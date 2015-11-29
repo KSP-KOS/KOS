@@ -5,9 +5,25 @@ File I/O
 
 For information about where files are kept and how to deal with volumes see the :ref:`Volumes <volumes>` page in the general topics section of this documentation.
 
+.. contents::
+    :local:
+    :depth: 2
+
 .. note::
 
-    All file names (program names) must be valid Identifiers. They can not contain spaces or special characters. For example, you can't have a file name called "this is my-file".
+    *Limitations on file names used for programs*
+
+    All file names used as program names with the ``run`` command must be
+    valid identifiers.  They can not contain spaces or special characters. For
+    example, you can't have a program named ``this is my-file.ks``.  This rule
+    does not necessarily apply to other filenames such as log files.  However
+    to use a filename that contains spaces, you will have to put quotes around
+    it.
+
+    On case-sensitive filesystems typically found on Linux and Mac, you should
+    name program files used with the ``run`` command entirely with
+    lowercase-only filenames or the system may fail to find them when you
+    use the ``run`` command.
 
 .. warning::
 
@@ -103,7 +119,7 @@ Please see :ref:`the details of the Kerboscript ML
 Executable <compiling>`.
 
 ``COPY programFile FROM/TO Volume|volumeId|volumeName.``
------------------------------------------
+--------------------------------------------------------
 
 Arguments
 ^^^^^^^^^
@@ -133,7 +149,7 @@ Example::
 
 
 ``DELETE filename FROM Volume|volumeId|volumeName.``
---------------------------------------
+----------------------------------------------------
 
 Deletes a file. Volumes can be referenced by instances of :struct:`Volume`, their ID numbers or their names
 if they’ve been given one.
@@ -197,9 +213,10 @@ Example::
 
 
 ``RENAME VOLUME Volume|volumeId|oldVolumeName TO name.``
---------------------------
+--------------------------------------------------------
+
 ``RENAME FILE oldName TO newName.``
---------------------------
+-----------------------------------
 
 Renames a file or volume. Volumes can be referenced by
 instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one.
@@ -215,8 +232,10 @@ Example::
     RENAME VOLUME 1 TO AwesomeDisk
     RENAME FILE MyFile TO AutoLaunch.
 
+.. _run_once:
+
 ``RUN [ONCE] <program>.``
-------------------
+-------------------------
 
 Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.
 
@@ -264,20 +283,17 @@ RUN only works when the filename is a bareword filename. It cannot use expressio
                      // called "ProgName.ksm" or "ProgName.ks", when it sees this,
                      // rather than "MyProgram".
 
-    The reasons for the exception to how filenames work for the RUN
-    command are too complex to go into in large detail here. Here's the
-    short version: While the kOS system does defer the majority of the
-    work
-    of actually compiling subprogram scripts until run-time, it still
-    has to
-    generate some header info about them at compile time, and the
-    filename
-    has to be set in stone at that time. Changing this would require a
-    large re-write of some of the architecture of the virtual machine.
+The reasons for the exception to how filenames work for the RUN command are
+too complex to go into in large detail here. Here's the short version: While
+the kOS system does defer the majority of the work of actually compiling
+subprogram scripts until run-time, it still has to generate some header info
+about them at compile time, and the filename has to be set in stone at that
+time. Changing this would require a large re-write of some of the architecture
+of the virtual machine.
 
 
 ``SWITCH TO Volume|volumeId|volumeName.``
------------------------------
+-----------------------------------------
 
 Switches to the specified volume. Volumes can be referenced by
 instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how

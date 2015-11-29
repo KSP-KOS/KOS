@@ -33,6 +33,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`PartModule`
     * :struct:`Sensor`
     * :struct:`VesselSensors`
+    * :struct:`LoadDistance`
 * :ref:`Configuration and Misc <misc>`
     * :struct:`Config`
     * :struct:`FileInfo`

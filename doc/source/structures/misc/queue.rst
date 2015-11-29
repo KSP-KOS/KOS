@@ -1,7 +1,7 @@
 .. _queue:
 
 Queue
-====
+=====
 
 A :struct:`Queue` is a collection of any type in kOS. Queues work according to `First-In first-out <https://en.wikipedia.org/wiki/FIFO_and_LIFO_accounting>`_ principle. It may be useful to contrast
 :struct:`Queue` with :struct:`Stack` to better understand how both structures work. You can read more about queues on `Wikipedia <https://en.wikipedia.org/wiki/Queue_(abstract_data_type)>`_.

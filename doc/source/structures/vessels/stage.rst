@@ -67,6 +67,10 @@ Structure
           - :struct:`List`
           - Get only
           - the :struct:`List` of :struct:`Resource` in the current stage
+        * - :attr:`RESOURCESLEX`
+          - :struct:`List`
+          - Get only
+          - the :struct:`Lexicon` of name :struct:`String` keyed :struct:`Resource` values in the current stage
 
 .. attribute:: Stage:READY
 
@@ -88,4 +92,14 @@ Structure
     :type: :struct:`List`
 
     This is a collection of the available :struct:`Resource` for the current stage.
-	
+
+.. attribute:: Stage:Resourceslex
+
+    :access: Get
+    :type: :struct:`Lexicon`
+
+    This is a dictionary style collection of the available :struct:`Resource`
+    for the current stage.  The :struct:`String` key in the lexicon will match
+    the name suffix on the :struct:`Resource`.  This suffix walks the parts
+    list entirely on every call, so it is recommended that you cache the value
+    if it will be reference repeatedly.
