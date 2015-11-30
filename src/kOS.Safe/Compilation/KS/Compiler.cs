@@ -2203,24 +2203,55 @@ namespace kOS.Safe.Compilation.KS
         /// inside it that pertains to this function.  Note, parameters inside functions
         /// nested inside the current one don't count.  This method performs a recursive
         /// walk.
+        /// <br/><br/>
+        /// While it does this walk, it also tests for whether or not there exists a
+        /// non-defaulted parameter after a defaulted one, which is illegal and throws an error.
         /// </summary>
-        private bool HasParameterStmtNested(ParseNode node)
+        /// <param name="node">The node to check</param>
+        /// <param name="sawMandatoryParam">true once a parameter without a default clause occurs.</param>
+        private bool HasParameterStmtNested(ParseNode node, ref bool sawMandatoryParam)
         {
             // Base case:
             if (node.Token.Type == TokenType.declare_parameter_clause)
-                return true;
-
-            // Recurive case:
-            foreach (ParseNode child in node.Nodes)
             {
+                // found one, double check that we don't have an undefaulted param after a defaulted one while we're at it:
+                // The logic counts backward here.
+                for (int i = node.Nodes.Count-2 ; i > 0 ; i -= 2)
+                {
+                    // If this is an expression, then we have a defaultable optional arg.
+                    // else we have a mandatory arg.
+                    TokenType tType = node.Nodes[i].Token.Type;
+                    bool isOptionalParam = (tType == TokenType.expr);
+                    if (isOptionalParam)
+                    {
+                        if (sawMandatoryParam)
+                            throw new KOSDefaultParamNotAtEndException();
+
+                        i -= 2; // skip back a bit further to pass over the extra terms a defaulter has.
+                    }
+                    else
+                    {
+                        sawMandatoryParam = true;
+                    }
+                }
+                
+                return true;
+            }
+
+
+            // Recursive case - make sure to walk backward, and don't abort the scan when a thing is found:
+            bool rememberReturnVal = false;
+            for (int i = node.Nodes.Count - 1 ; i >= 0 ; --i)
+            {
+                ParseNode child = node.Nodes[i];
                 if (child.Token.Type != TokenType.declare_function_clause) // functions nested in functions don't count
                 {
-                    if (HasParameterStmtNested(child))
-                        return true;
+                    if (HasParameterStmtNested(child, ref sawMandatoryParam))
+                        rememberReturnVal = true;
                 }
             }
                 
-            return false; // default if nothing found in the above search.
+            return rememberReturnVal;
         }
         
         /// <summary>
@@ -2235,18 +2266,18 @@ namespace kOS.Safe.Compilation.KS
         private int FindArgBottomSpot(ParseNode node)
         {
             int lastmostDefParamStmt = -1;
-            
-            // TODO - before making the pull request, revisit this spot and make
-            // it check for if there exists any undefaulted parameters AFTER defaulted
-            // ones.  If so, that's a compile error.  Defaulted ones must all come at
-            // the end of the list.
-            //
+            bool sawMandatoryParam = false;
             for (int i = node.Nodes.Count-1 ; i >= 0 ; --i)
             {
-                if (HasParameterStmtNested(node.Nodes[i]))
+                if (HasParameterStmtNested(node.Nodes[i], ref sawMandatoryParam))
                 {
-                    lastmostDefParamStmt = i;
-                    break;
+                    // Only set this the very fist time a hit is seen - counting backward from the
+                    // end that will be the lastmost parameter statement:
+                    if (lastmostDefParamStmt == -1)
+                        lastmostDefParamStmt = i;
+                    
+                    // Would break here but instead need to keep checking for defaulted params prior to
+                    // mandatory ones for throwing KOSDefaultParamNotAtEndException
                 }
             }
             

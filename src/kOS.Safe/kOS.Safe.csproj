@@ -95,6 +95,7 @@
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
+    <Compile Include="Exceptions\KOSDefaultParamNotAtEndException.cs" />
     <Compile Include="Exceptions\KOSOnceInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
