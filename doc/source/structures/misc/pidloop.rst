@@ -200,11 +200,11 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
                 // only calculate integral and derivative if the time
                 // difference is less than one second, and their gain is not 0.
                 if Ki <> 0 {
-                    ITerm = (ErrorSum + Error) * dt * Ki.
+                    set ITerm to (ErrorSum + Error) * dt * Ki.
                 }
                 set ChangeRate to (input - LastInput) / dt.
                 if Kd <> 0 {
-                    DTerm = ChangeRate * Kd.
+                    set DTerm to ChangeRate * Kd.
                 }
             }
         }
@@ -214,7 +214,7 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             set Output to MaxOutput.
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
-            if (Ki != 0) and (LastSampleTime < sampleTime) {
+            if (Ki <> 0) and (LastSampleTime < sampleTime) {
                 set ITerm to Output - Pterm - DTerm.
             }
         }
@@ -222,12 +222,12 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             set Output to MinOutput.
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
-            if (Ki != 0) and (LastSampleTime < sampleTime) {
+            if (Ki <> 0) and (LastSampleTime < sampleTime) {
                 set ITerm to Output - Pterm - DTerm.
             }
         }
-        LastSampleTime = sampleTime.
+        set LastSampleTime to sampleTime.
         if Ki <> 0 set ErrorSum to ITerm / Ki.
-        else ErrorSum = 0.
+        else set ErrorSum to 0.
         return Output.
     }
