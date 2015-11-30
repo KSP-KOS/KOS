@@ -33,7 +33,6 @@ namespace kOS.Safe.Compilation.KS
         private Int16 braceNestLevel;
         private readonly List<Int16> scopeStack = new List<Int16>();
         private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
-        private readonly List<ParseNode> programParameters = new List<ParseNode>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
@@ -73,7 +72,6 @@ namespace kOS.Safe.Compilation.KS
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
-            programParameters.Clear();
         }
 
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
@@ -115,7 +113,6 @@ namespace kOS.Safe.Compilation.KS
         {
             currentCodeSection = part.MainCode;
             
-            PopStackRunParameters();
             VisitNode(tree.Nodes[0]);
             
             if (addBranchDestination || currentCodeSection.Count == 0)
@@ -389,6 +386,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:
+                case TokenType.declare_stmt:
                     PreProcessChildNodes(node);
                     break;
                 case TokenType.on_stmt:
@@ -398,10 +396,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
-                    break;
-                case TokenType.declare_stmt:
-                    PreProcessChildNodes(node);
-                    PreProcessProgramParameters(node);
                     break;
                 case TokenType.run_stmt:
                     PreProcessRunStatement(node);
@@ -772,25 +766,6 @@ namespace kOS.Safe.Compilation.KS
             return node;
         }
 
-        private void PreProcessProgramParameters(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            // if the declaration is a parameter,
-            // and this is NOT contained inside a DEFINE FUNCTION block and
-            // is therefore a global program parameter (for the run statement):
-            if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                (!(IsInsideDefineFunctionStatement(node))))
-            {
-                for (int index = 1; index < lastSubNode.Nodes.Count; index += 2)
-                {
-                    programParameters.Add(lastSubNode.Nodes[index]);
-                }
-            }
-            // If it's any other sort of Declare statement, do nothing and instead
-            // allow the PreProcessChildNodes handle all the work.
-        }
-
         private void PreProcessRunStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -870,20 +845,6 @@ namespace kOS.Safe.Compilation.KS
                         // removed pointer initialization since it overwrote any existing values when loading ksm files.
                     }
                 }
-            }
-        }
-
-        private void PopStackRunParameters()
-        {
-            // When the stack "arrives" at this point in a program,
-            // it will have already had its parameters reversed such that they
-            // are actually in first-arg-first order rather than in
-            // stack order:
-            foreach (ParseNode node in programParameters)
-            {
-                VisitNode(node);
-                AddOpcode(new OpcodeSwap());
-                AddOpcode(new OpcodeStore());
             }
         }
 
@@ -2506,11 +2467,7 @@ namespace kOS.Safe.Compilation.KS
             //    DECLARE PARAMETER ident.
             // or
             //    DECLARE PARAMETER ident,ident,ident...
-            // AND this is inside a function definition rather than being at the global script level.
-            // (at the global script level a DEFINE PARAMETER statement is for RUN parameters, which
-            // get handled differently.)
-            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                IsInsideDefineFunctionStatement(node))
+            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
                 for (int i = 1 ; i < lastSubNode.Nodes.Count ; i += 2)
                 {
@@ -2550,9 +2507,9 @@ namespace kOS.Safe.Compilation.KS
                     return new OpcodeStoreGlobal();
                 default:
                     if (lazyGlobal)
-                        return AddOpcode(new OpcodeStore());
+                        return new OpcodeStore();
                     else
-                        return AddOpcode(new OpcodeStoreExist());
+                        return new OpcodeStoreExist();
             }
         }
         

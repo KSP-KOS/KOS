@@ -125,6 +125,13 @@ namespace kOS.Safe.Compilation
                 {
                     if (labels.ContainsKey(program[index].Label))
                     {
+                        // This is one of those "should never happen" errors that if it happens
+                        // it means kOS devs screwed up - so dump the partially relabeled program
+                        // to the log just to help in diagnosing the bug report that may happen:
+                        //
+                        Utilities.SafeHouse.Logger.LogError("=====Relabeled Program so far is: =========");
+                        Utilities.SafeHouse.Logger.LogError(Utilities.Debug.GetCodeFragment(program));
+
                         throw new kOS.Safe.Exceptions.KOSCompileException(string.Format(
                             "ProgramBuilder.ReplaceLabels: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
                     }
