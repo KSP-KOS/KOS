@@ -2236,6 +2236,11 @@ namespace kOS.Safe.Compilation.KS
         {
             int lastmostDefParamStmt = -1;
             
+            // TODO - before making the pull request, revisit this spot and make
+            // it check for if there exists any undefaulted parameters AFTER defaulted
+            // ones.  If so, that's a compile error.  Defaulted ones must all come at
+            // the end of the list.
+            //
             for (int i = node.Nodes.Count-1 ; i >= 0 ; --i)
             {
                 if (HasParameterStmtNested(node.Nodes[i]))
@@ -2466,14 +2471,25 @@ namespace kOS.Safe.Compilation.KS
             // If the declare statement is of the form:
             //    DECLARE PARAMETER ident.
             // or
+            //    DECLARE PARAMETER ident IS expr.
+            // or
             //    DECLARE PARAMETER ident,ident,ident...
+            // or
+            //    DECLARE PARAMETER ident,ident,ident IS expr, ident IS EXPR...
             else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
                 for (int i = 1 ; i < lastSubNode.Nodes.Count ; i += 2)
                 {
-                    VisitNode(lastSubNode.Nodes[i]);
-                    AddOpcode(new OpcodeSwap());
-                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true));
+                    bool hasInit = ( i < lastSubNode.Nodes.Count - 2 &&
+                                    ( lastSubNode.Nodes[i+1].Token.Type == TokenType.IS ||
+                                     lastSubNode.Nodes[i+1].Token.Type == TokenType.TO )
+                                   );
+                    ParseNode initExpressionNode = hasInit ? lastSubNode.Nodes[i+2] : null;
+                    VisitDeclareOneParameter(whereToStore, lastSubNode.Nodes[i], initExpressionNode);
+                    if (hasInit)
+                    {
+                        i += 2; // skip the "TO expr" part when looking for the next param.
+                    }
                 }
             }
             
@@ -2486,6 +2502,41 @@ namespace kOS.Safe.Compilation.KS
             
             // Note: DECLARE FUNCTION is dealt with entirely during
             // PreprocessDeclareStatement, with nothing for VisitNode to do.
+        }
+        
+        /// <summary>
+        /// Process a single parameter from the parameter list for a
+        /// function or program.  i.e. if encountering the statement
+        /// "DECLARE PARAMETER AA, BB, CC is 0." , then this method needs to be
+        /// called 3 times, once for AA, once for BB, and once for "CC is 0":
+        /// </summary>
+        /// <param name="whereToStore">is it local or global or lazyglobal</param>
+        /// <param name="identifierNode">Parse node holding the identifier of the param</param>
+        /// <param name="expressionNode">Parse node holding the expression to initialize to if
+        /// this is a defaultable parameter.  If it is not a defaultable parameter, pass null here</param>
+        private void VisitDeclareOneParameter(StorageModifier whereToStore, ParseNode identifierNode, ParseNode expressionNode)
+        {
+            if (expressionNode != null)
+            {
+                // This tests each defaultable parameter to see if it's at arg bottom.
+                // The test must be repeated for each parameter rather than optimizing by
+                // falling through to all subsequent defaulter expressions for the rest of
+                // the parameters once the first one finds arg bottom.
+                // This is because kerboscript does not require the declare parameters to
+                // be contiguous statements so there may be code in between them you're
+                // not supposed to skip over.
+
+                AddOpcode(new OpcodeTestArgBottom());
+                OpcodeBranchIfFalse branchSkippingInit = new OpcodeBranchIfFalse();
+                AddOpcode(branchSkippingInit);
+                
+                VisitNode(expressionNode); // evals init expression on the top of the stack where the arg would have been
+
+                branchSkippingInit.DestinationLabel = GetNextLabel(false);
+            }
+            VisitNode(identifierNode);
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true));                
         }
                 
         /// <summary>

@@ -1336,6 +1336,45 @@ namespace kOS.Safe.Compilation.KS
             }
 
             
+            tok = scanner.LookAhead(TokenType.TO, TokenType.IS);
+            if (tok.Type == TokenType.TO
+                || tok.Type == TokenType.IS)
+            {
+
+                
+                tok = scanner.LookAhead(TokenType.TO, TokenType.IS);
+                switch (tok.Type)
+                {
+                    case TokenType.TO:
+                        tok = scanner.Scan(TokenType.TO);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.TO) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TO.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    case TokenType.IS:
+                        tok = scanner.Scan(TokenType.IS);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.IS) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IS.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    default:
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        break;
+                }
+
+                
+                Parseexpr(node);
+            }
+
+            
             tok = scanner.LookAhead(TokenType.COMMA);
             while (tok.Type == TokenType.COMMA)
             {
@@ -1358,6 +1397,45 @@ namespace kOS.Safe.Compilation.KS
                 if (tok.Type != TokenType.IDENTIFIER) {
                     tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
                     return;
+                }
+
+                
+                tok = scanner.LookAhead(TokenType.TO, TokenType.IS);
+                if (tok.Type == TokenType.TO
+                    || tok.Type == TokenType.IS)
+                {
+
+                    
+                    tok = scanner.LookAhead(TokenType.TO, TokenType.IS);
+                    switch (tok.Type)
+                    {
+                        case TokenType.TO:
+                            tok = scanner.Scan(TokenType.TO);
+                            n = node.CreateNode(tok, tok.ToString() );
+                            node.Token.UpdateRange(tok);
+                            node.Nodes.Add(n);
+                            if (tok.Type != TokenType.TO) {
+                                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TO.ToString(), 0x1001, tok));
+                                return;
+                            }
+                            break;
+                        case TokenType.IS:
+                            tok = scanner.Scan(TokenType.IS);
+                            n = node.CreateNode(tok, tok.ToString() );
+                            node.Token.UpdateRange(tok);
+                            node.Nodes.Add(n);
+                            if (tok.Type != TokenType.IS) {
+                                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IS.ToString(), 0x1001, tok));
+                                return;
+                            }
+                            break;
+                        default:
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                            break;
+                    }
+
+                    
+                    Parseexpr(node);
                 }
             tok = scanner.LookAhead(TokenType.COMMA);
             }
