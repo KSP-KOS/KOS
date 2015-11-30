@@ -229,6 +229,76 @@ in the previous example where it said::
 
     print_corner(4,"That's me in the corner").
 
+Optional Parameters (parameter defaults)
+----------------------------------------
+
+If you wish, you may make some of the parameters of a user function optional
+by defaulting them to a starting value with the ``IS`` keyword, as follows:
+
+example 1::
+
+    FUNCTION MYFUNC {
+      DECLARE PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+example 2::
+
+    FUNCTION MYFUNC {
+      PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+example 3::
+
+    FUNCTION MYFUNC {
+      PARAMETER P1.
+      PARAMETER P2.
+      PAREMETER P3 is 0.
+      PARAMETER P4 is "cheese".
+
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+In the above examples, all of which are the same, if you call the function
+with parameter 3 or 4 missing, kOS will assign it the default value mentioned
+in the ``PARAMETER`` statement, like in the examples below::
+
+    MYFUNC(1,2).         // prints "1, 2, 0, cheese".
+    MYFUNC(1,2,3).       // prints "1, 2, 3, cheese".
+    MYFUNC(1,2,3,"hi").  // prints "1, 2, 3, hi".
+
+Whenever arguments are missing, the system always makes up the difference by
+using defaults for the lastmost parameters until the correct number have been
+padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's 
+the last argument, P4, that gets defaulted, but P3 does not.  But if you call
+it with 2 arguments, both P4 and P3 get defaulted.)
+
+It is illegal to put mandatory (not defaulted) parameters after defaulted ones.
+
+This will not work::
+
+    DECLARE PARAMETER thisIsOptional is 0,
+                      thisIsOptionalToo is 0.
+                      thisIsMandatory.
+
+Because the optional parameters didn't come at the end.
+
+
+Default parameters follow short-circuit logic
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Remember that if you have an optional parameter with an initializer
+expression, the expression will not get executed if the calling
+function had an argument present in that position.  The expression
+only gets executed if the system needed to pad a missing argument.
+
+.. versionadded:: 0.18.3
+   Optional Parameters were added as a new feature in kOS 0.18.3
+
+
+
 .. _interpreter functions:
 
 Functions and the terminal interpreter
