@@ -1,5 +1,5 @@
+using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
-using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
@@ -14,6 +14,7 @@ namespace kOS.Safe
         public ICpu Cpu { get; set; }
         public IScreenBuffer Screen { get; set; }
         public IInterpreter Interpreter { get; set; }
+        public IBindingManager BindingMgr { get; set; }  
         public Script ScriptHandler { get; set; }
         public ILogger Logger { get; set; }
         public IProcessor Processor { get; set; }

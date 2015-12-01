@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using kOS.Execution;
 using kOS.Safe.Compilation;
+using kOS.Safe.Execution;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
 

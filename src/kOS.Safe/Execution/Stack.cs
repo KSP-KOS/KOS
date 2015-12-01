@@ -1,11 +1,9 @@
-﻿using kOS.Safe.Execution;
-using kOS.Suffixed;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
 
-namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     public class Stack : IStack
     {

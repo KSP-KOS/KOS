@@ -19,6 +19,7 @@ using KSPAPIExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Execution;
 using UnityEngine;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
@@ -571,10 +572,6 @@ namespace kOS.Module
 
                 InitObjects();
 
-                if (shared != null && shared.Cpu != null)
-                {
-                    ((CPU)shared.Cpu).OnLoad(node);
-                }
                 base.OnLoad(node);
             }
             catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
@@ -598,7 +595,6 @@ namespace kOS.Module
 
                 if (shared != null && shared.Cpu != null)
                 {
-                    ((CPU)shared.Cpu).OnSave(node);
                     SafeHouse.Config.SaveConfig();
                 }
 
