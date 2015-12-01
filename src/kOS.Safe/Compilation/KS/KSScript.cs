@@ -95,37 +95,85 @@ namespace kOS.Safe.Compilation.KS
 
         public override bool IsCommandComplete(string command)
         {
+            // Good FUture Refactor Opportunity:
+            //
+            // It's not good that this is
+            // essentially doing kerboscript-aware syntax thinking
+            // somewhere outside the parser generator TinyPG.  That
+            // puts the same logic in two places of the code, which
+            // is usually a bad thing.  If someone can think of a
+            // better way to query the parser to ask it "is this
+            // statement incomplete?" rather than putting this logic
+            // here, that would be a good opportunity for a refactor.
+            //
+            // The difficulty is that the parser returns "syntax erorr"
+            // the same regardless of whether it's because it's incomplete
+            // or because there's an error.  So we can't say "if parser
+            // doesn't think it's done" wihtout the side effect of it hanging
+            // on syntax errors because it thinks they're "incomplete".            
+
             char[] commandChars = command.ToCharArray();
             int length = commandChars.Length;
             int openCurlyBrackets = 0;
             int openParentheses = 0;
-
+            bool inQuotes = false;
+            bool inCommentToEoln = false;
+            char curChar;
+            char prevChar = '\0';
+            
             for (int n = 0; n < length; n++)
             {
-                switch (commandChars[n])
+                curChar = commandChars[n];
+                switch (curChar)
                 {
-                    // match curly brackets
+                    // Track if we are in quotes or a comment, which
+                    // should make it bypass the checks for matching
+                    // parentheses and braces:
+                    case '\"':
+                        if (! inCommentToEoln)
+                            inQuotes = !(inQuotes);
+                        break;
+                    case '/':
+                        if (prevChar == '/' && !inQuotes )
+                            inCommentToEoln = true;
+                        break;
+                    case '\n':
+                    case '\r':
+                        inCommentToEoln = false;
+                        break;
+                        
+                    // match curly brackets:
                     case '{':
-                        openCurlyBrackets++;
+                        if (!inQuotes && !inCommentToEoln)
+                            openCurlyBrackets++;
                         break;
 
                     case '}':
-                        openCurlyBrackets--;
+                        if (!inQuotes && !inCommentToEoln)
+                            openCurlyBrackets--;
                         break;
-                    // match parentheses
+
+                    // match parentheses:
                     case '(':
-                        openParentheses++;
+                        if (!inQuotes && !inCommentToEoln)
+                            openParentheses++;
                         break;
 
                     case ')':
-                        openParentheses--;
+                        if (!inQuotes && !inCommentToEoln)
+                            openParentheses--;
                         break;
                 }
+                prevChar = curChar;
             }
 
-            // returns true even if you wrote extra closing curly brackets/parentheses
-            return (openCurlyBrackets <= 0)
-                && (openParentheses <= 0);
+            // Only return true if none of the conditions that
+            // indicate there's more to type are present:            
+            return
+                openCurlyBrackets <= 0 &&
+                openParentheses <= 0   &&
+                (!inQuotes);
+                
         }
     }
 }

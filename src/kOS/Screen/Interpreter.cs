@@ -64,6 +64,10 @@ namespace kOS.Screen
             if (key == (char)UnicodeCommand.BREAK)
             {
                 Shared.Cpu.BreakExecution(true);
+                LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
+
+                NewLine(); // process the now emptied line, to make it do all the updates it normally
+                           // does to the screenbuffers on pressing enter.
             }
 
             if (locked) return false;
