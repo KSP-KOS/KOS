@@ -1,4 +1,5 @@
 using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
@@ -18,7 +19,7 @@ namespace kOS.Safe
         public IProcessor Processor { get; set; }
         public UpdateHandler UpdateHandler { get; set; }
         public IFunctionManager FunctionManager { get; set; }
-        public VolumeManager VolumeMgr { get; set; }
+        public IVolumeManager VolumeMgr { get; set; }
         public ISoundMaker SoundMaker { get; set; }
     }
 }

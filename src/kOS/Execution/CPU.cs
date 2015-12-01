@@ -9,7 +9,6 @@ using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using kOS.Safe.Utilities;
-using kOS.Suffixed;
 using Debug = kOS.Safe.Utilities.Debug;
 
 namespace kOS.Execution
@@ -884,7 +883,7 @@ namespace kOS.Execution
 
         public void KOSFixedUpdate(double deltaTime)
         {
-            bool showStatistics = Config.Instance.ShowStatistics;
+            bool showStatistics = SafeHouse.Config.ShowStatistics;
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
@@ -892,7 +891,7 @@ namespace kOS.Execution
             double executionElapsed = 0.0;
 
             // If the script changes config value, it doesn't take effect until next update:
-            instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
+            instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
             instructionsSoFarInUpdate = 0;
             int numTriggerInstructions = 0;
             int numMainlineInstructions = 0;
@@ -1160,7 +1159,7 @@ namespace kOS.Execution
 
         public void PrintStatistics()
         {
-            if (!Config.Instance.ShowStatistics) return;
+            if (!SafeHouse.Config.ShowStatistics) return;
 
             shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", totalCompileTime));
             shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));

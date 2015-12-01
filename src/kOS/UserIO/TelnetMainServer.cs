@@ -152,7 +152,7 @@ namespace kOS.UserIO
         public void SetConfigEnable(bool newVal)
         {
             bool isLoopback = Equals(bindAddr, IPAddress.Loopback);
-            bool loopBackStatusChanged = (isLoopback != Config.Instance.TelnetLoopback);
+            bool loopBackStatusChanged = (isLoopback != SafeHouse.Config.TelnetLoopback);
             
             if (loopBackStatusChanged)
                 StopListening(); // we'll be forcing a new restart of the telnet server on the new IP address.
@@ -162,11 +162,11 @@ namespace kOS.UserIO
             
             if (newVal)
             {
-                if (tempListenPermission && ((tempRealIPPermission || Config.Instance.TelnetLoopback)))
+                if (tempListenPermission && ((tempRealIPPermission || SafeHouse.Config.TelnetLoopback)))
                     StartListening();
                 else
                 {
-                    Config.Instance.EnableTelnet = false; // Turn it right back off, never having allowed the server to turn on.
+                    SafeHouse.Config.EnableTelnet = false; // Turn it right back off, never having allowed the server to turn on.
                     
                     // Depending on which reason it was for the denial, activate the proper dialog window:
                     if (!tempListenPermission)
@@ -187,8 +187,8 @@ namespace kOS.UserIO
             
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
-            port = Config.Instance.TelnetPort;
-            bindAddr = Config.Instance.TelnetLoopback ? 
+            port = SafeHouse.Config.TelnetPort;
+            bindAddr = SafeHouse.Config.TelnetLoopback ? 
                 IPAddress.Loopback : 
                 GetRealAddress();
 
@@ -232,7 +232,7 @@ namespace kOS.UserIO
         
         public void Update()
         {
-            SetConfigEnable(Config.Instance.EnableTelnet);
+            SetConfigEnable(SafeHouse.Config.EnableTelnet);
             
             int howManySpawned = 0;
 
@@ -347,7 +347,7 @@ namespace kOS.UserIO
                         if (yesClicked || yesNeverAgainClicked)
                         {
                             tempListenPermission = true;
-                            Config.Instance.EnableTelnet = true; // should get noticed next Update() and turn on the server.
+                            SafeHouse.Config.EnableTelnet = true; // should get noticed next Update() and turn on the server.
                         }
                         
                         if (yesNeverAgainClicked)
@@ -420,13 +420,13 @@ namespace kOS.UserIO
                         
                         if (noClicked)
                         {
-                            Config.Instance.TelnetLoopback = true;
+                            SafeHouse.Config.TelnetLoopback = true;
                             tempRealIPPermission = false;
                         }
 
                         if (yesClicked || yesNeverAgainClicked)
                         {
-                            Config.Instance.TelnetLoopback = false;
+                            SafeHouse.Config.TelnetLoopback = false;
                             tempRealIPPermission = true;
                             StartListening();
                         }
