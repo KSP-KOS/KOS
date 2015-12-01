@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using kOS.Persistence;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
@@ -108,37 +107,32 @@ namespace kOS.Execution
                 shared.Screen.Print(bootMessage);
             }
 
-            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
-            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
-            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            if (!shared.Processor.CheckCanBoot()) return;
+
+            string filename = shared.Processor.BootFilename;
+            // Check to make sure the boot file name is valid, and then that the boot file exists.
+            if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
+            else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
+            else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
             else
             {
-                string filename = shared.Processor.BootFilename;
-                // Check to make sure the boot file name is valid, and then that the boot file exists.
-                if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
-                else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-                else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
-                else
+                var bootContext = "program";
+                string bootCommand = string.Format("run {0}.", filename);
+
+                var options = new CompilerOptions
                 {
-                    var bootContext = "program";
-                    var bootCommand = string.Format("run {0}.", filename);
+                    LoadProgramsInSameAddressSpace = true,
+                    FuncManager = shared.FunctionManager,
+                    IsCalledFromRun = false
+                };
 
-                    var options = new CompilerOptions
-                    {
-                        LoadProgramsInSameAddressSpace = true,
-                        FuncManager = shared.FunctionManager,
-                        IsCalledFromRun = false
-                    };
+                shared.ScriptHandler.ClearContext(bootContext);
+                List<CodePart> parts = shared.ScriptHandler.Compile(
+                    "sys:boot", 1, bootCommand, bootContext, options);
 
-                    shared.ScriptHandler.ClearContext(bootContext);
-                    List<CodePart> parts = shared.ScriptHandler.Compile(
-                        "sys:boot", 1, bootCommand, bootContext, options);
-
-                    var programContext = SwitchToProgramContext();
-                    programContext.Silent = true;
-                    programContext.AddParts(parts);
-                }
+                IProgramContext programContext = SwitchToProgramContext();
+                programContext.Silent = true;
+                programContext.AddParts(parts);
             }
         }
 

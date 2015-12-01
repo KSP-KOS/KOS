@@ -686,5 +686,18 @@ namespace kOS.Module
             get { return bootFile; }
             set { bootFile = value; }
         }
+
+        public bool CheckCanBoot()
+        {
+            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
+            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            else
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

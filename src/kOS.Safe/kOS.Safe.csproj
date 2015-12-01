@@ -147,6 +147,7 @@
     <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Persistence\FileCategory.cs" />
     <Compile Include="Persistence\Harddisk.cs" />
+    <Compile Include="Persistence\IVolumeManager.cs" />
     <Compile Include="Persistence\KOSFileException.cs" />
     <Compile Include="Persistence\PersistenceUtilities.cs" />
     <Compile Include="Persistence\ProgramFile.cs" />
