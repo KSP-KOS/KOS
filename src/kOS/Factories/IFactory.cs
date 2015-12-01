@@ -8,6 +8,6 @@ namespace kOS.Factories
     {
         IInterpreter CreateInterpreter(SharedObjects shared);
         Archive CreateArchive();
-        VolumeManager CreateVolumeManager(SharedObjects sharedObjects);
+        IVolumeManager CreateVolumeManager(SharedObjects sharedObjects);
     }
 }
