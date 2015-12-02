@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -18,22 +19,21 @@ namespace kOS.Safe.Compilation.KS
         public int CurrentLine;
         public int CurrentColumn;
         public int CurrentPosition;
-        public List<Token> Skipped; // tokens that were skipped
-        public Dictionary<TokenType, Regex> Patterns;
+        public List<Token> Skipped = new List<Token>(); // tokens that were skipped
+        
+        private Token LookAheadToken = null;
+        private readonly TokenType FileAndLine = default(TokenType);
 
-        private Token LookAheadToken;
-        private List<TokenType> Tokens;
-        private List<TokenType> SkipList; // tokens to be skipped
-        private readonly TokenType FileAndLine;
+        public static Dictionary<TokenType, Regex> Patterns;
+        private static List<TokenType> Tokens;
+        private static List<TokenType> SkipList; // tokens to be skipped
 
-        public Scanner()
+        static Scanner()
         {
             Regex regex;
             Patterns = new Dictionary<TokenType, Regex>();
             Tokens = new List<TokenType>();
-            LookAheadToken = null;
-            Skipped = new List<Token>();
-
+            
             SkipList = new List<TokenType>();
             SkipList.Add(TokenType.WHITESPACE);
             SkipList.Add(TokenType.COMMENTLINE);
@@ -201,6 +201,10 @@ namespace kOS.Safe.Compilation.KS
             regex = new Regex(@"(?i)\bfunction\b");
             Patterns.Add(TokenType.FUNCTION, regex);
             Tokens.Add(TokenType.FUNCTION);
+
+            regex = new Regex(@"(?i)\bcallback\b");
+            Patterns.Add(TokenType.CALLBACK, regex);
+            Tokens.Add(TokenType.CALLBACK);
 
             regex = new Regex(@"(?i)\breturn\b");
             Patterns.Add(TokenType.RETURN, regex);
@@ -493,10 +497,10 @@ namespace kOS.Safe.Compilation.KS
                     var match = Patterns[tok.Type].Match(tok.Text);
                     var fileMatch = match.Groups["File"];
                     if (fileMatch.Success)
-                        currentFile = fileMatch.Value;
+                        currentFile = fileMatch.Value.Replace("\\\\", "\\");
                     var lineMatch = match.Groups["Line"];
                     if (lineMatch.Success)
-                        currentline = int.Parse(lineMatch.Value);
+                        currentline = int.Parse(lineMatch.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
                 }
             }
             while (SkipList.Contains(tok.Type));
@@ -567,101 +571,103 @@ namespace kOS.Safe.Compilation.KS
             arith_expr= 48,
             multdiv_expr= 49,
             unary_expr= 50,
-            factor  = 51,
-            suffix  = 52,
-            suffix_trailer= 53,
-            suffixterm= 54,
-            suffixterm_trailer= 55,
-            function_trailer= 56,
-            array_trailer= 57,
-            atom    = 58,
-            sci_number= 59,
-            number  = 60,
-            varidentifier= 61,
-            identifier_led_stmt= 62,
-            identifier_led_expr= 63,
+            callback_expr= 51,
+            factor  = 52,
+            suffix  = 53,
+            suffix_trailer= 54,
+            suffixterm= 55,
+            suffixterm_trailer= 56,
+            function_trailer= 57,
+            array_trailer= 58,
+            atom    = 59,
+            sci_number= 60,
+            number  = 61,
+            varidentifier= 62,
+            identifier_led_stmt= 63,
+            identifier_led_expr= 64,
 
             //Terminal tokens:
-            PLUSMINUS= 64,
-            MULT    = 65,
-            DIV     = 66,
-            POWER   = 67,
-            E       = 68,
-            NOT     = 69,
-            AND     = 70,
-            OR      = 71,
-            TRUEFALSE= 72,
-            COMPARATOR= 73,
-            SET     = 74,
-            TO      = 75,
-            IS      = 76,
-            IF      = 77,
-            ELSE    = 78,
-            UNTIL   = 79,
-            STEP    = 80,
-            DO      = 81,
-            LOCK    = 82,
-            UNLOCK  = 83,
-            PRINT   = 84,
-            AT      = 85,
-            ON      = 86,
-            TOGGLE  = 87,
-            WAIT    = 88,
-            WHEN    = 89,
-            THEN    = 90,
-            OFF     = 91,
-            STAGE   = 92,
-            CLEARSCREEN= 93,
-            ADD     = 94,
-            REMOVE  = 95,
-            LOG     = 96,
-            BREAK   = 97,
-            PRESERVE= 98,
-            DECLARE = 99,
-            DEFINED = 100,
-            LOCAL   = 101,
-            GLOBAL  = 102,
-            PARAMETER= 103,
-            FUNCTION= 104,
-            RETURN  = 105,
-            SWITCH  = 106,
-            COPY    = 107,
-            FROM    = 108,
-            RENAME  = 109,
-            VOLUME  = 110,
-            FILE    = 111,
-            DELETE  = 112,
-            EDIT    = 113,
-            RUN     = 114,
-            ONCE    = 115,
-            COMPILE = 116,
-            LIST    = 117,
-            REBOOT  = 118,
-            SHUTDOWN= 119,
-            FOR     = 120,
-            UNSET   = 121,
-            BRACKETOPEN= 122,
-            BRACKETCLOSE= 123,
-            CURLYOPEN= 124,
-            CURLYCLOSE= 125,
-            SQUAREOPEN= 126,
-            SQUARECLOSE= 127,
-            COMMA   = 128,
-            COLON   = 129,
-            IN      = 130,
-            ARRAYINDEX= 131,
-            ALL     = 132,
-            IDENTIFIER= 133,
-            FILEIDENT= 134,
-            INTEGER = 135,
-            DOUBLE  = 136,
-            STRING  = 137,
-            EOI     = 138,
-            ATSIGN  = 139,
-            LAZYGLOBAL= 140,
-            EOF     = 141,
-            WHITESPACE= 142,
-            COMMENTLINE= 143
+            PLUSMINUS= 65,
+            MULT    = 66,
+            DIV     = 67,
+            POWER   = 68,
+            E       = 69,
+            NOT     = 70,
+            AND     = 71,
+            OR      = 72,
+            TRUEFALSE= 73,
+            COMPARATOR= 74,
+            SET     = 75,
+            TO      = 76,
+            IS      = 77,
+            IF      = 78,
+            ELSE    = 79,
+            UNTIL   = 80,
+            STEP    = 81,
+            DO      = 82,
+            LOCK    = 83,
+            UNLOCK  = 84,
+            PRINT   = 85,
+            AT      = 86,
+            ON      = 87,
+            TOGGLE  = 88,
+            WAIT    = 89,
+            WHEN    = 90,
+            THEN    = 91,
+            OFF     = 92,
+            STAGE   = 93,
+            CLEARSCREEN= 94,
+            ADD     = 95,
+            REMOVE  = 96,
+            LOG     = 97,
+            BREAK   = 98,
+            PRESERVE= 99,
+            DECLARE = 100,
+            DEFINED = 101,
+            LOCAL   = 102,
+            GLOBAL  = 103,
+            PARAMETER= 104,
+            FUNCTION= 105,
+            CALLBACK= 106,
+            RETURN  = 107,
+            SWITCH  = 108,
+            COPY    = 109,
+            FROM    = 110,
+            RENAME  = 111,
+            VOLUME  = 112,
+            FILE    = 113,
+            DELETE  = 114,
+            EDIT    = 115,
+            RUN     = 116,
+            ONCE    = 117,
+            COMPILE = 118,
+            LIST    = 119,
+            REBOOT  = 120,
+            SHUTDOWN= 121,
+            FOR     = 122,
+            UNSET   = 123,
+            BRACKETOPEN= 124,
+            BRACKETCLOSE= 125,
+            CURLYOPEN= 126,
+            CURLYCLOSE= 127,
+            SQUAREOPEN= 128,
+            SQUARECLOSE= 129,
+            COMMA   = 130,
+            COLON   = 131,
+            IN      = 132,
+            ARRAYINDEX= 133,
+            ALL     = 134,
+            IDENTIFIER= 135,
+            FILEIDENT= 136,
+            INTEGER = 137,
+            DOUBLE  = 138,
+            STRING  = 139,
+            EOI     = 140,
+            ATSIGN  = 141,
+            LAZYGLOBAL= 142,
+            EOF     = 143,
+            WHITESPACE= 144,
+            COMMENTLINE= 145
     }
 
     public class Token

@@ -3,6 +3,10 @@
 using System;
 using System.Collections.Generic;
 
+// Disable unused variable warnings which
+// can happen during the parser generation.
+#pragma warning disable 168
+
 namespace kOS.Safe.Compilation.KS
 {
     #region Parser
@@ -332,7 +336,7 @@ namespace kOS.Safe.Compilation.KS
                     Parsedirective(node);
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected SET, IF, UNTIL, FROM, UNLOCK, PRINT, ON, TOGGLE, WAIT, WHEN, STAGE, CLEARSCREEN, ADD, REMOVE, LOG, BREAK, PRESERVE, PARAMETER, FUNCTION, LOCK, DECLARE, LOCAL, GLOBAL, RETURN, SWITCH, COPY, RENAME, DELETE, EDIT, RUN, COMPILE, LIST, REBOOT, SHUTDOWN, FOR, UNSET, CURLYOPEN, INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, BRACKETOPEN, STRING, or ATSIGN.", 0x0002, tok));
                     break;
             }
 
@@ -663,7 +667,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected IDENTIFIER or ALL.", 0x0002, tok));
                     break;
             }
 
@@ -998,7 +1002,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected ON or OFF.", 0x0002, tok));
                     break;
             }
 
@@ -1287,7 +1291,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected TO or IS.", 0x0002, tok));
                     break;
             }
 
@@ -1545,7 +1549,7 @@ namespace kOS.Safe.Compilation.KS
                                         }
                                         break;
                                     default:
-                                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected LOCAL or GLOBAL.", 0x0002, tok));
                                         break;
                                 }
                             }
@@ -1576,12 +1580,12 @@ namespace kOS.Safe.Compilation.KS
                                     }
                                     break;
                                 default:
-                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected LOCAL or GLOBAL.", 0x0002, tok));
                                     break;
                             }
                             break;
                         default:
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected DECLARE, LOCAL, or GLOBAL.", 0x0002, tok));
                             break;
                     }
 
@@ -1602,12 +1606,12 @@ namespace kOS.Safe.Compilation.KS
                             Parsedeclare_lock_clause(node);
                             break;
                         default:
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected PARAMETER, FUNCTION, IDENTIFIER, or LOCK.", 0x0002, tok));
                             break;
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected PARAMETER, FUNCTION, LOCK, DECLARE, LOCAL, or GLOBAL.", 0x0002, tok));
                     break;
             }
 
@@ -1633,7 +1637,7 @@ namespace kOS.Safe.Compilation.KS
             }
 
             
-            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING);
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.CALLBACK);
             if (tok.Type == TokenType.PLUSMINUS
                 || tok.Type == TokenType.NOT
                 || tok.Type == TokenType.DEFINED
@@ -1643,7 +1647,8 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.IDENTIFIER
                 || tok.Type == TokenType.FILEIDENT
                 || tok.Type == TokenType.BRACKETOPEN
-                || tok.Type == TokenType.STRING)
+                || tok.Type == TokenType.STRING
+                || tok.Type == TokenType.CALLBACK)
             {
                 Parseexpr(node);
             }
@@ -1751,7 +1756,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected FROM or TO.", 0x0002, tok));
                     break;
             }
 
@@ -1818,7 +1823,7 @@ namespace kOS.Safe.Compilation.KS
                         }
                         break;
                     default:
-                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected VOLUME or FILE.", 0x0002, tok));
                         break;
                 }
             }
@@ -2334,7 +2339,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected IDENTIFIER or ALL.", 0x0002, tok));
                     break;
             }
 
@@ -2563,7 +2568,7 @@ namespace kOS.Safe.Compilation.KS
                         }
                         break;
                     default:
-                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected MULT or DIV.", 0x0002, tok));
                         break;
                 }
 
@@ -2582,54 +2587,106 @@ namespace kOS.Safe.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.unary_expr), "unary_expr");
             parent.Nodes.Add(node);
 
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.CALLBACK);
+            switch (tok.Type)
+            {
+                case TokenType.PLUSMINUS:
+                case TokenType.NOT:
+                case TokenType.DEFINED:
+                case TokenType.INTEGER:
+                case TokenType.DOUBLE:
+                case TokenType.TRUEFALSE:
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                case TokenType.BRACKETOPEN:
+                case TokenType.STRING:
+
+                    
+                    tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED);
+                    if (tok.Type == TokenType.PLUSMINUS
+                        || tok.Type == TokenType.NOT
+                        || tok.Type == TokenType.DEFINED)
+                    {
+                        tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED);
+                        switch (tok.Type)
+                        {
+                            case TokenType.PLUSMINUS:
+                                tok = scanner.Scan(TokenType.PLUSMINUS);
+                                n = node.CreateNode(tok, tok.ToString() );
+                                node.Token.UpdateRange(tok);
+                                node.Nodes.Add(n);
+                                if (tok.Type != TokenType.PLUSMINUS) {
+                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
+                                    return;
+                                }
+                                break;
+                            case TokenType.NOT:
+                                tok = scanner.Scan(TokenType.NOT);
+                                n = node.CreateNode(tok, tok.ToString() );
+                                node.Token.UpdateRange(tok);
+                                node.Nodes.Add(n);
+                                if (tok.Type != TokenType.NOT) {
+                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOT.ToString(), 0x1001, tok));
+                                    return;
+                                }
+                                break;
+                            case TokenType.DEFINED:
+                                tok = scanner.Scan(TokenType.DEFINED);
+                                n = node.CreateNode(tok, tok.ToString() );
+                                node.Token.UpdateRange(tok);
+                                node.Nodes.Add(n);
+                                if (tok.Type != TokenType.DEFINED) {
+                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DEFINED.ToString(), 0x1001, tok));
+                                    return;
+                                }
+                                break;
+                            default:
+                                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected PLUSMINUS, NOT, or DEFINED.", 0x0002, tok));
+                                break;
+                        }
+                    }
+
+                    
+                    Parsefactor(node);
+                    break;
+                case TokenType.CALLBACK:
+                    Parsecallback_expr(node);
+                    break;
+                default:
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected PLUSMINUS, NOT, DEFINED, INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, BRACKETOPEN, STRING, or CALLBACK.", 0x0002, tok));
+                    break;
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        }
+
+        private void Parsecallback_expr(ParseNode parent)
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.callback_expr), "callback_expr");
+            parent.Nodes.Add(node);
+
 
             
-            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED);
-            if (tok.Type == TokenType.PLUSMINUS
-                || tok.Type == TokenType.NOT
-                || tok.Type == TokenType.DEFINED)
-            {
-                tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED);
-                switch (tok.Type)
-                {
-                    case TokenType.PLUSMINUS:
-                        tok = scanner.Scan(TokenType.PLUSMINUS);
-                        n = node.CreateNode(tok, tok.ToString() );
-                        node.Token.UpdateRange(tok);
-                        node.Nodes.Add(n);
-                        if (tok.Type != TokenType.PLUSMINUS) {
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
-                            return;
-                        }
-                        break;
-                    case TokenType.NOT:
-                        tok = scanner.Scan(TokenType.NOT);
-                        n = node.CreateNode(tok, tok.ToString() );
-                        node.Token.UpdateRange(tok);
-                        node.Nodes.Add(n);
-                        if (tok.Type != TokenType.NOT) {
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOT.ToString(), 0x1001, tok));
-                            return;
-                        }
-                        break;
-                    case TokenType.DEFINED:
-                        tok = scanner.Scan(TokenType.DEFINED);
-                        n = node.CreateNode(tok, tok.ToString() );
-                        node.Token.UpdateRange(tok);
-                        node.Nodes.Add(n);
-                        if (tok.Type != TokenType.DEFINED) {
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DEFINED.ToString(), 0x1001, tok));
-                            return;
-                        }
-                        break;
-                    default:
-                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
-                        break;
-                }
+            tok = scanner.Scan(TokenType.CALLBACK);
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.CALLBACK) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.CALLBACK.ToString(), 0x1001, tok));
+                return;
             }
 
             
-            Parsefactor(node);
+            tok = scanner.Scan(TokenType.IDENTIFIER);
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.IDENTIFIER) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+                return;
+            }
 
             parent.Token.UpdateRange(node.Token);
         }
@@ -2756,7 +2813,7 @@ namespace kOS.Safe.Compilation.KS
                     Parsearray_trailer(node);
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected BRACKETOPEN, ARRAYINDEX, or SQUAREOPEN.", 0x0002, tok));
                     break;
             }
 
@@ -2782,7 +2839,7 @@ namespace kOS.Safe.Compilation.KS
             }
 
             
-            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING);
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.CALLBACK);
             if (tok.Type == TokenType.PLUSMINUS
                 || tok.Type == TokenType.NOT
                 || tok.Type == TokenType.DEFINED
@@ -2792,7 +2849,8 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.IDENTIFIER
                 || tok.Type == TokenType.FILEIDENT
                 || tok.Type == TokenType.BRACKETOPEN
-                || tok.Type == TokenType.STRING)
+                || tok.Type == TokenType.STRING
+                || tok.Type == TokenType.CALLBACK)
             {
                 Parsearglist(node);
             }
@@ -2857,7 +2915,7 @@ namespace kOS.Safe.Compilation.KS
                             }
                             break;
                         default:
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected IDENTIFIER or INTEGER.", 0x0002, tok));
                             break;
                     }
                     break;
@@ -2887,7 +2945,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected ARRAYINDEX or SQUAREOPEN.", 0x0002, tok));
                     break;
             }
 
@@ -2973,7 +3031,7 @@ namespace kOS.Safe.Compilation.KS
                             }
                             break;
                         default:
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, or BRACKETOPEN.", 0x0002, tok));
                             break;
                     }
                     break;
@@ -2988,7 +3046,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, BRACKETOPEN, or STRING.", 0x0002, tok));
                     break;
             }
 
@@ -3080,7 +3138,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected INTEGER or DOUBLE.", 0x0002, tok));
                     break;
             }
 

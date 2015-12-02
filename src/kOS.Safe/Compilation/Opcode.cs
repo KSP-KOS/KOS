@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+
 namespace kOS.Safe.Compilation
 {
     /// A very short numerical ID for the opcode. <br/>
@@ -82,6 +83,7 @@ namespace kOS.Safe.Compilation
         BRANCHTRUE     = 0x5e,
         EXISTS         = 0x5f,
         ARGBOTTOM      = 0x60,
+        PUSHCALLBACK   = 0x61,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -1282,13 +1284,17 @@ namespace kOS.Safe.Compilation
             object functionPointer;
             object delegateReturn = null;
 
-            if (Direct)
+            if (Direct && !(Destination is IUserDelegate))
             {
                 functionPointer = cpu.GetValue(Destination);
                 if (functionPointer == null)
                     throw new KOSException("Attempt to call function failed - Value of function pointer for " + Destination + " is null.");
             }
-            else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
+            else if (Destination is IUserDelegate)
+            {
+                SafeHouse.Logger.Log("Destination is IUserDelegate");
+                functionPointer = Destination;
+            } else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
             {
                 bool foundBottom = false;
                 int digDepth;
@@ -1344,7 +1350,8 @@ namespace kOS.Safe.Compilation
 
             if (functionPointer is int)
             {
-                ReverseStackArgs(cpu);
+                SafeHouse.Logger.Log("functionPointer is int");
+                cpu.ReverseStackArgs();
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
@@ -1402,18 +1409,60 @@ namespace kOS.Safe.Compilation
         {
             MethodInfo methInfo = dlg.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
-            var args = new List<object>();
-            
-            // Iterating over parameter signature backward because stack:
-            for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
+            var readArgs = new List<object>();
+
+            // Consume args
+            bool foundArgMarker = false;
+            while (cpu.GetStackSize() > 0 && !foundArgMarker)
             {
                 object arg = cpu.PopValue();
                 if (arg != null && arg.GetType() == ArgMarkerType)
-                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
-                Type argType = arg.GetType();
-                ParameterInfo paramInfo = paramArray[i];
-                Type paramType = paramInfo.ParameterType;
+                    foundArgMarker = true;
+                else
+                    readArgs.Add(arg);
+            }
                 
+            bool hasVarArgs = Attribute.IsDefined(paramArray.Last(), typeof(ParamArrayAttribute));
+
+            SafeHouse.Logger.Log("########## method attrs: " + methInfo.Attributes);
+            SafeHouse.Logger.Log("########## attrs: " + paramArray.Last().Attributes);
+            SafeHouse.Logger.Log("########## readArgs.Count: " + readArgs.Count);
+            SafeHouse.Logger.Log("########## paramArray.Length: " + paramArray.Length);
+            SafeHouse.Logger.Log("########## hasVarArgs: " + hasVarArgs);
+
+            // too many args?
+            if (!hasVarArgs && readArgs.Count > paramArray.Length)
+            {
+                throw new KOSArgumentMismatchException(paramArray.Length, readArgs.Count);
+            }
+
+            // too few args?
+            if (readArgs.Count < paramArray.Length - (hasVarArgs ? 1 : 0))
+            {
+                throw new KOSArgumentMismatchException(paramArray.Length, readArgs.Count);
+            }
+
+            var args = new List<object>();
+            var varArgs = new List<object>();
+
+            // Iterating over parameter signature backward because stack:
+            for (int i = 0; i < readArgs.Count; i++)
+            {
+                ParameterInfo paramInfo = (paramArray.Count() > i) ? paramArray[i] : paramArray.Last();
+
+                object arg = readArgs[i];
+                    
+                Type argType = arg.GetType();
+
+                Type paramType = paramInfo.ParameterType;
+
+                bool varArg = hasVarArgs && i >= paramArray.Length - 1;
+
+                if (varArg)
+                {
+                    paramType = paramType.GetElementType();
+                }
+
                 // Parameter type-safe checking:
                 bool inheritable = paramType.IsAssignableFrom(argType);
                 if (! inheritable)
@@ -1435,25 +1484,23 @@ namespace kOS.Safe.Compilation
                         throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (paramArray.Length - i), arg, methInfo.Name, paramType.Name, argType));
                     }
                 }
-                
-                args.Add(arg);
-            }
-            // Consume the bottom marker under the args, which had better be
-            // immediately under the args we just popped, or the count was off:
-            bool foundArgMarker = false;
-            int numExtraArgs = 0;
-            while (cpu.GetStackSize() > 0 && !foundArgMarker)
-            {
-                object marker = cpu.PopValue();
-                if (marker != null && marker.GetType() == ArgMarkerType)
-                    foundArgMarker = true;
-                else
-                    ++numExtraArgs;
-            }
-            if (numExtraArgs > 0)
-                throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
 
-            args.Reverse(); // Put back in normal order instead of stack order.
+                if (varArg)
+                {
+                    varArgs.Add(arg);
+                } else
+                {
+                    args.Add(arg);
+                }
+
+            }
+
+            if (hasVarArgs)
+            {
+                args.Add(varArgs.ToArray());
+            }
+
+            //args.Reverse(); // Put back in normal order instead of stack order.
             
             // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
             // there are no arguments to pass:
@@ -1483,36 +1530,6 @@ namespace kOS.Safe.Compilation
                     throw e.InnerException;
                 throw;
             }
-        }
-        
-        /// <summary>
-        /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
-        /// put them back again in reversed order so a function can read them in normal order.
-        /// </summary>
-        public void ReverseStackArgs(ICpu cpu)
-        {
-            List<object> args = new List<object>();
-            object arg = cpu.PopValue();
-            while (arg == null || arg.GetType() != ArgMarkerType)
-            {
-                args.Add(arg);
-
-                // It's important to dereference with PopValue, not using PopStack, because the function
-                // being called might not even be able to see the variable in scope anyway.
-                // In other words, if calling a function like so:
-                //     declare foo to 3.
-                //     myfunc(foo).
-                // The code inside myfunc needs to see that as being identical to just saying:
-                //     myfunc(3).
-                // It has to be unaware of the fact that the name of the argument was 'foo'.  It just needs to
-                // see the contents that were inside foo.
-                arg = cpu.PopValue();
-            }
-            // Push the arg marker back on again.
-            cpu.PushStack(new KOSArgMarkerType());
-            // Push the arguments back on again, which will invert their order:
-            foreach (object item in args)
-                cpu.PushStack(item);
         }
 
         public override string ToString()
@@ -1954,6 +1971,27 @@ namespace kOS.Safe.Compilation
             return Name + " " + NumLevels;
         }
   
+    }
+
+    public class OpcodePushCallback : Opcode
+    {
+        protected override string Name { get { return "pushusercallback"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHCALLBACK; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            string ident = cpu.PopStack() as string;
+            IUserDelegate userDelegate = cpu.GetValue("$" + ident + "*") as IUserDelegate;
+
+            if (userDelegate == null)
+            {
+                throw new Exception("Function identifier expected");
+            }
+
+            UserDelegate del = new UserDelegate(cpu, userDelegate.ProgContext, userDelegate.EntryPoint, true);
+
+            cpu.PushStack(new CallbackValue(del, ident));
+        }
     }
     
     public class OpcodePushDelegate : Opcode

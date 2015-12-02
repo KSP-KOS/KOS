@@ -135,7 +135,6 @@
     <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\KOSArgMarkerType.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
-    <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
@@ -182,6 +181,10 @@
     <Compile Include="Encapsulation\QueueValue.cs" />
     <Compile Include="Encapsulation\StackValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
+    <Compile Include="Execution\UserDelegate.cs" />
+    <Compile Include="Encapsulation\CallbackValue.cs" />
+    <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\VarArgsVoidSuffix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

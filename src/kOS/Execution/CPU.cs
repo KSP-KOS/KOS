@@ -1071,13 +1071,13 @@ namespace kOS.Execution
 
         private bool ExecuteInstruction(IProgramContext context)
         {
-            const bool DEBUG_EACH_OPCODE = false;
+            const bool DEBUG_EACH_OPCODE = true;
 
             Opcode opcode = context.Program[context.InstructionPointer];
 
             if (DEBUG_EACH_OPCODE)
             {
-                executeLog.Append(String.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n",
+                SafeHouse.Logger.Log(String.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n",
                                                 context.InstructionPointer, context.Program.Count, opcode.Label, opcode.ToString()));
             }
             try
@@ -1156,6 +1156,36 @@ namespace kOS.Execution
         public List<string> GetCodeFragment(int contextLines)
         {
             return currentContext.GetCodeFragment(contextLines);
+        }
+
+        /// <summary>
+        /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
+        /// put them back again in reversed order so a function can read them in normal order.
+        /// </summary>
+        public void ReverseStackArgs()
+        {
+            List<object> args = new List<object>();
+            object arg = PopValue();
+            while (arg == null || arg.GetType() != OpcodeCall.ArgMarkerType)
+            {
+                args.Add(arg);
+
+                // It's important to dereference with PopValue, not using PopStack, because the function
+                // being called might not even be able to see the variable in scope anyway.
+                // In other words, if calling a function like so:
+                //     declare foo to 3.
+                //     myfunc(foo).
+                // The code inside myfunc needs to see that as being identical to just saying:
+                //     myfunc(3).
+                // It has to be unaware of the fact that the name of the argument was 'foo'.  It just needs to
+                // see the contents that were inside foo.
+                arg = PopValue();
+            }
+            // Push the arg marker back on again.
+            PushStack(new KOSArgMarkerType());
+            // Push the arguments back on again, which will invert their order:
+            foreach (object item in args)
+                PushStack(item);
         }
 
         public void PrintStatistics()

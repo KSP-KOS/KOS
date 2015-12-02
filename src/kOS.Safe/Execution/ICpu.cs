@@ -18,6 +18,7 @@ namespace kOS.Safe.Execution
         object PeekValue(int digDepth, bool barewordOkay = false);        
         object PeekRaw(int digDepth, out bool checkOkay);
         int GetStackSize();
+        void ReverseStackArgs();
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);
         void SetNewLocal(string identifier, object value);

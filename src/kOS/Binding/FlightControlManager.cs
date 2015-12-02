@@ -1,5 +1,4 @@
-﻿using kOS.AddOns.RemoteTech;
-using kOS.Safe.Binding;
+﻿using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Math = System.Math;
+using kOS.AddOns.RemoteTech;
 
 namespace kOS.Binding
 {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using kOS.Safe.Compilation;
 
 namespace kOS.Safe.Execution
 {
@@ -32,12 +33,28 @@ namespace kOS.Safe.Execution
             if (useClosure)
                 CaptureClosure();
             else
-                Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everwywhere.
+                Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everywhere.
         }
 
         private void CaptureClosure()
         {
             Closure = cpu.GetCurrentClosure();
+        }
+
+        public void Call(params object[] args)
+        {
+            OpcodePush opcodePush = new OpcodePush(new KOSArgMarkerType());
+            opcodePush.Execute(cpu);
+
+            foreach (object arg in args)
+            {
+                opcodePush = new OpcodePush(arg);
+                opcodePush.Execute(cpu);
+            }
+
+            OpcodeCall opcodeCall = new OpcodeCall(this);
+            opcodeCall.Execute(cpu);
+
         }
         
         public override string ToString()

@@ -198,5 +198,10 @@ namespace kOS.Safe.Test.Opcode
         {
             throw new NotImplementedException();
         }
+
+        public void ReverseStackArgs ()
+        {
+            throw new NotImplementedException ();
+        }
     }
 }

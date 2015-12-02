@@ -1264,6 +1264,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.directive:
                     VisitDirective(node);
                     break;
+                case TokenType.callback_expr:
+                    VisitCallback(node);
+                    break;
             }
         }
         
@@ -1417,6 +1420,14 @@ namespace kOS.Safe.Compilation.KS
                                           // the regex chain of "zero or more" righthand terms.. had zero such terms.
                                           // So just delve in deeper to compile whatever part of speech it is further down.
             }
+        }
+
+        private void VisitCallback(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            if (node.Nodes.Count <= 0) return;
+            AddOpcode(new OpcodePush(node.Nodes[1].Token.Text));
+            AddOpcode(new OpcodePushCallback());
         }
         
         private void VisitUnaryExpression(ParseNode node)
