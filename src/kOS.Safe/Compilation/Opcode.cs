@@ -620,13 +620,14 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            object popValue = cpu.PopValue();
+            object popValue = Structure.FromPrimitive(cpu.PopValue());
 
             var specialValue = popValue as ISuffixed;
             
             if (specialValue == null)
             {
                 var s = popValue as string;
+                // TODO: delete this conversion as it should now be obsolete
                 if (s != null)
                 {
                     specialValue = new StringValue(s);
@@ -1342,11 +1343,11 @@ namespace kOS.Safe.Compilation
             if (userDelegate != null)
                 functionPointer = userDelegate.EntryPoint;
 
-            if (functionPointer is int)
+            if (functionPointer is int || functionPointer is ScalarValue)
             {
                 ReverseStackArgs(cpu);
                 int currentPointer = cpu.InstructionPointer;
-                DeltaInstructionPointer = (int)functionPointer - currentPointer;
+                DeltaInstructionPointer = Convert.ToInt32(functionPointer) - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
                 cpu.PushAboveStack(contextRecord);
                 if (userDelegate != null)
