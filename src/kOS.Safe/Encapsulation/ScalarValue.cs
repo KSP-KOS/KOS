@@ -162,7 +162,7 @@ namespace kOS.Safe.Encapsulation
             return new ScalarValue(val1.GetDoubleValue() / val2.GetDoubleValue());
         }
 
-        public static ScalarValue Modulous(ScalarValue val1, ScalarValue val2)
+        public static ScalarValue Modulus(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
@@ -267,7 +267,7 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue operator %(ScalarValue val1, ScalarValue val2)
         {
-            return Modulous(val1, val2);
+            return Modulus(val1, val2);
         }
 
         public static ScalarValue operator ^(ScalarValue val1, ScalarValue val2)
