@@ -52,7 +52,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
             AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.DebugEachOpcode , new ConfigKey("DebugEachOpcode", "DEBUGEACHOPCODE", "Unholy debug spam used by the kOS developers", true, false, true, typeof(bool)));
+            AddConfigKey(PropId.DebugEachOpcode , new ConfigKey("DebugEachOpcode", "DEBUGEACHOPCODE", "Unholy debug spam used by the kOS developers", false, false, true, typeof(bool)));
             if(ToolbarManager.ToolbarAvailable)
                 AddConfigKey(PropId.UseBlizzyToolbarOnly, new ConfigKey("UseBlizzyToolbarOnly", "BLIZZY", "Use Blizzy toolbar only. Takes effect on new scene.", false, false, true, typeof(bool)));
         }
