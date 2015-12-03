@@ -65,6 +65,10 @@ Configuration of kOS
           - boolean
           - True
           - Force the telnet server to use loopback (127.0.0.1) address
+        * - :attr:`DEBUGEACHOPCODE`
+          - boolean
+          - false
+          - Unholy debug spam used by the kOS developers
 
 .. attribute:: Config:IPU
 
@@ -208,4 +212,18 @@ Configuration of kOS
 
     To make the change take effect you may have to
     stop, then restart the telnet server, as described above.
+
+.. attribute:: Config:DEBUGEACHOPCODE
+
+    :access: Get/Set
+    :type: boolean
+
+    Configures the ``DebugEachOpcode`` setting.
+
+    If true, each opcode that is executed by the CPU will be accompanied by 
+    an entry in the KSP log. This is a debugging tool for those who are very 
+    familiar with the inner workings of kOS and should rarely be used outside
+    the kOS dev team
+
+    This change takes effect immediately 
 
