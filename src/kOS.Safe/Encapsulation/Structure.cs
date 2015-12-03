@@ -19,6 +19,7 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
+            AddSuffix("TYPE", new Suffixes.Suffix<string>(() => GetType().ToString()));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -156,6 +157,46 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return "Structure ";
+        }
+
+        public static object FromPrimitive(object value)
+        {
+            Type t = value.GetType();
+            if (t.IsPrimitive)
+            {
+                switch (t.Name.ToLower())
+                {
+                    case ("int32"):
+                    case ("double"):
+                    case ("float"):
+                        return new ScalarValue(value);
+                    case ("boolean"):
+                        return new BooleanValue((bool)value);
+                    case ("string"):
+                        string str = (string)value;
+                        return new StringValue(str);
+                    default:
+                        break;
+                }
+            }
+            return value;
+        }
+
+        public static object ToPrimative(object value)
+        {
+            if (value is ScalarValue)
+            {
+                return ((ScalarValue)value).Value;
+            }
+            else if (value is BooleanValue)
+            {
+                return ((BooleanValue)value).Value;
+            }
+            else if (value is StringValue)
+            {
+                return ((StringValue)value).ToString();
+            }
+            return value;
         }
     }
 }
