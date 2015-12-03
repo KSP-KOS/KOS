@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation
     /// necessary.
     /// 
     /// </summary>
-    public class StringValue : Structure, IIndexable
+    public class StringValue : Structure, IIndexable, IConvertible
     {
         private readonly string internalString;
 
@@ -186,6 +186,92 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return this;
+        }
+
+        TypeCode IConvertible.GetTypeCode()
+        {
+            return TypeCode.Object;
+        }
+
+        bool IConvertible.ToBoolean(IFormatProvider provider)
+        {
+            if (string.IsNullOrEmpty(internalString)) return false;
+            return true;
+        }
+
+        byte IConvertible.ToByte(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(byte));
+        }
+
+        char IConvertible.ToChar(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(char));
+        }
+
+        DateTime IConvertible.ToDateTime(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(DateTime));
+        }
+
+        decimal IConvertible.ToDecimal(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(Decimal));
+        }
+
+        double IConvertible.ToDouble(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(Double));
+        }
+
+        short IConvertible.ToInt16(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(Int16));
+        }
+
+        int IConvertible.ToInt32(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(Int32));
+        }
+
+        long IConvertible.ToInt64(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(Int64));
+        }
+
+        sbyte IConvertible.ToSByte(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(SByte));
+        }
+
+        float IConvertible.ToSingle(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(Single));
+        }
+
+        string IConvertible.ToString(IFormatProvider provider)
+        {
+            return internalString;
+        }
+
+        object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+        {
+            return Convert.ChangeType(internalString, conversionType);
+        }
+
+        ushort IConvertible.ToUInt16(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(UInt16));
+        }
+
+        uint IConvertible.ToUInt32(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(UInt32));
+        }
+
+        ulong IConvertible.ToUInt64(IFormatProvider provider)
+        {
+            throw new KOSCastException(typeof(StringValue), typeof(UInt64));
         }
     }
 }
