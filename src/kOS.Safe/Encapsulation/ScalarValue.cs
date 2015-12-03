@@ -4,43 +4,34 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ScalarValue : Structure, IConvertible
+    abstract public class ScalarValue : Structure, IConvertible
     {
-        private int? internalInt;
-        private double? internalDouble;
+        protected object internalValue;
 
-        public bool IsInt { get { return internalInt.HasValue; } }
+        abstract public bool IsInt { get; }
 
-        public bool IsDouble { get { return internalDouble.HasValue; } }
+        abstract public bool IsDouble { get; }
 
         public bool IsValid
         {
             get
             {
-                if (internalInt.HasValue) return true;
-                else if (internalDouble.HasValue)
+                if (IsInt) return true;
+                if (IsDouble)
                 {
-                    if (double.IsInfinity(internalDouble.Value) || double.IsNaN(internalDouble.Value)) return false;
+                    double d = GetDoubleValue();
+                    if (double.IsInfinity(d) || double.IsNaN(d)) return false;
                     return true;
                 }
                 return false;
             }
         }
 
-        public object Value
-        {
-            get
-            {
-                if (IsInt) return internalInt.Value;
-                if (IsDouble) return internalDouble.Value;
-                throw new kOS.Safe.Exceptions.KOSException("Scalar value contains no double or int value");
-            }
-        }
+        public object Value { get { return internalValue; } }
 
-        public ScalarValue(object value)
-            : base()
+        protected ScalarValue()
         {
-            SetValue(value);
+            InitializeSuffixes();
         }
 
         public void InitializeSuffixes()
@@ -50,7 +41,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("ISVALID", new Suffix<bool>(() => IsValid));
         }
 
-        protected void SetValue(object value)
+        public static ScalarValue Create(object value)
         {
             if (value is float)
                 value = Convert.ToDouble(value);
@@ -59,26 +50,23 @@ namespace kOS.Safe.Encapsulation
                 bool inBounds = Int32.MinValue < (double)value && (double)value < Int32.MaxValue;
                 if (inBounds && !double.IsNaN((double)value))
                 {
-                    // I still don't quite get what this part is doing... I'm thinking of rewriting it using modulous instead
+                    // Convert the double to an int, and check and see if they are still equal.
+                    // if so, treat the double as if it was an int.
                     int intPart = Convert.ToInt32(value);
                     if ((double)value == intPart)
                     {
-                        internalInt = intPart;
-                        internalDouble = null;
-                        return;
+                        return new ScalarIntValue(intPart);
                     }
                 }
-                internalDouble = (double)value;
-                internalInt = null;
+                return new ScalarDoubleValue((double)value);
             }
             else if (value is int)
             {
-                internalInt = (int)value;
-                internalDouble = null;
+                return new ScalarIntValue((int)value);
             }
             else if (value is ScalarValue)
             {
-                SetValue(((ScalarValue)value).Value);
+                return ScalarValue.Create(((ScalarValue)value).Value);
             }
             else
             {
@@ -88,21 +76,12 @@ namespace kOS.Safe.Encapsulation
 
         public int GetIntValue()
         {
-            if (internalInt.HasValue)
-            {
-                return internalInt.Value;
-            }
-            else
-            {
-                return Convert.ToInt32(internalDouble);
-            }
+            return Convert.ToInt32(Value);
         }
 
         public double GetDoubleValue()
         {
-            if (IsDouble) return internalDouble.Value;
-            if (IsInt) return Convert.ToDouble(internalInt.Value);
-            throw new kOS.Safe.Exceptions.KOSException("Scalar value contains no double or int value");
+            return Convert.ToDouble(Value);
         }
 
         public override string ToString()
@@ -126,58 +105,63 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         public static ScalarValue Add(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(val1.GetIntValue() + val2.GetIntValue());
+                return ScalarValue.Create(val1.GetIntValue() + val2.GetIntValue());
             }
-            return new ScalarValue(val1.GetDoubleValue() + val2.GetDoubleValue());
+            return ScalarValue.Create(val1.GetDoubleValue() + val2.GetDoubleValue());
         }
 
         public static ScalarValue Subtract(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(val1.GetIntValue() - val2.GetIntValue());
+                return ScalarValue.Create(val1.GetIntValue() - val2.GetIntValue());
             }
-            return new ScalarValue(val1.GetDoubleValue() - val2.GetDoubleValue());
+            return ScalarValue.Create(val1.GetDoubleValue() - val2.GetDoubleValue());
         }
 
         public static ScalarValue Multiply(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(val1.GetIntValue() * val2.GetIntValue());
+                return ScalarValue.Create(val1.GetIntValue() * val2.GetIntValue());
             }
-            return new ScalarValue(val1.GetDoubleValue() * val2.GetDoubleValue());
+            return ScalarValue.Create(val1.GetDoubleValue() * val2.GetDoubleValue());
         }
 
         public static ScalarValue Divide(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(val1.GetIntValue() / val2.GetIntValue());
+                return new ScalarIntValue(val1.GetIntValue() / val2.GetIntValue());
             }
-            return new ScalarValue(val1.GetDoubleValue() / val2.GetDoubleValue());
+            return ScalarValue.Create(val1.GetDoubleValue() / val2.GetDoubleValue());
         }
 
         public static ScalarValue Modulus(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(val1.GetIntValue() % val2.GetIntValue());
+                return ScalarValue.Create(val1.GetIntValue() % val2.GetIntValue());
             }
-            return new ScalarValue(val1.GetDoubleValue() % val2.GetDoubleValue());
+            return ScalarValue.Create(val1.GetDoubleValue() % val2.GetDoubleValue());
         }
 
         public static ScalarValue Power(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(Math.Pow(val1.GetIntValue(), val2.GetIntValue()));
+                return ScalarValue.Create(Math.Pow(val1.GetIntValue(), val2.GetIntValue()));
             }
-            return new ScalarValue(Math.Pow(val1.GetDoubleValue(), val2.GetDoubleValue()));
+            return ScalarValue.Create(Math.Pow(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static bool GreaterThan(ScalarValue val1, ScalarValue val2)
@@ -202,27 +186,27 @@ namespace kOS.Safe.Encapsulation
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(Math.Max(val1.GetIntValue(), val2.GetIntValue()));
+                return ScalarValue.Create(Math.Max(val1.GetIntValue(), val2.GetIntValue()));
             }
-            return new ScalarValue(Math.Max(val1.GetDoubleValue(), val2.GetDoubleValue()));
+            return ScalarValue.Create(Math.Max(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static ScalarValue Min(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return new ScalarValue(Math.Min(val1.GetIntValue(), val2.GetIntValue()));
+                return new ScalarIntValue(Math.Min(val1.GetIntValue(), val2.GetIntValue()));
             }
-            return new ScalarValue(Math.Min(val1.GetDoubleValue(), val2.GetDoubleValue()));
+            return ScalarValue.Create(Math.Min(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static ScalarValue Abs(ScalarValue val)
         {
             if (val.IsInt)
             {
-                return new ScalarValue(Math.Abs(val.GetIntValue()));
+                return new ScalarIntValue(Math.Abs(val.GetIntValue()));
             }
-            return new ScalarValue(Math.Abs(val.GetDoubleValue()));
+            return ScalarValue.Create(Math.Abs(val.GetDoubleValue()));
         }
 
         public static ScalarValue operator +(ScalarValue val1, ScalarValue val2)
@@ -232,7 +216,7 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue operator ++(ScalarValue val)
         {
-            return new ScalarValue(Add(val, 1));
+            return Add(val, 1);
         }
 
         public static ScalarValue operator -(ScalarValue val1, ScalarValue val2)
@@ -242,7 +226,7 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue operator --(ScalarValue val)
         {
-            return new ScalarValue(Subtract(val, 1));
+            return Subtract(val, 1);
         }
 
         public static ScalarValue operator *(ScalarValue val1, ScalarValue val2)
@@ -252,12 +236,12 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue operator +(ScalarValue val)
         {
-            return new ScalarValue(val.Value);
+            return ScalarValue.Create(val.Value);
         }
 
         public static ScalarValue operator -(ScalarValue val)
         {
-            return new ScalarValue(Multiply(val, -1));
+            return Multiply(val, -1);
         }
 
         public static ScalarValue operator /(ScalarValue val1, ScalarValue val2)
@@ -327,12 +311,12 @@ namespace kOS.Safe.Encapsulation
 
         public static implicit operator ScalarValue(int val)
         {
-            return new ScalarValue(val);
+            return ScalarValue.Create(val);
         }
 
         public static implicit operator ScalarValue(double val)
         {
-            return new ScalarValue(val);
+            return ScalarValue.Create(val);
         }
 
         public static implicit operator int(ScalarValue val)
@@ -429,6 +413,40 @@ namespace kOS.Safe.Encapsulation
         ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
             return Convert.ToUInt64(GetIntValue());
+        }
+    }
+
+    public class ScalarIntValue : ScalarValue
+    {
+        public override bool IsDouble
+        {
+            get { return true; }
+        }
+        public override bool IsInt
+        {
+            get { return false; }
+        }
+
+        public ScalarIntValue(int value)
+        {
+            internalValue = value;
+        }
+    }
+
+    public class ScalarDoubleValue : ScalarValue
+    {
+        public override bool IsDouble
+        {
+            get { return true; }
+        }
+        public override bool IsInt
+        {
+            get { return false; }
+        }
+
+        public ScalarDoubleValue(double value)
+        {
+            internalValue = value;
         }
     }
 }
