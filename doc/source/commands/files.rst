@@ -311,10 +311,10 @@ Example::
 
 Serializes the given object to JSON format and saves it under the given filename on the current volume.
 
-**Important:** only certain types of objects can be serialized. If a type is serializable it is explicitly mentioned
-in that type's documentation, see :struct:`Lexicon` for an example. Other types are not serializable.
+**Important:** only certain types of objects can be serialized. If a type is serializable then that fact
+is explicitly mentioned in the type's documentation, see :struct:`Lexicon` for an example.
 
-Example::
+Usage example::
 
     SET L TO LEXICON().
     SET NESTED TO QUEUE().
@@ -329,7 +329,7 @@ Example::
 ``READFILE(FILENAME).``
 -----------------------
 
-Reads the contents of the given file and deserializes them. Example::
+Reads the contents of a file previously created using ``WRITEFILE`` and deserializes them. Example::
 
     SET L TO READFILE("output.json").
     PRINT L["key1"].
@@ -338,7 +338,7 @@ Reads the contents of the given file and deserializes them. Example::
 .. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------------------------
 **(experimental)**
 
 For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.
