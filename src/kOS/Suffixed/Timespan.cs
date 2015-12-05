@@ -7,10 +7,11 @@ namespace kOS.Suffixed
     public class TimeSpan : Structure
     {
         readonly double span;
-        private readonly bool kerbinTimeSetting;
         private const int DAYS_IN_YEAR = 365;
-        private const int HOURS_IN_KERBIN_DAY = 6;
-        private const int HOURS_IN_EARTH_DAY = 24;
+
+        public const int HOURS_IN_EARTH_DAY = 24;
+        public const int HOURS_IN_KERBIN_DAY = 6;
+        
         private const int MINUTE_IN_HOUR = 60;
         private const int SECONDS_IN_MINUTE = 60;
 
@@ -24,7 +25,6 @@ namespace kOS.Suffixed
         public TimeSpan(double unixStyleTime)
         {
             span = unixStyleTime;
-            kerbinTimeSetting = GameSettings.KERBIN_TIME;
             InitializeSuffixes();
         }
 
@@ -42,16 +42,16 @@ namespace kOS.Suffixed
 
         private int CalculateYear()
         {
-            if (kerbinTimeSetting)
+            if (GameSettings.KERBIN_TIME)
             {
                 return (int)Math.Floor(span / SECONDS_IN_KERBIN_YEAR) + 1;
             }
             return (int)Math.Floor(span / SECONDS_IN_EARTH_YEAR) + 1;
         }
 
-        private int SecondsPerDay { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_DAY : SECONDS_IN_EARTH_DAY; } }
-        private int SecondsPerHour { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_HOUR : SECONDS_IN_EARTH_HOUR; } }
-        private int SecongsPerYear { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_YEAR : SECONDS_IN_EARTH_YEAR; } }
+        private int SecondsPerDay { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_DAY : SECONDS_IN_EARTH_DAY; } }
+        private int SecondsPerHour { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_HOUR : SECONDS_IN_EARTH_HOUR; } }
+        private int SecongsPerYear { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_YEAR : SECONDS_IN_EARTH_YEAR; } }
 
         private int CalculateDay()
         {
