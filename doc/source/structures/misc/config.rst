@@ -220,10 +220,12 @@ Configuration of kOS
 
     Configures the ``DebugEachOpcode`` setting.
 
+    NOTE: This makes the game VERY slow, use with caution.
+
     If true, each opcode that is executed by the CPU will be accompanied by 
     an entry in the KSP log. This is a debugging tool for those who are very 
     familiar with the inner workings of kOS and should rarely be used outside
-    the kOS dev team
+    the kOS dev team.
 
-    This change takes effect immediately 
+    This change takes effect immediately.
 
