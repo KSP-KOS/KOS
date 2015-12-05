@@ -228,7 +228,7 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return SerializationMgr.Instance.Serialize(this, TerminalFormatter.Instance, false);
+            return new SafeSerializationMgr().ToString(this);
         }
 
         public IDictionary<object, object> Dump()

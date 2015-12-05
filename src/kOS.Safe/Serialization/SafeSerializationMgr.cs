@@ -3,34 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation;
+using System.Reflection;
 
 namespace kOS.Safe.Serialization
 {
-    public class SerializationMgr
+    public class SafeSerializationMgr
     {
         public static string TYPE_KEY = "$type";
 
-        private static readonly SerializationMgr instance = new SerializationMgr();
-
-        public static SerializationMgr Instance
-        {
-            get 
-            {
-                return instance; 
-            }
-        }
-
-        private SerializationMgr()
+        public SafeSerializationMgr()
         {
 
         }
 
-        private bool IsValue(object serialized)
+        public static bool IsValue(object serialized)
         {
             return serialized.GetType().IsPrimitive || serialized is string;
         }
 
-        private IDictionary<object, object> Dump(IDumper dumper, bool includeType = true)
+        public IDictionary<object, object> Dump(IDumper dumper, bool includeType = true)
         {
             var dumped = dumper.Dump();
 
@@ -63,7 +54,7 @@ namespace kOS.Safe.Serialization
             return formatter.Write(Dump(serialized, includeType));
         }
 
-        private object CreateFromDump(IDictionary<object, object> dump)
+        public IDumper CreateFromDump(IDictionary<object, object> dump)
         {
             Dictionary<object, object> data = new Dictionary<object, object>();
             foreach (KeyValuePair<object, object> entry in dump)
@@ -89,6 +80,11 @@ namespace kOS.Safe.Serialization
                 throw new KOSSerializationException("Type information missing");
             }
 
+            return CreateInstance(typeFullName, data);
+        }
+
+        public virtual IDumper CreateInstance(string typeFullName, IDictionary<object, object> data)
+        {
             var deserializedType = Type.GetType(typeFullName);
 
             if (deserializedType == null)
@@ -113,6 +109,11 @@ namespace kOS.Safe.Serialization
             }
 
             return serialized;
+        }
+
+        public string ToString(IDumper dumper)
+        {
+            return Serialize(dumper, TerminalFormatter.Instance, false);
         }
     }
 }

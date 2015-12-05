@@ -97,12 +97,12 @@ namespace kOS.Safe.Test.Serialization
 
         private string Serialize(IDumper o)
         {
-            return SerializationMgr.Instance.Serialize(o, JSONFormatter.Instance);
+            return new SafeSerializationMgr().Serialize(o, JSONFormatter.Instance);
         }
 
         private object Deserialize(string s)
         {
-            return SerializationMgr.Instance.Deserialize(s, JSONFormatter.Instance);
+            return new SafeSerializationMgr().Deserialize(s, JSONFormatter.Instance);
         }
     }
 }

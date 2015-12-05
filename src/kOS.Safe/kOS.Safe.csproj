@@ -184,11 +184,11 @@
     <Compile Include="Encapsulation\EnumerableValue.cs" />
     <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />
-    <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Serialization\TerminalFormatter.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />
     <Compile Include="Serialization\DictionaryWithHeader.cs" />
+    <Compile Include="Serialization\SafeSerializationMgr.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

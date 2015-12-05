@@ -7,6 +7,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Persistence;
 using kOS.Safe.Serialization;
+using kOS.Serialization;
 
 namespace kOS.Function
 {
@@ -208,7 +209,7 @@ namespace kOS.Function
                 throw new KOSException("This type is not serializable");
             }
 
-            string serializedString = SerializationMgr.Instance.Serialize(serialized, JSONFormatter.Instance);
+            string serializedString = new SerializationMgr(shared).Serialize(serialized, JSONFormatter.Instance);
 
             ProgramFile programFile = new ProgramFile(fileName);
             programFile.StringContent = serializedString;
@@ -235,7 +236,7 @@ namespace kOS.Function
                 throw new KOSException("File does not exist: " + fileName);
             }
 
-            object read = SerializationMgr.Instance.Deserialize(programFile.StringContent, JSONFormatter.Instance);
+            object read = new SerializationMgr(shared).Deserialize(programFile.StringContent, JSONFormatter.Instance);
 
             ReturnValue = read;
         }

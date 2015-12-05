@@ -71,6 +71,10 @@ Structure
 	  - scalar (altitude above sea level)
           - Position of a point above (or below) the surface point, by giving the altitude number.
 
+.. note::
+
+    This type is serializable.
+
 .. attribute:: GeoCoordinates:LAT
 
     The latitude of this position on the surface.

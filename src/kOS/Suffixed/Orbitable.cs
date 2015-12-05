@@ -13,9 +13,13 @@ namespace kOS.Suffixed
     /// </summary>
     abstract public class Orbitable : Structure
     {
-        protected Orbitable(SharedObjects shareObj)
+        protected Orbitable(SharedObjects shareObj) : this()
         {
             Shared = shareObj;
+        }
+
+        protected Orbitable()
+        {
             InitializeSuffixes();
         }
 
@@ -27,7 +31,7 @@ namespace kOS.Suffixed
         /// <summary>
         ///   The shared context for the CPU running the code.
         /// </summary>
-        public SharedObjects Shared{get; private set;}
+        public SharedObjects Shared{get; protected set;}
         
         /// <summary>
         ///   Subclasses must override this method to return the position of this object right now.

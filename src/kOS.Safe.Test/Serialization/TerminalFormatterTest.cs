@@ -34,7 +34,7 @@ namespace kOS.Safe.Test.Serialization
 
         private string Serialize(IDumper o)
         {
-            return SerializationMgr.Instance.Serialize(o, TerminalFormatter.Instance, false);
+            return new SafeSerializationMgr().Serialize(o, TerminalFormatter.Instance, false);
         }
     }
 }
