@@ -10,10 +10,10 @@ namespace kOS.Suffixed
     {
         public static string DUMP_INCLINATION = "inclination";
         public static string DUMP_ECCENTRICITY = "eccentricity";
-        public static string DUMP_SEMI_MAJOR_AXIS = "semi_major_axis";
-        public static string DUMP_LONGITUDE_OF_ASCENDING_NODE = "longitude_of_ascending_node";
-        public static string DUMP_ARGUMENT_OF_PERIAPSIS = "argument_of_periapsis";
-        public static string DUMP_MEAN_ANOMALY_AT_EPOCH = "mean_anomaly_at_epoch";
+        public static string DUMP_SEMI_MAJOR_AXIS = "semiMajorAxis";
+        public static string DUMP_LONGITUDE_OF_ASCENDING_NODE = "longitudeOfAscendingNode";
+        public static string DUMP_ARGUMENT_OF_PERIAPSIS = "argumentOfPeriapsis";
+        public static string DUMP_MEAN_ANOMALY_AT_EPOCH = "meanAnomalyAtEpoch";
         public static string DUMP_EPOCH = "epoch";
         public static string DUMP_BODY = "body";
 
