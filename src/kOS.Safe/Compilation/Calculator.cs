@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Collections;
+using System.Reflection;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 
@@ -52,67 +55,67 @@ namespace kOS.Safe.Compilation
     {
         public override object Add(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 + (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) + ScalarValue.Create(argument2);
         }
 
         public override object Subtract(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 - (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) - ScalarValue.Create(argument2);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 * (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) * ScalarValue.Create(argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 / (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) / ScalarValue.Create(argument2);
         }
 
         public override object Power(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 ^ (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) ^ ScalarValue.Create(argument2);
         }
 
         public override object GreaterThan(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 > (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) > ScalarValue.Create(argument2);
         }
 
         public override object LessThan(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 < (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) < ScalarValue.Create(argument2);
         }
 
         public override object GreaterThanEqual(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 >= (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) >= ScalarValue.Create(argument2);
         }
 
         public override object LessThanEqual(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 <= (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) <= ScalarValue.Create(argument2);
         }
 
         public override object NotEqual(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 != (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) != ScalarValue.Create(argument2);
         }
 
         public override object Equal(object argument1, object argument2)
         {
-            return (ScalarValue)argument1 == (ScalarValue)argument2;
+            return ScalarValue.Create(argument1) == ScalarValue.Create(argument2);
         }
 
         public override object Min(object argument1, object argument2)
         {
-            return ScalarValue.Min((ScalarValue)argument1, (ScalarValue)argument2);
+            return ScalarValue.Min(ScalarValue.Create(argument1), ScalarValue.Create(argument2));
         }
 
         public override object Max(object argument1, object argument2)
         {
-            return ScalarValue.Max((ScalarValue)argument1, (ScalarValue)argument2);
+            return ScalarValue.Max(ScalarValue.Create(argument1), ScalarValue.Create(argument2));
         }
     }
 
@@ -180,13 +183,11 @@ namespace kOS.Safe.Compilation
 
         public override object NotEqual(object argument1, object argument2)
         {
-            ThrowIfNotStrings(argument1, argument2);
             return argument1.ToString().ToLower() != argument2.ToString().ToLower();
         }
         
         public override object Equal(object argument1, object argument2)
         {
-            ThrowIfNotStrings(argument1, argument2);
             return argument1.ToString().ToLower() == argument2.ToString().ToLower();
         }
 
@@ -277,6 +278,7 @@ namespace kOS.Safe.Compilation
 
     public class CalculatorStructure : Calculator
     {
+        BindingFlags flags = BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public;
         private object Calculate(string op, object argument1, object argument2)
         {
             if (argument1 is IOperable) return ((IOperable)argument1).TryOperation(op, argument2, false);
@@ -285,56 +287,189 @@ namespace kOS.Safe.Compilation
 
         public override object Add(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_Addition", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_Addition", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("+", argument1, argument2);
         }
 
         public override object Subtract(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_Subtraction", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_Subtraction", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("-", argument1, argument2);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_Multiply", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            method1 = type1.GetMethod("op_Multiply", flags, null, new Type[] { type2, type1 }, null);
+            MethodInfo method2 = type2.GetMethod("op_Multiply", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("*", argument1, argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_Division", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_Division", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("/", argument1, argument2);
         }
 
         public override object Power(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_ExclusiveOr", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_ExclusiveOr", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return null;
         }
 
         public override object GreaterThan(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_GreaterThan", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_GreaterThan", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate(">", argument1, argument2);
         }
 
         public override object LessThan(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_LessThan", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_LessThan", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("<", argument1, argument2);
         }
 
         public override object GreaterThanEqual(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_GreaterThanOrEqual", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_GreaterThanOrEqual", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate(">=", argument1, argument2);
         }
 
         public override object LessThanEqual(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_LessThanOrEqual", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_LessThanOrEqual", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("<=", argument1, argument2);
         }
 
         public override object NotEqual(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_Inequality", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_Inequality", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("<>", argument1, argument2);
         }
 
         public override object Equal(object argument1, object argument2)
         {
+            Type type1 = argument1.GetType();
+            Type type2 = argument2.GetType();
+            MethodInfo method1 = type1.GetMethod("op_Equality", flags, null, new Type[] { type1, type2 }, null);
+            if (method1 != null)
+            {
+                return method1.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo method2 = type2.GetMethod("op_Equality", flags, null, new Type[] { type1, type2 }, null);
+            if (method2 != null)
+            {
+                return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
             return Calculate("==", argument1, argument2);
         }
 

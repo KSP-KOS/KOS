@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Execution;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Binding
 {
@@ -18,10 +19,7 @@ namespace kOS.Safe.Binding
                 {
                     if (currentValue == null)
                     {
-                        currentValue = Get();
-                        if (currentValue is float)
-                            // promote floats to doubles
-                            currentValue = Convert.ToDouble(currentValue);
+                        currentValue = Structure.FromPrimitive(Get());
                     }
                     return currentValue;
                 }
@@ -30,7 +28,7 @@ namespace kOS.Safe.Binding
             set
             {
                 if (Set == null) return;
-                Set(value);
+                Set(Structure.ToPrimative(value));
             }
         }
 

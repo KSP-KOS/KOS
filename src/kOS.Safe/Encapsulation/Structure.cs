@@ -161,20 +161,29 @@ namespace kOS.Safe.Encapsulation
 
         public static object FromPrimitive(object value)
         {
-            Type t = value.GetType();
-            if (t.IsPrimitive)
+            IConvertible convert = value as IConvertible;
+            if (convert != null)
             {
-                switch (t.Name.ToLower())
+                var code = convert.GetTypeCode();
+                switch (code)
                 {
-                    case ("int32"):
-                    case ("double"):
-                    case ("float"):
-                        return new ScalarValue(value);
-                    case ("boolean"):
-                        return new BooleanValue((bool)value);
-                    case ("string"):
-                        string str = (string)value;
-                        return new StringValue(str);
+                    case TypeCode.Boolean:
+                        return new BooleanValue(Convert.ToBoolean(convert));
+                    case TypeCode.Decimal:
+                    case TypeCode.Double:
+                    case TypeCode.Single:
+                        return ScalarValue.Create(Convert.ToDouble(convert));
+                    case TypeCode.Byte:
+                    case TypeCode.Int16:
+                    case TypeCode.Int32:
+                    case TypeCode.Int64:
+                    case TypeCode.SByte:
+                    case TypeCode.UInt16:
+                    case TypeCode.UInt32:
+                    case TypeCode.UInt64:
+                        return ScalarValue.Create(Convert.ToInt32(convert));
+                    case TypeCode.String:
+                        return new StringValue(Convert.ToString(convert));
                     default:
                         break;
                 }

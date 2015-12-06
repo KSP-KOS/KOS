@@ -621,21 +621,17 @@ namespace kOS.Safe.Compilation
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
             object popValue = Structure.FromPrimitive(cpu.PopValue());
+            // We convert the popValue to a structure to ensure that we can get suffixes on values
+            // stored in primitive form as a fall back.  All variables should be stored as a structure
+            // now, other than system variables like pointers and labels.  This technically means that
+            // a change performed by calling a function on Scalar, Boolean, or String values might not
+            // save the value to the original objet.
 
             var specialValue = popValue as ISuffixed;
             
             if (specialValue == null)
             {
-                var s = popValue as string;
-                // TODO: delete this conversion as it should now be obsolete
-                if (s != null)
-                {
-                    specialValue = new StringValue(s);
-                }
-                else
-                {
-                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
-                }
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
             object value = specialValue.GetSuffix(suffixName);
@@ -648,6 +644,11 @@ namespace kOS.Safe.Compilation
                 cpu.PushStack(new KOSArgMarkerType());
                 value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
             }
+            // When we refactor to make every structure use the new suffix style, this conversion
+            // from primative can be removed.  Right now there are too many structures that override the
+            // GetSuffix method and return their own types, preventing us from converting directly in
+            // the GetSuffix method.
+            value = Structure.FromPrimitive(value);
 
             cpu.PushStack(value);
         }
@@ -683,23 +684,21 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             string suffixName = cpu.PopStack().ToString().ToUpper();
             object popValue = cpu.PopValue();
+            // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
+            // the referenced variable wouldn't be updated.  The primitives themselves are treated as value
+            // types instead of reference types.  This is also why I removed the string unboxing
+            // from the ISuffixed check below.
 
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
-                // Box strings if necessary to allow suffixes
-                var s = popValue as string;
-                if (s != null)
-                {
-                    specialValue = new StringValue(s);
-                }
-                else
-                {
-                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
-                }
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            if (!specialValue.SetSuffix(suffixName, value))
+            // TODO: When we refactor to make every structure use the new suffix style, this conversion
+            // to primative can be removed.  Right now there are too many structures that override the
+            // SetSuffix method while relying on unboxing the object rahter than using Convert
+            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimative(value)))
             {
                 throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }
@@ -1042,7 +1041,7 @@ namespace kOS.Safe.Compilation
                 // overloaded the unary negate operator '-'.
                 // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
                 Type t = value.GetType();
-                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
+                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
                 if (negateMe != null)
                     result = negateMe.Invoke(null, new[]{value}); // value is an arg, not the 'this'.  (Method is static.)
                 else
@@ -1144,16 +1143,15 @@ namespace kOS.Safe.Compilation
         {
             object value = cpu.PopValue();
             object result;
-
-            if (value is bool)
-                result = !((bool)value);
-            else if (value is int)
-                result = Convert.ToBoolean(value) ? 0 : 1;
-            else if ((value is double) || (value is float))
-                result = Convert.ToBoolean(value) ? 0.0 : 1.0;
-            else
-                throw new KOSUnaryOperandTypeException("boolean-not", value);
-
+            Type t = value.GetType();
+            try
+            {
+                result = !Convert.ToBoolean(value);
+            }
+            catch
+            {
+                throw new KOSCastException(value.GetType(), typeof(bool));
+            }
             cpu.PushStack(result);
         }
     }
@@ -1474,7 +1472,9 @@ namespace kOS.Safe.Compilation
                                  // it can unconditionally assume there will be exactly 1 value left behind on the stack
                                  // regardless of what function it was that was being called.
                 }
-                return dlg.DynamicInvoke(argArray);
+                // Convert a primitive return type to a structure.  This is done in the opcode, since
+                // the opcode calls the deligate directly and cannot be (quickly) intercepted
+                return Structure.FromPrimitive(dlg.DynamicInvoke(argArray));
             }
             catch (TargetInvocationException e)
             {

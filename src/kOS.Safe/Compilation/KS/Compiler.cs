@@ -1527,7 +1527,7 @@ namespace kOS.Safe.Compilation.KS
                 number = double.Parse(node.Token.Text);
             }
 
-            AddOpcode(new OpcodePush(new ScalarValue(number)));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitDouble(ParseNode node)
@@ -1535,7 +1535,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             object number = double.Parse(node.Token.Text);
 
-            AddOpcode(new OpcodePush(new ScalarValue(number)));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitTrueFalse(ParseNode node)
