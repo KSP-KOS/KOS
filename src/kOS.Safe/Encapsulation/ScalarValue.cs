@@ -93,14 +93,18 @@ namespace kOS.Safe.Encapsulation
 
         public override bool Equals(object obj)
         {
-            ScalarValue val = obj as ScalarValue;
-            if (val != null)
+            if (obj == null) return false;
+            if (obj is ScalarValue)
             {
-                if (this.IsInt && val.IsInt)
+                ScalarValue val = obj as ScalarValue;
+                if (val != null)
                 {
-                    return this.GetIntValue() == val.GetIntValue();
+                    if (this.IsInt && val.IsInt)
+                    {
+                        return this.GetIntValue() == val.GetIntValue();
+                    }
+                    return this.GetDoubleValue() == val.GetDoubleValue();
                 }
-                return this.GetDoubleValue() == val.GetDoubleValue();
             }
             return false;
         }
