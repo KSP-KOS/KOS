@@ -31,6 +31,7 @@ namespace kOS.Safe.Encapsulation
 
         public override bool Equals(object obj)
         {
+            if (obj == null) return false;
             BooleanValue val = obj as BooleanValue;
             if (val != null)
             {
