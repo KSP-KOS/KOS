@@ -195,7 +195,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("writefile")]
+    [Function("writejson")]
     public class FunctionWriteFile : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -221,7 +221,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("readfile")]
+    [Function("readjson")]
     public class FunctionReadFile : FunctionBase
     {
         public override void Execute(SharedObjects shared)

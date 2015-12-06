@@ -306,7 +306,7 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
-``WRITEFILE(OBJECT, FILENAME).``
+``WRITEJSON(OBJECT, FILENAME).``
 --------------------------------
 
 Serializes the given object to JSON format and saves it under the given filename on the current volume.
@@ -320,18 +320,18 @@ Usage example::
     SET NESTED TO QUEUE().
 
     L:ADD("key1", "value1").
-    L:ADD("key2", nested).
+    L:ADD("key2", NESTED).
 
     NESTED:ADD("nestedkey1", "nestedvalue1").
 
-    WRITEFILE(l, "output.json").
+    WRITEJSON(l, "output.json").
 
-``READFILE(FILENAME).``
+``READJSON(FILENAME).``
 -----------------------
 
-Reads the contents of a file previously created using ``WRITEFILE`` and deserializes them. Example::
+Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them. Example::
 
-    SET L TO READFILE("output.json").
+    SET L TO READJSON("output.json").
     PRINT L["key1"].
 
 
