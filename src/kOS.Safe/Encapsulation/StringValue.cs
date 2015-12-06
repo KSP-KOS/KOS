@@ -188,6 +188,16 @@ namespace kOS.Safe.Encapsulation
             return this;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            if (obj is StringValue || obj is string)
+            {
+                return String.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+
         TypeCode IConvertible.GetTypeCode()
         {
             return TypeCode.Object;
