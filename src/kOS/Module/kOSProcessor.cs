@@ -19,6 +19,7 @@ using KSPAPIExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Execution;
 using UnityEngine;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
@@ -309,7 +310,7 @@ namespace kOS.Module
                 }
 
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
-                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !Config.Instance.StartOnArchive)
+                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
                 {
                     var bootProgramFile = archive.GetByName(bootFile);
                     if (bootProgramFile != null)
@@ -323,7 +324,7 @@ namespace kOS.Module
             shared.VolumeMgr.Add(HardDisk);
 
             // process setting
-            if (!Config.Instance.StartOnArchive)
+            if (!SafeHouse.Config.StartOnArchive)
             {
                 shared.VolumeMgr.SwitchTo(HardDisk);
             }
@@ -571,10 +572,6 @@ namespace kOS.Module
 
                 InitObjects();
 
-                if (shared != null && shared.Cpu != null)
-                {
-                    ((CPU)shared.Cpu).OnLoad(node);
-                }
                 base.OnLoad(node);
             }
             catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
@@ -598,8 +595,7 @@ namespace kOS.Module
 
                 if (shared != null && shared.Cpu != null)
                 {
-                    ((CPU)shared.Cpu).OnSave(node);
-                    Config.Instance.SaveConfig();
+                    SafeHouse.Config.SaveConfig();
                 }
 
                 base.OnSave(node);
@@ -647,7 +643,7 @@ namespace kOS.Module
                 switch (newProcessorMode)
                 {
                     case ProcessorModes.READY:
-                        shared.VolumeMgr.SwitchTo(Config.Instance.StartOnArchive
+                        shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
                             ? shared.VolumeMgr.GetVolume(0)
                             : HardDisk);
                         if (shared.Cpu != null) shared.Cpu.Boot();
@@ -685,6 +681,19 @@ namespace kOS.Module
         {
             get { return bootFile; }
             set { bootFile = value; }
+        }
+
+        public bool CheckCanBoot()
+        {
+            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
+            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            else
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

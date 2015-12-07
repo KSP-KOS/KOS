@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using kOS.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
-using kOS.Safe.Execution;
 
-namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     public class ProgramContext : IProgramContext
     {
@@ -86,7 +85,7 @@ namespace kOS.Execution
             }
         }
 
-        public void DisableActiveFlyByWire(BindingManager manager)
+        public void DisableActiveFlyByWire(IBindingManager manager)
         {
             foreach (KeyValuePair<string, bool> kvp in flyByWire) {
                 if (kvp.Value) {
@@ -95,7 +94,7 @@ namespace kOS.Execution
             }
         }
 
-        public void EnableActiveFlyByWire(BindingManager manager)
+        public void EnableActiveFlyByWire(IBindingManager manager)
         {
             foreach (KeyValuePair<string, bool> kvp in flyByWire) {
                 manager.ToggleFlyByWire(kvp.Key, kvp.Value);

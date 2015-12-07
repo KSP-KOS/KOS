@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using kOS.Module;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
+using Math = System.Math;
 
 namespace kOS.Function
 {
@@ -276,7 +279,7 @@ namespace kOS.Function
             list.AddColumn("Name", 34, ColumnAlignment.Left);
             list.AddColumn("Value", 6, ColumnAlignment.Left);
 
-            foreach (ConfigKey key in Config.Instance.GetConfigKeys())
+            foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
                 list.AddItem(key.Alias, key.Name, key.Value);
             }

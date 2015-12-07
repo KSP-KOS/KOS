@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace kOS.Safe.Persistence
 {
-    public class VolumeManager
+    public class VolumeManager : IVolumeManager
     {
         private readonly Dictionary<int, Volume> volumes;
         private Volume currentVolume;
@@ -31,7 +31,7 @@ namespace kOS.Safe.Persistence
             
             foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
-                if (String.Equals(kvp.Value.Name, name, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(kvp.Value.Name, name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     volumeId = kvp.Key;
                     break;
