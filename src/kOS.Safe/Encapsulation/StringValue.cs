@@ -177,10 +177,61 @@ namespace kOS.Safe.Encapsulation
 
         }
 
+        public static bool operator ==(StringValue val1, StringValue val2)
+        {
+            if (val1 == null) return false;
+            return val1.Equals(val2);
+        }
+
+        public static bool operator !=(StringValue val1, StringValue val2)
+        {
+            if (val1 == null) return false;
+            return !val1.Equals(val2);
+        }
+
+        public static bool operator ==(StringValue val1, string val2)
+        {
+            if (val1 == null) return false;
+            return val1.Equals(val2);
+        }
+
+        public static bool operator ==(string val1, StringValue val2)
+        {
+            if (val2 == null) return false;
+            return val2.Equals(val1);
+        }
+
+        public static bool operator !=(StringValue val1, string val2)
+        {
+            if (val1 == null) return false;
+            return !val1.Equals(val2);
+        }
+
+        public static bool operator !=(string val1, StringValue val2)
+        {
+            if (val2 == null) return false;
+            return !val2.Equals(val1);
+        }
+
         // Implicitly converts to a string (i.e., unboxes itself automatically)
         public static implicit operator string(StringValue value)
         {
             return value.internalString;
+        }
+
+        public static StringValue operator +(StringValue val1, StringValue val2)
+        {
+            return new StringValue(val1.ToString() + val2.ToString());
+        }
+
+        public static StringValue operator +(StringValue val1, Structure val2)
+        {
+            return new StringValue(val1.ToString() + val2.ToString());
+        }
+
+        public static StringValue operator +(Structure val1, StringValue val2)
+        {
+            return new StringValue(val1.ToString() + val2.ToString());
         }
 
         public override string ToString()

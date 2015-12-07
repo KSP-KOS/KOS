@@ -159,6 +159,11 @@ namespace kOS.Safe.Encapsulation
             return "Structure ";
         }
 
+        public static StringValue operator +(Structure val1, Structure val2)
+        {
+            return new StringValue(val1.ToString() + val2.ToString());
+        }
+
         public static object FromPrimitive(object value)
         {
             IConvertible convert = value as IConvertible;

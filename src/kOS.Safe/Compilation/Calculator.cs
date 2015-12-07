@@ -285,8 +285,19 @@ namespace kOS.Safe.Compilation
             return ((IOperable)argument2).TryOperation(op, argument1, true);
         }
 
+        private static string GetMessage(string op, object argument1, object argument2)
+        {
+            string t1 = argument1 == null ? "<null>" : argument1.GetType().ToString();
+            string t2 = argument2 == null ? "<null>" : argument2.GetType().ToString();
+            return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", "multiply", t1, t2);
+        }
+
         public override object Add(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("Add", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_Addition", flags, null, new Type[] { type1, type2 }, null);
@@ -304,6 +315,10 @@ namespace kOS.Safe.Compilation
 
         public override object Subtract(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("Subtract", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_Subtraction", flags, null, new Type[] { type1, type2 }, null);
@@ -321,6 +336,10 @@ namespace kOS.Safe.Compilation
 
         public override object Multiply(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("Multiply", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_Multiply", flags, null, new Type[] { type1, type2 }, null);
@@ -361,6 +380,10 @@ namespace kOS.Safe.Compilation
 
         public override object Divide(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("Divide", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_Division", flags, null, new Type[] { type1, type2 }, null);
@@ -378,6 +401,10 @@ namespace kOS.Safe.Compilation
 
         public override object Power(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("Power", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_ExclusiveOr", flags, null, new Type[] { type1, type2 }, null);
@@ -395,6 +422,10 @@ namespace kOS.Safe.Compilation
 
         public override object GreaterThan(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("GreaterThan", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_GreaterThan", flags, null, new Type[] { type1, type2 }, null);
@@ -412,6 +443,10 @@ namespace kOS.Safe.Compilation
 
         public override object LessThan(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("LessThan", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_LessThan", flags, null, new Type[] { type1, type2 }, null);
@@ -429,6 +464,10 @@ namespace kOS.Safe.Compilation
 
         public override object GreaterThanEqual(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("GreaterThanEqual", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_GreaterThanOrEqual", flags, null, new Type[] { type1, type2 }, null);
@@ -446,6 +485,10 @@ namespace kOS.Safe.Compilation
 
         public override object LessThanEqual(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("LessThanEqual", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_LessThanOrEqual", flags, null, new Type[] { type1, type2 }, null);
@@ -463,6 +506,10 @@ namespace kOS.Safe.Compilation
 
         public override object NotEqual(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("NotEqual", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_Inequality", flags, null, new Type[] { type1, type2 }, null);
@@ -480,6 +527,10 @@ namespace kOS.Safe.Compilation
 
         public override object Equal(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("Equal", argument1, argument2));
+            }
             Type type1 = argument1.GetType();
             Type type2 = argument2.GetType();
             MethodInfo method1 = type1.GetMethod("op_Equality", flags, null, new Type[] { type1, type2 }, null);
@@ -497,11 +548,19 @@ namespace kOS.Safe.Compilation
 
         public override object Min(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("min", argument1, argument2));
+            }
             return Calculate("min", argument1, argument2);
         }
 
         public override object Max(object argument1, object argument2)
         {
+            if (argument1 == null || argument2 == null)
+            {
+                throw new InvalidOperationException(GetMessage("max", argument1, argument2));
+            }
             return Calculate("max", argument1, argument2);
         }
     }

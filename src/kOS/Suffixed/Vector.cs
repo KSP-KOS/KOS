@@ -173,12 +173,7 @@ namespace kOS.Suffixed
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
-        public static Vector operator *(Vector a, ScalarIntValue b)
-        {
-            return new Vector(a.X * b, a.Y * b, a.Z * b);
-        }
-
-        public static Vector operator *(Vector a, ScalarDoubleValue b)
+        public static Vector operator *(Vector a, ScalarValue b)
         {
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
@@ -193,14 +188,14 @@ namespace kOS.Suffixed
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
-        public static Vector operator *(ScalarIntValue b, Vector a)
+        public static Vector operator *(ScalarValue b, Vector a)
         {
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
-        public static Vector operator *(ScalarDoubleValue b, Vector a)
+        public static Vector operator /(Vector a, ScalarValue b)
         {
-            return new Vector(a.X * b, a.Y * b, a.Z * b);
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
         }
 
         public static Vector operator +(Vector a, Vector b)
