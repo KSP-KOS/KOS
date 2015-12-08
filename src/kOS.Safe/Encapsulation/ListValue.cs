@@ -57,6 +57,16 @@ namespace kOS.Safe.Encapsulation
             get { return collection[index]; }
             set { collection[index] = value; }
         }
+            
+        public override void LoadDump(IDictionary<object, object> dump)
+        {
+            collection.Clear();
+
+            foreach (object item in dump.Values)
+            {
+                collection.Add((T)item);
+            }
+        }
 
         private void ListInitializeSuffixes()
         {

@@ -62,6 +62,8 @@
     <Compile Include="Structure\TwoArgsVoidSuffixTest.cs" />
     <Compile Include="Collections\QueueValueTest.cs" />
     <Compile Include="Collections\StackValueTest.cs" />
+    <Compile Include="Serialization\JSONFormatterTest.cs" />
+    <Compile Include="Serialization\TerminalFormatterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -80,4 +82,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
 </Project>

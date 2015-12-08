@@ -200,43 +200,6 @@ namespace kOS.Safe.Test.Collections
             Assert.AreEqual(0, ((NoArgsSuffix<int>.Del<int>)copyList.GetSuffix("LENGTH")).Invoke());
         }
 
-        [Test]
-        public void CanShallowToString()
-        {
-            ListValue list = MakeNestedExample();
-            
-            string result = list.ToString();
-            
-            Assert.IsTrue(result.Contains("100"),"CanShallowToString(): ToString from list isn't shallow enough and is finding number 100\n"+result);
-            Assert.IsTrue(result.Contains("String, outer value"),"CanShallowToString(): ToString from list isn't shallow enough and is finding \"string,outer value\"\n"+result);
-            Assert.IsTrue(result.Contains("LIST of 5 items"),"CanShallowToString(): failed to find expected inner list object terse dump\n"+result);
-            Assert.IsFalse(result.Contains("string,one.two"),"CanShallowToString(): ToString from list isn't shallow enough and is finding inner component 'string,one.two'\n"+result);
-        }
-
-        [Test]
-        public void CanDeepToString()
-        {
-            ListValue list = MakeNestedExample();
-            
-            string result = (string)InvokeDelegate(list, "DUMP");
-            
-            Assert.IsTrue(result.Contains("100"),"CanDeepToString(): failed to find expected integer 100 in string output\n"+result);
-            Assert.IsTrue(result.Contains("String, outer value"),"CanDeepToString(): failed to find expected string value in string output\n"+result);
-            Assert.IsTrue(result.Contains("string,one.two"),"CanDeepToString(): Listvalue:DUMP isn't going deep enough to print inner member 'string,one.two'\n"+result);
-            Assert.IsTrue(result.Contains("inner string 1"),"CanDeepToString(): Listvalue:DUMP isn't going deep enough to print inner member 'inner string 1'\n"+result);
-        }
-
-        [Test]
-        public void DoesNotContainInvalidToString()
-        {
-            ListValue list = MakeNestedExample();
-
-            string result = (string) InvokeDelegate(list, "DUMP");
-
-            Assert.IsFalse(result.Contains("System"));
-            Assert.IsFalse(result.Contains("string[]"));
-        }
-
         private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)
         {
             var lengthObj = list.GetSuffix(suffixName);

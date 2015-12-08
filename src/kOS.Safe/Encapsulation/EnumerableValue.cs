@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe
 {
@@ -21,7 +22,7 @@ namespace kOS.Safe
             InitializeEnumerableSuffixes();
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {
             return collection.GetEnumerator();
         }
@@ -38,59 +39,35 @@ namespace kOS.Safe
 
         public abstract int Count { get; }
 
-        public string[] Dump(int limit, int depth = 0)
-        {
-            var toReturn = new List<string>();
-
-            var listString = string.Format(label + " of {0} items", Count);
-            toReturn.Add(listString);
-
-            if (limit <= 0) return toReturn.ToArray();
-
-            int index = 0;
-            foreach (var item in collection)
-            {
-                var dumper = item as IDumper;
-                if (dumper != null)
-                {
-                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-
-                    var itemDump = dumper.Dump(limit - 1, depth + 1);
-
-                    var itemString = string.Format("  [{0,2}]= {1}", index, itemDump[0]);
-                    entry += itemString;
-
-                    toReturn.Add(entry);
-
-                    for (int i = 1; i < itemDump.Length; i++)
-                    {
-                        var subEntry = string.Format("{0}", itemDump[i]);
-                        toReturn.Add(subEntry);
-                    }
-                }
-                else
-                {
-                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-                    entry += string.Format("  [{0,2}]= {1}", index, item);
-                    toReturn.Add(entry);
-                }
-
-                index++;
-            }
-            return toReturn.ToArray();
-        }
-
         public override string ToString()
         {
-            return string.Join(Environment.NewLine, Dump(1));
+            return new SafeSerializationMgr().ToString(this);
         }
+
+        public IDictionary<object, object> Dump()
+        {
+            DictionaryWithHeader result = new DictionaryWithHeader();
+
+            result.Header = label + " of " + collection.Count() + " items:";
+
+            int i = 0;
+            foreach (T item in this)
+            {
+                result.Add(i, item);
+                i++;
+            }
+
+            return result;
+        }
+
+        public abstract void LoadDump(IDictionary<object, object> dump);
 
         private void InitializeEnumerableSuffixes()
         {
             AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator (collection.GetEnumerator())));
             AddSuffix("CONTAINS",   new OneArgsSuffix<bool, T>            (item => collection.Contains(item)));
             AddSuffix("EMPTY",      new NoArgsSuffix<bool>                (() => !collection.Any()));
-            AddSuffix("DUMP",       new NoArgsSuffix<string>              (() => string.Join(Environment.NewLine, Dump(99))));
+            AddSuffix("DUMP",       new NoArgsSuffix<string>              (() => ToString()));
         }
     }
 }

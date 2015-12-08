@@ -17,7 +17,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanAddAndGetKey()
         {
-            var lex = new Lexicon<object, object> {{"foo", "bar"}};
+            var lex = new Lexicon {{"foo", "bar"}};
 
             var testValue = lex["foo"];
 
@@ -27,7 +27,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void HasCaseInsensitiveKeys()
         {
-            var lex = new Lexicon<object, object> {{"foo", "bar"}};
+            var lex = new Lexicon {{"foo", "bar"}};
 
             Assert.AreEqual("bar", lex["FOO"]);
         }
@@ -35,7 +35,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void HashHitOnEqualValues()
         {
-            var lex = new Lexicon<double, object> {{double.MaxValue, "bar"}};
+            var lex = new Lexicon {{double.MaxValue, "bar"}};
 
             Assert.AreEqual("bar", lex[double.MaxValue]);
         }
@@ -44,7 +44,7 @@ namespace kOS.Safe.Test.Collections
         [ExpectedException(typeof(KOSKeyNotFoundException))]
         public void HashMissOnDifferentValues()
         {
-            var lex = new Lexicon<double, object> {{double.MinValue, "bar"}};
+            var lex = new Lexicon {{double.MinValue, "bar"}};
 
             Assert.AreNotEqual("bar", lex[double.MaxValue]);
         }
@@ -52,7 +52,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void ContainsReturnsTrueIfTheKeyIsPresent()
         {
-            var lex = new Lexicon<double, object> {{double.MinValue, "bar"}};
+            var lex = new Lexicon {{double.MinValue, "bar"}};
 
             Assert.IsTrue(lex.ContainsKey(double.MinValue));
         }
@@ -60,7 +60,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void ContainsReturnsFalseIfTheKeyIsMissing()
         {
-            var lex = new Lexicon<double, object> {{double.MinValue, "bar"}};
+            var lex = new Lexicon {{double.MinValue, "bar"}};
 
             Assert.IsFalse(lex.ContainsKey(double.MaxValue));
         }
@@ -68,7 +68,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanRemoveKeyOfDifferentCase()
         {
-            var lex = new Lexicon<object, object> {{"foo", "bar"}};
+            var lex = new Lexicon {{"foo", "bar"}};
 
             Assert.AreEqual(1, lex.Count);
 
@@ -91,14 +91,14 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void DoesNotErrorOnRemoveNullKey()
         {
-            var lex = new Lexicon<object, object>();
+            var lex = new Lexicon();
             lex.Remove("foo");
         }
 
         [Test]
         public void CanSetNewIndex()
         {
-            var lex = new Lexicon<object, object>();
+            var lex = new Lexicon();
             lex["foo"] = "bang";
 
             Assert.AreEqual(1, lex.Count);
@@ -107,7 +107,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanSetAndGetIndex()
         {
-            var lex = new Lexicon<object, object>();
+            var lex = new Lexicon();
             lex.SetIndex("fizz", "bang");
             var value = lex.GetIndex("fizz");
 
@@ -118,16 +118,8 @@ namespace kOS.Safe.Test.Collections
         [ExpectedException(typeof(KOSKeyNotFoundException))]
         public void ErrorsOnGetEmptyKey()
         {
-            var lex = new Lexicon<object, object>();
-            lex.GetIndex("fizz");
-        }
-
-        [Test]
-        [ExpectedException(typeof(KOSInvalidArgumentException))]
-        public void ErrorsOnInvalidKeyType()
-        {
-            var lex = new Lexicon<double, object>();
-            lex.GetIndex("fizz");
+            var lex = new Lexicon();
+            var val = lex["fizz"];
         }
 
         [Test]
@@ -231,14 +223,14 @@ namespace kOS.Safe.Test.Collections
         }
 
         [Test]
-        public void CanFormatNeumericKeys()
+        public void CanFormatNumericKeys()
         {
             var map = MakeNestedExample();
 
             var hasKeyInner = (bool)InvokeDelegate(map, "HASKEY" , "inner");
             Assert.IsTrue(hasKeyInner);
 
-            var inner = (Lexicon<object, object>) ((Lexicon<object,object>)map)["inner"];
+            var inner = (Lexicon) ((Lexicon)map)["inner"];
             Assert.IsNotNull(inner);
 
             var hasNumericKey = (bool)InvokeDelegate(inner, "HASKEY" , 3);
@@ -248,7 +240,6 @@ namespace kOS.Safe.Test.Collections
 
             Assert.IsTrue(innerString.Contains("[\"2\"]"));
             Assert.IsTrue(innerString.Contains("[3]"));
-
         }
 
         [Test]
@@ -280,10 +271,10 @@ namespace kOS.Safe.Test.Collections
         {
             const string OUTER_STRING = "String, outer value";
             
-            var map = new Lexicon<object,object>();
-            var innerMap1 = new Lexicon<object,object>();
-            var innerMap2 = new Lexicon<object,object>();
-            var innerInnerMap = new Lexicon<object,object>
+            var map = new Lexicon();
+            var innerMap1 = new Lexicon();
+            var innerMap2 = new Lexicon();
+            var innerInnerMap = new Lexicon
             {
                 {"inner", "inner string 1"}, 
                 {2, 2}

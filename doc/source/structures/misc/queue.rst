@@ -62,6 +62,9 @@ Structure
           - string
           - verbose dump of all contained elements
 
+.. note::
+
+    This type is serializable.
 
 
 .. method:: Queue:PUSH(item)
