@@ -1273,7 +1273,7 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodeCall seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)fields[0];
+            DestinationLabel = Convert.ToString(fields[0]);
             Destination = fields[1];
         }
 
