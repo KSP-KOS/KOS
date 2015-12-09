@@ -26,6 +26,8 @@ namespace kOS.Function
         {
             get
             {
+                // Convert from primitive types to encapsulated types so that functions
+                // do not explicitly need to return the encapsulated type.
                 return Structure.FromPrimitive(internalReturn);
             }
             set
@@ -111,6 +113,8 @@ namespace kOS.Function
             }
             try
             {
+                // Convert to double instead of cast in case the identifier is stored
+                // as an encapsulated ScalarValue, preventing an unboxing collision.
                 return new TimeSpan(Convert.ToDouble(argument));
             }
             catch

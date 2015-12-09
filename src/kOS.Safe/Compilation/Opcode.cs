@@ -480,6 +480,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValue(identifier, value);
         }
@@ -502,6 +504,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool result = false; //pessimistic default
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
             string ident = Convert.ToString(cpu.PopStack());
             if (ident != null && cpu.IdentifierExistsInScope(ident))
             {
@@ -528,6 +532,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValueExists(identifier, value);
         }
@@ -561,6 +567,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetNewLocal(identifier, value);
         }
@@ -588,6 +596,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetGlobal(identifier, value);
         }
@@ -645,7 +655,7 @@ namespace kOS.Safe.Compilation
                 cpu.PushStack(new KOSArgMarkerType());
                 value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
             }
-            // When we refactor to make every structure use the new suffix style, this conversion
+            // TODO: When we refactor to make every structure use the new suffix style, this conversion
             // from primative can be removed.  Right now there are too many structures that override the
             // GetSuffix method and return their own types, preventing us from converting directly in
             // the GetSuffix method.
@@ -1129,6 +1139,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
+            // Convert to bool instead of cast in case the identifier is stored
+            // as an encapsulated BooleanValue, preventing an unboxing collision.
             bool result = Convert.ToBoolean(value);
             cpu.PushStack(result);
         }
@@ -1145,6 +1157,10 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object result;
             Type t = value.GetType();
+            // Convert to bool instead of cast in case the identifier is stored
+            // as an encapsulated BooleanValue, preventing an unboxing collision.
+            // Wrapped in a try/catch since the Convert framework doesn't have a
+            // way to determine if a type can be converted.
             try
             {
                 result = !Convert.ToBoolean(value);
@@ -1273,6 +1289,8 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodeCall seems to be missing.  Version mismatch?");
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
             DestinationLabel = Convert.ToString(fields[0]);
             Destination = fields[1];
         }
@@ -1342,6 +1360,8 @@ namespace kOS.Safe.Compilation
             if (userDelegate != null)
                 functionPointer = userDelegate.EntryPoint;
 
+            // Convert to int instead of cast in case the identifier is stored
+            // as an encapsulated ScalarValue, preventing an unboxing collision.
             if (functionPointer is int || functionPointer is ScalarValue)
             {
                 ReverseStackArgs(cpu);

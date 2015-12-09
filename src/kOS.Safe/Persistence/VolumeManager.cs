@@ -60,6 +60,8 @@ namespace kOS.Safe.Persistence
         public Volume GetVolume(object volumeId)
         {
             if (volumeId is string) return GetVolume(volumeId.ToString());
+            // Convert to int instead of cast in case the identifier is stored
+            // as an encapsulated ScalarValue, preventing an unboxing collision.
             try
             {
                 return GetVolume(Convert.ToInt32(volumeId));
