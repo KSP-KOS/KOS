@@ -709,7 +709,7 @@ namespace kOS.Safe.Compilation
             // TODO: When we refactor to make every structure use the new suffix style, this conversion
             // to primative can be removed.  Right now there are too many structures that override the
             // SetSuffix method while relying on unboxing the object rahter than using Convert
-            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimative(value)))
+            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimitive(value)))
             {
                 throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }

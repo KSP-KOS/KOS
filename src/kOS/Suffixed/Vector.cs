@@ -80,7 +80,7 @@ namespace kOS.Suffixed
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             other = ConvertToDoubleIfNeeded(other);
-            other = Structure.ToPrimative(other);
+            other = Structure.ToPrimitive(other);
 
             switch (op)
             {

@@ -40,7 +40,7 @@ namespace kOS.Safe.Binding
                 // "(double)(ScalarValue)object" since it will unbox the object, and then cast it.
                 // If the delegates supported typing, we could use "Convert" to do this unbox/conversion
                 // all at the same time.  Instead, we pass the primitive value to avoid these conflicts.
-                Set(Structure.ToPrimative(value));
+                Set(Structure.ToPrimitive(value));
             }
         }
 

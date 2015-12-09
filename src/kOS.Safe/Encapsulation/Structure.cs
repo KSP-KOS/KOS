@@ -196,7 +196,7 @@ namespace kOS.Safe.Encapsulation
             return value;
         }
 
-        public static object ToPrimative(object value)
+        public static object ToPrimitive(object value)
         {
             if (value is ScalarValue)
             {
