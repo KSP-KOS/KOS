@@ -480,7 +480,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValue(identifier, value);
         }
     }
@@ -502,7 +502,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool result = false; //pessimistic default
-            string ident = cpu.PopStack() as string;
+            string ident = Convert.ToString(cpu.PopStack());
             if (ident != null && cpu.IdentifierExistsInScope(ident))
             {
                 result = true;
@@ -528,7 +528,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValueExists(identifier, value);
         }
     }
@@ -561,7 +561,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetNewLocal(identifier, value);
         }
     }
@@ -588,7 +588,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetGlobal(identifier, value);
         }
     }

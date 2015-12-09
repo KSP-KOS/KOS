@@ -249,6 +249,11 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return internalString.GetHashCode();
+        }
+
         TypeCode IConvertible.GetTypeCode()
         {
             return TypeCode.Object;

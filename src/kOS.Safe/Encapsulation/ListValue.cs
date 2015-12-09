@@ -109,15 +109,17 @@ namespace kOS.Safe.Encapsulation
 
         public void SetIndex(object index, object value)
         {
-            // TODO: remove double and float reference as it should be obsolete
-            if (index is double || index is float || index is ScalarValue)
+            int idx;
+            try
             {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                idx = Convert.ToInt32(index);
+            }
+            catch
+            {
+                throw new KOSException("The index must be an integer number");
             }
 
-            if (!(index is int)) throw new KOSException("The index must be an integer number");
-
-            collection[(int)index] = (T)value;
+            collection[idx] = (T)value;
         }
 
 
