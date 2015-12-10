@@ -40,6 +40,11 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return internalValue.GetHashCode();
+        }
+
         public static BooleanValue operator !(BooleanValue val)
         {
             return new BooleanValue(!val.Value);
