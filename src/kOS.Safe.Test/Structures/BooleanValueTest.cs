@@ -21,6 +21,7 @@ namespace kOS.Safe.Test.Structures
             Assert.IsFalse(b != bv);
             Assert.IsFalse(!b == bv);
         }
+
         [Test]
         public void CanImplicitlyConvertToBool()
         {
@@ -28,6 +29,18 @@ namespace kOS.Safe.Test.Structures
             BooleanValue bv = new BooleanValue(b);
             bool b2 = bv;
             Assert.AreEqual(b, b2);
+        }
+
+        [Test]
+        public void CanAddAsString()
+        {
+            bool b = true;
+            string string1 = "foo";
+            var str1 = new StringValue(string1);
+            var bv = new BooleanValue(b);
+            var strResult = str1 + bv;
+            string stringResult = string1 + b.ToString();
+            Assert.AreEqual(stringResult, (string)strResult);
         }
     }
 }
