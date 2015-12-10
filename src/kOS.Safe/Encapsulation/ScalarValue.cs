@@ -424,11 +424,11 @@ namespace kOS.Safe.Encapsulation
     {
         public override bool IsDouble
         {
-            get { return true; }
+            get { return false; }
         }
         public override bool IsInt
         {
-            get { return false; }
+            get { return true; }
         }
 
         public ScalarIntValue(int value)
