@@ -4,7 +4,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
-    abstract public class ScalarValue : Structure, IConvertible
+    abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
         protected object internalValue;
 

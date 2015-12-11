@@ -6,7 +6,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class BooleanValue : Structure, IConvertible
+    public class BooleanValue : Structure, IConvertible, ISerializableValue
     {
         private bool internalValue;
         

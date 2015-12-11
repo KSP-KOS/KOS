@@ -40,7 +40,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (object item in dump.Values)
             {
-                collection.Enqueue((T)item);
+                collection.Enqueue((T)Structure.FromPrimitive(item));
             }
         }
 

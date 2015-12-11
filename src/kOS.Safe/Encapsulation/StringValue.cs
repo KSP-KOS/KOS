@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation
     /// necessary.
     /// 
     /// </summary>
-    public class StringValue : Structure, IIndexable, IConvertible
+    public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue
     {
         private readonly string internalString;
 

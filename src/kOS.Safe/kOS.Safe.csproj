@@ -207,6 +207,7 @@
     <Compile Include="Exceptions\KOSSerializationException.cs" />
     <Compile Include="Serialization\DictionaryWithHeader.cs" />
     <Compile Include="Serialization\SafeSerializationMgr.cs" />
+    <Compile Include="Encapsulation\ISerializableValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

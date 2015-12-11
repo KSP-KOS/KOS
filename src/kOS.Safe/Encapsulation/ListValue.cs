@@ -64,7 +64,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (object item in dump.Values)
             {
-                collection.Add((T)item);
+                collection.Add((T)Structure.FromPrimitive(item));
             }
         }
 
