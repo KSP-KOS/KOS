@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using System;

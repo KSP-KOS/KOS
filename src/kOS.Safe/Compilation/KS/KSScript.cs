@@ -148,7 +148,6 @@ namespace kOS.Safe.Compilation.KS
                 
                 foreach (ParseError err in parseTree.Errors)
                 {
-                    System.Console.WriteLine("eraseme:  err msg: " + err.Message);
                     if (err.Message.StartsWith("Unexpected token 'EOF'"))
                     {
                         if (err.Message.Contains("Expected CURLYCLOSE") ||

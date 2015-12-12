@@ -1521,9 +1521,13 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="node">parse node for the function term of the parse tree.</param>
         /// <param name="isDirect">true if it should make an OpcodeCall that is Direct, false if it should make an indirect one.
         /// See the documentation for OpcodeCall.Direct for the full explanation of the difference.  If isDirect is true, then
-        /// the name to the left of the parentheses will be the name of the function call.  If isDirect is false, then it will
-        /// ignore the name to the left of the parentheses and presume the function name, delegate, or branch index was
-        /// already placed atop the stack by other parts of this compiler.</param>
+        /// the name to the left of the parentheses will be the name of the function call or the name of the
+        /// identifier variable that holds the function's jump address in the case of user functions.  But in either case
+        /// the important thing is that when isDirect is true, that means the OpcodeCall uses the Opcode's argument to
+        /// decide where to call.  On the other hand, if isDirect is false, then it will
+        /// presume the function name, delegate, or branch index was
+        /// already placed atop the stack by other parts of this compiler, rather than encoding it into the
+        /// OpcodeCall's argument itself.</param>
         /// <param name="directName">In the case where it's a direct function, what's the name of it?  In the case
         /// where it's not direct, this argument doesn't matter.</param>
         private void VisitActualFunction(ParseNode node, bool isDirect, string directName = "")
@@ -1531,6 +1535,12 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             ParseNode trailerNode = node; // the function_trailer rule is here.
+
+            if (trailerNode.Nodes.Count > 0 && trailerNode.Nodes[0].Token.Type == TokenType.ATSIGN)
+            {
+                BuildFunctionDelegate(isDirect, directName);
+                return;
+            }
 
             // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
             // Even if there are no arguments, it still has to be TOLD that by showing
@@ -1590,6 +1600,37 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[nodeIndex]);
                 nodeIndex -= 2;
             }
+        }
+        
+        /// <summary>
+        /// When a function identifier or suffix ends in '@' where parentheses could have gone,
+        /// then its not really being called like a function.  Instead it's being asked to generate
+        /// a delegate of itself to be put atop the stack.
+        /// This builds the code that does that.
+        /// </summary>
+        /// <param name="isDirect">If true, then the directName is the name of the function being called or the user
+        /// variable holding the function delegate to be called.  If false, then the compiler should have built code
+        /// that will have left a suffix or function reference atop the stack already.</param>
+        /// <param name="directName">only needed when isDirect is true</param>
+        private void BuildFunctionDelegate(bool isDirect, string directName = "")
+        {
+            if (isDirect)
+            {
+                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuildInDelegate
+                {
+                    // TODO: new BuiltInDelegate here.
+                }
+                else
+                {
+                    // It is not a built-in, so instead get its value as a user function pointer variable, despite 
+                    // the fact that it's being called AS IF it was direct.
+                    if (!directName.EndsWith("*")) directName = directName + "*";
+                    if (!directName.StartsWith("$")) directName = "$" + directName;
+                    AddOpcode(new OpcodePush(directName));
+                }
+            }
+            // Else we shouldn't have to do any work because the thing atop the stack will already
+            // be a suffix delegate.
         }
 
         private void VisitVarIdentifier(ParseNode node)
@@ -2320,8 +2361,15 @@ namespace kOS.Safe.Compilation.KS
                 // This is typical of an OOP language.  The physical code is always static for all
                 // methods and functions, and always has exactly one copy in memory whether there are
                 // one, many, or zero "instances" of it present in scope at the moment.
+                //
+                // Note that because we now allow the capture of UserDelegates in user-land variables
+                // to be called later perhaps from a different scope, we now store a closure context
+                // for all functions just in case they may get used this way.  It's unneded overhead
+                // to do so most of the time, but it makes the algorithm simple for the few cases
+                // where it is needed.
+                
                 AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushDelegateRelocateLater(null,false), func.GetFuncLabel());
+                AddOpcode(new OpcodePushDelegateRelocateLater(null,true), func.GetFuncLabel());
                 if (node == null) // global scope, so unconditionally use a normal Store:
                     AddOpcode(new OpcodeStore()); //
                 else
