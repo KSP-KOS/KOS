@@ -111,6 +111,7 @@
     <Compile Include="Encapsulation\UserDelegate.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSDefaultParamNotAtEndException.cs" />
+    <Compile Include="Exceptions\KOSNotInvokableException.cs" />
     <Compile Include="Exceptions\KOSOnceInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />

@@ -615,8 +615,19 @@ namespace kOS.Safe.Execution
             }
             if (failOkay)
                 return null;
-            else
-                throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'), "");
+            // In the case where we were looking for a function pointer but didn't find one, and would
+            // have failed with exception, then it's still acceptable to find a hit that isn't a function
+            // pointer (has no trailing asterisk '*') but only if it's a delegate of some sort:
+            if (identifier.EndsWith("*"))
+            {
+                string trimmedTail = identifier.TrimEnd('*');
+                Variable retryVal = GetVariable(trimmedTail, barewordOkay, failOkay);
+                string trimmedLeader = trimmedTail.TrimStart('$');
+                if (retryVal.Value is Delegate || retryVal.Value is KOSDelegate)
+                    return retryVal;
+                throw new KOSNotInvokableException(trimmedLeader);
+            }
+            throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'), "");
         }
 
         /// <summary>

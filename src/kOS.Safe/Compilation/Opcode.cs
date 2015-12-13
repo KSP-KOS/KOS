@@ -1400,10 +1400,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                // This is one of those "the user had better NEVER see this error" sorts of messages that's here to keep us in check:
-                throw new Exception(
-                    string.Format("kOS internal error: OpcodeCall calling a function described using {0} which is of type {1} and kOS doesn't know how to call that.", functionPointer, functionPointer.GetType().Name)
-                   );
+                throw new KOSNotInvokableException(functionPointer);
             }
 
             if (functionPointer is Delegate)
