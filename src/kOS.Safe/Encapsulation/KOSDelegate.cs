@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using System;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace kOS.Safe.Execution
     /// </summary>
     public abstract class KOSDelegate : Structure
     {
-        private List<object> curriedArgs = new List<object>();
+        public List<object> curriedArgs = new List<object>();
         protected readonly ICpu cpu;
         
         public KOSDelegate(ICpu cpu)
@@ -55,6 +56,46 @@ namespace kOS.Safe.Execution
                 cpu.PushStack(arg);
             }
             return Call();
+        }
+        
+        /// <summary>
+        /// Assuming normal args are already on the stack,
+        /// then the curried args would have to be inserted
+        /// underneath them, which slightly violates the
+        /// stack access rules.  So do it through this method
+        /// if it's needed.  (If Call() was used, then it's not needed
+        /// because Call() does this for you.  But if Call() was
+        /// not used and someone just used bare parentheses like so:
+        ///    function y { parameter a,b,c. print a+b+c. }
+        ///    set x to y@:curry(1,2).
+        ///    x(). // instead of saying x:call().
+        /// then the curried args don't get pushed by doing that, and they
+        /// have to get pushed under the top by calling this.)
+        /// </summary>
+        public void InsertCurriedArgs()
+        {
+            Stack<object> aboveArgs = new Stack<object>();
+            object arg = ""; // doesn't matter what it is as long as it's non-null for the while check below.
+            while (arg != null && !(arg is KOSArgMarkerType))
+            {
+                arg = cpu.PopStack();
+                if (! (arg is KOSArgMarkerType))
+                    aboveArgs.Push(arg);
+            }
+            if (arg == null)
+                throw new KOSException("KOSDelegate.InsertCurriedArgs: Stack arg bottom missing.\n" +
+                                       "Contact the kOS devs.  This message should 'never' happen.");
+            // Now re-push the args back, putting the curried ones at the bottom
+            // where they belong:
+            cpu.PushStack(new KOSArgMarkerType());
+            foreach (object item in curriedArgs)
+            {
+                cpu.PushStack(item);
+            }
+            foreach (object item in aboveArgs) // Because this was pushed to a stack, this should show in reverse order.
+            {
+                cpu.PushStack(item);
+            }
         }
         
         /// <summary>

@@ -76,6 +76,7 @@
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Compilation\PseudoNull.cs" />
     <Compile Include="Compilation\Script.cs" />
+    <Compile Include="Encapsulation\BuiltinDelegate.cs" />
     <Compile Include="Encapsulation\KOSDelegate.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\Enumerator.cs" />
@@ -152,7 +153,7 @@
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\KOSArgMarkerType.cs" />
-    <Compile Include="Execution\KOSPassThruUserReturn.cs" />
+    <Compile Include="Execution\KOSPassThruReturn.cs" />
     <Compile Include="Execution\ProgramContext.cs" />
     <Compile Include="Execution\Stack.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />

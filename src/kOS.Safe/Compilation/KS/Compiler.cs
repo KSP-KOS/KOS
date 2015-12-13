@@ -1616,9 +1616,11 @@ namespace kOS.Safe.Compilation.KS
         {
             if (isDirect)
             {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuildInDelegate
+                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuiltInDelegate
                 {
-                    // TODO: new BuiltInDelegate here.
+                    AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                    AddOpcode(new OpcodePush(directName));
+                    AddOpcode(new OpcodeCall("makebuiltindelegate()"));
                 }
                 else
                 {

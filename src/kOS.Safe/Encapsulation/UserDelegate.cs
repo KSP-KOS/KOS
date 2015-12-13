@@ -69,7 +69,7 @@ namespace kOS.Safe.Encapsulation
         
         public override object Call()
         {
-            int absoluteJumpTo = OpcodeCall.StaticExecute(cpu, false, "");
+            int absoluteJumpTo = OpcodeCall.StaticExecute(cpu, false, "", true);
             if (absoluteJumpTo >= 0)
                 cpu.InstructionPointer = absoluteJumpTo - 1; // -1 because it increments by 1 automatically between instructions.
             
@@ -79,7 +79,7 @@ namespace kOS.Safe.Encapsulation
             // dummy return value.  This says to not even do that - just offload the
             // responsibility for pushing a return value onto the user code that is
             // about to be jumped into.
-            return new KOSPassThruUserReturn();
+            return new KOSPassThruReturn();
         }
     }
 }

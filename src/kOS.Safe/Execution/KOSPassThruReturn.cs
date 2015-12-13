@@ -20,15 +20,15 @@
     /// the way of the arguments being sent to the user function that hasn't
     /// had a chance to start yet.<br/>
     /// <br/>
-    /// This must ONLY be ever used by suffixes that intend to jump the 
-    /// instruction pointer to a subroutine as the next instruction, and expect
-    /// the subroutine to put a return value on the stack instead of this suffix.<br/>
+    /// This must ONLY be ever used by suffixes that intend to let some other
+    /// part of their call push a return value onto the cpu stack rather than
+    /// having it be returned by the suffix call itself.<br/>
     /// <br/>
     /// (For example, when performing user delegate calls with :CALL).
     /// </summary>
-    public class KOSPassThruUserReturn
+    public class KOSPassThruReturn
     {
-        public KOSPassThruUserReturn()
+        public KOSPassThruReturn()
         {
         }
     }

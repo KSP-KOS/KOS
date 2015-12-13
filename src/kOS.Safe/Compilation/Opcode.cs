@@ -84,6 +84,7 @@ namespace kOS.Safe.Compilation
         EXISTS         = 0x5f,
         ARGBOTTOM      = 0x60,
         TESTARGBOTTOM  = 0x61,
+        
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -648,7 +649,7 @@ namespace kOS.Safe.Compilation
                 // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
                 cpu.PushStack(value);
                 cpu.PushStack(new KOSArgMarkerType());
-                OpcodeCall.StaticExecute(cpu, false, ""); // this will push the return value on the stack for us.
+                OpcodeCall.StaticExecute(cpu, false, "", false); // this will push the return value on the stack for us.
             }
             else
             {
@@ -1284,7 +1285,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            int absoluteJumpTo = StaticExecute(cpu, Direct, Destination);
+            int absoluteJumpTo = StaticExecute(cpu, Direct, Destination, false);
             if (absoluteJumpTo >= 0)
                 DeltaInstructionPointer = absoluteJumpTo - cpu.InstructionPointer;
         }
@@ -1302,8 +1303,11 @@ namespace kOS.Safe.Compilation
         /// <param name="cpu">the cpu its running on</param>
         /// <param name="direct">same meaning as OpcodeCall.Direct</param>
         /// <param name="destination">if direct, then this is the function name</param>
+        /// <param name="calledFromKOSDelegateCall">true if KOSDelegate.Call() brought us here.  If true that
+        /// means any curried args are already on the stack.  If false it means they aren't and this will have to
+        /// put them there.</param>
         /// <returns>new IP to jump to, if this should be followed up by a jump.  If -1 then it means don't jump.</returns>
-        public static int StaticExecute(ICpu cpu, bool direct, object destination)
+        public static int StaticExecute(ICpu cpu, bool direct, object destination, bool calledFromKOSDelegateCall)
         {
             object functionPointer;
             object delegateReturn = null;
@@ -1348,7 +1352,7 @@ namespace kOS.Safe.Compilation
                 }
             }
 
-                // If it's a string it might not really be a built-in, it might still be a user func.
+            // If it's a string it might not really be a built-in, it might still be a user func.
             // Detect whether it's built-in, and if it's not, then convert it into the equivalent
             // user func call by making it be an integer instruction pointer instead:
             if (functionPointer is string)
@@ -1365,9 +1369,21 @@ namespace kOS.Safe.Compilation
                     functionPointer = cpu.GetValue(functionName);
                 }
             }
+
+            KOSDelegate kosDelegate = functionPointer as KOSDelegate;
+            if (kosDelegate != null)
+            {
+                if (! calledFromKOSDelegateCall)
+                    kosDelegate.InsertCurriedArgs();
+            }
+
             IUserDelegate userDelegate = functionPointer as IUserDelegate;
             if (userDelegate != null)
                 functionPointer = userDelegate.EntryPoint;
+
+            BuiltinDelegate builtinDel = functionPointer as BuiltinDelegate;
+            if (builtinDel != null && (! calledFromKOSDelegateCall) )
+                functionPointer = builtinDel.Name;
 
             if (functionPointer is int)
             {
@@ -1393,6 +1409,15 @@ namespace kOS.Safe.Compilation
                 if (functionName.EndsWith("()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 cpu.CallBuiltinFunction(functionName);
+
+                // If this was indirect, we need to consume the thing under the return value.
+                // as that was the indirect BuiltInDelegate:
+                if ((! direct) && builtinDel != null)
+                {
+                    object topThing = cpu.PopStack();
+                    cpu.PopStack(); // remove BuiltInDelegate object.
+                    cpu.PushStack(topThing); // put return value back.
+                }
             }
             else if (functionPointer is Delegate)
             {
@@ -1405,10 +1430,10 @@ namespace kOS.Safe.Compilation
 
             if (functionPointer is Delegate)
             {
-                if (! (delegateReturn is KOSPassThruUserReturn))
+                if (! (delegateReturn is KOSPassThruReturn))
                     cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
             }
-            
+
             return newIP;
         }
         
@@ -2093,7 +2118,7 @@ namespace kOS.Safe.Compilation
             return Name + " " + EntryPoint.ToString();
         }
     }
-    
+        
     /// <summary>
     /// This serves the same purpose as OpcodePushRelocateLater, except it's for
     /// use with UserDelegates instead of raw integer IP calls.
