@@ -46,7 +46,7 @@ namespace kOS.Safe.Encapsulation
 
         public bool EndsWith(string s)
         {
-            return internalString.EndsWith(s,true, CultureInfo.CurrentCulture);
+            return internalString.EndsWith(s, StringComparison.OrdinalIgnoreCase);
         }
 
         public int IndexOf(string s)
@@ -93,7 +93,7 @@ namespace kOS.Safe.Encapsulation
 
         public string Replace(string oldString, string newString)
         {
-            return internalString.Replace(oldString, newString);
+            return Regex.Replace(internalString, Regex.Escape(oldString), newString, RegexOptions.IgnoreCase);
         }
 
         public string ToLower()
@@ -108,7 +108,7 @@ namespace kOS.Safe.Encapsulation
 
         public bool StartsWith(string s)
         {
-            return internalString.StartsWith(s, true, CultureInfo.CurrentCulture);
+            return internalString.StartsWith(s, StringComparison.OrdinalIgnoreCase);
         }
 
         public string Trim()
@@ -146,7 +146,7 @@ namespace kOS.Safe.Encapsulation
         // As the regular Split, except returning a ListValue rather than an array.
         public ListValue<string> SplitToList(string separator)
         {
-            string[] split = Regex.Split(internalString, separator, RegexOptions.IgnoreCase);
+            string[] split = Regex.Split(internalString, Regex.Escape(separator), RegexOptions.IgnoreCase);
             return new ListValue<string>(split);
         }
 

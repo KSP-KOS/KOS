@@ -16,7 +16,7 @@ namespace kOS.Factories
             return new Archive();
         }
 
-        public VolumeManager CreateVolumeManager(SharedObjects sharedObjects)
+        public IVolumeManager CreateVolumeManager(SharedObjects sharedObjects)
         {
             return new VolumeManager();
         }

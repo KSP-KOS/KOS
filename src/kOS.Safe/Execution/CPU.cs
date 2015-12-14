@@ -1,18 +1,15 @@
-﻿using System;
+﻿using kOS.Safe.Binding;
+using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using kOS.Persistence;
-using kOS.Safe.Binding;
-using kOS.Safe.Compilation;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Execution;
-using kOS.Safe.Utilities;
-using kOS.Suffixed;
 using Debug = kOS.Safe.Utilities.Debug;
 
-namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
@@ -36,6 +33,7 @@ namespace kOS.Execution
 
         // statistics
         private double totalCompileTime;
+
         private double totalUpdateTime;
         private double totalTriggersTime;
         private double totalExecutionTime;
@@ -90,7 +88,7 @@ namespace kOS.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", Core.VersionInfo);
+                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", SafeHouse.Version);
                 List<string> nags = Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
@@ -109,37 +107,32 @@ namespace kOS.Execution
                 shared.Screen.Print(bootMessage);
             }
 
-            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
-            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
-            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            if (!shared.Processor.CheckCanBoot()) return;
+
+            string filename = shared.Processor.BootFilename;
+            // Check to make sure the boot file name is valid, and then that the boot file exists.
+            if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
+            else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
+            else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
             else
             {
-                string filename = shared.Processor.BootFilename;
-                // Check to make sure the boot file name is valid, and then that the boot file exists.
-                if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
-                else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-                else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
-                else
+                var bootContext = "program";
+                string bootCommand = string.Format("run {0}.", filename);
+
+                var options = new CompilerOptions
                 {
-                    var bootContext = "program";
-                    var bootCommand = string.Format("run {0}.", filename);
+                    LoadProgramsInSameAddressSpace = true,
+                    FuncManager = shared.FunctionManager,
+                    IsCalledFromRun = false
+                };
 
-                    var options = new CompilerOptions
-                    {
-                        LoadProgramsInSameAddressSpace = true,
-                        FuncManager = shared.FunctionManager,
-                        IsCalledFromRun = false
-                    };
+                shared.ScriptHandler.ClearContext(bootContext);
+                List<CodePart> parts = shared.ScriptHandler.Compile(
+                    "sys:boot", 1, bootCommand, bootContext, options);
 
-                    shared.ScriptHandler.ClearContext(bootContext);
-                    List<CodePart> parts = shared.ScriptHandler.Compile(
-                        "sys:boot", 1, bootCommand, bootContext, options);
-
-                    var programContext = SwitchToProgramContext();
-                    programContext.Silent = true;
-                    programContext.AddParts(parts);
-                }
+                IProgramContext programContext = SwitchToProgramContext();
+                programContext.Silent = true;
+                programContext.AddParts(parts);
             }
         }
 
@@ -170,7 +163,7 @@ namespace kOS.Execution
             if (contexts.Any())
             {
                 // remove the last context
-                var contextRemove = contexts.Last();
+                ProgramContext contextRemove = contexts.Last();
                 contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
                 SafeHouse.Logger.Log("Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
@@ -210,7 +203,7 @@ namespace kOS.Execution
         /// </summary>
         public object PopAboveStack(int howMany)
         {
-            object returnVal = new Int32(); // bogus return val if given a bogus "pop zero things" request.
+            object returnVal = new int(); // bogus return val if given a bogus "pop zero things" request.
             while (howMany > 0)
             {
                 MoveStackPointer(1);
@@ -234,7 +227,7 @@ namespace kOS.Execution
         /// <returns>A stripped down copy of the stack with just the relevant closure frames in it.</returns>
         public List<VariableScope> GetCurrentClosure()
         {
-            List<VariableScope> closureList = new List<VariableScope>();
+            var closureList = new List<VariableScope>();
             GetNestedDictionary("", closureList);
             // The closure's variable scopes need to be marked as such, so the
             // 'popscope' opcode knows to pop them off in one go when it hits
@@ -299,7 +292,7 @@ namespace kOS.Execution
             savedPointers = new VariableScope(0, -1);
             var pointers = new List<string>(globalVariables.Variables.Keys.Where(v => v.Contains('*')));
 
-            foreach (var pointerName in pointers)
+            foreach (string pointerName in pointers)
             {
                 savedPointers.Variables.Add(pointerName, globalVariables.Variables[pointerName]);
                 globalVariables.Variables.Remove(pointerName);
@@ -313,10 +306,10 @@ namespace kOS.Execution
             // back again by this method when returning to the previous programming
             // programming context.
 
-            int restoredPointers = 0;
-            int deletedPointers = 0;
+            var restoredPointers = 0;
+            var deletedPointers = 0;
 
-            foreach (var item in savedPointers.Variables)
+            foreach (KeyValuePair<string, Variable> item in savedPointers.Variables)
             {
                 if (globalVariables.Variables.ContainsKey(item.Key))
                 {
@@ -426,7 +419,7 @@ namespace kOS.Execution
         private VariableScope GetNestedDictionary(int peekDepth)
         {
             object stackItem = true; // any non-null value will do here, just to get the loop started.
-            for (int rawStackDepth = 0; stackItem != null && peekDepth >= 0; ++rawStackDepth)
+            for (var rawStackDepth = 0; stackItem != null && peekDepth >= 0; ++rawStackDepth)
             {
                 stackItem = stack.Peek(-1 - rawStackDepth);
                 if (stackItem is VariableScope)
@@ -434,7 +427,9 @@ namespace kOS.Execution
                 if (stackItem is SubroutineContext)
                     stackItem = null; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
             }
-            return stackItem == null ? globalVariables : (VariableScope)stackItem;
+
+            var scope = stackItem as VariableScope;
+            return scope ?? globalVariables;
         }
 
         /// <summary>
@@ -463,7 +458,7 @@ namespace kOS.Execution
                 bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
                 if (stackExhausted)
                     break;
-                VariableScope localDict = stackItem as VariableScope;
+                var localDict = stackItem as VariableScope;
                 if (localDict == null) // some items on the stack might not be variable scopes.  skip them.
                 {
                     ++rawStackDepth;
@@ -481,11 +476,11 @@ namespace kOS.Execution
                 // -------------------------------------------------------------------------------
 
                 // Scan the stack until the variable scope with the right parent ID is seen:
-                Int16 skippedLevels = 0;
+                short skippedLevels = 0;
                 while (!(stackExhausted))
                 {
-                    bool needsIncrement = true;
-                    VariableScope scopeFrame = stackItem as VariableScope;
+                    var needsIncrement = true;
+                    var scopeFrame = stackItem as VariableScope;
                     if (scopeFrame != null) // skip cases where the thing on the stack isn't a variable scope.
                     {
                         // If the scope id of this frame is my parent ID, then we found it and are done.
@@ -552,7 +547,7 @@ namespace kOS.Execution
             }
             return variable;
         }
-        
+
         /// <summary>
         /// Test if an identifier is a variable you can get the value of
         /// at the moment (var name exists and is in scope).  Return
@@ -562,7 +557,7 @@ namespace kOS.Execution
         /// <returns></returns>
         public bool IdentifierExistsInScope(string identifier)
         {
-            Variable dummyVal = GetVariable(identifier,false,true);
+            Variable dummyVal = GetVariable(identifier, false, true);
             return (dummyVal != null);
         }
 
@@ -642,11 +637,7 @@ namespace kOS.Execution
                 identifier = "$" + identifier;
             }
 
-            VariableScope whichDict;
-            if (local)
-                whichDict = GetNestedDictionary(0);
-            else
-                whichDict = globalVariables;
+            VariableScope whichDict = local ? GetNestedDictionary(0) : globalVariables;
             if (whichDict.Variables.ContainsKey(identifier))
             {
                 if (whichDict.Variables[identifier].Value is BoundVariable)
@@ -704,16 +695,17 @@ namespace kOS.Execution
             // If it's a variable, meaning it starts with "$" but
             // does NOT have a value like $<.....>, which are special
             // flags used internally:
-            if (testValue is string &&
-                ((string)testValue).Length > 1 &&
-                ((string)testValue)[0] == '$' &&
-                ((string)testValue)[1] != '<')
+            var identifier = testValue as string;
+            if (identifier == null ||
+                identifier.Length <= 1 ||
+                identifier[0] != '$' ||
+                identifier[1] == '<')
             {
-                var identifier = (string)testValue;
-                Variable variable = GetVariable(identifier, barewordOkay);
-                return variable.Value;
+                return testValue;
             }
-            return testValue;
+
+            Variable variable = GetVariable(identifier, barewordOkay);
+            return variable.Value;
         }
 
         /// <summary>
@@ -884,18 +876,18 @@ namespace kOS.Execution
 
         public void KOSFixedUpdate(double deltaTime)
         {
-            bool showStatistics = Config.Instance.ShowStatistics;
+            bool showStatistics = SafeHouse.Config.ShowStatistics;
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
-            double triggerElapsed = 0.0;
-            double executionElapsed = 0.0;
+            var triggerElapsed = 0.0;
+            var executionElapsed = 0.0;
 
             // If the script changes config value, it doesn't take effect until next update:
-            instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
+            instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
             instructionsSoFarInUpdate = 0;
-            int numTriggerInstructions = 0;
-            int numMainlineInstructions = 0;
+            var numTriggerInstructions = 0;
+            var numMainlineInstructions = 0;
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
 
@@ -1023,7 +1015,7 @@ namespace kOS.Execution
                     {
                         currentContext.InstructionPointer = triggerPointer;
 
-                        bool executeNext = true;
+                        var executeNext = true;
                         executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
                         while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                         {
@@ -1055,7 +1047,7 @@ namespace kOS.Execution
 
         private void ContinueExecution()
         {
-            bool executeNext = true;
+            var executeNext = true;
             executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
             while (currentStatus == Status.Running &&
                    instructionsSoFarInUpdate < instructionsPerUpdate &&
@@ -1071,14 +1063,11 @@ namespace kOS.Execution
 
         private bool ExecuteInstruction(IProgramContext context)
         {
-            const bool DEBUG_EACH_OPCODE = false;
-
             Opcode opcode = context.Program[context.InstructionPointer];
 
-            if (DEBUG_EACH_OPCODE)
+            if (SafeHouse.Config.DebugEachOpcode)
             {
-                executeLog.Append(String.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n",
-                                                context.InstructionPointer, context.Program.Count, opcode.Label, opcode.ToString()));
+                executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
             }
             try
             {
@@ -1091,21 +1080,20 @@ namespace kOS.Execution
                     SafeHouse.Logger.Log("Execution Broken");
                     return false;
                 }
-                else if (opcode.AbortContext)
+
+                if (opcode.AbortContext)
                 {
                     return false;
                 }
-                else
+
+                int prevPointer = context.InstructionPointer;
+                context.InstructionPointer += opcode.DeltaInstructionPointer;
+                if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count)
                 {
-                    int prevPointer = context.InstructionPointer;
-                    context.InstructionPointer += opcode.DeltaInstructionPointer;
-                    if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count())
-                    {
-                        throw new KOSBadJumpException(
-                            context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode));
-                    }
-                    return true;
+                    throw new KOSBadJumpException(
+                        context.InstructionPointer, string.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode));
                 }
+                return true;
             }
             catch (Exception)
             {
@@ -1160,7 +1148,7 @@ namespace kOS.Execution
 
         public void PrintStatistics()
         {
-            if (!Config.Instance.ShowStatistics) return;
+            if (!SafeHouse.Config.ShowStatistics) return;
 
             shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", totalCompileTime));
             shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
@@ -1182,16 +1170,6 @@ namespace kOS.Execution
             maxExecutionTime = 0.0;
             maxMainlineInstructionsSoFar = 0;
             maxTriggerInstructionsSoFar = 0;
-        }
-
-        public void OnSave(ConfigNode node)
-        {
-            // the saving of global variables has been removed for now.
-        }
-
-        public void OnLoad(ConfigNode node)
-        {
-            // the restoring of global variables has been removed for now.
         }
 
         public void Dispose()

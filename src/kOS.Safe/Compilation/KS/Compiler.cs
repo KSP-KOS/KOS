@@ -33,7 +33,6 @@ namespace kOS.Safe.Compilation.KS
         private Int16 braceNestLevel;
         private readonly List<Int16> scopeStack = new List<Int16>();
         private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
-        private readonly List<ParseNode> programParameters = new List<ParseNode>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
@@ -73,7 +72,6 @@ namespace kOS.Safe.Compilation.KS
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
-            programParameters.Clear();
         }
 
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
@@ -115,7 +113,6 @@ namespace kOS.Safe.Compilation.KS
         {
             currentCodeSection = part.MainCode;
             
-            PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
             if (addBranchDestination || currentCodeSection.Count == 0)
@@ -389,6 +386,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:
+                case TokenType.declare_stmt:
                     PreProcessChildNodes(node);
                     break;
                 case TokenType.on_stmt:
@@ -398,10 +396,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
-                    break;
-                case TokenType.declare_stmt:
-                    PreProcessChildNodes(node);
-                    PreProcessProgramParameters(node);
                     break;
                 case TokenType.run_stmt:
                     PreProcessRunStatement(node);
@@ -772,25 +766,6 @@ namespace kOS.Safe.Compilation.KS
             return node;
         }
 
-        private void PreProcessProgramParameters(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            // if the declaration is a parameter,
-            // and this is NOT contained inside a DEFINE FUNCTION block and
-            // is therefore a global program parameter (for the run statement):
-            if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                (!(IsInsideDefineFunctionStatement(node))))
-            {
-                for (int index = 1; index < lastSubNode.Nodes.Count; index += 2)
-                {
-                    programParameters.Add(lastSubNode.Nodes[index]);
-                }
-            }
-            // If it's any other sort of Declare statement, do nothing and instead
-            // allow the PreProcessChildNodes handle all the work.
-        }
-
         private void PreProcessRunStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -870,19 +845,6 @@ namespace kOS.Safe.Compilation.KS
                         // removed pointer initialization since it overwrote any existing values when loading ksm files.
                     }
                 }
-            }
-        }
-
-        private void PushReversedParameters()
-        {
-            // reverse the order of parameters so the stack
-            // is popped in the correct order
-            programParameters.Reverse();
-            foreach (ParseNode node in programParameters)
-            {
-                VisitNode(node);
-                AddOpcode(new OpcodeSwap());
-                AddOpcode(new OpcodeStore());
             }
         }
 
@@ -1609,6 +1571,27 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
+        // For the case where you wish to eval the args lastmost-first, such
+        // that they'll push onto the stack like so:
+        //   arg1 <-- top
+        //   arg2
+        //   arg3 <-- bottom
+        //
+        // instead of the usual stack order of:
+        //   arg3 <-- top
+        //   arg2
+        //   arg1 <-- bottom
+        private void VisitArgListReversed(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            int nodeIndex = node.Nodes.Count - 1;
+            while (nodeIndex >= 0)
+            {
+                VisitNode(node.Nodes[nodeIndex]);
+                nodeIndex -= 2;
+            }
+        }
+
         private void VisitVarIdentifier(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -2220,24 +2203,55 @@ namespace kOS.Safe.Compilation.KS
         /// inside it that pertains to this function.  Note, parameters inside functions
         /// nested inside the current one don't count.  This method performs a recursive
         /// walk.
+        /// <br/><br/>
+        /// While it does this walk, it also tests for whether or not there exists a
+        /// non-defaulted parameter after a defaulted one, which is illegal and throws an error.
         /// </summary>
-        private bool HasParameterStmtNested(ParseNode node)
+        /// <param name="node">The node to check</param>
+        /// <param name="sawMandatoryParam">true once a parameter without a default clause occurs.</param>
+        private bool HasParameterStmtNested(ParseNode node, ref bool sawMandatoryParam)
         {
             // Base case:
             if (node.Token.Type == TokenType.declare_parameter_clause)
-                return true;
-
-            // Recurive case:
-            foreach (ParseNode child in node.Nodes)
             {
+                // found one, double check that we don't have an undefaulted param after a defaulted one while we're at it:
+                // The logic counts backward here.
+                for (int i = node.Nodes.Count-2 ; i > 0 ; i -= 2)
+                {
+                    // If this is an expression, then we have a defaultable optional arg.
+                    // else we have a mandatory arg.
+                    TokenType tType = node.Nodes[i].Token.Type;
+                    bool isOptionalParam = (tType == TokenType.expr);
+                    if (isOptionalParam)
+                    {
+                        if (sawMandatoryParam)
+                            throw new KOSDefaultParamNotAtEndException();
+
+                        i -= 2; // skip back a bit further to pass over the extra terms a defaulter has.
+                    }
+                    else
+                    {
+                        sawMandatoryParam = true;
+                    }
+                }
+                
+                return true;
+            }
+
+
+            // Recursive case - make sure to walk backward, and don't abort the scan when a thing is found:
+            bool rememberReturnVal = false;
+            for (int i = node.Nodes.Count - 1 ; i >= 0 ; --i)
+            {
+                ParseNode child = node.Nodes[i];
                 if (child.Token.Type != TokenType.declare_function_clause) // functions nested in functions don't count
                 {
-                    if (HasParameterStmtNested(child))
-                        return true;
+                    if (HasParameterStmtNested(child, ref sawMandatoryParam))
+                        rememberReturnVal = true;
                 }
             }
                 
-            return false; // default if nothing found in the above search.
+            return rememberReturnVal;
         }
         
         /// <summary>
@@ -2252,13 +2266,18 @@ namespace kOS.Safe.Compilation.KS
         private int FindArgBottomSpot(ParseNode node)
         {
             int lastmostDefParamStmt = -1;
-            
+            bool sawMandatoryParam = false;
             for (int i = node.Nodes.Count-1 ; i >= 0 ; --i)
             {
-                if (HasParameterStmtNested(node.Nodes[i]))
+                if (HasParameterStmtNested(node.Nodes[i], ref sawMandatoryParam))
                 {
-                    lastmostDefParamStmt = i;
-                    break;
+                    // Only set this the very fist time a hit is seen - counting backward from the
+                    // end that will be the lastmost parameter statement:
+                    if (lastmostDefParamStmt == -1)
+                        lastmostDefParamStmt = i;
+                    
+                    // Would break here but instead need to keep checking for defaulted params prior to
+                    // mandatory ones for throwing KOSDefaultParamNotAtEndException
                 }
             }
             
@@ -2483,18 +2502,25 @@ namespace kOS.Safe.Compilation.KS
             // If the declare statement is of the form:
             //    DECLARE PARAMETER ident.
             // or
+            //    DECLARE PARAMETER ident IS expr.
+            // or
             //    DECLARE PARAMETER ident,ident,ident...
-            // AND this is inside a function definition rather than being at the global script level.
-            // (at the global script level a DEFINE PARAMETER statement is for RUN parameters, which
-            // get handled differently.)
-            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                IsInsideDefineFunctionStatement(node))
+            // or
+            //    DECLARE PARAMETER ident,ident,ident IS expr, ident IS EXPR...
+            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
                 for (int i = 1 ; i < lastSubNode.Nodes.Count ; i += 2)
                 {
-                    VisitNode(lastSubNode.Nodes[i]);
-                    AddOpcode(new OpcodeSwap());
-                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true));
+                    bool hasInit = ( i < lastSubNode.Nodes.Count - 2 &&
+                                    ( lastSubNode.Nodes[i+1].Token.Type == TokenType.IS ||
+                                     lastSubNode.Nodes[i+1].Token.Type == TokenType.TO )
+                                   );
+                    ParseNode initExpressionNode = hasInit ? lastSubNode.Nodes[i+2] : null;
+                    VisitDeclareOneParameter(whereToStore, lastSubNode.Nodes[i], initExpressionNode);
+                    if (hasInit)
+                    {
+                        i += 2; // skip the "TO expr" part when looking for the next param.
+                    }
                 }
             }
             
@@ -2507,6 +2533,41 @@ namespace kOS.Safe.Compilation.KS
             
             // Note: DECLARE FUNCTION is dealt with entirely during
             // PreprocessDeclareStatement, with nothing for VisitNode to do.
+        }
+        
+        /// <summary>
+        /// Process a single parameter from the parameter list for a
+        /// function or program.  i.e. if encountering the statement
+        /// "DECLARE PARAMETER AA, BB, CC is 0." , then this method needs to be
+        /// called 3 times, once for AA, once for BB, and once for "CC is 0":
+        /// </summary>
+        /// <param name="whereToStore">is it local or global or lazyglobal</param>
+        /// <param name="identifierNode">Parse node holding the identifier of the param</param>
+        /// <param name="expressionNode">Parse node holding the expression to initialize to if
+        /// this is a defaultable parameter.  If it is not a defaultable parameter, pass null here</param>
+        private void VisitDeclareOneParameter(StorageModifier whereToStore, ParseNode identifierNode, ParseNode expressionNode)
+        {
+            if (expressionNode != null)
+            {
+                // This tests each defaultable parameter to see if it's at arg bottom.
+                // The test must be repeated for each parameter rather than optimizing by
+                // falling through to all subsequent defaulter expressions for the rest of
+                // the parameters once the first one finds arg bottom.
+                // This is because kerboscript does not require the declare parameters to
+                // be contiguous statements so there may be code in between them you're
+                // not supposed to skip over.
+
+                AddOpcode(new OpcodeTestArgBottom());
+                OpcodeBranchIfFalse branchSkippingInit = new OpcodeBranchIfFalse();
+                AddOpcode(branchSkippingInit);
+                
+                VisitNode(expressionNode); // evals init expression on the top of the stack where the arg would have been
+
+                branchSkippingInit.DestinationLabel = GetNextLabel(false);
+            }
+            VisitNode(identifierNode);
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true));                
         }
                 
         /// <summary>
@@ -2528,9 +2589,9 @@ namespace kOS.Safe.Compilation.KS
                     return new OpcodeStoreGlobal();
                 default:
                     if (lazyGlobal)
-                        return AddOpcode(new OpcodeStore());
+                        return new OpcodeStore();
                     else
-                        return AddOpcode(new OpcodeStoreExist());
+                        return new OpcodeStoreExist();
             }
         }
         
@@ -2727,7 +2788,10 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
             {
-                VisitNode(node.Nodes[argListIndex]);
+                // Run args need to get pushed to the stack in the opposite order to how
+                // function args do, because they pass through two levels of OpcodeCall, and
+                // thus get reversed twice, whereas function args only get reversed once:
+                VisitArgListReversed(node.Nodes[argListIndex]);
                 volumeIndex += 3;
             }
 

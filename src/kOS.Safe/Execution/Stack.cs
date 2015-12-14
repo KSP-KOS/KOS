@@ -1,10 +1,9 @@
-﻿using kOS.Safe.Execution;
-using kOS.Suffixed;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using kOS.Safe.Utilities;
 
-namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     public class Stack : IStack
     {
@@ -28,19 +27,19 @@ namespace kOS.Execution
 
         private void ThrowIfInvalid(object item)
         {
-            if (!Config.Instance.EnableSafeMode)
+            if (!SafeHouse.Config.EnableSafeMode)
                 return;
             if (!(item is double) && !(item is float))
                 return;
 
             double unboxed = Convert.ToDouble(item);
 
-            if (Double.IsNaN(unboxed))
+            if (double.IsNaN(unboxed))
             {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push NaN into the stack.");
             }
-            if (Double.IsInfinity(unboxed))
+            if (double.IsInfinity(unboxed))
             {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push Infinity into the stack.");
@@ -61,13 +60,14 @@ namespace kOS.Execution
             }
             if (item is double)
             {
-                var outOfBounds = Int32.MinValue < (double) item && (double) item < Int32.MaxValue;
+                var doubleItem = (double)item;
+                var outOfBounds = int.MinValue < doubleItem && doubleItem < int.MaxValue;
 
-                if (!Double.IsNaN((double)item) && outOfBounds)
+                if (!double.IsNaN(doubleItem) && outOfBounds)
                 {
-                    int intPart = Convert.ToInt32(item);
-                    if ((double)item == intPart)
-                        item = intPart;
+                    int intItem = Convert.ToInt32(item);
+                    if (doubleItem == intItem)
+                        item = intItem;
                 }
             }
             return item;

@@ -82,6 +82,7 @@ namespace kOS.Safe.Compilation
         BRANCHTRUE     = 0x5e,
         EXISTS         = 0x5f,
         ARGBOTTOM      = 0x60,
+        TESTARGBOTTOM  = 0x61,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -1493,7 +1494,7 @@ namespace kOS.Safe.Compilation
         {
             List<object> args = new List<object>();
             object arg = cpu.PopValue();
-            while (arg == null || arg.GetType() != ArgMarkerType)
+            while (cpu.GetStackSize() > 0 && arg.GetType() != ArgMarkerType)
             {
                 args.Add(arg);
 
@@ -1788,6 +1789,32 @@ namespace kOS.Safe.Compilation
             if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
             {
                 throw new KOSArgumentMismatchException("Called with too many arguments.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Tests whether or not the next thing on the stack is the argument bottom marker.
+    /// It pushes a true on top if it is, or false if it is not.  In either case it does
+    /// NOT consume the arg bottom marker, but just peeks for it.
+    /// </summary>
+    public class OpcodeTestArgBottom : Opcode
+    {
+        protected override string Name { get { return "testargbottom"; } }
+        public override ByteCode Code { get { return ByteCode.TESTARGBOTTOM; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            bool worked;
+            object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
+
+            if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
+            {
+                cpu.PushStack(false);
+            }
+            else
+            {
+                cpu.PushStack(true);
             }
         }
     }

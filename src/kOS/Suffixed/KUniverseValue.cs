@@ -31,6 +31,7 @@ namespace kOS.Suffixed
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
             AddSuffix("ACTIVEVESSEL", new SetSuffix<VesselTarget>(() => new VesselTarget(FlightGlobals.ActiveVessel, shared), SetActiveVessel));
             AddSuffix("FORCESETACTIVEVESSEL", new OneArgsSuffix<VesselTarget>(ForceSetActiveVessel));
+            AddSuffix("HOURSPERDAY", new Suffix<int>(GetHoursPerDay));
             AddSuffix("DEBUGLOG", new OneArgsSuffix<string>(DebugLog));
         }
 
@@ -118,6 +119,11 @@ namespace kOS.Suffixed
             {
                 FlightGlobals.ForceSetActiveVessel(vessel);
             }
+        }
+        
+        public int GetHoursPerDay()
+        {
+            return GameSettings.KERBIN_TIME ? TimeSpan.HOURS_IN_KERBIN_DAY : TimeSpan.HOURS_IN_EARTH_DAY;
         }
         
         public void DebugLog(string message)
