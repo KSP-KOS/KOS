@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿using System.Collections.Generic;
 
 namespace kOS.Safe.Serialization
 {
-    public class JSONFormatter : Formatter
+    public class JsonFormatter : IFormatWriter, IFormatReader
     {
-        private static readonly JSONFormatter instance = new JSONFormatter();
+        private static readonly JsonFormatter instance;
 
-        public static JSONFormatter Instance
+        public static IFormatReader ReaderInstance
         {
             get 
             {
@@ -17,26 +14,36 @@ namespace kOS.Safe.Serialization
             }
         }
 
-        private JSONFormatter()
+        public static IFormatWriter WriterInstance
         {
+            get 
+            {
+                return instance; 
+            }
+        }
+
+        private JsonFormatter()
+        {
+        }
+
+        static JsonFormatter()
+        {
+            instance = new JsonFormatter();
         }
 
         private object MakeStringDictionaries(object value)
         {
-            if (value is IDictionary<object, object>)
-            {
-                Dictionary<string, object> stringKeys = new Dictionary<string, object>();
+            var objects = value as IDictionary<object, object>;
+            if (objects == null) return value;
 
-                foreach (KeyValuePair<object, object> entry in value as IDictionary<object, object>)
-                {
-                    stringKeys[entry.Key.ToString()] = MakeStringDictionaries(entry.Value);
-                }
+            var stringKeys = new Dictionary<string, object>();
 
-                return stringKeys;
-            } else
+            foreach (var entry in objects)
             {
-                return value;
+                stringKeys[entry.Key.ToString()] = MakeStringDictionaries(entry.Value);
             }
+
+            return stringKeys;
         }
 
         public string Write(IDictionary<object, object> value)
@@ -46,20 +53,17 @@ namespace kOS.Safe.Serialization
             
         private object Unwrap(object read)
         {
-            if (read is IDictionary<string, object>)
-            {
-                Dictionary<object, object> result = new Dictionary<object, object>();
+            var objects = read as IDictionary<string, object>;
+            if (objects == null) return read;
 
-                foreach (KeyValuePair<string, object> entry in read as IDictionary<string, object>)
-                {
-                    result[entry.Key] = Unwrap(entry.Value);
-                }
+            var result = new Dictionary<object, object>();
 
-                return result;
-            } else
+            foreach (var entry in objects)
             {
-                return read;
+                result[entry.Key] = Unwrap(entry.Value);
             }
+
+            return result;
         }
 
         public IDictionary<object, object> Read(string input)

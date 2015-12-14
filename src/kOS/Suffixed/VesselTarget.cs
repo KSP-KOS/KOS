@@ -597,11 +597,6 @@ namespace kOS.Suffixed
             return !Equals(left, right);
         }
 
-        public void SetSharedObjects(SharedObjects sharedObjects)
-        {
-            this.Shared = sharedObjects;
-        }
-
         public IDictionary<object, object> Dump()
         {
             DictionaryWithHeader dump = new DictionaryWithHeader();

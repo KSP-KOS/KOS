@@ -256,11 +256,12 @@ namespace kOS.Suffixed
 
         public System.Collections.Generic.IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader dictionary = new DictionaryWithHeader();
-
-            dictionary.Add(DUMP_LAT, lat);
-            dictionary.Add(DUMP_LNG, lng);
-            dictionary.Add(DUMP_BODY, new BodyTarget(Body, Shared));
+            var dictionary = new DictionaryWithHeader
+            {
+                {DUMP_LAT, lat},
+                {DUMP_LNG, lng},
+                {DUMP_BODY, new BodyTarget(Body, Shared)}
+            };
 
             return dictionary;
         }

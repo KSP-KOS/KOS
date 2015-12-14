@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace kOS.Safe.Serialization
 {
-    public class TerminalFormatter : Formatter
+    public class TerminalFormatter : IFormatWriter
     {
         private static int INDENT_SPACES = 2;
-        private static readonly TerminalFormatter instance = new TerminalFormatter();
+        private static readonly TerminalFormatter instance;
 
         public static TerminalFormatter Instance
         {
@@ -22,13 +21,19 @@ namespace kOS.Safe.Serialization
 
         }
 
+        static TerminalFormatter()
+        {
+            instance = new TerminalFormatter();
+        }
+
         public string Write(IDictionary<object, object> value)
         {
             string header = "";
 
-            if (value is DictionaryWithHeader)
+            var withHeader = value as DictionaryWithHeader;
+            if (withHeader != null)
             {
-                header = (value as DictionaryWithHeader).Header + Environment.NewLine;
+                header = withHeader.Header + Environment.NewLine;
             }
 
             return header + WriteIndented(value);
@@ -44,16 +49,18 @@ namespace kOS.Safe.Serialization
                 var value = entry.Value;
                 string valueString;
 
-                if (value is IDictionary<object, object>)
+                var objects = value as IDictionary<object, object>;
+                if (objects != null)
                 {
                     string header = Environment.NewLine;
 
-                    if (value is DictionaryWithHeader)
+                    var withHeader = value as DictionaryWithHeader;
+                    if (withHeader != null)
                     {
-                        header = (value as DictionaryWithHeader).Header + Environment.NewLine;
+                        header = withHeader.Header + Environment.NewLine;
                     }
 
-                    valueString = header + WriteIndented(value as IDictionary<object, object>, level + 1);
+                    valueString = header + WriteIndented(objects, level + 1);
                 } else
                 {
                     valueString = value.ToString();
@@ -71,12 +78,6 @@ namespace kOS.Safe.Serialization
 
             return String.Join(Environment.NewLine, result.ToArray());
         }
-
-        public IDictionary<object, object> Read(string input)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
 

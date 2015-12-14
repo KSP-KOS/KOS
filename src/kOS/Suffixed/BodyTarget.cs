@@ -78,7 +78,7 @@ namespace kOS.Suffixed
             return new Vector(Vector3d.Exclude(GetUpVector(), parent.transform.up));
         }
 
-        public BodyTarget() : base()
+        public BodyTarget()
         {
             BodyInitializeSuffixes();
         }
@@ -150,7 +150,7 @@ namespace kOS.Suffixed
         /// weird exception for this one case.  This transforms it back into raw universe
         /// axes again:
         /// </summary>
-        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <param name="angularVelFromKSP">the value KSP is returning for angular velocity</param>
         /// <returns>altered velocity in the new reference frame</returns>
         private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
         {
@@ -214,14 +214,15 @@ namespace kOS.Suffixed
 
         public void SetSharedObjects(SharedObjects sharedObjects)
         {
-            this.Shared = sharedObjects;
+            Shared = sharedObjects;
         }
 
         public IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
-
-            dump.Header = "BODY '" + Body.bodyName + "'";
+            var dump = new DictionaryWithHeader
+            {
+                Header = string.Format("BODY '{0}'", Body.bodyName)
+            };
 
             dump.Add(DUMP_NAME, Body.bodyName);
 

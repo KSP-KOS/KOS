@@ -1,10 +1,9 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -45,7 +44,6 @@ namespace kOS.Safe.Encapsulation
 
         private IDictionary<object, object> internalDictionary;
         private bool caseSensitive;
-        private const int INDENT_SPACES = 2;
 
         public Lexicon()
         {
@@ -72,9 +70,9 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
             AddSuffix("COPY", new NoArgsSuffix<Lexicon>(() => new Lexicon(this), "Returns a copy of Lexicon"));
             AddSuffix("LENGTH", new NoArgsSuffix<int>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
-            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove(one), "Removes the value at the given key"));
-            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add(one, two), "Adds a new item to the lexicon, will error if the key already exists"));
-            AddSuffix("DUMP", new NoArgsSuffix<string>(() => ToString(), "Serializes the collection to a string for printing"));
+            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(Remove, "Removes the value at the given key"));
+            AddSuffix("ADD", new TwoArgsSuffix<object, object>(Add, "Adds a new item to the lexicon, will error if the key already exists"));
+            AddSuffix("DUMP", new NoArgsSuffix<string>(ToString, "Serializes the collection to a string for printing"));
             AddSuffix(new[] { "CASESENSITIVE", "CASE" }, new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
         }
 
@@ -233,9 +231,10 @@ namespace kOS.Safe.Encapsulation
 
         public IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary);
-
-            result.Header = "LEXICON of " + internalDictionary.Count + " items:";
+            var result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary)
+            {
+                Header = "LEXICON of " + internalDictionary.Count + " items:"
+            };
 
             return result;
         }
@@ -244,11 +243,10 @@ namespace kOS.Safe.Encapsulation
         {
             internalDictionary.Clear();
 
-            foreach (KeyValuePair<object, object> entry in dump) 
+            foreach (KeyValuePair<object, object> entry in dump)
             {
                 internalDictionary.Add(entry.Key, entry.Value);
             }
         }
-
     }
 }
