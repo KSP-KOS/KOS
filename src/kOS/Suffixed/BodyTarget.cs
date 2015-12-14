@@ -11,7 +11,7 @@ namespace kOS.Suffixed
 {
     public class BodyTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
-        private static string DUMP_NAME = "name";
+        private static string DumpName = "name";
 
         public CelestialBody Body { get; set; }
 
@@ -224,14 +224,14 @@ namespace kOS.Suffixed
                 Header = string.Format("BODY '{0}'", Body.bodyName)
             };
 
-            dump.Add(DUMP_NAME, Body.bodyName);
+            dump.Add(DumpName, Body.bodyName);
 
             return dump;
         }
 
         public void LoadDump(IDictionary<object, object> dump)
         {
-            string name = dump[DUMP_NAME] as string;
+            string name = dump[DumpName] as string;
 
             if (name == null)
             {

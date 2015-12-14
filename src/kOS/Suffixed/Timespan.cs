@@ -8,7 +8,7 @@ namespace kOS.Suffixed
 {
     public class TimeSpan : Structure, IDumper, IComparable<TimeSpan>
     {
-        public const string DUMP_SPAN = "span";
+        public const string DumpSpan = "span";
 
         double span;
         private const int DAYS_IN_YEAR = 365;
@@ -162,7 +162,7 @@ namespace kOS.Suffixed
         {
             var dump = new DictionaryWithHeader
             {
-                {DUMP_SPAN, span}
+                {DumpSpan, span}
             };
 
             return dump;
@@ -170,7 +170,7 @@ namespace kOS.Suffixed
 
         public void LoadDump (IDictionary<object, object> dump)
         {
-            span = Convert.ToDouble(dump[DUMP_SPAN]);
+            span = Convert.ToDouble(dump[DumpSpan]);
         }
             
         public int CompareTo(TimeSpan other)

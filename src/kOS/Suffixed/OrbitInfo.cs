@@ -8,14 +8,14 @@ namespace kOS.Suffixed
 {
     public class OrbitInfo : Structure, IDumperWithSharedObjects
     {
-        public static string DUMP_INCLINATION = "inclination";
-        public static string DUMP_ECCENTRICITY = "eccentricity";
-        public static string DUMP_SEMI_MAJOR_AXIS = "semiMajorAxis";
-        public static string DUMP_LONGITUDE_OF_ASCENDING_NODE = "longitudeOfAscendingNode";
-        public static string DUMP_ARGUMENT_OF_PERIAPSIS = "argumentOfPeriapsis";
-        public static string DUMP_MEAN_ANOMALY_AT_EPOCH = "meanAnomalyAtEpoch";
-        public static string DUMP_EPOCH = "epoch";
-        public static string DUMP_BODY = "body";
+        public static string DumpInclination = "inclination";
+        public static string DumpEccentricity = "eccentricity";
+        public static string DumpSemiMajorAxis = "semiMajorAxis";
+        public static string DumpLongitudeOfAscendingNode = "longitudeOfAscendingNode";
+        public static string DumpArgumentOfPeriapsis = "argumentOfPeriapsis";
+        public static string DumpMeanAnomalyAtEpoch = "meanAnomalyAtEpoch";
+        public static string DumpEpoch = "epoch";
+        public static string DumpBody = "body";
 
         private Orbit orbit;
         public SharedObjects Shared { get; set; }
@@ -135,14 +135,14 @@ namespace kOS.Suffixed
                 Header = "ORBIT of " + name
             };
 
-            dump.Add(DUMP_INCLINATION, orbit.inclination);
-            dump.Add(DUMP_ECCENTRICITY, orbit.eccentricity);
-            dump.Add(DUMP_SEMI_MAJOR_AXIS, orbit.semiMajorAxis);
-            dump.Add(DUMP_LONGITUDE_OF_ASCENDING_NODE, orbit.LAN);
-            dump.Add(DUMP_ARGUMENT_OF_PERIAPSIS, orbit.argumentOfPeriapsis);
-            dump.Add(DUMP_MEAN_ANOMALY_AT_EPOCH, orbit.meanAnomalyAtEpoch);
-            dump.Add(DUMP_EPOCH, orbit.epoch);
-            dump.Add(DUMP_BODY, new BodyTarget(orbit.referenceBody, Shared));
+            dump.Add(DumpInclination, orbit.inclination);
+            dump.Add(DumpEccentricity, orbit.eccentricity);
+            dump.Add(DumpSemiMajorAxis, orbit.semiMajorAxis);
+            dump.Add(DumpLongitudeOfAscendingNode, orbit.LAN);
+            dump.Add(DumpArgumentOfPeriapsis, orbit.argumentOfPeriapsis);
+            dump.Add(DumpMeanAnomalyAtEpoch, orbit.meanAnomalyAtEpoch);
+            dump.Add(DumpEpoch, orbit.epoch);
+            dump.Add(DumpBody, new BodyTarget(orbit.referenceBody, Shared));
 
             return dump;
         }
@@ -151,14 +151,14 @@ namespace kOS.Suffixed
         {
             name = "<unnamed>";
 
-            double inclination = Convert.ToDouble(dump[DUMP_INCLINATION]);
-            double eccentricity = Convert.ToDouble(dump[DUMP_ECCENTRICITY]);
-            double semiMajorAxis = Convert.ToDouble(dump[DUMP_SEMI_MAJOR_AXIS]);
-            double longitudeOfAscendingNode = Convert.ToDouble(dump[DUMP_LONGITUDE_OF_ASCENDING_NODE]);
-            double argumentOfPeriapsis = Convert.ToDouble(dump[DUMP_ARGUMENT_OF_PERIAPSIS]);
-            double meanAnomalyAtEpoch = Convert.ToDouble(dump[DUMP_MEAN_ANOMALY_AT_EPOCH]);
-            double epoch = Convert.ToDouble(dump[DUMP_EPOCH]);
-            BodyTarget body = dump[DUMP_BODY] as BodyTarget;
+            double inclination = Convert.ToDouble(dump[DumpInclination]);
+            double eccentricity = Convert.ToDouble(dump[DumpEccentricity]);
+            double semiMajorAxis = Convert.ToDouble(dump[DumpSemiMajorAxis]);
+            double longitudeOfAscendingNode = Convert.ToDouble(dump[DumpLongitudeOfAscendingNode]);
+            double argumentOfPeriapsis = Convert.ToDouble(dump[DumpArgumentOfPeriapsis]);
+            double meanAnomalyAtEpoch = Convert.ToDouble(dump[DumpMeanAnomalyAtEpoch]);
+            double epoch = Convert.ToDouble(dump[DumpEpoch]);
+            BodyTarget body = dump[DumpBody] as BodyTarget;
 
             orbit = new Orbit(inclination, eccentricity, semiMajorAxis, longitudeOfAscendingNode, argumentOfPeriapsis,
                 meanAnomalyAtEpoch, epoch, body.Body);

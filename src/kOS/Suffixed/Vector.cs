@@ -10,9 +10,9 @@ namespace kOS.Suffixed
 {
     public class Vector : Structure, IDumper
     {
-        public const string DUMP_X = "x";
-        public const string DUMP_Y = "y";
-        public const string DUMP_Z = "z";
+        public const string DumpX = "x";
+        public const string DumpY = "y";
+        public const string DumpZ = "z";
 
         public double X { get; set; }
 
@@ -202,18 +202,18 @@ namespace kOS.Suffixed
         {
             DictionaryWithHeader dump = new DictionaryWithHeader();
 
-            dump.Add(DUMP_X, X);
-            dump.Add(DUMP_Y, Y);
-            dump.Add(DUMP_Z, Z);
+            dump.Add(DumpX, X);
+            dump.Add(DumpY, Y);
+            dump.Add(DumpZ, Z);
 
             return dump;
         }
 
         public void LoadDump(IDictionary<object, object> dump)
         {
-            X = Convert.ToDouble(dump[DUMP_X]);
-            Y = Convert.ToDouble(dump[DUMP_Y]);
-            Z = Convert.ToDouble(dump[DUMP_Z]);
+            X = Convert.ToDouble(dump[DumpX]);
+            Y = Convert.ToDouble(dump[DumpY]);
+            Z = Convert.ToDouble(dump[DumpZ]);
         }
     }
 }
