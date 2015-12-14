@@ -2,11 +2,17 @@
 using kOS.Utilities;
 using UnityEngine;
 using System;
+using kOS.Serialization;
+using System.Collections.Generic;
+using kOS.Safe.Serialization;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
-    public class BodyTarget : Orbitable, IKOSTargetable
+    public class BodyTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
+        private static string DUMP_NAME = "name";
+
         public CelestialBody Body { get; set; }
 
         override public Orbit Orbit { get { return Body.orbit; } }
@@ -70,6 +76,11 @@ namespace kOS.Suffixed
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody() ?? Body;
             return new Vector(Vector3d.Exclude(GetUpVector(), parent.transform.up));
+        }
+
+        public BodyTarget() : base()
+        {
+            BodyInitializeSuffixes();
         }
 
         public BodyTarget(string name, SharedObjects shareObj)
@@ -199,6 +210,42 @@ namespace kOS.Suffixed
         public override int GetHashCode()
         {
             return Body.name.GetHashCode();
+        }
+
+        public void SetSharedObjects(SharedObjects sharedObjects)
+        {
+            this.Shared = sharedObjects;
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            DictionaryWithHeader dump = new DictionaryWithHeader();
+
+            dump.Header = "BODY '" + Body.bodyName + "'";
+
+            dump.Add(DUMP_NAME, Body.bodyName);
+
+            return dump;
+        }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            string name = dump[DUMP_NAME] as string;
+
+            if (name == null)
+            {
+                throw new KOSSerializationException("Body's name is null or invalid");
+            }
+
+            CelestialBody body = VesselUtils.GetBodyByName(name);
+
+            if (body == null)
+            {
+                throw new KOSSerializationException("Body with the given name does not exist");
+            }
+
+            Body = body;
+
         }
     }
 }

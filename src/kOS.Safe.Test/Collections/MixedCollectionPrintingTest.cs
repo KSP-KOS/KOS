@@ -7,27 +7,9 @@ namespace kOS.Safe.Test.Collections
     [TestFixture]
     public class MixedCollectionPrintingTest
     {
-        [Test]
-        public void CanShallowPrintListInLexicon()
-        {
-            var list = new ListValue();
-            list.Add("First In List");
-            list.Add("Second In List");
-            list.Add("Last In List");
-
-            var lexicon = new Lexicon<object, object>();
-            lexicon.Add("list", list);
-            lexicon.Add("not list", 2);
-
-            var result = lexicon.ToString();
-
-            Assert.IsTrue(result.Contains("LEXICON of 2 items"));
-            Assert.IsTrue(result.Contains("  [\"list\"]= LIST of 3 items"));
-            Assert.IsFalse(result.Contains("Last In List"));
-        }
 
         [Test]
-        public void CanDeepPrintListInLexicon()
+        public void CanPrintListInLexicon()
         {
             var list = new ListValue
             {
@@ -36,7 +18,7 @@ namespace kOS.Safe.Test.Collections
                 "Last In List"
             };
 
-            var lexicon = new Lexicon<object, object>
+            var lexicon = new Lexicon
             {
                 {"list", list}, 
                 {"not list", 2}
@@ -45,7 +27,7 @@ namespace kOS.Safe.Test.Collections
             var result = (string)InvokeDelegate(lexicon, "DUMP");
 
             Assert.IsTrue(result.Contains("LEXICON of 2 items"));
-            Assert.IsTrue(result.Contains("  [\"list\"]= LIST of 3 items"));
+            Assert.IsTrue(result.Contains("[\"list\"]= LIST of 3 items"));
             Assert.IsTrue(result.Contains("Last In List"));
         }
 
@@ -59,7 +41,7 @@ namespace kOS.Safe.Test.Collections
                 "Last In List"
             };
 
-            var lexicon = new Lexicon<object, object>
+            var lexicon = new Lexicon
             {
                 {"list", list}, 
                 {"not list", 2}

@@ -2,16 +2,28 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using UnityEngine;
+using kOS.Safe.Serialization;
+using System.Collections.Generic;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class Vector : Structure
+    public class Vector : Structure, IDumper
     {
+        public const string DUMP_X = "x";
+        public const string DUMP_Y = "y";
+        public const string DUMP_Z = "z";
+
         public double X { get; set; }
 
         public double Y { get; set; }
 
         public double Z { get; set; }
+
+        public Vector()
+        {
+            InitializeSuffixes();
+        }
 
         public Vector(Vector3d init)
             : this(init.x, init.y, init.z)
@@ -28,12 +40,11 @@ namespace kOS.Suffixed
         {
         }
 
-        public Vector(double x, double y, double z)
+        public Vector(double x, double y, double z) : this()
         {
             X = x;
             Y = y;
             Z = z;
-            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
@@ -185,6 +196,24 @@ namespace kOS.Suffixed
         public static Vector operator -(Vector a)
         {
             return a * (-1);
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            DictionaryWithHeader dump = new DictionaryWithHeader();
+
+            dump.Add(DUMP_X, X);
+            dump.Add(DUMP_Y, Y);
+            dump.Add(DUMP_Z, Z);
+
+            return dump;
+        }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            X = Convert.ToDouble(dump[DUMP_X]);
+            Y = Convert.ToDouble(dump[DUMP_Y]);
+            Z = Convert.ToDouble(dump[DUMP_Z]);
         }
     }
 }

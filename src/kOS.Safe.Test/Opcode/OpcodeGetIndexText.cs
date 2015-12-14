@@ -77,7 +77,7 @@ namespace kOS.Safe.Test.Opcode
         [Test]
         public void CanGetLexiconIndex()
         {
-            var list = new Lexicon<object,object>();
+            var list = new Lexicon();
             list.Add("foo", "bar");
             cpu.PushStack(list);
 
@@ -95,7 +95,7 @@ namespace kOS.Safe.Test.Opcode
         [Test]
         public void CanGetCorrectLexiconIndex()
         {
-            var list = new Lexicon<object, object>();
+            var list = new Lexicon();
             list.Add("foo", "bar");
             list.Add("fizz", "bang");
             cpu.PushStack(list);

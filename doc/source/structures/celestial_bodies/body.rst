@@ -62,6 +62,10 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`ROTATIONANGLE`            scalar (deg)
     ================================ ============
 
+.. note::
+
+    This type is serializable.
+
 .. attribute:: Body:NAME
 
     The name of the body. Example: "Mun".

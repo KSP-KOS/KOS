@@ -181,6 +181,8 @@
     <Compile Include="Suffixed\CrewMember.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
+    <Compile Include="Serialization\SerializationMgr.cs" />
+    <Compile Include="Serialization\IDumperWithSharedObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -214,4 +216,7 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
 </Project>

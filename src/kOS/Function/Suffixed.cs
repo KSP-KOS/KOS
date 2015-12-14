@@ -231,7 +231,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             AssertArgBottomAndConsume(shared);
-            var listValue = new Lexicon<object,object>();
+            var listValue = new Lexicon();
             ReturnValue = listValue;
         }
     }

@@ -3,6 +3,11 @@ using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using KSP.IO;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
+using kOS.Persistence;
+using kOS.Safe.Serialization;
+using kOS.Serialization;
 
 namespace kOS.Function
 {
@@ -190,5 +195,50 @@ namespace kOS.Function
         }
     }
 
+    [Function("writejson")]
+    public class FunctionWriteFile : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            IDumper serialized = PopValueAssert(shared, true) as IDumper;
+            AssertArgBottomAndConsume(shared);
 
+            if (serialized == null)
+            {
+                throw new KOSException("This type is not serializable");
+            }
+
+            string serializedString = new SerializationMgr(shared).Serialize(serialized, JSONFormatter.Instance);
+
+            ProgramFile programFile = new ProgramFile(fileName);
+            programFile.StringContent = serializedString;
+
+            if (shared.VolumeMgr != null)
+            {
+                shared.VolumeMgr.CurrentVolume.SaveFile(programFile);
+            }
+        }
+    }
+
+    [Function("readjson")]
+    public class FunctionReadFile : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            ProgramFile programFile = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
+
+            if (programFile == null)
+            {
+                throw new KOSException("File does not exist: " + fileName);
+            }
+
+            object read = new SerializationMgr(shared).Deserialize(programFile.StringContent, JSONFormatter.Instance);
+
+            ReturnValue = read;
+        }
+    }
 }

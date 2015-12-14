@@ -76,6 +76,10 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :meth:`CREW()`                        :struct:`List`            all :struct:`CrewMembers <CrewMember>`
     ===================================== ========================= =============
 
+.. note::
+
+    This type is serializable.
+
 .. attribute:: Vessel:CONTROL
 
     :type: :struct:`Control`

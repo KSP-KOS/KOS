@@ -24,9 +24,24 @@ namespace kOS.Safe.Encapsulation
             get { return collection.Count; }
         }
 
+        public T Pop()
+        {
+            return collection.Dequeue();
+        }
+
         public void Push(T val)
         {
             collection.Enqueue(val);
+        }
+            
+        public override void LoadDump(IDictionary<object, object> dump)
+        {
+            collection.Clear();
+
+            foreach (object item in dump.Values)
+            {
+                collection.Enqueue((T)item);
+            }
         }
 
         private void QueueInitializeSuffixes()
