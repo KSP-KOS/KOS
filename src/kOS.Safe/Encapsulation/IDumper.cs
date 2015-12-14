@@ -1,10 +1,13 @@
+using System.Collections.Generic;
+
 namespace kOS.Safe.Encapsulation
 {
     /// <summary>
-    /// A Dumper Is a class that is part of a suffix graph and wants to control how many levels of the graph we want to travel on a dump
+    /// Classes implementing this interface can dump their data to a dictionary.
     /// </summary>
     public interface IDumper : ISuffixed
     {
-        string[] Dump(int limit, int depth = 0);
+        IDictionary<object, object> Dump();
+        void LoadDump(IDictionary<object, object> dump);
     }
 }

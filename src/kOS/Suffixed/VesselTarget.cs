@@ -11,11 +11,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using kOS.Serialization;
+using kOS.Safe.Serialization;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : Orbitable, IKOSTargetable
+    public class VesselTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
+        private static string DumpGuid = "guid";
+
         override public Orbit Orbit { get { return Vessel.orbit; } }
 
         override public string GetName()
@@ -187,6 +191,11 @@ namespace kOS.Suffixed
                     "AIRSPEED", "VESSELNAME", "SHIPNAME",
                     "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
                 };
+        }
+
+        public VesselTarget()
+        {
+            InitializeSuffixes();
         }
 
         public VesselTarget(Vessel target, SharedObjects shared)
@@ -586,6 +595,37 @@ namespace kOS.Suffixed
         public static bool operator !=(VesselTarget left, VesselTarget right)
         {
             return !Equals(left, right);
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            DictionaryWithHeader dump = new DictionaryWithHeader();
+
+            dump.Header = "VESSEL '" + Vessel.vesselName + "'";
+
+            dump.Add(DumpGuid, Vessel.id.ToString());
+
+            return dump;
+        }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            string guid = dump[DumpGuid] as string;
+
+            if (guid == null)
+            {
+                throw new KOSSerializationException("Vessel's guid is null or invalid");
+            }
+
+            Vessel vessel = FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(guid));
+
+            if (vessel == null)
+            {
+                throw new KOSSerializationException("Vessel with the given id does not exist");
+            }
+
+            Vessel = vessel;
+
         }
     }
 }

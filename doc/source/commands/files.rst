@@ -306,10 +306,39 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+``WRITEJSON(OBJECT, FILENAME).``
+--------------------------------
+
+Serializes the given object to JSON format and saves it under the given filename on the current volume.
+
+**Important:** only certain types of objects can be serialized. If a type is serializable then that fact
+is explicitly mentioned in the type's documentation, see :struct:`Lexicon` for an example.
+
+Usage example::
+
+    SET L TO LEXICON().
+    SET NESTED TO QUEUE().
+
+    L:ADD("key1", "value1").
+    L:ADD("key2", NESTED).
+
+    NESTED:ADD("nestedkey1", "nestedvalue1").
+
+    WRITEJSON(l, "output.json").
+
+``READJSON(FILENAME).``
+-----------------------
+
+Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them. Example::
+
+    SET L TO READJSON("output.json").
+    PRINT L["key1"].
+
+
 .. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------------------------
 **(experimental)**
 
 For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.

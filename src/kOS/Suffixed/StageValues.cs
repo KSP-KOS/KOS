@@ -24,7 +24,7 @@ namespace kOS.Suffixed
             AddSuffix("NUMBER", new Suffix<int>(() => Staging.CurrentStage));
             AddSuffix("READY", new Suffix<bool>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
-            AddSuffix("RESOURCESLEX", new Suffix<Lexicon<string, ActiveResourceValue>>(GetResourceDictionary));
+            AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
@@ -40,10 +40,10 @@ namespace kOS.Suffixed
             return toReturn;
         }
 
-        private Lexicon<string, ActiveResourceValue> GetResourceDictionary()
+        private Lexicon GetResourceDictionary()
         {
             var resources = shared.Vessel.GetActiveResources();
-            var toReturn = new Lexicon<string, ActiveResourceValue>();
+            var toReturn = new Lexicon();
 
             foreach (var resource in resources)
             {

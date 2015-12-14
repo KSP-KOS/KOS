@@ -2,11 +2,18 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
+using kOS.Serialization;
+using kOS.Safe.Serialization;
+using System;
 
 namespace kOS.Suffixed
 {
-    public class GeoCoordinates : Structure
+    public class GeoCoordinates : Structure, IDumperWithSharedObjects
     {
+        private static string DumpLat = "lat";
+        private static string DumpLng = "lng";
+        private static string DumpBody = "body";
+
         private double lat;
         private double lng;
         public double Latitude
@@ -36,6 +43,11 @@ namespace kOS.Suffixed
 
         private const int TERRAIN_MASK_BIT = 15;
 
+        public GeoCoordinates()
+        {
+            GeoCoordsInitializeSuffixes();
+        }
+
         /// <summary>
         ///   Build a GeoCoordinates from the current lat/long of the orbitable
         ///   object passed in.  The object being checked for should be in the same
@@ -43,14 +55,13 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="orb">object to take current coords of</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        public GeoCoordinates(Orbitable orb, SharedObjects sharedObj)
+        public GeoCoordinates(Orbitable orb, SharedObjects sharedObj) : this()
         {
             Shared = sharedObj;
             Vector p = orb.GetPosition();
             Latitude = orb.PositionToLatitude(p);
             Longitude = orb.PositionToLongitude(p);
             Body = orb.GetParentBody();
-            GeoCoordsInitializeSuffixes();
         }
 
         /// <summary>
@@ -60,13 +71,12 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
-        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude)
+        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude) : this()
         {
             Latitude = latitude;
             Longitude = longitude;
             Shared = sharedObj;
             Body = body;
-            GeoCoordsInitializeSuffixes();
         }
 
         /// <summary>
@@ -86,13 +96,12 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude)
+        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude) : this()
         {
             Latitude = latitude;
             Longitude = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
-            GeoCoordsInitializeSuffixes();
         }
 
         /// <summary>
@@ -238,6 +247,30 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "LATLNG(" + Latitude + ", " + Longitude + ")";
+        }
+
+        public void SetSharedObjects(SharedObjects sharedObjects)
+        {
+            Shared = sharedObjects;
+        }
+
+        public System.Collections.Generic.IDictionary<object, object> Dump()
+        {
+            var dictionary = new DictionaryWithHeader
+            {
+                {DumpLat, lat},
+                {DumpLng, lng},
+                {DumpBody, new BodyTarget(Body, Shared)}
+            };
+
+            return dictionary;
+        }
+
+        public void LoadDump (System.Collections.Generic.IDictionary<object, object> dump)
+        {
+            Body = (dump[DumpBody] as BodyTarget).Body;
+            lat = Convert.ToDouble(dump[DumpLat]);
+            lng = Convert.ToDouble(dump[DumpLng]);
         }
     }
 }
