@@ -3,28 +3,22 @@ using kOS.Safe.Serialization;
 using kOS.Safe.Encapsulation;
 using System.Collections.Generic;
 using kOS.Safe.Exceptions;
-using kOS.Safe.Utilities;
 
 namespace kOS.Serialization
 {
     public class SerializationMgr : SafeSerializationMgr
     {
-        private SharedObjects sharedObjects;
+        private readonly SharedObjects sharedObjects;
 
-        public SerializationMgr(SharedObjects sharedObjects) : base()
+        public SerializationMgr(SharedObjects sharedObjects)
         {
             this.sharedObjects = sharedObjects;
         }
 
         public override IDumper CreateInstance(string typeFullName, IDictionary<object, object> data)
         {
-            var deserializedType = Type.GetType(typeFullName);
-
-            if (deserializedType == null)
-            {
-                SafeHouse.Logger.Log("#### " + typeFullName + ", " + typeof(SafeSerializationMgr).Assembly.FullName);
-                deserializedType = Type.GetType(typeFullName + ", " + typeof(SafeSerializationMgr).Assembly.FullName);
-            }
+            var deserializedType = Type.GetType(typeFullName) ??
+                                   Type.GetType(typeFullName + ", " + typeof(SafeSerializationMgr).Assembly.FullName);
 
             if (deserializedType == null)
             {
@@ -36,10 +30,13 @@ namespace kOS.Serialization
             if (instance is IDumperWithSharedObjects)
             {
                 IDumperWithSharedObjects withSharedObjects = instance as IDumperWithSharedObjects;
-                withSharedObjects.SetSharedObjects(sharedObjects);
+                withSharedObjects.Shared = sharedObjects;
             }
 
-            instance.LoadDump(data);
+            if (instance != null)
+            {
+                instance.LoadDump(data);
+            }
 
             return instance;
         }

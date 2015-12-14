@@ -1,30 +1,27 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
 
-namespace kOS.Safe
+namespace kOS.Safe.Encapsulation
 {
-    public abstract class EnumerableValue<T, C> : Structure, IEnumerable<T>, IDumper where C : IEnumerable<T>
+    public abstract class EnumerableValue<T, TC> : Structure, IEnumerable<T>, IDumper where TC : IEnumerable<T>
     {
-        private const int INDENT_SPACES = 2;
-        protected readonly C collection;
-        private string label;
+        protected TC Collection { get; private set; }
+        private readonly string label;
 
-        public EnumerableValue(string label, C collection)
+        protected EnumerableValue(string label, TC collection)
         {
             this.label = label;
-            this.collection = collection;
+            Collection = collection;
 
             InitializeEnumerableSuffixes();
         }
 
         public virtual IEnumerator<T> GetEnumerator()
         {
-            return collection.GetEnumerator();
+            return Collection.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -34,7 +31,7 @@ namespace kOS.Safe
 
         public bool Contains(T item)
         {
-            return collection.Contains(item);
+            return Collection.Contains(item);
         }
 
         public abstract int Count { get; }
@@ -46,9 +43,11 @@ namespace kOS.Safe
 
         public IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader result = new DictionaryWithHeader();
+            var result = new DictionaryWithHeader
+            {
+                Header = label + " of " + Collection.Count() + " items:"
+            };
 
-            result.Header = label + " of " + collection.Count() + " items:";
 
             int i = 0;
             foreach (T item in this)
@@ -64,10 +63,10 @@ namespace kOS.Safe
 
         private void InitializeEnumerableSuffixes()
         {
-            AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator (collection.GetEnumerator())));
-            AddSuffix("CONTAINS",   new OneArgsSuffix<bool, T>            (item => collection.Contains(item)));
-            AddSuffix("EMPTY",      new NoArgsSuffix<bool>                (() => !collection.Any()));
-            AddSuffix("DUMP",       new NoArgsSuffix<string>              (() => ToString()));
+            AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator (Collection.GetEnumerator())));
+            AddSuffix("CONTAINS",   new OneArgsSuffix<bool, T>            (item => Collection.Contains(item)));
+            AddSuffix("EMPTY",      new NoArgsSuffix<bool>                (() => !Collection.Any()));
+            AddSuffix("DUMP",       new NoArgsSuffix<string>              (ToString));
         }
     }
 }

@@ -160,9 +160,10 @@ namespace kOS.Suffixed
 
         public IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
-
-            dump.Add(DUMP_SPAN, span);
+            var dump = new DictionaryWithHeader
+            {
+                {DUMP_SPAN, span}
+            };
 
             return dump;
         }

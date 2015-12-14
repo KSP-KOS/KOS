@@ -1,12 +1,10 @@
 ﻿using System;
-using kOS.Safe.Function;
-using kOS.Safe.Persistence;
-using kOS.Safe.Utilities;
-using KSP.IO;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
-using kOS.Persistence;
+using kOS.Safe.Function;
+using kOS.Safe.Persistence;
 using kOS.Safe.Serialization;
+using kOS.Safe.Utilities;
 using kOS.Serialization;
 
 namespace kOS.Function
@@ -209,10 +207,12 @@ namespace kOS.Function
                 throw new KOSException("This type is not serializable");
             }
 
-            string serializedString = new SerializationMgr(shared).Serialize(serialized, JSONFormatter.Instance);
+            string serializedString = new SerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
 
-            ProgramFile programFile = new ProgramFile(fileName);
-            programFile.StringContent = serializedString;
+            ProgramFile programFile = new ProgramFile(fileName)
+            {
+                StringContent = serializedString
+            };
 
             if (shared.VolumeMgr != null)
             {
@@ -236,7 +236,7 @@ namespace kOS.Function
                 throw new KOSException("File does not exist: " + fileName);
             }
 
-            object read = new SerializationMgr(shared).Deserialize(programFile.StringContent, JSONFormatter.Instance);
+            object read = new SerializationMgr(shared).Deserialize(programFile.StringContent, JsonFormatter.ReaderInstance);
 
             ReturnValue = read;
         }
