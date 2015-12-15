@@ -1,10 +1,6 @@
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Properties;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -21,31 +17,31 @@ namespace kOS.Safe.Encapsulation
 
         public override IEnumerator<T> GetEnumerator()
         {
-            return Enumerable.Reverse(collection).GetEnumerator();
+            return Collection.Reverse().GetEnumerator();
         }
 
         public override int Count
         {
-            get { return collection.Count; }
+            get { return Collection.Count; }
         }
 
         public T Pop()
         {
-            return collection.Pop();
+            return Collection.Pop();
         }
 
         public void Push(T val)
         {
-            collection.Push(val);
+            Collection.Push(val);
         }
 
         public override void LoadDump(IDictionary<object, object> dump)
         {
-            collection.Clear();
+            Collection.Clear();
 
             foreach (object item in dump.Values)
             {
-                collection.Push((T)Structure.FromPrimitive(item));
+                Collection.Push((T)Structure.FromPrimitive(item));
             }
         }
 
@@ -53,11 +49,11 @@ namespace kOS.Safe.Encapsulation
         private void StackInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
-            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => collection.Push(toPush)));
-            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => collection.Pop()));
-            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => collection.Peek()));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => collection.Clear()));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => Collection.Count));
+            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Push(toPush)));
+            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Pop()));
+            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
         }
 
         public static StackValue<T> CreateStack<TU>(IEnumerable<TU> list)

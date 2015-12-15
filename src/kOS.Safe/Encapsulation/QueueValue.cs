@@ -1,10 +1,6 @@
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Properties;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -21,37 +17,37 @@ namespace kOS.Safe.Encapsulation
 
         public override int Count
         {
-            get { return collection.Count; }
+            get { return Collection.Count; }
         }
 
         public T Pop()
         {
-            return collection.Dequeue();
+            return Collection.Dequeue();
         }
 
         public void Push(T val)
         {
-            collection.Enqueue(val);
+            Collection.Enqueue(val);
         }
             
         public override void LoadDump(IDictionary<object, object> dump)
         {
-            collection.Clear();
+            Collection.Clear();
 
             foreach (object item in dump.Values)
             {
-                collection.Enqueue((T)Structure.FromPrimitive(item));
+                Collection.Enqueue((T)Structure.FromPrimitive(item));
             }
         }
 
         private void QueueInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<QueueValue<T>>       (() => new QueueValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
-            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => collection.Enqueue(toPush)));
-            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => collection.Dequeue()));
-            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => collection.Peek()));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => collection.Clear()));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => Collection.Count));
+            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Enqueue(toPush)));
+            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Dequeue()));
+            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
         }
 
         public static QueueValue<T> CreateQueue<TU>(IEnumerable<TU> list)

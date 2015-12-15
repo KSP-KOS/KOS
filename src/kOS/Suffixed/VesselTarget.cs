@@ -18,7 +18,7 @@ namespace kOS.Suffixed
 {
     public class VesselTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
-        private static string DUMP_GUID = "guid";
+        private static string DumpGuid = "guid";
 
         override public Orbit Orbit { get { return Vessel.orbit; } }
 
@@ -597,25 +597,20 @@ namespace kOS.Suffixed
             return !Equals(left, right);
         }
 
-        public void SetSharedObjects(SharedObjects sharedObjects)
-        {
-            this.Shared = sharedObjects;
-        }
-
         public IDictionary<object, object> Dump()
         {
             DictionaryWithHeader dump = new DictionaryWithHeader();
 
             dump.Header = "VESSEL '" + Vessel.vesselName + "'";
 
-            dump.Add(DUMP_GUID, Vessel.id.ToString());
+            dump.Add(DumpGuid, Vessel.id.ToString());
 
             return dump;
         }
 
         public void LoadDump(IDictionary<object, object> dump)
         {
-            string guid = dump[DUMP_GUID] as string;
+            string guid = dump[DumpGuid] as string;
 
             if (guid == null)
             {

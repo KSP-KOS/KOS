@@ -10,9 +10,9 @@ namespace kOS.Suffixed
 {
     public class GeoCoordinates : Structure, IDumperWithSharedObjects
     {
-        private static string DUMP_LAT = "lat";
-        private static string DUMP_LNG = "lng";
-        private static string DUMP_BODY = "body";
+        private static string DumpLat = "lat";
+        private static string DumpLng = "lng";
+        private static string DumpBody = "body";
 
         private double lat;
         private double lng;
@@ -256,20 +256,21 @@ namespace kOS.Suffixed
 
         public System.Collections.Generic.IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader dictionary = new DictionaryWithHeader();
-
-            dictionary.Add(DUMP_LAT, lat);
-            dictionary.Add(DUMP_LNG, lng);
-            dictionary.Add(DUMP_BODY, new BodyTarget(Body, Shared));
+            var dictionary = new DictionaryWithHeader
+            {
+                {DumpLat, lat},
+                {DumpLng, lng},
+                {DumpBody, new BodyTarget(Body, Shared)}
+            };
 
             return dictionary;
         }
 
         public void LoadDump (System.Collections.Generic.IDictionary<object, object> dump)
         {
-            Body = (dump[DUMP_BODY] as BodyTarget).Body;
-            lat = Convert.ToDouble(dump[DUMP_LAT]);
-            lng = Convert.ToDouble(dump[DUMP_LNG]);
+            Body = (dump[DumpBody] as BodyTarget).Body;
+            lat = Convert.ToDouble(dump[DumpLat]);
+            lng = Convert.ToDouble(dump[DumpLng]);
         }
     }
 }

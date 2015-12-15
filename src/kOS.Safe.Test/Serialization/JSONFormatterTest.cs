@@ -1,9 +1,6 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Exceptions;
-using NUnit.Framework;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Serialization;
-using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace kOS.Safe.Test.Serialization
 {
@@ -97,12 +94,12 @@ namespace kOS.Safe.Test.Serialization
 
         private string Serialize(IDumper o)
         {
-            return new SafeSerializationMgr().Serialize(o, JSONFormatter.Instance);
+            return new SafeSerializationMgr().Serialize(o, JsonFormatter.WriterInstance);
         }
 
         private object Deserialize(string s)
         {
-            return new SafeSerializationMgr().Deserialize(s, JSONFormatter.Instance);
+            return new SafeSerializationMgr().Deserialize(s, JsonFormatter.ReaderInstance);
         }
     }
 }

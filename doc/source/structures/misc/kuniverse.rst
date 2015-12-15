@@ -45,6 +45,10 @@ KUniverse 4th wall methods
           - string
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
+        * - :attr:`HOURSPERDAY`
+          - scalar
+          - Get
+          - Number of hours per day (6 or 24) according to your game settings.
         * - :attr:`DEBUGLOG(message)`
           - none
           - Method
@@ -148,6 +152,34 @@ KUniverse 4th wall methods
     :return: none
 
     Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
+
+.. attribute:: KUniverse:HOURSPERDAY
+
+    :access: Get
+    :type: Scalar (integer)
+
+    Has the value of either 6 or 24, depending on what setting you used
+    on Kerbal Space Program's main settings screen for whether you wanted
+    to think in terms of Kerbal days (6 hours) or Kerbin days (24 hours).
+    This only affects what the clock format looks like and doesn't
+    change the actual time in game, which is stored purely as a number of
+    seconds since epoch anyway and is unaffected by how the time is presented
+    to the human being watching the game.  (i.e. if you allow
+    25 hours to pass in the game, the game merely tracks that 39000 seconds
+    have passed (25 x 60 x 60).  It doesn't care how that translates into
+    minutes, hours, days, and years until showing it on screen to the player.)
+
+    This setting also affects how values from :struct:Timespan calculate
+    the ``:hours``, ``:days``, and ``:years`` suffixes.
+
+    Note that this setting is not settable.  This decision was made because
+    the main stock KSP game only ever changes the setting on the main
+    settings menu, which isn't accessible during play.  It's entirely
+    possible for kOS to support changing the value mid-game, but we've
+    decided to deliberately avoid doing so because there may be other mods
+    with code that only reads the setting once up front and then assumes
+    it never changes after that.  Because in the stock game, that
+    assumption would be true.
 
 .. _debuglog:
 
