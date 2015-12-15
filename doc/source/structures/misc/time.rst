@@ -38,7 +38,7 @@ Special variable TIME
         TIME:CLOCK          // Universal time in H:M:S format(1:50:26)
         TIME:CALENDAR       // Year 1, day 134
         TIME:YEAR           // 1
-        TIME:DAY            // 134
+        TIME:DAY            // 134 : changes depending on KUNIVERSE:HOURSPERDAY
         TIME:HOUR           // 1
         TIME:MINUTE         // 50
         TIME:SECOND         // 26
@@ -56,6 +56,9 @@ You can use the TIME special variable to detect whether or not a real physics 't
     Please be aware that the kind of calendar :struct:`TimeSpan`'s use will depend on your KSP settings. The main KSP game supports both Kerbin time and Earth time and changing that setting will affect how :struct:`TimeSpan` works in kOS.
 
     The difference is whether 1 day = 6 hours or 1 day = 24 hours.
+
+    You can access this setting from your script by using
+    :attr:`Kuniverse:HOURSPERDAY`.
 
 .. warning::
 

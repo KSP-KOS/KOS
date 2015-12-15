@@ -28,8 +28,10 @@ namespace kOS.Safe.Test.Serialization
             nested["nested1"] = "nested1value";
             nested["nested2"] = "nested2value";
 
-            Assert.AreEqual("LEXICON of 3 items:\n[\"key1\"]= value1\n[\"key2\"]= 1\n[\"key3\"]=" +
-                " LEXICON of 2 items:\n  [\"nested1\"]= nested1value\n  [\"nested2\"]= nested2value", Serialize(lex));
+            var lines = new string[] { "LEXICON of 3 items:", "[\"key1\"]= value1", "[\"key2\"]= 1", "[\"key3\"]= LEXICON of 2 items:",
+                "  [\"nested1\"]= nested1value", "  [\"nested2\"]= nested2value"};
+
+            Assert.AreEqual(String.Join(Environment.NewLine, lines), Serialize(lex));
         }
 
         private string Serialize(IDumper o)

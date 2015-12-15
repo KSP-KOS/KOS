@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation;
-using System.Reflection;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Serialization
 {
     public class SafeSerializationMgr
     {
         public static string TYPE_KEY = "$type";
-
-        public SafeSerializationMgr()
-        {
-
-        }
 
         public static bool IsValue(object serialized)
         {
@@ -34,9 +27,10 @@ namespace kOS.Safe.Serialization
 
             foreach (object key in keys)
             {
-                if (dumped[key] is IDumper)
+                var dump = dumped[key] as IDumper;
+                if (dump != null)
                 {
-                    dumped[key] = Dump(dumped[key] as IDumper, includeType);
+                    dumped[key] = Dump(dump, includeType);
                 } else if (IsEncapsulatedValue(dumped[key]) || IsValue(dumped[key]))
                 {
                     dumped[key] = Structure.ToPrimitive(dumped[key]);
@@ -54,14 +48,14 @@ namespace kOS.Safe.Serialization
             return dumped;
         }
 
-        public string Serialize(IDumper serialized, Formatter formatter, bool includeType = true)
+        public string Serialize(IDumper serialized, IFormatWriter formatter, bool includeType = true)
         {
             return formatter.Write(Dump(serialized, includeType));
         }
 
         public IDumper CreateFromDump(IDictionary<object, object> dump)
         {
-            Dictionary<object, object> data = new Dictionary<object, object>();
+            var data = new Dictionary<object, object>();
             foreach (KeyValuePair<object, object> entry in dump)
             {
                 if (entry.Key.Equals(TYPE_KEY))
@@ -69,9 +63,10 @@ namespace kOS.Safe.Serialization
                     continue;
                 }
 
-                if (entry.Value is IDictionary<object, object>)
+                var objects = entry.Value as IDictionary<object, object>;
+                if (objects != null)
                 {
-                    data[entry.Key] = CreateFromDump(entry.Value as IDictionary<object, object>);
+                    data[entry.Key] = CreateFromDump(objects);
                 } else
                 {
                     data[entry.Key] = entry.Value;
@@ -104,16 +99,11 @@ namespace kOS.Safe.Serialization
             return instance;
         }
 
-        public object Deserialize(string input, Formatter formatter)
+        public object Deserialize(string input, IFormatReader formatter)
         {
-            object serialized = formatter.Read(input);
+            IDictionary<object, object> dump = formatter.Read(input);
 
-            if (serialized is IDictionary<object, object>)
-            {
-                return CreateFromDump(serialized as IDictionary<object, object>);
-            }
-
-            return serialized;
+            return dump == null ? null : CreateFromDump(dump);
         }
 
         public string ToString(IDumper dumper)

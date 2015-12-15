@@ -8,17 +8,17 @@ namespace kOS.Suffixed
 {
     public class OrbitInfo : Structure, IDumperWithSharedObjects
     {
-        public static string DUMP_INCLINATION = "inclination";
-        public static string DUMP_ECCENTRICITY = "eccentricity";
-        public static string DUMP_SEMI_MAJOR_AXIS = "semiMajorAxis";
-        public static string DUMP_LONGITUDE_OF_ASCENDING_NODE = "longitudeOfAscendingNode";
-        public static string DUMP_ARGUMENT_OF_PERIAPSIS = "argumentOfPeriapsis";
-        public static string DUMP_MEAN_ANOMALY_AT_EPOCH = "meanAnomalyAtEpoch";
-        public static string DUMP_EPOCH = "epoch";
-        public static string DUMP_BODY = "body";
+        public static string DumpInclination = "inclination";
+        public static string DumpEccentricity = "eccentricity";
+        public static string DumpSemiMajorAxis = "semiMajorAxis";
+        public static string DumpLongitudeOfAscendingNode = "longitudeOfAscendingNode";
+        public static string DumpArgumentOfPeriapsis = "argumentOfPeriapsis";
+        public static string DumpMeanAnomalyAtEpoch = "meanAnomalyAtEpoch";
+        public static string DumpEpoch = "epoch";
+        public static string DumpBody = "body";
 
         private Orbit orbit;
-        private SharedObjects shared;
+        public SharedObjects Shared { get; set; }
         private string name;
  
         public OrbitInfo()
@@ -29,13 +29,13 @@ namespace kOS.Suffixed
         public OrbitInfo(Orbitable orb, SharedObjects sharedObj) : this()
         {
             orbit = orb.Orbit;
-            shared = sharedObj;
+            Shared = sharedObj;
             name = orb.GetName();
         }
         
         public OrbitInfo( Orbit orb, SharedObjects sharedObj) : this()
         {
-            shared = sharedObj;
+            Shared = sharedObj;
             orbit = orb;
             name = "<unnamed>";
         }
@@ -45,7 +45,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<string>(() => name));
             AddSuffix("APOAPSIS", new Suffix<double>(() => orbit.ApA));
             AddSuffix("PERIAPSIS", new Suffix<double>(() => orbit.PeA));
-            AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(orbit.referenceBody, shared)));
+            AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(orbit.referenceBody, Shared)));
             AddSuffix("PERIOD", new Suffix<double>(() => orbit.period));
             AddSuffix("INCLINATION", new Suffix<double>(() => orbit.inclination));
             AddSuffix("ECCENTRICITY", new Suffix<double>(() => orbit.eccentricity));
@@ -77,7 +77,7 @@ namespace kOS.Suffixed
         /// <returns></returns>
         public Vector GetPositionAtUT( TimeSpan timeStamp )
         {
-            return new Vector( orbit.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - shared.Vessel.findWorldCenterOfMass() );
+            return new Vector( orbit.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - Shared.Vessel.findWorldCenterOfMass() );
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace kOS.Suffixed
             if (parent != null)
             {
                 Vector3d pos = GetPositionAtUT( timeStamp );
-                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + shared.Vessel.findWorldCenterOfMass()) );
+                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + Shared.Vessel.findWorldCenterOfMass()) );
             }
             else
                 surfVel = new Vector( orbVel.X, orbVel.Y, orbVel.Z );
@@ -111,7 +111,7 @@ namespace kOS.Suffixed
         /// <returns>an OrbitInfo, or a null if there isn't any.</returns>
         private OrbitInfo GetNextPatch()
         {
-            return ! GetHasNextPatch() ? null : new OrbitInfo(orbit.nextPatch,shared);
+            return ! GetHasNextPatch() ? null : new OrbitInfo(orbit.nextPatch,Shared);
         }
 
         /// <summary>
@@ -128,24 +128,21 @@ namespace kOS.Suffixed
             return "ORBIT of " + name;
         }
 
-        public void SetSharedObjects(SharedObjects sharedObjects)
-        {
-            shared = sharedObjects;
-        }
-
         public System.Collections.Generic.IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
+            DictionaryWithHeader dump = new DictionaryWithHeader
+            {
+                Header = "ORBIT of " + name
+            };
 
-            dump.Header = "ORBIT of " + name;
-            dump.Add(DUMP_INCLINATION, orbit.inclination);
-            dump.Add(DUMP_ECCENTRICITY, orbit.eccentricity);
-            dump.Add(DUMP_SEMI_MAJOR_AXIS, orbit.semiMajorAxis);
-            dump.Add(DUMP_LONGITUDE_OF_ASCENDING_NODE, orbit.LAN);
-            dump.Add(DUMP_ARGUMENT_OF_PERIAPSIS, orbit.argumentOfPeriapsis);
-            dump.Add(DUMP_MEAN_ANOMALY_AT_EPOCH, orbit.meanAnomalyAtEpoch);
-            dump.Add(DUMP_EPOCH, orbit.epoch);
-            dump.Add(DUMP_BODY, new BodyTarget(orbit.referenceBody, shared));
+            dump.Add(DumpInclination, orbit.inclination);
+            dump.Add(DumpEccentricity, orbit.eccentricity);
+            dump.Add(DumpSemiMajorAxis, orbit.semiMajorAxis);
+            dump.Add(DumpLongitudeOfAscendingNode, orbit.LAN);
+            dump.Add(DumpArgumentOfPeriapsis, orbit.argumentOfPeriapsis);
+            dump.Add(DumpMeanAnomalyAtEpoch, orbit.meanAnomalyAtEpoch);
+            dump.Add(DumpEpoch, orbit.epoch);
+            dump.Add(DumpBody, new BodyTarget(orbit.referenceBody, Shared));
 
             return dump;
         }
@@ -154,17 +151,17 @@ namespace kOS.Suffixed
         {
             name = "<unnamed>";
 
-            double inclination = Convert.ToDouble(dump[DUMP_INCLINATION]);
-            double eccentricity = Convert.ToDouble(dump[DUMP_ECCENTRICITY]);
-            double semi_major_axis = Convert.ToDouble(dump[DUMP_SEMI_MAJOR_AXIS]);
-            double longitude_of_ascending_node = Convert.ToDouble(dump[DUMP_LONGITUDE_OF_ASCENDING_NODE]);
-            double argument_of_periapsis = Convert.ToDouble(dump[DUMP_ARGUMENT_OF_PERIAPSIS]);
-            double mean_anomaly_at_epoch = Convert.ToDouble(dump[DUMP_MEAN_ANOMALY_AT_EPOCH]);
-            double epoch = Convert.ToDouble(dump[DUMP_EPOCH]);
-            BodyTarget body = dump[DUMP_BODY] as BodyTarget;
+            double inclination = Convert.ToDouble(dump[DumpInclination]);
+            double eccentricity = Convert.ToDouble(dump[DumpEccentricity]);
+            double semiMajorAxis = Convert.ToDouble(dump[DumpSemiMajorAxis]);
+            double longitudeOfAscendingNode = Convert.ToDouble(dump[DumpLongitudeOfAscendingNode]);
+            double argumentOfPeriapsis = Convert.ToDouble(dump[DumpArgumentOfPeriapsis]);
+            double meanAnomalyAtEpoch = Convert.ToDouble(dump[DumpMeanAnomalyAtEpoch]);
+            double epoch = Convert.ToDouble(dump[DumpEpoch]);
+            BodyTarget body = dump[DumpBody] as BodyTarget;
 
-            orbit = new Orbit(inclination, eccentricity, semi_major_axis, longitude_of_ascending_node, argument_of_periapsis,
-                mean_anomaly_at_epoch, epoch, body.Body);
+            orbit = new Orbit(inclination, eccentricity, semiMajorAxis, longitudeOfAscendingNode, argumentOfPeriapsis,
+                meanAnomalyAtEpoch, epoch, body.Body);
         }
     }
 }

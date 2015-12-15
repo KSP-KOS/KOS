@@ -1,16 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
     public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
     {
-        private const int INDENT_SPACES = 2;
 
         public ListValue()
             : this(new List<T>())
@@ -24,58 +22,58 @@ namespace kOS.Safe.Encapsulation
 
         public void Add(T item)
         {
-            collection.Add(item);
+            Collection.Add(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            collection.CopyTo(array, arrayIndex);
+            Collection.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(T item)
         {
-            return collection.Remove(item);
+            return Collection.Remove(item);
         }
 
         public void Clear()
         {
-            collection.Clear();
+            Collection.Clear();
         }
 
         public override int Count
         {
-            get { return collection.Count; }
+            get { return Collection.Count; }
         }
 
         public void RemoveAt(int index)
         {
-            collection.RemoveAt(index);
+            Collection.RemoveAt(index);
         }
 
         public T this[int index]
         {
-            get { return collection[index]; }
-            set { collection[index] = value; }
+            get { return Collection[index]; }
+            set { Collection[index] = value; }
         }
             
         public override void LoadDump(IDictionary<object, object> dump)
         {
-            collection.Clear();
+            Collection.Clear();
 
             foreach (object item in dump.Values)
             {
-                collection.Add((T)Structure.FromPrimitive(item));
+                Collection.Add((T)Structure.FromPrimitive(item));
             }
         }
 
         private void ListInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => collection.Clear()));
-            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => collection.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => collection.Insert(index, toAdd)));
-            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => collection.RemoveAt(toRemove)));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => Collection.Count));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
+            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Collection.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => Collection.Insert(index, toAdd)));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => Collection.RemoveAt(toRemove)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
        }
 
@@ -83,9 +81,9 @@ namespace kOS.Safe.Encapsulation
         private ListValue SubListMethod(int start, int runLength)
         {
             var subList = new ListValue();
-            for (int i = start; i < collection.Count && i < start + runLength; ++i)
+            for (int i = start; i < Collection.Count && i < start + runLength; ++i)
             {
-                subList.Add(collection[i]);
+                subList.Add(Collection[i]);
             }
             return subList;
         }
@@ -104,7 +102,7 @@ namespace kOS.Safe.Encapsulation
             }
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            return collection[(int)index];
+            return Collection[(int)index];
         }
 
         public void SetIndex(object index, object value)
@@ -118,8 +116,7 @@ namespace kOS.Safe.Encapsulation
             {
                 throw new KOSException("The index must be an integer number");
             }
-
-            collection[idx] = (T)value;
+            Collection[idx] = (T)value;
         }
 
 

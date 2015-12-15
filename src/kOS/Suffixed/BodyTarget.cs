@@ -11,7 +11,7 @@ namespace kOS.Suffixed
 {
     public class BodyTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
-        private static string DUMP_NAME = "name";
+        private static string DumpName = "name";
 
         public CelestialBody Body { get; set; }
 
@@ -78,7 +78,7 @@ namespace kOS.Suffixed
             return new Vector(Vector3d.Exclude(GetUpVector(), parent.transform.up));
         }
 
-        public BodyTarget() : base()
+        public BodyTarget()
         {
             BodyInitializeSuffixes();
         }
@@ -150,7 +150,7 @@ namespace kOS.Suffixed
         /// weird exception for this one case.  This transforms it back into raw universe
         /// axes again:
         /// </summary>
-        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <param name="angularVelFromKSP">the value KSP is returning for angular velocity</param>
         /// <returns>altered velocity in the new reference frame</returns>
         private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
         {
@@ -214,23 +214,24 @@ namespace kOS.Suffixed
 
         public void SetSharedObjects(SharedObjects sharedObjects)
         {
-            this.Shared = sharedObjects;
+            Shared = sharedObjects;
         }
 
         public IDictionary<object, object> Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
+            var dump = new DictionaryWithHeader
+            {
+                Header = string.Format("BODY '{0}'", Body.bodyName)
+            };
 
-            dump.Header = "BODY '" + Body.bodyName + "'";
-
-            dump.Add(DUMP_NAME, Body.bodyName);
+            dump.Add(DumpName, Body.bodyName);
 
             return dump;
         }
 
         public void LoadDump(IDictionary<object, object> dump)
         {
-            string name = dump[DUMP_NAME] as string;
+            string name = dump[DumpName] as string;
 
             if (name == null)
             {
