@@ -1304,7 +1304,7 @@ namespace kOS.Safe.Compilation
         /// <param name="direct">same meaning as OpcodeCall.Direct</param>
         /// <param name="destination">if direct, then this is the function name</param>
         /// <param name="calledFromKOSDelegateCall">true if KOSDelegate.Call() brought us here.  If true that
-        /// means any curried args are already on the stack.  If false it means they aren't and this will have to
+        /// means any pre-bound args are already on the stack.  If false it means they aren't and this will have to
         /// put them there.</param>
         /// <returns>new IP to jump to, if this should be followed up by a jump.  If -1 then it means don't jump.</returns>
         public static int StaticExecute(ICpu cpu, bool direct, object destination, bool calledFromKOSDelegateCall)
@@ -1374,7 +1374,7 @@ namespace kOS.Safe.Compilation
             if (kosDelegate != null)
             {
                 if (! calledFromKOSDelegateCall)
-                    kosDelegate.InsertCurriedArgs();
+                    kosDelegate.InsertPreBoundArgs();
             }
 
             IUserDelegate userDelegate = functionPointer as IUserDelegate;
