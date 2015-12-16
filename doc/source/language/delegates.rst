@@ -170,7 +170,7 @@ some code for it to run.
 
 And that's what you would use a delegate for.  Here's the full example
 that passes in a delegate where you tell it what kind of check you want
-it to do by giving it a function you want it to call for the boolean check:
+it to do by giving it a function you want it to call for the boolean check::
 
     function make_sublist {
       parameter
