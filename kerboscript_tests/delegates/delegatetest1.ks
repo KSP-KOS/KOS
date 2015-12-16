@@ -25,8 +25,8 @@ print "== calling bar through a delegate ==".
 set bar_ref to bar@.
 set refsum to bar_ref:call(1,2,3).
 print "bar via a ref returned " + refsum + " which should be 6".
-print "== getting a curry of bar delegate ==".
-set bar_curry to bar_ref:curry(1,2).
-print "== calling bar through curry ==".
-set refsum to bar_curry:call(3).
-print "bar via a curry returned " + refsum + " which should be 6".
+print "== getting a bound curry of bar delegate ==".
+set bar_bound to bar_ref:bind(1,2).
+print "== calling bar through bound curry ==".
+set refsum to bar_bound:call(3).
+print "bar via a bound curry returned " + refsum + " which should be 6".

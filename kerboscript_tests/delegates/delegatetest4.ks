@@ -20,7 +20,7 @@ function outer {
     }
     return inner@.
   }
-  return middle:curry(outerParam).
+  return middle:bind(outerParam).
 }
 
 print "launch in 3...".

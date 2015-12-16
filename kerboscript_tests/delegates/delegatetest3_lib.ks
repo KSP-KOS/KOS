@@ -22,9 +22,9 @@ function make_eacher {
 }
 
 if yield_results {
-  global mapper_result is make_mapper():curry(op).
+  global mapper_result is make_mapper():bind(op).
 } else {
-  global mapper_result is make_eacher():curry(op).
+  global mapper_result is make_eacher():bind(op).
   mapper_result:call(list(2,3,4)).
 }
 

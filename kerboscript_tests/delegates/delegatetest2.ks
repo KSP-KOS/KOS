@@ -13,7 +13,7 @@ function square {
 
 print "== ensuring delegates as arguments ==".
 set map_delegate to map@.
-set square_list to map_delegate:curry(square@).
+set square_list to map_delegate:bind(square@).
 print "   — squares of list(1,2,3) are " + square_list:call(list(1,2,3)).
 
 function make_greeter {
