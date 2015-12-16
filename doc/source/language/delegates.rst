@@ -190,8 +190,8 @@ it to do by giving it a function you want it to call for the boolean check::
     local numlist is LIST(5, 6, 1, 49.1, 10, -2, 0, -12, 50, 0.3, 1.2, -1, 0).
 
     function is_neg { parameter n. return (n < 0). }
-    function is_round { parameter n. return (num = round(num,0)). }
-    function is_even { parameter n. return (mod(num,2) = 0). }
+    function is_round { parameter n. return (n = round(n,0)). }
+    function is_even { parameter n. return (mod(n,2) = 0). }
 
     print "A list of all the negatives:".
     print make_sublist(numlist, is_neg@). // note the '@' for a delegate of the function.
