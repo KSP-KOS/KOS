@@ -116,6 +116,9 @@ You can use the TIME special variable to detect whether or not a real physics 't
           - Total Seconds since Epoch
 
 
+.. note::
+
+    This type is serializable.
 
 
 .. attribute:: TimeSpan:CLOCK

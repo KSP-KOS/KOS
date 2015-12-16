@@ -1,12 +1,16 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
-    public class TimeSpan : Structure
+    public class TimeSpan : Structure, IDumper, IComparable<TimeSpan>
     {
-        readonly double span;
+        public const string DumpSpan = "span";
+
+        double span;
         private const int DAYS_IN_YEAR = 365;
 
         public const int HOURS_IN_EARTH_DAY = 24;
@@ -22,10 +26,14 @@ namespace kOS.Suffixed
         private const int SECONDS_IN_EARTH_DAY = SECONDS_IN_EARTH_HOUR * HOURS_IN_EARTH_DAY;
         private const int SECONDS_IN_EARTH_YEAR = SECONDS_IN_EARTH_DAY * DAYS_IN_YEAR;
 
-        public TimeSpan(double unixStyleTime)
+        public TimeSpan()
+        {
+            InitializeSuffixes();
+        }
+
+        public TimeSpan(double unixStyleTime) : this()
         {
             span = unixStyleTime;
-            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
@@ -148,6 +156,26 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return string.Format("TIME({0:0})", span);
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            var dump = new DictionaryWithHeader
+            {
+                {DumpSpan, span}
+            };
+
+            return dump;
+        }
+
+        public void LoadDump (IDictionary<object, object> dump)
+        {
+            span = Convert.ToDouble(dump[DumpSpan]);
+        }
+            
+        public int CompareTo(TimeSpan other)
+        {
+            return span.CompareTo(other.span);
         }
     }
 }

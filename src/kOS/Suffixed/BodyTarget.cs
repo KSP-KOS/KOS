@@ -2,11 +2,17 @@
 using kOS.Utilities;
 using UnityEngine;
 using System;
+using kOS.Serialization;
+using System.Collections.Generic;
+using kOS.Safe.Serialization;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
-    public class BodyTarget : Orbitable, IKOSTargetable
+    public class BodyTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
+        private static string DumpName = "name";
+
         public CelestialBody Body { get; set; }
 
         override public Orbit Orbit { get { return Body.orbit; } }
@@ -70,6 +76,11 @@ namespace kOS.Suffixed
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody() ?? Body;
             return new Vector(Vector3d.Exclude(GetUpVector(), parent.transform.up));
+        }
+
+        public BodyTarget()
+        {
+            BodyInitializeSuffixes();
         }
 
         public BodyTarget(string name, SharedObjects shareObj)
@@ -139,7 +150,7 @@ namespace kOS.Suffixed
         /// weird exception for this one case.  This transforms it back into raw universe
         /// axes again:
         /// </summary>
-        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <param name="angularVelFromKSP">the value KSP is returning for angular velocity</param>
         /// <returns>altered velocity in the new reference frame</returns>
         private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
         {
@@ -199,6 +210,43 @@ namespace kOS.Suffixed
         public override int GetHashCode()
         {
             return Body.name.GetHashCode();
+        }
+
+        public void SetSharedObjects(SharedObjects sharedObjects)
+        {
+            Shared = sharedObjects;
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            var dump = new DictionaryWithHeader
+            {
+                Header = string.Format("BODY '{0}'", Body.bodyName)
+            };
+
+            dump.Add(DumpName, Body.bodyName);
+
+            return dump;
+        }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            string name = dump[DumpName] as string;
+
+            if (name == null)
+            {
+                throw new KOSSerializationException("Body's name is null or invalid");
+            }
+
+            CelestialBody body = VesselUtils.GetBodyByName(name);
+
+            if (body == null)
+            {
+                throw new KOSSerializationException("Body with the given name does not exist");
+            }
+
+            Body = body;
+
         }
     }
 }
