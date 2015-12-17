@@ -107,7 +107,6 @@
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
-    <Compile Include="Encapsulation\Suffixes\VarArgsVoidSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />
     <Compile Include="Encapsulation\UserDelegate.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />

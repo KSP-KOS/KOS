@@ -312,7 +312,7 @@ of these ``:bind`` calls.  You could do this, for example::
 The technique of transforming a function that takes many arguments into
 a nested succession of functions that each only take one argument has a
 name.  It's called :ref:`Currying <https://en.wikipedia.org/wiki/Currying>`_.
-(It's named after mathemetician
+(It's named after mathematician
 :ref:`Haskell Curry <https://en.wikipedia.org/wiki/Haskell_Curry>`_
 and has nothing to do with delicious spicy food).
 

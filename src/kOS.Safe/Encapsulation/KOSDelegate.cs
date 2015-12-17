@@ -114,7 +114,6 @@ namespace kOS.Safe.Execution
         /// <summary>
         /// Should return a new instance of self, with all fields copied.
         /// </summary>
-        /// <param name="KOSDelegate">Should be of type whatever the actual derived type is, not a raw KOSDelegate</param>
         /// <returns>Should return whatever the actual derived type is, not a raw KOSDelegate</returns>
         public abstract KOSDelegate Clone();
 

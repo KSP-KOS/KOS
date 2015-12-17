@@ -1553,11 +1553,8 @@ namespace kOS.Safe.Compilation
                 if (methInfo.ReturnType == typeof(void))
                 {
                     dlg.DynamicInvoke(argArray);
-                    return null; // So that the compiler building the opcodes for a function call statement doesn't
-                    // have to know the function prototype to decide whether or
-                    // not it needs to pop a value from the stack for the return value.  By adding this,
-                    // it can unconditionally assume there will be exactly 1 value left behind on the stack
-                    // regardless of what function it was that was being called.
+                    return null; // By adding this we can unconditionally assume all functions
+                                 // have a return value to be used or popped away, even if "void".
                 }
                 return dlg.DynamicInvoke(argArray);
             }

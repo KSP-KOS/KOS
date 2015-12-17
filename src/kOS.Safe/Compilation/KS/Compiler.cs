@@ -1193,9 +1193,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
-                case TokenType.suffixterm:
-                    VisitSuffixTerm(node);
-                    break;
+                case TokenType.suffixterm:   // TODO: If the exception in VisitSuffixTerm never gets
+                    VisitSuffixTerm(node);   // thrown during our testing, we can then safely remove
+                    break;                   // this clause from the switch.
                 case TokenType.IDENTIFIER:
                     VisitIdentifier(node);
                     break;
@@ -1716,12 +1716,13 @@ namespace kOS.Safe.Compilation.KS
                     ParseNode trailerTerm = suffixTerm.Nodes[trailerIndex].Nodes[0];
                     bool isFunc = (trailerTerm.Token.Type == TokenType.function_trailer);
                     bool isArray = (trailerTerm.Token.Type == TokenType.array_trailer);
+                    bool thisTermIsDirect = (isDirect && trailerIndex == 1); // only the firstmost term in a chain can be direct.
 
                     if (isFunc || isUserFunc)
                     {
                         // direct if it's just one term like foo(aaa) but indirect
                         // if it's a list of suffixes like foo:bar(aaa):
-                        VisitActualFunction(trailerTerm, isDirect, firstIdentifier);
+                        VisitActualFunction(trailerTerm, thisTermIsDirect, firstIdentifier);
                     }
                     if (isArray)
                     {
@@ -1847,8 +1848,26 @@ namespace kOS.Safe.Compilation.KS
             return string.Empty;
         }
 
+        
         private void VisitSuffixTerm(ParseNode node)
         {
+            // TODO: DELETE THIS METHOD BEFORE RELEASE OF 0.19.0
+            //
+            // NOTE: I suspect this method never ever gets called anymore, 
+            // having been superceeded by the work in VisitSuffix() quite a few
+            // months ago.  But with the tree walk of the compiler and its frequent
+            // use of the open-ended VisitNode(), it's quite hard to prove by
+            // eyeball that this is never called.
+            //
+            // Therefore I added this exception to complain loudly if any test
+            // program happens to make the compiler walk a path that uses this
+            // method.
+            
+            throw new KOSCompileException(
+                "TESTING TESTING TESTING.  TELL @dunbaratu IMMEDIATELY IF YOU SEE THIS ERROR. " +
+                "THIS MESSAGE IS A CHECK TO ENSURE THAT VisitSuffixTerm IS NEVER REALLY GETTING CALLED. " +
+                "IF NONE OF THE KOS DEVS EVER SEE THIS DURING OUR TESTS OF 0.19.0, THEN VisitSuffixTerm " +
+                "SHOULD BE DELETED BEFORE RELEASING 0.19.0" );
             NodeStartHousekeeping(node);
             
             if (node.Nodes.Count > 1 &&

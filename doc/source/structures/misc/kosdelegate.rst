@@ -41,11 +41,6 @@ Structure
           - another KOSDelegate
           - creates a new KOSDelegate with some arguments predefined.
 
-.. note::
-
-    This type is not serializable.
-
-
 .. method:: KOSDelegate:CALL(varying arguments)
 
     Calls the function this KOSDelegate is set up to call.
