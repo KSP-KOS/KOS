@@ -472,24 +472,30 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             WaypointManager wpm = WaypointManager.Instance();
-            if (wpm == null) // When zero waypoints exist, there might not even be a waypoint manager.
-            {
-                ReturnValue = null;
-                // I don't like returning null here without the user being able to test for that, but
-                // we don't have another way to communicate "no such waypoint".  We really need to address
-                // that problem once and for all.
-                return;
-            }
+
+            // If no contracts have been generated with waypoints in them,
+            // then sometimes the stock game's waypoint manager doesn't even
+            // exist yet either.  (The base game seems not to instance one until the
+            // first time a contract with a waypoint is created).
+            if (wpm == null)
+                throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints existl");
             
             string baseName;
             int index;
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
+            if (hasGreek)
+                pointName = baseName;
             Waypoint point = wpm.AllWaypoints().FirstOrDefault(
-                p => String.Equals(p.name, baseName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+                p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+            
+            // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
+            // nulls), so bomb out here:
+            if (point ==null)
+                throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no such waypoint");
 
             ReturnValue = new WaypointValue(point, shared);
         }
-    }    
+    }
 
     [Function("transferall")]
     public class FunctionTransferAll : FunctionBase

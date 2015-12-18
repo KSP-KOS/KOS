@@ -19,12 +19,6 @@ namespace kOS.Suffixed
             WrappedWaypoint = wayPoint;
             Shared = shared;
             InitializeSuffixes();
-
-            // greekMap is static, so whichever waypoint instance's constructor happens to
-            // get called first will make it, and from then on other waypoints don't need to
-            // keep re-initializing it:
-            if (greekMap == null)
-                InitializeGreekMap();
         }
 
         private void InitializeSuffixes()
@@ -128,10 +122,18 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="greekLetterName">string name to check.  Case insensitively.</param>
         /// <param name="index">integer position in alphabet.  -1 if no match.</param>
-        /// <param name="baseName">the name after the greek suffix has been stripped off, if there is one.</param>
+        /// <param name="baseName">the name after the last term has been stripped off, if there are
+        /// space separated terms. Note that if the return value of this method is false, this
+        /// shouldn't be used and you should stick with the original full name.</param>
         /// <returns>true if there was a greek letter suffix</returns>
         public static bool GreekToInteger(string greekLetterName, out int index, out string baseName )
         {
+            // greekMap is static, and we only need to populate it once in
+            // the lifetime of the KSP process.  We'll do so the first time
+            // this method (the only one that uses it) gets called:
+            if (greekMap == null)
+                InitializeGreekMap();
+
             // Get lastmost word (or whole string if there's no spaces):
             int lastSpace = greekLetterName.LastIndexOf(' ');
             string lastTerm;
