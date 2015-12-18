@@ -478,7 +478,7 @@ namespace kOS.Function
             // exist yet either.  (The base game seems not to instance one until the
             // first time a contract with a waypoint is created).
             if (wpm == null)
-                throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints existl");
+                throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints exist");
             
             string baseName;
             int index;
