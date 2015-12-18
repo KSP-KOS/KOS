@@ -26,12 +26,9 @@ namespace kOS.Safe.Serialization
                 if (dump != null)
                 {
                     dumped[key] = Dump(dump, includeType);
-                } else if (IsValue(dumped[key]))
+                } else if (!IsValue(dumped[key]))
                 {
-                    dumped[key] = dumped[key];
-                } else
-                {
-                    throw new KOSException("This type can't be serialized: " + dumped[key].GetType().Name);
+                    dumped[key] = dumped[key].ToString();
                 }
             }
 
