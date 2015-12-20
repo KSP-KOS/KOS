@@ -1,29 +1,24 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+﻿using System;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
-using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.PartModuleField
 {
-    public class ScienceExperimentFields : PartModuleFields
+    public abstract class ScienceExperimentFields : PartModuleFields
     {
-        private readonly ModuleScienceExperiment module;
-        private readonly MethodInfo gatherDataMethod, resetExperimentMethod, sendDataToCommsMethod, dumpDataMethod;
-
-        public ScienceExperimentFields(ModuleScienceExperiment module, SharedObjects sharedObj) : base(module, sharedObj)
+        protected IScienceDataContainer container;
+        public ScienceExperimentFields(PartModule module, SharedObjects shared) : base(module, shared)
         {
-            this.module = module;
+            this.container = module as IScienceDataContainer;
 
-            gatherDataMethod = module.GetType().GetMethod("gatherData",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            resetExperimentMethod = module.GetType().GetMethod("resetExperiment",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            sendDataToCommsMethod = module.GetType().GetMethod("sendDataToComms",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            dumpDataMethod = module.GetType().GetMethod("dumpData",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+            if (container == null)
+            {
+                throw new KOSException("This module is not a science data container");
+            }
 
             InitializeSuffixes();
         }
@@ -34,68 +29,44 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("RESET", new NoArgsVoidSuffix(ResetExperiment, "Reset this experiment"));
             AddSuffix("TRANSMIT", new NoArgsVoidSuffix(TransmitData, "Transmit experiment data back to Kerbin"));
             AddSuffix("DUMP", new NoArgsVoidSuffix(DumpData, "Dump experiment data"));
-            AddSuffix("INOPERABLE", new Suffix<BooleanValue>(() => module.Inoperable, "Is this experiment inoperable"));
-            AddSuffix("DEPLOYED", new Suffix<BooleanValue>(() => module.Deployed, "Is this experiment deployed"));
-            AddSuffix("RERUNNABLE", new Suffix<BooleanValue>(() => module.rerunnable, "Is this experiment rerunnable"));
-            AddSuffix("HASDATA", new Suffix<BooleanValue>(() => module.GetData().Any(), "Does this experiment have any data stored"));
+            AddSuffix("INOPERABLE", new Suffix<BooleanValue>(() => Inoperable(), "Is this experiment inoperable"));
+            AddSuffix("DEPLOYED", new Suffix<BooleanValue>(() => Deployed(), "Is this experiment deployed"));
+            AddSuffix("RERUNNABLE", new Suffix<BooleanValue>(() => Rerunnable(), "Is this experiment rerunnable"));
+            AddSuffix("HASDATA", new Suffix<BooleanValue>(() => HasData(), "Does this experiment have any data stored"));
+            AddSuffix("DATA", new Suffix<ListValue>(Data, "Does this experiment have any data stored"));
         }
 
-        private void DeployExperiment()
+        public abstract bool Deployed();
+        public abstract bool Inoperable();
+        public abstract void DeployExperiment();
+        public abstract void ResetExperiment();
+
+        public virtual bool Rerunnable()
         {
-            if (module.GetData().Any())
-            {
-                throw new KOSException("Experiment already contains data");
-            }
-
-            if (module.Inoperable)
-            {
-                throw new KOSException("Experiment is inoperable");
-            }
-
-            object result = gatherDataMethod.Invoke(module, new object[] { false });
-
-            IEnumerator e = result as IEnumerator;
-
-            module.StartCoroutine(e);
+            return container.IsRerunnable();
         }
 
-        private void ResetExperiment()
+        public virtual bool HasData()
         {
-            if (module.Inoperable)
-            {
-                throw new KOSException("Experiment is inoperable");
-            }
-
-            object result = resetExperimentMethod.Invoke(module, new object[] { });
-
-            IEnumerator e = result as IEnumerator;
-
-            module.StartCoroutine(e);
+            return container.GetData().Any();
         }
 
-        private void TransmitData()
+        public virtual ListValue Data()
         {
-            if (!module.GetData().Any())
-            {
-                throw new KOSException("Experiment contains no data");
-            }
-
-            ScienceData[] dataArray = module.GetData();
-
-            foreach (ScienceData data in dataArray)
-            {
-                sendDataToCommsMethod.Invoke(module, new object[] { data });
-            }
+            return new ListValue(container.GetData().Select(s => new ScienceDataValue(s)).Cast<Structure>());
         }
 
-        private void DumpData()
+        public virtual void DumpData()
         {
-            if (!module.rerunnable)
-            {
-                module.SetInoperable();
-            }
+            Array.ForEach(container.GetData(), (d) => container.DumpData(d));
+        }
 
-            dumpDataMethod.Invoke(module, new object[] { });
+        public abstract void TransmitData();
+
+        public new string ToString()
+        {
+            return "SCIENCE EXPERIMENT";
         }
     }
 }
+
