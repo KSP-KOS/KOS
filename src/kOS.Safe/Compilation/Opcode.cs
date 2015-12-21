@@ -2030,8 +2030,8 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<2)
                 throw new Exception("Saved field in ML file for OpcodePushDelegate seems to be missing.  Version mismatch?");
-            EntryPoint = (int)fields[0];
-            WithClosure = (bool)fields[1];
+            EntryPoint = Convert.ToInt32(fields[0]);
+            WithClosure = Convert.ToBoolean(fields[1]);
         }
 
         public override void Execute(ICpu cpu)
@@ -2073,8 +2073,8 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodePushDelegateRelocatelater seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)( fields[0] ); // this is really from the base class.
-            WithClosure = (bool)fields[1];
+            DestinationLabel = Convert.ToString(fields[0]); // this is really from the base class.
+            WithClosure = Convert.ToBoolean(fields[1]);
         }
     }
     

@@ -310,6 +310,18 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return Add(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return Add(argument1, argument2);
+            }
             return Calculate("+", argument1, argument2);
         }
 
@@ -330,6 +342,18 @@ namespace kOS.Safe.Compilation
             if (method2 != null)
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return Subtract(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return Subtract(argument1, argument2);
             }
             return Calculate("-", argument1, argument2);
         }
@@ -352,29 +376,18 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            // TODO: Remove this debugging code, adding to the commit in case it is needed for continued testing.
-            //string message = "\n  Multiply-Method1: " + method1 ?? "<null>";
-            //message += "\n";
-            //message += "  Multiply-Method2: " + method2 ?? "<null>";
-            //message += "\n";
-            //message += "  Multiply-Type1: " + type1 ?? "<null>";
-            //message += "\n";
-            //message += "  Multiply-Type2: " + type2 ?? "<null>";
-            //message += "\n";
-            //message += "  Multiply-Methods1: \n";
-            //foreach (var method in type1.GetMethods(flags))
-            //{
-            //    string paramarray = string.Join(", ", method.GetParameters().Select(e => e.ParameterType.ToString()).ToArray());
-            //    message += string.Format("    {0} ({1})\n", method.Name, paramarray);
-            //}
-            //message += "  Multiply-Methods2: \n";
-            //foreach (var method in type2.GetMethods(flags))
-            //{
-            //    string paramarray = string.Join(", ", method.GetParameters().Select(e => e.ParameterType.ToString()).ToArray());
-            //    message += string.Format("    {0} ({1})\n", method.Name, paramarray);
-            //}
-            //message.TrimEnd('\n');
-            //kOS.Safe.Utilities.SafeHouse.Logger.LogWarning(message);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return Multiply(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return Multiply(argument1, argument2);
+            }
             return Calculate("*", argument1, argument2);
         }
 
@@ -395,6 +408,18 @@ namespace kOS.Safe.Compilation
             if (method2 != null)
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return Divide(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return Divide(argument1, argument2);
             }
             return Calculate("/", argument1, argument2);
         }
@@ -417,6 +442,18 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return Power(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return Power(argument1, argument2);
+            }
             return null;
         }
 
@@ -437,6 +474,18 @@ namespace kOS.Safe.Compilation
             if (method2 != null)
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return GreaterThan(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return GreaterThan(argument1, argument2);
             }
             return Calculate(">", argument1, argument2);
         }
@@ -459,6 +508,18 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return LessThan(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return LessThan(argument1, argument2);
+            }
             return Calculate("<", argument1, argument2);
         }
 
@@ -479,6 +540,18 @@ namespace kOS.Safe.Compilation
             if (method2 != null)
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return GreaterThanEqual(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return GreaterThanEqual(argument1, argument2);
             }
             return Calculate(">=", argument1, argument2);
         }
@@ -501,6 +574,18 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return LessThanEqual(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return LessThanEqual(argument1, argument2);
+            }
             return Calculate("<=", argument1, argument2);
         }
 
@@ -522,6 +607,18 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return NotEqual(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return NotEqual(argument1, argument2);
+            }
             return Calculate("<>", argument1, argument2);
         }
 
@@ -542,6 +639,18 @@ namespace kOS.Safe.Compilation
             if (method2 != null)
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
+            }
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            if (convert2 != null)
+            {
+                argument2 = convert2.Invoke(null, new object[] { argument2 });
+                return Equal(argument1, argument2);
+            }
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            if (convert1 != null)
+            {
+                argument1 = convert1.Invoke(null, new object[] { argument1 });
+                return Equal(argument1, argument2);
             }
             return Calculate("==", argument1, argument2);
         }
