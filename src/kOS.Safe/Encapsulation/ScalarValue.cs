@@ -36,9 +36,9 @@ namespace kOS.Safe.Encapsulation
 
         public void InitializeSuffixes()
         {
-            AddSuffix("ISINT", new Suffix<bool>(() => IsInt));
-            AddSuffix("ISDOUBLE", new Suffix<bool>(() => IsDouble));
-            AddSuffix("ISVALID", new Suffix<bool>(() => IsValid));
+            // TODO: Commented suffixes until the introduction of kOS types to the user.
+            //AddSuffix("ISINTEGER", new Suffix<bool>(() => IsInt));
+            //AddSuffix("ISVALID", new Suffix<bool>(() => IsValid));
         }
 
         public static ScalarValue Create(object value)
