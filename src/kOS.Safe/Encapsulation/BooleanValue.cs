@@ -37,7 +37,37 @@ namespace kOS.Safe.Encapsulation
             {
                 if (Value == val.Value) return true;
             }
+            else
+            {
+                var converter = typeof(BooleanValue).GetMethod("op_Implicit", new[] { obj.GetType() });
+                if (converter != null)
+                {
+                    val = (BooleanValue)converter.Invoke(null, new[] { obj });
+                    if (Value == val.Value) return true;
+                }
+            }
             return false;
+        }
+
+        public static bool NullSafeEquals(object obj1, object obj2)
+        {
+            if (obj1 == null)
+            {
+                if (obj2 == null) return true;
+                return false;
+            }
+            if (obj2 == null) return false;
+            BooleanValue val1 = obj1 as BooleanValue;
+            if (val1 != null)
+            {
+                return val1.Equals(obj2);
+            }
+            BooleanValue val2 = obj1 as BooleanValue;
+            if (val2 != null)
+            {
+                return val2.Equals(obj1);
+            }
+            return val1.Equals(obj2);
         }
 
         public override int GetHashCode()
@@ -52,32 +82,56 @@ namespace kOS.Safe.Encapsulation
 
         public static bool operator ==(BooleanValue val1, BooleanValue val2)
         {
-            return val1.Equals(val2);
+            return NullSafeEquals(val1, val2);
         }
 
-        public static bool operator ==(BooleanValue val1, object val2)
+        public static bool operator ==(BooleanValue val1, bool val2)
         {
-            return val1.Equals(val2);
+            return NullSafeEquals(val1, new BooleanValue(val2));
         }
 
-        public static bool operator ==(object val1, BooleanValue val2)
+        public static bool operator ==(bool val1, BooleanValue val2)
         {
-            return val2.Equals(val1);
+            return NullSafeEquals(new BooleanValue(val1), val2);
+        }
+
+        public static bool operator ==(BooleanValue val1, Structure val2)
+        {
+            val2 = new BooleanValue(Convert.ToBoolean(val2));
+            return NullSafeEquals(val1, val2);
+        }
+
+        public static bool operator ==(Structure val1, BooleanValue val2)
+        {
+            val2 = new BooleanValue(Convert.ToBoolean(val1));
+            return NullSafeEquals(val1, val2);
         }
 
         public static bool operator !=(BooleanValue val1, BooleanValue val2)
         {
-            return !val1.Equals(val2);
+            return !NullSafeEquals(val1, val2);
         }
 
-        public static bool operator !=(BooleanValue val1, object val2)
+        public static bool operator !=(BooleanValue val1, bool val2)
         {
-            return !val1.Equals(val2);
+            return !NullSafeEquals(val1, new BooleanValue(val2));
         }
 
-        public static bool operator !=(object val1, BooleanValue val2)
+        public static bool operator !=(bool val1, BooleanValue val2)
         {
-            return !val2.Equals(val1);
+            return !NullSafeEquals(new BooleanValue(val1), val2);
+        }
+
+        public static bool operator !=(BooleanValue val1, Structure val2)
+        {
+            val2 = new BooleanValue(Convert.ToBoolean(val2));
+            return !NullSafeEquals(val1, val2);
+        }
+
+        public static bool operator !=(Structure val1, BooleanValue val2)
+        {
+            val2 = new BooleanValue(Convert.ToBoolean(val1));
+            return !NullSafeEquals(val1, val2);
         }
 
         public static bool operator &(BooleanValue val1, BooleanValue val2)
