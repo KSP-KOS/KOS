@@ -94,19 +94,37 @@ namespace kOS.Safe.Encapsulation
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            if (obj is ScalarValue)
+            ScalarValue val = obj as ScalarValue;
+            if (val != null)
             {
-                ScalarValue val = obj as ScalarValue;
-                if (val != null)
+                if (this.IsInt && val.IsInt)
                 {
-                    if (this.IsInt && val.IsInt)
-                    {
-                        return this.GetIntValue() == val.GetIntValue();
-                    }
-                    return this.GetDoubleValue() == val.GetDoubleValue();
+                    return this.GetIntValue() == val.GetIntValue();
+                }
+                return this.GetDoubleValue() == val.GetDoubleValue();
+            }
+            else
+            {
+                var converter = typeof(ScalarValue).GetMethod("op_Implicit", new[] { obj.GetType() });
+                if (converter != null)
+                {
+                    val = (ScalarValue)converter.Invoke(null, new[] { obj });
+                    if (Value == val.Value) return true;
                 }
             }
             return false;
+        }
+
+        public static bool NullSafeEquals(object obj1, object obj2)
+        {
+            if (obj1 == null)
+            {
+                if (obj2 == null) return true;
+                return false;
+            }
+            if (obj2 == null) return false;
+            ScalarValue val1 = ScalarValue.Create(obj1);
+            return val1.Equals(obj2);
         }
 
         public override int GetHashCode()
@@ -265,32 +283,12 @@ namespace kOS.Safe.Encapsulation
 
         public static bool operator ==(ScalarValue val1, ScalarValue val2)
         {
-            return val1.Equals(val2);
-        }
-
-        public static bool operator ==(ScalarValue val1, object val2)
-        {
-            return val1.Equals(val2);
-        }
-
-        public static bool operator ==(object val1, ScalarValue val2)
-        {
-            return val2.Equals(val1);
+            return NullSafeEquals(val1, val2);
         }
 
         public static bool operator !=(ScalarValue val1, ScalarValue val2)
         {
-            return !val1.Equals(val2);
-        }
-
-        public static bool operator !=(ScalarValue val1, object val2)
-        {
-            return !val1.Equals(val2);
-        }
-
-        public static bool operator !=(object val1, ScalarValue val2)
-        {
-            return !val2.Equals(val1);
+            return !NullSafeEquals(val1, val2);
         }
 
         public static bool operator >(ScalarValue val1, ScalarValue val2)
