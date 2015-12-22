@@ -161,10 +161,6 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue Divide(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return new ScalarIntValue(val1.GetIntValue() / val2.GetIntValue());
-            }
             return ScalarValue.Create(val1.GetDoubleValue() / val2.GetDoubleValue());
         }
 
@@ -179,10 +175,6 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue Power(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return ScalarValue.Create(Math.Pow(val1.GetIntValue(), val2.GetIntValue()));
-            }
             return ScalarValue.Create(Math.Pow(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
