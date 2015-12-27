@@ -18,8 +18,8 @@
             "it doesn't mean anything when it's not inside a\n" +
             "loop.\n";
 
-        public KOSBreakInvalidHereException() :
-            base("BREAK", "outside a loop", "in a loop body")
+        public KOSBreakInvalidHereException(int line, int col) :
+            base(line, col, "BREAK", "outside a loop", "in a loop body")
         {
         }
     }

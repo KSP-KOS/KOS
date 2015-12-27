@@ -19,8 +19,8 @@
             "work inside a trigger body, which must complete\n" +
             "its work within one update tick.\n";
 
-        public KOSWaitInvalidHereException() :
-            base( "WAIT", "in a trigger body", "outside of triggers" )
+        public KOSWaitInvalidHereException(int line, int col) :
+            base(line, col, "WAIT", "in a trigger body", "outside of triggers" )
         {
         }
     }

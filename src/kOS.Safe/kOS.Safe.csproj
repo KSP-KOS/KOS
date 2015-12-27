@@ -59,6 +59,7 @@
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
+    <Compile Include="Compilation\KS\LineCol.cs" />
     <Compile Include="Compilation\KS\Scope.cs" />
     <Compile Include="Compilation\KS\Subprogram.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />

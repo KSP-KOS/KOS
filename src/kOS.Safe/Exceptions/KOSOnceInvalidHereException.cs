@@ -20,8 +20,8 @@
             "recompiles and re-runs the program\n" +
             "each run.\n";
 
-        public KOSOnceInvalidHereException() :
-            base( "ONCE", "from the terminal interpreter", "inside a program" )
+        public KOSOnceInvalidHereException(int line, int col) :
+            base(line, col, "ONCE", "from the terminal interpreter", "inside a program" )
         {
         }
     }

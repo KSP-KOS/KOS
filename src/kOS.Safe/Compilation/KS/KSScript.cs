@@ -26,8 +26,16 @@ namespace kOS.Safe.Compilation.KS
                 var compiler = new Compiler();
                 LoadContext(contextId);
 
-                // TODO: handle compile errors (e.g. wrong run parameter count)
-                CodePart mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
+                CodePart mainPart;
+                try
+                {
+                    mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
+                }
+                catch (KOSCompileException e)
+                {
+                    e.AddSourceText((short)startLineNum, scriptText);
+                    throw e;
+                }
 
                 // add locks and triggers
                 parts.AddRange(currentContext.UserFunctions.GetNewParts());
@@ -148,7 +156,6 @@ namespace kOS.Safe.Compilation.KS
                 
                 foreach (ParseError err in parseTree.Errors)
                 {
-                    System.Console.WriteLine("eraseme:  err msg: " + err.Message);
                     if (err.Message.StartsWith("Unexpected token 'EOF'"))
                     {
                         if (err.Message.Contains("Expected CURLYCLOSE") ||
