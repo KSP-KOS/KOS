@@ -58,7 +58,7 @@ namespace kOS
                 message += LINE_RULE;
             }
 
-            if (SafeHouse.Config.AudibleExceptions && e is KOSException)
+            if (SafeHouse.Config.AudibleExceptions)
                 Shared.SoundMaker.BeginSound("error");
 
             LogToScreen(message);
