@@ -99,10 +99,13 @@ namespace kOS.Safe.Screen
         /// in need of a diff check.
         /// </summary>
         /// <param name="startRow">Starting with this row number</param>
-        /// <param name="numRows">for this many rows</param>
+        /// <param name="numRows">for this many rows, or up to the max row the buffer has if this number is too large</param>
         public void MarkRowsDirty(int startRow, int numRows)
         {
-            for( int i = 0; i < numRows ; ++i)
+            // Mark fewer rows than asked to if the reqeusted number would have blown past the end of the buffer:
+            int numSafeRows = (numRows + startRow <= buffer.Count) ? numRows : buffer.Count - startRow;
+            
+            for( int i = 0; i < numSafeRows ; ++i)
                 buffer[startRow + i].TouchTime();
         }
 
