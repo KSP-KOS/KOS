@@ -90,6 +90,9 @@
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\PIDLoop.cs" />
+    <Compile Include="Encapsulation\ScalarDoubleValue.cs" />
+    <Compile Include="Encapsulation\ScalarIntValue.cs" />
+    <Compile Include="Encapsulation\ScalarValue.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
     <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
