@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.Safe.Exceptions;
+using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -39,7 +40,8 @@ namespace kOS.Safe.Encapsulation
             }
             else
             {
-                var converter = typeof(BooleanValue).GetMethod("op_Implicit", new[] { obj.GetType() });
+                BindingFlags flags = BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public;
+                var converter = typeof(BooleanValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
                 if (converter != null)
                 {
                     val = (BooleanValue)converter.Invoke(null, new[] { obj });
