@@ -1,6 +1,7 @@
 ﻿using System;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -97,6 +98,10 @@ namespace kOS.Safe.Encapsulation
             ScalarValue val = obj as ScalarValue;
             if (val != null)
             {
+                if (this.IsInt && val.IsDouble)
+                {
+                    return false;
+                }
                 if (this.IsInt && val.IsInt)
                 {
                     return this.GetIntValue() == val.GetIntValue();
@@ -105,7 +110,8 @@ namespace kOS.Safe.Encapsulation
             }
             else
             {
-                var converter = typeof(ScalarValue).GetMethod("op_Implicit", new[] { obj.GetType() });
+                BindingFlags flags = BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public;
+                var converter = typeof(ScalarValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
                 if (converter != null)
                 {
                     val = (ScalarValue)converter.Invoke(null, new[] { obj });
