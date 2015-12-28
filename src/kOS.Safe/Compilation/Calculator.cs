@@ -289,7 +289,7 @@ namespace kOS.Safe.Compilation
         {
             string t1 = argument1 == null ? "<null>" : argument1.GetType().ToString();
             string t2 = argument2 == null ? "<null>" : argument2.GetType().ToString();
-            return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", "multiply", t1, t2);
+            return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
         }
 
         public override object Add(object argument1, object argument2)
@@ -310,13 +310,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return Add(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -343,13 +343,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return Subtract(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -376,13 +376,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return Multiply(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -409,13 +409,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return Divide(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -442,19 +442,19 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return Power(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
                 return Power(argument1, argument2);
             }
-            return null;
+            return Calculate("^", argument1, argument2);
         }
 
         public override object GreaterThan(object argument1, object argument2)
@@ -475,13 +475,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return GreaterThan(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -508,13 +508,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return LessThan(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -541,13 +541,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return GreaterThanEqual(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -574,13 +574,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return LessThanEqual(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -607,13 +607,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return NotEqual(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
@@ -640,13 +640,13 @@ namespace kOS.Safe.Compilation
             {
                 return method2.Invoke(null, new object[] { argument1, argument2 });
             }
-            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags, null, new Type[] { type2 }, null);
+            MethodInfo convert2 = type1.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type2 }, null);
             if (convert2 != null)
             {
                 argument2 = convert2.Invoke(null, new object[] { argument2 });
                 return Equal(argument1, argument2);
             }
-            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags, null, new Type[] { type1 }, null);
+            MethodInfo convert1 = type2.GetMethod("op_Implicit", flags | BindingFlags.ExactBinding, null, new Type[] { type1 }, null);
             if (convert1 != null)
             {
                 argument1 = convert1.Invoke(null, new object[] { argument1 });
