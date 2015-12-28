@@ -7,7 +7,7 @@ namespace kOS.Safe.Encapsulation
 {
     abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
-        protected object internalValue;
+        private object internalValue;
 
         abstract public bool IsInt { get; }
 
@@ -28,7 +28,17 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public object Value { get { return internalValue; } }
+        public object Value
+        {
+            get
+            {
+                return internalValue;
+            }
+            protected set
+            {
+                internalValue = value;
+            }
+        }
 
         protected ScalarValue()
         {
@@ -413,40 +423,6 @@ namespace kOS.Safe.Encapsulation
         ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
             return Convert.ToUInt64(GetIntValue());
-        }
-    }
-
-    public class ScalarIntValue : ScalarValue
-    {
-        public override bool IsDouble
-        {
-            get { return false; }
-        }
-        public override bool IsInt
-        {
-            get { return true; }
-        }
-
-        public ScalarIntValue(int value)
-        {
-            internalValue = value;
-        }
-    }
-
-    public class ScalarDoubleValue : ScalarValue
-    {
-        public override bool IsDouble
-        {
-            get { return true; }
-        }
-        public override bool IsInt
-        {
-            get { return false; }
-        }
-
-        public ScalarDoubleValue(double value)
-        {
-            internalValue = value;
         }
     }
 }
