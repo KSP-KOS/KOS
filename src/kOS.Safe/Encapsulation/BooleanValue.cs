@@ -1,5 +1,5 @@
-﻿using System;
-using kOS.Safe.Exceptions;
+﻿using kOS.Safe.Exceptions;
+using System;
 using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
@@ -7,7 +7,7 @@ namespace kOS.Safe.Encapsulation
     public class BooleanValue : Structure, IConvertible
     {
         private readonly bool internalValue;
-        
+
         public bool Value { get { return internalValue; } }
 
         public BooleanValue(bool value)
