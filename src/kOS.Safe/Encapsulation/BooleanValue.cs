@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Safe.Exceptions;
+﻿using kOS.Safe.Exceptions;
+using System;
 using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
     public class BooleanValue : Structure, IConvertible, ISerializableValue
     {
-        private bool internalValue;
-        
+        private readonly bool internalValue;
+
         public bool Value { get { return internalValue; } }
 
         public BooleanValue(bool value)
-            : base()
         {
             internalValue = value;
             InitializeSuffixes();
@@ -33,7 +29,7 @@ namespace kOS.Safe.Encapsulation
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            BooleanValue val = obj as BooleanValue;
+            var val = obj as BooleanValue;
             if (val != null)
             {
                 if (Value == val.Value) return true;
@@ -41,7 +37,7 @@ namespace kOS.Safe.Encapsulation
             else
             {
                 BindingFlags flags = BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public;
-                var converter = typeof(BooleanValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
+                MethodInfo converter = typeof(BooleanValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
                 if (converter != null)
                 {
                     val = (BooleanValue)converter.Invoke(null, new[] { obj });
@@ -59,17 +55,17 @@ namespace kOS.Safe.Encapsulation
                 return false;
             }
             if (obj2 == null) return false;
-            BooleanValue val1 = obj1 as BooleanValue;
+            var val1 = obj1 as BooleanValue;
             if (val1 != null)
             {
                 return val1.Equals(obj2);
             }
-            BooleanValue val2 = obj1 as BooleanValue;
+            var val2 = obj2 as BooleanValue;
             if (val2 != null)
             {
                 return val2.Equals(obj1);
             }
-            return val1.Equals(obj2);
+            return false;
         }
 
         public override int GetHashCode()
@@ -132,6 +128,7 @@ namespace kOS.Safe.Encapsulation
 
         public static bool operator !=(Structure val1, BooleanValue val2)
         {
+            if (val2 == null) throw new ArgumentNullException(nameof(val2));
             val2 = new BooleanValue(Convert.ToBoolean(val1));
             return !NullSafeEquals(val1, val2);
         }
@@ -193,7 +190,7 @@ namespace kOS.Safe.Encapsulation
 
         short IConvertible.ToInt16(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(BooleanValue), typeof(Int16));
+            throw new KOSCastException(typeof(BooleanValue), typeof(short));
         }
 
         int IConvertible.ToInt32(IFormatProvider provider)
@@ -203,7 +200,7 @@ namespace kOS.Safe.Encapsulation
 
         long IConvertible.ToInt64(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(BooleanValue), typeof(Int64));
+            throw new KOSCastException(typeof(BooleanValue), typeof(long));
         }
 
         sbyte IConvertible.ToSByte(IFormatProvider provider)
@@ -213,7 +210,7 @@ namespace kOS.Safe.Encapsulation
 
         float IConvertible.ToSingle(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(BooleanValue), typeof(Single));
+            throw new KOSCastException(typeof(BooleanValue), typeof(float));
         }
 
         string IConvertible.ToString(IFormatProvider provider)
@@ -228,7 +225,7 @@ namespace kOS.Safe.Encapsulation
 
         ushort IConvertible.ToUInt16(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(BooleanValue), typeof(UInt16));
+            throw new KOSCastException(typeof(BooleanValue), typeof(ushort));
         }
 
         uint IConvertible.ToUInt32(IFormatProvider provider)
@@ -238,7 +235,7 @@ namespace kOS.Safe.Encapsulation
 
         ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(BooleanValue), typeof(UInt64));
+            throw new KOSCastException(typeof(BooleanValue), typeof(ulong));
         }
     }
 }

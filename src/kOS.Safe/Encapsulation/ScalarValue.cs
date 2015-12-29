@@ -51,6 +51,8 @@ namespace kOS.Safe.Encapsulation
                     // Convert the double to an int, and check and see if they are still equal.
                     // if so, treat the double as if it was an int.
                     int intPart = Convert.ToInt32(value);
+
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if ((double)value == intPart)
                     {
                         return new ScalarIntValue(intPart);
@@ -104,7 +106,8 @@ namespace kOS.Safe.Encapsulation
                 {
                     return this.GetIntValue() == val.GetIntValue();
                 }
-                return this.GetDoubleValue() == val.GetDoubleValue();
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                return GetDoubleValue() == val.GetDoubleValue();
             }
             else
             {
