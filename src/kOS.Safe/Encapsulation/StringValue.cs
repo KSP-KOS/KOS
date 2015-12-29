@@ -179,38 +179,35 @@ namespace kOS.Safe.Encapsulation
 
         public static bool operator ==(StringValue val1, StringValue val2)
         {
-            if (val1 == null) return false;
+            if ((object)val1 == null) return ((object)val2 == null);
             return val1.Equals(val2);
         }
 
         public static bool operator !=(StringValue val1, StringValue val2)
         {
-            if (val1 == null) return false;
-            return !val1.Equals(val2);
+            return !(val1 == val2);
         }
 
         public static bool operator ==(StringValue val1, string val2)
         {
-            if (val1 == null) return false;
+            if (val1 == null) return val2 == null;
             return val1.Equals(val2);
         }
 
         public static bool operator ==(string val1, StringValue val2)
         {
-            if (val2 == null) return false;
+            if (val2 == null) return val1 == null;
             return val2.Equals(val1);
         }
 
         public static bool operator !=(StringValue val1, string val2)
         {
-            if (val1 == null) return false;
-            return !val1.Equals(val2);
+            return !(val1 == val2);
         }
 
         public static bool operator !=(string val1, StringValue val2)
         {
-            if (val2 == null) return false;
-            return !val2.Equals(val1);
+            return !(val1 == val2);
         }
 
         // Implicitly converts to a string (i.e., unboxes itself automatically)

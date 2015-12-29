@@ -438,6 +438,7 @@ namespace kOS.Safe.Compilation
             var operands = new OperandPair(left, right);
 
             Calculator calc = Calculator.GetCalculator(operands);
+            Operands = operands;
             object result = ExecuteCalculation(calc);
             cpu.PushStack(result);
         }
