@@ -84,6 +84,7 @@
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
+    <Compile Include="Control\IFlightControlParameter.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
+    <Compile Include="Module\kOSVesselModule.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
