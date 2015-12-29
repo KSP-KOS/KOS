@@ -1,14 +1,11 @@
-﻿using System;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Exceptions;
+﻿using kOS.Safe.Exceptions;
+using System;
 using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
     abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
-        private object internalValue;
-
         abstract public bool IsInt { get; }
 
         abstract public bool IsDouble { get; }
@@ -28,17 +25,7 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public object Value
-        {
-            get
-            {
-                return internalValue;
-            }
-            protected set
-            {
-                internalValue = value;
-            }
-        }
+        public object Value { get; protected set; }
 
         protected ScalarValue()
         {
@@ -58,7 +45,7 @@ namespace kOS.Safe.Encapsulation
                 value = Convert.ToDouble(value);
             if (value is double)
             {
-                bool inBounds = Int32.MinValue < (double)value && (double)value < Int32.MaxValue;
+                bool inBounds = int.MinValue < (double)value && (double)value < int.MaxValue;
                 if (inBounds && !double.IsNaN((double)value))
                 {
                     // Convert the double to an int, and check and see if they are still equal.
@@ -71,18 +58,19 @@ namespace kOS.Safe.Encapsulation
                 }
                 return new ScalarDoubleValue((double)value);
             }
-            else if (value is int)
+
+            if (value is int)
             {
                 return new ScalarIntValue((int)value);
             }
-            else if (value is ScalarValue)
+
+            var scalarValue = value as ScalarValue;
+            if (scalarValue != null)
             {
-                return ScalarValue.Create(((ScalarValue)value).Value);
+                return Create(scalarValue.Value);
             }
-            else
-            {
-                throw new kOS.Safe.Exceptions.KOSException(string.Format("Failed to set scalar value.  Passed type {0}, expected Double or Int", value.GetType().Name));
-            }
+
+            throw new KOSException(string.Format("Failed to set scalar value.  Passed type {0}, expected Double or Int", value.GetType().Name));
         }
 
         public int GetIntValue()
@@ -105,7 +93,7 @@ namespace kOS.Safe.Encapsulation
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            ScalarValue val = obj as ScalarValue;
+            var val = obj as ScalarValue;
             if (val != null)
             {
                 if (this.IsInt && val.IsDouble)
@@ -121,7 +109,7 @@ namespace kOS.Safe.Encapsulation
             else
             {
                 BindingFlags flags = BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public;
-                var converter = typeof(ScalarValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
+                MethodInfo converter = typeof(ScalarValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
                 if (converter != null)
                 {
                     val = (ScalarValue)converter.Invoke(null, new[] { obj });
@@ -139,7 +127,7 @@ namespace kOS.Safe.Encapsulation
                 return false;
             }
             if (obj2 == null) return false;
-            ScalarValue val1 = ScalarValue.Create(obj1);
+            ScalarValue val1 = Create(obj1);
             return val1.Equals(obj2);
         }
 
@@ -152,27 +140,27 @@ namespace kOS.Safe.Encapsulation
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return ScalarValue.Create(val1.GetIntValue() + val2.GetIntValue());
+                return Create(val1.GetIntValue() + val2.GetIntValue());
             }
-            return ScalarValue.Create(val1.GetDoubleValue() + val2.GetDoubleValue());
+            return Create(val1.GetDoubleValue() + val2.GetDoubleValue());
         }
 
         public static ScalarValue Subtract(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return ScalarValue.Create(val1.GetIntValue() - val2.GetIntValue());
+                return Create(val1.GetIntValue() - val2.GetIntValue());
             }
-            return ScalarValue.Create(val1.GetDoubleValue() - val2.GetDoubleValue());
+            return Create(val1.GetDoubleValue() - val2.GetDoubleValue());
         }
 
         public static ScalarValue Multiply(ScalarValue val1, ScalarValue val2)
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return ScalarValue.Create(val1.GetIntValue() * val2.GetIntValue());
+                return Create(val1.GetIntValue() * val2.GetIntValue());
             }
-            return ScalarValue.Create(val1.GetDoubleValue() * val2.GetDoubleValue());
+            return Create(val1.GetDoubleValue() * val2.GetDoubleValue());
         }
 
         public static ScalarValue Divide(ScalarValue val1, ScalarValue val2)
@@ -184,9 +172,9 @@ namespace kOS.Safe.Encapsulation
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return ScalarValue.Create(val1.GetIntValue() % val2.GetIntValue());
+                return Create(val1.GetIntValue() % val2.GetIntValue());
             }
-            return ScalarValue.Create(val1.GetDoubleValue() % val2.GetDoubleValue());
+            return Create(val1.GetDoubleValue() % val2.GetDoubleValue());
         }
 
         public static ScalarValue Power(ScalarValue val1, ScalarValue val2)
@@ -216,9 +204,9 @@ namespace kOS.Safe.Encapsulation
         {
             if (val1.IsInt && val2.IsInt)
             {
-                return ScalarValue.Create(Math.Max(val1.GetIntValue(), val2.GetIntValue()));
+                return Create(Math.Max(val1.GetIntValue(), val2.GetIntValue()));
             }
-            return ScalarValue.Create(Math.Max(val1.GetDoubleValue(), val2.GetDoubleValue()));
+            return Create(Math.Max(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static ScalarValue Min(ScalarValue val1, ScalarValue val2)
@@ -227,7 +215,7 @@ namespace kOS.Safe.Encapsulation
             {
                 return new ScalarIntValue(Math.Min(val1.GetIntValue(), val2.GetIntValue()));
             }
-            return ScalarValue.Create(Math.Min(val1.GetDoubleValue(), val2.GetDoubleValue()));
+            return Create(Math.Min(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static ScalarValue Abs(ScalarValue val)
@@ -236,7 +224,7 @@ namespace kOS.Safe.Encapsulation
             {
                 return new ScalarIntValue(Math.Abs(val.GetIntValue()));
             }
-            return ScalarValue.Create(Math.Abs(val.GetDoubleValue()));
+            return Create(Math.Abs(val.GetDoubleValue()));
         }
 
         public static ScalarValue operator +(ScalarValue val1, ScalarValue val2)
@@ -266,7 +254,7 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue operator +(ScalarValue val)
         {
-            return ScalarValue.Create(val.Value);
+            return Create(val.Value);
         }
 
         public static ScalarValue operator -(ScalarValue val)
@@ -321,12 +309,12 @@ namespace kOS.Safe.Encapsulation
 
         public static implicit operator ScalarValue(int val)
         {
-            return ScalarValue.Create(val);
+            return Create(val);
         }
 
         public static implicit operator ScalarValue(double val)
         {
-            return ScalarValue.Create(val);
+            return Create(val);
         }
 
         public static implicit operator int(ScalarValue val)
@@ -392,12 +380,12 @@ namespace kOS.Safe.Encapsulation
 
         sbyte IConvertible.ToSByte(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(ScalarValue), typeof(SByte));
+            throw new KOSCastException(typeof(ScalarValue), typeof(sbyte));
         }
 
         float IConvertible.ToSingle(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(ScalarValue), typeof(Single));
+            throw new KOSCastException(typeof(ScalarValue), typeof(float));
         }
 
         string IConvertible.ToString(IFormatProvider provider)
