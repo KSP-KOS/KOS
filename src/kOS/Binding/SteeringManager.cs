@@ -2,6 +2,7 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
+using kOS.Control;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,38 +12,40 @@ using Math = System.Math;
 namespace kOS.Binding
 {
     [kOS.Safe.Utilities.KOSNomenclature("SteeringManager")]
-    public class SteeringManager : Structure, IDisposable
+    public class SteeringManager : Structure, IDisposable, IFlightControlParameter
     {
-        public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
-        {
-            SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
-            instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
-            instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
-            instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
-            instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
-            instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
-            instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
-            instance.MaxStoppingTime = oldInstance.MaxStoppingTime;
+        //public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
+        //{
+        //    SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
+        //    instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
+        //    instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
+        //    instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
+        //    instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
+        //    instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
+        //    instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
+        //    instance.MaxStoppingTime = oldInstance.MaxStoppingTime;
 
-            instance.pitchPI.Ts = oldInstance.pitchPI.Ts;
-            instance.yawPI.Ts = oldInstance.yawPI.Ts;
-            instance.rollPI.Ts = oldInstance.rollPI.Ts;
-            instance.pitchPI.Loop = PIDLoop.DeepCopy(oldInstance.pitchPI.Loop);
-            instance.yawPI.Loop = PIDLoop.DeepCopy(oldInstance.yawPI.Loop);
-            instance.rollPI.Loop = PIDLoop.DeepCopy(oldInstance.rollPI.Loop);
+        //    instance.pitchPI.Ts = oldInstance.pitchPI.Ts;
+        //    instance.yawPI.Ts = oldInstance.yawPI.Ts;
+        //    instance.rollPI.Ts = oldInstance.rollPI.Ts;
+        //    instance.pitchPI.Loop = PIDLoop.DeepCopy(oldInstance.pitchPI.Loop);
+        //    instance.yawPI.Loop = PIDLoop.DeepCopy(oldInstance.yawPI.Loop);
+        //    instance.rollPI.Loop = PIDLoop.DeepCopy(oldInstance.rollPI.Loop);
 
-            instance.pitchRatePI = PIDLoop.DeepCopy(oldInstance.pitchRatePI);
-            instance.yawRatePI = PIDLoop.DeepCopy(oldInstance.yawRatePI);
-            instance.rollRatePI = PIDLoop.DeepCopy(oldInstance.rollRatePI);
+        //    instance.pitchRatePI = PIDLoop.DeepCopy(oldInstance.pitchRatePI);
+        //    instance.yawRatePI = PIDLoop.DeepCopy(oldInstance.yawRatePI);
+        //    instance.rollRatePI = PIDLoop.DeepCopy(oldInstance.rollRatePI);
 
-            instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
-            instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
-            instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
-            instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
-            instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
-            instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
-            return instance;
-        }
+        //    instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
+        //    instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
+        //    instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
+        //    instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
+        //    instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
+        //    instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
+        //    return instance;
+        //}
+
+        private Vessel internalVessel;
 
         public Vessel Vessel
         {
@@ -266,9 +269,13 @@ namespace kOS.Binding
 
         #endregion VectorRenderers
 
-        public SteeringManager(SharedObjects sharedObj)
+        public SteeringManager(SharedObjects sharedObj) : this(sharedObj.Vessel)
         {
-            shared = sharedObj;
+        }
+
+        public SteeringManager(Vessel vessel)
+        {
+            internalVessel = vessel;
             ShowFacingVectors = false;
             ShowAngularVectors = false;
             ShowThrustVectors = false;
@@ -378,7 +385,7 @@ namespace kOS.Binding
         public void DisableControl()
         {
             if (enabled && partId != shared.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Cannon unbind Steering Manager on this ship in use by another processor.");
+                throw new Safe.Exceptions.KOSException("Cannot unbind Steering Manager on this ship in use by another processor.");
             partId = 0;
             Enabled = false;
         }
@@ -431,23 +438,32 @@ namespace kOS.Binding
 
         private void Update(FlightCtrlState c)
         {
-            if (Value == null) return;
+            if (Value == null)
+            {
+                SafeHouse.Logger.LogError("SteeringManager.Update: Value is <null>");
+                return;
+            }
 
             lastSessionTime = sessionTime;
             sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
             //if (sessionTime > lastSessionTime)
             //{
             //}
-            sw.Reset();
-            sw.Start();
-            UpdateStateVectors();
-            UpdateControlParts();
-            UpdateTorque();
-            UpdatePredictionPI();
-            UpdateControl(c);
-            if (ShowSteeringStats) PrintDebug();
-            if (WriteCSVFiles) WriteCSVs();
-            UpdateVectorRenders();
+            if (shared.Vessel.ActionGroups[KSPActionGroup.SAS])
+            {
+                UpdateControl(c);
+            }
+            else
+            {
+                UpdateStateVectors();
+                UpdateControlParts();
+                UpdateTorque();
+                UpdatePredictionPI();
+                UpdateControl(c);
+                if (ShowSteeringStats) PrintDebug();
+                if (WriteCSVFiles) WriteCSVs();
+                UpdateVectorRenders();
+            }
             sw.Stop();
             AverageDuration.Update((double)sw.ElapsedTicks / (double)System.TimeSpan.TicksPerMillisecond);
         }
@@ -1555,7 +1571,6 @@ namespace kOS.Binding
 
             adjustTorqueWriter = null;
 
-            SteeringManagerProvider.RemoveInstance(shared.Vessel);
         }
 
         private struct ForceVector
@@ -1633,6 +1648,66 @@ namespace kOS.Binding
                 return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
                     Loop.LastSampleTime, Loop.Input, Loop.Setpoint, Loop.Error, Loop.ErrorSum, Loop.Output, Loop.Kp, Loop.Ki, Tr, Ts, I, Loop.MaxOutput);
             }
+        }
+
+        bool IFlightControlParameter.Enabled
+        {
+            get
+            {
+                return this.Enabled;
+            }
+        }
+
+        bool IFlightControlParameter.IsAutopilot
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        object IFlightControlParameter.Value
+        {
+            get
+            {
+                return this.Value;
+            }
+            set
+            {
+                this.Value = value;
+            }
+        }
+
+
+        uint IFlightControlParameter.ControlPart
+        {
+            get { return this.PartId; }
+        }
+
+        void IFlightControlParameter.UpdateState()
+        {
+            //throw new NotImplementedException();
+        }
+
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        {
+            this.OnFlyByWire(c);
+        }
+
+
+        void IFlightControlParameter.EnableControl(SharedObjects shared)
+        {
+            this.EnableControl(shared);
+        }
+
+        void IFlightControlParameter.DisableControl(SharedObjects shared)
+        {
+            this.DisableControl();
+        }
+
+        void IFlightControlParameter.DisableControl()
+        {
+            this.DisableControl();
         }
     }
 }
