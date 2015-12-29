@@ -83,30 +83,46 @@ namespace kOS.Safe.Test.Structures
             ScalarValue sv = ScalarValue.Create(1);
             Assert.IsTrue(bv == sv);
             Assert.IsFalse(bv != sv);
+            Assert.IsTrue(sv == bv);
+            Assert.IsFalse(sv != bv);
             sv = ScalarValue.Create(0);
             Assert.IsTrue(bv != sv);
             Assert.IsFalse(bv == sv);
+            Assert.IsTrue(sv != bv);
+            Assert.IsFalse(sv == bv);
             sv = ScalarValue.Create(3.1415926535897932384626433832795);
             Assert.IsTrue(bv == sv);
             Assert.IsFalse(bv != sv);
+            Assert.IsTrue(sv == bv);
+            Assert.IsFalse(sv != bv);
             sv = ScalarValue.Create(0.0d);
             Assert.IsTrue(bv != sv);
             Assert.IsFalse(bv == sv);
+            Assert.IsTrue(sv != bv);
+            Assert.IsFalse(sv == bv);
 
             bv = new BooleanValue(false);
             sv = ScalarValue.Create(1);
             Assert.IsTrue(bv != sv);
             Assert.IsFalse(bv == sv);
+            Assert.IsTrue(sv != bv);
+            Assert.IsFalse(sv == bv);
             sv = ScalarValue.Create(0);
             Assert.IsTrue(bv == sv);
             Assert.IsFalse(bv != sv);
+            Assert.IsTrue(sv == bv);
+            Assert.IsFalse(sv != bv);
             sv = ScalarValue.Create(3.1415926535897932384626433832795);
             Assert.IsTrue(bv != sv);
             Assert.IsFalse(bv == sv);
+            Assert.IsTrue(sv != bv);
+            Assert.IsFalse(sv == bv);
             Assert.IsFalse(bv.Equals(sv));
             sv = ScalarValue.Create(0.0d);
             Assert.IsTrue(bv == sv);
             Assert.IsFalse(bv != sv);
+            Assert.IsTrue(sv == bv);
+            Assert.IsFalse(sv != bv);
             Assert.IsFalse(bv.Equals(sv));
         }
     }

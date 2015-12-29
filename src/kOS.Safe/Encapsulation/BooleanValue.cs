@@ -101,7 +101,7 @@ namespace kOS.Safe.Encapsulation
 
         public static bool operator ==(Structure val1, BooleanValue val2)
         {
-            val2 = new BooleanValue(Convert.ToBoolean(val1));
+            val1 = new BooleanValue(Convert.ToBoolean(val1));
             return NullSafeEquals(val1, val2);
         }
 
@@ -129,7 +129,7 @@ namespace kOS.Safe.Encapsulation
         public static bool operator !=(Structure val1, BooleanValue val2)
         {
             if (val2 == null) throw new ArgumentNullException("val2");
-            val2 = new BooleanValue(Convert.ToBoolean(val1));
+            val1 = new BooleanValue(Convert.ToBoolean(val1));
             return !NullSafeEquals(val1, val2);
         }
 
