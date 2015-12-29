@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.UserIO;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace kOS.UserIO
 {
@@ -151,9 +152,11 @@ namespace kOS.UserIO
 
             for (int index = 0; index < inChars.Length; ++index)
             {
+                Console.WriteLine("eraseme: ch ord = " + (int)inChars[index]);
                 switch (inChars[index])
                 {
                     case ESCAPE_CHARACTER:
+                        Console.WriteLine("eraseme: esc char, next char = " + (int)inChars[index+1]);
                         if (inChars[index + 1] == '[') // ESC followed by '[' is called the CSI (Control Sequence Initiator) and it's how most VT100 codes start.
                         {
                             int numConsumed;
