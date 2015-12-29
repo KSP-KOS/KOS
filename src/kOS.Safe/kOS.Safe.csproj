@@ -52,6 +52,10 @@
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\IBindingManager.cs" />
     <Compile Include="Compilation\Calculator.cs" />
+    <Compile Include="Compilation\CalculatorBool.cs" />
+    <Compile Include="Compilation\CalculatorScalar.cs" />
+    <Compile Include="Compilation\CalculatorString.cs" />
+    <Compile Include="Compilation\CalculatorStructure.cs" />
     <Compile Include="Compilation\CodePart.cs" />
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
@@ -72,6 +76,7 @@
     <Compile Include="Compilation\KS\Trigger.cs" />
     <Compile Include="Compilation\KS\TriggerCollection.cs" />
     <Compile Include="Compilation\Opcode.cs" />
+    <Compile Include="Compilation\OperandPair.cs" />
     <Compile Include="Compilation\ProgramBuilder.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Compilation\PseudoNull.cs" />
@@ -241,7 +246,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Serialization\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

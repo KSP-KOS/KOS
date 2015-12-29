@@ -126,9 +126,10 @@ namespace kOS.Function
             object argument1 = PopValueAssert(shared);
             object argument2 = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
-            
-            Calculator calculator = Calculator.GetCalculator(argument1, argument2);
-            object result = calculator.Min(argument1, argument2);
+
+            var pair = new OperandPair(argument1, argument2);
+            Calculator calculator = Calculator.GetCalculator(pair);
+            object result = calculator.Min(pair);
             ReturnValue = result;
         }
     }
@@ -142,8 +143,9 @@ namespace kOS.Function
             object argument2 = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
 
-            Calculator calculator = Calculator.GetCalculator(argument1, argument2);
-            object result = calculator.Max(argument1, argument2);
+            var pair = new OperandPair(argument1, argument2);
+            Calculator calculator = Calculator.GetCalculator(pair);
+            object result = calculator.Max(pair);
             ReturnValue = result;
         }
     }
