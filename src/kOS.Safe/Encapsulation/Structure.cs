@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 
@@ -63,7 +64,10 @@ namespace kOS.Safe.Encapsulation
                     typeSuffixes.Add(suffixName, suffixToAdd);
                 }
             }
-            globalSuffixes[type] = typeSuffixes;
+            lock (globalSuffixLock)
+            {
+                globalSuffixes[type] = typeSuffixes;
+            }
         }
 
         private static IDictionary<string, ISuffix> GetStaticSuffixesForType(Type currentType)
@@ -161,55 +165,58 @@ namespace kOS.Safe.Encapsulation
 
         public static StringValue operator +(Structure val1, Structure val2)
         {
-            return new StringValue(val1.ToString() + val2.ToString());
+            return new StringValue(string.Concat(val1, val2));
         }
 
         public static object FromPrimitive(object value)
         {
-            IConvertible convert = value as IConvertible;
-            if (convert != null)
+            var convert = value as IConvertible;
+            if (convert == null) return value;
+
+            TypeCode code = convert.GetTypeCode();
+            switch (code)
             {
-                var code = convert.GetTypeCode();
-                switch (code)
-                {
-                    case TypeCode.Boolean:
-                        return new BooleanValue(Convert.ToBoolean(convert));
-                    case TypeCode.Decimal:
-                    case TypeCode.Double:
-                    case TypeCode.Single:
-                        return ScalarValue.Create(Convert.ToDouble(convert));
-                    case TypeCode.Byte:
-                    case TypeCode.Int16:
-                    case TypeCode.Int32:
-                    case TypeCode.Int64:
-                    case TypeCode.SByte:
-                    case TypeCode.UInt16:
-                    case TypeCode.UInt32:
-                    case TypeCode.UInt64:
-                        return ScalarValue.Create(Convert.ToInt32(convert));
-                    case TypeCode.String:
-                        return new StringValue(Convert.ToString(convert));
-                    default:
-                        break;
-                }
+                case TypeCode.Boolean:
+                    return new BooleanValue(Convert.ToBoolean(convert));
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return ScalarValue.Create(Convert.ToDouble(convert));
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                    return ScalarValue.Create(Convert.ToInt32(convert));
+                case TypeCode.String:
+                    return new StringValue(Convert.ToString(convert, CultureInfo.CurrentCulture));
+                default:
+                    break;
             }
             return value;
         }
 
         public static object ToPrimitive(object value)
         {
-            if (value is ScalarValue)
+            var scalarValue = value as ScalarValue;
+            if (scalarValue != null)
             {
-                return ((ScalarValue)value).Value;
+                return scalarValue.Value;
             }
-            else if (value is BooleanValue)
+            var booleanValue = value as BooleanValue;
+            if (booleanValue != null)
             {
-                return ((BooleanValue)value).Value;
+                return booleanValue.Value;
             }
-            else if (value is StringValue)
+            var stringValue = value as StringValue;
+            if (stringValue != null)
             {
-                return ((StringValue)value).ToString();
+                return stringValue.ToString();
             }
+
             return value;
         }
     }

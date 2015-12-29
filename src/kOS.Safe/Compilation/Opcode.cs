@@ -428,19 +428,16 @@ namespace kOS.Safe.Compilation
 
     public abstract class BinaryOpcode : Opcode
     {
-        protected object Argument1 { get; private set; }
-        protected object Argument2 { get; private set; }
+        protected OperandPair Operands { get; private set; }
 
         public override void Execute(ICpu cpu)
         {
-            Argument2 = cpu.PopValue();
-            Argument1 = cpu.PopValue();
+            object right = cpu.PopValue();
+            object left = cpu.PopValue();
 
-            // convert floats to doubles
-            if (Argument1 is float) Argument1 = Convert.ToDouble(Argument1);
-            if (Argument2 is float) Argument2 = Convert.ToDouble(Argument2);
+            var operands = new OperandPair(left, right);
 
-            Calculator calc = Calculator.GetCalculator(Argument1, Argument2);
+            Calculator calc = Calculator.GetCalculator(operands);
             object result = ExecuteCalculation(calc);
             cpu.PushStack(result);
         }
@@ -961,7 +958,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThan(Argument1, Argument2);
+            return calc.GreaterThan(Operands);
         }
     }
 
@@ -973,7 +970,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThan(Argument1, Argument2);
+            return calc.LessThan(Operands);
         }
     }
 
@@ -985,7 +982,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThanEqual(Argument1, Argument2);
+            return calc.GreaterThanEqual(Operands);
         }
     }
 
@@ -997,7 +994,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThanEqual(Argument1, Argument2);
+            return calc.LessThanEqual(Operands);
         }
     }
 
@@ -1009,7 +1006,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.NotEqual(Argument1, Argument2);
+            return calc.NotEqual(Operands);
         }
     }
     
@@ -1021,7 +1018,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Equal(Argument1, Argument2);
+            return calc.Equal(Operands);
         }
     }
 
@@ -1071,9 +1068,9 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            object result = calc.Add(Argument1, Argument2);
+            object result = calc.Add(Operands);
             if (result == null)
-                throw new KOSBinaryOperandTypeException(Argument1, "add", "to", Argument2);
+                throw new KOSBinaryOperandTypeException(Operands, "add", "to");
             return result;
         }
     }
@@ -1086,7 +1083,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Subtract(Argument1, Argument2);
+            return calc.Subtract(Operands);
         }
     }
 
@@ -1098,7 +1095,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Multiply(Argument1, Argument2);
+            return calc.Multiply(Operands);
         }
     }
 
@@ -1110,7 +1107,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Divide(Argument1, Argument2);
+            return calc.Divide(Operands);
         }
     }
 
@@ -1122,7 +1119,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Power(Argument1, Argument2);
+            return calc.Power(Operands);
         }
     }
 
@@ -1156,7 +1153,7 @@ namespace kOS.Safe.Compilation
         {
             object value = cpu.PopValue();
             object result;
-            Type t = value.GetType();
+
             // Convert to bool instead of cast in case the identifier is stored
             // as an encapsulated BooleanValue, preventing an unboxing collision.
             // Wrapped in a try/catch since the Convert framework doesn't have a
@@ -1581,7 +1578,7 @@ namespace kOS.Safe.Compilation
         /// be popping as it does so.  It combines the behavior of a PopScope inside
         /// itself, AFTER it reads and evaluates the thing atop the stack for return
         /// purposes (that way it evals the top thing BEFORE it pops the scope and forgets
-        /// what variables exist).<br/
+        /// what variables exist).<br/>
         /// <br/>
         /// Doing this:<br/>
         ///   push $val<br/>
@@ -1593,7 +1590,7 @@ namespace kOS.Safe.Compilation
         ///   return 0 deep<br/>
         /// <br/>
         /// </summary>
-        /// <param name="popScopes"></param>
+        /// <param name="depth">the number of levels to be popped</param>
         public OpcodeReturn(Int16 depth)
         {
             Depth = depth;
@@ -1612,7 +1609,7 @@ namespace kOS.Safe.Compilation
             // Now dig down through the stack until the argbottom is found.
             // anything still leftover above that should be unread parameters we
             // should throw away:
-            object shouldBeArgMarker = (int)0; // just a temp to force the loop to execute at least once.
+            object shouldBeArgMarker = 0; // just a temp to force the loop to execute at least once.
             while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType))
             {
                 if (cpu.GetStackSize() <= 0)
@@ -2066,7 +2063,8 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// This variant of the constructor is just for ML file save/load to use.
         /// </summary>
-        protected OpcodePushDelegateRelocateLater() : base() {}
+        protected OpcodePushDelegateRelocateLater()
+        {}
         
         public override void PopulateFromMLFields(List<object> fields)
         {            
