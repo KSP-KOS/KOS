@@ -244,8 +244,7 @@ namespace kOS.Suffixed
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
                     // SafeHouse.Logger.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
                     // _label.font = lblFont;
-                    
-                    label.fontSize = 12;
+
                     label.text = labelStr;
                     label.anchor = TextAnchor.MiddleCenter;
 
@@ -294,6 +293,7 @@ namespace kOS.Suffixed
         {
             labelStr = newVal;
             if (label != null) label.text = labelStr;
+            RenderPointCoords();
         }
         
         public void RenderValues()
@@ -325,18 +325,14 @@ namespace kOS.Suffixed
                     mapWidthMult = Math.Max( camLookVec.magnitude, 100.0f ) / 100.0f;
                 }
                 
-                Vector3d point1 = mapLengthMult * Scale * Start;
-                Vector3d point2 = mapLengthMult * Scale * (Start+0.95*Vector);
-                Vector3d point3 = mapLengthMult * Scale * (Start+Vector);
+                Vector3d point1 = mapLengthMult * Start;
+                Vector3d point2 = mapLengthMult * (Start + (Scale * 0.95 * Vector));
+                Vector3d point3 = mapLengthMult * (Start + (Scale * Vector));
                 
-                if (Width <= 0) // User didn't pick a valid width. Use dynamic calculation.
-                {
-                    useWidth = (float) (0.2*mapWidthMult);
-                }
-                else // User did pick a width to override the dynamic calculations.
-                {
-                    useWidth = (float)Width;
-                }
+                label.fontSize = (int) (12.0 * (Width/0.2) * Scale);
+
+                useWidth = (float) (Width * Scale * mapWidthMult);
+
 
                 // Position the arrow line:
                 line.SetVertexCount( 2 );

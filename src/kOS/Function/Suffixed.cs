@@ -304,45 +304,28 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             int argc = CountRemainingArgs(shared);
-            // If I was called with arguments, then run the version of the constructor that takes args
-            if (argc == 6)
-            {
-                bool      show  = Convert.ToBoolean(PopValueAssert(shared));
-                double    scale = GetDouble(PopValueAssert(shared));
-                string    str   = PopValueAssert(shared).ToString();
-                RgbaColor rgba  = GetRgba(PopValueAssert(shared));
-                Vector    vec   = GetVector(PopValueAssert(shared));
-                Vector    start = GetVector(PopValueAssert(shared));
-                AssertArgBottomAndConsume(shared);
-                DoExecuteWork(shared, start, vec, rgba, str, scale, show);
-            }
-            else if (argc == 0)
-            {
-                AssertArgBottomAndConsume(shared); // no args
-                DoExecuteWork(shared);  // default constructor:
-            }
-            else
-            {
-                throw new KOSArgumentMismatchException("Vecdraw() expected either 0 or 6 arguments passed, but got " + argc +" instead.");
-            }
+
+            // Handle the var args that might be passed in, or give defaults if fewer args:
+            double width   = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
+            bool   show    = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
+            double scale   = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
+            string str     = (argc >= 4) ? PopValueAssert(shared).ToString()         : "";
+            RgbaColor rgba = (argc >= 3) ? GetRgba(PopValueAssert(shared))           : new RgbaColor(1.0f, 1.0f, 1.0f);
+            Vector vec     = (argc >= 2) ? GetVector(PopValueAssert(shared))         : new Vector(1.0, 0.0, 0.0);
+            Vector start   = (argc >= 1) ? GetVector(PopValueAssert(shared))         : new Vector(0.0, 0.0, 0.0);
+            AssertArgBottomAndConsume(shared);
+            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width);
         }
         
-        public void DoExecuteWork(SharedObjects shared)
-        {
-            var vRend = new VectorRenderer( shared.UpdateHandler, shared );
-            vRend.SetShow( false );
-            
-            ReturnValue = vRend;            
-        }
-
-        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show)
+        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width)
         {
             var vRend = new VectorRenderer( shared.UpdateHandler, shared )
                 {
                     Vector = vec,
                     Start = start,
                     Color = rgba,
-                    Scale = scale
+                    Scale = scale,
+                    Width = width
                 };
             vRend.SetLabel( str );
             vRend.SetShow( show );
