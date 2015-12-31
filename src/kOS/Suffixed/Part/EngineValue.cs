@@ -20,7 +20,10 @@ namespace kOS.Suffixed.Part
         {
             AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
             AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
-            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value, 0, 100, 0.5f));
+            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<float>(() => engine.ThrustPercentage,
+                                                          value => engine.ThrustPercentage = value,
+                                                          0f, 100f, 0f,
+                                                          "thrust limit percentage for this engine"));
             AddSuffix("MAXTHRUST", new Suffix<float>(() => engine.MaxThrust));
             AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
             AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));

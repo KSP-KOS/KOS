@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Execution
 {
@@ -29,7 +30,7 @@ namespace kOS.Safe.Execution
         {
             if (!SafeHouse.Config.EnableSafeMode)
                 return;
-            if (!(item is double) && !(item is float))
+            if (!(item is double || item is float || item is ScalarDoubleValue))
                 return;
 
             double unboxed = Convert.ToDouble(item);

@@ -3,62 +3,77 @@
 Drawing Vectors on the Screen
 =============================
 
-.. function:: VECDRAW() or VECDRAWARGS()
+    You can create an object that represents a vector drawn in the
+    flight view, as a holographic image in flight.  You may move it
+    to a new location, make it appear or disappear, change its color,
+    and label.  This page describes how to do that.
 
-    Build the suffix fields one at a time using the :struct:`VecDraw` empty construction function. This creates an empty :struct:`VecDraw` with nothing populated yet. You have to follow it up with calls to the suffixes as shown here::
+.. function:: VECDRAW(start, vec, color, label, scale, show, width)
+.. function:: VECDRAWARGS(start, vec, color, label, scale, show, width)
 
-        SET anArrow TO VECDRAW().
-        SET anArrow:VEC TO V(a,b,c).
-        SET anArrow:SHOW TO true.
-        // At this point you have done the minimal necessary to make the arrow appear
-        // and it shows up on the scren immediately.
-
-        // Further options can also be set:
-        SET anArrow:START TO V(0,0,0).
-        SET anArrow:COLOR TO RGB(1,0,0).
-        SET anArrow:LABEL TO "See the arrow?".
-        SET anArrow:SCALE TO 5.0.
-
-
-.. function:: VECDRAW(start, vec, color, label, scale, show) or VECDRAWARGS(start, vec, color, label, scale, show) 
-
-    This variant builds the :struct:`VecDraw` all at once.  It lets you specify all of the attributes in a list of arguments at once::
+    Both these two function names do the same thing.  For historical
+    reasons both names exist, but now they both do the same thing.
+    They create a new ``vecdraw`` object that you can then manipulate
+    to show things on the screen::
 
         SET anArrow TO VECDRAW(
               V(0,0,0),
               V(a,b,c),
               RGB(1,0,0),
               "See the arrow?",
-              5.0,
-              TRUE
+              1.0,
+              TRUE,
+              0.2 
             ).
 
-        // Saying VECDRAWARGS gives the same exact result:
         SET anArrow TO VECDRAWARGS(
               V(0,0,0),
               V(a,b,c),
               RGB(1,0,0),
               "See the arrow?",
-              5.0,
-              TRUE
+              1.0,
+              TRUE,
+              0.2 
             ).
 
-The above two examples make the same thing. The arrow should be visible on both the map view and the in-flight view, but on the map view it will have to be a long arrow to be visible. :struct:`VecDraw`'s do not auto-update for changes in the vector like a LOCK would, but if you repeatedly SET the :VEC suffix in a loop, it will adjust the arrow picture to match as you do so::
+    All the parameters of the ``VECDRAW()`` and ``VECDRAWARGS()`` are
+    optional.  You can leave any of the lastmost parameters off and they
+    will be given a default::
 
-    set xAxis to VECDRAWARGS( V(0,0,0), V(1,0,0), RGB(1.0,0.5,0.5), "X axis", 5, TRUE ).
-    set yAxis to VECDRAWARGS( V(0,0,0), V(0,1,0), RGB(0.5,1.0,0.5), "Y axis", 5, TRUE ).
-    set zAxis to VECDRAWARGS( V(0,0,0), V(0,0,1), RGB(0.5,0.5,1.0), "Z axis", 5, TRUE ).
+        Set anArrow TO VECDRAW().
 
-To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just UNSET the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
+    Causes it to have these defaults:
 
+    .. list-table:: Defaults
+            :header-rows: 1
+            :widths: 1 3 
 
-.. note::
-    Historical note: Once upon a time VECDRAW() took zero arguments,
-    and VECDRAWARGS() took the 6 arguments.  This was before we added
-    the ability to have varying numbers of arguments for built-in
-    functions.  Now that varying arguments exist, both names have
-    become synonyms for the same thing, for backward compatibility.
-    You can use them interchangably.
+            * - Suffix
+              - Default
+
+            * - :attr:`START`
+              - V(0,0,0)  (center of the ship is the origin)
+            * - :attr:`VEC`
+              - V(0,0,0)  (no length, so nothing appears)
+            * - :attr:`COLO[U]R`
+              - White
+            * - :attr:`LABEL`
+              - Empty string ""
+            * - :attr:`SCALE`
+              - 1.0
+            * - :attr:`SHOW`
+              - false
+            * - :attr:`WIDTH`
+              - 0.2
+
+    Examples::
+
+        // Makes a red vecdraw at the origin, pointing 5 meters north,
+        // with defaults for the un-mentioned
+        // paramters LABEL, SCALE, SHOW, and WIDTH.
+        SET vd TO VECDRAW(V(0,0,0), 5*north:vector, red).
+
+    To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just UNSET the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
 
 .. _clearvecdraws:
 
@@ -105,11 +120,14 @@ To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHO
           - string
           - Text to show next to vector
         * - :attr:`SCALE`
-          - integer
-          - Scale :attr:`START` and :attr:`VEC`
+          - scalar number
+          - Scale :attr:`VEC` and :attr:`WIDTH` but not :attr:`START`
         * - :attr:`SHOW`
           - boolean
-          - Draw vector to screen
+          - True to enable display to screen
+        * - :attr:`WIDTH`
+          - scalar number
+          - width of vector, default is 0.2
 
 
 
@@ -148,13 +166,22 @@ To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHO
     :type: string
 
     Optional, defaults to "". Text to show on-screen at the midpoint of the vector.
+    Note the font size the label is displayed in gets stretched when you
+    change the :attr:`SCALE` or the :attr:`WIDTH` values.
 
 .. attribute:: VecDraw:SCALE
 
     :access: Get/Set
-    :type: integer
+    :type: Scalar number
 
-    Optional, defauls to 1. Scalar to multiply by both the START and the VEC
+    Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
+    but not the START.
+
+    .. versionchanged:: 0.19.0
+
+        In previous versions, this also moved the start location, but most
+        users found that useless and confusing and that has been
+        changed as described above.
 
 .. attribute:: VecDraw:SHOW
 
@@ -163,4 +190,15 @@ To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHO
 
     Set to true to make the arrow appear, false to hide it. Defaults to false until you're ready to set it to true.
 
+.. attribute:: VecDraw:WIDTH
 
+    :access: Get/Set
+    :type: Scalar number
+
+    Define the width of the drawn line, in meters.  The deafult is 0.2 if
+    left off.  Note, this also causes the font of the label to be enlarged
+    to match if set to a value larger than 0.2.
+
+    .. versionadded:: 0.19.0
+
+        This parameter didn't exist before kOS 0.19.0.

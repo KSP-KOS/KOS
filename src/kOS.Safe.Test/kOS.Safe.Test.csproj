@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
+    <Compile Include="Structures\BooleanValueTest.cs" />
+    <Compile Include="Structures\ScalarValueTest.cs" />
     <Compile Include="Structures\StringValueTest.cs" />
     <Compile Include="Structure\ClampSetSuffixTest.cs" />
     <Compile Include="Collections\LexiconTest.cs" />

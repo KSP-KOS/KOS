@@ -81,7 +81,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+                Debug.LogError(string.Format("{0} Exception loading telnet config options: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
             return false;
         }
@@ -101,7 +101,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+                Debug.LogError(string.Format("{0} Exception loading telnet config options: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
         }
 
@@ -124,7 +124,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+                Debug.LogError(string.Format("{0} Exception loading telnet config options: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
             return false; // In principle it should never reach here.
         }
@@ -144,7 +144,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+                Debug.LogError(string.Format("{0} Exception loading telnet config options: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
         }
         

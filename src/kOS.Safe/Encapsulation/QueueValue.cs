@@ -36,7 +36,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (object item in dump.Values)
             {
-                Collection.Enqueue((T)item);
+                Collection.Enqueue((T)Structure.FromPrimitive(item));
             }
         }
 

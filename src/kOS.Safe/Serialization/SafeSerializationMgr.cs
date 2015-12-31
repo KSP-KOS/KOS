@@ -14,6 +14,11 @@ namespace kOS.Safe.Serialization
             return serialized.GetType().IsPrimitive || serialized is string;
         }
 
+        public static bool IsEncapsulatedValue(object serialized)
+        {
+            return serialized is ISerializableValue;
+        }
+
         public IDictionary<object, object> Dump(IDumper dumper, bool includeType = true)
         {
             var dumped = dumper.Dump();
@@ -26,9 +31,9 @@ namespace kOS.Safe.Serialization
                 if (dump != null)
                 {
                     dumped[key] = Dump(dump, includeType);
-                } else if (IsValue(dumped[key]))
+                } else if (IsEncapsulatedValue(dumped[key]) || IsValue(dumped[key]))
                 {
-                    dumped[key] = dumped[key];
+                    dumped[key] = Structure.ToPrimitive(dumped[key]);
                 } else
                 {
                     throw new KOSException("This type can't be serialized: " + dumped[key].GetType().Name);

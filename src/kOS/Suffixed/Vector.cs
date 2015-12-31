@@ -80,6 +80,7 @@ namespace kOS.Suffixed
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             other = ConvertToDoubleIfNeeded(other);
+            other = Structure.ToPrimitive(other);
 
             switch (op)
             {
@@ -183,6 +184,31 @@ namespace kOS.Suffixed
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
+        public static Vector operator *(Vector a, ScalarValue b)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(float b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(double b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(ScalarValue b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator /(Vector a, ScalarValue b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.ToVector3D() + b.ToVector3D());
@@ -195,7 +221,7 @@ namespace kOS.Suffixed
 
         public static Vector operator -(Vector a)
         {
-            return a * (-1);
+            return a * (-1d);
         }
 
         public IDictionary<object, object> Dump()

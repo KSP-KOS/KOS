@@ -430,19 +430,17 @@ namespace kOS.Safe.Compilation
 
     public abstract class BinaryOpcode : Opcode
     {
-        protected object Argument1 { get; private set; }
-        protected object Argument2 { get; private set; }
+        protected OperandPair Operands { get; private set; }
 
         public override void Execute(ICpu cpu)
         {
-            Argument2 = cpu.PopValue();
-            Argument1 = cpu.PopValue();
+            object right = cpu.PopValue();
+            object left = cpu.PopValue();
 
-            // convert floats to doubles
-            if (Argument1 is float) Argument1 = Convert.ToDouble(Argument1);
-            if (Argument2 is float) Argument2 = Convert.ToDouble(Argument2);
+            var operands = new OperandPair(left, right);
 
-            Calculator calc = Calculator.GetCalculator(Argument1, Argument2);
+            Calculator calc = Calculator.GetCalculator(operands);
+            Operands = operands;
             object result = ExecuteCalculation(calc);
             cpu.PushStack(result);
         }
@@ -482,7 +480,9 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValue(identifier, value);
         }
     }
@@ -504,7 +504,9 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool result = false; //pessimistic default
-            string ident = cpu.PopStack() as string;
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            string ident = Convert.ToString(cpu.PopStack());
             if (ident != null && cpu.IdentifierExistsInScope(ident))
             {
                 result = true;
@@ -530,7 +532,9 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValueExists(identifier, value);
         }
     }
@@ -563,7 +567,9 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetNewLocal(identifier, value);
         }
     }
@@ -590,7 +596,9 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = PopValueAssert(cpu);
-            var identifier = (string)cpu.PopStack();
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetGlobal(identifier, value);
         }
     }
@@ -623,21 +631,18 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            object popValue = cpu.PopValue();
+            object popValue = Structure.FromPrimitive(cpu.PopValue());
+            // We convert the popValue to a structure to ensure that we can get suffixes on values
+            // stored in primitive form as a fall back.  All variables should be stored as a structure
+            // now, other than system variables like pointers and labels.  This technically means that
+            // a change performed by calling a function on Scalar, Boolean, or String values might not
+            // save the value to the original objet.
 
             var specialValue = popValue as ISuffixed;
             
             if (specialValue == null)
             {
-                var s = popValue as string;
-                if (s != null)
-                {
-                    specialValue = new StringValue(s);
-                }
-                else
-                {
-                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
-                }
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
             object value = specialValue.GetSuffix(suffixName);
@@ -653,6 +658,11 @@ namespace kOS.Safe.Compilation
             }
             else
             {
+                // TODO: When we refactor to make every structure use the new suffix style, this conversion
+                // from primative can be removed.  Right now there are too many structures that override the
+                // GetSuffix method and return their own types, preventing us from converting directly in
+                // the GetSuffix method.
+                value = Structure.FromPrimitive(value);
                 cpu.PushStack(value);
             }
         }
@@ -688,23 +698,21 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             string suffixName = cpu.PopStack().ToString().ToUpper();
             object popValue = cpu.PopValue();
+            // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
+            // the referenced variable wouldn't be updated.  The primitives themselves are treated as value
+            // types instead of reference types.  This is also why I removed the string unboxing
+            // from the ISuffixed check below.
 
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
-                // Box strings if necessary to allow suffixes
-                var s = popValue as string;
-                if (s != null)
-                {
-                    specialValue = new StringValue(s);
-                }
-                else
-                {
-                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
-                }
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            if (!specialValue.SetSuffix(suffixName, value))
+            // TODO: When we refactor to make every structure use the new suffix style, this conversion
+            // to primative can be removed.  Right now there are too many structures that override the
+            // SetSuffix method while relying on unboxing the object rahter than using Convert
+            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimitive(value)))
             {
                 throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }
@@ -956,7 +964,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThan(Argument1, Argument2);
+            return calc.GreaterThan(Operands);
         }
     }
 
@@ -968,7 +976,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThan(Argument1, Argument2);
+            return calc.LessThan(Operands);
         }
     }
 
@@ -980,7 +988,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThanEqual(Argument1, Argument2);
+            return calc.GreaterThanEqual(Operands);
         }
     }
 
@@ -992,7 +1000,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThanEqual(Argument1, Argument2);
+            return calc.LessThanEqual(Operands);
         }
     }
 
@@ -1004,7 +1012,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.NotEqual(Argument1, Argument2);
+            return calc.NotEqual(Operands);
         }
     }
     
@@ -1016,7 +1024,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Equal(Argument1, Argument2);
+            return calc.Equal(Operands);
         }
     }
 
@@ -1047,7 +1055,7 @@ namespace kOS.Safe.Compilation
                 // overloaded the unary negate operator '-'.
                 // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
                 Type t = value.GetType();
-                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
+                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
                 if (negateMe != null)
                     result = negateMe.Invoke(null, new[]{value}); // value is an arg, not the 'this'.  (Method is static.)
                 else
@@ -1066,9 +1074,9 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            object result = calc.Add(Argument1, Argument2);
+            object result = calc.Add(Operands);
             if (result == null)
-                throw new KOSBinaryOperandTypeException(Argument1, "add", "to", Argument2);
+                throw new KOSBinaryOperandTypeException(Operands, "add", "to");
             return result;
         }
     }
@@ -1081,7 +1089,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Subtract(Argument1, Argument2);
+            return calc.Subtract(Operands);
         }
     }
 
@@ -1093,7 +1101,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Multiply(Argument1, Argument2);
+            return calc.Multiply(Operands);
         }
     }
 
@@ -1105,7 +1113,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Divide(Argument1, Argument2);
+            return calc.Divide(Operands);
         }
     }
 
@@ -1117,7 +1125,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Power(Argument1, Argument2);
+            return calc.Power(Operands);
         }
     }
 
@@ -1134,6 +1142,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
+            // Convert to bool instead of cast in case the identifier is stored
+            // as an encapsulated BooleanValue, preventing an unboxing collision.
             bool result = Convert.ToBoolean(value);
             cpu.PushStack(result);
         }
@@ -1150,15 +1160,18 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object result;
 
-            if (value is bool)
-                result = !((bool)value);
-            else if (value is int)
-                result = Convert.ToBoolean(value) ? 0 : 1;
-            else if ((value is double) || (value is float))
-                result = Convert.ToBoolean(value) ? 0.0 : 1.0;
-            else
-                throw new KOSUnaryOperandTypeException("boolean-not", value);
-
+            // Convert to bool instead of cast in case the identifier is stored
+            // as an encapsulated BooleanValue, preventing an unboxing collision.
+            // Wrapped in a try/catch since the Convert framework doesn't have a
+            // way to determine if a type can be converted.
+            try
+            {
+                result = !Convert.ToBoolean(value);
+            }
+            catch
+            {
+                throw new KOSCastException(value.GetType(), typeof(bool));
+            }
             cpu.PushStack(result);
         }
     }
@@ -1279,7 +1292,9 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodeCall seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)fields[0];
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            DestinationLabel = Convert.ToString(fields[0]);
             Destination = fields[1];
         }
 
@@ -1385,11 +1400,14 @@ namespace kOS.Safe.Compilation
             if (builtinDel != null && (! calledFromKOSDelegateCall) )
                 functionPointer = builtinDel.Name;
 
-            if (functionPointer is int)
+            // Convert to int instead of cast in case the identifier is stored
+            // as an encapsulated ScalarValue, preventing an unboxing collision.
+            if (functionPointer is int || functionPointer is ScalarValue)
             {
                 ReverseStackArgs(cpu, direct);
                 var contextRecord = new SubroutineContext(cpu.InstructionPointer+1);
-                newIP = (int)functionPointer; // safe because we know it's an in in this if body.
+                newIP = Convert.ToInt32(functionPointer);
+                
                 cpu.PushAboveStack(contextRecord);
                 if (userDelegate != null)
                 {
@@ -1556,7 +1574,9 @@ namespace kOS.Safe.Compilation
                     return null; // By adding this we can unconditionally assume all functions
                                  // have a return value to be used or popped away, even if "void".
                 }
-                return dlg.DynamicInvoke(argArray);
+                // Convert a primitive return type to a structure.  This is done in the opcode, since
+                // the opcode calls the deligate directly and cannot be (quickly) intercepted
+                return Structure.FromPrimitive(dlg.DynamicInvoke(argArray));
             }
             catch (TargetInvocationException e)
             {
@@ -1651,7 +1671,7 @@ namespace kOS.Safe.Compilation
         /// be popping as it does so.  It combines the behavior of a PopScope inside
         /// itself, AFTER it reads and evaluates the thing atop the stack for return
         /// purposes (that way it evals the top thing BEFORE it pops the scope and forgets
-        /// what variables exist).<br/
+        /// what variables exist).<br/>
         /// <br/>
         /// Doing this:<br/>
         ///   push $val<br/>
@@ -1663,7 +1683,7 @@ namespace kOS.Safe.Compilation
         ///   return 0 deep<br/>
         /// <br/>
         /// </summary>
-        /// <param name="popScopes"></param>
+        /// <param name="depth">the number of levels to be popped</param>
         public OpcodeReturn(Int16 depth)
         {
             Depth = depth;
@@ -1682,7 +1702,7 @@ namespace kOS.Safe.Compilation
             // Now dig down through the stack until the argbottom is found.
             // anything still leftover above that should be unread parameters we
             // should throw away:
-            object shouldBeArgMarker = (int)0; // just a temp to force the loop to execute at least once.
+            object shouldBeArgMarker = 0; // just a temp to force the loop to execute at least once.
             while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType))
             {
                 if (cpu.GetStackSize() <= 0)
@@ -2100,8 +2120,8 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<2)
                 throw new Exception("Saved field in ML file for OpcodePushDelegate seems to be missing.  Version mismatch?");
-            EntryPoint = (int)fields[0];
-            WithClosure = (bool)fields[1];
+            EntryPoint = Convert.ToInt32(fields[0]);
+            WithClosure = Convert.ToBoolean(fields[1]);
         }
 
         public override void Execute(ICpu cpu)
@@ -2136,15 +2156,16 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// This variant of the constructor is just for ML file save/load to use.
         /// </summary>
-        protected OpcodePushDelegateRelocateLater() : base() {}
+        protected OpcodePushDelegateRelocateLater()
+        {}
         
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodePushDelegateRelocatelater seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)( fields[0] ); // this is really from the base class.
-            WithClosure = (bool)fields[1];
+            DestinationLabel = Convert.ToString(fields[0]); // this is really from the base class.
+            WithClosure = Convert.ToBoolean(fields[1]);
         }
     }
     

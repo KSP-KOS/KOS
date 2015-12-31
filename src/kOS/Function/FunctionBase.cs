@@ -5,6 +5,7 @@ using kOS.Safe.Exceptions;
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
 using TimeSpan = kOS.Suffixed.TimeSpan;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
@@ -21,7 +22,20 @@ namespace kOS.Function
         /// it onto the stack manually, as that would result in a double-push.
         /// If you decline to set ReturnValue, it will get a default value of zero anyway.
         /// </summary>
-        public object ReturnValue {get; set;}
+        public object ReturnValue
+        {
+            get
+            {
+                // Convert from primitive types to encapsulated types so that functions
+                // do not explicitly need to return the encapsulated type.
+                return Structure.FromPrimitive(internalReturn);
+            }
+            set
+            {
+                internalReturn = value;
+            }
+        }
+        private object internalReturn = null;
         
         /// <summary>
         /// In the *extremely* rare case where a built-in function is NOT supposed to
@@ -97,11 +111,16 @@ namespace kOS.Function
             {
                 return span;
             }
-            if (argument is double || argument is int || argument is long || argument is float)
+            try
             {
-                return new TimeSpan( Convert.ToDouble(argument) );
+                // Convert to double instead of cast in case the identifier is stored
+                // as an encapsulated ScalarValue, preventing an unboxing collision.
+                return new TimeSpan(Convert.ToDouble(argument));
             }
-            throw new KOSCastException(argument.GetType(),typeof(TimeSpan));
+            catch
+            {
+                throw new KOSCastException(argument.GetType(), typeof(TimeSpan));
+            }
         }
 
         protected Orbitable GetOrbitable(object argument)

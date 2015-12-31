@@ -62,7 +62,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (object item in dump.Values)
             {
-                Collection.Add((T)item);
+                Collection.Add((T)Structure.FromPrimitive(item));
             }
         }
 
@@ -95,7 +95,8 @@ namespace kOS.Safe.Encapsulation
 
         public object GetIndex(object index)
         {
-            if (index is double || index is float)
+            // TODO: remove double and float reference as it should be obsolete
+            if (index is double || index is float || index is ScalarValue)
             {
                 index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
             }
@@ -106,14 +107,16 @@ namespace kOS.Safe.Encapsulation
 
         public void SetIndex(object index, object value)
         {
-            if (index is double || index is float)
+            int idx;
+            try
             {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                idx = Convert.ToInt32(index);
             }
-
-            if (!(index is int)) throw new KOSException("The index must be an integer number");
-
-            Collection[(int)index] = (T)value;
+            catch
+            {
+                throw new KOSException("The index must be an integer number");
+            }
+            Collection[idx] = (T)value;
         }
 
 
