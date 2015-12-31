@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
-    abstract public class ScalarValue : Structure, IConvertible
+    abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
         abstract public bool IsInt { get; }
 
@@ -98,21 +98,21 @@ namespace kOS.Safe.Encapsulation
             var val = obj as ScalarValue;
             if (val != null)
             {
-                if (this.IsInt && val.IsDouble)
+                if (IsInt && val.IsDouble)
                 {
                     return false;
                 }
-                if (this.IsInt && val.IsInt)
+                if (IsInt && val.IsInt)
                 {
-                    return this.GetIntValue() == val.GetIntValue();
+                    return GetIntValue() == val.GetIntValue();
                 }
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 return GetDoubleValue() == val.GetDoubleValue();
             }
             else
             {
-                BindingFlags flags = BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public;
-                MethodInfo converter = typeof(ScalarValue).GetMethod("op_Implicit", flags, null, new[] { obj.GetType() }, null);
+                const BindingFlags FLAGS = BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public;
+                MethodInfo converter = typeof(ScalarValue).GetMethod("op_Implicit", FLAGS, null, new[] { obj.GetType() }, null);
                 if (converter != null)
                 {
                     val = (ScalarValue)converter.Invoke(null, new[] { obj });
@@ -168,10 +168,6 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue Divide(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return new ScalarIntValue(val1.GetIntValue() / val2.GetIntValue());
-            }
             return Create(val1.GetDoubleValue() / val2.GetDoubleValue());
         }
 
@@ -186,10 +182,6 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue Power(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return Create(Math.Pow(val1.GetIntValue(), val2.GetIntValue()));
-            }
             return Create(Math.Pow(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 

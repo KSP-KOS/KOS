@@ -245,7 +245,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (KeyValuePair<object, object> entry in dump)
             {
-                internalDictionary.Add(entry.Key, entry.Value);
+                internalDictionary.Add(Structure.FromPrimitive(entry.Key), Structure.FromPrimitive(entry.Value));
             }
         }
     }

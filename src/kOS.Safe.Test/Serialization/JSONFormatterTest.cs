@@ -28,10 +28,10 @@ namespace kOS.Safe.Test.Serialization
 
             Lexicon deserialized = Deserialize(Serialize(lex)) as Lexicon;
 
-            Assert.AreEqual("value1", deserialized["key1"]);
-            Assert.AreEqual(1, deserialized["key2"]);
-            Assert.IsTrue(deserialized["key3"] is Lexicon);
-            Assert.AreEqual("nested1value", (deserialized["key3"] as Lexicon)["nested1"]);
+            Assert.AreEqual(new StringValue("value1"), deserialized[new StringValue("key1")]);
+            Assert.AreEqual(new ScalarIntValue(1), deserialized[new StringValue("key2")]);
+            Assert.IsTrue(deserialized[new StringValue("key3")] is Lexicon);
+            Assert.AreEqual(new StringValue("nested1value"), (deserialized[new StringValue("key3")] as Lexicon)[new StringValue("nested1")]);
         }
 
         [Test]
@@ -48,8 +48,8 @@ namespace kOS.Safe.Test.Serialization
 
             ListValue deserialized = Deserialize(Serialize(list)) as ListValue;
 
-            Assert.AreEqual("item1", deserialized[0]);
-            Assert.AreEqual(2, deserialized[1]);
+            Assert.AreEqual(new StringValue("item1"), deserialized[0]);
+            Assert.AreEqual(new ScalarIntValue(2), deserialized[1]);
             Assert.IsTrue(deserialized[2] is ListValue);
         }
 
@@ -67,9 +67,9 @@ namespace kOS.Safe.Test.Serialization
 
             StackValue deserialized = Deserialize(Serialize(stack)) as StackValue;
 
-            Assert.AreEqual("nested1", (deserialized.Pop() as StackValue).Pop());
-            Assert.AreEqual(2, deserialized.Pop());
-            Assert.AreEqual("item1", deserialized.Pop());
+            Assert.AreEqual(new StringValue("nested1"), (deserialized.Pop() as StackValue).Pop());
+            Assert.AreEqual(new ScalarIntValue(2), deserialized.Pop());
+            Assert.AreEqual(new StringValue("item1"), deserialized.Pop());
 
         }
 
@@ -87,8 +87,8 @@ namespace kOS.Safe.Test.Serialization
 
             QueueValue deserialized = Deserialize(Serialize(queue)) as QueueValue;
 
-            Assert.AreEqual("item1", deserialized.Pop());
-            Assert.AreEqual(2, deserialized.Pop());
+            Assert.AreEqual(new StringValue("item1"), deserialized.Pop());
+            Assert.AreEqual(new ScalarIntValue(2), deserialized.Pop());
             Assert.IsTrue(deserialized.Pop() is QueueValue);
         }
 

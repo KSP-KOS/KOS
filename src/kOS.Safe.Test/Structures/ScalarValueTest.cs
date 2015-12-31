@@ -30,40 +30,39 @@ namespace kOS.Safe.Test.Structures
             Assert.AreEqual(d, (double)s);
         }
 
-        // TODO: Uncomment these tests when merged with upstream changes
-        //[Test]
-        //public void CanStructureFromPrimitiveInt()
-        //{
-        //    int i = 10;
-        //    var s = kOS.Safe.Encapsulation.Structure.FromPrimitive(i);
-        //    Assert.AreEqual(i, (ScalarValue)s);
-        //}
+        [Test]
+        public void CanStructureFromPrimitiveInt()
+        {
+            int i = 10;
+            var s = kOS.Safe.Encapsulation.Structure.FromPrimitive(i);
+            Assert.AreEqual(i, (ScalarValue)s);
+        }
 
-        //[Test]
-        //public void CanStructureFromPrimitiveDouble()
-        //{
-        //    double d = 3.1415926535897932384626433832795;
-        //    var s = kOS.Safe.Encapsulation.Structure.FromPrimitive(d);
-        //    Assert.AreEqual(d, (ScalarValue)s, 0d);
-        //}
+        [Test]
+        public void CanStructureFromPrimitiveDouble()
+        {
+            double d = 3.1415926535897932384626433832795;
+            var s = kOS.Safe.Encapsulation.Structure.FromPrimitive(d);
+            Assert.AreEqual(d, (ScalarValue)s, 0d);
+        }
 
-        //[Test]
-        //public void CanStructureToPrimitiveInt()
-        //{
-        //    int i = 10;
-        //    var s = ScalarValue.Create(i);
-        //    var iTest = kOS.Safe.Encapsulation.Structure.ToPrimitive(s);
-        //    Assert.AreEqual(i, (int)iTest);
-        //}
+        [Test]
+        public void CanStructureToPrimitiveInt()
+        {
+            int i = 10;
+            var s = ScalarValue.Create(i);
+            var iTest = kOS.Safe.Encapsulation.Structure.ToPrimitive(s);
+            Assert.AreEqual(i, (int)iTest);
+        }
 
-        //[Test]
-        //public void CanStructureToPrimitiveDouble()
-        //{
-        //    double d = 3.1415926535897932384626433832795;
-        //    var s = ScalarValue.Create(d);
-        //    var dTest = kOS.Safe.Encapsulation.Structure.ToPrimitive(s);
-        //    Assert.AreEqual(d, (double)dTest, 0d);
-        //}
+        [Test]
+        public void CanStructureToPrimitiveDouble()
+        {
+            double d = 3.1415926535897932384626433832795;
+            var s = ScalarValue.Create(d);
+            var dTest = kOS.Safe.Encapsulation.Structure.ToPrimitive(s);
+            Assert.AreEqual(d, (double)dTest, 0d);
+        }
 
         [Test]
         public void CanImplicitCastToInt()
@@ -195,6 +194,29 @@ namespace kOS.Safe.Test.Structures
             var strResult = str1 + s1;
             string stringResult = string1 + d1.ToString();
             Assert.AreEqual(stringResult, (string)strResult);
+        }
+
+        [Test]
+        public void CanNullCheck()
+        {
+            ScalarValue sv = null;
+            Assert.IsTrue(sv == null);
+            Assert.IsFalse(sv != null);
+            sv = ScalarValue.Create(1);
+            Assert.IsTrue(sv != null);
+            Assert.IsFalse(sv == null);
+            Assert.IsTrue(null != sv);
+            Assert.IsFalse(null == sv);
+            sv = ScalarValue.Create(0);
+            Assert.IsTrue(sv != null);
+            Assert.IsFalse(sv == null);
+            Assert.IsTrue(null != sv);
+            Assert.IsFalse(null == sv);
+            sv = ScalarValue.Create(3.1415926535897932384626433832795);
+            Assert.IsTrue(sv != null);
+            Assert.IsFalse(sv == null);
+            Assert.IsTrue(null != sv);
+            Assert.IsFalse(null == sv);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Safe.Execution;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -1488,7 +1489,7 @@ namespace kOS.Safe.Compilation.KS
                 number = double.Parse(node.Token.Text);
             }
 
-            AddOpcode(new OpcodePush(number));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitDouble(ParseNode node)
@@ -1496,7 +1497,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             object number = double.Parse(node.Token.Text);
 
-            AddOpcode(new OpcodePush(number));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitTrueFalse(ParseNode node)
@@ -1505,7 +1506,7 @@ namespace kOS.Safe.Compilation.KS
             bool boolValue;
             if (bool.TryParse(node.Token.Text, out boolValue))
             {
-                AddOpcode(new OpcodePush(boolValue));
+                AddOpcode(new OpcodePush(new BooleanValue(boolValue)));
             }
         }
 
@@ -1891,7 +1892,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitString(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
+            AddOpcode(new OpcodePush(new StringValue(node.Token.Text.Trim('"'))));
         }
 
         ///<summary>
