@@ -37,6 +37,8 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("MOVENEXTPRESET", new NoArgsSuffix(MoveNextPreset));
             AddSuffix("MOVEPREVPRESET", new NoArgsSuffix(MovePrevPreset));
             AddSuffix("STOP", new NoArgsSuffix(Stop));
+
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(GetVessel));
         }
 
         public ListValue GetServos()
@@ -52,6 +54,16 @@ namespace kOS.AddOns.InfernalRobotics
             }
             
             return ListValue.CreateList(list);
+        }
+
+        public VesselTarget GetVessel()
+        {
+            if (IRWrapper.APIReady) 
+            {
+                return cg.Vessel != null ? new VesselTarget (cg.Vessel, shared) : null;
+            } 
+            else
+                return null;
         }
 
         public void MoveRight()
