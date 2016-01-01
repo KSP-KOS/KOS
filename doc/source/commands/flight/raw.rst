@@ -43,7 +43,14 @@ Raw Flight Controls Reference
 These "Raw" controls allow you the direct control of flight parameters while the current program is running.
 
 .. note::
-    The ``MAINTHROTTLE`` requires active engines and, of course, sufficient and appropriate fuel. The rotational controls ``YAW``, ``PITCH`` and ``ROW`` require active reaction wheels with sufficient energy or *RCS* to be ON with properly placed thrusters and appropriate fuel. The translational controls ``FORE``, ``STARBOARD`` and ``TOP`` require *RCS* to be ON with properly placed thrusters and appropriate fuel.
+    The ``MAINTHROTTLE`` requires active engines and, of course,
+    sufficient and appropriate fuel. The rotational controls ``YAW``,
+    ``PITCH`` and ``ROW`` require one of the following: active reaction
+    wheels with sufficient energy, *RCS* to be ON with properly placed
+    thrusters and appropriate fuel, or control surfaces with an atmosphere
+    in which to operate. The translational controls ``FORE``, ``STARBOARD``
+    and ``TOP`` only work with *RCS*, and require RCS to be ON with
+    properly placed thrusters and appropriate fuel.
 
 
 .. list-table::

@@ -233,7 +233,6 @@ only gets executed if the system needed to pad a missing argument.
 
 
 
-
 .. note::
 
     **Pass By Value**
@@ -687,6 +686,14 @@ lazy global feature and it will require you to explicitly mention
 all variables you use in a declaration somewhere (with the 
 exception of the built-in variables such as THROTTLE, STEERING,
 SHIP, and so on.)
+
+.. note::
+    The @LAZYGLOBAL directive does not affect LOCK statements.
+    LOCKS are a special case that define new pseudo-functions
+    when encountered and don't quite work the same way as
+    SET statements do. Thus even with @LAZYGLOBAL OFF, it's still
+    possible to make a LOCK statement with a typo in the identifier
+    name and it will still create the new typo'ed lock that way.
 
 @LAZYGLOBAL Can only exist at the top of your code.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

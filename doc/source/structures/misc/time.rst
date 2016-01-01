@@ -74,10 +74,6 @@ You can use the TIME special variable to detect whether or not a real physics 't
 
         The epoch (time zero) in the KSP game is the time at which you first started the new campaign. All campaign games begin with the planets in precisely the same position and the clock set to zero years, zero days, zero hours, and so on.
 
-.. warning::
-
-    Beware that the times returned from :struct:`FileInfo` for the time a file was modified or created are NOT in this :struct:`TimeSpan` structure but instead are just raw strings. That is because they represent the time the file was affected in the real world and NOT times taken from the KSP simulation clock. That is a necessity because your files in the Archive exist globally across all multiple saved games. Different saved games won't have synchronized calendars with each other.
-
 
 .. structure:: TimeSpan
 

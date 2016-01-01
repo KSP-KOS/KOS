@@ -42,8 +42,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
      :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
-     :attr:`DYNAMICPRESSURE`               scalar (kilopascals)      Air Pressure surrounding the vessel
-     :attr:`Q`                             scalar (kilopascals)      Alias name for DYNAMICPRESSURE
+     :attr:`DYNAMICPRESSURE`               scalar (ATM's)            Air Pressure surrounding the vessel
+     :attr:`Q`                             scalar (ATM's)            Alias name for DYNAMICPRESSURE
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
      :attr:`GROUNDSPEED`                   scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
@@ -161,14 +161,18 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
 .. attribute:: Vessel:DYNAMICPRESSURE
 
-    :type: scalar (kiloPascals, kPa)
+    :type: scalar (ATM's)
     :access: Get only
 
     Returns what the air pressure is in the atmosphere surrounding the vessel.
+    The value is returned in units of sea-level Kerbin atmospheres.  Many
+    fomulae expect you to plug in a value expressed in kiloPascals, or
+    kPA.  You can convert this value into kPa by multiplying it by
+    `constant:ATMtokPa`.
 
 .. attribute:: Vessel:Q
 
-    :type: scalar (kiloPascals, kPa)
+    :type: scalar (ATM's)
     :access: Get only
 
     Alias for DYNAMICPRESSURE
@@ -243,8 +247,29 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`Direction`
     :access: Get only
 
-    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector represents the axis of the rotation, and its magnitude is the angular momentum of the rotation, which varies not only with the speed of the rotation, but also with the angular inertia of the vessel.
+    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector
+    represents the axis of the rotation (in left-handed convention,
+    not right handed as most physics textbooks show it), and its
+    magnitude is the angular momentum of the rotation, which varies
+    not only with the speed of the rotation, but also with the angular
+    inertia of the vessel.
 
+    Units are expressed in: (Megagrams * meters^2) / (seconds * radians)
+
+    (Normal SI units would use kilograms, but in KSP all masses use a
+    1000x scaling factor.)
+
+    **Justification for radians here:** 
+    Unlike the trigonometry functions in kOS, this value uses radians
+    rather than degrees.  The convention of always expressing angular
+    momentum using a formula that assumes you're using radians is a very
+    strongly adhered to universal convention, for... reasons.
+    It's so common that it's often not even explicitly
+    mentioned in information you may find when doing a web search on
+    helpful formulae about angular momentum.  This is why kOS doesn't
+    use degrees here.  (That an backward compatibility for old scripts.
+    It's been like this for quite a while.).
+    
     .. note::
 
         .. versionchanged:: 0.15.4
@@ -253,16 +278,23 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
 .. attribute:: Vessel:ANGULARVEL
 
-    :type: :struct:`Direction`
-    :access: Get only
+    Angular velocity of the body's rotation about its axis (its
+    day) expressed as a vector.
 
-    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector represents the axis of the rotation, and its magnitude is the speed of that rotation (Presumably in degrees per second?  This is not documented in the KSP API and may take some experimentation to discover if it's radians or degrees).
+    The direction the angular velocity points is in Ship-Raw orientation,
+    and represents the axis of rotation.  Remember that everything in
+    Kerbal Space Program uses a *left-handed coordinate system*, which
+    affects which way the angular velocity vector will point.  If you
+    curl the fingers of your **left** hand in the direction of the rotation,
+    and stick out your thumb, the thumb's direction is the way the
+    angular velocity vector will point.
 
-    .. note::
+    The magnitude of the vector is the speed of the rotation.
 
-        .. versionchanged:: 0.15.4
-
-            This has been changed to a vector, as it should have been all along.
+    Note, unlike many of the other parts of kOS, the rotaion speed is
+    expressed in radians rather than degrees.  This is to make it
+    congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
+    backward compatibility with older kOS scripts.
 
 .. attribute:: Vessel:SENSORS
 

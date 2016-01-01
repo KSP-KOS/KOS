@@ -324,6 +324,14 @@ TIME is the time since the entire saved game campaign started, in the
 kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
 just started.
 
+KUNIVERSE
+~~~~~~~~~
+
+:ref:`Kuniverse <kuniverse>` is a structure that contains many settings that
+break the fourth wall a little bit and control the game simulation directly.
+The eventual goal is probably to move many of the variables you see listed
+below into ``kuniverse``.
+
 Config
 ~~~~~~
 

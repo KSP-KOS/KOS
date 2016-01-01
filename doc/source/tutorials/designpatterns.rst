@@ -57,7 +57,7 @@ Here, we introduce IF/ELSE logic into UNTIL loops:
     STAGE.
     UNTIL SHIP:ALTITUDE > 20000 {
         IF SHIP:ALTITUDE > 10000 {
-            LOCK STEERING TO R(0,0,-90) + HEADING(90,45).
+            LOCK STEERING TO TO R(0,0,-90) + HEADING(90,45).
         }
         IF STAGE:LIQUIDFUEL < 0.1 {
             STAGE.

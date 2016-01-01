@@ -17,7 +17,7 @@ In this style of controlling the craft, you do not steer the craft directly, but
     This sets the main throttle of the ship to *value*. Where *value* is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.
 
 .. _LOCK STEERING:
-.. object:: LOCK STEERING TO value.
+.. object:: LOCK STEERING TO value. // value range [0.0 .. 1.0]
 
    This sets the direction **kOS** should point the ship where *value* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
 
@@ -56,6 +56,77 @@ In this style of controlling the craft, you do not steer the craft directly, but
             LOCK STEERING TO VCRS(SHIP:VELOCITY:ORBIT, BODY:POSITION).
 
 Like all ``LOCK`` expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other ``LOCK`` expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other ``LOCK`` expressions only get executed when you try to read the value of the variable. The reason is that the **kOS** computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.
+
+
+.. _LOCK WHEELTHROTTLE:
+.. object:: LOCK WHEELTHROTTLE TO value. // value range [-1.0 .. 1.0]
+
+    **(For Rovers)** This is used to control the throttle that is used when
+    driving a wheeled vehicle on the ground.  It is an entirely independent
+    control from the flight throttle used with ``LOCK THROTTLE`` above.
+    It is analagous to holding the 'W' (value of +1) or 'S' (value of -1)
+    key when driving a rover manually under default keybindings.
+
+    ``WHEELTHROTTLE`` allows you to set
+    a negative value, up to -1.0, while ``THROTTLE`` can't go below zero.
+    A negative value means you are trying to accelerate in reverse.
+
+    Unlike trying to drive manually, using ``WHEELTHROTTLE`` in kOS does
+    not cause the torque wheels to engage as well.  In stock KSP using
+    the 'W' or 'S' keys on a rover engages both the wheel driving AND the
+    torque wheel rotational power.  In kOS those two features are
+    done independantly.
+
+.. _LOCK WHEELSTEERING:
+.. object:: LOCK WHEELSTEERING TO value.
+
+   **(For Rovers)** This is used to tell the rover's cooked steering
+   where to go.  The rover's cooked steering doesn't use nearly as
+   sophisticated a PID control system as the flight cooked steering
+   does, but it does usually get the job done, as driving has more
+   physical effects that help dampen the steering down automatically.
+
+   There are 3 kinds of value understood by WHEELSTEERING:
+
+   - :struct:`GeoCoordinates` - If you lock wheelsteering to a
+     :ref:`latlng`, that will mean the rover will try to steer in
+     whichever compass direction will aim at that location.
+
+   - :struct:`Vessel` - If you try to lock wheelsteering to a vessel,
+     that will mean the rover will try to steer in whichever compass
+     direction will aim at that vessel.  The vessel being aimed at
+     does not need to be landed.  If it is in the sky, the rover will
+     attempt to aim at a location directly underneath it on the ground.
+
+   - *Scalar Number* - If you try to lock wheelsteering to just a plain
+     scalar number, that will mean the rover will try to aim at that
+     compass heading.  For example ``lock wheelsteering to 45.`` will
+     try to drive the rover northeast.
+
+   For more precise control over steering, you can use raw steering to
+   just directly tell the rover to yaw left and right as it drives and
+   that will translate into wheel steering provided the vessel is landed
+   and you have a probe core aiming the right way.
+
+   **A warning about WHEELSTEERING and vertically mounted probe cores**:
+
+   If you built your rover in such a way that the probe core controlling it
+   is stack-mounted facing up at the sky when the rover is driving, that 
+   will confuse the ``lock WHEELSTEERING`` cooked control mechanism.  This
+   is a common building pattern for KSP players and it seems to work okay
+   when driving manually, but when driving by a kOS script, the fact that
+   the vessel's facing is offically pointing up at the sky causes it to
+   get confused.  If you notice that your rover tends to drive in the
+   correct direction only when on a flat or slight downslope, but then
+   turns around and around in circles when driving toward the target
+   requires going up a slope, then this may be exactly what's happening.
+   When it tilted back, the 'forward' vector aiming up at the sky started
+   pointing behind it, and the cooked steering thought the rover was
+   aimed in the opposite direction to the way it was really going.
+   To fix this problem, either mount your rover probe core facing the
+   front of the rover, or perform a "control from here" on some forward
+   facing docking port or something like that to get it to stop thinking
+   of the sky as "forward".
 
 Unlocking controls
 ------------------

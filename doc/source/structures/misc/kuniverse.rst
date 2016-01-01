@@ -240,7 +240,7 @@ KUniverse 4th wall methods
 ****
 
 Examples
-========
+--------
 
 Switch to an active vessel called "vessel 2"::
 
