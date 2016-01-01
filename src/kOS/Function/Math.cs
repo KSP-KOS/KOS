@@ -94,6 +94,7 @@ namespace kOS.Function
         }
     }
 
+
     [Function("ln")]
     public class FunctionLn : FunctionBase
     {
@@ -235,6 +236,19 @@ namespace kOS.Function
             }
             else
                 throw new KOSException("vector angle calculation attempted with a non-vector value");
+        }
+    }
+
+
+    [Function("char")]
+    public class FunctionChar : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            string result = new string((char) argument, 1);
+            ReturnValue = result;
         }
     }
 }
