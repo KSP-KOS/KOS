@@ -1,5 +1,4 @@
-﻿using System;
-using kOS.Safe.Compilation.KS;
+﻿using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Exceptions
 {
@@ -11,7 +10,7 @@ namespace kOS.Safe.Exceptions
     /// occur *prior* to actually letting the CPU start executing the
     /// program's opcodes.
     /// </summary>
-    public class KOSCompileException: KOSException
+    public class KOSCompileException : KOSException
     {
         public LineCol Location { get; private set; }
 
@@ -21,16 +20,22 @@ namespace kOS.Safe.Exceptions
         // constructed, as the source text information isn't available when the exception
         // is first constructed.  (See AddSourceText() below).
         private string message;
+
         public override string Message
         {
             get { return message; }
         }
-        
+
         // Just default the Verbose message to return the terse message:
-        public override string VerboseMessage { get{return Message;} }
+        public override string VerboseMessage { get { return Message; } }
 
         // Just nothing by default:
-        public override string HelpURL { get{ return "";} }
+        public override string HelpURL { get { return ""; } }
+
+        public KOSCompileException(Token token, string message)
+            : this(new LineCol(token.Line, token.Column), message)
+        {
+        }
 
         public KOSCompileException(LineCol location, string message)
         {
@@ -54,7 +59,7 @@ namespace kOS.Safe.Exceptions
             int sourceLine = startline;
             int startIndex = 0;
             int endIndex = sourceText.Length; // endIndex is one past the end, actually.
-            for (int i = 0; i < sourceText.Length ; ++i)
+            for (int i = 0; i < sourceText.Length; ++i)
             {
                 if (sourceText[i] == '\n')
                 {
@@ -72,9 +77,9 @@ namespace kOS.Safe.Exceptions
             }
             message = string.Format(
                 "{0}\n{1}\nline {2}, col {3}: {4}",
-                sourceText.Substring(startIndex, (endIndex-startIndex)),
+                sourceText.Substring(startIndex, (endIndex - startIndex)),
                 "^".PadLeft(Location.Column), // put the caret under the right column of the source line
-                Location.Line, Location.Column, message );
+                Location.Line, Location.Column, message);
         }
     }
 }

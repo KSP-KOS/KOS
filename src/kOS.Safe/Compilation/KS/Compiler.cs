@@ -321,16 +321,14 @@ namespace kOS.Safe.Compilation.KS
             }
             
             // These probably can't happen because the parser would have barfed before it got to this method:
-            var location = new LineCol(node.Token.Line, node.Token.Column);
-
             if (initBlock == null)
-                throw new KOSCompileException(location, "Missing FROM block in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing FROM block in FROM loop.");
             if (checkExpression == null || untilTokenNode == null)
-                throw new KOSCompileException(location, "Missing UNTIL check expression in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing UNTIL check expression in FROM loop.");
             if (stepBlock == null)
-                throw new KOSCompileException(location, "Missing STEP block in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing STEP block in FROM loop.");
             if (doBlock == null)
-                throw new KOSCompileException(location, "Missing loop body (DO block) in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing loop body (DO block) in FROM loop.");
             
             // Append the step instructions to the tail end of the body block's instructions:
             foreach (ParseNode child in stepBlock.Nodes)
@@ -1864,7 +1862,7 @@ namespace kOS.Safe.Compilation.KS
             // program happens to make the compiler walk a path that uses this
             // method.
             
-            throw new KOSCompileException(
+            throw new KOSCompileException(node.Token, 
                 "TESTING TESTING TESTING.  TELL @dunbaratu IMMEDIATELY IF YOU SEE THIS ERROR. " +
                 "THIS MESSAGE IS A CHECK TO ENSURE THAT VisitSuffixTerm IS NEVER REALLY GETTING CALLED. " +
                 "IF NONE OF THE KOS DEVS EVER SEE THIS DURING OUR TESTS OF 0.19.0, THEN VisitSuffixTerm " +
