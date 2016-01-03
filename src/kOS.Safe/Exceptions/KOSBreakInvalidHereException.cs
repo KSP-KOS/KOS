@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// A version of KOSCommandInvalidHere describing an attempt to use
@@ -18,8 +20,8 @@
             "it doesn't mean anything when it's not inside a\n" +
             "loop.\n";
 
-        public KOSBreakInvalidHereException(int line, int col) :
-            base(line, col, "BREAK", "outside a loop", "in a loop body")
+        public KOSBreakInvalidHereException(LineCol location) :
+            base(location, "BREAK", "outside a loop", "in a loop body")
         {
         }
     }

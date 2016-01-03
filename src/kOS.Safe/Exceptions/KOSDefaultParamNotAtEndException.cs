@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// A version of KOSCommandInvalidHere describing a situation where the
@@ -26,8 +28,8 @@
             "because when x had a default then all other\n" +
             "parameters that came after it had to have one.\n";
 
-        public KOSDefaultParamNotAtEndException(int line, int col) :
-            base(line, col,
+        public KOSDefaultParamNotAtEndException(LineCol location) :
+            base(location,
                  "An optional parameter (one with a default initializer)",
                  "before a mandatory parameter (one without a default initializer)",
                  "when all mandatory parameters come before all optional parameters")

@@ -1,4 +1,6 @@
 ﻿using System;
+using kOS.Safe.Compilation.KS;
+
 namespace kOS.Safe.Exceptions
 {
     /// <summary>
@@ -11,9 +13,8 @@ namespace kOS.Safe.Exceptions
     /// </summary>
     public class KOSCompileException: KOSException
     {
-        public int Line {get; private set;}
-        public int Col {get; private set;}
-        
+        public LineCol Location { get; private set; }
+
         // In order to make the Message property of an Exception not be read-only, you have
         // to do it this way - make a writable field underneath the get-only property.  This
         // is being done so the message of this exception can be altered later after it was
@@ -31,13 +32,13 @@ namespace kOS.Safe.Exceptions
         // Just nothing by default:
         public override string HelpURL { get{ return "";} }
 
-        public KOSCompileException(int line, int col, string message)
+        public KOSCompileException(LineCol location, string message)
         {
-            Line = line;
-            Col = col;
+            Location = location;
+
             this.message = message;
         }
-        
+
         /// <summary>
         /// Skims through the source text looking for the line snippet
         /// where the problem is.  This will prepend the source line
@@ -47,7 +48,7 @@ namespace kOS.Safe.Exceptions
         public void AddSourceText(int startline, string sourceText)
         {
             // special case for when the exception cannot show its source line:
-            if (Line <= 0 || Col <= 0)
+            if (Location.Line <= 0 || Location.Column <= 0)
                 return;
             // Have to skim through the source text looking for the right line:
             int sourceLine = startline;
@@ -58,11 +59,11 @@ namespace kOS.Safe.Exceptions
                 if (sourceText[i] == '\n')
                 {
                     ++sourceLine;
-                    if (sourceLine == Line)
+                    if (sourceLine == Location.Line)
                     {
                         startIndex = i + 1;
                     }
-                    else if (sourceLine == Line + 1)
+                    else if (sourceLine == Location.Column + 1)
                     {
                         endIndex = i;
                         break;
@@ -72,8 +73,8 @@ namespace kOS.Safe.Exceptions
             message = string.Format(
                 "{0}\n{1}\nline {2}, col {3}: {4}",
                 sourceText.Substring(startIndex, (endIndex-startIndex)),
-                "^".PadLeft(Col), // put the caret under the right column of the source line
-                Line, Col, message );
+                "^".PadLeft(Location.Column), // put the caret under the right column of the source line
+                Location.Line, Location.Column, message );
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Compilation
 {
@@ -132,7 +133,7 @@ namespace kOS.Safe.Compilation
                         Utilities.SafeHouse.Logger.LogError("=====Relabeled Program so far is: =========");
                         Utilities.SafeHouse.Logger.LogError(Utilities.Debug.GetCodeFragment(program));
 
-                        throw new kOS.Safe.Exceptions.KOSCompileException(-1, -1, string.Format(
+                        throw new Exceptions.KOSCompileException(LineCol.Unknown(), string.Format(
                             "ProgramBuilder.ReplaceLabels: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
                     }
                     labels.Add(program[index].Label, index);

@@ -7,12 +7,24 @@
     /// </summary>
     public class LineCol
     {
-        public short Line { get; set; }
-        public short Col { get; set; }
-        public LineCol(short line, short col)
+        public short Line { get; private set; }
+        public short Column { get; private set; }
+
+        public LineCol(short line, short column)
         {
             Line = line;
-            Col = col;
+            Column = column;
+        }
+
+        public LineCol(int line, int column)
+        {
+            Line = (short)line;
+            Column = (short)column;
+        }
+
+        public static LineCol Unknown()
+        {
+            return new LineCol(-1,-1);
         }
     }
 }

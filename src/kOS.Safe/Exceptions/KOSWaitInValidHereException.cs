@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// A version of KOSCommandInvalidHere describing an attempt to use
@@ -19,8 +21,8 @@
             "work inside a trigger body, which must complete\n" +
             "its work within one update tick.\n";
 
-        public KOSWaitInvalidHereException(int line, int col) :
-            base(line, col, "WAIT", "in a trigger body", "outside of triggers" )
+        public KOSWaitInvalidHereException(LineCol location) :
+            base(location, "WAIT", "in a trigger body", "outside of triggers" )
         {
         }
     }

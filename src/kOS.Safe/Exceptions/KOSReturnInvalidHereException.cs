@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// A version of KOSCommandInvalidHere describing an attempt to use
@@ -18,8 +20,8 @@
             "it doesn't mean anything when it's not inside a\n" +
             "user function.\n";
 
-        public KOSReturnInvalidHereException(int line, int col) :
-            base(line, col, "RETURN", "outside a FUNCTION", "in a FUNCTION body")
+        public KOSReturnInvalidHereException(LineCol location) :
+            base(location, "RETURN", "outside a FUNCTION", "in a FUNCTION body")
         {
         }
     }

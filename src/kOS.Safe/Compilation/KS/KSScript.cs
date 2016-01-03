@@ -34,7 +34,7 @@ namespace kOS.Safe.Compilation.KS
                 catch (KOSCompileException e)
                 {
                     e.AddSourceText((short)startLineNum, scriptText);
-                    throw e;
+                    throw;
                 }
 
                 // add locks and triggers
@@ -50,7 +50,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                // TODO: Come back here and check on the possiblity of reporting more
+                // TODO: Come back here and check on the possibility of reporting more
                 // errors than just the first one.  It appears that TinyPG builds a
                 // whole array of error messages so people could see multiple syntax
                 // errors in one go if we supported the reporting of it.  It may be that
@@ -119,9 +119,9 @@ namespace kOS.Safe.Compilation.KS
                 curChar = commandChars[n];
                 switch (curChar)
                 {
-                    // Track if we are ina string literal that didn't close,
+                    // Track if we are in a string literal that didn't close,
                     // and make sure it's not a string literal inside a comment,
-                    // becasue those don't count:
+                    // because those don't count:
                     case '\"':
                         if (! inCommentToEoln)
                             inQuotes = !(inQuotes);
