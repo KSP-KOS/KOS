@@ -487,7 +487,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-           string name = PopValueAssert(shared, false).ToString();
+           string name = PopValueAssert(shared).ToString();
            AssertArgBottomAndConsume(shared);
            
            ReturnValue = new BuiltinDelegate(shared.Cpu, name);

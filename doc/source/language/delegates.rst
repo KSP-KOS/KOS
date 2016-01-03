@@ -92,7 +92,7 @@ with KOSDelegates.
 Why the '@' sign?
 ~~~~~~~~~~~~~~~~~
 
-In kerboscript, often when you mention a function's name and don't provide
+In Kerboscript, often when you mention a function's name and don't provide
 any empty parentheses, if it's a function that takes zero arguments, it
 ends up being called anyway.  Thus ``set x to myfunc.`` ends up doing
 the same thing as ``set x to myfunc().``.  It ends up calling the 
@@ -221,7 +221,7 @@ lib_enum in KSLib
 There is a library in the kslib that can be used to perform many data
 set enumeration operations like the one described in the above section.
 It was written to be released coinciding with the addition of this feature
-to kerboscript.  In addition to being useful as a library, it also can
+to Kerboscript.  In addition to being useful as a library, it also can
 serve as a good list of example cases for how you can use this
 "delegate" feature in your own code.  Please have a look at
 :ref:`the lib_enum library in KSLib <https://github.com/KSP-KOS/KSLib/blob/master/doc/lib_enum.md>`_
@@ -229,7 +229,7 @@ to see what it has to offer.  It allows you to do things such as sorting
 a LIST() based on whatever comparison criteria you like, finding the
 minimum or maximum from a list, transforming all items in the list according
 to a mapping rule, finding the index of the first hit in a list that 
-matches given critiera, and so on.
+matches given criteria, and so on.
 
 Advanced topics
 ===============
@@ -363,7 +363,7 @@ involves decisions that impact the future of the language and once made,
 can't be changed easily.*)
 
 - You **can** make a delegate of a :ref:`user function <user_functions>`
-  implemented in kerboscript code.::
+  implemented in Kerboscript code.::
     
     function mysquarefunc { parameter a. return a*a. }
     set x to mysquarefunc@.
@@ -377,7 +377,7 @@ can't be changed easily.*)
     print "square root of 7, to the nearest 2 places is: " + r:call(s:call(7), 2).
 
 - You **cannot** make a delegate of a suffix of a structure (*yet?*)
-  in kerboscript.::
+  in Kerboscript.::
 
     //
     // WON'T WORK, WILL GIVE ERROR:

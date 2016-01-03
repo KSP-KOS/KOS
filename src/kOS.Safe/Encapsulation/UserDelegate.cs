@@ -50,13 +50,13 @@ namespace kOS.Safe.Encapsulation
 
         private void CaptureClosure()
         {
-            Closure = cpu.GetCurrentClosure();
+            Closure = Cpu.GetCurrentClosure();
         }
         
         public override string ToString()
         {
             return string.Format("UserDelegate(cpu={0}, entryPoint={1}, Closure={2},\n   {3})",
-                                 cpu.ToString(), EntryPoint.ToString(), Closure.ToString(), base.ToString());
+                                 Cpu, EntryPoint, Closure, base.ToString());
         }
         
         public override void PushUnderArgs()
@@ -64,14 +64,14 @@ namespace kOS.Safe.Encapsulation
             // Going to do an indirect call of myself, and indirect calls need
             // to have the delegate underneath the args.  That's how
             // OpcodeCall.StaticExecute() expects to see it.
-            cpu.PushStack(this);
+            Cpu.PushStack(this);
         }
         
         public override object Call()
         {
-            int absoluteJumpTo = OpcodeCall.StaticExecute(cpu, false, "", true);
+            int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)
-                cpu.InstructionPointer = absoluteJumpTo - 1; // -1 because it increments by 1 automatically between instructions.
+                Cpu.InstructionPointer = absoluteJumpTo - 1; // -1 because it increments by 1 automatically between instructions.
             
             // Remember this is just a special flag telling OpcodeCall to never place
             // this suffix's C# delegate return value on the stack.  It's like saying

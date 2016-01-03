@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
-using System;
+using kOS.Safe.Execution;
+using System.Collections.Generic;
 using System.Text;
 
-namespace kOS.Safe.Execution
+namespace kOS.Safe.Encapsulation
 {
     /// <summary>
     /// Any situation where a function of any type is referenced as the
@@ -15,21 +14,24 @@ namespace kOS.Safe.Execution
     /// </summary>
     public abstract class KOSDelegate : Structure
     {
-        public List<object> preBoundArgs = new List<object>();
-        protected readonly ICpu cpu;
-        
-        public KOSDelegate(ICpu cpu)
+        protected IList<object> PreBoundArgs { get; set; }
+
+        protected ICpu Cpu { get; set; }
+
+        protected KOSDelegate(ICpu cpu)
         {
-            this.cpu = cpu;
+            Cpu = cpu;
+            PreBoundArgs = new List<object>();
             InitializeSuffixes();
         }
-        
-        public KOSDelegate(KOSDelegate oldCopy)
+
+        protected KOSDelegate(KOSDelegate oldCopy)
         {
-            cpu = oldCopy.cpu;
+            Cpu = oldCopy.Cpu;
+            PreBoundArgs = new List<object>();
             InitializeSuffixes();
-            foreach (object ca in oldCopy.preBoundArgs)
-                preBoundArgs.Add(ca);
+            foreach (object ca in oldCopy.PreBoundArgs)
+                PreBoundArgs.Add(ca);
         }
 
         private void InitializeSuffixes()
@@ -40,24 +42,24 @@ namespace kOS.Safe.Execution
 
         public void AddPreBoundArg(object arg)
         {
-            preBoundArgs.Add(arg);
+            PreBoundArgs.Add(arg);
         }
 
         public object Call(params object[] args)
         {
             PushUnderArgs();
-            cpu.PushStack(new KOSArgMarkerType());
-            foreach (object arg in preBoundArgs)
+            Cpu.PushStack(new KOSArgMarkerType());
+            foreach (object arg in PreBoundArgs)
             {
-                cpu.PushStack(arg);
+                Cpu.PushStack(arg);
             }
             foreach (object arg in args)
             {
-                cpu.PushStack(arg);
+                Cpu.PushStack(arg);
             }
             return Call();
         }
-        
+
         /// <summary>
         /// Assuming normal args are already on the stack,
         /// then the prebound args would have to be inserted
@@ -78,8 +80,8 @@ namespace kOS.Safe.Execution
             object arg = ""; // doesn't matter what it is as long as it's non-null for the while check below.
             while (arg != null && !(arg is KOSArgMarkerType))
             {
-                arg = cpu.PopStack();
-                if (! (arg is KOSArgMarkerType))
+                arg = Cpu.PopStack();
+                if (!(arg is KOSArgMarkerType))
                     aboveArgs.Push(arg);
             }
             if (arg == null)
@@ -87,30 +89,30 @@ namespace kOS.Safe.Execution
                                        "Contact the kOS devs.  This message should 'never' happen.");
             // Now re-push the args back, putting the preBound ones at the bottom
             // where they belong:
-            cpu.PushStack(new KOSArgMarkerType());
-            foreach (object item in preBoundArgs)
+            Cpu.PushStack(new KOSArgMarkerType());
+            foreach (object item in PreBoundArgs)
             {
-                cpu.PushStack(item);
+                Cpu.PushStack(item);
             }
             foreach (object item in aboveArgs) // Because this was pushed to a stack, this should show in reverse order.
             {
-                cpu.PushStack(item);
+                Cpu.PushStack(item);
             }
         }
-        
+
         /// <summary>
         /// Assuming the args have been pushed onto the stack already, with
         /// the argbottom marker under them, do the call of this delegate.
         /// </summary>
         public abstract object Call();
-        
+
         /// <summary>
         /// If the derivative class needs to put anything on the stack underneath the
         /// KOSArgMarkerType and the args, it's given an opportunity to do so here by
         /// overriding this method.
         /// </summary>
         public abstract void PushUnderArgs();
-        
+
         /// <summary>
         /// Should return a new instance of self, with all fields copied.
         /// </summary>
@@ -118,7 +120,7 @@ namespace kOS.Safe.Execution
         public abstract KOSDelegate Clone();
 
         /// <summary>
-        /// This returns a new variant of the delegate that has the first 
+        /// This returns a new variant of the delegate that has the first
         /// parameters hardcoded.  If you call :bind(1,2,3) on a delegate that takes 5 arguments, you get
         /// a variant of the delegate that now only takes the lastmost 2 arguments, with the first two
         /// having been hardcoded to 1,2,3.
@@ -137,14 +139,14 @@ namespace kOS.Safe.Execution
 
             return preBoundDel;
         }
-        
+
         public override string ToString()
         {
             StringBuilder str = new StringBuilder();
             str.Append("KOSDelegate(");
-            foreach (object arg in preBoundArgs)
+            foreach (object arg in PreBoundArgs)
             {
-                str.Append("pre-bound arg "+arg+" ");
+                str.Append("pre-bound arg " + arg + " ");
             }
             str.Append(")");
             return str.ToString();

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
-using kOS.Safe.Compilation;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -12,15 +11,15 @@ namespace kOS.Safe.Encapsulation
     {
         public string Name { get; set; }
         
-        public BuiltinDelegate(ICpu cpu, string Name) :
+        public BuiltinDelegate(ICpu cpu, string name) :
             base(cpu)
         {
-            this.Name = Name;
+            Name = name;
         }
 
         public BuiltinDelegate(BuiltinDelegate oldCopy) : base(oldCopy)
         {
-            this.Name = oldCopy.Name;
+            Name = oldCopy.Name;
         }
         
         public override KOSDelegate Clone()
@@ -31,7 +30,7 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return string.Format("BuiltinDelegate(cpu={0}, Name={1},\n  {2})",
-                                 cpu.ToString(), Name, base.ToString());
+                                 Cpu, Name, base.ToString());
         }
         
         public override void PushUnderArgs()
@@ -41,7 +40,7 @@ namespace kOS.Safe.Encapsulation
         
         public override object Call()
         {
-            int throwAway = OpcodeCall.StaticExecute(cpu, true, Name, true);
+            int throwAway = OpcodeCall.StaticExecute(Cpu, true, Name, true);
             // throwAway will be -1 for cases where it's a builtin function.
             // and the return value will be left atop the stack by StaticExecute.
             return new KOSPassThruReturn();
