@@ -212,7 +212,7 @@ suffix_trailer     -> (COLON suffixterm);
 suffixterm         -> atom suffixterm_trailer*;
 suffixterm_trailer -> (function_trailer | array_trailer);
 
-function_trailer   -> (BRACKETOPEN arglist? BRACKETCLOSE);
+function_trailer   -> (BRACKETOPEN arglist? BRACKETCLOSE) | ATSIGN;
 array_trailer      -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
 
 atom               -> ( sci_number |
