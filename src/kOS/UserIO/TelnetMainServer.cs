@@ -57,7 +57,6 @@ namespace kOS.UserIO
             
             DontDestroyOnLoad(transform.gameObject); // Otherwise Unity will stop calling my Update() on the next scene change because my gameObject went away.
 
-            Console.WriteLine("kOS TelnetMainServer class exists."); // Console.Writeline used because this occurs before kSP's logger is set up.
             Instance = this;
             
             tempListenPermission = GetPermanentListenPermission();

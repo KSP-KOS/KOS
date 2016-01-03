@@ -81,6 +81,8 @@
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Compilation\PseudoNull.cs" />
     <Compile Include="Compilation\Script.cs" />
+    <Compile Include="Encapsulation\BuiltinDelegate.cs" />
+    <Compile Include="Encapsulation\KOSDelegate.cs" />
     <Compile Include="Encapsulation\BooleanValue.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\Enumerator.cs" />
@@ -113,9 +115,12 @@
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />
+    <Compile Include="Encapsulation\UserDelegate.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSDefaultParamNotAtEndException.cs" />
+    <Compile Include="Exceptions\KOSNotInvokableException.cs" />
     <Compile Include="Exceptions\KOSOnceInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
@@ -156,10 +161,10 @@
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\KOSArgMarkerType.cs" />
+    <Compile Include="Execution\KOSPassThruReturn.cs" />
     <Compile Include="Execution\ProgramContext.cs" />
     <Compile Include="Execution\Stack.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
-    <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
