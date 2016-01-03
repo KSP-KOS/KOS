@@ -19,8 +19,8 @@
             "anything when it's not inside a trigger like\n" +
             "WHEN or ON.\n";
 
-        public KOSPreserveInvalidHereException() :
-            base( "PRESERVE", "not in a trigger body", "in triggers" )
+        public KOSPreserveInvalidHereException(int line, int col) :
+            base(line, col, "PRESERVE", "not in a trigger body", "in triggers" )
         {
         }
     }

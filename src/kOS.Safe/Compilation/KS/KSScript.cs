@@ -26,8 +26,16 @@ namespace kOS.Safe.Compilation.KS
                 var compiler = new Compiler();
                 LoadContext(contextId);
 
-                // TODO: handle compile errors (e.g. wrong run parameter count)
-                CodePart mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
+                CodePart mainPart;
+                try
+                {
+                    mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
+                }
+                catch (KOSCompileException e)
+                {
+                    e.AddSourceText((short)startLineNum, scriptText);
+                    throw e;
+                }
 
                 // add locks and triggers
                 parts.AddRange(currentContext.UserFunctions.GetNewParts());

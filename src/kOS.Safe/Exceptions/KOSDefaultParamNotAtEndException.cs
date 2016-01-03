@@ -26,8 +26,9 @@
             "because when x had a default then all other\n" +
             "parameters that came after it had to have one.\n";
 
-        public KOSDefaultParamNotAtEndException() :
-            base("An optional parameter (one with a default initializer)",
+        public KOSDefaultParamNotAtEndException(int line, int col) :
+            base(line, col,
+                 "An optional parameter (one with a default initializer)",
                  "before a mandatory parameter (one without a default initializer)",
                  "when all mandatory parameters come before all optional parameters")
         {

@@ -41,7 +41,7 @@ namespace kOS.Suffixed
             {
                 FlightDriver.RevertToLaunch();
             }
-            else throw new KOSCommandInvalidHereException("REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
+            else throw new KOSCommandInvalidHereException(-1, -1, "REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
         }
 
         public void RevertToEditor()
@@ -51,7 +51,7 @@ namespace kOS.Suffixed
                 EditorFacility fac = ShipConstruction.ShipType;
                 FlightDriver.RevertToPrelaunch(fac);
             }
-            else throw new KOSCommandInvalidHereException("REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
+            else throw new KOSCommandInvalidHereException(-1, -1, "REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
         }
 
         public void RevertTo(string editor)
@@ -73,7 +73,7 @@ namespace kOS.Suffixed
                 }
                 FlightDriver.RevertToPrelaunch(fac);
             }
-            else throw new KOSCommandInvalidHereException("REVERTTO", "When revert is disabled", "When revert is enabled");
+            else throw new KOSCommandInvalidHereException(-1, -1, "REVERTTO", "When revert is disabled", "When revert is enabled");
         }
 
         public bool CanRevert()

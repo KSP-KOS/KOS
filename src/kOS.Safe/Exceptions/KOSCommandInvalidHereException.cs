@@ -26,13 +26,15 @@ namespace kOS.Safe.Exceptions
         /// <summary>
         /// Describe the condition under which the invalidity is happening.
         /// </summary>
+        /// <param name="line">current line num in script where the problem was</param>
+        /// <param name="col">current col num in script where the problem was</param>
         /// <param name="command">string name of the invalid command</param>
         /// <param name="badPlace">describing where in code the it's not being allowed.
         /// Use a phrasing that starts with a preposition, i.e. "in a loop", "outside a loop"</param>
         /// <param name="goodPlace">describing what sort of code the it is meant to be used in instead.
         /// Use a phrasing that starts with a preposition, i.e. "in a loop", "outside a loop"</param>
-        public KOSCommandInvalidHereException(string command, string badPlace, string goodPlace) :
-            base(string.Format(TERSE_MSG_FMT, command, badPlace, goodPlace))
+        public KOSCommandInvalidHereException(int line, int col, string command, string badPlace, string goodPlace) :
+            base(line, col, string.Format(TERSE_MSG_FMT, command, badPlace, goodPlace))
         {
         }
     }
