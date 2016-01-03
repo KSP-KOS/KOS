@@ -172,7 +172,7 @@ Okay, so type the lines below in an external *text editor of your choice* (i.e. 
         WAIT 1. // pauses the script here for 1 second.
     }
 
-See those things with the two slashes ("//")? Those are comments in the kerboscript language and they're just ways to write things in the program that don't do anything - they're there for humans like you to read so you understand what's going on. In these examples you never actually have to type in the things you see after the slashes. They're there for your benefit when reading this document but you can leave them out if you wish.
+See those things with the two slashes ("//")? Those are comments in the Kerboscript language and they're just ways to write things in the program that don't do anything - they're there for humans like you to read so you understand what's going on. In these examples you never actually have to type in the things you see after the slashes. They're there for your benefit when reading this document but you can leave them out if you wish.
 
 Save the file in your ``Ships/Script`` folder of your **KSP** installation under the filename "hellolaunch.ks". DO NOT save it anywhere under ``GameData/kOS/``. Do NOT. According to the **KSP** standard, normally **KSP** mods should put their files in ``GameData/[mod name]``, but **kOS** puts the archive outside the ``GameData`` folder because it represents content owned by you, the player, not content owned by the **kOS** mod.
 
@@ -619,5 +619,5 @@ As you can probably see, it would still have a long way to go before it would be
 - You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a "too high" launch that's a bit inefficient. In addition, this method relies on velocity to determine pitch angle, which could result in some very firey launches for other ships with a higher TWR profile.
 - This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid velocities that result in high atmospheric heating.
 - This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.
-- With even more sophisticated checks, the script could be made to work with fancy staging methods like asaparagus.
+- With even more sophisticated checks, the script could be made to work with fancy staging methods like asparagus.
 - Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.

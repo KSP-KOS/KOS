@@ -4,7 +4,7 @@
 Time Span
 =========
 
-In several places the game uses a :struct:`TimeSpan` format. This is a strucure that gives the time in various formats. It also allows you to peform arithmetic on the time.
+In several places the game uses a :struct:`TimeSpan` format. This is a structure that gives the time in various formats. It also allows you to perform arithmetic on the time.
 
 TimeSpan represents *SIMULATED* time
 ------------------------------------
@@ -62,7 +62,7 @@ You can use the TIME special variable to detect whether or not a real physics 't
 
 .. warning::
 
-    Beware the pitfall of confuising the :attr:`TimeSpan:SECOND` (singular) suffix with the :attr:`TimeSpan:SECONDS` (plural) suffix.
+    Beware the pitfall of confusing the :attr:`TimeSpan:SECOND` (singular) suffix with the :attr:`TimeSpan:SECONDS` (plural) suffix.
 
     :attr:`TimeSpan:SECOND`
 

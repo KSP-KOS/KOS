@@ -24,7 +24,7 @@ Our next step is to calculate how much time our vessel needs to burn at full thr
     // needs to take into account the fact that the mass will decrease
     // as you lose fuel during the burn.  In fact throwing the fuel out
     // the back of the engine very fast is the entire reason you're able
-    // to thrust at all in space.  The proper caclulation for this
+    // to thrust at all in space.  The proper calculation for this
     // can be found easily enough online by searching for the phrase
     //   "Tsiolkovsky rocket equation".
     // This example here will keep it simple for demonstration purposes,

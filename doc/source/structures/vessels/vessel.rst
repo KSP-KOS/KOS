@@ -49,7 +49,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
-     :attr:`NAME`                          string                    Synomym for SHIPNAME
+     :attr:`NAME`                          string                    Synonym for SHIPNAME
      :attr:`STATUS`                        string                    Current ship status
      :attr:`TYPE`                          string                    Ship type
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
@@ -122,14 +122,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: scalar
     :access: Get only
 
-    Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
+    Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into account their throttlelimits. Result is in Kilonewtons.
 
 .. method:: Vessel:AVAILABLETHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Vessel:FACING
 
@@ -166,7 +166,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Returns what the air pressure is in the atmosphere surrounding the vessel.
     The value is returned in units of sea-level Kerbin atmospheres.  Many
-    fomulae expect you to plug in a value expressed in kiloPascals, or
+    formulae expect you to plug in a value expressed in kiloPascals, or
     kPA.  You can convert this value into kPa by multiplying it by
     `constant:ATMtokPa`.
 
@@ -291,7 +291,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     The magnitude of the vector is the speed of the rotation.
 
-    Note, unlike many of the other parts of kOS, the rotaion speed is
+    Note, unlike many of the other parts of kOS, the rotation speed is
     expressed in radians rather than degrees.  This is to make it
     congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
     backward compatibility with older kOS scripts.
@@ -315,7 +315,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`LoadDistance`
     :access: Get only
 
-    Returns the load distance object for this vessel.  The suffixes of this object may be adjusted to change the loading behavior of this vessel. Note: these settings are not persistant across flight instances, and will reset the next time you lauch a craft from an editor or the tracking station.
+    Returns the load distance object for this vessel.  The suffixes of this object may be adjusted to change the loading behavior of this vessel. Note: these settings are not persistent across flight instances, and will reset the next time you launch a craft from an editor or the tracking station.
 
 .. attribute:: Vessel:ISDEAD
 

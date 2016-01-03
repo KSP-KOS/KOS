@@ -16,10 +16,10 @@ Predictions of Flight Path
 .. warning::
 
     Be aware that a limitation of KSP makes it so that some vessels'
-    manuever node systems cannot be accessed.  KSP appears to limit the
+    maneuver node systems cannot be accessed.  KSP appears to limit the
     maneuver node system to only functioning on the current PLAYER
     vessel, under the presumption that its the only vessel that needs
-    them, as ever other vessel cannot be manuevered. kOS can manuever a
+    them, as ever other vessel cannot be maneuvered. kOS can maneuver a
     vessel that is not the player vessel, but it cannot overcome this
     limitation of the base game that unloads the maneuver node system
     for other vessels. 
@@ -46,7 +46,7 @@ These return predicted information about the future position and velocity of an 
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space
-    center's buildings advanced to the point where you can make manuever
+    center's buildings advanced to the point where you can make maneuver
     nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
 
 .. function:: VELOCITYAT(orbitable,time)
@@ -76,7 +76,7 @@ These return predicted information about the future position and velocity of an 
 
     *Prerequisite:*  If you are in a career mode game rather than a
     sandbox mode game, This function requires that you have your space
-    center's buildings advanced to the point where you can make manuever
+    center's buildings advanced to the point where you can make maneuver
     nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
 
 Examples::

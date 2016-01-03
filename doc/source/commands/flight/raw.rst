@@ -143,7 +143,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL ROLL:
 .. object:: SHIP:CONTROL:ROLL
 
-    Rotation about the logintudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
+    Rotation about the longitudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
 
 .. _SHIP CONTROL ROTATION:
 .. object:: SHIP:CONTROL:ROTATION

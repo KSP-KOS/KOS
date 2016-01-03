@@ -115,7 +115,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
     The magnitude of the vector is the speed of the rotation.
 
-    Note, unlike many of the other parts of kOS, the rotaion speed is
+    Note, unlike many of the other parts of kOS, the rotation speed is
     expressed in radians rather than degrees.  This is to make it
     congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
     backward compatibility with older kOS scripts.

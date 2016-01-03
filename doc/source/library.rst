@@ -5,7 +5,7 @@ Community Examples Library
 
 Starting with version 0.17.0 of kOS, we have decided to support
 a separate repository of examples and libraries that "live" entirely
-in kerboscript code only.  This is a useful place to find helpful
+in Kerboscript code only.  This is a useful place to find helpful
 code written mostly by other users of kOS, some of whom may be members
 of the main kOS development team, but most of whom are not and are
 just ordinary users of kOS like you.

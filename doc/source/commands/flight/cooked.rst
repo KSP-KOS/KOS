@@ -64,7 +64,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     **(For Rovers)** This is used to control the throttle that is used when
     driving a wheeled vehicle on the ground.  It is an entirely independent
     control from the flight throttle used with ``LOCK THROTTLE`` above.
-    It is analagous to holding the 'W' (value of +1) or 'S' (value of -1)
+    It is analogous to holding the 'W' (value of +1) or 'S' (value of -1)
     key when driving a rover manually under default keybindings.
 
     ``WHEELTHROTTLE`` allows you to set
@@ -75,7 +75,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     not cause the torque wheels to engage as well.  In stock KSP using
     the 'W' or 'S' keys on a rover engages both the wheel driving AND the
     torque wheel rotational power.  In kOS those two features are
-    done independantly.
+    done independently.
 
 .. _LOCK WHEELSTEERING:
 .. object:: LOCK WHEELSTEERING TO value.
@@ -115,7 +115,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    will confuse the ``lock WHEELSTEERING`` cooked control mechanism.  This
    is a common building pattern for KSP players and it seems to work okay
    when driving manually, but when driving by a kOS script, the fact that
-   the vessel's facing is offically pointing up at the sky causes it to
+   the vessel's facing is officially pointing up at the sky causes it to
    get confused.  If you notice that your rover tends to drive in the
    correct direction only when on a flat or slight downslope, but then
    turns around and around in circles when driving toward the target
@@ -237,7 +237,7 @@ actually do.
 If you don't know what a PID controller is and want to learn more, you can
 read numerous descriptions of the concept on the internet that can be found
 in moments by a web search.  If you just want to know a two minute explanation
-for the sake of tuing the cooked steering a bit, read on.
+for the sake of tuning the cooked steering a bit, read on.
 
 Quick and Dirty description of a PID controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -436,7 +436,7 @@ the details of the motion.
 Cooked controls perform best on ships that do not rely heavily on control
 surfaces, have medium levels of torque, and are structurally stable.  You can
 improve the control by placing the ship's root part or control part close to the
-center of mass (preferablly both).  Adding struts to critical joints (like
+center of mass (preferably both).  Adding struts to critical joints (like
 decouplers) or installing a mod like Kerbal Joint Reinforcement will also help.
 
 But because of the impossibility of finding one setting that is universally

@@ -241,7 +241,7 @@ Tuning a PID-loop
 
 We are going to start with the same rocket design we have been using so far and actually tune the PID-loop using the Ziegler-Nichols method. This is where we turn off the integral and derivative terms in the loop and bring the proportional gain (Kp) up from zero to the point where the loop causes a steady oscillation with a measured period (Tu). At this point, the proportional gain is called the "ultimate gain" (Ku) and the actual gains (Kp, Ki and Kd) are set according to this table `taken from wikipedia`_:
 
-.. _taken from wikipedia: http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
+.. _taken from Wikipedia: http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
 +------------------------+-----------+---------------+--------------+
 | Control Type           | Kp        | Ki            | Kd           |
