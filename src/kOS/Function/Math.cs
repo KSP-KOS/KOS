@@ -251,4 +251,16 @@ namespace kOS.Function
             ReturnValue = result;
         }
     }
+
+    [Function("unchar")]
+    public class FunctionUnchar : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string argument = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            double result = (double) argument.ToCharArray()[0];
+            ReturnValue = result;
+        }
+    }
 }
