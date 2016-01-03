@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using kOS.Suffixed.PartModuleField;
 using kOS.Module;
+using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
@@ -130,7 +131,7 @@ namespace kOS.Function
             }
             else if (!shared.Vessel.isActiveVessel)
             {
-                throw new KOSCommandInvalidHereException("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+                throw new KOSCommandInvalidHereException(LineCol.Unknown(), "STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
             }
         }
     }

@@ -6,6 +6,7 @@ using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using System;
 using System.Linq;
+using kOS.Safe.Compilation.KS;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -143,7 +144,7 @@ namespace kOS.Suffixed.Part
             }
             else
             {
-                throw new KOSCommandInvalidHereException("CONTROLFROM", "a generic part value", "a docking port or command part");
+                throw new KOSCommandInvalidHereException(LineCol.Unknown(), "CONTROLFROM", "a generic part value", "a docking port or command part");
             }
         }
 

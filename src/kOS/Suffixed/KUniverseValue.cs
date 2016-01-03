@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -11,7 +8,7 @@ namespace kOS.Suffixed
 {
     public class KUniverseValue : Structure
     {
-        private SharedObjects shared;
+        private readonly SharedObjects shared;
         
         public KUniverseValue(SharedObjects shared)
         {
@@ -41,7 +38,7 @@ namespace kOS.Suffixed
             {
                 FlightDriver.RevertToLaunch();
             }
-            else throw new KOSCommandInvalidHereException("REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
+            else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
         }
 
         public void RevertToEditor()
@@ -51,7 +48,7 @@ namespace kOS.Suffixed
                 EditorFacility fac = ShipConstruction.ShipType;
                 FlightDriver.RevertToPrelaunch(fac);
             }
-            else throw new KOSCommandInvalidHereException("REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
+            else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
         }
 
         public void RevertTo(string editor)
@@ -73,7 +70,7 @@ namespace kOS.Suffixed
                 }
                 FlightDriver.RevertToPrelaunch(fac);
             }
-            else throw new KOSCommandInvalidHereException("REVERTTO", "When revert is disabled", "When revert is enabled");
+            else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTO", "When revert is disabled", "When revert is enabled");
         }
 
         public bool CanRevert()

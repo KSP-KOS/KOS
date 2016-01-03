@@ -86,27 +86,11 @@ namespace kOS.Safe.Compilation.KS
             
             ++context.NumCompilesSoFar;
 
-            try
+            if (tree.Nodes.Count > 0)
             {
-                if (tree.Nodes.Count > 0)
-                {
-                    PreProcess(tree);
-                    CompileProgram(tree);
-                }
+                PreProcess(tree);
+                CompileProgram(tree);
             }
-            catch (KOSException kosException)
-            {
-                if (lastNode != null)
-                {
-                    throw;  // TODO something more sophisticated will go here that will
-                    // attach source/line information to the exception before throwing it upward.
-                    // that's why this seemingly pointless "catch and then throw again" is here.
-                }
-                SafeHouse.Logger.Log("Exception in Compiler: " + kosException.Message);
-                SafeHouse.Logger.Log(kosException.StackTrace);
-                throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
-            }
-                        
             return part;
         }
 
@@ -125,31 +109,45 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// Set the current line/column info and potentially also make a helpful
         /// debug trace useful when making syntax changes.
-        /// 
         /// </summary>
-        /// <returns>true if a line number was found in this node.  mostly used for internal recursion
-        /// and can be safely ignored when this is called.</returns>
-        private bool NodeStartHousekeeping(ParseNode node)
+        private void NodeStartHousekeeping(ParseNode node)
         {
             if (node == null) { throw new ArgumentNullException("node"); }
 
             if (TRACE_PARSE)
                 SafeHouse.Logger.Log("traceParse: visiting node: " + node.Token.Type.ToString() + ", " + node.Token.Text);
 
+            LineCol location = GetLineCol(node);
+            lastLine = location.Line;
+            lastColumn = location.Column;
+        }
+        
+        /// <summary>
+        /// Get a line number and column for a given parse node.  Handles the
+        /// fact that TinyPG does not provide line and col information for all
+        /// nodes - just the terminals.  This means if you, say, ask for the
+        /// line or column of a complex node like an expression, you get the bogus answer 0,0 back
+        /// from TinyPG normally.  This method performs a leftmost walk of the
+        /// parse tree to get the first instance where a token exists with actual
+        /// line and column information populated, and returns that.
+        /// </summary>
+        /// <param name="node">The node to get the line number for</param>
+        /// <returns>line and column pair of the firstmost terminal within the parse node</returns>
+        private LineCol GetLineCol(ParseNode node)
+        {
             if (node.Token == null || node.Token.Line <= 0)
             {
-                // Only those nodes which are primitive tokens will have line number
-                // information.  So perform a leftmost search of the subtree of nodes
-                // until a node with a token with a line number is found:
-                return node.Nodes.Any(NodeStartHousekeeping);
+                foreach (ParseNode child in node.Nodes)
+                {
+                    LineCol candidate = GetLineCol(child);
+                    if (candidate.Line >= 0)
+                        return candidate;
+                }
             }
 
-            lastLine = (short)(node.Token.Line + (startLineNum - 1));
-            lastColumn = (short)(node.Token.Column);
-            return true;
-
+            return new LineCol( (node.Token.Line + (startLineNum - 1)), (node.Token.Column) );
         }
-
+        
         private Opcode AddOpcode(Opcode opcode, string destinationLabel)
         {
             opcode.Label = GetNextLabel(true);
@@ -323,14 +321,16 @@ namespace kOS.Safe.Compilation.KS
             }
             
             // These probably can't happen because the parser would have barfed before it got to this method:
+            var location = new LineCol(node.Token.Line, node.Token.Column);
+
             if (initBlock == null)
-                throw new KOSCompileException("Missing FROM block in FROM loop.");
+                throw new KOSCompileException(location, "Missing FROM block in FROM loop.");
             if (checkExpression == null || untilTokenNode == null)
-                throw new KOSCompileException("Missing UNTIL check expression in FROM loop.");
+                throw new KOSCompileException(location, "Missing UNTIL check expression in FROM loop.");
             if (stepBlock == null)
-                throw new KOSCompileException("Missing STEP block in FROM loop.");
+                throw new KOSCompileException(location, "Missing STEP block in FROM loop.");
             if (doBlock == null)
-                throw new KOSCompileException("Missing loop body (DO block) in FROM loop.");
+                throw new KOSCompileException(location, "Missing loop body (DO block) in FROM loop.");
             
             // Append the step instructions to the tail end of the body block's instructions:
             foreach (ParseNode child in stepBlock.Nodes)
@@ -2288,7 +2288,10 @@ namespace kOS.Safe.Compilation.KS
                     if (isOptionalParam)
                     {
                         if (sawMandatoryParam)
-                            throw new KOSDefaultParamNotAtEndException();
+                        {
+                            LineCol location = GetLineCol(node);
+                            throw new KOSDefaultParamNotAtEndException(location);
+                        }
 
                         i -= 2; // skip back a bit further to pass over the extra terms a defaulter has.
                     }
@@ -2534,7 +2537,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             if (nowCompilingTrigger)
-                throw new KOSWaitInvalidHereException();
+                throw new KOSWaitInvalidHereException(new LineCol(lastLine, lastColumn));
 
             if (node.Nodes.Count == 3)
             {
@@ -2724,14 +2727,23 @@ namespace kOS.Safe.Compilation.KS
                 lastSubNode.Token.Type == TokenType.declare_identifier_clause &&
                 !allowLazyGlobal)
             {
-                throw new KOSCommandInvalidHereException("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
-                                                "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
-                                                "in a file where the default @LAZYGLOBAL behavior is on");
+                LineCol location = GetLineCol(node);
+                throw new KOSCommandInvalidHereException(location, 
+                                                         "a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
+                                                         "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
+                                                         "in a file where the default @LAZYGLOBAL behavior is on");
             }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-                throw new KOSCommandInvalidHereException("GLOBAL", "in a function declaration", "in a variable declaration");
+            {
+                LineCol location = GetLineCol(node);
+                throw new KOSCommandInvalidHereException(location, "GLOBAL",
+                                                         "in a function declaration", "in a variable declaration");
+            }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
-                throw new KOSCommandInvalidHereException("GLOBAL", "in a parameter declaration", "in a variable declaration");
+            {
+                LineCol location = GetLineCol(node);
+                throw new KOSCommandInvalidHereException(location, "GLOBAL", "in a parameter declaration", "in a variable declaration");
+            }
 
             return modifier;
         }
@@ -2828,7 +2840,7 @@ namespace kOS.Safe.Compilation.KS
                 ++progNameIndex;
             }
             if (hasOnce && ! options.LoadProgramsInSameAddressSpace)
-                throw new KOSOnceInvalidHereException();
+                throw new KOSOnceInvalidHereException(new LineCol(lastLine, lastColumn));
 
             // process program arguments
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // regardless of whether it's called directly or indirectly, we still need at least one.
@@ -3029,7 +3041,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             if (!nowInALoop)
-                throw new KOSBreakInvalidHereException();
+                throw new KOSBreakInvalidHereException(new LineCol(lastLine, lastColumn));
 
             // Will need to pop out the number of variables scopes equal to the
             // number of braces we're skipping out of.  For now just record the
@@ -3056,8 +3068,8 @@ namespace kOS.Safe.Compilation.KS
             var nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
-                throw new KOSReturnInvalidHereException();
-
+                throw new KOSReturnInvalidHereException(new LineCol(lastLine, lastColumn));
+            
             // Push the return expression onto the stack, or if it was a naked RETURN
             // keyword with no expression, then push a secret dummy return value of zero:
             if (node.Nodes.Count > 2)
@@ -3082,7 +3094,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             if (!nowCompilingTrigger)
-                throw new KOSPreserveInvalidHereException();
+                throw new KOSPreserveInvalidHereException(new LineCol(lastLine, lastColumn));
 
             string flagName = PeekTriggerRemoveName();
             AddOpcode(new OpcodePush(flagName));
@@ -3218,6 +3230,8 @@ namespace kOS.Safe.Compilation.KS
         
         public void VisitDirective(ParseNode node)
         {
+            NodeStartHousekeeping(node);
+            
             // For now, let the compiler decide if the compiler directive is in the wrong place, 
             // not the parser.  Therefore the parser treats it like a normal statement and here in
             // the compiler we'll decide per-directive which directives can go where:
@@ -3225,7 +3239,7 @@ namespace kOS.Safe.Compilation.KS
             ParseNode directiveNode = node.Nodes[0]; // a directive contains the exact directive node nested one step inside it.
             
             if (directiveNode.Nodes.Count < 2)
-                throw new KOSCompileException("Kerboscript compiler directive ('@') without a keyword after it.");
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive ('@') without a keyword after it.");
             
             
             switch (directiveNode.Nodes[1].Token.Type)
@@ -3237,14 +3251,14 @@ namespace kOS.Safe.Compilation.KS
                 // There is room for expansion here if we want to add more compiler directives.
                 
                 default:
-                    throw new KOSCompileException("Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
+                    throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
             }
         }
         
         public void VisitLazyGlobalDirective(ParseNode node)
         {
             if (node.Nodes.Count < 3 || node.Nodes[2].Token.Type != TokenType.onoff_trailer)
-                throw new KOSCompileException("Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
             
             // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
             // ---------------------------------------------------------------------------------------------------------------
@@ -3290,7 +3304,7 @@ namespace kOS.Safe.Compilation.KS
                 }
             }
             if (!validLocation)
-                throw new KOSCommandInvalidHereException("@LAZYGLOBAL",
+                throw new KOSCommandInvalidHereException(new LineCol(node.Token.Line, node.Token.Column), "@LAZYGLOBAL",
                                                 "after the first command in the file",
                                                 "at the start of a script file, prior to any other statements");
 
