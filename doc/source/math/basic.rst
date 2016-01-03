@@ -135,6 +135,7 @@ Mathematical Functions
  :func:`ROUND(a,b)`   round to nearest place
  :func:`SQRT(a)`      square root
  :func:`CHAR(a)`      character from unicode
+ :func:`UNCHAR(a)`    unicode from character
 ==================== ===================================================
 
 .. function:: ABS(a)
@@ -219,6 +220,15 @@ Mathematical Functions
     ::
 
         PRINT CHAR(34) + "Apples" + CHAR(34). // prints "Apples"
+
+.. function:: UNCHAR(a)
+
+    :parameter a: (string)
+    :return: (number) unicode number representing the character specified
+
+    ::
+
+        PRINT UNCHAR("A"). // prints 65
 
 .. _trig:
 .. index:: Trigonometric Functions
