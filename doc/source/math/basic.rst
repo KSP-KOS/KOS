@@ -211,6 +211,15 @@ Mathematical Functions
 
         PRINT SQRT(7.89). // prints 2.80891438103763
 
+.. function:: CHAR(a)
+
+    :parameter a: (number)
+    :return: (string) single-character string containing the unicode character specified
+
+    ::
+
+        PRINT CHAR(34) + "Apples" + CHAR(34). // prints "Apples"
+
 .. _trig:
 .. index:: Trigonometric Functions
 
@@ -295,12 +304,3 @@ Trigonometric Functions
         PRINT ARCTAN2(0.67, 0.89). // prints 36.9727625
 
     The two parameters resolve ambiguities when taking the arctangent. See the `wikipedia page about atan2 <http://en.wikipedia.org/wiki/Atan2>`_ for more details.
-
-.. function:: CHAR(a)
-
-    :parameter a: (number)
-    :return: (string) single-character string containing the unicode character specified
-
-    ::
-
-        PRINT CHAR(34) + "Apples" + CHAR(34). // prints "Apples"
