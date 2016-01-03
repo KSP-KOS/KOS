@@ -27,6 +27,8 @@ namespace kOS.AddOns.OrbitalScience
 
         public void ToggleExperiment()
         {
+            ThrowIfNotCPUVessel();
+
             var toggleMethod = module.GetType().GetMethod("toggleEvent",
                 BindingFlags.Public | BindingFlags.Instance);
 
@@ -35,6 +37,8 @@ namespace kOS.AddOns.OrbitalScience
 
         protected override void Deploy()
         {
+            ThrowIfNotCPUVessel();
+
             var gatherDataMethod = module.GetType().GetMethod("gatherScienceData",
                 BindingFlags.Public | BindingFlags.Instance);
 

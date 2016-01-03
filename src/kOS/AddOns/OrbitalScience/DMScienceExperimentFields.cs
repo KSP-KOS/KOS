@@ -22,6 +22,8 @@ namespace kOS
 
         public void ToggleExperiment()
         {
+            ThrowIfNotCPUVessel();
+
             var toggleMethod = partModule.GetType().GetMethod("toggleEvent",
                 BindingFlags.Public | BindingFlags.Instance);
 
@@ -44,6 +46,8 @@ namespace kOS
 
         public override void DeployExperiment()
         {
+            ThrowIfNotCPUVessel();
+
             if (HasData())
             {
                 throw new KOSException("Experiment already contains data");
@@ -62,6 +66,8 @@ namespace kOS
 
         public override void ResetExperiment()
         {
+            ThrowIfNotCPUVessel();
+
             if (Inoperable())
             {
                 throw new KOSException("Experiment is inoperable");
@@ -75,6 +81,8 @@ namespace kOS
 
         public override void TransmitData()
         {
+            ThrowIfNotCPUVessel();
+
             IScienceDataContainer container = partModule as IScienceDataContainer;
 
             ScienceData[] data = container.GetData();

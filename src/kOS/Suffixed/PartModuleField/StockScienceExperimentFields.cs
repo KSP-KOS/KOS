@@ -40,6 +40,8 @@ namespace kOS.Suffixed.PartModuleField
 
         protected virtual void Deploy()
         {
+            ThrowIfNotCPUVessel();
+
             var gatherDataMethod = module.GetType().GetMethod("gatherData",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -57,6 +59,8 @@ namespace kOS.Suffixed.PartModuleField
 
         public override void ResetExperiment()
         {
+            ThrowIfNotCPUVessel();
+
             if (Inoperable())
             {
                 throw new KOSException("Experiment is inoperable");
@@ -67,6 +71,8 @@ namespace kOS.Suffixed.PartModuleField
           
         public override void TransmitData()
         {
+            ThrowIfNotCPUVessel();
+
             IScienceDataContainer container = module as IScienceDataContainer;
 
             ScienceData[] data = container.GetData();

@@ -58,6 +58,8 @@ namespace kOS.Suffixed.PartModuleField
 
         public virtual void DumpData()
         {
+            ThrowIfNotCPUVessel();
+
             Array.ForEach(container.GetData(), (d) => container.DumpData(d));
         }
 

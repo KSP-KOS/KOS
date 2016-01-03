@@ -20,6 +20,8 @@ namespace kOS.AddOns.OrbitalScience
 
         protected void LightsOn()
         {
+            ThrowIfNotCPUVessel();
+
             var lightsMethod = module.GetType().GetMethod("turnLightsOn",
                 BindingFlags.Public | BindingFlags.Instance);
 
@@ -28,6 +30,8 @@ namespace kOS.AddOns.OrbitalScience
 
         protected void LightsOff()
         {
+            ThrowIfNotCPUVessel();
+
             var lightsMethod = module.GetType().GetMethod("turnLightsOff",
                 BindingFlags.Public | BindingFlags.Instance);
 
