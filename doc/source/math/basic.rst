@@ -74,7 +74,7 @@ constants about the universe that you may find handy in your math operations.
     This constant is provided mainly for the benefit of people who are
     playing with the mod "RemoteTech" installed, who may want to perform
     calculations about signal delays to hypothetical probes.  (Note that
-    if the probe already has a connection, you can 
+    if the probe already has a connection, you can
     :ref:`ask Remotetech directly <remotetech>` what the signal delay is.
 
 .. global:: Constant:AtmToKPa
@@ -91,7 +91,7 @@ constants about the universe that you may find handy in your math operations.
 
     If you have a pressure measurement expressed in kiloPascals (kiloNewtons
     per square meter), you can multiply it by this to get the equivalent
-    in atmospheres. 
+    in atmospheres.
 
 .. global:: Constant:DegToRad
 
@@ -134,6 +134,7 @@ Mathematical Functions
  :func:`ROUND(a)`     round to whole number
  :func:`ROUND(a,b)`   round to nearest place
  :func:`SQRT(a)`      square root
+ :func:`CHAR(a)`      character from unicode
 ==================== ===================================================
 
 .. function:: ABS(a)
@@ -294,3 +295,12 @@ Trigonometric Functions
         PRINT ARCTAN2(0.67, 0.89). // prints 36.9727625
 
     The two parameters resolve ambiguities when taking the arctangent. See the `wikipedia page about atan2 <http://en.wikipedia.org/wiki/Atan2>`_ for more details.
+
+.. function:: CHAR(a)
+
+    :parameter a: (number)
+    :return: (string) single-character string containing the unicode character specified
+
+    ::
+
+        PRINT CHAR(34) + "Apples" + CHAR(34). // prints "Apples"
