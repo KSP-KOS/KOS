@@ -80,7 +80,6 @@
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Binding\SteeringManager.cs" />
-    <Compile Include="Binding\SteeringManagerProvider.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />

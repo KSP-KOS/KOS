@@ -16,13 +16,25 @@ namespace kOS.Module
     /// </summary>
     public class kOSVesselModule : VesselModule
     {
+        private bool initialized = false;
         private Vessel parentVessel;
-        private static Dictionary<Vessel, kOSVesselModule> allInstances = new Dictionary<Vessel, kOSVesselModule>();
+        public Guid ID
+        {
+            get
+            {
+                if (parentVessel != null) return parentVessel.id;
+                return Guid.Empty;
+            }
+        }
+
+        private Guid baseId = Guid.Empty;
+        public Guid BaseId { get { return baseId; } }
+
+        private static Dictionary<Guid, kOSVesselModule> allInstances = new Dictionary<Guid, kOSVesselModule>();
         private static Dictionary<uint, kOSVesselModule> partLookup = new Dictionary<uint, kOSVesselModule>();
         private Dictionary<string, IFlightControlParameter> flightControlParameters = new Dictionary<string, IFlightControlParameter>();
         private List<uint> childParts = new List<uint>();
         private int partCount = 0;
-        private SteeringManager steeringManager;
 
         #region KSP Vessel Module Events
         /// <summary>
@@ -38,9 +50,10 @@ namespace kOS.Module
                 parentVessel = GetComponent<Vessel>();
                 if (parentVessel != null)
                 {
-                    allInstances[parentVessel] = this;
+                    allInstances[ID] = this;
                     addDefaultParameters();
                 }
+                kOS.Safe.Utilities.SafeHouse.Logger.LogError(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.name, ID));
             }
         }
 
@@ -51,9 +64,10 @@ namespace kOS.Module
         /// </summary>
         public void Start()
         {
-            kOS.Safe.Utilities.SafeHouse.Logger.LogError("kOSVesselModule Start()!");
+            kOS.Safe.Utilities.SafeHouse.Logger.LogError(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.name, ID));
             harvestParts();
             hookEvents();
+            initialized = true;
         }
 
         /// <summary>
@@ -67,15 +81,20 @@ namespace kOS.Module
                 kOS.Safe.Utilities.SafeHouse.Logger.LogError("kOSVesselModule OnDestroy()!");
                 unHookEvents();
                 clearParts();
-                if (parentVessel != null && allInstances.ContainsKey(parentVessel))
+                if (parentVessel != null && allInstances.ContainsKey(ID))
                 {
-                    allInstances.Remove(parentVessel);
+                    allInstances.Remove(ID);
                 }
                 foreach (var key in flightControlParameters.Keys.ToList())
                 {
                     RemoveFlightControlParameter(key);
                 }
                 parentVessel = null;
+                if (allInstances.Count == 0)
+                {
+                    partLookup.Clear();
+                }
+                initialized = false;
             }
         }
 
@@ -84,14 +103,18 @@ namespace kOS.Module
         /// </summary>
         public void FixedUpdate()
         {
-            if (parentVessel.Parts.Count != partCount)
+            if (initialized)
             {
-                clearParts();
-                harvestParts();
-            }
-            if (parentVessel.loaded)
-            {
-                updateParameterState();
+                if (parentVessel.Parts.Count != partCount)
+                {
+                    clearParts();
+                    harvestParts();
+                    partCount = parentVessel.Parts.Count;
+                }
+                if (parentVessel.loaded)
+                {
+                    updateParameterState();
+                }
             }
         }
 
@@ -127,17 +150,44 @@ namespace kOS.Module
             foreach (var proc in proccessorModules)
             {
                 childParts.Add(proc.part.flightID);
-                partLookup[proc.part.flightID] = this;
+                uint id = proc.part.flightID;
+                if (partLookup.ContainsKey(id) && partLookup[id].ID != ID)
+                {
+                    // If the part is already known and not associated with this module, then
+                    // it is appearing as a result of a staging or undocking event (or something
+                    // similar).  As such, we need to copy the information from the flight parameters
+                    // on the originating module.
+                    foreach (string key in flightControlParameters.Keys)
+                    {
+                        if (partLookup[id].HasFlightControlParameter(key))
+                        {
+                            // Only copy the data if the previous vessel module still has the parameter.
+                            IFlightControlParameter paramDestination = flightControlParameters[key];
+                            IFlightControlParameter paramOrigin = partLookup[id].GetFlightControlParameter(key);
+                            // We only want to copy the parameters themselves once (because they are vessel dependent
+                            // not part dependent) but we still need to iterate through each part since "control"
+                            // itself is part dependent.
+                            if (partLookup[id].ID != BaseId) paramDestination.CopyFrom(paramOrigin);
+                            if (paramOrigin.Enabled && paramOrigin.ControlPartId == id)
+                            {
+                                // If this parameter was previously controlled by this part, re-enable
+                                // control, copy it's Value setpoint, and disable control on the old parameter.
+                                SharedObjects shared = paramOrigin.GetShared();
+                                paramDestination.EnableControl(shared);
+                                paramDestination.UpdateValue(paramOrigin.GetValue());
+                                paramOrigin.DisableControl();
+                            }
+                        }
+                    }
+                    baseId = partLookup[id].ID; // Keep track of which vessel the parameters are based on.
+                }
+                partLookup[id] = this;
             }
             partCount = parentVessel.Parts.Count;
         }
 
         private void clearParts()
         {
-            foreach (var id in childParts)
-            {
-                partLookup.Remove(id);
-            }
             childParts.Clear();
             partCount = 0;
         }
@@ -190,11 +240,14 @@ namespace kOS.Module
 
         private void updateAutopilot(FlightCtrlState c)
         {
-            foreach (var parameter in flightControlParameters.Values)
+            if (childParts.Count > 0)
             {
-                if (parameter.Enabled && parameter.IsAutopilot)
+                foreach (var parameter in flightControlParameters.Values)
                 {
-                    parameter.UpdateAutopilot(c);
+                    if (parameter.Enabled && parameter.IsAutopilot)
+                    {
+                        parameter.UpdateAutopilot(c);
+                    }
                 }
             }
         }
@@ -209,8 +262,13 @@ namespace kOS.Module
         public IFlightControlParameter GetFlightControlParameter(string name)
         {
             if (!flightControlParameters.ContainsKey(name))
-                throw new Exception("kOSVesselModule does not contain a parameter named " + name);
+                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.name, name));
             return flightControlParameters[name];
+        }
+
+        public bool HasFlightControlParameter(string name)
+        {
+            return flightControlParameters.ContainsKey(name);
         }
 
         public void RemoveFlightControlParameter(string name)
@@ -226,7 +284,7 @@ namespace kOS.Module
 
         public static kOSVesselModule GetInstance(Vessel vessel)
         {
-            return allInstances[vessel];
+            return allInstances[vessel.id];
         }
     }
 }

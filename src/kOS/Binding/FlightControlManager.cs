@@ -481,7 +481,7 @@ namespace kOS.Binding
                 }
                 else
                 {
-                    if (param.Enabled && param.ControlPart == shared.KSPPart.flightID) param.DisableControl(shared);
+                    if (param.Enabled && param.ControlPartId == shared.KSPPart.flightID) param.DisableControl(shared);
                 }
             }
 

@@ -14,36 +14,34 @@ namespace kOS.Binding
     [kOS.Safe.Utilities.KOSNomenclature("SteeringManager")]
     public class SteeringManager : Structure, IDisposable, IFlightControlParameter
     {
-        //public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
-        //{
-        //    SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
-        //    instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
-        //    instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
-        //    instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
-        //    instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
-        //    instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
-        //    instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
-        //    instance.MaxStoppingTime = oldInstance.MaxStoppingTime;
+        public static void Copy(SteeringManager origin, SteeringManager destination)
+        {
+            destination.ShowAngularVectors = origin.ShowAngularVectors;
+            destination.ShowFacingVectors = origin.ShowFacingVectors;
+            destination.ShowRCSVectors = origin.ShowRCSVectors;
+            destination.ShowThrustVectors = origin.ShowThrustVectors;
+            destination.ShowSteeringStats = origin.ShowSteeringStats;
+            destination.WriteCSVFiles = origin.WriteCSVFiles;
+            destination.MaxStoppingTime = origin.MaxStoppingTime;
 
-        //    instance.pitchPI.Ts = oldInstance.pitchPI.Ts;
-        //    instance.yawPI.Ts = oldInstance.yawPI.Ts;
-        //    instance.rollPI.Ts = oldInstance.rollPI.Ts;
-        //    instance.pitchPI.Loop = PIDLoop.DeepCopy(oldInstance.pitchPI.Loop);
-        //    instance.yawPI.Loop = PIDLoop.DeepCopy(oldInstance.yawPI.Loop);
-        //    instance.rollPI.Loop = PIDLoop.DeepCopy(oldInstance.rollPI.Loop);
+            destination.pitchPI.Ts = origin.pitchPI.Ts;
+            destination.yawPI.Ts = origin.yawPI.Ts;
+            destination.rollPI.Ts = origin.rollPI.Ts;
+            destination.pitchPI.Loop = PIDLoop.DeepCopy(origin.pitchPI.Loop);
+            destination.yawPI.Loop = PIDLoop.DeepCopy(origin.yawPI.Loop);
+            destination.rollPI.Loop = PIDLoop.DeepCopy(origin.rollPI.Loop);
 
-        //    instance.pitchRatePI = PIDLoop.DeepCopy(oldInstance.pitchRatePI);
-        //    instance.yawRatePI = PIDLoop.DeepCopy(oldInstance.yawRatePI);
-        //    instance.rollRatePI = PIDLoop.DeepCopy(oldInstance.rollRatePI);
+            destination.pitchRatePI = PIDLoop.DeepCopy(origin.pitchRatePI);
+            destination.yawRatePI = PIDLoop.DeepCopy(origin.yawRatePI);
+            destination.rollRatePI = PIDLoop.DeepCopy(origin.rollRatePI);
 
-        //    instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
-        //    instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
-        //    instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
-        //    instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
-        //    instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
-        //    instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
-        //    return instance;
-        //}
+            destination.PitchTorqueAdjust = origin.PitchTorqueAdjust;
+            destination.PitchTorqueFactor = origin.PitchTorqueFactor;
+            destination.RollTorqueAdjust = origin.RollTorqueAdjust;
+            destination.RollTorqueFactor = origin.RollTorqueFactor;
+            destination.YawTorqueAdjust = origin.YawTorqueAdjust;
+            destination.YawTorqueFactor = origin.YawTorqueFactor;
+        }
 
         private Vessel internalVessel;
 
@@ -51,7 +49,7 @@ namespace kOS.Binding
         {
             get
             {
-                return shared.Vessel;
+                return internalVessel;
             }
         }
 
@@ -384,7 +382,13 @@ namespace kOS.Binding
 
         public void DisableControl()
         {
-            if (enabled && partId != shared.KSPPart.flightID)
+            partId = 0;
+            Enabled = false;
+        }
+
+        public void DisableControl(SharedObjects sharedObj)
+        {
+            if (enabled && partId != sharedObj.KSPPart.flightID)
                 throw new Safe.Exceptions.KOSException("Cannot unbind Steering Manager on this ship in use by another processor.");
             partId = 0;
             Enabled = false;
@@ -444,6 +448,8 @@ namespace kOS.Binding
                 return;
             }
 
+            sw.Reset();
+            sw.Start();
             lastSessionTime = sessionTime;
             sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
             //if (sessionTime > lastSessionTime)
@@ -1679,9 +1685,26 @@ namespace kOS.Binding
         }
 
 
-        uint IFlightControlParameter.ControlPart
+        uint IFlightControlParameter.ControlPartId
         {
             get { return this.PartId; }
+        }
+
+        void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
+        {
+            if (enabled && partId != shared.KSPPart.flightID)
+                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
+            Value = value;
+        }
+
+        void IFlightControlParameter.UpdateValue(object value)
+        {
+            Value = value;
+        }
+
+        object IFlightControlParameter.GetValue()
+        {
+            return Value;
         }
 
         void IFlightControlParameter.UpdateState()
@@ -1702,12 +1725,27 @@ namespace kOS.Binding
 
         void IFlightControlParameter.DisableControl(SharedObjects shared)
         {
-            this.DisableControl();
+            this.DisableControl(shared);
         }
 
         void IFlightControlParameter.DisableControl()
         {
             this.DisableControl();
+        }
+
+        void IFlightControlParameter.CopyFrom(IFlightControlParameter origin)
+        {
+            SteeringManager smOrigin = origin as SteeringManager;
+            if (smOrigin != null)
+            {
+                Copy(smOrigin, this);
+            }
+        }
+
+
+        SharedObjects IFlightControlParameter.GetShared()
+        {
+            return shared;
         }
     }
 }
