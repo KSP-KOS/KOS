@@ -16,10 +16,10 @@ Predictions of Flight Path
 .. warning::
 
     Be aware that a limitation of KSP makes it so that some vessels'
-    manuever node systems cannot be accessed.  KSP appears to limit the
+    maneuver node systems cannot be accessed.  KSP appears to limit the
     maneuver node system to only functioning on the current PLAYER
     vessel, under the presumption that its the only vessel that needs
-    them, as ever other vessel cannot be manuevered. kOS can manuever a
+    them, as ever other vessel cannot be maneuvered. kOS can maneuver a
     vessel that is not the player vessel, but it cannot overcome this
     limitation of the base game that unloads the maneuver node system
     for other vessels. 
@@ -44,6 +44,11 @@ These return predicted information about the future position and velocity of an 
 
     Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
+    *Prerequisite:*  If you are in a career mode game rather than a
+    sandbox mode game, This function requires that you have your space
+    center's buildings advanced to the point where you can make maneuver
+    nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
+
 .. function:: VELOCITYAT(orbitable,time)
 
     :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
@@ -54,6 +59,11 @@ These return predicted information about the future position and velocity of an 
 
     Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
 
+    *Prerequisite:*  If you are in a career mode game rather than a
+    sandbox mode game, This function requires that you have your space
+    center's buildings advanced to the point where you can make manuever
+    nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
+
 .. function:: ORBITAT(orbitable,time)
 
     :param orbitable: A :Ref:`Vessel <vessel>`, :struct:`Body` or other :struct:`Orbitable` object
@@ -63,6 +73,11 @@ These return predicted information about the future position and velocity of an 
     :return: An :struct:`Orbit` structure.
 
     Returns the :ref:`Orbit patch <orbit>` where the :struct:`Orbitable` object is predicted to be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
+
+    *Prerequisite:*  If you are in a career mode game rather than a
+    sandbox mode game, This function requires that you have your space
+    center's buildings advanced to the point where you can make maneuver
+    nodes on the map view, as described in :struct:`Career:CANMAKENODES`.
 
 Examples::
 

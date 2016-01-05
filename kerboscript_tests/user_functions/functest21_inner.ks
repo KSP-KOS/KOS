@@ -5,6 +5,6 @@
 // an update tick must occur while it is running because
 // it executes a lot of instructions:
 set counter to 0.
-until counter >= 5000 {
+until counter >= 1000 {
   set counter to counter + 1.
 }.

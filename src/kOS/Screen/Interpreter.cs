@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using kOS.Execution;
 using kOS.Safe.Compilation;
+using kOS.Safe.Execution;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
 
@@ -64,6 +65,10 @@ namespace kOS.Screen
             if (key == (char)UnicodeCommand.BREAK)
             {
                 Shared.Cpu.BreakExecution(true);
+                LineBuilder.Remove(0, LineBuilder.Length); // why isn't there a StringBuilder.Clear()?
+
+                NewLine(); // process the now emptied line, to make it do all the updates it normally
+                           // does to the screenbuffers on pressing enter.
             }
 
             if (locked) return false;
@@ -127,7 +132,13 @@ namespace kOS.Screen
 
             try
             {
-                CompilerOptions options = new CompilerOptions { LoadProgramsInSameAddressSpace = false, FuncManager = Shared.FunctionManager };
+                CompilerOptions options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = false,
+                    FuncManager = Shared.FunctionManager,
+                    IsCalledFromRun = false
+                };
+
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter", options);
                 if (commandParts == null) return;
 

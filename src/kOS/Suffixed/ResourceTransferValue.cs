@@ -74,7 +74,7 @@ namespace kOS.Suffixed
             {
                 return;
             }
-            WorkTransfer(fromParts, toParts);
+            WorkTransfer(fromParts, toParts, deltaTime);
         }
 
         public override string ToString()
@@ -126,11 +126,11 @@ namespace kOS.Suffixed
             throw new ArgumentOutOfRangeException("toTest", @"Type: " + toTest.GetType());
         }
 
-        private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
+        private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts, double deltaTime)
         {
             var transferGoal = CalculateTransferGoal(toParts);
 
-            double pulledAmount = PullResources(fromParts, transferGoal);
+            double pulledAmount = PullResources(fromParts, transferGoal, deltaTime);
 
             PutResources(toParts, pulledAmount);
 
@@ -179,7 +179,7 @@ namespace kOS.Suffixed
         /// <param name="parts">All of the donor parts</param>
         /// <param name="transferGoal">the aggregate amount we are seeking to remove from parts</param>
         /// <returns>the amount we were successful at pulling</returns>
-        private double PullResources(IList<global::Part> parts, double transferGoal)
+        private double PullResources(IList<global::Part> parts, double transferGoal, double deltaTime)
         {
             double toReturn = 0.0;
             var availableResources = CalculateAvailableResource(parts);
@@ -192,7 +192,7 @@ namespace kOS.Suffixed
 
                 // Throttle the transfer
                 var thisPartsShare = transferGoal*thisPartsPercentage;
-                var thisPartsRate = resource.maxAmount*RESOURCE_SHARE_PER_UPDATE;
+                var thisPartsRate = resource.maxAmount*RESOURCE_SHARE_PER_UPDATE*deltaTime/0.02;
                 
                 // The amount you pull must be negative 
                 thisPartsShare = -Math.Min(thisPartsShare, thisPartsRate);

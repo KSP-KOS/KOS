@@ -29,6 +29,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Shell|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Shell\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,7 +50,12 @@
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
+    <Compile Include="Binding\IBindingManager.cs" />
     <Compile Include="Compilation\Calculator.cs" />
+    <Compile Include="Compilation\CalculatorBool.cs" />
+    <Compile Include="Compilation\CalculatorScalar.cs" />
+    <Compile Include="Compilation\CalculatorString.cs" />
+    <Compile Include="Compilation\CalculatorStructure.cs" />
     <Compile Include="Compilation\CodePart.cs" />
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
@@ -49,6 +63,7 @@
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
+    <Compile Include="Compilation\KS\LineCol.cs" />
     <Compile Include="Compilation\KS\Scope.cs" />
     <Compile Include="Compilation\KS\Subprogram.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />
@@ -62,23 +77,35 @@
     <Compile Include="Compilation\KS\Trigger.cs" />
     <Compile Include="Compilation\KS\TriggerCollection.cs" />
     <Compile Include="Compilation\Opcode.cs" />
+    <Compile Include="Compilation\OperandPair.cs" />
     <Compile Include="Compilation\ProgramBuilder.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Compilation\PseudoNull.cs" />
     <Compile Include="Compilation\Script.cs" />
+    <Compile Include="Encapsulation\BuiltinDelegate.cs" />
+    <Compile Include="Encapsulation\KOSDelegate.cs" />
+    <Compile Include="Encapsulation\BooleanValue.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
+    <Compile Include="Encapsulation\IDumper.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
+    <Compile Include="Encapsulation\Lexicon.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
+    <Compile Include="Encapsulation\PIDLoop.cs" />
+    <Compile Include="Encapsulation\ScalarDoubleValue.cs" />
+    <Compile Include="Encapsulation\ScalarIntValue.cs" />
+    <Compile Include="Encapsulation\ScalarValue.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\ConfigKey.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\NoArgsSuffix.cs" />
@@ -89,18 +116,25 @@
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />
+    <Compile Include="Encapsulation\UserDelegate.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
+    <Compile Include="Exceptions\KOSDefaultParamNotAtEndException.cs" />
+    <Compile Include="Exceptions\KOSNotInvokableException.cs" />
+    <Compile Include="Exceptions\KOSOnceInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
     <Compile Include="Exceptions\KOSBadJumpException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSDuplicateKeyException.cs" />
     <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
-    <Compile Include="Exceptions\KOSInvalidDelegateContext.cs" />
+    <Compile Include="Exceptions\KOSInvalidDelegateContextException.cs" />
+    <Compile Include="Exceptions\KOSKeyNotFoundException.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
-    <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
+    <Compile Include="Exceptions\KOSCommandInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSDeprecationException.cs" />
@@ -119,13 +153,19 @@
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
     <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
+    <Compile Include="Exceptions\KOSWrongControlValueTypeException.cs" />
+    <Compile Include="Exceptions\KOSWrongCPUVesselException.cs" />
+    <Compile Include="Execution\CPU.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\IProgramContext.cs" />
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
+    <Compile Include="Execution\KOSArgMarkerType.cs" />
+    <Compile Include="Execution\KOSPassThruReturn.cs" />
+    <Compile Include="Execution\ProgramContext.cs" />
+    <Compile Include="Execution\Stack.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
-    <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
@@ -136,6 +176,7 @@
     <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Persistence\FileCategory.cs" />
     <Compile Include="Persistence\Harddisk.cs" />
+    <Compile Include="Persistence\IVolumeManager.cs" />
     <Compile Include="Persistence\KOSFileException.cs" />
     <Compile Include="Persistence\PersistenceUtilities.cs" />
     <Compile Include="Persistence\ProgramFile.cs" />
@@ -163,15 +204,28 @@
     <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
     <Compile Include="Utilities\Math.cs" />
     <Compile Include="Utilities\TickGen.cs" />
+    <Compile Include="Encapsulation\QueueValue.cs" />
+    <Compile Include="Encapsulation\StackValue.cs" />
+    <Compile Include="Encapsulation\EnumerableValue.cs" />
+    <Compile Include="Serialization\Formatter.cs" />
+    <Compile Include="Serialization\JSONFormatter.cs" />
+    <Compile Include="Serialization\TerminalFormatter.cs" />
+    <Compile Include="SimpleJson.cs" />
+    <Compile Include="Exceptions\KOSSerializationException.cs" />
+    <Compile Include="Serialization\DictionaryWithHeader.cs" />
+    <Compile Include="Serialization\SafeSerializationMgr.cs" />
+    <Compile Include="Encapsulation\ISerializableValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
     <None Include="Compilation\KS\kRISC.tpg" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -179,14 +233,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sound" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
       cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &#x26;&#x26; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
+      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
@@ -200,4 +252,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup />
 </Project>

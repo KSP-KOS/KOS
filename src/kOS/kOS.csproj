@@ -71,6 +71,8 @@
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Binding\SteeringManager.cs" />
+    <Compile Include="Binding\SteeringManagerProvider.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
@@ -95,6 +97,8 @@
     </Compile>
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
+    <Compile Include="Suffixed\KUniverseValue.cs" />
+    <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -129,7 +133,6 @@
     <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\OrbitInfo.cs" />
-    <Compile Include="Execution\ProgramContext.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="Suffixed\Part\DockingPortValue.cs" />
     <Compile Include="Suffixed\Part\EngineValue.cs" />
@@ -152,16 +155,13 @@
     <Compile Include="UserIO\TerminalXtermMapper.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
-    <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Suffixed\Timespan.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Suffixed\Vector.cs" />
-    <Compile Include="Execution\CPU.cs" />
     <Compile Include="Suffixed\Direction.cs" />
     <Compile Include="Function\FunctionBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Execution\Stack.cs" />
     <Compile Include="Suffixed\VesselSensors.cs" />
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
@@ -178,6 +178,11 @@
     <Compile Include="AddOns\InfernalRobotics\Addon.cs" />
     <Compile Include="Screen\RectExtensions.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
+    <Compile Include="Suffixed\CrewMember.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
+    <Compile Include="Serialization\SerializationMgr.cs" />
+    <Compile Include="Serialization\IDumperWithSharedObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -210,5 +215,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup />
   <ItemGroup />
 </Project>

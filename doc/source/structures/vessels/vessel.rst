@@ -36,24 +36,27 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
      :meth:`MAXTHRUSTAT(pressure)`         scalar                    Sum of active maximum thrusts at the given atmospheric pressure
-     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
+     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts
      :meth:`AVAILABLETHRUSTAT(pressure)`   scalar                    Sum of active limited maximum thrusts at the given atmospheric pressure
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
      :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
+     :attr:`DYNAMICPRESSURE`               scalar (ATM's)            Air Pressure surrounding the vessel
+     :attr:`Q`                             scalar (ATM's)            Alias name for DYNAMICPRESSURE
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
-     :attr:`SURFACESPEED`                  scalar (m/s)              How fast the ship is moving "horizontally"
+     :attr:`GROUNDSPEED`                   scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
-     :attr:`NAME`                          string                    Synomym for SHIPNAME
+     :attr:`NAME`                          string                    Synonym for SHIPNAME
      :attr:`STATUS`                        string                    Current ship status
      :attr:`TYPE`                          string                    Ship type
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
+     :attr:`LOADDISTANCE`                  :struct:`LoadDistance`    the :struct:`LoadDistance` object for this vessel
      :attr:`ISDEAD`                        Boolean                   True if the vessel refers to a ship that has gone away.
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
      :attr:`ROOTPART`                      :struct:`Part`            Root :struct:`Part` of this vessel
@@ -69,7 +72,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :meth:`PARTSINGROUP(group)`           :struct:`List`            :struct:`Parts <Part>` by action group
      :meth:`MODULESINGROUP(group)`         :struct:`List`            :struct:`PartModules <PartModule>` by action group
      :meth:`ALLPARTSTAGGED()`              :struct:`List`            :struct:`Parts <Part>` that have non-blank nametags
+     :attr:`CREWCAPACITY`                  scalar                    Crew capacity of this vessel
+     :meth:`CREW()`                        :struct:`List`            all :struct:`CrewMembers <CrewMember>`
     ===================================== ========================= =============
+
+.. note::
+
+    This type is serializable.
 
 .. attribute:: Vessel:CONTROL
 
@@ -77,6 +86,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     The structure representing the raw flight controls for the vessel.
+
+    WARNING: This suffix is only gettable for :ref:`CPU Vessel <cpu vessel>`
 
 .. attribute:: Vessel:BEARING
 
@@ -98,7 +109,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     Sum of all the :ref:`engines' MAXTHRUSTs <engine_MAXTHRUST>` of all the currently active engines In Kilonewtons.
-    
+
 .. method:: Vessel:MAXTHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
@@ -110,15 +121,15 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     :type: scalar
     :access: Get only
-    
-    Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
+
+    Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into account their throttlelimits. Result is in Kilonewtons.
 
 .. method:: Vessel:AVAILABLETHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Vessel:FACING
 
@@ -148,6 +159,24 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     The mass of the ship if all resources were empty
 
+.. attribute:: Vessel:DYNAMICPRESSURE
+
+    :type: scalar (ATM's)
+    :access: Get only
+
+    Returns what the air pressure is in the atmosphere surrounding the vessel.
+    The value is returned in units of sea-level Kerbin atmospheres.  Many
+    formulae expect you to plug in a value expressed in kiloPascals, or
+    kPA.  You can convert this value into kPa by multiplying it by
+    `constant:ATMtokPa`.
+
+.. attribute:: Vessel:Q
+
+    :type: scalar (ATM's)
+    :access: Get only
+
+    Alias for DYNAMICPRESSURE
+
 .. attribute:: Vessel:VERTICALSPEED
 
     :type: scalar (m/s)
@@ -155,12 +184,24 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     How fast the ship is moving. in the "up" direction relative to the SOI Body's sea level surface.
 
-.. attribute:: Vessel:SURFACESPEED
+.. attribute:: Vessel:GROUNDSPEED
 
     :type: scalar (m/s)
     :access: Get only
 
-    How fast the ship is moving in the plane horizontal to the SOI body's sea level surface.
+    How fast the ship is moving in the two dimensional plane horizontal
+    to the SOI body's sea level surface.  The vertical component of the
+    ship's velocity is ignored when calculating this.
+
+    .. note::
+
+        .. versionadded:: 0.18
+
+        The old name for this value was SURFACESPEED.  The name was changed
+        because it was confusing before.  "surface speed" implied it's the
+        scalar magnitude of "surface velocity", but it wasn't, because of how
+        it ignores the vertical component.
+
 
 .. attribute:: Vessel:AIRSPEED
 
@@ -191,9 +232,9 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     :type: string
     :access: get only
-    
+
     The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
-    
+
 .. attribute:: Vessel:TYPE
 
     :type: string
@@ -206,8 +247,29 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`Direction`
     :access: Get only
 
-    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector represents the axis of the rotation, and its magnitude is the angular momentum of the rotation, which varies not only with the speed of the rotation, but also with the angular inertia of the vessel.
+    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector
+    represents the axis of the rotation (in left-handed convention,
+    not right handed as most physics textbooks show it), and its
+    magnitude is the angular momentum of the rotation, which varies
+    not only with the speed of the rotation, but also with the angular
+    inertia of the vessel.
 
+    Units are expressed in: (Megagrams * meters^2) / (seconds * radians)
+
+    (Normal SI units would use kilograms, but in KSP all masses use a
+    1000x scaling factor.)
+
+    **Justification for radians here:** 
+    Unlike the trigonometry functions in kOS, this value uses radians
+    rather than degrees.  The convention of always expressing angular
+    momentum using a formula that assumes you're using radians is a very
+    strongly adhered to universal convention, for... reasons.
+    It's so common that it's often not even explicitly
+    mentioned in information you may find when doing a web search on
+    helpful formulae about angular momentum.  This is why kOS doesn't
+    use degrees here.  (That an backward compatibility for old scripts.
+    It's been like this for quite a while.).
+    
     .. note::
 
         .. versionchanged:: 0.15.4
@@ -216,16 +278,23 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
 .. attribute:: Vessel:ANGULARVEL
 
-    :type: :struct:`Direction`
-    :access: Get only
+    Angular velocity of the body's rotation about its axis (its
+    day) expressed as a vector.
 
-    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector represents the axis of the rotation, and its magnitude is the speed of that rotation (Presumably in degrees per second?  This is not documented in the KSP API and may take some experimentation to discover if it's radians or degrees).
+    The direction the angular velocity points is in Ship-Raw orientation,
+    and represents the axis of rotation.  Remember that everything in
+    Kerbal Space Program uses a *left-handed coordinate system*, which
+    affects which way the angular velocity vector will point.  If you
+    curl the fingers of your **left** hand in the direction of the rotation,
+    and stick out your thumb, the thumb's direction is the way the
+    angular velocity vector will point.
 
-    .. note::
+    The magnitude of the vector is the speed of the rotation.
 
-        .. versionchanged:: 0.15.4
-
-            This has been changed to a vector, as it should have been all along.
+    Note, unlike many of the other parts of kOS, the rotation speed is
+    expressed in radians rather than degrees.  This is to make it
+    congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
+    backward compatibility with older kOS scripts.
 
 .. attribute:: Vessel:SENSORS
 
@@ -240,6 +309,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     true if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
+
+.. attribute:: Vessel:LOADDISTANCE
+
+    :type: :struct:`LoadDistance`
+    :access: Get only
+
+    Returns the load distance object for this vessel.  The suffixes of this object may be adjusted to change the loading behavior of this vessel. Note: these settings are not persistent across flight instances, and will reset the next time you launch a craft from an editor or the tracking station.
 
 .. attribute:: Vessel:ISDEAD
 
@@ -280,14 +356,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`List` of :struct:`DockingPort` objects
     :access: Get only
 
-    A List of all the :ref:`docking ports <DockingPort>` on the Vessel. 
+    A List of all the :ref:`docking ports <DockingPort>` on the Vessel.
 
 .. attribute:: Vessel:ELEMENTS
 
     :type: :struct:`List` of :struct:`Element` objects
     :access: Get only
 
-    A List of all the :ref:`elements <Element>` on the Vessel. 
+    A List of all the :ref:`elements <Element>` on the Vessel.
 
 .. attribute:: Vessel:RESOURCES
 
@@ -351,3 +427,16 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`List` of :struct:`Part` objects
 
     nametag on them of any sort that is nonblank. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. attribute:: Vessel:CREWCAPACITY
+
+    :type: scalar
+    :access: Get only
+
+    crew capacity of this vessel
+
+.. method:: Vessel:CREW()
+
+    :return: :struct:`List` of :struct:`CrewMember` objects
+
+    list of all :struct:`kerbonauts <CrewMember>` aboard this vessel

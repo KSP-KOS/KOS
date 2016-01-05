@@ -43,7 +43,14 @@ Raw Flight Controls Reference
 These "Raw" controls allow you the direct control of flight parameters while the current program is running.
 
 .. note::
-    The ``MAINTHROTTLE`` requires active engines and, of course, sufficient and appropriate fuel. The rotational controls ``YAW``, ``PITCH`` and ``ROW`` require active reaction wheels with sufficient energy or *RCS* to be ON with properly placed thrusters and appropriate fuel. The translational controls ``FORE``, ``STARBOARD`` and ``TOP`` require *RCS* to be ON with properly placed thrusters and appropriate fuel.
+    The ``MAINTHROTTLE`` requires active engines and, of course,
+    sufficient and appropriate fuel. The rotational controls ``YAW``,
+    ``PITCH`` and ``ROW`` require one of the following: active reaction
+    wheels with sufficient energy, *RCS* to be ON with properly placed
+    thrusters and appropriate fuel, or control surfaces with an atmosphere
+    in which to operate. The translational controls ``FORE``, ``STARBOARD``
+    and ``TOP`` only work with *RCS*, and require RCS to be ON with
+    properly placed thrusters and appropriate fuel.
 
 
 .. list-table::
@@ -136,7 +143,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL ROLL:
 .. object:: SHIP:CONTROL:ROLL
 
-    Rotation about the logintudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
+    Rotation about the longitudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
 
 .. _SHIP CONTROL ROTATION:
 .. object:: SHIP:CONTROL:ROTATION

@@ -4,7 +4,7 @@
 Time Span
 =========
 
-In several places the game uses a :struct:`TimeSpan` format. This is a strucure that gives the time in various formats. It also allows you to peform arithmetic on the time.
+In several places the game uses a :struct:`TimeSpan` format. This is a structure that gives the time in various formats. It also allows you to perform arithmetic on the time.
 
 TimeSpan represents *SIMULATED* time
 ------------------------------------
@@ -26,7 +26,7 @@ Special variable TIME
 .. global:: TIME
 
     :access: Get only
-    :type: integer
+    :type: :struct:`TimeSpan`
 
     The special variable **TIME** is used to get the current time.
 
@@ -38,7 +38,7 @@ Special variable TIME
         TIME:CLOCK          // Universal time in H:M:S format(1:50:26)
         TIME:CALENDAR       // Year 1, day 134
         TIME:YEAR           // 1
-        TIME:DAY            // 134
+        TIME:DAY            // 134 : changes depending on KUNIVERSE:HOURSPERDAY
         TIME:HOUR           // 1
         TIME:MINUTE         // 50
         TIME:SECOND         // 26
@@ -57,9 +57,12 @@ You can use the TIME special variable to detect whether or not a real physics 't
 
     The difference is whether 1 day = 6 hours or 1 day = 24 hours.
 
+    You can access this setting from your script by using
+    :attr:`Kuniverse:HOURSPERDAY`.
+
 .. warning::
 
-    Beware the pitfall of confuising the :attr:`TimeSpan:SECOND` (singular) suffix with the :attr:`TimeSpan:SECONDS` (plural) suffix.
+    Beware the pitfall of confusing the :attr:`TimeSpan:SECOND` (singular) suffix with the :attr:`TimeSpan:SECONDS` (plural) suffix.
 
     :attr:`TimeSpan:SECOND`
 
@@ -70,10 +73,6 @@ You can use the TIME special variable to detect whether or not a real physics 't
         This is the number of seconds total if you want to represent time as just a simple flat number without all the components. It's the total count of the number of seconds since the beginning of time (Epoch). Because it's a floating point number, it can store times less than 1 second. Note this is a measure of how much simulated Kerbal time has passed since the game began. People experienced at programming will be familiar with this concept. It's the Kerbal's version of "unix time".
 
         The epoch (time zero) in the KSP game is the time at which you first started the new campaign. All campaign games begin with the planets in precisely the same position and the clock set to zero years, zero days, zero hours, and so on.
-
-.. warning::
-
-    Beware that the times returned from :struct:`FileInfo` for the time a file was modified or created are NOT in this :struct:`TimeSpan` structure but instead are just raw strings. That is because they represent the time the file was affected in the real world and NOT times taken from the KSP simulation clock. That is a necessity because your files in the Archive exist globally across all multiple saved games. Different saved games won't have synchronized calendars with each other.
 
 
 .. structure:: TimeSpan
@@ -109,10 +108,13 @@ You can use the TIME special variable to detect whether or not a real physics 't
           - integer
           - Year-hand number
         * - :attr:`SECONDS`
-          - integer
+          - Number (float)
           - Total Seconds since Epoch
 
 
+.. note::
+
+    This type is serializable.
 
 
 .. attribute:: TimeSpan:CLOCK
@@ -167,8 +169,10 @@ You can use the TIME special variable to detect whether or not a real physics 't
 .. attribute:: TimeSpan:SECONDS
 
     :access: Get only
-    :type: integer
+    :type: Number (float)
 
-    Total Seconds since Epoch.
+    Total Seconds since Epoch.  Epoch is defined as the moment your 
+    current saved game's universe began (the point where you started
+    your campaign).  Can be very precise.
 
 

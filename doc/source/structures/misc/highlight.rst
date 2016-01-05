@@ -37,7 +37,7 @@ structure is defined as follows:
           - bool
           - controls the visibility of the highlight
 		
-Example:
+Example::
     
 	list elements in elist.
 	

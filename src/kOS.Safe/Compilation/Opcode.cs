@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+
 namespace kOS.Safe.Compilation
 {
     /// A very short numerical ID for the opcode. <br/>
@@ -19,7 +20,7 @@ namespace kOS.Safe.Compilation
     /// the compiled files.  Try to only tack values onto the end of the list,
     /// if possible:
     /// 
-    public enum ByteCode :byte 
+    public enum ByteCode :byte
     {
         // It's good practice to always have a zero value in an enum, even if not used:
         BOGUS = 0,
@@ -33,7 +34,7 @@ namespace kOS.Safe.Compilation
         // The explicit picking of the hex numbers is not strictly necessary,
         // but it's being done to aid in debugging the ML load/unload process,
         // as it makes it possible to look at hexdumps of the machine code
-        // and compare that to this list: 
+        // and compare that to this list:
         EOF            = 0x31,
         EOP            = 0x32,
         NOP            = 0x33,
@@ -80,6 +81,10 @@ namespace kOS.Safe.Compilation
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
         BRANCHTRUE     = 0x5e,
+        EXISTS         = 0x5f,
+        ARGBOTTOM      = 0x60,
+        TESTARGBOTTOM  = 0x61,
+        
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -174,10 +179,10 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// The short coded value that indicates what kind of instruction this is.
         /// Hopefully one byte will be enough, and we won't have more than 256 different opcodes.
-        /// </summary> 
+        /// </summary>
         public abstract /*SHOULD-BE-STATIC*/ ByteCode Code { get; }
         
-        // A mapping of CodeName to Opcode type, built at initialization time:        
+        // A mapping of CodeName to Opcode type, built at initialization time:
         private static Dictionary<ByteCode,Type> mapCodeToType; // will init this later.
 
         // A mapping of Name to Opcode type,  built at initialization time:
@@ -186,7 +191,7 @@ namespace kOS.Safe.Compilation
         // A table describing the arguments in machine language form that each opcode needs.
         // This is populated by using Reflection to scan all the Opcodes for their MLField Attributes.
         private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs;
-                
+        
         private const string FORCE_DEFAULT_CONSTRUCTOR_MSG =
             "+----------- ERROR IN OPCODE DEFINITION ----------------------------------+\n" +
             "|                                                                         |\n" +
@@ -208,7 +213,7 @@ namespace kOS.Safe.Compilation
             "+-------------------------------------------------------------------------+\n";
 
         public int Id { get { return id; } }
-        public int DeltaInstructionPointer { get; protected set; } 
+        public int DeltaInstructionPointer { get; protected set; }
         public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
         public string Label {get{return label;} set {label = value;} }
         public virtual string DestinationLabel {get;set;}
@@ -218,6 +223,9 @@ namespace kOS.Safe.Compilation
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
 
         private string label = string.Empty;
+
+        public bool AbortProgram { get; set; }
+        public bool AbortContext { get; set; }
         
         public virtual void Execute(ICpu cpu)
         {
@@ -231,6 +239,8 @@ namespace kOS.Safe.Compilation
         protected Opcode()
         {
             DeltaInstructionPointer = 1;
+            AbortProgram = false;
+            AbortContext = false;
         }
         
         /// <summary>
@@ -264,7 +274,7 @@ namespace kOS.Safe.Compilation
         
         /// <summary>
         /// This is intended to be called once, during the mod's initialization, and never again.
-        /// It builds the Dictionaries that look up the type of opcode given its string name or code. 
+        /// It builds the Dictionaries that look up the type of opcode given its string name or code.
         /// </summary>
         public static void InitMachineCodeData()
         {
@@ -315,7 +325,7 @@ namespace kOS.Safe.Compilation
                         {
                             // Add to the map from codename to Opcode type:
                             var opCodeName = (ByteCode) pInfo.GetValue(dummyInstance, null);
-                            mapCodeToType.Add(opCodeName, opType);                                                 
+                            mapCodeToType.Add(opCodeName, opType);
                         }
                         else if (pInfo.Name == "Name")
                         {
@@ -375,7 +385,7 @@ namespace kOS.Safe.Compilation
             if (! mapCodeToType.TryGetValue(code, out returnValue))
             {
                 returnValue = typeof(PseudoNull); // flag telling the caller "not found".
-            }        
+            }
             return returnValue;
         }
 
@@ -403,23 +413,34 @@ namespace kOS.Safe.Compilation
         {
             return mapOpcodeToArgs[GetType()];
         }
-    }
         
+        /// <summary>
+        /// A utility function that will do a cpu.PopValue, but with an additional check to ensure
+        /// the value atop the stack isn't the arg bottom marker.
+        /// </summary>
+        /// <returns>object popped if it all worked fine</returns>
+        protected object PopValueAssert(ICpu cpu, bool barewordOkay = false)
+        {
+            object returnValue = cpu.PopValue(barewordOkay);
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
+                throw new KOSArgumentMismatchException("Called with not enough arguments.");
+            return returnValue;
+        }
+    }
+
     public abstract class BinaryOpcode : Opcode
     {
-        protected object Argument1 { get; private set; }
-        protected object Argument2 { get; private set; }
+        protected OperandPair Operands { get; private set; }
 
         public override void Execute(ICpu cpu)
         {
-            Argument2 = cpu.PopValue();
-            Argument1 = cpu.PopValue();
+            object right = cpu.PopValue();
+            object left = cpu.PopValue();
 
-            // convert floats to doubles
-            if (Argument1 is float) Argument1 = Convert.ToDouble(Argument1);
-            if (Argument2 is float) Argument2 = Convert.ToDouble(Argument2);
+            var operands = new OperandPair(left, right);
 
-            Calculator calc = Calculator.GetCalculator(Argument1, Argument2);
+            Calculator calc = Calculator.GetCalculator(operands);
+            Operands = operands;
             object result = ExecuteCalculation(calc);
             cpu.PushStack(result);
         }
@@ -458,9 +479,39 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            var identifier = (string)cpu.PopStack();
+            object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValue(identifier, value);
+        }
+    }
+
+    /// <summary>
+    /// Tests if the identifier atop the stack is an identifier that exists in the system
+    /// and is accessible in scope at the moment.  If the identifier doesn't
+    /// exist, or if it does but it's out of scope right now, then it results in
+    /// a FALSE, else it results in a TRUE.  The result is pushed onto the stack
+    /// for reading.
+    /// Note that the ident atop the stack must be formatted like a variable
+    /// name (i.e. have the leading '$').
+    /// </summary>
+    public class OpcodeExists : Opcode
+    {
+        protected override string Name { get { return "exists"; } }
+        public override ByteCode Code { get { return ByteCode.EXISTS; } }
+        
+        public override void Execute(ICpu cpu)
+        {
+            bool result = false; //pessimistic default
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            string ident = Convert.ToString(cpu.PopStack());
+            if (ident != null && cpu.IdentifierExistsInScope(ident))
+            {
+                result = true;
+            }
+            cpu.PushStack(result);
         }
     }
 
@@ -480,12 +531,14 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            var identifier = (string)cpu.PopStack();
+            object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetValueExists(identifier, value);
         }
     }
-
+    
     /// <summary>
     /// Consumes the topmost 2 values of the stack, storing the topmost stack
     /// value into a variable described by the next value down the stack. <br/>
@@ -513,8 +566,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            var identifier = (string)cpu.PopStack();
+            object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetNewLocal(identifier, value);
         }
     }
@@ -540,8 +595,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            var identifier = (string)cpu.PopStack();
+            object value = PopValueAssert(cpu);
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            var identifier = Convert.ToString(cpu.PopStack());
             cpu.SetGlobal(identifier, value);
         }
     }
@@ -574,9 +631,15 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            object popValue = cpu.PopValue();
+            object popValue = Structure.FromPrimitive(cpu.PopValue());
+            // We convert the popValue to a structure to ensure that we can get suffixes on values
+            // stored in primitive form as a fall back.  All variables should be stored as a structure
+            // now, other than system variables like pointers and labels.  This technically means that
+            // a change performed by calling a function on Scalar, Boolean, or String values might not
+            // save the value to the original objet.
 
             var specialValue = popValue as ISuffixed;
+            
             if (specialValue == null)
             {
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
@@ -589,11 +652,19 @@ namespace kOS.Safe.Compilation
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
                 // member returned is a delegate that needs to be called to get its actual
                 // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
-                cpu.PushStack(OpcodeCall.ARG_MARKER_STRING);
-                value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
+                cpu.PushStack(value);
+                cpu.PushStack(new KOSArgMarkerType());
+                OpcodeCall.StaticExecute(cpu, false, "", false); // this will push the return value on the stack for us.
             }
-
-            cpu.PushStack(value);
+            else
+            {
+                // TODO: When we refactor to make every structure use the new suffix style, this conversion
+                // from primative can be removed.  Right now there are too many structures that override the
+                // GetSuffix method and return their own types, preventing us from converting directly in
+                // the GetSuffix method.
+                value = Structure.FromPrimitive(value);
+                cpu.PushStack(value);
+            }
         }
     }
     
@@ -627,6 +698,10 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             string suffixName = cpu.PopStack().ToString().ToUpper();
             object popValue = cpu.PopValue();
+            // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
+            // the referenced variable wouldn't be updated.  The primitives themselves are treated as value
+            // types instead of reference types.  This is also why I removed the string unboxing
+            // from the ISuffixed check below.
 
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
@@ -634,7 +709,10 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            if (!specialValue.SetSuffix(suffixName, value))
+            // TODO: When we refactor to make every structure use the new suffix style, this conversion
+            // to primative can be removed.  Right now there are too many structures that override the
+            // SetSuffix method while relying on unboxing the object rahter than using Convert
+            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimitive(value)))
             {
                 throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }
@@ -650,16 +728,27 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object index = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
             object list = cpu.PopValue();
 
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
+            object value;
 
-            object value = ((IIndexable)list).GetIndex((int)index);
+            var indexable = list as IIndexable;
+            if (indexable != null)
+            {
+                value = indexable.GetIndex(index);
+            }
+            // Box strings if necessary to allow them to be indexed
+            else if (list is string)
+            {
+                value = new StringValue((string) list).GetIndex(index);
+            }
+            else
+            {
+                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            }
+
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+
             cpu.PushStack(value);
         }
     }
@@ -675,25 +764,29 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object index = cpu.PopValue();
             object list = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            if (value != null)
+            if (index == null || value == null)
             {
-                ((IIndexable)list).SetIndex((int)index, value);
+                throw new KOSException("Neither the key nor the index of a collection may be null");
             }
+
+            var indexable = list as IIndexable;
+            if (indexable == null)
+            {
+                throw new KOSException(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
+            }
+            indexable.SetIndex(index, value);
         }
     }
 
-    
     public class OpcodeEOF : Opcode
     {
         protected override string Name { get { return "EOF"; } }
         public override ByteCode Code { get { return ByteCode.EOF; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortContext = true;
+        }
     }
 
     
@@ -701,6 +794,10 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "EOP"; } }
         public override ByteCode Code { get { return ByteCode.EOP; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortProgram = true;
+        }
     }
 
     
@@ -730,10 +827,20 @@ namespace kOS.Safe.Compilation
     
     public abstract class BranchOpcode : Opcode
     {
-        // This is identical to the base DestinationLabel, except that it has
-        // the MLFIeld attached to it:
+        // This stores EITHER the label OR the relative distance,
+        // depending, in the KSM packed file.  Only if the label is
+        // an empty string does it store the integer distance instead.
         [MLField(1,true)]
-        public override string DestinationLabel {get;set;}
+        public object KSMLabelOrDistance
+        {
+            get
+            {
+                if (DestinationLabel == string.Empty)
+                    return Distance;
+                else
+                    return DestinationLabel;
+            }
+        }
         
         public int Distance { get; set; }
 
@@ -742,12 +849,19 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for BranchOpcode seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)(fields[0]);  // should throw exception if not an integer-ish type.
+            // This class does something strange - it expects the KSM file to encode EITHER a string label OR an integer,
+            // but never both.  Therefore it has to determine the type of the arg to decide which it was:
+            if (fields[0] is string)
+                DestinationLabel = (string)(fields[0]);
+            else
+                Distance = (int)fields[0];
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", Name, Distance);
+            // Format string forces printing of '+/-' sign always, even for positive numbers.
+            // The intent is to make it more clear that this is a relative, not absolute jump:
+            return string.Format("{0} {1:+#;-#;+0}", Name, Distance);
         }
     }
 
@@ -760,6 +874,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
+
             DeltaInstructionPointer = !condition ? Distance : 1;
         }
     }
@@ -834,7 +949,7 @@ namespace kOS.Safe.Compilation
         public override string ToString()
         {
             return Name + " Label of next thing = {" + UpcomingLabel +"}";
-        }        
+        }
     }
 
     #endregion
@@ -849,7 +964,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThan(Argument1, Argument2);
+            return calc.GreaterThan(Operands);
         }
     }
 
@@ -861,7 +976,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThan(Argument1, Argument2);
+            return calc.LessThan(Operands);
         }
     }
 
@@ -873,7 +988,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThanEqual(Argument1, Argument2);
+            return calc.GreaterThanEqual(Operands);
         }
     }
 
@@ -885,7 +1000,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThanEqual(Argument1, Argument2);
+            return calc.LessThanEqual(Operands);
         }
     }
 
@@ -897,7 +1012,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.NotEqual(Argument1, Argument2);
+            return calc.NotEqual(Operands);
         }
     }
     
@@ -909,14 +1024,14 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Equal(Argument1, Argument2);
+            return calc.Equal(Operands);
         }
     }
 
     #endregion
 
     #region Math
-        
+    
     
     public class OpcodeMathNegate : Opcode
     {
@@ -940,7 +1055,7 @@ namespace kOS.Safe.Compilation
                 // overloaded the unary negate operator '-'.
                 // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
                 Type t = value.GetType();
-                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
+                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
                 if (negateMe != null)
                     result = negateMe.Invoke(null, new[]{value}); // value is an arg, not the 'this'.  (Method is static.)
                 else
@@ -959,9 +1074,9 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            object result = calc.Add(Argument1, Argument2);
+            object result = calc.Add(Operands);
             if (result == null)
-                throw new KOSBinaryOperandTypeException(Argument1, "add", "to", Argument2);
+                throw new KOSBinaryOperandTypeException(Operands, "add", "to");
             return result;
         }
     }
@@ -974,7 +1089,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Subtract(Argument1, Argument2);
+            return calc.Subtract(Operands);
         }
     }
 
@@ -986,7 +1101,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Multiply(Argument1, Argument2);
+            return calc.Multiply(Operands);
         }
     }
 
@@ -998,7 +1113,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Divide(Argument1, Argument2);
+            return calc.Divide(Operands);
         }
     }
 
@@ -1010,7 +1125,7 @@ namespace kOS.Safe.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Power(Argument1, Argument2);
+            return calc.Power(Operands);
         }
     }
 
@@ -1027,6 +1142,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
+            // Convert to bool instead of cast in case the identifier is stored
+            // as an encapsulated BooleanValue, preventing an unboxing collision.
             bool result = Convert.ToBoolean(value);
             cpu.PushStack(result);
         }
@@ -1043,15 +1160,18 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object result;
 
-            if (value is bool)
-                result = !((bool)value);
-            else if (value is int)
-                result = Convert.ToBoolean(value) ? 0 : 1;
-            else if ((value is double) || (value is float))
-                result = Convert.ToBoolean(value) ? 0.0 : 1.0;
-            else
-                throw new KOSUnaryOperandTypeException("boolean-not", value);
-
+            // Convert to bool instead of cast in case the identifier is stored
+            // as an encapsulated BooleanValue, preventing an unboxing collision.
+            // Wrapped in a try/catch since the Convert framework doesn't have a
+            // way to determine if a type can be converted.
+            try
+            {
+                result = !Convert.ToBoolean(value);
+            }
+            catch
+            {
+                throw new KOSCastException(value.GetType(), typeof(bool));
+            }
             cpu.PushStack(result);
         }
     }
@@ -1103,7 +1223,7 @@ namespace kOS.Safe.Compilation
         protected override string Name { get { return "call"; } }
         public override ByteCode Code { get { return ByteCode.CALL; } }
 
-        public const string ARG_MARKER_STRING = "$<argstart>"; // guaranteed to not be a legal variable name.
+        public static Type ArgMarkerType { get; private set; } // Don't query with reflection at runtime - get the type just once and keep it here.
 
         /// <summary>
         /// The Direct property flags which mode the opcode will be operating in:<br/>
@@ -1123,19 +1243,19 @@ namespace kOS.Safe.Compilation
         /// Calling a function called "somefunc", which takes 2 parameters:<br/>
         /// If the OpcodeCall is Direct, then the stack should look like this when it's executed:<br/>
         /// <br/>
-        /// (arg2)  &lt; -- top of stack<br/>  
+        /// (arg2)  &lt; -- top of stack<br/>
         /// (arg1) <br/>
         /// <br/>
         /// If the OpcodeCall is Indirect, then the stack should look like this when it's executed:<br/>
         /// <br/>
-        /// (arg2)  &lt; -- top of stack<br/>  
+        /// (arg2)  &lt; -- top of stack<br/>
         /// (arg1) <br/>
         /// (ArgMarkerString) <br/>
         /// ("somefunc" (or a delegate))<br/>
         /// </summary>
         public bool Direct
         {
-            // Behind the scenes this is implemented as a flag value in the 
+            // Behind the scenes this is implemented as a flag value in the
             // Destination field.  The Opcode is only indirect if the Destination
             // is a string equal to indirectPlaceholder.
             get
@@ -1161,26 +1281,58 @@ namespace kOS.Safe.Compilation
         /// This variant of the constructor is just for machine language file read/write to use.
         /// </summary>
         protected OpcodeCall() { }
-        
+
+        static OpcodeCall()
+        {
+            ArgMarkerType = typeof(KOSArgMarkerType);
+        }
+
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodeCall seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)fields[0];
+            // Convert to string instead of cast in case the identifier is stored
+            // as an encapsulated StringValue, preventing an unboxing collision.
+            DestinationLabel = Convert.ToString(fields[0]);
             Destination = fields[1];
         }
 
         public override void Execute(ICpu cpu)
         {
+            int absoluteJumpTo = StaticExecute(cpu, Direct, Destination, false);
+            if (absoluteJumpTo >= 0)
+                DeltaInstructionPointer = absoluteJumpTo - cpu.InstructionPointer;
+        }
+        
+        /// <summary>
+        /// Performs the actual execution of a subroutine call, either from this opcode or externally from elsewhere.
+        /// All "call a routine" logic should shunt through this code here, which handles all the complex cases,
+        /// or at least it should.
+        /// Note that in the case of a user function, this does not *ACTUALLY* execute the function yet.  It just
+        /// arranges the stack correctly for the call and returns the new location that the IP should be jumped to
+        /// on the next instruction to begin the subroutine.  For all built-in cases, it actually executes the 
+        /// call right now and doesn't return until it's done.  But for User functions it can't do that - it can only
+        /// advise on where to jump on the next instruction to begin the function.
+        /// </summary>
+        /// <param name="cpu">the cpu its running on</param>
+        /// <param name="direct">same meaning as OpcodeCall.Direct</param>
+        /// <param name="destination">if direct, then this is the function name</param>
+        /// <param name="calledFromKOSDelegateCall">true if KOSDelegate.Call() brought us here.  If true that
+        /// means any pre-bound args are already on the stack.  If false it means they aren't and this will have to
+        /// put them there.</param>
+        /// <returns>new IP to jump to, if this should be followed up by a jump.  If -1 then it means don't jump.</returns>
+        public static int StaticExecute(ICpu cpu, bool direct, object destination, bool calledFromKOSDelegateCall)
+        {
             object functionPointer;
             object delegateReturn = null;
+            int newIP = -1; // new instruction pointer to jump to, next, if any.
 
-            if (Direct)
+            if (direct)
             {
-                functionPointer = cpu.GetValue(Destination);
+                functionPointer = cpu.GetValue(destination);
                 if (functionPointer == null)
-                    throw new KOSException("Attempt to call function failed - Value of function pointer for " + Destination + " is null.");
+                    throw new KOSException("Attempt to call function failed - Value of function pointer for " + destination + " is null.");
             }
             else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
             {
@@ -1190,13 +1342,13 @@ namespace kOS.Safe.Compilation
                 for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
                 {
                     object arg = cpu.PeekValue(digDepth);
-                    if (arg is string && arg.ToString() == ARG_MARKER_STRING)
+                    if (arg != null && arg.GetType() == ArgMarkerType)
                         foundBottom = true;
                     else
                         ++argsCount;
                 }
                 functionPointer = cpu.PeekValue(digDepth);
-                if (! ( functionPointer is Delegate))
+                if (! ( functionPointer is Delegate || functionPointer is KOSDelegate))
                 {
                     // Indirect calls are meant to be delegates.  If they are not, then that means the
                     // function parentheses were put on by the user when they weren't required.  Just dig
@@ -1211,10 +1363,10 @@ namespace kOS.Safe.Compilation
                             0, argsCount, "\n(In fact in this case the parentheses are entirely optional)");
                     }
                     cpu.PopValue(); // pop the ArgMarkerString too.
-                    return;
+                    return -1;
                 }
             }
-            
+
             // If it's a string it might not really be a built-in, it might still be a user func.
             // Detect whether it's built-in, and if it's not, then convert it into the equivalent
             // user func call by making it be an integer instruction pointer instead:
@@ -1225,23 +1377,37 @@ namespace kOS.Safe.Compilation
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 if (!(cpu.BuiltInExists(functionName)))
                 {
-                    // It is not a built-in, so instead get its value as a user function pointer variable, despite 
+                    // It is not a built-in, so instead get its value as a user function pointer variable, despite
                     // the fact that it's being called AS IF it was direct.
                     if (!functionName.EndsWith("*")) functionName = functionName + "*";
                     if (!functionName.StartsWith("$")) functionName = "$" + functionName;
                     functionPointer = cpu.GetValue(functionName);
                 }
             }
+
+            KOSDelegate kosDelegate = functionPointer as KOSDelegate;
+            if (kosDelegate != null)
+            {
+                if (! calledFromKOSDelegateCall)
+                    kosDelegate.InsertPreBoundArgs();
+            }
+
             IUserDelegate userDelegate = functionPointer as IUserDelegate;
             if (userDelegate != null)
                 functionPointer = userDelegate.EntryPoint;
 
-            if (functionPointer is int)
+            BuiltinDelegate builtinDel = functionPointer as BuiltinDelegate;
+            if (builtinDel != null && (! calledFromKOSDelegateCall) )
+                functionPointer = builtinDel.Name;
+
+            // Convert to int instead of cast in case the identifier is stored
+            // as an encapsulated ScalarValue, preventing an unboxing collision.
+            if (functionPointer is int || functionPointer is ScalarValue)
             {
-                ReverseStackArgs(cpu);
-                int currentPointer = cpu.InstructionPointer;
-                DeltaInstructionPointer = (int)functionPointer - currentPointer;
-                var contextRecord = new SubroutineContext(currentPointer+1);
+                ReverseStackArgs(cpu, direct);
+                var contextRecord = new SubroutineContext(cpu.InstructionPointer+1);
+                newIP = Convert.ToInt32(functionPointer);
+                
                 cpu.PushAboveStack(contextRecord);
                 if (userDelegate != null)
                 {
@@ -1261,6 +1427,15 @@ namespace kOS.Safe.Compilation
                 if (functionName.EndsWith("()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 cpu.CallBuiltinFunction(functionName);
+
+                // If this was indirect, we need to consume the thing under the return value.
+                // as that was the indirect BuiltInDelegate:
+                if ((! direct) && builtinDel != null)
+                {
+                    object topThing = cpu.PopStack();
+                    cpu.PopStack(); // remove BuiltInDelegate object.
+                    cpu.PushStack(topThing); // put return value back.
+                }
             }
             else if (functionPointer is Delegate)
             {
@@ -1268,26 +1443,28 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                // This is one of those "the user had better NEVER see this error" sorts of messages that's here to keep us in check:
-                throw new Exception(
-                    string.Format("kOS internal error: OpcodeCall calling a function described using {0} which is of type {1} and kOS doesn't know how to call that.", functionPointer, functionPointer.GetType().Name)
-                    );
+                throw new KOSNotInvokableException(functionPointer);
             }
 
-            if (! Direct)
-            {
-                cpu.PopValue(); // consume function name, branch index, or delegate
-            }
             if (functionPointer is Delegate)
             {
-                cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
+                if (! (delegateReturn is KOSPassThruReturn))
+                    cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
             }
+
+            return newIP;
         }
         
         /// <summary>
-        /// Call this when executing a delegate function whose delegate object was stored on
+        /// Call this when executing a C# delegate function whose delegate object was stored on
         /// the stack underneath the arguments.  The code here is using reflection and complex
         /// enough that it needed to be separated from the main Execute method.
+        /// <br/><br/>
+        /// Note that this method is only supposed to be used for things that are actual C# delegates,
+        /// and NOT for our KOS delegates that we handle through different means (like UserDelegates
+        /// or BuiltInFunction delegates).  This code uses reflection to learn about the signature of
+        /// the C# delegate - it's intended paramerters and return type, and thus won't work on things
+        /// that aren't actually C# delegates.
         /// </summary>
         /// <param name="cpu">the cpu this opcode is being called on</param>
         /// <param name="dlg">the delegate object this opcode is being called for.</param>
@@ -1297,16 +1474,34 @@ namespace kOS.Safe.Compilation
             MethodInfo methInfo = dlg.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
             var args = new List<object>();
+            var paramArrayArgs = new List<object>();
+
+            // Will be true iff the lastmost parameter of the delegate is using the C# 'param' keyword and thus
+            // expects the remainder of the arguments marshalled together into one array object.
+            bool isParamArrayArg = false;
             
-            // Iterating over parameter signature backward because stack:
-            for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
+            ReverseStackArgs(cpu, false);
+            for (int i = 0 ; i < paramArray.Length ; ++i)
             {
                 object arg = cpu.PopValue();
-                if (arg is string && ((string)arg) == ARG_MARKER_STRING)
-                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
-                Type paramType = paramInfo.ParameterType;
+                
+                // If this is the lastmost parameter then it might be a 'param' array which expects all the rest of
+                // the arguments to be collected together into one single array parameter when invoking the method:
+                isParamArrayArg = (i == paramArray.Length-1 && Attribute.IsDefined(paramInfo, typeof(ParamArrayAttribute)));
+
+                if (arg != null && arg.GetType() == ArgMarkerType)
+                {
+                    if (isParamArrayArg)
+                        break; // with param arguments, you want to consume everything to the arg bottom - it's normal.
+                    else
+                        throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
+                }
+                                
+                // Either the expected type of this one parameter, or if it's a 'param' array as the last arg, then
+                // the expected type of that array's elements:
+                Type paramType = (isParamArrayArg ? paramInfo.ParameterType.GetElementType() : paramInfo.ParameterType);
                 
                 // Parameter type-safe checking:
                 bool inheritable = paramType.IsAssignableFrom(argType);
@@ -1330,24 +1525,39 @@ namespace kOS.Safe.Compilation
                     }
                 }
                 
-                args.Add(arg);
+                if (isParamArrayArg)
+                {
+                    paramArrayArgs.Add(arg);
+                    --i; // keep hitting the last item in the param list again and again until a forced break because of arg bottom marker.
+                }
+                else
+                {
+                    args.Add(arg);
+                }
+            }
+            if (isParamArrayArg)
+            {
+                // collect the param array args that were at the end into the one single
+                // array item that will be sent to the method when invoked:
+                args.Add(paramArrayArgs.ToArray());
             }
             // Consume the bottom marker under the args, which had better be
-            // immediately under the args we just popped, or the count was off:
-            bool foundArgMarker = false;
-            int numExtraArgs = 0;
-            while (cpu.GetStackSize() > 0 && !foundArgMarker)
+            // immediately under the args we just popped, or the count was off.
+            if (!isParamArrayArg) // A param array arg will have already consumed the arg bottom mark.
             {
-                object marker = cpu.PopValue();
-                if (marker is string && ((string)marker) == ARG_MARKER_STRING)
-                    foundArgMarker = true;
-                else
-                    ++numExtraArgs;
+                bool foundArgMarker = false;
+                int numExtraArgs = 0;
+                while (cpu.GetStackSize() > 0 && !foundArgMarker)
+                {
+                    object marker = cpu.PopValue();
+                    if (marker != null && marker.GetType() == ArgMarkerType)
+                        foundArgMarker = true;
+                    else
+                        ++numExtraArgs;
+                }
+                if (numExtraArgs > 0)
+                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
             }
-            if (numExtraArgs > 0)
-                throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
-
-            args.Reverse(); // Put back in normal order instead of stack order.
             
             // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
             // there are no arguments to pass:
@@ -1361,13 +1571,12 @@ namespace kOS.Safe.Compilation
                 if (methInfo.ReturnType == typeof(void))
                 {
                     dlg.DynamicInvoke(argArray);
-                    return null; // So that the compiler building the opcodes for a function call statement doesn't
-                                 // have to know the function prototype to decide whether or
-                                 // not it needs to pop a value from the stack for the return value.  By adding this,
-                                 // it can unconditionally assume there will be exactly 1 value left behind on the stack
-                                 // regardless of what function it was that was being called.
+                    return null; // By adding this we can unconditionally assume all functions
+                                 // have a return value to be used or popped away, even if "void".
                 }
-                return dlg.DynamicInvoke(argArray);
+                // Convert a primitive return type to a structure.  This is done in the opcode, since
+                // the opcode calls the deligate directly and cannot be (quickly) intercepted
+                return Structure.FromPrimitive(dlg.DynamicInvoke(argArray));
             }
             catch (TargetInvocationException e)
             {
@@ -1382,12 +1591,19 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
         /// put them back again in reversed order so a function can read them in normal order.
+        /// Note that if this is an indirect call, it will also consume the thing just under
+        /// the ARG_MARKER, since that's expected to be the delegate or KOSDelegate that we already
+        /// read and pulled the needed information from.
+        /// <param name="cpu">the cpu we are running on, fur stack manipulation purposes</param>
+        /// <param name="direct">need to know if this was a direct or indirect call.  If indirect,
+        /// then that means it also needs to consume the indirect reference off the stack just under
+        /// the args</param>
         /// </summary>
-        public void ReverseStackArgs(ICpu cpu)
+        public static void ReverseStackArgs(ICpu cpu, bool direct)
         {
             List<object> args = new List<object>();
             object arg = cpu.PopValue();
-            while (arg != null && (!(arg.ToString().Equals(ARG_MARKER_STRING))))
+            while (cpu.GetStackSize() > 0 && arg.GetType() != ArgMarkerType)
             {
                 args.Add(arg);
 
@@ -1402,8 +1618,10 @@ namespace kOS.Safe.Compilation
                 // see the contents that were inside foo.
                 arg = cpu.PopValue();
             }
+            if (! direct)
+                cpu.PopStack(); // throw away the delegate or KOSDelegate info - we already snarfed it by now.
             // Push the arg marker back on again.
-            cpu.PushStack(ARG_MARKER_STRING);
+            cpu.PushStack(new KOSArgMarkerType());
             // Push the arguments back on again, which will invert their order:
             foreach (object item in args)
                 cpu.PushStack(item);
@@ -1453,7 +1671,7 @@ namespace kOS.Safe.Compilation
         /// be popping as it does so.  It combines the behavior of a PopScope inside
         /// itself, AFTER it reads and evaluates the thing atop the stack for return
         /// purposes (that way it evals the top thing BEFORE it pops the scope and forgets
-        /// what variables exist).<br/
+        /// what variables exist).<br/>
         /// <br/>
         /// Doing this:<br/>
         ///   push $val<br/>
@@ -1465,7 +1683,7 @@ namespace kOS.Safe.Compilation
         ///   return 0 deep<br/>
         /// <br/>
         /// </summary>
-        /// <param name="popScopes"></param>
+        /// <param name="depth">the number of levels to be popped</param>
         public OpcodeReturn(Int16 depth)
         {
             Depth = depth;
@@ -1473,28 +1691,31 @@ namespace kOS.Safe.Compilation
         
         public override void Execute(ICpu cpu)
         {
-
-            // Return value should be atop the stack - we have to pop it so that
-            // we can reach the arg start marker under it:
+            // Return value should be atop the stack.
+            // Pop it, eval it, and push it back,
+            // i.e. if the statement was RETURN X, and X is 2, then you want
+            // it to return the number 2, not the variable name $x, which could
+            // be a variable local to this function which is about to go out of scope
+            // so the caller can't access it:
             object returnVal = cpu.PopValue();
 
-            // The next thing on the stack under the return value should be the marker that indicated where
-            // the parameters started.  It should be thrown away now.  If the next thing is NOT the marker
-            // of where the parameters started, that is proof the stack is misaligned, probably because the
-            // number of args passed didn't match the number of DECLARE PARAMETER statements in the function:
-            string shouldBeArgMarker = cpu.PopStack() as string;
-
-            if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.Equals(OpcodeCall.ARG_MARKER_STRING))) )
+            // Now dig down through the stack until the argbottom is found.
+            // anything still leftover above that should be unread parameters we
+            // should throw away:
+            object shouldBeArgMarker = 0; // just a temp to force the loop to execute at least once.
+            while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType))
             {
-                throw new KOSArgumentMismatchException(
-                    string.Format("(detected when returning from function and the stack still had {0} on it)", 
-                    (shouldBeArgMarker ?? "a non-string value"))
-                );
+                if (cpu.GetStackSize() <= 0)
+                {
+                    throw new KOSArgumentMismatchException(
+                        string.Format("Something is wrong with the stack - no arg bottom mark when doing a return.  This is an internal problem with kOS")
+                       );
+                }
+                shouldBeArgMarker = cpu.PopStack();
             }
-            // If the proper argument marker was found, then it's all okay, so put the return value
-            // back, where it belongs, now that the arg start marker was popped off:
-            cpu.PushStack(returnVal);
             
+            cpu.PushStack(returnVal);
+
             // Now, after the eval was done, NOW finally pop the scope, after we don't need local vars anymore:
             if( Depth > 0 )
                 OpcodePopScope.DoPopScope(cpu, Depth);
@@ -1585,7 +1806,7 @@ namespace kOS.Safe.Compilation
     /// 1. In some cases, like setting up locks, Compiler would create an OpcodePush with Argument = null,
     /// and a DestinationLabel = something.
     /// 2. ProgramBuilder would rebuild the OpcodePush's Argument by copying it from the DestinationLabel
-    /// as part of ReplaceLabels at runtime.  
+    /// as part of ReplaceLabels at runtime.
     /// 
     /// The Problem: When storing this in the ML file, BOTH the Argument AND the DestinationLabel would
     /// need to be stored as [MLFields] even though they are never BOTH populated at the same time, which
@@ -1636,7 +1857,7 @@ namespace kOS.Safe.Compilation
         public override string ToString()
         {
             return Name + " Dest{" + DestinationLabel +"}";
-        }        
+        }
     }
 
     
@@ -1659,6 +1880,55 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// Asserts that the next thing on the stack is the argument bottom marker.
+    /// If it's not the argument bottom, it throws an error.
+    /// This does NOT pop the value from the stack - it merely peeks at the stack top.
+    /// The actual popping of the arg bottom value comes later when doing a return,
+    /// or a program bottom exit.
+    /// </summary>
+    public class OpcodeArgBottom : Opcode
+    {
+        protected override string Name { get { return "argbottom"; } }
+        public override ByteCode Code { get { return ByteCode.ARGBOTTOM; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            bool worked;
+            object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
+
+            if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
+            {
+                throw new KOSArgumentMismatchException("Called with too many arguments.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Tests whether or not the next thing on the stack is the argument bottom marker.
+    /// It pushes a true on top if it is, or false if it is not.  In either case it does
+    /// NOT consume the arg bottom marker, but just peeks for it.
+    /// </summary>
+    public class OpcodeTestArgBottom : Opcode
+    {
+        protected override string Name { get { return "testargbottom"; } }
+        public override ByteCode Code { get { return ByteCode.TESTARGBOTTOM; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            bool worked;
+            object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
+
+            if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
+            {
+                cpu.PushStack(false);
+            }
+            else
+            {
+                cpu.PushStack(true);
+            }
+        }
+    }
     
     public class OpcodeDup : Opcode
     {
@@ -1760,7 +2030,7 @@ namespace kOS.Safe.Compilation
         {
             return String.Format("{0} {1} {2}", Name, ScopeId, ParentScopeId);
         }
- 
+        
     }
 
     /// <summary>
@@ -1821,7 +2091,7 @@ namespace kOS.Safe.Compilation
         {
             return Name + " " + NumLevels;
         }
-  
+        
     }
     
     public class OpcodePushDelegate : Opcode
@@ -1850,8 +2120,8 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<2)
                 throw new Exception("Saved field in ML file for OpcodePushDelegate seems to be missing.  Version mismatch?");
-            EntryPoint = (int)fields[0];
-            WithClosure = (bool)fields[1];
+            EntryPoint = Convert.ToInt32(fields[0]);
+            WithClosure = Convert.ToBoolean(fields[1]);
         }
 
         public override void Execute(ICpu cpu)
@@ -1865,7 +2135,7 @@ namespace kOS.Safe.Compilation
             return Name + " " + EntryPoint.ToString();
         }
     }
-    
+        
     /// <summary>
     /// This serves the same purpose as OpcodePushRelocateLater, except it's for
     /// use with UserDelegates instead of raw integer IP calls.
@@ -1886,15 +2156,16 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// This variant of the constructor is just for ML file save/load to use.
         /// </summary>
-        protected OpcodePushDelegateRelocateLater() : base() {}
+        protected OpcodePushDelegateRelocateLater()
+        {}
         
         public override void PopulateFromMLFields(List<object> fields)
-        {            
+        {
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodePushDelegateRelocatelater seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)( fields[0] ); // this is really from the base class.
-            WithClosure = (bool)fields[1];
+            DestinationLabel = Convert.ToString(fields[0]); // this is really from the base class.
+            WithClosure = Convert.ToBoolean(fields[1]);
         }
     }
     

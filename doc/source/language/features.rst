@@ -82,7 +82,7 @@ For more information, see the :ref:`Structures Section <language structures>`. A
 
 .. _short_circuit:
 
-Short-curcuiting booleans
+Short-circuiting booleans
 -------------------------
 
 Further reading: https://en.wikipedia.org/wiki/Short-circuit_evaluation
@@ -157,7 +157,7 @@ User Functions
 
 Kerboscript supports user functions which you can write yourself
 and call from your own scripts.  *These are not* :ref:`structure
-methods <methods>` *(which as of this writing are a feature which
+methods <features methods>` *(which as of this writing are a feature which
 only works for the built-in kOS types, and are not yet supported
 by the kerboscript language for user functions you write yourself).*
 

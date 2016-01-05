@@ -52,22 +52,22 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
           - Rate of fuel burn
         * - :attr:`ISP`
           - scalar
-          - `Specific impulse <isp>`_
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :meth:`ISPAT(pressure)`
           - scalar
-          - `Specific impulse <isp>`_ at the given pressure (in standard Kerbin atmospheres).
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given pressure (in standard Kerbin atmospheres).
         * - :attr:`VACUUMISP`
           - scalar
-          - `Vacuum Specific impulse <isp>`_
+          - Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :attr:`VISP`
           - scalar
-          - `Synonym for VACUUMISP <vacuumisp>`_
+          - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
           - scalar
-          - `Specific impulse at Kerbin sealevel <isp>`_
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel
         * - :attr:`SLISP`
           - scalar
-          - `Synonym for SEALEVELISP <sealevelisp>`_
+          - Synonym for SEALEVELISP
         * - :attr:`FLAMEOUT`
           - boolean
           - Check if no more fuel
@@ -104,7 +104,23 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get/Set
     :type: scalar (%)
 
-    If this an engine with a thrust limiter (tweakable) enabled, what percentage is it limited to?
+    If this an engine with a thrust limiter (tweakable) enabled, what
+    percentage is it limited to?  Note that this is expressed as a 
+    percentage, not a simple 0..1 coefficient.  e.g. To set thrustlimit
+    to half, you use a value of 50.0, not 0.5.
+
+    This value is not allowed to go outside the range [0..100].  If you
+    attempt to do so, it will be clamped down into the allowed range.
+
+    Note that although a kerboscript is allowed to set the value to a
+    very precise number (for example 10.5123), the stock in-game display
+    widget that pops up when you right-click the engine will automatically
+    round it to the nearest 0.5 whenever you open the panel.  So if you
+    do something like ``set ship:part[20]:thrustlimit to 10.5123.`` in
+    your script, then look at the rightclick menu for the engine, the very
+    act of just looking at the menu will cause it to become 10.5 instead 
+    of 10.5123.  There isn't much that kOS can to to change this.  It's a
+    user interface decision baked into the stock game.
 
 .. _engine_MAXTHRUST:
 
@@ -161,21 +177,21 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: scalar
 
-    `Specific impulse <isp>`_
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. method:: Engine:ISPAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar
 
-    `Specific impulse <isp>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Engine:VACUUMISP
 
     :access: Get only
     :type: scalar
 
-    `Vacuum Specific impulse <isp>`_
+    Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. attribute:: Engine:VISP
 
@@ -189,7 +205,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: scalar
 
-    `Specific impulse at Kerbin sealevel <isp>`_
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel.
 
 .. attribute:: Engine:SLISP
 

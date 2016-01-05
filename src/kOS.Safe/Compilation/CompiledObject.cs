@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Execution;
 
 namespace kOS.Safe.Compilation
 {
@@ -57,6 +59,11 @@ namespace kOS.Safe.Compilation
             AddTypeData(5, typeof(float));
             AddTypeData(6, typeof(double));
             AddTypeData(7, typeof(string));
+            AddTypeData(8, typeof(KOSArgMarkerType));
+            AddTypeData(9, typeof(ScalarIntValue));
+            AddTypeData(10, typeof(ScalarDoubleValue));
+            AddTypeData(11, typeof(BooleanValue));
+            AddTypeData(12, typeof(StringValue));
         }
         
         private static void AddTypeData(int byteType, Type csType)
@@ -377,6 +384,7 @@ namespace kOS.Safe.Compilation
         private static void WriteSomeBinaryPrimitive(BinaryWriter writer, object obj)
         {
             if      (obj is PseudoNull) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            else if (obj is KOSArgMarkerType) { /*do nothing,  for this type has no data*/ }
             else if (obj is Boolean)    writer.Write((bool)obj);
             else if (obj is Int32)      writer.Write((Int32)obj);
             else if (obj is String)     writer.Write((String)obj);
@@ -391,8 +399,12 @@ namespace kOS.Safe.Compilation
             else if (obj is UInt32)     writer.Write((UInt32)obj);
             else if (obj is UInt64)     writer.Write((UInt64)obj);
             else if (obj is SByte)      writer.Write((SByte)obj);
+            else if (obj is ScalarIntValue) writer.Write(((ScalarIntValue)obj).GetIntValue());
+            else if (obj is ScalarDoubleValue) writer.Write(((ScalarDoubleValue)obj).GetDoubleValue());
+            else if (obj is BooleanValue) writer.Write((BooleanValue)obj);
+            else if (obj is StringValue) writer.Write((StringValue)obj);
             else
-                throw new Exception( "Don't konw how to write this type of object to binary file: " + obj.GetType().Name );
+                throw new Exception("Don't konw how to write this type of object to binary file: " + obj.GetType().Name);
         }
         /// <summary>
         /// It's surprising that BinaryWriter.Read doesn't have a method that does the
@@ -405,6 +417,7 @@ namespace kOS.Safe.Compilation
             object returnValue = null;
             
             if      (cSharpType == typeof(PseudoNull)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            else if (cSharpType == typeof(KOSArgMarkerType)) returnValue = new KOSArgMarkerType(); // no packed data - just make a default one.
             else if (cSharpType == typeof(Boolean))    returnValue = reader.ReadBoolean();
             else if (cSharpType == typeof(Int32))      returnValue = reader.ReadInt32();
             else if (cSharpType == typeof(String))     returnValue = reader.ReadString();
@@ -419,8 +432,12 @@ namespace kOS.Safe.Compilation
             else if (cSharpType == typeof(UInt32))     returnValue = reader.ReadUInt32();
             else if (cSharpType == typeof(UInt64))     returnValue = reader.ReadUInt64();
             else if (cSharpType == typeof(SByte))      returnValue = reader.ReadSByte();
+            else if (cSharpType == typeof(ScalarIntValue)) returnValue = ScalarValue.Create(reader.ReadInt32());
+            else if (cSharpType == typeof(ScalarDoubleValue)) returnValue = ScalarValue.Create(reader.ReadDouble());
+            else if (cSharpType == typeof(BooleanValue)) returnValue = new BooleanValue(reader.ReadBoolean());
+            else if (cSharpType == typeof(StringValue)) returnValue = new StringValue(reader.ReadString());
             else
-                throw new Exception( "Don't konw how to read this type of object from binary file: " + cSharpType.Name );
+                throw new Exception("Don't know how to read this type of object from binary file: " + cSharpType.Name);
             return returnValue;
         }
         

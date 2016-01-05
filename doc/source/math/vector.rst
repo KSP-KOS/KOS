@@ -72,6 +72,10 @@ Structure
           - yes
           - no
 
+.. note::
+
+    This type is serializable.
+
 .. attribute:: Vector:X
 
     :type: scalar

@@ -94,6 +94,7 @@ namespace kOS.Function
         }
     }
 
+
     [Function("ln")]
     public class FunctionLn : FunctionBase
     {
@@ -126,9 +127,10 @@ namespace kOS.Function
             object argument1 = PopValueAssert(shared);
             object argument2 = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
-            
-            Calculator calculator = Calculator.GetCalculator(argument1, argument2);
-            object result = calculator.Min(argument1, argument2);
+
+            var pair = new OperandPair(argument1, argument2);
+            Calculator calculator = Calculator.GetCalculator(pair);
+            object result = calculator.Min(pair);
             ReturnValue = result;
         }
     }
@@ -142,8 +144,9 @@ namespace kOS.Function
             object argument2 = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
 
-            Calculator calculator = Calculator.GetCalculator(argument1, argument2);
-            object result = calculator.Max(argument1, argument2);
+            var pair = new OperandPair(argument1, argument2);
+            Calculator calculator = Calculator.GetCalculator(pair);
+            object result = calculator.Max(pair);
             ReturnValue = result;
         }
     }
@@ -233,6 +236,31 @@ namespace kOS.Function
             }
             else
                 throw new KOSException("vector angle calculation attempted with a non-vector value");
+        }
+    }
+
+
+    [Function("char")]
+    public class FunctionChar : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            string result = new string((char) argument, 1);
+            ReturnValue = result;
+        }
+    }
+
+    [Function("unchar")]
+    public class FunctionUnchar : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string argument = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            double result = (double) argument.ToCharArray()[0];
+            ReturnValue = result;
         }
     }
 }

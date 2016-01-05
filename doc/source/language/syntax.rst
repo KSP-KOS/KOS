@@ -31,11 +31,11 @@ operator symbols:
 
 **Instructions and keywords**::
 
-    set  to  if  else from until step do lock  unlock  print  at  on  toggle
-    wait  when  then  off  stage  clearscreen  add  remove  log
-    break  preserve  declare  parameter  switch  copy  rename
-    volume  file  delete  edit  run  compile  list  reboot  shutdown
-    for  unset  batch  deploy  in  all
+    add all at batch break clearscreen compile copy declare delete
+    deploy do do edit else file for from from function global if
+    in list local lock log off on once parameter preserve print reboot
+    remove rename run set shutdown stage step switch then to toggle
+    unlock unset until volume wait when
 
 **Other symbols**::
 

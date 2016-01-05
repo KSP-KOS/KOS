@@ -1,7 +1,6 @@
 # This is a precursor to an automated build system
 
 ### Pre-Build
-* Update the kOS.Core.cs VersionInfo
 * Update AssemblyInfo for kOS project
 * Update AssemblyInfo for kOS.Safe project
 * Update Resources\GameData\kOS\kOS.version
@@ -10,6 +9,7 @@
 
 ### Build
 * Build kOS solution in release mode
+* Ensure that all required resources are in place (ie KSPAPIE)
 * Create zip file with a root starting in the \Resources\ directory
 * Name the zip file with the following pattern kOS.v<major>.<minor>.<patch>.zip (eg kOS.v0.14.2.zip )
 * Build the documentation in \docs\

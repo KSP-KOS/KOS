@@ -1,10 +1,12 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// A version of KOSCommandInvalidHere describing an attempt to use
     /// the RETURN command when not in the body of a user function.
     /// </summary>
-    public class KOSReturnInvalidHereException : KOSCommandInvalidHere
+    public class KOSReturnInvalidHereException : KOSCommandInvalidHereException
     {
         public override string HelpURL
         {
@@ -18,8 +20,8 @@
             "it doesn't mean anything when it's not inside a\n" +
             "user function.\n";
 
-        public KOSReturnInvalidHereException() :
-            base("RETURN", "outside a FUNCTION", "in a FUNCTION body")
+        public KOSReturnInvalidHereException(LineCol location) :
+            base(location, "RETURN", "outside a FUNCTION", "in a FUNCTION body")
         {
         }
     }

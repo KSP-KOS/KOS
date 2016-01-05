@@ -24,6 +24,7 @@ namespace kOS.Suffixed
             AddSuffix("NUMBER", new Suffix<int>(() => Staging.CurrentStage));
             AddSuffix("READY", new Suffix<bool>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
+            AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
@@ -34,6 +35,19 @@ namespace kOS.Suffixed
             foreach (var resource in resources)
             {
                 toReturn.Add(new ActiveResourceValue(resource, shared));
+            }
+
+            return toReturn;
+        }
+
+        private Lexicon GetResourceDictionary()
+        {
+            var resources = shared.Vessel.GetActiveResources();
+            var toReturn = new Lexicon();
+
+            foreach (var resource in resources)
+            {
+                toReturn.Add(resource.info.name, new ActiveResourceValue(resource, shared));
             }
 
             return toReturn;
@@ -74,22 +88,22 @@ namespace kOS.Suffixed
                     engine.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
                 }
             }
+            else if (resourceDef.resourceFlowMode == ResourceFlowMode.NO_FLOW) {
+                var engines = VesselUtils.GetListOfActivatedEngines(shared.Vessel);
+                foreach (var engine in engines)
+                {
+                    list.AddRange(engine.Resources.GetAll(resourceDef.id));
+                }
+            }
             else
             {
                 shared.Vessel.rootPart.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
             }
             if (list.Count == 0)
             {
-                return null;
+                return 0;
             }
-            double available = 0.0;
-            double capacity = 0.0;
-            foreach (var resource in list)
-            {
-                available += resource.amount;
-                capacity += resource.maxAmount;
-            }
-            return Math.Round(available, 2);
+            return Math.Round(list.GroupBy(e => e.part.flightID).Select(e => e.FirstOrDefault()).Sum(e => e.amount), 2);
         }
 
         public override string ToString()

@@ -1,10 +1,12 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
-    /// A version of KOSCommandInvalidHere describing an attempt to use
+    /// A version of KOSCommandInvalidHereException describing an attempt to use
     /// the PRESERVE keyword when not in a trigger.
     /// </summary>
-    public class KOSPreserveInvalidHereException : KOSCommandInvalidHere
+    public class KOSPreserveInvalidHereException : KOSCommandInvalidHereException
     {
         public override string HelpURL
         {
@@ -19,8 +21,8 @@
             "anything when it's not inside a trigger like\n" +
             "WHEN or ON.\n";
 
-        public KOSPreserveInvalidHereException() :
-            base( "PRESERVE", "not in a trigger body", "in triggers" )
+        public KOSPreserveInvalidHereException(LineCol location) :
+            base(location, "PRESERVE", "not in a trigger body", "in triggers" )
         {
         }
     }

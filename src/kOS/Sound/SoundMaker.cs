@@ -45,6 +45,7 @@ namespace kOS.Sound
             if (! sounds.ContainsKey(name))
                 return false;
             AudioSource source = sounds[name];
+            source.volume = GameSettings.UI_VOLUME;
             if (!source.clip.isReadyToPlay || source.isPlaying)
                 return false; // prev beep sound still is happening.
             

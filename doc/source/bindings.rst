@@ -28,7 +28,7 @@ TARGET:
 | **Gettable**: yes
 | **Settable**: yes
 | **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__ 
-| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targetted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.
+| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targeted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.
 
 Alias shortcuts for SHIP fields
 -------------------------------
@@ -60,7 +60,8 @@ ANGULARVELOCITY  Same as SHIP:ANGULARVEL
 COMMRANGE        Same as SHIP:COMMRANGE
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
-SURFACESPEED     Same as SHIP:SURFACESPEED
+GROUNDSPEED      Same as SHIP:GROUNDSPEED 
+SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
 VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
@@ -73,6 +74,21 @@ OBT              Same as SHIP:OBT
 STATUS           Same as SHIP:STATUS
 SHIPNAME         Same as SHIP:NAME
 ================ ==============================================================================
+
+Constants (pi, e, etc)
+----------------------
+
+Get-only.
+
+The variable ``constant`` provides a way to access a few
+:ref:`basic math and physics constants <constants>`, such as Pi, Euler's
+number, and so on.
+
+Example::
+
+    print "Kerbin's circumference: " + (2*constant:pi*Kerbin:radius) + "meters.".
+
+The full list is here: :ref:`constants page <constants>`.
 
 Terminal
 --------
@@ -97,7 +113,7 @@ which triggers the next stage.
 NextNode
 --------
 
-Get-only. ``nextnode`` returns the next planned manuever :struct:`node` in the SHIP's flight plan.  Bombs out if no such node exists.
+Get-only. ``nextnode`` returns the next planned maneuver :struct:`node` in the SHIP's flight plan.  Bombs out if no such node exists.
 
 Resource Types
 --------------
@@ -148,42 +164,41 @@ You can also get a list of all resources, either in SHIP: or STAGE: with the :RE
 ALT ALIAS
 ---------
 
-The special variable ALT is a unique exception. It behaves like a
-structure with suffixes but it's actually a bit "fake" in that it's not
-really a structure. The following terms are just exceptions that don't
-fit anywhere else:
+The special variable `ALT <structures/vessels/alt.html>`__ gives you
+access to a few altitude predictions:
 
-============== ======== ==========
-Variable       Type      Meaning
-============== ======== ==========
-ALT:APOAPSIS   number   The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.
-ALT:PERIAPSIS  number   The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.
-ALT:RADAR      number   The altitude of the current ship above the terrain.  Does not have an alias anywhere.
-============== ======== ==========
+ALT:APOAPSIS 
+
+ALT:PERIAPSIS
+
+ALT:RADAR
+
+Further details are found on the `ALT page <structures/vessels/alt.html>`__ .
+
 
 ETA ALIAS
 ---------
 
-The special variable ETA is a unique exception. It behaves like a
-structure with suffixes but it's actually a bit "fake" in that it's not
-really a structure. The following terms are just exceptions that don't
-fit anywhere else:
+The special variable `ETA <structures/vessels/eta.html>`__ gives you
+access to a few time predictions:
 
-============== ======== ==========
-Variable       Type      Meaning
-============== ======== ==========
-ETA:APOAPSIS   number   seconds until SHIP will reach its apoapsis.
-ETA:PERIAPSIS  number   seconds until SHIP will reach its periapsis.
-ETA:TRANSITION number   seconds until SHIP will leave its SOI to enter the SOI of another body.
-============== ======== ==========
+ETA:APOAPSIS 
+
+ETA:PERIAPSIS
+
+ETA:TRANSITION
+
+Further details are found on the `ETA page <structures/vessels/eta.html>`__ .
 
 ENCOUNTER
 ---------
 
-The body being encountered next by the current vessel. Returns the
-special string "None" if there is no expected encounter, or an object of
-type `Body <structures/celestial_bodies/body.html>`__ if an encounter is
-expected.
+The orbit patch describing the next encounter with a body the current
+vessel will enter. If there is no such encounter coming, it will return
+the special string "None".  If there is an encounter coming, it will
+return an object :ref:`of type Orbit <orbit>`.  (i.e. to obtain the name
+of the planet the encounter is with, you can do:
+``print ENCOUNTER:BODY:NAME.``, for example.).
 
 BOOLEAN TOGGLE FIELDS:
 ----------------------
@@ -309,6 +324,14 @@ TIME is the time since the entire saved game campaign started, in the
 kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
 just started.
 
+KUNIVERSE
+~~~~~~~~~
+
+:ref:`Kuniverse <kuniverse>` is a structure that contains many settings that
+break the fourth wall a little bit and control the game simulation directly.
+The eventual goal is probably to move many of the variables you see listed
+below into ``kuniverse``.
+
 Config
 ~~~~~~
 
@@ -343,6 +366,37 @@ situations such that the value changes depending on where you are.
 But kOS does not support this at the moment so in kOS if you set
 the LOADDISTANCE, you are setting it to the same value
 universally for all situations.
+
+.. _solarprimevector:
+
+SOLARPRIMEVECTOR
+----------------
+
+Gives the Prime Meridian :struct:`Vector` for the Solar System itself, in
+current Ship-Raw XYZ coordinates.
+
+Both the :attr:`Orbit:LONGITUDEOFASCENDINGNODE` orbit suffix and the
+:attr:`Body:ROTATIONANGLE` body suffix are expressed in terms of
+degree offsets from this *Prime Meridian Reference Vector*.
+
+What is the Solar Prime Reference Vector?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The solar prime vector is an arbitrary vector in space used to measure
+some orbital parameters that are supposed to remain fixed to space
+regardless of how the planets underneath the orbit rotate, or where the
+Sun is.  In a sense it can be thought of as the celestial "prime
+meridian" of the entire solar system, rather than the "prime meridian" of
+any one particular rotating planet or moon.
+
+In a hypothetical Earthling's solar system our Kerbal scientists have
+hypothesized may exist in a galaxy far away, Earthbound astronomers use
+a reference they called the
+`First Point of Aries <https://en.wikipedia.org/wiki/First_Point_of_Aries>`__,
+for this purpose.
+
+For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
+point in the firmament, also known as the "skybox".
 
 Addons
 ------

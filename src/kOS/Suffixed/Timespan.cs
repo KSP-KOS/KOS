@@ -1,16 +1,21 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
-    public class TimeSpan : Structure
+    public class TimeSpan : Structure, IDumper, IComparable<TimeSpan>
     {
-        readonly double span;
-        private readonly bool kerbinTimeSetting;
+        public const string DumpSpan = "span";
+
+        double span;
         private const int DAYS_IN_YEAR = 365;
-        private const int HOURS_IN_KERBIN_DAY = 6;
-        private const int HOURS_IN_EARTH_DAY = 24;
+
+        public const int HOURS_IN_EARTH_DAY = 24;
+        public const int HOURS_IN_KERBIN_DAY = 6;
+        
         private const int MINUTE_IN_HOUR = 60;
         private const int SECONDS_IN_MINUTE = 60;
 
@@ -21,11 +26,14 @@ namespace kOS.Suffixed
         private const int SECONDS_IN_EARTH_DAY = SECONDS_IN_EARTH_HOUR * HOURS_IN_EARTH_DAY;
         private const int SECONDS_IN_EARTH_YEAR = SECONDS_IN_EARTH_DAY * DAYS_IN_YEAR;
 
-        public TimeSpan(double unixStyleTime)
+        public TimeSpan()
+        {
+            InitializeSuffixes();
+        }
+
+        public TimeSpan(double unixStyleTime) : this()
         {
             span = unixStyleTime;
-            kerbinTimeSetting = GameSettings.KERBIN_TIME;
-            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
@@ -42,16 +50,16 @@ namespace kOS.Suffixed
 
         private int CalculateYear()
         {
-            if (kerbinTimeSetting)
+            if (GameSettings.KERBIN_TIME)
             {
                 return (int)Math.Floor(span / SECONDS_IN_KERBIN_YEAR) + 1;
             }
             return (int)Math.Floor(span / SECONDS_IN_EARTH_YEAR) + 1;
         }
 
-        private int SecondsPerDay { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_DAY : SECONDS_IN_EARTH_DAY; } }
-        private int SecondsPerHour { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_HOUR : SECONDS_IN_EARTH_HOUR; } }
-        private int SecongsPerYear { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_YEAR : SECONDS_IN_EARTH_YEAR; } }
+        private int SecondsPerDay { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_DAY : SECONDS_IN_EARTH_DAY; } }
+        private int SecondsPerHour { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_HOUR : SECONDS_IN_EARTH_HOUR; } }
+        private int SecongsPerYear { get { return GameSettings.KERBIN_TIME ? SECONDS_IN_KERBIN_YEAR : SECONDS_IN_EARTH_YEAR; } }
 
         private int CalculateDay()
         {
@@ -101,6 +109,23 @@ namespace kOS.Suffixed
         public static bool operator >=(double a, TimeSpan b) { return a >= b.ToUnixStyleTime(); }
         public static bool operator <=(double a, TimeSpan b) { return a <= b.ToUnixStyleTime(); }
 
+        public static TimeSpan operator +(TimeSpan a, ScalarValue b) { return new TimeSpan(a.ToUnixStyleTime() + b); }
+        public static TimeSpan operator -(TimeSpan a, ScalarValue b) { return new TimeSpan(a.ToUnixStyleTime() - b); }
+        public static TimeSpan operator *(TimeSpan a, ScalarValue b) { return new TimeSpan(a.ToUnixStyleTime() * b); }
+        public static TimeSpan operator /(TimeSpan a, ScalarValue b) { return new TimeSpan(a.ToUnixStyleTime() / b); }
+        public static TimeSpan operator +(ScalarValue b, TimeSpan a) { return new TimeSpan(b + a.ToUnixStyleTime()); }
+        public static TimeSpan operator -(ScalarValue b, TimeSpan a) { return new TimeSpan(b - a.ToUnixStyleTime()); }
+        public static TimeSpan operator *(ScalarValue b, TimeSpan a) { return new TimeSpan(b * a.ToUnixStyleTime()); }
+        public static TimeSpan operator /(ScalarValue b, TimeSpan a) { return new TimeSpan(b / a.ToUnixStyleTime()); }
+        public static bool operator >(TimeSpan a, ScalarValue b) { return a.ToUnixStyleTime() > b; }
+        public static bool operator <(TimeSpan a, ScalarValue b) { return a.ToUnixStyleTime() < b; }
+        public static bool operator >=(TimeSpan a, ScalarValue b) { return a.ToUnixStyleTime() >= b; }
+        public static bool operator <=(TimeSpan a, ScalarValue b) { return a.ToUnixStyleTime() <= b; }
+        public static bool operator >(ScalarValue a, TimeSpan b) { return a > b.ToUnixStyleTime(); }
+        public static bool operator <(ScalarValue a, TimeSpan b) { return a < b.ToUnixStyleTime(); }
+        public static bool operator >=(ScalarValue a, TimeSpan b) { return a >= b.ToUnixStyleTime(); }
+        public static bool operator <=(ScalarValue a, TimeSpan b) { return a <= b.ToUnixStyleTime(); }
+
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             other = ConvertToDoubleIfNeeded(other);
@@ -148,6 +173,26 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return string.Format("TIME({0:0})", span);
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            var dump = new DictionaryWithHeader
+            {
+                {DumpSpan, span}
+            };
+
+            return dump;
+        }
+
+        public void LoadDump (IDictionary<object, object> dump)
+        {
+            span = Convert.ToDouble(dump[DumpSpan]);
+        }
+            
+        public int CompareTo(TimeSpan other)
+        {
+            return span.CompareTo(other.span);
         }
     }
 }

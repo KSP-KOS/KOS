@@ -2,6 +2,7 @@ using kOS.Safe.Binding;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
+using kOS.Module;
 
 namespace kOS.Binding
 {
@@ -10,7 +11,7 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            shared.BindingMgr.AddGetter("CORE", () => new Core(shared));
+            shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
 
             shared.BindingMgr.AddSetter("TARGET", val =>
             {

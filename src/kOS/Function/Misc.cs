@@ -1,6 +1,7 @@
 ﻿using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
@@ -8,6 +9,10 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
+using kOS.Suffixed.PartModuleField;
+using kOS.Module;
+using kOS.Safe.Compilation.KS;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
@@ -126,7 +131,7 @@ namespace kOS.Function
             }
             else if (!shared.Vessel.isActiveVessel)
             {
-                throw new KOSCommandInvalidHere("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+                throw new KOSCommandInvalidHereException(LineCol.Unknown(), "STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
             }
         }
     }
@@ -218,6 +223,7 @@ namespace kOS.Function
             shared.Cpu.PushStack(0); // dummy return that all functions have.
 
             // Put the args for the program being called back on in the same order they were in before (so read the list backward):
+            shared.Cpu.PushStack(new KOSArgMarkerType());
             for (int i = argc - 1; i >= 0; --i)
                 shared.Cpu.PushStack(progArgs[i]);
         }
@@ -361,6 +367,7 @@ namespace kOS.Function
                 AssertArgBottomAndConsume(shared); // not sure if this matters when rebooting anwyway.
                 shared.Processor.SetMode(ProcessorModes.OFF);
                 shared.Processor.SetMode(ProcessorModes.READY);
+                ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
             }
         }
     }
@@ -372,6 +379,7 @@ namespace kOS.Function
         {
             AssertArgBottomAndConsume(shared); // not sure if this matters when shutting down anwyway.
             if (shared.Processor != null) shared.Processor.SetMode(ProcessorModes.OFF);
+            ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
         }
     }
 
@@ -404,6 +412,86 @@ namespace kOS.Function
             }
             AssertArgBottomAndConsume(shared);
             TimeWarp.fetch.WarpTo(ut);
+        }
+    }
+        
+    [Function("processor")]
+    public class FunctionProcessor : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            object processorTagOrVolume = PopValueAssert(shared, true);
+            AssertArgBottomAndConsume(shared);
+
+            kOSProcessor processor;
+
+            if (processorTagOrVolume is Volume) {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
+            } else if (processorTagOrVolume is string) {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as string);
+            } else {
+                throw new KOSInvalidArgumentException("processor", "processorId", "String or Volume expected");
+            }
+
+            if (processor == null)
+            {
+                throw new KOSInvalidArgumentException("processor", "processorId", "Processor with that volume or name was not found");
+            }
+
+            ReturnValue = PartModuleFieldsFactory.Construct(processor, shared);
+        }
+    }
+
+    [Function("pidloop")]
+    public class PIDLoopConstructor : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int args = CountRemainingArgs(shared);
+            double kd;
+            double ki;
+            double kp;
+            double maxoutput;
+            double minoutput;
+            switch (args)
+            {
+                case 0:
+                    this.ReturnValue = new PIDLoop();
+                    break;
+                case 1:
+                    kp = GetDouble(PopValueAssert(shared));
+                    this.ReturnValue = new PIDLoop(kp, 0, 0);
+                    break;
+                case 3:
+                    kd = GetDouble(PopValueAssert(shared));
+                    ki = GetDouble(PopValueAssert(shared));
+                    kp = GetDouble(PopValueAssert(shared));
+                    this.ReturnValue = new PIDLoop(kp, ki, kd);
+                    break;
+                case 5:
+                    maxoutput = GetDouble(PopValueAssert(shared));
+                    minoutput = GetDouble(PopValueAssert(shared));
+                    kd = GetDouble(PopValueAssert(shared));
+                    ki = GetDouble(PopValueAssert(shared));
+                    kp = GetDouble(PopValueAssert(shared));
+                    this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput);
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
+            }
+            AssertArgBottomAndConsume(shared);
+        }
+    }
+    
+    [Function("makebuiltindelegate")]
+    public class MakeBuiltinDelegate : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+           string name = PopValueAssert(shared).ToString();
+           AssertArgBottomAndConsume(shared);
+           
+           ReturnValue = new BuiltinDelegate(shared.Cpu, name);
         }
     }
 }
