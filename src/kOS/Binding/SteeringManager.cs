@@ -570,6 +570,7 @@ namespace kOS.Binding
                 rcsModules.Clear();
                 engineModules.Clear();
                 gimbalModules.Clear();
+                clearEngineRCSVectors();
                 foreach (Part part in shared.Vessel.Parts)
                 {
                     int engineCount = 0;
@@ -1264,7 +1265,7 @@ namespace kOS.Binding
                 vEngines.Clear();
             }
 
-            if (ShowRCSVectors && enabled)
+            if (ShowRCSVectors && enabled && Vessel.ActionGroups[KSPActionGroup.RCS])
             {
                 foreach (var force in rcsVectors)
                 {
@@ -1297,6 +1298,20 @@ namespace kOS.Binding
                 }
                 vRcs.Clear();
             }
+        }
+
+        private void clearEngineRCSVectors()
+        {
+            foreach (string key in vEngines.Keys)
+            {
+                vEngines[key].SetShow(false);
+            }
+            vEngines.Clear();
+            foreach (string key in vRcs.Keys)
+            {
+                vRcs[key].SetShow(false);
+            }
+            vRcs.Clear();
         }
 
         public void PrintDebug()
