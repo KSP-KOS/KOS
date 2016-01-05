@@ -20,8 +20,8 @@ Access structure IRAddon via `ADDONS:IR`.
      Suffix                                Type                      Description
     ===================================== ========================= =============
      :attr:`AVAILABLE`                     bool(readonly)            Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.
-     :attr:`GROUPS`                        List (readonly)           Lists all Servo Groups for current focused vessel
-     :attr:`ALLSERVOS`                     List (readonly)           Lists all Servos for current focused vessel
+     :attr:`GROUPS`                        List (readonly)           Lists all Servo Groups for the Vessel on which CPU runs this command (see details below).
+     :attr:`ALLSERVOS`                     List (readonly)           Lists all Servos for the Vessel on which CPU runs this command (see details below).
     ===================================== ========================= =============
 
 
@@ -44,7 +44,8 @@ Access structure IRAddon via `ADDONS:IR`.
     :type: List of :struct:`IRControlGroup` objects
     :access: Get only
 
-    Lists all Servo Groups for current focused vessel. Example of use::
+    Lists all Servo Groups for the Vessel on which the script is being executed. On IR versions prior to 0.21.5 will always return servo groups for current focused vessel.
+    Example of use::
 
         for g in ADDONS:IR:GROUPS
         {
@@ -57,7 +58,8 @@ Access structure IRAddon via `ADDONS:IR`.
     :type: List of :struct:`IRServo` objects
     :access: Get only
 
-    Lists all Servos for current focused vessel. Example of use::
+    Lists all Servos for the Vessel on which the script is being executed. On IR versions prior to 0.21.5 will always return servos for current focused vessel.
+    Example of use::
 
         for s in ADDONS:IR:ALLSERVOS
         {
@@ -76,6 +78,7 @@ Access structure IRAddon via `ADDONS:IR`.
      :attr:`FORWARDKEY`                    string                    Key assigned to forward movement
      :attr:`REVERSEKEY`                    string                    Key assigned to reverse movement
      :attr:`SERVOS`                        List (readonly)           List of servos in the group
+     :attr:`VESSEL`                        :struct:`Vessel`          Vessel object, owning this servo group. Readonly, requires IR version 0.21.5 or later.
 
      :meth:`MOVERIGHT()`                   void                      Commands servos in the group to move in positive direction
      :meth:`MOVELEFT()`                    void                      Commands servos in the group to move in negative direction
@@ -135,6 +138,13 @@ Access structure IRAddon via `ADDONS:IR`.
                 print "    " + s:NAME + ", position: " + s:POSITION.
             }
         }
+
+.. attribute:: IRControlGroup:VESSEL
+
+    :type: :struct:`Vessel`
+    :access: Get only
+
+    If IR 0.21.5 or later is installed will return a Vessel that owns this ServoGroup, otherwise will return current focused Vessel
 
 .. method:: IRControlGroup:MOVERIGHT()
 

@@ -37,6 +37,8 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("MOVENEXTPRESET", new NoArgsSuffix(MoveNextPreset));
             AddSuffix("MOVEPREVPRESET", new NoArgsSuffix(MovePrevPreset));
             AddSuffix("STOP", new NoArgsSuffix(Stop));
+
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(GetVessel));
         }
 
         public ListValue GetServos()
@@ -52,6 +54,18 @@ namespace kOS.AddOns.InfernalRobotics
             }
             
             return ListValue.CreateList(list);
+        }
+
+        public VesselTarget GetVessel()
+        {
+            if (IRWrapper.APIReady) 
+            {
+                //IF IR version is 0.21.4 or below IR API may return null, but it also means that IR API only returns groups for ActiveVessel
+                //so returning the ActiveVessel should work
+                return cg.Vessel != null ? new VesselTarget (cg.Vessel, shared) : new VesselTarget(FlightGlobals.ActiveVessel, shared);
+            } 
+            else
+                return new VesselTarget(shared.Vessel, shared); //user should not be able to get here anyway, but to avoid null will return shared.Vessel
         }
 
         public void MoveRight()

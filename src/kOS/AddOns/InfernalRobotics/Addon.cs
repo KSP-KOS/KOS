@@ -36,7 +36,8 @@ namespace kOS.AddOns.InfernalRobotics
 
             foreach (IRWrapper.IControlGroup cg in controlGroups)
             {
-                list.Add(new IRControlGroupWrapper(cg, shared));
+                if (cg.Vessel == null || cg.Vessel == shared.Vessel)
+                    list.Add(new IRControlGroupWrapper(cg, shared));
             }
 
 
@@ -62,7 +63,7 @@ namespace kOS.AddOns.InfernalRobotics
 
             foreach (IRWrapper.IControlGroup cg in controlGroups)
             {
-                if (cg.Servos == null)
+                if (cg.Servos == null || (cg.Vessel!=null && cg.Vessel != shared.Vessel))
                     continue;
                 
                 foreach (IRWrapper.IServo s in cg.Servos)
