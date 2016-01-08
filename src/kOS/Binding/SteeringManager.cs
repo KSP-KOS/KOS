@@ -355,6 +355,7 @@ namespace kOS.Binding
             AddSuffix("CONTROLTORQUE", new Suffix<Vector>(() => new Vector(controlTorque)));
             AddSuffix("MEASUREDTORQUE", new Suffix<Vector>(() => new Vector(measuredTorque)));
             AddSuffix("RAWTORQUE", new Suffix<Vector>(() => new Vector(rawTorque)));
+            AddSuffix("ADJUSTTORQUE", new Suffix<Vector>(() => new Vector(adjustTorque)));
             AddSuffix("TARGETTORQUE", new Suffix<Vector>(() => new Vector(tgtPitchTorque, tgtRollTorque, tgtYawTorque)));
             AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
             AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
