@@ -17,11 +17,25 @@ namespace kOS.Suffixed.PartModuleField
         private void InitializeSuffixes()
         {
             AddSuffix("MODE", new NoArgsSuffix<string>(() => processor.ProcessorMode.ToString(), "This processor's mode"));
-            AddSuffix("ACTIVATE", new NoArgsSuffix(() => processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.STARVED, "Activate this processor"));
-            AddSuffix("DEACTIVATE", new NoArgsSuffix(() => processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.OFF, "Deactivate this processor"));
+            AddSuffix("ACTIVATE", new NoArgsSuffix(Activate, "Activate this processor"));
+            AddSuffix("DEACTIVATE", new NoArgsSuffix(Deactivate, "Deactivate this processor"));
             AddSuffix("VOLUME", new NoArgsSuffix<Volume>(() => processor.HardDisk, "This processor's hard disk"));
             AddSuffix("TAG", new NoArgsSuffix<string>(() => processor.Tag, "This processor's tag"));
             AddSuffix("BOOTFILENAME", new SetSuffix<string>(GetBootFilename, SetBootFilename, "The name of the processor's boot file."));
+        }
+
+        private void Activate()
+        {
+            ThrowIfNotCPUVessel();
+
+            processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.STARVED;
+        }
+
+        private void Deactivate()
+        {
+            ThrowIfNotCPUVessel();
+
+            processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.OFF;
         }
 
         private string GetBootFilename()
@@ -31,6 +45,8 @@ namespace kOS.Suffixed.PartModuleField
 
         private void SetBootFilename(string name)
         {
+            ThrowIfNotCPUVessel();
+
             processor.BootFilename = name;
         }
     }
