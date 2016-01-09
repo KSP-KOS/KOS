@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Serialization
 {
@@ -26,11 +27,11 @@ namespace kOS.Safe.Serialization
             instance = new TerminalFormatter();
         }
 
-        public string Write(IDictionary<object, object> value)
+        public string Write(Dump value)
         {
             string header = "";
 
-            var withHeader = value as DictionaryWithHeader;
+            var withHeader = value as DumpWithHeader;
             if (withHeader != null)
             {
                 header = withHeader.Header + Environment.NewLine;
@@ -39,22 +40,22 @@ namespace kOS.Safe.Serialization
             return header + WriteIndented(value);
         }
 
-        public string WriteIndented(IDictionary<object, object> collection, int level = 0)
+        public string WriteIndented(Dump dump, int level = 0)
         {
             var result = new List<string>();
 
-            foreach (KeyValuePair<object, object> entry in collection)
+            foreach (KeyValuePair<object, object> entry in dump)
             {
                 var line = string.Empty.PadLeft(level * INDENT_SPACES);
                 var value = entry.Value;
                 string valueString;
 
-                var objects = value as IDictionary<object, object>;
+                var objects = value as Dump;
                 if (objects != null)
                 {
                     string header = Environment.NewLine;
 
-                    var withHeader = value as DictionaryWithHeader;
+                    var withHeader = value as DumpWithHeader;
                     if (withHeader != null)
                     {
                         header = withHeader.Header + Environment.NewLine;
@@ -66,13 +67,22 @@ namespace kOS.Safe.Serialization
                     valueString = value.ToString();
                 }
 
-                if (entry.Key is string)
+                if (entry.Key is string || entry.Key is StringValue)
                 {
-                    line += string.Format("[\"{0}\"]= {1}", entry.Key, valueString);
+                    line += string.Format("[\"{0}\"] = ", entry.Key);
                 } else
                 {
-                    line += string.Format("[{0}]= {1}", entry.Key, valueString);
+                    line += string.Format("[{0}] = ", entry.Key.ToString());
                 }
+
+                if (entry.Value is string)
+                {
+                    line += string.Format("\"{0}\"", valueString);
+                } else
+                {
+                    line += string.Format("{0}", valueString);
+                }
+
                 result.Add(line);
             }
 

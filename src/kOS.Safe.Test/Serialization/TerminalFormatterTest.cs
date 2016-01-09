@@ -22,14 +22,15 @@ namespace kOS.Safe.Test.Serialization
             var nested = new Lexicon();
 
             lex["key1"] = "value1";
-            lex["key2"] = 1;
+            lex["2"] = 10;
+            lex[2] = 11; // make sure int 2 is different than string "2"
             lex["key3"] = nested;
 
             nested["nested1"] = "nested1value";
             nested["nested2"] = "nested2value";
 
-            var lines = new string[] { "LEXICON of 3 items:", "[\"key1\"]= value1", "[\"key2\"]= 1", "[\"key3\"]= LEXICON of 2 items:",
-                "  [\"nested1\"]= nested1value", "  [\"nested2\"]= nested2value"};
+            var lines = new string[] { "LEXICON of 4 items:", "[\"key1\"] = \"value1\"", "[\"2\"] = 10", "[2] = 11", "[\"key3\"] = LEXICON of 2 items:",
+                "  [\"nested1\"] = \"nested1value\"", "  [\"nested2\"] = \"nested2value\""};
 
             Assert.AreEqual(String.Join(Environment.NewLine, lines), Serialize(lex));
         }

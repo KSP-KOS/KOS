@@ -5,6 +5,7 @@ using kOS.Utilities;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
 using System;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
@@ -254,9 +255,9 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public System.Collections.Generic.IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            var dictionary = new DictionaryWithHeader
+            var dictionary = new DumpWithHeader
             {
                 {DumpLat, lat},
                 {DumpLng, lng},
@@ -266,7 +267,7 @@ namespace kOS.Suffixed
             return dictionary;
         }
 
-        public void LoadDump (System.Collections.Generic.IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             Body = (dump[DumpBody] as BodyTarget).Body;
             lat = Convert.ToDouble(dump[DumpLat]);

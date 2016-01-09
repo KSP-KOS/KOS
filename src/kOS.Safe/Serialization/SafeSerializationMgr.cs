@@ -19,33 +19,35 @@ namespace kOS.Safe.Serialization
             return serialized is ISerializableValue;
         }
 
-        public IDictionary<object, object> Dump(IDumper dumper, bool includeType = true)
+        public Dump Dump(IDumper dumper, bool includeType = true)
         {
-            var dumped = dumper.Dump();
+            var dump = dumper.Dump();
 
-            List<object> keys = new List<object>(dumped.Keys);
+            List<object> keys = new List<object>(dump.Keys);
 
             foreach (object key in keys)
             {
-                var dump = dumped[key] as IDumper;
-                if (dump != null)
+                var value = dump[key];
+                var valueDumper = value as IDumper;
+
+                if (valueDumper != null)
                 {
-                    dumped[key] = Dump(dump, includeType);
-                } else if (IsEncapsulatedValue(dumped[key]) || IsValue(dumped[key]))
+                    dump[key] = Dump(valueDumper, includeType);
+                } else if (IsEncapsulatedValue(value) || IsValue(value))
                 {
-                    dumped[key] = Structure.ToPrimitive(dumped[key]);
+                    dump[key] = Structure.ToPrimitive(value);
                 } else
                 {
-                    throw new KOSException("This type can't be serialized: " + dumped[key].GetType().Name);
+                    dump[key] = value.ToString();
                 }
             }
 
             if (includeType)
             {
-                dumped.Add(TYPE_KEY, dumper.GetType().Namespace + "." + dumper.GetType().Name);
+                dump.Add(TYPE_KEY, dumper.GetType().Namespace + "." + dumper.GetType().Name);
             }
 
-            return dumped;
+            return dump;
         }
 
         public string Serialize(IDumper serialized, IFormatWriter formatter, bool includeType = true)
@@ -53,9 +55,9 @@ namespace kOS.Safe.Serialization
             return formatter.Write(Dump(serialized, includeType));
         }
 
-        public IDumper CreateFromDump(IDictionary<object, object> dump)
+        public IDumper CreateFromDump(Dump dump)
         {
-            var data = new Dictionary<object, object>();
+            var data = new Dump();
             foreach (KeyValuePair<object, object> entry in dump)
             {
                 if (entry.Key.Equals(TYPE_KEY))
@@ -63,7 +65,7 @@ namespace kOS.Safe.Serialization
                     continue;
                 }
 
-                var objects = entry.Value as IDictionary<object, object>;
+                var objects = entry.Value as Dump;
                 if (objects != null)
                 {
                     data[entry.Key] = CreateFromDump(objects);
@@ -83,7 +85,7 @@ namespace kOS.Safe.Serialization
             return CreateInstance(typeFullName, data);
         }
 
-        public virtual IDumper CreateInstance(string typeFullName, IDictionary<object, object> data)
+        public virtual IDumper CreateInstance(string typeFullName, Dump data)
         {
             var deserializedType = Type.GetType(typeFullName);
 
@@ -101,7 +103,7 @@ namespace kOS.Safe.Serialization
 
         public object Deserialize(string input, IFormatReader formatter)
         {
-            IDictionary<object, object> dump = formatter.Read(input);
+            Dump dump = formatter.Read(input);
 
             return dump == null ? null : CreateFromDump(dump);
         }

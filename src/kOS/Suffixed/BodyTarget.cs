@@ -6,6 +6,7 @@ using kOS.Serialization;
 using System.Collections.Generic;
 using kOS.Safe.Serialization;
 using kOS.Safe.Exceptions;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
@@ -217,9 +218,9 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            var dump = new DictionaryWithHeader
+            var dump = new DumpWithHeader
             {
                 Header = string.Format("BODY '{0}'", Body.bodyName)
             };
@@ -229,7 +230,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             string name = dump[DumpName] as string;
 

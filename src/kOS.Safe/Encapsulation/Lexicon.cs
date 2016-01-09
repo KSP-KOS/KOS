@@ -4,6 +4,7 @@ using kOS.Safe.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -229,17 +230,18 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public IDictionary<object, object> Dump()
+
+        public Dump Dump()
         {
-            var result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary)
+            var dump = new DumpWithHeader((Dictionary<object, object>)internalDictionary)
             {
                 Header = "LEXICON of " + internalDictionary.Count + " items:"
             };
 
-            return result;
+            return dump;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             internalDictionary.Clear();
 

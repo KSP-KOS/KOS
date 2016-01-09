@@ -41,9 +41,9 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            var result = new DictionaryWithHeader
+            var result = new DumpWithHeader
             {
                 Header = label + " of " + Collection.Count() + " items:"
             };
@@ -52,14 +52,14 @@ namespace kOS.Safe.Encapsulation
             int i = 0;
             foreach (T item in this)
             {
-                result.Add(i, item);
+                result.Add(i.ToString(), item);
                 i++;
             }
 
             return result;
         }
 
-        public abstract void LoadDump(IDictionary<object, object> dump);
+        public abstract void LoadDump(Dump dump);
 
         private void InitializeEnumerableSuffixes()
         {

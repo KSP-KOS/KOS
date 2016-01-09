@@ -13,6 +13,7 @@ using System.Linq;
 using UnityEngine;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
@@ -597,9 +598,9 @@ namespace kOS.Suffixed
             return !Equals(left, right);
         }
 
-        public IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
+            DumpWithHeader dump = new DumpWithHeader();
 
             dump.Header = "VESSEL '" + Vessel.vesselName + "'";
 
@@ -608,7 +609,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             string guid = dump[DumpGuid] as string;
 
@@ -625,7 +626,6 @@ namespace kOS.Suffixed
             }
 
             Vessel = vessel;
-
         }
     }
 }
