@@ -9,11 +9,9 @@ namespace kOS.Safe.Encapsulation
     public abstract class EnumerableValue<T, TC> : Structure, IEnumerable<T>, IDumper where TC : IEnumerable<T>
     {
         protected TC Collection { get; private set; }
-        private readonly string label;
 
-        protected EnumerableValue(string label, TC collection)
+        protected EnumerableValue(TC collection)
         {
-            this.label = label;
             Collection = collection;
 
             InitializeEnumerableSuffixes();
@@ -41,23 +39,7 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public Dump Dump()
-        {
-            var result = new DumpWithHeader
-            {
-                Header = label + " of " + Collection.Count() + " items:"
-            };
-
-
-            int i = 0;
-            foreach (T item in this)
-            {
-                result.Add(i.ToString(), item);
-                i++;
-            }
-
-            return result;
-        }
+        public abstract Dump Dump();
 
         public abstract void LoadDump(Dump dump);
 

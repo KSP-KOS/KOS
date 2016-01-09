@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
+using System.Linq;
 
 namespace kOS.Safe.Serialization
 {
@@ -19,6 +20,21 @@ namespace kOS.Safe.Serialization
             return serialized is ISerializableValue;
         }
 
+        private object DumpValue(object value, bool includeType)
+        {
+            var valueDumper = value as IDumper;
+
+            if (valueDumper != null) {
+                return Dump(valueDumper, includeType);
+            } else if (value is List<object>) {
+                return (value as List<object>).Select((v) => DumpValue(v, includeType)).ToList();
+            } else if (IsEncapsulatedValue(value) || IsValue(value)) {
+                return Structure.ToPrimitive(value);
+            } else {
+                return value.ToString();
+            }
+        }
+
         public Dump Dump(IDumper dumper, bool includeType = true)
         {
             var dump = dumper.Dump();
@@ -27,19 +43,7 @@ namespace kOS.Safe.Serialization
 
             foreach (object key in keys)
             {
-                var value = dump[key];
-                var valueDumper = value as IDumper;
-
-                if (valueDumper != null)
-                {
-                    dump[key] = Dump(valueDumper, includeType);
-                } else if (IsEncapsulatedValue(value) || IsValue(value))
-                {
-                    dump[key] = Structure.ToPrimitive(value);
-                } else
-                {
-                    dump[key] = value.ToString();
-                }
+                dump[key] = DumpValue(dump[key], includeType);
             }
 
             if (includeType)
@@ -55,6 +59,20 @@ namespace kOS.Safe.Serialization
             return formatter.Write(Dump(serialized, includeType));
         }
 
+        public object CreateValue(object value)
+        {
+            var objects = value as Dump;
+            if (objects != null)
+            {
+                return CreateFromDump(objects);
+            } else if (value is List<object>)
+            {
+                return (value as List<object>).Select(item => CreateValue(item)).ToList();
+            }
+
+            return value;
+        }
+
         public IDumper CreateFromDump(Dump dump)
         {
             var data = new Dump();
@@ -65,14 +83,7 @@ namespace kOS.Safe.Serialization
                     continue;
                 }
 
-                var objects = entry.Value as Dump;
-                if (objects != null)
-                {
-                    data[entry.Key] = CreateFromDump(objects);
-                } else
-                {
-                    data[entry.Key] = entry.Value;
-                }
+                data [entry.Key] = CreateValue (entry.Value);
             }
 
             string typeFullName = dump[TYPE_KEY] as string;

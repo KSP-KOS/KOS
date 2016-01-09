@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using System.Linq;
 
 namespace kOS.Safe.Serialization
 {
@@ -42,6 +43,32 @@ namespace kOS.Safe.Serialization
 
         public string WriteIndented(Dump dump, int level = 0)
         {
+            IDictionary<object, object> printedDump;
+
+            if (dump.Count == 1 && dump.ContainsKey(Dump.Items)) {
+                // special handling for enumerables
+                List<object> list = dump[Dump.Items] as List<object>;
+                printedDump = list.Select((x, i) => new { Item = x, Index = (object)i })
+                    .ToDictionary(x => x.Index, x => x.Item);
+            } else if (dump.Count == 1 && dump.ContainsKey(Dump.Entries)) {
+                // special handling for lexicons
+                List<object> list = dump[Dump.Entries] as List<object>;
+
+                printedDump = new Dictionary<object, object>();
+
+                for (int i = 0; 2 * i < list.Count; i++)
+                {
+                    printedDump[list[2 * i]] = list[2 * i + 1];
+                }
+            } else {
+                printedDump = dump;
+            }
+
+            return WriteIndentedDump(printedDump, level);
+        }
+
+        public string WriteIndentedDump(IDictionary<object, object> dump, int level)
+        {
             var result = new List<string>();
 
             foreach (KeyValuePair<object, object> entry in dump)
@@ -70,6 +97,18 @@ namespace kOS.Safe.Serialization
                 if (entry.Key is string || entry.Key is StringValue)
                 {
                     line += string.Format("[\"{0}\"] = ", entry.Key);
+                } else if (entry.Key is Dump)
+                {
+                    string header = Environment.NewLine;
+
+                    var withHeader = entry.Key as DumpWithHeader;
+                    if (withHeader != null)
+                    {
+                        header = withHeader.Header + Environment.NewLine;
+                    }
+
+                    string keyString = header + WriteIndented(entry.Key as Dump, level + 1);
+                    line += string.Format("[{0}] = ", keyString);
                 } else
                 {
                     line += string.Format("[{0}] = ", entry.Key.ToString());

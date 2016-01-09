@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -10,7 +11,7 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public QueueValue(IEnumerable<T> queueValue) : base("QUEUE", new Queue<T>(queueValue))
+        public QueueValue(IEnumerable<T> queueValue) : base(new Queue<T>(queueValue))
         {
             QueueInitializeSuffixes();
         }
@@ -29,12 +30,26 @@ namespace kOS.Safe.Encapsulation
         {
             Collection.Enqueue(val);
         }
-            
+
+        public override Dump Dump()
+        {
+            var result = new DumpWithHeader
+            {
+                Header = "QUEUE of " + Collection.Count() + " items:"
+            };
+
+            result.Add(kOS.Safe.Dump.Items, Collection.ToList());
+
+            return result;
+        }
+
         public override void LoadDump(Dump dump)
         {
             Collection.Clear();
 
-            foreach (object item in dump.Values)
+            List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
+
+            foreach (object item in values)
             {
                 Collection.Enqueue((T)Structure.FromPrimitive(item));
             }

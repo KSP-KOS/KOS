@@ -230,24 +230,35 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-
         public Dump Dump()
         {
-            var dump = new DumpWithHeader((Dictionary<object, object>)internalDictionary)
+            var result = new DumpWithHeader
             {
-                Header = "LEXICON of " + internalDictionary.Count + " items:"
+                Header = "LEXICON of " + internalDictionary.Count() + " items:"
             };
 
-            return dump;
+            List<object> list = new List<object>();
+
+            foreach (KeyValuePair<object, object> entry in internalDictionary)
+            {
+                list.Add(entry.Key);
+                list.Add(entry.Value);
+            }
+
+            result.Add(kOS.Safe.Dump.Entries, list);
+
+            return result;
         }
 
         public void LoadDump(Dump dump)
         {
             internalDictionary.Clear();
 
-            foreach (KeyValuePair<object, object> entry in dump)
+            List<object> values = (List<object>)dump[kOS.Safe.Dump.Entries];
+
+            for (int i = 0; 2 * i < values.Count; i++)
             {
-                internalDictionary.Add(Structure.FromPrimitive(entry.Key), Structure.FromPrimitive(entry.Value));
+                internalDictionary.Add(Structure.FromPrimitive(values[2 * i]), Structure.FromPrimitive(values[2 * i + 1]));
             }
         }
     }

@@ -34,55 +34,63 @@ namespace kOS.Safe.Serialization
             instance = new JsonFormatter();
         }
 
-        private object MakeStringDictionaries(object value)
+        private object WriteJsonObjects(object value)
         {
             var objects = value as IDictionary<object, object>;
-            if (objects == null) return value;
+            if (objects != null) {
+                var stringKeys = new JsonObject();
 
-            var stringKeys = new Dictionary<string, object>();
+                foreach (var entry in objects) {
+                    stringKeys[entry.Key.ToString()] = WriteJsonObjects(entry.Value);
+                }
 
-            foreach (var entry in objects)
+                return stringKeys;
+            } else if (value is List<object>)
             {
-                stringKeys[entry.Key.ToString()] = MakeStringDictionaries(entry.Value);
+                return (value as List<object>).Select(item => WriteJsonObjects(item)).ToList();
             }
 
-            return stringKeys;
+            return value;
         }
 
         public string Write(Dump value)
         {
-            return JsonHelper.FormatJson(SimpleJson.SerializeObject(MakeStringDictionaries(value)));
+            return JsonHelper.FormatJson(SimpleJson.SerializeObject(WriteJsonObjects(value)));
         }
 
-        private Dump UnwrapDictionary(IDictionary<string, object> dictionary)
+        private Dump ReadJsonObject(JsonObject dictionary)
         {
             var result = new Dump();
 
             foreach (var entry in dictionary)
             {
-                result[entry.Key] = Unwrap(entry.Value);
+                result[entry.Key] = ReadValue(entry.Value);
             }
 
             return result;
         }
 
-        private object Unwrap(object read)
+        private object ReadValue(object read)
         {
-            var objects = read as IDictionary<string, object>;
-            if (objects == null)
+            var objects = read as JsonObject;
+            if (objects != null)
             {
-                return read;
+                return ReadJsonObject(objects);
+            } if (read is List<object>) {
+                return (read as List<object>).Select(item => ReadValue(item)).ToList();
             } else
             {
-                return UnwrapDictionary(objects);
+                return read;
             }
         }
 
         public Dump Read(string input)
         {
-            return UnwrapDictionary(SimpleJson.DeserializeObject<Dictionary<string, object>>(input));
+            return ReadJsonObject(SimpleJson.DeserializeObject<JsonObject>(input));
         }
 
+
+        // This handles JSON indentation
         class JsonHelper
         {
             private const string INDENT_STRING = "    ";

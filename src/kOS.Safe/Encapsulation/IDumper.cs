@@ -5,7 +5,7 @@ namespace kOS.Safe.Encapsulation
     /// <summary>
     /// Classes implementing this interface can dump their data to a dictionary.
     ///
-    /// Dumps should only contain primitives, strings and other Dumps.
+    /// Dumps should only contain primitives, strings, lists and other Dumps.
     /// SerializationMgr, for convenience, will handle any encapsulation types that implement
     /// ISerializableValue when serializing.
     ///

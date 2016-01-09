@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -10,7 +11,7 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public StackValue(IEnumerable<T> stackValue) : base("STACK", new Stack<T>(stackValue))
+        public StackValue(IEnumerable<T> stackValue) : base(new Stack<T>(stackValue))
         {
             StackInitializeSuffixes();
         }
@@ -35,11 +36,27 @@ namespace kOS.Safe.Encapsulation
             Collection.Push(val);
         }
 
+        public override Dump Dump()
+        {
+            var result = new DumpWithHeader
+            {
+                Header = "STACK of " + Collection.Count() + " items:"
+            };
+
+            result.Add(kOS.Safe.Dump.Items, Collection.ToList());
+
+            return result;
+        }
+
         public override void LoadDump(Dump dump)
         {
             Collection.Clear();
 
-            foreach (object item in dump.Values)
+            List<object> values = ((List<object>)dump[kOS.Safe.Dump.Items]);
+
+            values.Reverse();
+
+            foreach (object item in values)
             {
                 Collection.Push((T)Structure.FromPrimitive(item));
             }
