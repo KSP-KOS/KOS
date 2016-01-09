@@ -23,7 +23,7 @@ namespace kOS.Safe.Encapsulation
                     return false;
                 }
 
-                if (x is string && y is string)
+                if ((x is string || x is StringValue) && (y is string || y is StringValue))
                 {
                     var compare = string.Compare(x.ToString(), y.ToString(), StringComparison.InvariantCultureIgnoreCase);
                     return compare == 0;
@@ -34,7 +34,7 @@ namespace kOS.Safe.Encapsulation
 
             public int GetHashCode(TI obj)
             {
-                if (obj is string)
+                if (obj is string || obj is StringValue)
                 {
                     return obj.ToString().ToLower().GetHashCode();
                 }

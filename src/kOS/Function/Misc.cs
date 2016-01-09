@@ -427,8 +427,8 @@ namespace kOS.Function
 
             if (processorTagOrVolume is Volume) {
                 processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
-            } else if (processorTagOrVolume is string) {
-                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as string);
+            } else if (processorTagOrVolume is string || processorTagOrVolume is StringValue) {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume.ToString());
             } else {
                 throw new KOSInvalidArgumentException("processor", "processorId", "String or Volume expected");
             }
