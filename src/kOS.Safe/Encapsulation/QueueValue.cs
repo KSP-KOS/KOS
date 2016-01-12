@@ -30,11 +30,11 @@ namespace kOS.Safe.Encapsulation
             Collection.Enqueue(val);
         }
             
-        public override void LoadDump(IDictionary<object, object> dump)
+        public override void LoadDump(IDictionary<Structure, Structure> dump)
         {
             Collection.Clear();
 
-            foreach (object item in dump.Values)
+            foreach (Structure item in dump.Values)
             {
                 Collection.Enqueue((T)Structure.FromPrimitive(item));
             }

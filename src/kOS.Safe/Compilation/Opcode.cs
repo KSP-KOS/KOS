@@ -426,6 +426,16 @@ namespace kOS.Safe.Compilation
                 throw new KOSArgumentMismatchException("Called with not enough arguments.");
             return returnValue;
         }
+
+        /// <summary>
+        /// A utility function that will do the same as a cpu.PopValueEncapsulated, but with an additional check to ensure
+        /// the value atop the stack isn't the arg bottom marker.
+        /// </summary>
+        /// <returns>object popped if it all worked fine</returns>
+        protected Structure PopValueAssertEncapsulated(ICpu cpu, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive(PopValueAssert(cpu, barewordOkay));
+        }
     }
 
     public abstract class BinaryOpcode : Opcode
@@ -479,7 +489,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = PopValueAssert(cpu);
+            Structure value = PopValueAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -531,7 +541,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = PopValueAssert(cpu);
+            Structure value = PopValueAssertEncapsulation(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -566,7 +576,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = PopValueAssert(cpu);
+            Structure value = PopValueAssertEncapsulation(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -595,7 +605,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = PopValueAssert(cpu);
+            Structure value = PopValueAssertEncapsulation(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -631,7 +641,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            object popValue = Structure.FromPrimitive(cpu.PopValue());
+            Structure popValue = cpu.PopValueEncapsulated();
             // We convert the popValue to a structure to ensure that we can get suffixes on values
             // stored in primitive form as a fall back.  All variables should be stored as a structure
             // now, other than system variables like pointers and labels.  This technically means that
@@ -695,9 +705,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            string suffixName = cpu.PopStack().ToString().ToUpper();
-            object popValue = cpu.PopValue();
+            Structure value = cpu.PopValueEncapsulated();             // new value to set it to
+            string suffixName = cpu.PopStack().ToString().ToUpper();  // name of suffix being set
+            Structure popValue = cpu.PopValueEncapsulated();          // object to which the suffix is attached.
+
             // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
             // the referenced variable wouldn't be updated.  The primitives themselves are treated as value
             // types instead of reference types.  This is also why I removed the string unboxing
@@ -727,29 +738,29 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object index = cpu.PopValue();
-            object list = cpu.PopValue();
+            Structure index = cpu.PopValueEncapsulated();
+            Structure collection = cpu.PopValueEncapsulated();
 
-            object value;
+            Structure result;
 
-            var indexable = list as IIndexable;
+            var indexable = collection as IIndexable;
             if (indexable != null)
             {
-                value = indexable.GetIndex(index);
+                result = indexable.GetIndex(index);
             }
             // Box strings if necessary to allow them to be indexed
-            else if (list is string)
+            else if (collection is string)
             {
-                value = new StringValue((string) list).GetIndex(index);
+                result = new StringValue((string) collection).GetIndex(index);
             }
             else
             {
-                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+                throw new Exception(string.Format("Can't iterate on an object of type {0}", collection.GetType()));
             }
 
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            if (!(collection is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", collection.GetType()));
 
-            cpu.PushStack(value);
+            cpu.PushStack(result);
         }
     }
 
@@ -761,9 +772,9 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            object index = cpu.PopValue();
-            object list = cpu.PopValue();
+            Structure value = cpu.PopValueEncapsulated();
+            Structure index = cpu.PopValueEncapsulated();
+            Structure list = cpu.PopValueEncapsulated();
 
             if (index == null || value == null)
             {
@@ -779,6 +790,12 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    
+    
+<----  NOTICE: THIS IS AS FAR AS I GOT TODAY, @erendrake
+       THIS IS DELIBERATELY NOT A COMMENT, so the compiler will complain here and draw your attention to this point.
+    
+    
     public class OpcodeEOF : Opcode
     {
         protected override string Name { get { return "EOF"; } }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class Lexicon : Structure, IDictionary<object, object>, IIndexable, IDumper
+    public class Lexicon : Structure, IDictionary<Structure, Structure>, IIndexable, IDumper
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
@@ -42,17 +42,17 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        private IDictionary<object, object> internalDictionary;
+        private IDictionary<Structure, Structure> internalDictionary;
         private bool caseSensitive;
 
         public Lexicon()
         {
-            internalDictionary = new Dictionary<object, object>(new LexiconComparer<object>());
+            internalDictionary = new Dictionary<Structure, Structure>(new LexiconComparer<Structure>());
             caseSensitive = false;
             InitalizeSuffixes();
         }
 
-        private Lexicon(IEnumerable<KeyValuePair<object, object>> lexicon)
+        private Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon)
             : this()
         {
             foreach (var u in lexicon)
@@ -85,31 +85,31 @@ namespace kOS.Safe.Encapsulation
             caseSensitive = newCase;
 
             internalDictionary = newCase ?
-                new Dictionary<object, object>() :
-            new Dictionary<object, object>(new LexiconComparer<object>());
+                new Dictionary<Structure, Structure>() :
+            new Dictionary<Structure, Structure>(new LexiconComparer<Structure>());
         }
 
-        private bool HasValue(object value)
+        private bool HasValue(Structure value)
         {
             return internalDictionary.Values.Contains(value);
         }
 
-        private bool HasKey(object key)
+        private bool HasKey(Structure key)
         {
             return internalDictionary.ContainsKey(key);
         }
 
-        public ListValue<object> GetValues()
+        public ListValue<Structure> GetValues()
         {
             return ListValue.CreateList(Values);
         }
 
-        public ListValue<object> GetKeys()
+        public ListValue<Structure> GetKeys()
         {
             return ListValue.CreateList(Keys);
         }
 
-        public IEnumerator<KeyValuePair<object, object>> GetEnumerator()
+        public IEnumerator<KeyValuePair<Structure, Structure>> GetEnumerator()
         {
             return internalDictionary.GetEnumerator();
         }
@@ -119,7 +119,7 @@ namespace kOS.Safe.Encapsulation
             return GetEnumerator();
         }
 
-        public void Add(KeyValuePair<object, object> item)
+        public void Add(KeyValuePair<Structure, Structure> item)
         {
             if (internalDictionary.ContainsKey(item.Key))
             {
@@ -133,17 +133,17 @@ namespace kOS.Safe.Encapsulation
             internalDictionary.Clear();
         }
 
-        public bool Contains(KeyValuePair<object, object> item)
+        public bool Contains(KeyValuePair<Structure, Structure> item)
         {
             return internalDictionary.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<Structure, Structure>[] array, int arrayIndex)
         {
             internalDictionary.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<object, object> item)
+        public bool Remove(KeyValuePair<Structure, Structure> item)
         {
             return internalDictionary.Remove(item);
         }
@@ -158,12 +158,12 @@ namespace kOS.Safe.Encapsulation
             get { return internalDictionary.IsReadOnly; }
         }
 
-        public bool ContainsKey(object key)
+        public bool ContainsKey(Structure key)
         {
             return internalDictionary.ContainsKey(key);
         }
 
-        public void Add(object key, object value)
+        public void Add(Structure key, Structure value)
         {
             if (internalDictionary.ContainsKey(key))
             {
@@ -172,17 +172,17 @@ namespace kOS.Safe.Encapsulation
             internalDictionary.Add(key, value);
         }
 
-        public bool Remove(object key)
+        public bool Remove(Structure key)
         {
             return internalDictionary.Remove(key);
         }
 
-        public bool TryGetValue(object key, out object value)
+        public bool TryGetValue(Structure key, out Structure value)
         {
             return internalDictionary.TryGetValue(key, out value);
         }
 
-        public object this[object key]
+        public Structure this[Structure key]
         {
             get
             {
@@ -198,7 +198,7 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public ICollection<object> Keys
+        public ICollection<Structure> Keys
         {
             get
             {
@@ -206,7 +206,7 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public ICollection<object> Values
+        public ICollection<Structure> Values
         {
             get
             {
@@ -214,12 +214,12 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public object GetIndex(object key)
+        public Structure GetIndex(Structure key)
         {
             return internalDictionary[key];
         }
 
-        public void SetIndex(object index, object value)
+        public void SetIndex(Structure index, Structure value)
         {
             internalDictionary[index] = value;
         }
@@ -229,9 +229,9 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public IDictionary<object, object> Dump()
+        public IDictionary<Structure, Structure> Dump()
         {
-            var result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary)
+            var result = new DictionaryWithHeader((Dictionary<Structure, Structure>)internalDictionary)
             {
                 Header = "LEXICON of " + internalDictionary.Count + " items:"
             };
@@ -239,11 +239,11 @@ namespace kOS.Safe.Encapsulation
             return result;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public void LoadDump(IDictionary<Structure, Structure> dump)
         {
             internalDictionary.Clear();
 
-            foreach (KeyValuePair<object, object> entry in dump)
+            foreach (KeyValuePair<Structure, Structure> entry in dump)
             {
                 internalDictionary.Add(Structure.FromPrimitive(entry.Key), Structure.FromPrimitive(entry.Value));
             }

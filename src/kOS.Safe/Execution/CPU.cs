@@ -839,6 +839,52 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
+        /// Identical to PopValue(), except that it guarantees the return value is either already a Structure,
+        /// or it converts it into a Structure if it's a primitive.
+        /// It bombs out with an exception if it can't be converted thusly.
+        /// </summary>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public Structure PopValueEncapsulated(bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive( PopValue(barewordOkay) );
+        }
+
+        /// <summary>
+        /// Identical to PeekValue(), except that it guarantees the return value is either already a Structure,
+        /// or it converts it into a Structure if it's a primitive.
+        /// It bombs out with an exception if it can't be converted thusly.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public Structure PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+        }
+
+        /// <summary>
+        /// Identical to GetValue(), except that it guarantees the return value is either already a Structure,
+        /// or it converts it into a Structure if it's a primitive.
+        /// It bombs out with an exception if it can't be converted thusly.
+        /// </summary>
+        /// <param name="testValue">the object which might be a variable name</param>
+        /// <param name="barewordOkay">
+        ///   Is this a case in which it's acceptable for the
+        ///   variable not to exist, and if it doesn't exist then the variable name itself
+        ///   is the value?
+        /// </param>
+        /// <returns>The value after the steps described have been performed.</returns>
+        public Structure GetValueEncapsulated(Structure testValue, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive(GetValue(testValue, barewordOkay));
+        }
+
+        /// <summary>
         /// Peek at a value atop the stack without popping it, and without evaluating it to get the variable's
         /// value.  (i.e. if the thing in the stack is $foo, and the variable foo has value 5, you'll get the string
         /// "$foo" returned, not the integer 5).

@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation
     /// </summary>
     public interface IDumper : ISuffixed
     {
-        IDictionary<object, object> Dump();
-        void LoadDump(IDictionary<object, object> dump);
+        IDictionary<Structure, Structure> Dump();
+        void LoadDump(IDictionary<Structure, Structure> dump);
     }
 }

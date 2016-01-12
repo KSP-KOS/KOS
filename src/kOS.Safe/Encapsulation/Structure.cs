@@ -168,10 +168,16 @@ namespace kOS.Safe.Encapsulation
             return new StringValue(string.Concat(val1, val2));
         }
 
-        public static object FromPrimitive(object value)
+        public static Structure FromPrimitive(object value)
         {
+            // No conversion if already encapsulated:
+            if (value is Structure)
+                return value;
+            
             var convert = value as IConvertible;
-            if (convert == null) return value;
+            if (convert == null)
+                throw new KOSException("Contact the kOS developers:  This is an internal bug.  " +
+                                       "Mention the phrase 'FromPrimitive not IConvertable' in your error report.");
 
             TypeCode code = convert.GetTypeCode();
             switch (code)
@@ -196,7 +202,8 @@ namespace kOS.Safe.Encapsulation
                 default:
                     break;
             }
-            return value;
+            throw new KOSException("Contact the kOS developers:  This is an internal bug.  " +
+                                   "Mention the phrase 'FromPrimitive arg was "+code.ToString()+"' in your error report.");
         }
 
         public static object ToPrimitive(object value)

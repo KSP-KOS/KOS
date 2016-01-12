@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Execution
 {
@@ -15,8 +16,11 @@ namespace kOS.Safe.Execution
         void AssertValidDelegateCall(IUserDelegate userDelegate);
         object GetValue(object testValue, bool barewordOkay = false);
         object PopValue(bool barewordOkay = false);
-        object PeekValue(int digDepth, bool barewordOkay = false);        
+        object PeekValue(int digDepth, bool barewordOkay = false);
         object PeekRaw(int digDepth, out bool checkOkay);
+        Structure GetValueEncapsulated(Structure testValue, bool barewordOkay = false);
+        Structure PopValueEncapsulated(bool barewordOkay = false);
+        Structure PeekValueEncapsulated(int digDepth, bool barewordOkay = false);
         int GetStackSize();
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);

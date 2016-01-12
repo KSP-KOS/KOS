@@ -29,6 +29,18 @@ namespace kOS.Safe.Encapsulation
             StringInitializeSuffixes();
         }
 
+        public StringValue(StringValue stringValue)
+        {
+            internalString = stringValue.ToString();
+            StringInitializeSuffixes();
+        }
+
+        public StringValue(char ch)
+        {
+            internalString = new string(new char[] {ch});
+            StringInitializeSuffixes();
+        }
+
         public int Length
         {
             get { return internalString.Length; }
@@ -126,28 +138,36 @@ namespace kOS.Safe.Encapsulation
             return internalString.TrimStart();
         }
 
-        public object GetIndex(object index)
+        public Structure GetIndex(int index)
         {
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(index is int)) throw new Exception("The index must be an integer number");
+            return new StringValue(internalString[index]);
+        }
 
-            return internalString[(int)index].ToString();
+        public Structure GetIndex(Structure index)
+        {
+            if (index is ScalarValue)
+            {
+                int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                return internalString[i].ToString();
+            }
+            throw new KOSCastException(index.GetType(), typeof(int)/*So the message will say it needs integer, not just any Scalar*/);
+
         }
 
         // Required by the interface but unimplemented, because strings are immutable.
-        public void SetIndex(object index, object value)
+        public void SetIndex(Structure index, Structure value)
         {
             throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
 
         // As the regular Split, except returning a ListValue rather than an array.
-        public ListValue<string> SplitToList(string separator)
+        public ListValue<StringValue> SplitToList(string separator)
         {
             string[] split = Regex.Split(internalString, Regex.Escape(separator), RegexOptions.IgnoreCase);
-            return new ListValue<string>(split);
+            ListValue<StringValue> returnList = new ListValue<StringValue>();
+            foreach (string s in split)
+                returnList.Add(new StringValue(s));
+            return returnList;
         }
 
         private void StringInitializeSuffixes()

@@ -8,6 +8,7 @@ using kOS.Safe.Properties;
 namespace kOS.Safe.Encapsulation
 {
     public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
+        where T : Structure
     {
 
         public ListValue()
@@ -56,11 +57,11 @@ namespace kOS.Safe.Encapsulation
             set { Collection[index] = value; }
         }
             
-        public override void LoadDump(IDictionary<object, object> dump)
+        public override void LoadDump(IDictionary<Structure, Structure> dump)
         {
             Collection.Clear();
 
-            foreach (object item in dump.Values)
+            foreach (Structure item in dump.Values)
             {
                 Collection.Add((T)Structure.FromPrimitive(item));
             }
@@ -93,19 +94,22 @@ namespace kOS.Safe.Encapsulation
             return new ListValue<T>(list.Cast<T>());
         }
 
-        public object GetIndex(object index)
+        public Structure GetIndex(int index)
         {
-            // TODO: remove double and float reference as it should be obsolete
-            if (index is double || index is float || index is ScalarValue)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(index is int)) throw new Exception("The index must be an integer number");
-
             return Collection[(int)index];
         }
 
-        public void SetIndex(object index, object value)
+        public Structure GetIndex(Structure index)
+        {
+            if (index is ScalarValue)
+            {
+                int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                return GetIndex(i);
+            }
+            throw new KOSCastException(index.GetType(), typeof(int)/*So the message will say it needs integer, not just any Scalar*/);
+        }
+
+        public void SetIndex(Structure index, Structure value)
         {
             int idx;
             try
@@ -122,14 +126,14 @@ namespace kOS.Safe.Encapsulation
 
     }
 
-    public class ListValue : ListValue<object>
+    public class ListValue : ListValue<Structure>
     {
         public ListValue()
         {
             InitializeSuffixes();
         }
 
-        public ListValue(IEnumerable<object> toCopy)
+        public ListValue(IEnumerable<Structure> toCopy)
             : base(toCopy)
         {
             InitializeSuffixes();

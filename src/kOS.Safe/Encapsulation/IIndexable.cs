@@ -2,7 +2,7 @@ namespace kOS.Safe.Encapsulation
 {
     public interface IIndexable
     {
-        object GetIndex(object index);
-        void SetIndex(object index, object value);
+        Structure GetIndex(Structure index);
+        void SetIndex(Structure index, Structure value);
     }
 }

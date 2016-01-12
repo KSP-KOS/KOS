@@ -41,7 +41,7 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public IDictionary<object, object> Dump()
+        public IDictionary<Structure, Structure> Dump()
         {
             var result = new DictionaryWithHeader
             {
@@ -59,7 +59,7 @@ namespace kOS.Safe.Encapsulation
             return result;
         }
 
-        public abstract void LoadDump(IDictionary<object, object> dump);
+        public abstract void LoadDump(IDictionary<Structure, Structure> dump);
 
         private void InitializeEnumerableSuffixes()
         {
