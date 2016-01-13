@@ -186,7 +186,7 @@ namespace kOS.Suffixed
 
         public static Vector operator *(Vector a, ScalarValue b)
         {
-            return new Vector(a.X * b, a.Y * b, a.Z * b);
+            return a * b.GetDoubleValue();
         }
 
         public static Vector operator *(float b, Vector a)
@@ -201,7 +201,7 @@ namespace kOS.Suffixed
 
         public static Vector operator *(ScalarValue b, Vector a)
         {
-            return new Vector(a.X * b, a.Y * b, a.Z * b);
+            return a * b.GetDoubleValue();
         }
 
         public static Vector operator /(Vector a, ScalarValue b)
