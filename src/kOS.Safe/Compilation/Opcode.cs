@@ -541,7 +541,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulation(cpu);
+            Structure value = PopValueAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -576,7 +576,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulation(cpu);
+            Structure value = PopValueAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -605,7 +605,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulation(cpu);
+            Structure value = PopValueAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -748,17 +748,10 @@ namespace kOS.Safe.Compilation
             {
                 result = indexable.GetIndex(index);
             }
-            // Box strings if necessary to allow them to be indexed
-            else if (collection is string)
-            {
-                result = new StringValue((string) collection).GetIndex(index);
-            }
             else
             {
                 throw new Exception(string.Format("Can't iterate on an object of type {0}", collection.GetType()));
             }
-
-            if (!(collection is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", collection.GetType()));
 
             cpu.PushStack(result);
         }
@@ -790,10 +783,6 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
-    
-<----  NOTICE: THIS IS AS FAR AS I GOT TODAY, @erendrake
-       THIS IS DELIBERATELY NOT A COMMENT, so the compiler will complain here and draw your attention to this point.
     
     
     public class OpcodeEOF : Opcode
@@ -869,7 +858,7 @@ namespace kOS.Safe.Compilation
             // This class does something strange - it expects the KSM file to encode EITHER a string label OR an integer,
             // but never both.  Therefore it has to determine the type of the arg to decide which it was:
             if (fields[0] is string)
-                DestinationLabel = (string)(fields[0]);
+                DestinationLabel = (string)fields[0];
             else
                 Distance = (int)fields[0];
         }
@@ -955,7 +944,7 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodePushRelocateLater seems to be missing.  Version mismatch?");
-            UpcomingLabel = (string)( fields[0] );
+            UpcomingLabel = (string)fields[0];
         }
 
         public override void Execute(ICpu cpu)
@@ -1057,15 +1046,14 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
-            object result;
+            Structure value = cpu.PopValueEncapsulated();
 
-            if (value is int)
-                result = -((int)value);
-            else if (value is float)
-                result = -(Convert.ToDouble(value));
-            else if (value is double)
-                result = -((double)value);
+            var scalarValue = value as ScalarValue;
+
+            if (scalarValue != null && scalarValue.IsValid)
+            {
+                    scalarValue = -scalarValue;
+            }
             else
             {
                 // Generic last-ditch to catch any sort of object that has
@@ -1074,12 +1062,15 @@ namespace kOS.Safe.Compilation
                 Type t = value.GetType();
                 MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
                 if (negateMe != null)
-                    result = negateMe.Invoke(null, new[]{value}); // value is an arg, not the 'this'.  (Method is static.)
+                {
+                    object result = negateMe.Invoke(null, new[]{value});
+                    scalarValue = ScalarValue.Create(result);
+                }
                 else
                     throw new KOSUnaryOperandTypeException("negate", value);
             }
 
-            cpu.PushStack(result);
+            cpu.PushStack(scalarValue);
         }
     }
 
@@ -1135,6 +1126,7 @@ namespace kOS.Safe.Compilation
     }
 
     
+
     public class OpcodeMathPower : BinaryOpcode
     {
         protected override string Name { get { return "pow"; } }
@@ -1148,6 +1140,10 @@ namespace kOS.Safe.Compilation
 
     #endregion
 
+<----  NOTICE: THIS IS AS FAR AS I GOT TONIGHT, @dunbaratu
+       THIS IS DELIBERATELY NOT A COMMENT, so the compiler will complain here and draw your attention to this point.
+    
+    
     #region Logic
 
     
