@@ -22,6 +22,15 @@ of existing strings. For example::
     SET s TO "Hello, Strings!".
     SET t TO s:REPLACE("Hello", "Goodbye").
 
+Strings are iterable. This scripts prints the string's characters one per line::
+
+  SET str TO "abcde".
+
+  FOR c IN str {
+    PRINT c.
+  }
+
+
 
 CASE SENSITIVIY
 ~~~~~~~~~~~~~~~
