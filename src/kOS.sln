@@ -1,14 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-# SharpDevelop 4.4
-VisualStudioVersion = 14.0.23107.0
-MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS", "kOS\kOS.csproj", "{465EC87D-723D-4A6C-B116-9777AC641DE3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe", "kOS.Safe\kOS.Safe.csproj", "{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe.Test", "kOS.Safe.Test\kOS.Safe.Test.csproj", "{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10812530-11E8-4993-A3AD-95485F7CA115}"
+	ProjectSection(SolutionItems) = preProject
+		kOS\LightColor\CoreLight.cs = kOS\LightColor\CoreLight.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,7 +31,10 @@ Global
 		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9A42A44-DDC8-4D6C-8A16-D7F30F494B46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = kOS\kOS.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.FileWidth = 120
