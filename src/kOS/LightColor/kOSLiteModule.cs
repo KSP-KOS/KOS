@@ -4,7 +4,7 @@ using KSP.IO;
 
 namespace kOS.LightColor
 {
-    class kOSLiteModule : PartModule
+    class CoreLight : PartModule
         
     {
         
