@@ -1052,25 +1052,23 @@ namespace kOS.Safe.Compilation
 
             if (scalarValue != null && scalarValue.IsValid)
             {
-                    scalarValue = -scalarValue;
-            }
-            else
-            {
-                // Generic last-ditch to catch any sort of object that has
-                // overloaded the unary negate operator '-'.
-                // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
-                Type t = value.GetType();
-                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
-                if (negateMe != null)
-                {
-                    object result = negateMe.Invoke(null, new[]{value});
-                    scalarValue = ScalarValue.Create(result);
-                }
-                else
-                    throw new KOSUnaryOperandTypeException("negate", value);
+                cpu.PushStack(-scalarValue);
+                return;
             }
 
-            cpu.PushStack(scalarValue);
+            // Generic last-ditch to catch any sort of object that has
+            // overloaded the unary negate operator '-'.
+            // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
+            Type t = value.GetType();
+            MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.FlattenHierarchy |BindingFlags.Static | BindingFlags.Public);
+            if (negateMe != null)
+            {
+                object result = negateMe.Invoke(null, new[]{value});
+                cpu.PushStack(result);
+            }
+            else
+                throw new KOSUnaryOperandTypeException("negate", value);
+
         }
     }
 
