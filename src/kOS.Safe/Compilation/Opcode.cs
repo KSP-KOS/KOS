@@ -1379,9 +1379,9 @@ namespace kOS.Safe.Compilation
             // If it's a string it might not really be a built-in, it might still be a user func.
             // Detect whether it's built-in, and if it's not, then convert it into the equivalent
             // user func call by making it be an integer instruction pointer instead:
-            if (functionPointer is string)
+            if (functionPointer is string || functionPointer is StringValue)
             {
-                string functionName = functionPointer as string;
+                string functionName = functionPointer.ToString();
                 if (functionName.EndsWith("()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 if (!(cpu.BuiltInExists(functionName)))
