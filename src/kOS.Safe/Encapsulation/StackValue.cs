@@ -5,6 +5,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 namespace kOS.Safe.Encapsulation
 {
     public class StackValue<T> : EnumerableValue<T, Stack<T>>
+        where T : Structure
     {
         public StackValue() : this(new Stack<T>())
         {
@@ -35,7 +36,7 @@ namespace kOS.Safe.Encapsulation
             Collection.Push(val);
         }
 
-        public override void LoadDump(IDictionary<Structure, Structure> dump)
+        public override void LoadDump(IDictionary<object, object> dump)
         {
             Collection.Clear();
 
@@ -62,14 +63,14 @@ namespace kOS.Safe.Encapsulation
         }
     }
 
-    public class StackValue : StackValue<object>
+    public class StackValue : StackValue<Structure>
     {
         public StackValue()
         {
             InitializeSuffixes();
         }
 
-        public StackValue(IEnumerable<object> toCopy)
+        public StackValue(IEnumerable<Structure> toCopy)
             : base(toCopy)
         {
             InitializeSuffixes();
@@ -82,7 +83,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static StackValue CreateStack<T>(IEnumerable<T> toCopy)
         {
-            return new StackValue(toCopy.Cast<object>());
+            return new StackValue(toCopy.Select(x => Structure.FromPrimitive(x)));
         }
     }
 }

@@ -172,7 +172,7 @@ namespace kOS.Safe.Encapsulation
         {
             // No conversion if already encapsulated:
             if (value is Structure)
-                return value;
+                return (Structure)value;
             
             var convert = value as IConvertible;
             if (convert == null)

@@ -5,6 +5,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 namespace kOS.Safe.Encapsulation
 {
     public class QueueValue<T> : EnumerableValue<T, Queue<T>>
+        where T : Structure
     {
         public QueueValue() : this(new Queue<T>())
         {
@@ -30,7 +31,7 @@ namespace kOS.Safe.Encapsulation
             Collection.Enqueue(val);
         }
             
-        public override void LoadDump(IDictionary<Structure, Structure> dump)
+        public override void LoadDump(IDictionary<object, object> dump)
         {
             Collection.Clear();
 
@@ -57,14 +58,14 @@ namespace kOS.Safe.Encapsulation
 
     }
 
-    public class QueueValue : QueueValue<object>
+    public class QueueValue : QueueValue<Structure>
     {
         public QueueValue()
         {
             InitializeSuffixes();
         }
 
-        public QueueValue(IEnumerable<object> toCopy)
+        public QueueValue(IEnumerable<Structure> toCopy)
             : base(toCopy)
         {
             InitializeSuffixes();
@@ -77,7 +78,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static QueueValue CreateQueue<T>(IEnumerable<T> toCopy)
         {
-            return new QueueValue(toCopy.Cast<object>());
+            return new QueueValue(toCopy.Select(x => Structure.FromPrimitive(x)));
         }
     }
 }

@@ -57,7 +57,7 @@ namespace kOS.Safe.Encapsulation
             set { Collection[index] = value; }
         }
             
-        public override void LoadDump(IDictionary<Structure, Structure> dump)
+        public override void LoadDump(IDictionary<object, object> dump)
         {
             Collection.Clear();
 
@@ -124,6 +124,12 @@ namespace kOS.Safe.Encapsulation
         }
 
 
+        public void SetIndex(int index, Structure value)
+        {
+            Collection[index] = (T)value;
+        }
+
+
     }
 
     public class ListValue : ListValue<Structure>
@@ -146,7 +152,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static ListValue CreateList<T>(IEnumerable<T> toCopy)
         {
-            return new ListValue(toCopy.Cast<object>());
+            return new ListValue(toCopy.Select(x => Structure.FromPrimitive(x)));
         }
     }
 }

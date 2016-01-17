@@ -1137,13 +1137,8 @@ namespace kOS.Safe.Compilation
     }
 
     #endregion
-
-<----  NOTICE: THIS IS AS FAR AS I GOT TONIGHT, @dunbaratu
-       THIS IS DELIBERATELY NOT A COMMENT, so the compiler will complain here and draw your attention to this point.
-    
     
     #region Logic
-
     
     public class OpcodeLogicToBool : Opcode
     {
@@ -1152,14 +1147,17 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
+            // This may look like it's just pointlessly converting from a
+            // ScalarBoolean to a primitive boolean and then back into a
+            // ScalarBoolean, and in the case where the operand was already
+            // a ScalarBoolean that would be true.  But the purpose of this opcode
+            // is to also change integers and floats into booleans. Thus the call to
+            // Convert.ToBoolean():
             object value = cpu.PopValue();
-            // Convert to bool instead of cast in case the identifier is stored
-            // as an encapsulated BooleanValue, preventing an unboxing collision.
             bool result = Convert.ToBoolean(value);
-            cpu.PushStack(result);
+            cpu.PushStack(Structure.FromPrimitive(result));
         }
     }
-
     
     public class OpcodeLogicNot : Opcode
     {
@@ -1183,7 +1181,7 @@ namespace kOS.Safe.Compilation
             {
                 throw new KOSCastException(value.GetType(), typeof(bool));
             }
-            cpu.PushStack(result);
+            cpu.PushStack(Structure.FromPrimitive(result));
         }
     }
 
@@ -1197,8 +1195,8 @@ namespace kOS.Safe.Compilation
         {
             bool argument2 = Convert.ToBoolean(cpu.PopValue());
             bool argument1 = Convert.ToBoolean(cpu.PopValue());
-            object result = argument1 & argument2;
-            cpu.PushStack(result);
+            object result = argument1 && argument2;
+            cpu.PushStack(Structure.FromPrimitive(result));
         }
     }
 
@@ -1212,8 +1210,8 @@ namespace kOS.Safe.Compilation
         {
             bool argument2 = Convert.ToBoolean(cpu.PopValue());
             bool argument1 = Convert.ToBoolean(cpu.PopValue());
-            object result = argument1 | argument2;
-            cpu.PushStack(result);
+            object result = argument1 || argument2;
+            cpu.PushStack(Structure.FromPrimitive(result));
         }
     }
 
@@ -1411,6 +1409,12 @@ namespace kOS.Safe.Compilation
             if (builtinDel != null && (! calledFromKOSDelegateCall) )
                 functionPointer = builtinDel.Name;
 
+            // If the IP for a jump location got encapsulated as a user int when it got stored
+            // into the internal variable, then get the primitive int back out of it again:
+            ScalarIntValue userInt = functionPointer as ScalarIntValue;
+            if (userInt != null)
+                functionPointer = userInt.GetIntValue();
+            
             // Convert to int instead of cast in case the identifier is stored
             // as an encapsulated ScalarValue, preventing an unboxing collision.
             if (functionPointer is int || functionPointer is ScalarValue)
@@ -1724,8 +1728,8 @@ namespace kOS.Safe.Compilation
                 }
                 shouldBeArgMarker = cpu.PopStack();
             }
-            
-            cpu.PushStack(returnVal);
+
+            cpu.PushStack(Structure.FromPrimitive(returnVal));
 
             // Now, after the eval was done, NOW finally pop the scope, after we don't need local vars anymore:
             if( Depth > 0 )
@@ -1766,7 +1770,6 @@ namespace kOS.Safe.Compilation
     #endregion
 
     #region Stack
-
     
     public class OpcodePush : Opcode
     {
@@ -1932,11 +1935,11 @@ namespace kOS.Safe.Compilation
 
             if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
             {
-                cpu.PushStack(false);
+                cpu.PushStack(false); // these are internally used, so no Strucutre.FromPrimitive wrapper call.
             }
             else
             {
-                cpu.PushStack(true);
+                cpu.PushStack(true); // these are internally used, so no Strucutre.FromPrimitive wrapper call.
             }
         }
     }
@@ -1983,7 +1986,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PushStack(cpu.PopValue());
+            cpu.PushStack(cpu.PopValueEncapsulated());
         }
     }
 
@@ -2192,7 +2195,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            var functionPointer = (int)cpu.PopValue();
+            int functionPointer = Convert.ToInt32(cpu.PopValue()); // in case it got wrapped in a ScalarIntValue
             cpu.AddTrigger(functionPointer);
         }
 
@@ -2210,7 +2213,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            var functionPointer = (int)cpu.PopValue();
+            var functionPointer = Convert.ToInt32(cpu.PopValue()); // in case it got wrapped in a ScalarIntValue
             cpu.RemoveTrigger(functionPointer);
         }
     }

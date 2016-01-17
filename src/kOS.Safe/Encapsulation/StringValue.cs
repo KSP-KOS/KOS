@@ -148,7 +148,7 @@ namespace kOS.Safe.Encapsulation
             if (index is ScalarValue)
             {
                 int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-                return internalString[i].ToString();
+                return new StringValue(internalString[i]);
             }
             throw new KOSCastException(index.GetType(), typeof(int)/*So the message will say it needs integer, not just any Scalar*/);
 
@@ -156,6 +156,11 @@ namespace kOS.Safe.Encapsulation
 
         // Required by the interface but unimplemented, because strings are immutable.
         public void SetIndex(Structure index, Structure value)
+        {
+            throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
+        }
+        // Required by the interface but unimplemented, because strings are immutable.
+        public void SetIndex(int index, Structure value)
         {
             throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }

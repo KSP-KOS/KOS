@@ -219,9 +219,23 @@ namespace kOS.Safe.Encapsulation
             return internalDictionary[key];
         }
 
+        // Only needed because IIndexable demands it.  For a lexicon, none of the code is
+        // actually trying to call this:
+        public Structure GetIndex(int index)
+        {
+            return internalDictionary[Structure.FromPrimitive(index)];
+        }
+
         public void SetIndex(Structure index, Structure value)
         {
             internalDictionary[index] = value;
+        }
+        
+        // Only needed because IIndexable demands it.  For a lexicon, none of the code is
+        // actually trying to call this:
+        public void SetIndex(int index, Structure value)
+        {
+            internalDictionary[Structure.FromPrimitive(index)] = value;
         }
 
         public override string ToString()
@@ -229,9 +243,9 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public IDictionary<Structure, Structure> Dump()
+        public IDictionary<object, object> Dump()
         {
-            var result = new DictionaryWithHeader((Dictionary<Structure, Structure>)internalDictionary)
+            var result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary)
             {
                 Header = "LEXICON of " + internalDictionary.Count + " items:"
             };
@@ -239,11 +253,11 @@ namespace kOS.Safe.Encapsulation
             return result;
         }
 
-        public void LoadDump(IDictionary<Structure, Structure> dump)
+        public void LoadDump(IDictionary<object, object> dump)
         {
             internalDictionary.Clear();
 
-            foreach (KeyValuePair<Structure, Structure> entry in dump)
+            foreach (KeyValuePair<object, object> entry in dump)
             {
                 internalDictionary.Add(Structure.FromPrimitive(entry.Key), Structure.FromPrimitive(entry.Value));
             }
