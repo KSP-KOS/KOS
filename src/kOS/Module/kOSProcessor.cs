@@ -75,6 +75,19 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiActive = false)]
         public int MaxPartId = 100;
 
+        // This represents how much EC to consume per executed instruction.
+        // This would be the "variable" component of the processor's power.
+        // TODO: This value needs to be changed to a non-zero number and balanced.
+        [KSPField(isPersistant = false, guiActive = false)]
+        public float ECPerInstruction = 0F;
+
+        // This represents how much EC to consume per Byte of the current volume, per second.
+        // This would be the "continuous" compoenent of the processor's power (though it varies
+        // when you change to another volume).
+        // TODO: This value mirrors the existing default.  A new balanced value needs to be found.
+        [KSPField(isPersistant = false, guiActive = false)]
+        public float ECPerBytePerSecond = 0.000004F;
+
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
@@ -82,7 +95,7 @@ namespace kOS.Module
             OpenWindow();
         }
 
-        [KSPField(isPersistant = true, guiName = "Required Power", guiActive = true)]
+        [KSPField(isPersistant = true, guiName = "kOS Required Power", guiActive = true, guiActiveEditor = true)]
         public float RequiredPower;
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
@@ -160,19 +173,14 @@ namespace kOS.Module
         //returns basic information on kOSProcessor module in Editor
         public override string GetInfo()
         {
-            const float MAXIMUM_POWER_CONSUMPTION = 0.2F;
-            string moduleInfo = "KOS Processor\n";
-
-            moduleInfo += "\nDefault disk capacity: " + diskSpace;
-
-            moduleInfo += "\nMax Power consuption, EC/s : " + System.Math.Round(MAXIMUM_POWER_CONSUMPTION, 2);
-
-            if (additionalCost > 0)
-            {
-                moduleInfo += "\nCost of probe CPU upgrade: " + System.Math.Round(additionalCost, 0);
-            }
-
-            return moduleInfo;
+            string format =
+                "Default disk capacity: {0}\n\n" +
+                "<color=#99ff00ff>Requires (default):</color>\n" +
+                "-ElectricCharge: {1:N3}/s";
+            // For the sake of GetInfo, prorate the EC usage based on the smallest physics frame the settings UI allows: 0.02s.
+            // Because this is called before the part is set, we need to manually calculate it instead of letting Update handle it.
+            double power = diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / 0.02;
+            return string.Format(format, diskSpace, power);
         }
 
         //implement IPartCostModifier component
@@ -436,6 +444,7 @@ namespace kOS.Module
                     UpdateCostAndMass();
                     GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
                 }
+                RequiredPower = this.diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction;
             }
             if (!IsAlive()) return;
             UpdateVessel();
@@ -612,7 +621,7 @@ namespace kOS.Module
         // funny messages.)  This is where kOS *should* be putting all the
         // static initializing that does not change per-part, or per-vessel
         // or per-CPU.  It might be true that some of what we're doing up above
-        // in OnLoad and OnStart might relly belong here.
+        // in OnLoad and OnStart might really belong here.
         //
         // At some future point it would be a really good idea to look very carefully
         // at *everything* being done during those initialzations and see if any of
@@ -628,12 +637,29 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.OFF) return;
 
-            RequiredPower = shared.VolumeMgr.CurrentRequiredPower;
-            var electricReq = time * RequiredPower;
-            var result = partObj.RequestResource("ElectricCharge", electricReq) / electricReq;
-
-            var newMode = (result < 0.5f) ? ProcessorModes.STARVED : ProcessorModes.READY;
-            SetMode(newMode);
+            double volumePower = 0;
+            var volume = shared.VolumeMgr.CurrentVolume;
+            if (volume.Name == "Archive")
+            {
+                // TODO: Like with the default value of ECPerBytePerSecond, this corresponds to the existing value.
+                // It should be adjusted for balance.
+                volumePower = 50000 * ECPerBytePerSecond;
+            }
+            else
+            {
+                volumePower = volume.Capacity * ECPerBytePerSecond;
+            }
+            RequiredPower = (float)(volumePower + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / TimeWarp.fixedDeltaTime);
+            var request = volumePower * time + shared.Cpu.InstructionsThisUpdate * ECPerInstruction;
+            var available = partObj.RequestResource("ElectricCharge", request);
+            if (available / request > 0.5f)
+            {
+                if (ProcessorMode == ProcessorModes.STARVED) SetMode(ProcessorModes.READY);
+            }
+            else
+            {
+                if (ProcessorMode == ProcessorModes.READY) SetMode(ProcessorModes.STARVED);
+            }
         }
 
         public void SetMode(ProcessorModes newProcessorMode)
