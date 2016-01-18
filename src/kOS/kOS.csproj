@@ -88,6 +88,7 @@
     <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
+    <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
