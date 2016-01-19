@@ -19,15 +19,24 @@ If you launch a manned craft while using RemoteTech, you are still able to input
 
 It is possible to activate/deactivate RT antennas, as well as set their targets using kOS::
 
-  SET p TO SHIP:PARTSNAMED("mediumDishAntenna")[0].
-  SET m to p:GETMODULE("ModuleRTAntenna").
-  m:DOEVENT("activate").
-  m:SETFIELD("target", "mission-control").
-  // or
-  m:SETFIELD("target", mun).
-  m:SETFIELD("target", "minmus").
+  SET P TO SHIP:PARTSNAMED("mediumDishAntenna")[0].
+  SET M to p:GETMODULE("ModuleRTAntenna").
+  M:DOEVENT("activate").
+  M:SETFIELD("target", "Mission Control").
+  M:SETFIELD("target", mun).
+  M:SETFIELD("target", somevessel).
+  M:SETFIELD("target", "minmus").
 
-Acceptable values for `"target"` are: `"no-target"`, `"active-vessel"`, `"mission-control"`, a :struct:`Body`, a :struct:`Vessel`, or a string containing the name of a body or vessel.
+Acceptable values for `"target"` are:
+
+- `"no-target"`
+- `"active-vessel"`
+- a :struct:`Body`
+- a :struct:`Vessel`
+- a string containing the name of a body or vessel
+- a string containing the name of a ground station (case-sensitive)
+
+You can use :meth:`RTADDON:GROUNDSTATIONS` to get a list of all ground stations. The default ground station is called `"Mission Control"`.
 
 Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 
@@ -39,9 +48,11 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
      :attr:`AVAILABLE`                     bool(readonly)            True if RT is installed and RT integration enabled.
      :meth:`DELAY(vessel)`                 double                    Get shortest possible delay to given :struct:`Vessel`
      :meth:`KSCDELAY(vessel)`              double                    Get delay from KSC to given :struct:`Vessel`
+     :meth:`ANTENNAHASCONNECTION(part)`    bool                      True if given :struct:`Part` has any connection
      :meth:`HASCONNECTION(vessel)`         bool                      True if given :struct:`Vessel` has any connection
      :meth:`HASKSCCONNECTION(vessel)`      bool                      True if given :struct:`Vessel` has connection to KSC
      :meth:`HASLOCALCONTROL(vessel)`       bool                      True if given :struct:`Vessel` has local control
+     :meth:`GROUNDSTATIONS()`              :struct:`List`            Get names of all ground stations
     ===================================== ========================= =============
 
 
@@ -67,6 +78,13 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 
     Returns delay in seconds from KSC to `vessel`.
 
+.. method:: RTAddon:ANTENNAHASCONNECTION(part)
+
+    :parameter part: :struct:`Part`
+    :return: bool
+
+    Returns True if `part` has any connection (including to local command posts).
+
 .. method:: RTAddon:HASCONNECTION(vessel)
 
     :parameter vessel: :struct:`Vessel`
@@ -87,3 +105,9 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
     :return: bool
 
     Returns True if `vessel` has local control (and thus not requiring a RemoteTech connection).
+
+.. method:: RTAddon:GROUNDSTATIONS()
+
+    :return: :struct:`List`
+
+    Returns names of all RT ground stations
