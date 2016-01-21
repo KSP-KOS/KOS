@@ -11,9 +11,9 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override object Get()
+        public override ISuffixResult Get()
         {
-            return del;
+            return new DeletageSuffixResult(del);
         }
     }
 }

@@ -106,6 +106,8 @@
     <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\ConfigKey.cs" />
+    <Compile Include="Encapsulation\Suffixes\DeletageSuffixResult.cs" />
+    <Compile Include="Encapsulation\Suffixes\ISuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\NoArgsSuffix.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Encapsulation\Suffixes\SetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
+    <Compile Include="Encapsulation\Suffixes\SuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />

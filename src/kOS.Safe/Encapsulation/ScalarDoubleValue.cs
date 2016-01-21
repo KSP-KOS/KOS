@@ -16,5 +16,10 @@
         {
             Value = value;
         }
+
+        public static implicit operator ScalarDoubleValue(double val)
+        {
+            return new ScalarDoubleValue(val);
+        }
     }
 }

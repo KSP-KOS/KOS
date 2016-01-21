@@ -6,7 +6,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
-    public abstract class EnumerableValue<T, TC> : Structure, IEnumerable<T>, IDumper where TC : IEnumerable<T>
+    public abstract class EnumerableValue<T, TC> : Structure, IEnumerable<T>, IDumper where TC : IEnumerable<T> where T : Structure
     {
         protected TC Collection { get; private set; }
         private readonly string label;
@@ -64,9 +64,9 @@ namespace kOS.Safe.Encapsulation
         private void InitializeEnumerableSuffixes()
         {
             AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator (Collection.GetEnumerator())));
-            AddSuffix("CONTAINS",   new OneArgsSuffix<bool, T>            (item => Collection.Contains(item)));
-            AddSuffix("EMPTY",      new NoArgsSuffix<bool>                (() => !Collection.Any()));
-            AddSuffix("DUMP",       new NoArgsSuffix<string>              (ToString));
+            AddSuffix("CONTAINS",   new OneArgsSuffix<BooleanValue, T>    (item => Collection.Contains(item)));
+            AddSuffix("EMPTY",      new NoArgsSuffix<BooleanValue>        (() => !Collection.Any()));
+            AddSuffix("DUMP",       new NoArgsSuffix<StringValue>         (() => ToString()));
         }
     }
 }

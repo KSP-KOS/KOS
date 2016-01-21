@@ -16,5 +16,16 @@
         {
             Value = value;
         }
+
+        public static implicit operator ScalarIntValue(int val)
+        {
+            return new ScalarIntValue(val);
+        }
+
+        public static implicit operator int(ScalarIntValue val)
+        {
+            return new ScalarIntValue(val);
+        }
+
     }
 }

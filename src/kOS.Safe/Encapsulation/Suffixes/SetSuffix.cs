@@ -2,7 +2,7 @@ using System;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class SetSuffix<TValue> : Suffix<TValue>, ISetSuffix
+    public class SetSuffix<TValue> : Suffix<TValue>, ISetSuffix where TValue : Structure
     {
         private readonly SuffixSetDlg<TValue> setter;
 

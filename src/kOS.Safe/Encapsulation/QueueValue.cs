@@ -37,14 +37,14 @@ namespace kOS.Safe.Encapsulation
 
             foreach (Structure item in dump.Values)
             {
-                Collection.Enqueue((T)Structure.FromPrimitive(item));
+                Collection.Enqueue((T)FromPrimitive(item));
             }
         }
 
         private void QueueInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<QueueValue<T>>       (() => new QueueValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => Collection.Count));
+            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarIntValue>                 (() => Collection.Count));
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Enqueue(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Dequeue()));
             AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
@@ -78,7 +78,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static QueueValue CreateQueue<T>(IEnumerable<T> toCopy)
         {
-            return new QueueValue(toCopy.Select(x => Structure.FromPrimitive(x)));
+            return new QueueValue(toCopy.Select(x => FromPrimitive(x)));
         }
     }
 }

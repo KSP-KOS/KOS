@@ -2,7 +2,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class ClampSetSuffix<TValue> : SetSuffix<TValue>
+    public class ClampSetSuffix<TValue> : SetSuffix<TValue> where TValue : Structure
     {
         private readonly double min;
         private readonly double max;

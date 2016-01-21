@@ -23,15 +23,15 @@ namespace kOS.Safe.Encapsulation
                 status = false;
                 enumerator.Reset();
             }));
-            AddSuffix("NEXT", new NoArgsSuffix<bool>(() =>
+            AddSuffix("NEXT", new NoArgsSuffix<BooleanValue>(() =>
             {
                 status = enumerator.MoveNext();
                 index++;
                 return status;
             }));
-            AddSuffix("ATEND", new NoArgsSuffix<bool>(() => !status));
-            AddSuffix("INDEX", new NoArgsSuffix<int>(() => index));
-            AddSuffix("VALUE", new NoArgsSuffix<object>(() => enumerator.Current));
+            AddSuffix("ATEND", new NoArgsSuffix<BooleanValue>(() => !status));
+            AddSuffix("INDEX", new NoArgsSuffix<ScalarIntValue>(() => index));
+            AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitive(enumerator.Current)));
         }
 
         public override string ToString()

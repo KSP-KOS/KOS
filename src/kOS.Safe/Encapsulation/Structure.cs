@@ -20,7 +20,7 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
-            AddSuffix("TYPE", new Suffixes.Suffix<string>(() => GetType().ToString()));
+            AddSuffix("TYPE", new Suffixes.Suffix<StringValue>(() => GetType().ToString()));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)

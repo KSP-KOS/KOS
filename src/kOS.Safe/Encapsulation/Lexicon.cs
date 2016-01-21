@@ -64,20 +64,21 @@ namespace kOS.Safe.Encapsulation
         private void InitalizeSuffixes()
         {
             AddSuffix("CLEAR", new NoArgsSuffix(Clear, "Removes all items from Lexicon"));
-            AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys, "Returns the lexicon keys"));
-            AddSuffix("HASKEY", new OneArgsSuffix<bool, object>(HasKey, "Returns true if a key is in the Lexicon"));
-            AddSuffix("HASVALUE", new OneArgsSuffix<bool, object>(HasValue, "Returns true if value is in the Lexicon"));
-            AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
+            AddSuffix("KEYS", new Suffix<ListValue<Structure>>(GetKeys, "Returns the lexicon keys"));
+            AddSuffix("HASKEY", new OneArgsSuffix<BooleanValue, Structure>(HasKey, "Returns true if a key is in the Lexicon"));
+            AddSuffix("HASVALUE", new OneArgsSuffix<BooleanValue, Structure>(HasValue, "Returns true if value is in the Lexicon"));
+            AddSuffix("VALUES", new Suffix<ListValue<Structure>>(GetValues, "Returns the lexicon values"));
             AddSuffix("COPY", new NoArgsSuffix<Lexicon>(() => new Lexicon(this), "Returns a copy of Lexicon"));
-            AddSuffix("LENGTH", new NoArgsSuffix<int>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
-            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(Remove, "Removes the value at the given key"));
-            AddSuffix("ADD", new TwoArgsSuffix<object, object>(Add, "Adds a new item to the lexicon, will error if the key already exists"));
-            AddSuffix("DUMP", new NoArgsSuffix<string>(ToString, "Serializes the collection to a string for printing"));
-            AddSuffix(new[] { "CASESENSITIVE", "CASE" }, new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
+            AddSuffix("LENGTH", new NoArgsSuffix<ScalarIntValue>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
+            AddSuffix("REMOVE", new OneArgsSuffix<BooleanValue, Structure>(one => Remove(one), "Removes the value at the given key"));
+            AddSuffix("ADD", new TwoArgsSuffix<Structure, Structure>(Add, "Adds a new item to the lexicon, will error if the key already exists"));
+            AddSuffix("DUMP", new NoArgsSuffix<StringValue>(() => ToString(), "Serializes the collection to a string for printing"));
+            AddSuffix(new[] { "CASESENSITIVE", "CASE" }, new SetSuffix<BooleanValue>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
         }
 
-        private void SetCaseSensitivity(bool newCase)
+        private void SetCaseSensitivity(BooleanValue value)
         {
+            bool newCase = value.Value;
             if (newCase == caseSensitive)
             {
                 return;
@@ -89,12 +90,12 @@ namespace kOS.Safe.Encapsulation
             new Dictionary<Structure, Structure>(new LexiconComparer<Structure>());
         }
 
-        private bool HasValue(Structure value)
+        private BooleanValue HasValue(Structure value)
         {
             return internalDictionary.Values.Contains(value);
         }
 
-        private bool HasKey(Structure key)
+        private BooleanValue HasKey(Structure key)
         {
             return internalDictionary.ContainsKey(key);
         }
@@ -223,7 +224,7 @@ namespace kOS.Safe.Encapsulation
         // actually trying to call this:
         public Structure GetIndex(int index)
         {
-            return internalDictionary[Structure.FromPrimitive(index)];
+            return internalDictionary[FromPrimitive(index)];
         }
 
         public void SetIndex(Structure index, Structure value)
@@ -235,7 +236,7 @@ namespace kOS.Safe.Encapsulation
         // actually trying to call this:
         public void SetIndex(int index, Structure value)
         {
-            internalDictionary[Structure.FromPrimitive(index)] = value;
+            internalDictionary[FromPrimitive(index)] = value;
         }
 
         public override string ToString()

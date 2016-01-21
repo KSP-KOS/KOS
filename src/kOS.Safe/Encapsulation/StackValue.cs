@@ -50,7 +50,7 @@ namespace kOS.Safe.Encapsulation
         private void StackInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => Collection.Count));
+            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarIntValue>      (() => Collection.Count));
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Push(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Pop()));
             AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
