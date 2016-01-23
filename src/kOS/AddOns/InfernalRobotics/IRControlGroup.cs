@@ -1,11 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 using kOS.Suffixed;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using kOS.AddOns.InfernalRobotics;
 
 namespace kOS.AddOns.InfernalRobotics
 {
@@ -23,11 +19,11 @@ namespace kOS.AddOns.InfernalRobotics
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new SetSuffix<string>(() => cg.Name, value => cg.Name = value));
-            AddSuffix("SPEED", new SetSuffix<float>(() => cg.Speed, value => cg.Speed = value));
-            AddSuffix("EXPANDED", new SetSuffix<bool>(() => cg.Expanded, value => cg.Expanded = value));
-            AddSuffix("FORWARDKEY", new SetSuffix<string>(() => cg.ForwardKey, value => cg.ForwardKey = value));
-            AddSuffix("REVERSEKEY", new SetSuffix<string>(() => cg.ReverseKey, value => cg.ReverseKey = value));
+            AddSuffix("NAME", new SetSuffix<StringValue>(() => cg.Name, value => cg.Name = value));
+            AddSuffix("SPEED", new SetSuffix<ScalarDoubleValue>(() => cg.Speed, value => cg.Speed = value));
+            AddSuffix("EXPANDED", new SetSuffix<BooleanValue>(() => cg.Expanded, value => cg.Expanded = value));
+            AddSuffix("FORWARDKEY", new SetSuffix<StringValue>(() => cg.ForwardKey, value => cg.ForwardKey = value));
+            AddSuffix("REVERSEKEY", new SetSuffix<StringValue>(() => cg.ReverseKey, value => cg.ReverseKey = value));
 
             AddSuffix("SERVOS", new NoArgsSuffix<ListValue> (GetServos));
 

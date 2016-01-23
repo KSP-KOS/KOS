@@ -1,3 +1,6 @@
+using System;
+using kOS.Safe.Execution;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class SuffixResult : ISuffixResult
@@ -9,14 +12,22 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.structure = structure;
         }
 
-        public Structure Value()
+        public Structure Value
         {
-            return structure;
+            get
+            {
+                return structure;
+            }
         }
 
         public bool HasValue
         {
             get { return true; }
+        }
+
+        public void InitState(ICpu cpu, Type argMarkerType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -53,14 +53,14 @@ namespace kOS.AddOns.KerbalAlarmClock
                 }
                 else
                 {
-                    ReturnValue = StringValue(string.Empty);
+                    ReturnValue = new StringValue(string.Empty);
                     SafeHouse.Logger.Log(string.Format("Failed creating KAC Alarm, UT={0}, Name={1}, Type= {2}", alarmUT, alarmName, alarmType));
                 }
             }
             else
             {
                 //KAC integration not present.
-                ReturnValue = StringValue(string.Empty);
+                ReturnValue = new StringValue(string.Empty);
                 throw new KOSUnavailableAddonException("addAlarm()", "Kerbal Alarm Clock");
             }
         }
