@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
@@ -1419,7 +1420,7 @@ namespace kOS.Safe.Compilation
             // as an encapsulated ScalarValue, preventing an unboxing collision.
             if (functionPointer is int || functionPointer is ScalarValue)
             {
-                ReverseStackArgs(cpu, direct);
+                CpuUtility.ReverseStackArgs(cpu, direct, ArgMarkerType);
                 var contextRecord = new SubroutineContext(cpu.InstructionPointer+1);
                 newIP = Convert.ToInt32(functionPointer);
                 
@@ -1451,6 +1452,17 @@ namespace kOS.Safe.Compilation
                     cpu.PopStack(); // remove BuiltInDelegate object.
                     cpu.PushStack(topThing); // put return value back.
                 }
+            }
+            else if (functionPointer is ISuffixResult)
+            {
+                var result = (ISuffixResult) functionPointer;
+
+                if (!result.HasValue)
+                {
+                    result.InitState(cpu, ArgMarkerType);
+                }
+
+                delegateReturn = result.Value;
             }
             else if (functionPointer is Delegate)
             {
@@ -1495,7 +1507,7 @@ namespace kOS.Safe.Compilation
             // expects the remainder of the arguments marshalled together into one array object.
             bool isParamArrayArg = false;
             
-            ReverseStackArgs(cpu, false);
+            CpuUtility.ReverseStackArgs(cpu, false, ArgMarkerType);
             for (int i = 0 ; i < paramArray.Length ; ++i)
             {
                 object arg = cpu.PopValue();
@@ -1603,44 +1615,6 @@ namespace kOS.Safe.Compilation
             }
         }
         
-        /// <summary>
-        /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
-        /// put them back again in reversed order so a function can read them in normal order.
-        /// Note that if this is an indirect call, it will also consume the thing just under
-        /// the ARG_MARKER, since that's expected to be the delegate or KOSDelegate that we already
-        /// read and pulled the needed information from.
-        /// <param name="cpu">the cpu we are running on, fur stack manipulation purposes</param>
-        /// <param name="direct">need to know if this was a direct or indirect call.  If indirect,
-        /// then that means it also needs to consume the indirect reference off the stack just under
-        /// the args</param>
-        /// </summary>
-        public static void ReverseStackArgs(ICpu cpu, bool direct)
-        {
-            List<object> args = new List<object>();
-            object arg = cpu.PopValue();
-            while (cpu.GetStackSize() > 0 && arg.GetType() != ArgMarkerType)
-            {
-                args.Add(arg);
-
-                // It's important to dereference with PopValue, not using PopStack, because the function
-                // being called might not even be able to see the variable in scope anyway.
-                // In other words, if calling a function like so:
-                //     declare foo to 3.
-                //     myfunc(foo).
-                // The code inside myfunc needs to see that as being identical to just saying:
-                //     myfunc(3).
-                // It has to be unaware of the fact that the name of the argument was 'foo'.  It just needs to
-                // see the contents that were inside foo.
-                arg = cpu.PopValue();
-            }
-            if (! direct)
-                cpu.PopStack(); // throw away the delegate or KOSDelegate info - we already snarfed it by now.
-            // Push the arg marker back on again.
-            cpu.PushStack(new KOSArgMarkerType());
-            // Push the arguments back on again, which will invert their order:
-            foreach (object item in args)
-                cpu.PushStack(item);
-        }
 
         public override string ToString()
         {
