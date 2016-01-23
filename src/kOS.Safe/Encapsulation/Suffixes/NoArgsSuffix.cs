@@ -1,5 +1,3 @@
-using System;
-
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class NoArgsSuffix<TReturn> : SuffixBase where TReturn : Structure
@@ -19,24 +17,4 @@ namespace kOS.Safe.Encapsulation.Suffixes
         }
     }
 
-    public class DeletageSuffixResult<TReturn> : ISuffixResult where TReturn : Structure
-    {
-        private Delegate del;
-
-        public DeletageSuffixResult(Delegate del)
-        {
-            this.del = del;
-        }
-
-        public Structure Value()
-        {
-            //TODO:ERENDRAKE Make custom error
-            throw new System.NotImplementedException();
-        }
-
-        public bool HasValue
-        {
-            get { return true; }
-        }
-    }
 }

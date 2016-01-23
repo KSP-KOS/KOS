@@ -205,6 +205,7 @@
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
+    <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
