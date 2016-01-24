@@ -188,7 +188,7 @@ namespace kOS.Suffixed
                     "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
                     "LONGITUDE",
                     "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
-                    "AIRSPEED", "VESSELNAME", "SHIPNAME",
+                    "AIRSPEED", "DRAG", "VESSELNAME", "SHIPNAME",
                     "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
                 };
         }
@@ -429,6 +429,7 @@ namespace kOS.Suffixed
             AddSuffix("GROUNDSPEED", new Suffix<double>(GetHorizontalSrfSpeed));
             AddSuffix("SURFACESPEED", new Suffix<double>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
             AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
+            AddSuffix("DRAG", new Suffix<double>(() => Vessel.drag));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));

@@ -73,6 +73,7 @@ VERTICALSPEED    Same as SHIP:VERTICALSPEED
 GROUNDSPEED      Same as SHIP:GROUNDSPEED 
 SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
+DRAG             Same as SHIP:DRAG
 VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
 APOAPSIS         Same as SHIP:APOAPSIS
