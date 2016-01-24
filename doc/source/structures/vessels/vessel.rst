@@ -212,7 +212,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
 
-.. attribute:: Vessel:AIRSPEED
+.. attribute:: Vessel:DRAG
 
     :type: scalar (m/s)
     :access: Get only
