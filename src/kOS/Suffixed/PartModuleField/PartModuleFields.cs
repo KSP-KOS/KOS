@@ -194,10 +194,10 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(string.Format(formatter,
-                                              (IsEditable(field) ? "settable" : "get-only"),
+                returnValue.Add(new StringValue(string.Format(formatter,
+                                              IsEditable(field) ? "settable" : "get-only",
                                               field.guiName.ToLower(),
-                                              Utilities.Utils.KOSType(field.FieldInfo.FieldType)));
+                                              Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
             }
             return returnValue;
         }
@@ -207,7 +207,7 @@ namespace kOS.Suffixed.PartModuleField
         /// which are currently showing on the part's RMB menu, without formating.
         /// </summary>
         /// <returns>List of all the strings field names.</returns>
-        protected ListValue AllFieldNames()
+        protected virtual ListValue AllFieldNames()
         {
             var returnValue = new ListValue();
 
@@ -215,7 +215,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(field.guiName.ToLower());
+                returnValue.Add(new StringValue(field.guiName.ToLower()));
             }
             return returnValue;
         }
@@ -226,7 +226,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="fieldName">The field to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
-        public bool HasField(string fieldName)
+        public virtual BooleanValue HasField(StringValue fieldName)
         {
             return FieldIsVisible(GetField(fieldName));
         }
@@ -255,10 +255,10 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseEvent kspEvent in visibleEvents)
             {
-                returnValue.Add(string.Format(formatter,
+                returnValue.Add(new StringValue(string.Format(formatter,
                                               "callable",
                                               kspEvent.guiName.ToLower(),
-                                              "KSPEvent"));
+                                              "KSPEvent")));
             }
             return returnValue;
         }
@@ -276,7 +276,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseEvent kspEvent in visibleEvents)
             {
-                returnValue.Add(kspEvent.guiName.ToLower());
+                returnValue.Add(new StringValue(kspEvent.guiName.ToLower()));
             }
             return returnValue;
         }
@@ -287,7 +287,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="eventName">The event name to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
-        public bool HasEvent(string eventName)
+        public BooleanValue HasEvent(StringValue eventName)
         {
             return EventIsVisible(GetEvent(eventName));
         }
@@ -313,10 +313,10 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                returnValue.Add(string.Format(formatter,
+                returnValue.Add(new StringValue(string.Format(formatter,
                                               "callable",
                                               kspAction.guiName.ToLower(),
-                                              "KSPAction"));
+                                              "KSPAction")));
             }
             return returnValue;
         }
@@ -331,7 +331,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                returnValue.Add(kspAction.guiName.ToLower());
+                returnValue.Add(new StringValue(kspAction.guiName.ToLower()));
             }
             return returnValue;
         }
@@ -342,7 +342,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="actionName">The action name to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
-        public bool HasAction(string actionName)
+        public BooleanValue HasAction(StringValue actionName)
         {
             return partModule.Actions.Any(kspAction => string.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
         }
@@ -372,37 +372,37 @@ namespace kOS.Suffixed.PartModuleField
             ListValue fields = AllFields(FORMATTER);
             ListValue events = AllEvents(FORMATTER);
             ListValue actions = AllActions(FORMATTER);
-            foreach (object t in fields)
+            foreach (Structure field in fields)
             {
-                all.Add(t);
+                all.Add(field);
             }
-            foreach (object t in events)
+            foreach (Structure kspevent in events)
             {
-                all.Add(t);
+                all.Add(kspevent);
             }
-            foreach (object t in actions)
+            foreach (Structure action in actions)
             {
-                all.Add(t);
+                all.Add(action);
             }
             return all;
         }
 
         private void InitializeSuffixesAfterConstruction()
         {
-            AddSuffix("NAME", new Suffix<string>(() => partModule.moduleName));
+            AddSuffix("NAME", new Suffix<StringValue>(() => partModule.moduleName));
             AddSuffix("PART", new Suffix<PartValue>(() => PartValueFactory.Construct(partModule.part, shared)));
             AddSuffix("ALLFIELDS", new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
             AddSuffix("ALLFIELDNAMES", new Suffix<ListValue>(AllFieldNames));
-            AddSuffix("HASFIELD", new OneArgsSuffix<bool, string>(HasField));
+            AddSuffix("HASFIELD", new OneArgsSuffix<BooleanValue, StringValue>(HasField));
             AddSuffix("ALLEVENTS", new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
             AddSuffix("AllEVENTNAMES", new Suffix<ListValue>(AllEventNames));
-            AddSuffix("HASEVENT", new OneArgsSuffix<bool, string>(HasEvent));
+            AddSuffix("HASEVENT", new OneArgsSuffix<BooleanValue, StringValue>(HasEvent));
             AddSuffix("ALLACTIONS", new Suffix<ListValue>(() => AllActions("({0}) {1}, is {2}")));
             AddSuffix("ALLACTIONNAMES", new Suffix<ListValue>(AllActionNames));
-            AddSuffix("HASACTION", new OneArgsSuffix<bool, string>(HasAction));
-            AddSuffix("GETFIELD", new OneArgsSuffix<object, string>(GetKSPFieldValue));
-            AddSuffix("SETFIELD", new TwoArgsSuffix<string, object>(SetKSPFieldValue));
-            AddSuffix("DOEVENT", new OneArgsSuffix<string>(CallKSPEvent));
+            AddSuffix("HASACTION", new OneArgsSuffix<BooleanValue, StringValue>(HasAction));
+            AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldValue));
+            AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, object>(SetKSPFieldValue));
+            AddSuffix("DOEVENT", new OneArgsSuffix<StringValue>(CallKSPEvent));
             AddSuffix("DOACTION", new TwoArgsSuffix<string, bool>(CallKSPAction));
         }
 
@@ -425,14 +425,14 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <returns></returns>
-        protected object GetKSPFieldValue(string suffixName)
+        protected Structure GetKSPFieldValue(StringValue suffixName)
         {
             BaseField field = GetField(suffixName);
             if (field == null)
                 throw new KOSLookupFailException("FIELD", suffixName, this);
             if (!FieldIsVisible(field))
                 throw new KOSLookupFailException("FIELD", suffixName, this, true);
-            object obj = field.GetValue(partModule);
+            Structure obj = FromPrimitive(field.GetValue(partModule));
             return obj;
         }
 
@@ -441,7 +441,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="newValue"></param>
-        protected void SetKSPFieldValue(string suffixName, object newValue)
+        protected virtual void SetKSPFieldValue(StringValue suffixName, object newValue)
         {
             ThrowIfNotCPUVessel();
             BaseField field = GetField(suffixName);
@@ -466,7 +466,7 @@ namespace kOS.Suffixed.PartModuleField
         /// Trigger whatever code the PartModule has attached to this Event, given the kOS name for the suffix.
         /// </summary>
         /// <param name="suffixName"></param>
-        private void CallKSPEvent(string suffixName)
+        private void CallKSPEvent(StringValue suffixName)
         {
             ThrowIfNotCPUVessel();
             BaseEvent evt = GetEvent(suffixName);

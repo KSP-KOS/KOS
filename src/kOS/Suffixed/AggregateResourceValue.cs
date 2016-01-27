@@ -24,10 +24,10 @@ namespace kOS.Suffixed
 
         private void InitializeAggregateResourceSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("DENSITY", new Suffix<float>(() => density, "The density of the resource"));
-            AddSuffix("AMOUNT", new Suffix<double>(GetAmount, "The resources currently available"));
-            AddSuffix("CAPACITY", new Suffix<double>(GetCapacity, "The total storage capacity currently available"));
+            AddSuffix("NAME", new Suffix<StringValue>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("DENSITY", new Suffix<ScalarDoubleValue>(() => density, "The density of the resource"));
+            AddSuffix("AMOUNT", new Suffix<ScalarDoubleValue>(GetAmount, "The resources currently available"));
+            AddSuffix("CAPACITY", new Suffix<ScalarDoubleValue>(GetCapacity, "The total storage capacity currently available"));
             AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(GetParts, "The containers for this resource"));
         }
 
@@ -37,12 +37,12 @@ namespace kOS.Suffixed
             return ListValue<PartValue>.CreateList(parts);
         }
 
-        private double GetCapacity()
+        private ScalarDoubleValue GetCapacity()
         {
             return resources.Sum(r => r.maxAmount);
         }
 
-        private double GetAmount()
+        private ScalarDoubleValue GetAmount()
         {
             return resources.Sum(r => r.amount);
         }

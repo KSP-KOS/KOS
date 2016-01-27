@@ -42,24 +42,24 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => name));
-            AddSuffix("APOAPSIS", new Suffix<double>(() => orbit.ApA));
-            AddSuffix("PERIAPSIS", new Suffix<double>(() => orbit.PeA));
+            AddSuffix("NAME", new Suffix<StringValue>(() => name));
+            AddSuffix("APOAPSIS", new Suffix<ScalarDoubleValue>(() => orbit.ApA));
+            AddSuffix("PERIAPSIS", new Suffix<ScalarDoubleValue>(() => orbit.PeA));
             AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(orbit.referenceBody, Shared)));
-            AddSuffix("PERIOD", new Suffix<double>(() => orbit.period));
-            AddSuffix("INCLINATION", new Suffix<double>(() => orbit.inclination));
-            AddSuffix("ECCENTRICITY", new Suffix<double>(() => orbit.eccentricity));
-            AddSuffix("SEMIMAJORAXIS", new Suffix<double>(() => orbit.semiMajorAxis));
-            AddSuffix("SEMIMINORAXIS", new Suffix<double>(() => orbit.semiMinorAxis));
-            AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<double>(() => orbit.LAN));
-            AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<double>(() => orbit.argumentOfPeriapsis));
-            AddSuffix("TRUEANOMALY", new Suffix<double>(() => Utilities.Utils.DegreeFix(orbit.trueAnomaly,0.0)));
-            AddSuffix("MEANANOMALYATEPOCH", new Suffix<double>(() => Utilities.Utils.DegreeFix(orbit.meanAnomalyAtEpoch * 180.0 / Math.PI, 0.0)));
-            AddSuffix("TRANSITION", new Suffix<string>(() => orbit.patchEndTransition.ToString()));
+            AddSuffix("PERIOD", new Suffix<ScalarDoubleValue>(() => orbit.period));
+            AddSuffix("INCLINATION", new Suffix<ScalarDoubleValue>(() => orbit.inclination));
+            AddSuffix("ECCENTRICITY", new Suffix<ScalarDoubleValue>(() => orbit.eccentricity));
+            AddSuffix("SEMIMAJORAXIS", new Suffix<ScalarDoubleValue>(() => orbit.semiMajorAxis));
+            AddSuffix("SEMIMINORAXIS", new Suffix<ScalarDoubleValue>(() => orbit.semiMinorAxis));
+            AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<ScalarDoubleValue>(() => orbit.LAN));
+            AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<ScalarDoubleValue>(() => orbit.argumentOfPeriapsis));
+            AddSuffix("TRUEANOMALY", new Suffix<ScalarDoubleValue>(() => Utilities.Utils.DegreeFix(orbit.trueAnomaly,0.0)));
+            AddSuffix("MEANANOMALYATEPOCH", new Suffix<ScalarDoubleValue>(() => Utilities.Utils.DegreeFix(orbit.meanAnomalyAtEpoch * 180.0 / Math.PI, 0.0)));
+            AddSuffix("TRANSITION", new Suffix<StringValue>(() => orbit.patchEndTransition.ToString()));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
-            AddSuffix("HASNEXTPATCH", new Suffix<bool>(GetHasNextPatch));
+            AddSuffix("HASNEXTPATCH", new Suffix<BooleanValue>(GetHasNextPatch));
 
             //TODO: Determine if these vectors are different than POSITION and VELOCITY
             AddSuffix("VSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.vel)));
@@ -118,7 +118,7 @@ namespace kOS.Suffixed
         /// Find out whether or not the orbit has a next patch.
         /// </summary>
         /// <returns>true if the :NEXTPATCH suffix will return a real suffix.</returns>
-        private bool GetHasNextPatch()
+        private BooleanValue GetHasNextPatch()
         {
             return orbit.nextPatch != null && (orbit.nextPatch.activePatch);
         }

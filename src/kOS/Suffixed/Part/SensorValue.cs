@@ -16,10 +16,10 @@ namespace kOS.Suffixed.Part
 
         private void SensorInitializeSuffixes()
         {
-            AddSuffix("ACTIVE", new SetSuffix<bool>(() => sensor.sensorActive, value => sensor.sensorActive = value));
-            AddSuffix("TYPE", new Suffix<string>(() => sensor.sensorType));
-            AddSuffix("DISPLAY", new Suffix<string>(() => sensor.readoutInfo));
-            AddSuffix("POWERCONSUMPTION", new Suffix<float>(() => sensor.powerConsumption));
+            AddSuffix("ACTIVE", new SetSuffix<BooleanValue>(() => sensor.sensorActive, value => sensor.sensorActive = value));
+            AddSuffix("TYPE", new Suffix<StringValue>(() => sensor.sensorType));
+            AddSuffix("DISPLAY", new Suffix<StringValue>(() => sensor.readoutInfo));
+            AddSuffix("POWERCONSUMPTION", new Suffix<ScalarDoubleValue>(() => sensor.powerConsumption));
             AddSuffix("TOGGLE", new NoArgsSuffix(() => sensor.Toggle()));
         }
 

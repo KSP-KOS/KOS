@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using kOS.Serialization;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Serialization;
 using kOS.Safe.Exceptions;
 
@@ -15,29 +16,29 @@ namespace kOS.Suffixed
 
         public CelestialBody Body { get; set; }
 
-        override public Orbit Orbit { get { return Body.orbit; } }
+        public override Orbit Orbit { get { return Body.orbit; } }
 
-        override public string GetName()
+        public override StringValue GetName()
         {
             return Body.name;
         }
 
-        override public Vector GetPosition()
+        public override Vector GetPosition()
         {
             return new Vector(Body.position - Shared.Vessel.findWorldCenterOfMass());
         }
 
-        override public OrbitableVelocity GetVelocities()
+        public override OrbitableVelocity GetVelocities()
         {
             return new OrbitableVelocity(Body, Shared);
         }
 
-        override public Vector GetPositionAtUT(TimeSpan timeStamp)
+        public override Vector GetPositionAtUT(TimeSpan timeStamp)
         {
             return new Vector(Body.getPositionAtUT(timeStamp.ToUnixStyleTime()) - Shared.Vessel.findWorldCenterOfMass());
         }
 
-        override public OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
+        public override OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody();
             if (parent == null) // only if Body is Sun and therefore has no parent, then do more complex work instead because KSP didn't provide a way itself
@@ -47,7 +48,7 @@ namespace kOS.Suffixed
                 if (soiBody.orbit != null)
                     futureOrbitalVel = soiBody.orbit.GetFrameVelAtUT(timeStamp.ToUnixStyleTime());
                 else
-                    futureOrbitalVel = (-1) * (new VesselTarget(Shared.Vessel, Shared).GetVelocitiesAtUT(timeStamp).Orbital.ToVector3D());
+                    futureOrbitalVel = -1 * new VesselTarget(Shared.Vessel, Shared).GetVelocitiesAtUT(timeStamp).Orbital.ToVector3D();
                 return new OrbitableVelocity(new Vector(futureOrbitalVel), new Vector(0.0, 0.0, 0.0));
             }
 
@@ -59,12 +60,12 @@ namespace kOS.Suffixed
             return new OrbitableVelocity(orbVel, surfVel);
         }
 
-        override public Orbit GetOrbitAtUT(double desiredUT)
+        public override Orbit GetOrbitAtUT(double desiredUT)
         {
             return Orbit;  // Bodies cannot transition and are always on rails so this is constant.
         }
 
-        override public Vector GetUpVector()
+        public override Vector GetUpVector()
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody();
             return parent == null ?
@@ -72,7 +73,7 @@ namespace kOS.Suffixed
                 new Vector((Body.position - parent.position).normalized);
         }
 
-        override public Vector GetNorthVector()
+        public override Vector GetNorthVector()
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody() ?? Body;
             return new Vector(Vector3d.Exclude(GetUpVector(), parent.transform.up));
@@ -98,23 +99,23 @@ namespace kOS.Suffixed
 
         private void BodyInitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => Body.name));
-            AddSuffix("DESCRIPTION", new Suffix<string>(() => Body.bodyDescription));
-            AddSuffix("MASS", new Suffix<double>(() => Body.Mass));
-            AddSuffix("ALTITUDE", new Suffix<double>(() => Body.orbit.altitude));
-            AddSuffix("RADIUS", new Suffix<double>(() => Body.Radius));
-            AddSuffix("MU", new Suffix<double>(() => Body.gravParameter));
-            AddSuffix("ROTATIONPERIOD", new Suffix<double>(() => Body.rotationPeriod));
+            AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
+            AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
+            AddSuffix("MASS", new Suffix<ScalarDoubleValue>(() => Body.Mass));
+            AddSuffix("ALTITUDE", new Suffix<ScalarDoubleValue>(() => Body.orbit.altitude));
+            AddSuffix("RADIUS", new Suffix<ScalarDoubleValue>(() => Body.Radius));
+            AddSuffix("MU", new Suffix<ScalarDoubleValue>(() => Body.gravParameter));
+            AddSuffix("ROTATIONPERIOD", new Suffix<ScalarDoubleValue>(() => Body.rotationPeriod));
             AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
-            AddSuffix("SOIRADIUS", new Suffix<double>(() => Body.sphereOfInfluence));
-            AddSuffix("ROTATIONANGLE", new Suffix<double>(() => Body.rotationAngle));
+            AddSuffix("SOIRADIUS", new Suffix<ScalarDoubleValue>(() => Body.sphereOfInfluence));
+            AddSuffix("ROTATIONANGLE", new Suffix<ScalarDoubleValue>(() => Body.rotationAngle));
             AddSuffix("GEOPOSITIONOF",
                       new OneArgsSuffix<GeoCoordinates, Vector>(
                               GeoCoordinatesFromPosition,
                               "Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body."));
             AddSuffix("ALTITUDEOF",
-                      new OneArgsSuffix<double, Vector>(
+                      new OneArgsSuffix<ScalarDoubleValue, Vector>(
                               AltitudeFromPosition,
                               "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
         }
@@ -137,7 +138,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="position">Vector to use as the 3D position in ship-raw coords</param>
         /// <returns>The altitude above 'sea level'.</returns>
-        public double AltitudeFromPosition(Vector position)
+        public ScalarDoubleValue AltitudeFromPosition(Vector position)
         {
             Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
             return Body.GetAltitude(unityWorldPosition);

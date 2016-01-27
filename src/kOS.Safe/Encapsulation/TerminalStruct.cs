@@ -34,7 +34,7 @@ namespace kOS.Safe.Encapsulation
         private void InitializeSuffixes()
         {
             // TODO: Uncomment the following if IsOpen gets implemented later:
-            // AddSuffix("ISOPEN", new SetSuffix<bool>(() => IsOpen, Isopen = value, "true=open, false=closed.  You can set it to open/close the window."));
+            // AddSuffix("ISOPEN", new SetSuffix<BooleanValue>(() => IsOpen, Isopen = value, "true=open, false=closed.  You can set it to open/close the window."));
             AddSuffix("HEIGHT", new ClampSetSuffix<ScalarIntValue>(() => Shared.Screen.RowCount,
                                                          value => Shared.Screen.SetSize(value, Shared.Screen.ColumnCount),
                                                          MINROWS,

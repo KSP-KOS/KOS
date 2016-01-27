@@ -1,3 +1,4 @@
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
@@ -32,9 +33,9 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixColor()
         {
-            AddSuffix(new[] { "H", "HUE" }, new ClampSetSuffix<float>(() => hue, value => { hue = value; ReconcileHsvToRgb(); }, 0, 255));
-            AddSuffix(new[] { "S", "SATURATION" }, new ClampSetSuffix<float>(() => saturation, value => { saturation = value; ReconcileHsvToRgb(); }, 0, 255));
-            AddSuffix(new[] { "V", "VALUE" }, new ClampSetSuffix<float>(() => hsvValue, value => { hsvValue = value; ReconcileHsvToRgb(); }, 0, 255));
+            AddSuffix(new[] { "H", "HUE" }, new ClampSetSuffix<ScalarDoubleValue>(() => hue, value => { hue = value; ReconcileHsvToRgb(); }, 0, 255));
+            AddSuffix(new[] { "S", "SATURATION" }, new ClampSetSuffix<ScalarDoubleValue>(() => saturation, value => { saturation = value; ReconcileHsvToRgb(); }, 0, 255));
+            AddSuffix(new[] { "V", "VALUE" }, new ClampSetSuffix<ScalarDoubleValue>(() => hsvValue, value => { hsvValue = value; ReconcileHsvToRgb(); }, 0, 255));
         }
 
         // Converts an RGB color to an HSV color.

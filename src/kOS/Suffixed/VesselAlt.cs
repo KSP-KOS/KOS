@@ -16,22 +16,22 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixAlt()
         {
-            AddSuffix("APOAPSIS", new NoArgsSuffix<double>(GetApoapsis));
-            AddSuffix("PERIAPSIS", new NoArgsSuffix<double>(GetPeriapsis));
-            AddSuffix("RADAR", new NoArgsSuffix<double>(GetRadar));
+            AddSuffix("APOAPSIS", new NoArgsSuffix<ScalarDoubleValue>(GetApoapsis));
+            AddSuffix("PERIAPSIS", new NoArgsSuffix<ScalarDoubleValue>(GetPeriapsis));
+            AddSuffix("RADAR", new NoArgsSuffix<ScalarDoubleValue>(GetRadar));
         }
         
-        public double GetApoapsis()
+        public ScalarDoubleValue GetApoapsis()
         {
             return shared.Vessel.orbit.ApA;            
         }
         
-        public double GetPeriapsis()
+        public ScalarDoubleValue GetPeriapsis()
         {
             return shared.Vessel.orbit.PeA;
         }
         
-        public double GetRadar()
+        public ScalarDoubleValue GetRadar()
         {
             return Convert.ToDouble(
                 shared.Vessel.heightFromTerrain > 0 ?

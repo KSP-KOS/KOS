@@ -319,30 +319,30 @@ namespace kOS.Binding
             AddSuffix("PITCHPID", new Suffix<PIDLoop>(() => pitchRatePI));
             AddSuffix("YAWPID", new Suffix<PIDLoop>(() => yawRatePI));
             AddSuffix("ROLLPID", new Suffix<PIDLoop>(() => rollRatePI));
-            AddSuffix("ENABLED", new Suffix<bool>(() => Enabled));
+            AddSuffix("ENABLED", new Suffix<BooleanValue>(() => Enabled));
             AddSuffix("TARGET", new Suffix<Direction>(() => TargetDirection));
             AddSuffix("RESETPIDS", new NoArgsSuffix(ResetIs));
-            AddSuffix("SHOWFACINGVECTORS", new SetSuffix<bool>(() => ShowFacingVectors, value => ShowFacingVectors = value));
-            AddSuffix("SHOWANGULARVECTORS", new SetSuffix<bool>(() => ShowAngularVectors, value => ShowAngularVectors = value));
-            AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<bool>(() => ShowThrustVectors, value => ShowThrustVectors = value));
-            AddSuffix("SHOWRCSVECTORS", new SetSuffix<bool>(() => ShowRCSVectors, value => ShowRCSVectors = value));
-            AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<bool>(() => ShowSteeringStats, value => ShowSteeringStats = value));
-            AddSuffix("WRITECSVFILES", new SetSuffix<bool>(() => WriteCSVFiles, value => WriteCSVFiles = value));
-            AddSuffix("PITCHTS", new SetSuffix<double>(() => pitchPI.Ts, value => pitchPI.Ts = value));
-            AddSuffix("YAWTS", new SetSuffix<double>(() => yawPI.Ts, value => yawPI.Ts = value));
-            AddSuffix("ROLLTS", new SetSuffix<double>(() => rollPI.Ts, value => rollPI.Ts = value));
-            AddSuffix("MAXSTOPPINGTIME", new SetSuffix<double>(() => MaxStoppingTime, value => MaxStoppingTime = value));
-            AddSuffix("ANGLEERROR", new Suffix<double>(() => phi * RadToDeg));
-            AddSuffix("PITCHERROR", new Suffix<double>(() => phiPitch * RadToDeg));
-            AddSuffix("YAWERROR", new Suffix<double>(() => phiYaw * RadToDeg));
-            AddSuffix("ROLLERROR", new Suffix<double>(() => phiRoll * RadToDeg));
-            AddSuffix("PITCHTORQUEADJUST", new SetSuffix<double>(() => PitchTorqueAdjust, value => PitchTorqueAdjust = value));
-            AddSuffix("YAWTORQUEADJUST", new SetSuffix<double>(() => YawTorqueAdjust, value => YawTorqueAdjust = value));
-            AddSuffix("ROLLTORQUEADJUST", new SetSuffix<double>(() => RollTorqueAdjust, value => RollTorqueAdjust = value));
-            AddSuffix("PITCHTORQUEFACTOR", new SetSuffix<double>(() => PitchTorqueFactor, value => PitchTorqueFactor = value));
-            AddSuffix("YAWTORQUEFACTOR", new SetSuffix<double>(() => YawTorqueFactor, value => YawTorqueFactor = value));
-            AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<double>(() => RollTorqueFactor, value => RollTorqueFactor = value));
-            AddSuffix("AVERAGEDURATION", new Suffix<double>(() => AverageDuration.Mean));
+            AddSuffix("SHOWFACINGVECTORS", new SetSuffix<BooleanValue>(() => ShowFacingVectors, value => ShowFacingVectors = value));
+            AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
+            AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() => ShowThrustVectors, value => ShowThrustVectors = value));
+            AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() => ShowRCSVectors, value => ShowRCSVectors = value));
+            AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<BooleanValue>(() => ShowSteeringStats, value => ShowSteeringStats = value));
+            AddSuffix("WRITECSVFILES", new SetSuffix<BooleanValue>(() => WriteCSVFiles, value => WriteCSVFiles = value));
+            AddSuffix("PITCHTS", new SetSuffix<ScalarDoubleValue>(() => pitchPI.Ts, value => pitchPI.Ts = value));
+            AddSuffix("YAWTS", new SetSuffix<ScalarDoubleValue>(() => yawPI.Ts, value => yawPI.Ts = value));
+            AddSuffix("ROLLTS", new SetSuffix<ScalarDoubleValue>(() => rollPI.Ts, value => rollPI.Ts = value));
+            AddSuffix("MAXSTOPPINGTIME", new SetSuffix<ScalarDoubleValue>(() => MaxStoppingTime, value => MaxStoppingTime = value));
+            AddSuffix("ANGLEERROR", new Suffix<ScalarDoubleValue>(() => phi * RadToDeg));
+            AddSuffix("PITCHERROR", new Suffix<ScalarDoubleValue>(() => phiPitch * RadToDeg));
+            AddSuffix("YAWERROR", new Suffix<ScalarDoubleValue>(() => phiYaw * RadToDeg));
+            AddSuffix("ROLLERROR", new Suffix<ScalarDoubleValue>(() => phiRoll * RadToDeg));
+            AddSuffix("PITCHTORQUEADJUST", new SetSuffix<ScalarDoubleValue>(() => PitchTorqueAdjust, value => PitchTorqueAdjust = value));
+            AddSuffix("YAWTORQUEADJUST", new SetSuffix<ScalarDoubleValue>(() => YawTorqueAdjust, value => YawTorqueAdjust = value));
+            AddSuffix("ROLLTORQUEADJUST", new SetSuffix<ScalarDoubleValue>(() => RollTorqueAdjust, value => RollTorqueAdjust = value));
+            AddSuffix("PITCHTORQUEFACTOR", new SetSuffix<ScalarDoubleValue>(() => PitchTorqueFactor, value => PitchTorqueFactor = value));
+            AddSuffix("YAWTORQUEFACTOR", new SetSuffix<ScalarDoubleValue>(() => YawTorqueFactor, value => YawTorqueFactor = value));
+            AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<ScalarDoubleValue>(() => RollTorqueFactor, value => RollTorqueFactor = value));
+            AddSuffix("AVERAGEDURATION", new Suffix<ScalarDoubleValue>(() => AverageDuration.Mean));
 #if DEBUG
             AddSuffix("MOI", new Suffix<Vector>(() => new Vector(momentOfInertia)));
             AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
@@ -352,8 +352,8 @@ namespace kOS.Binding
             AddSuffix("TARGETTORQUE", new Suffix<Vector>(() => new Vector(tgtPitchTorque, tgtRollTorque, tgtYawTorque)));
             AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
             AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
-            AddSuffix("ENABLETORQUEADJUST", new SetSuffix<bool>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
-            AddSuffix("ENABLEMOIADJUST", new SetSuffix<bool>(() => enableMoiAdjust, value => enableMoiAdjust = value));
+            AddSuffix("ENABLETORQUEADJUST", new SetSuffix<BooleanValue>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
+            AddSuffix("ENABLEMOIADJUST", new SetSuffix<BooleanValue>(() => enableMoiAdjust, value => enableMoiAdjust = value));
 #endif
         }
 

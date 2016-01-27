@@ -53,7 +53,7 @@ namespace kOS.Suffixed
         {
             AddSuffix(new[] {"DELTAV", "BURNVECTOR"}, new Suffix<Vector>(GetBurnVector));
 
-            AddSuffix("ETA", new SetSuffix<double>(
+            AddSuffix("ETA", new SetSuffix<ScalarDoubleValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -66,7 +66,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("PROGRADE", new SetSuffix<double>(
+            AddSuffix("PROGRADE", new SetSuffix<ScalarDoubleValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -79,7 +79,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("RADIALOUT", new SetSuffix<double>(
+            AddSuffix("RADIALOUT", new SetSuffix<ScalarDoubleValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -91,7 +91,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("NORMAL", new SetSuffix<double>(
+            AddSuffix("NORMAL", new SetSuffix<ScalarDoubleValue>(
                 () =>
                 {
                     FromNodeRef();

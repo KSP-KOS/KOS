@@ -109,7 +109,7 @@ namespace kOS.Suffixed
         ///   given lat/long coords, relative to the current CPU vessel's heading.
         /// </summary>
         /// <returns> bearing </returns>
-        public double GetBearing()
+        public ScalarDoubleValue GetBearing()
         {
             return VesselUtils.AngleDelta(VesselUtils.GetHeading(Shared.Vessel), (float) GetHeadingFrom());
         }
@@ -118,7 +118,7 @@ namespace kOS.Suffixed
         ///  Returns the ground's altitude above sea level at this geo position.
         /// </summary>
         /// <returns></returns>
-        public double GetTerrainAltitude()
+        public ScalarDoubleValue GetTerrainAltitude()
         {
             double alt = 0.0;
             PQS bodyPQS = Body.pqsController;
@@ -179,7 +179,7 @@ namespace kOS.Suffixed
         ///   LAT/LANG position on the SOI body's surface.
         /// </summary>
         /// <returns>compass heading in degrees</returns>
-        private double GetHeadingFrom()
+        private ScalarDoubleValue GetHeadingFrom()
         {
             var up = Shared.Vessel.upAxis;
             var north = VesselUtils.GetNorthVector(Shared.Vessel);
@@ -199,7 +199,7 @@ namespace kOS.Suffixed
         ///   the current CPU vessel is now.
         /// </summary>
         /// <returns>distance scalar</returns>
-        private double GetDistanceFrom()
+        private ScalarDoubleValue GetDistanceFrom()
         {
             return GetPosition().Magnitude();
         }
@@ -220,7 +220,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="altitude">The (sea level) altitude to get a position for</param>>
         /// <returns>position vector</returns>
-        public Vector GetAltitudePosition(double altitude)
+        public Vector GetAltitudePosition(ScalarDoubleValue altitude)
         {
             Vector3d latLongCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, altitude);
             Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
@@ -229,17 +229,17 @@ namespace kOS.Suffixed
 
         private void GeoCoordsInitializeSuffixes()
         {
-            AddSuffix("LAT", new Suffix<double>(()=> Latitude));
-            AddSuffix("LNG", new Suffix<double>(()=> Longitude));
+            AddSuffix("LAT", new Suffix<ScalarDoubleValue>(()=> Latitude));
+            AddSuffix("LNG", new Suffix<ScalarDoubleValue>(()=> Longitude));
             AddSuffix("BODY", new Suffix<BodyTarget>(()=> new BodyTarget(Body, Shared)));
-            AddSuffix("TERRAINHEIGHT", new Suffix<double>(GetTerrainAltitude));
-            AddSuffix("DISTANCE", new Suffix<double>(GetDistanceFrom));
-            AddSuffix("HEADING", new Suffix<double>(GetHeadingFrom));
-            AddSuffix("BEARING", new Suffix<double>(GetBearing));
+            AddSuffix("TERRAINHEIGHT", new Suffix<ScalarDoubleValue>(GetTerrainAltitude));
+            AddSuffix("DISTANCE", new Suffix<ScalarDoubleValue>(GetDistanceFrom));
+            AddSuffix("HEADING", new Suffix<ScalarDoubleValue>(GetHeadingFrom));
+            AddSuffix("BEARING", new Suffix<ScalarDoubleValue>(GetBearing));
             AddSuffix("POSITION", new Suffix<Vector>(GetPosition,
                                                      "Get the 3-D space position relative to the ship center, of this lat/long, " +
                                                      "at a point on the terrain surface"));
-            AddSuffix("ALTITUDEPOSITION", new OneArgsSuffix<Vector,double>(GetAltitudePosition,
+            AddSuffix("ALTITUDEPOSITION", new OneArgsSuffix<Vector,ScalarDoubleValue>(GetAltitudePosition,
                                                                            "Get the 3-D space position relative to the ship center, " +
                                                                            "of this lat/long, at this (sea level) altitude"));
         }

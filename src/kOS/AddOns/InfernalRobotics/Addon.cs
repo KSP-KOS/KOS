@@ -76,7 +76,7 @@ namespace kOS.AddOns.InfernalRobotics
             return list;
         }
 
-        public override bool Available()
+        public override BooleanValue Available()
         {
             return IRWrapper.APIReady;
         }

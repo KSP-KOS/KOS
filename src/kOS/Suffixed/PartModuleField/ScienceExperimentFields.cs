@@ -3,6 +3,7 @@ using kOS.Safe.Exceptions;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.PartModuleField
 {
@@ -33,10 +34,10 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("RESET", new NoArgsSuffix(ResetExperiment, "Reset this experiment"));
             AddSuffix("TRANSMIT", new NoArgsSuffix(TransmitData, "Transmit experiment data back to Kerbin"));
             AddSuffix("DUMP", new NoArgsSuffix(DumpData, "Dump experiment data"));
-            AddSuffix("INOPERABLE", new Suffix<bool>(() => module.Inoperable, "Is this experiment inoperable"));
-            AddSuffix("DEPLOYED", new Suffix<bool>(() => module.Deployed, "Is this experiment deployed"));
-            AddSuffix("RERUNNABLE", new Suffix<bool>(() => module.rerunnable, "Is this experiment rerunnable"));
-            AddSuffix("HASDATA", new Suffix<bool>(() => module.GetData().Any(), "Does this experiment have any data stored"));
+            AddSuffix("INOPERABLE", new Suffix<BooleanValue>(() => module.Inoperable, "Is this experiment inoperable"));
+            AddSuffix("DEPLOYED", new Suffix<BooleanValue>(() => module.Deployed, "Is this experiment deployed"));
+            AddSuffix("RERUNNABLE", new Suffix<BooleanValue>(() => module.rerunnable, "Is this experiment rerunnable"));
+            AddSuffix("HASDATA", new Suffix<BooleanValue>(() => module.GetData().Any(), "Does this experiment have any data stored"));
         }
 
         private void DeployExperiment()

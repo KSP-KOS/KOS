@@ -249,7 +249,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             string result = new string((char) argument, 1);
-            ReturnValue = StringValue(result);
+            ReturnValue = new StringValue(result);
         }
     }
 
@@ -261,7 +261,7 @@ namespace kOS.Function
             string argument = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
             char result = argument.ToCharArray()[0];
-            ReturnValue = ScalarIntValue((int)result);
+            ReturnValue = new ScalarIntValue(result);
         }
     }
 }

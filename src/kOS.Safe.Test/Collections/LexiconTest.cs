@@ -17,9 +17,9 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanAddAndGetKey()
         {
-            var lex = new Lexicon {{"foo", "bar"}};
+            var lex = new Lexicon {{new StringValue("foo"), new StringValue("bar")}};
 
-            var testValue = lex["foo"];
+            var testValue = lex[new StringValue("foo")];
 
             Assert.AreEqual("bar", testValue);
         }
@@ -27,64 +27,64 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void HasCaseInsensitiveKeys()
         {
-            var lex = new Lexicon {{"foo", "bar"}};
+            var lex = new Lexicon {{new StringValue("foo"), new StringValue("bar")}};
 
-            Assert.AreEqual("bar", lex["FOO"]);
+            Assert.AreEqual("bar", lex[new StringValue("FOO")]);
         }
 
         [Test]
         public void HashHitOnEqualValues()
         {
-            var lex = new Lexicon {{double.MaxValue, "bar"}};
+            var lex = new Lexicon {{ScalarDoubleValue.MaxValue(), new StringValue("bar")}};
 
-            Assert.AreEqual("bar", lex[double.MaxValue]);
+            Assert.AreEqual("bar", lex[ScalarDoubleValue.MaxValue()]);
         }
 
         [Test]
         [ExpectedException(typeof(KOSKeyNotFoundException))]
         public void HashMissOnDifferentValues()
         {
-            var lex = new Lexicon {{double.MinValue, "bar"}};
+            var lex = new Lexicon {{ScalarDoubleValue.MinValue(), new StringValue("bar")}};
 
-            Assert.AreNotEqual("bar", lex[double.MaxValue]);
+            Assert.AreNotEqual("bar", lex[ScalarDoubleValue.MaxValue()]);
         }
 
         [Test]
         public void ContainsReturnsTrueIfTheKeyIsPresent()
         {
-            var lex = new Lexicon {{double.MinValue, "bar"}};
+            var lex = new Lexicon {{ScalarDoubleValue.MinValue(), new StringValue("bar")}};
 
-            Assert.IsTrue(lex.ContainsKey(double.MinValue));
+            Assert.IsTrue(lex.ContainsKey(ScalarDoubleValue.MinValue()));
         }
 
         [Test]
         public void ContainsReturnsFalseIfTheKeyIsMissing()
         {
-            var lex = new Lexicon {{double.MinValue, "bar"}};
+            var lex = new Lexicon {{ScalarDoubleValue.MinValue(), new StringValue("bar")}};
 
-            Assert.IsFalse(lex.ContainsKey(double.MaxValue));
+            Assert.IsFalse(lex.ContainsKey(ScalarDoubleValue.MaxValue()));
         }
 
         [Test]
         public void CanRemoveKeyOfDifferentCase()
         {
-            var lex = new Lexicon {{"foo", "bar"}};
+            var lex = new Lexicon {{new StringValue("foo"), new StringValue("bar")}};
 
             Assert.AreEqual(1, lex.Count);
 
-            lex.Remove("foo");
+            lex.Remove(new StringValue("foo"));
             Assert.AreEqual(0, lex.Count);
 
-            lex.Add("foo", "bar");
+            lex.Add(new StringValue("foo"), new StringValue("bar"));
             Assert.AreEqual(1, lex.Count);
 
-            lex.Remove("FOO");
+            lex.Remove(new StringValue("FOO"));
             Assert.AreEqual(0, lex.Count);
 
-            lex.Add("foo", "bar");
+            lex.Add(new StringValue("foo"), new StringValue("bar"));
             Assert.AreEqual(1, lex.Count);
 
-            lex.Remove("Foo");
+            lex.Remove(new StringValue("Foo"));
             Assert.AreEqual(0, lex.Count);
         }
 
@@ -92,14 +92,14 @@ namespace kOS.Safe.Test.Collections
         public void DoesNotErrorOnRemoveNullKey()
         {
             var lex = new Lexicon();
-            lex.Remove("foo");
+            lex.Remove(new StringValue("foo"));
         }
 
         [Test]
         public void CanSetNewIndex()
         {
             var lex = new Lexicon();
-            lex["foo"] = "bang";
+            lex[new StringValue("foo")] = new StringValue("bang");
 
             Assert.AreEqual(1, lex.Count);
         }
@@ -108,8 +108,8 @@ namespace kOS.Safe.Test.Collections
         public void CanSetAndGetIndex()
         {
             var lex = new Lexicon();
-            lex.SetIndex("fizz", "bang");
-            var value = lex.GetIndex("fizz");
+            lex.SetIndex(new StringValue("fizz"), new StringValue("bang"));
+            var value = lex.GetIndex(new StringValue("fizz"));
 
             Assert.AreEqual("bang", value);
         }
@@ -119,7 +119,7 @@ namespace kOS.Safe.Test.Collections
         public void ErrorsOnGetEmptyKey()
         {
             var lex = new Lexicon();
-            var val = lex["fizz"];
+            var val = lex[new StringValue("fizz")];
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace kOS.Safe.Test.Collections
             var hasKeyInner = (bool)InvokeDelegate(map, "HASKEY" , "inner");
             Assert.IsTrue(hasKeyInner);
 
-            var inner = (Lexicon) ((Lexicon)map)["inner"];
+            var inner = (Lexicon) ((Lexicon)map)[new StringValue("inner")];
             Assert.IsNotNull(inner);
 
             var hasNumericKey = (bool)InvokeDelegate(inner, "HASKEY" , 3);
@@ -276,16 +276,16 @@ namespace kOS.Safe.Test.Collections
             var innerMap2 = new Lexicon();
             var innerInnerMap = new Lexicon
             {
-                {"inner", "inner string 1"}, 
-                {2, 2}
+                {new StringValue("inner"), new StringValue("inner string 1")}, 
+                {new ScalarIntValue(2), new ScalarIntValue(2)}
             };
 
-            innerMap1.Add("map", innerInnerMap);
-            innerMap1.Add("2", "string,one.two");
-            innerMap1.Add(3, "string,one.three");
+            innerMap1.Add(new StringValue("map"), innerInnerMap);
+            innerMap1.Add(new StringValue("2"), new StringValue("string,one.two"));
+            innerMap1.Add(new ScalarIntValue(3), new StringValue("string,one.three"));
 
-            innerMap2.Add("testing", "string,two.one" );
-            innerMap2.Add("2", "string,two.two" );
+            innerMap2.Add(new StringValue("testing"), new StringValue("string,two.one") );
+            innerMap2.Add(new StringValue("2"), new StringValue("string,two.two") );
             
             InvokeDelegate(map,"ADD", "first", 100);
             InvokeDelegate(map,"ADD", "second", 200);

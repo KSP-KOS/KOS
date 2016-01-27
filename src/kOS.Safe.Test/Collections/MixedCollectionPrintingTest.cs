@@ -13,15 +13,15 @@ namespace kOS.Safe.Test.Collections
         {
             var list = new ListValue
             {
-                "First In List", 
-                "Second In List", 
-                "Last In List"
+                new StringValue("First In List"), 
+                new StringValue("Second In List"), 
+                new StringValue("Last In List")
             };
 
             var lexicon = new Lexicon
             {
-                {"list", list}, 
-                {"not list", 2}
+                {new StringValue("list"), list}, 
+                {new StringValue("not list"), new ScalarIntValue(2)}
             };
 
             var result = (string)InvokeDelegate(lexicon, "DUMP");
@@ -36,15 +36,15 @@ namespace kOS.Safe.Test.Collections
         {
             var list = new ListValue
             {
-                "First In List", 
-                "Second In List", 
-                "Last In List"
+                new StringValue("First In List"), 
+                new StringValue("Second In List"), 
+                new StringValue("Last In List")
             };
 
             var lexicon = new Lexicon
             {
-                {"list", list}, 
-                {"not list", 2}
+                {new StringValue("list"), list}, 
+                {new StringValue("not list"), new ScalarIntValue(2)}
             };
 
             var result = (string)InvokeDelegate(lexicon, "DUMP");

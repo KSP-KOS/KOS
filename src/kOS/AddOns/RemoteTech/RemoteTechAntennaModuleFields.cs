@@ -12,18 +12,18 @@ namespace kOS.AddOns.RemoteTech
     public class RemoteTechAntennaModuleFields : PartModuleFields
     {
         // those Guids are hardcoded in RemoteTech
-        public const String NoTargetGuid = "00000000000000000000000000000000";
+        public const string NoTargetGuid = "00000000000000000000000000000000";
 
-        public const String ActiveVesselGuid = "35b89a0d664c43c6bec8d0840afc97b2";
-        public const String MissionControlGuid = "5105f5a9d62841c6ad4b21154e8fc488";
+        public const string ActiveVesselGuid = "35b89a0d664c43c6bec8d0840afc97b2";
+        public const string MissionControlGuid = "5105f5a9d62841c6ad4b21154e8fc488";
 
-        public const String RTAntennaModule = "ModuleRTAntenna";
-        public const String RTOriginalField = "RTAntennaTarget";
-        public const String RTTargetField = "target";
+        public const string RTAntennaModule = "ModuleRTAntenna";
+        public const string RTOriginalField = "RTAntennaTarget";
+        public const string RTTargetField = "target";
 
-        public const String NoTargetString = "no-target";
-        public const String ActiveVesselString = "active-vessel";
-        public const String MissionControlString = "mission-control";
+        public const string NoTargetString = "no-target";
+        public const string ActiveVesselString = "active-vessel";
+        public const string MissionControlString = "mission-control";
 
         public RemoteTechAntennaModuleFields(PartModule partModule, SharedObjects shared)
             : base(partModule, shared)
@@ -36,31 +36,32 @@ namespace kOS.AddOns.RemoteTech
         {
             AddSuffix("ALLFIELDS", new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
             AddSuffix("ALLFIELDNAMES", new Suffix<ListValue>(AllFieldNames));
-            AddSuffix("HASFIELD", new OneArgsSuffix<bool, string>(HasField));
-            AddSuffix("GETFIELD", new OneArgsSuffix<object, string>(GetKSPFieldValue));
-            AddSuffix("SETFIELD", new TwoArgsSuffix<string, object>(SetKSPFieldValue));
+            AddSuffix("HASFIELD", new OneArgsSuffix<BooleanValue, StringValue>(HasField));
+            AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldValue));
+            AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, object>(SetKSPFieldValue));
         }
 
-        public new bool HasField(string fieldName)
+        public override BooleanValue HasField(StringValue fieldName)
         {
-            return fieldName.Equals(RemoteTechAntennaModuleFields.RTTargetField) || base.HasField(fieldName);
+            if (fieldName.Equals(RTTargetField)) return true;
+            return base.HasField(fieldName);
         }
 
         protected override ListValue AllFields(string formatter)
         {
             var returnValue = base.AllFields(formatter);
 
-            returnValue.Add(String.Format(formatter, "settable",
-                    RTTargetField.ToLower(), "String | Body | Vessel"));
+            returnValue.Add(new StringValue(string.Format(formatter, "settable",
+                    RTTargetField.ToLower(), "String | Body | Vessel")));
 
             return returnValue;
         }
 
-        protected new ListValue AllFieldNames()
+        protected override ListValue AllFieldNames()
         {
             var returnValue = base.AllFieldNames();
 
-            returnValue.Add(RTTargetField.ToLower());
+            returnValue.Add(new StringValue(RTTargetField.ToLower()));
 
             return returnValue;
         }
@@ -68,35 +69,35 @@ namespace kOS.AddOns.RemoteTech
         protected new BaseField GetField(string cookedGuiName)
         {
             return partModule.Fields.Cast<BaseField>().
-                FirstOrDefault(field => String.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+                FirstOrDefault(field => string.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        protected new object GetKSPFieldValue(string suffixName)
+        protected new Structure GetKSPFieldValue(StringValue suffixName)
         {
-            if (suffixName.Equals(RTTargetField, StringComparison.InvariantCultureIgnoreCase))
+            if (Equals(suffixName, new StringValue(RTTargetField)))
             {
                 BaseField field = GetField(RTOriginalField);
                 Guid guid = (Guid)field.GetValue(partModule);
-                String guidString = guid.ToString("N");
+                string guidString = guid.ToString("N");
 
                 if (guidString.Equals(NoTargetGuid))
                 {
-                    return NoTargetString;
+                    return new StringValue(NoTargetString);
                 }
                 else if (guidString.Equals(ActiveVesselGuid))
                 {
-                    return ActiveVesselString;
+                    return new StringValue(ActiveVesselString);
                 }
                 else if (guidString.Equals(MissionControlGuid))
                 {
-                    return MissionControlString;
+                    return new StringValue(MissionControlString);
                 }
 
                 foreach (var body in FlightGlobals.Bodies)
                 {
                     if (CelestialBodyGuid(body).Equals(guid))
                     {
-                        return new BodyTarget(body, this.shared);
+                        return new BodyTarget(body, shared);
                     }
                 }
 
@@ -104,21 +105,22 @@ namespace kOS.AddOns.RemoteTech
                 {
                     if (vessel.id.Equals(guid))
                     {
-                        return new VesselTarget(vessel, this.shared);
+                        return new VesselTarget(vessel, shared);
                     }
                 }
 
                 // just print the guid if we can't figure out what it is
-                return guid.ToString();
+                return new StringValue(guid.ToString());
             }
             return base.GetKSPFieldValue(suffixName);
         }
 
         private Guid GetTargetGuid(object target)
         {
-            if (target is String)
+            var str = target as string;
+            if (str != null)
             {
-                String targetString = (String)target;
+                string targetString = str;
                 if (targetString.Equals(NoTargetString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return new Guid(NoTargetGuid);
@@ -133,14 +135,14 @@ namespace kOS.AddOns.RemoteTech
                 }
                 else
                 {
-                    var body = FlightGlobals.Bodies.Where(b => b.bodyName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    var body = FlightGlobals.Bodies.FirstOrDefault(b => b.bodyName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase));
                     if (body != null)
                     {
                         return CelestialBodyGuid(body);
                     }
                     else
                     {
-                        var vessel = FlightGlobals.Vessels.Where(v => v.vesselName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                        var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.vesselName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase));
                         if (vessel != null)
                         {
                             if (partModule.vessel.id.Equals(vessel.id))
@@ -174,9 +176,9 @@ namespace kOS.AddOns.RemoteTech
                 "', Body or Vessel expected");
         }
 
-        protected new void SetKSPFieldValue(string suffixName, object newValue)
+        protected override void SetKSPFieldValue(StringValue suffixName, object newValue)
         {
-            if (suffixName.Equals(RTTargetField, StringComparison.InvariantCultureIgnoreCase))
+            if (Equals(suffixName, new StringValue(RTTargetField)))
             {
                 Guid guid = GetTargetGuid(newValue);
 
