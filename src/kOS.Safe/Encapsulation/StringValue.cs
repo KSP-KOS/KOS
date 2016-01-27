@@ -249,7 +249,7 @@ namespace kOS.Safe.Encapsulation
             if (obj == null) return false;
             if (obj is StringValue || obj is string)
             {
-                return String.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
+                return string.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
             }
             return false;
         }

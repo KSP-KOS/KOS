@@ -53,7 +53,7 @@ namespace kOS.Suffixed
             return toReturn;
         }
 
-        public override object GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName)
         {
             if (!IsResource(suffixName))
             {
@@ -61,7 +61,7 @@ namespace kOS.Suffixed
             }
 
             var resourceAmount = GetResourceOfCurrentStage(suffixName);
-            return resourceAmount.HasValue ? resourceAmount.Value : 0.0;
+            return new SuffixResult(new ScalarDoubleValue(resourceAmount.HasValue ? resourceAmount.Value : 0.0));
         }
 
         private bool IsResource(string suffixName)

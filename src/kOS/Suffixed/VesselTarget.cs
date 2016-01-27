@@ -553,7 +553,7 @@ namespace kOS.Suffixed
                               new Vector3d(angularVelFromKSP.x, -angularVelFromKSP.z, angularVelFromKSP.y));
         }
 
-        public override object GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName)
         {
             // Most suffixes are handled by the newer AddSuffix system, except for the
             // resource levels, which have to use this older technique as a fallback because
@@ -563,7 +563,7 @@ namespace kOS.Suffixed
             double dblValue;
             if (VesselUtils.TryGetResource(Vessel, suffixName, out dblValue))
             {
-                return dblValue;
+                return new SuffixResult(new ScalarDoubleValue(dblValue));
             }
 
             return base.GetSuffix(suffixName);

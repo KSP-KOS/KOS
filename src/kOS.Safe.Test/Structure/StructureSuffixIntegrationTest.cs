@@ -22,7 +22,7 @@ namespace kOS.Safe.Test.Structure
             var structure = new StructureTest.TestStructure();
             var strongBox = new StrongBox<BooleanValue>(false);
             structure.TestAddInstanceSuffix("FOO", new Suffix<BooleanValue>(BuildBasicGetter(strongBox)));
-            Assert.IsFalse((bool) structure.GetSuffix("FOO"));
+            Assert.IsFalse((BooleanValue) structure.GetSuffix("FOO").Value);
         }
 
         [Test]
@@ -33,9 +33,9 @@ namespace kOS.Safe.Test.Structure
             structure.TestAddInstanceSuffix("FOO", new Suffix<BooleanValue>(BuildBasicGetter(strongBox)));
 
             strongBox.Value = false;
-            Assert.IsFalse((bool) structure.GetSuffix("FOO"));
+            Assert.IsFalse((BooleanValue) structure.GetSuffix("FOO").Value);
             strongBox.Value = true;
-            Assert.IsTrue((bool) structure.GetSuffix("FOO"));
+            Assert.IsTrue((BooleanValue) structure.GetSuffix("FOO").Value);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace kOS.Safe.Test.Structure
             var strongBox = new StrongBox<BooleanValue>(false);
             structure.TestAddInstanceSuffix("FOO", new SetSuffix<BooleanValue>(BuildBasicGetter(strongBox), BuildBasicSetter(strongBox)));
 
-            Assert.IsFalse((bool) structure.GetSuffix("FOO"));
+            Assert.IsFalse((BooleanValue) structure.GetSuffix("FOO").Value);
         }
 
         [Test]

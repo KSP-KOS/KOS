@@ -133,7 +133,7 @@ namespace kOS.Suffixed
             config.SetValue(key.StringKey, keys[key.StringKey.ToUpper()].Value);
         }
 
-        public override object GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName)
         {
             ConfigKey key = null;
 
@@ -146,7 +146,7 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            return key != null ? key.Value : base.GetSuffix(suffixName);
+            return key != null ? new SuffixResult(FromPrimitive(key.Value)) : base.GetSuffix(suffixName);
         }
 
         public override bool SetSuffix(string suffixName, object value)

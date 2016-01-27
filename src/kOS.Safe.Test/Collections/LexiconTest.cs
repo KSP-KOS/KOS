@@ -21,7 +21,7 @@ namespace kOS.Safe.Test.Collections
 
             var testValue = lex[new StringValue("foo")];
 
-            Assert.AreEqual("bar", testValue);
+            Assert.AreEqual(new StringValue("bar"), testValue);
         }
 
         [Test]

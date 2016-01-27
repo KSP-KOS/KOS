@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
+using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
@@ -188,18 +190,27 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void EachListConstructor()
         {
+            var cpu = new FakeCpu();
+            cpu.PushStack(new KOSArgMarkerType());
+
             var baseList = new ListValue();
-            var baseDelegate = (NoArgsSuffix<ScalarIntValue>.Del<ScalarIntValue>)baseList.GetSuffix("LENGTH");
-            Assert.AreEqual(0, baseDelegate.Invoke());
+            var baseDelegate = baseList.GetSuffix("LENGTH");
+            baseDelegate.InitState(cpu, typeof(object));
+            Assert.AreEqual(0, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
-            var castDelegate = (NoArgsSuffix<ScalarIntValue>.Del<ScalarIntValue>)castList.GetSuffix("LENGTH");
-            Assert.AreEqual(0, castDelegate.Invoke());
+            var castDelegate = castList.GetSuffix("LENGTH");
+            baseDelegate.InitState(cpu, typeof(KOSArgMarkerType));
+            Assert.AreEqual(0, castDelegate.Value);
 
-            var copyDelegate = (NoArgsSuffix<ListValue>.Del<ListValue>)baseList.GetSuffix("COPY");
-            var copyList = copyDelegate.Invoke();
+            var copyDelegate = baseList.GetSuffix("COPY");
+            baseDelegate.InitState(cpu, typeof(KOSArgMarkerType));
+            Assert.AreEqual(0, castDelegate.Value);
+            var copyList = copyDelegate.Value;
 
-            Assert.AreEqual(0, ((NoArgsSuffix<ScalarIntValue>.Del<ScalarIntValue>)copyList.GetSuffix("LENGTH")).Invoke());
+            var lengthDelegate = copyList.GetSuffix("LENGTH");
+            baseDelegate.InitState(cpu, typeof(KOSArgMarkerType));
+            Assert.AreEqual(0, lengthDelegate);
         }
 
         private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)

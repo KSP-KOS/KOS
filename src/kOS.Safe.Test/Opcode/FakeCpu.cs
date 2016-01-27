@@ -100,7 +100,7 @@ namespace kOS.Safe.Test.Opcode
 
         public int GetStackSize()
         {
-            throw new NotImplementedException();
+            return fakeStack.Count;
         }
 
         public void SetValue(string identifier, object value)

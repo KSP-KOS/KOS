@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 
@@ -110,7 +111,7 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
-        public virtual object GetSuffix(string suffixName)
+        public virtual ISuffixResult GetSuffix(string suffixName)
         {
             ISuffix suffix;
             if (instanceSuffixes.TryGetValue(suffixName, out suffix))

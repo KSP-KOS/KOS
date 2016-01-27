@@ -164,7 +164,7 @@ namespace kOS.Suffixed
             return Vector3d.Distance(Shared.Vessel.findWorldCenterOfMass(), Body.position) - Body.Radius;
         }
 
-        public override object GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName)
         {
             if (Target == null) throw new Exception("BODY structure appears to be empty!");
             return base.GetSuffix(suffixName);
