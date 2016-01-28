@@ -656,8 +656,8 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            object value = specialValue.GetSuffix(suffixName);
-            if (value is Delegate && !IsMethodCallAttempt)
+            ISuffixResult value = specialValue.GetSuffix(suffixName);
+            if (value != null && !IsMethodCallAttempt)
             {
                 // This is what happens when someone tries to call a suffix method as if
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
@@ -666,15 +666,6 @@ namespace kOS.Safe.Compilation
                 cpu.PushStack(value);
                 cpu.PushStack(new KOSArgMarkerType());
                 OpcodeCall.StaticExecute(cpu, false, "", false); // this will push the return value on the stack for us.
-            }
-            else
-            {
-                // TODO: When we refactor to make every structure use the new suffix style, this conversion
-                // from primative can be removed.  Right now there are too many structures that override the
-                // GetSuffix method and return their own types, preventing us from converting directly in
-                // the GetSuffix method.
-                value = Structure.FromPrimitive(value);
-                cpu.PushStack(value);
             }
         }
     }
@@ -1474,7 +1465,7 @@ namespace kOS.Safe.Compilation
                 throw new KOSNotInvokableException(functionPointer);
             }
 
-            if (functionPointer is Delegate)
+            if (functionPointer is ISuffixResult)
             {
                 if (! (delegateReturn is KOSPassThruReturn))
                     cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
