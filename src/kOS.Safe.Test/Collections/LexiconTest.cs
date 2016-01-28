@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
@@ -29,7 +33,7 @@ namespace kOS.Safe.Test.Collections
         {
             var lex = new Lexicon {{new StringValue("foo"), new StringValue("bar")}};
 
-            Assert.AreEqual("bar", lex[new StringValue("FOO")]);
+            Assert.AreEqual(new StringValue("bar"), lex[new StringValue("FOO")]);
         }
 
         [Test]
@@ -37,7 +41,7 @@ namespace kOS.Safe.Test.Collections
         {
             var lex = new Lexicon {{ScalarDoubleValue.MaxValue(), new StringValue("bar")}};
 
-            Assert.AreEqual("bar", lex[ScalarDoubleValue.MaxValue()]);
+            Assert.AreEqual(new StringValue("bar"), lex[ScalarDoubleValue.MaxValue()]);
         }
 
         [Test]
@@ -111,7 +115,7 @@ namespace kOS.Safe.Test.Collections
             lex.SetIndex(new StringValue("fizz"), new StringValue("bang"));
             var value = lex.GetIndex(new StringValue("fizz"));
 
-            Assert.AreEqual("bang", value);
+            Assert.AreEqual(new StringValue("bang"), value);
         }
 
         [Test]
@@ -127,7 +131,7 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
             
-            var result = (string)InvokeDelegate(map, "DUMP");
+            var result = (StringValue)InvokeDelegate(map, "DUMP");
             
             //TODO: build Asserts
         }
@@ -147,11 +151,11 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(map, "HASKEY" , "first");
+            var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("first"));
             Assert.IsTrue(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(map, "HASKEY" , "second");
+            var hasKeySecond = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("second"));
             Assert.IsTrue(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(map, "HASKEY" , "second");
+            var hasKeyLast = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("second"));
             Assert.IsTrue(hasKeyLast);
         }
 
@@ -160,11 +164,11 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(map, "HASKEY" , "2");
+            var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("2"));
             Assert.IsFalse(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(map, "HASKEY" , "3");
+            var hasKeySecond = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("3"));
             Assert.IsFalse(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(map, "HASKEY" , "testing");
+            var hasKeyLast = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("testing"));
             Assert.IsFalse(hasKeyLast);
         }
 
@@ -173,11 +177,11 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(map, "HASVALUE" , 100);
+            var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASVALUE" , new ScalarIntValue(100));
             Assert.IsTrue(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(map, "HASVALUE" , 200);
+            var hasKeySecond = (BooleanValue)InvokeDelegate(map, "HASVALUE" , new ScalarIntValue(200));
             Assert.IsTrue(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(map, "HASVALUE" , "String, outer value");
+            var hasKeyLast = (BooleanValue)InvokeDelegate(map, "HASVALUE" , new StringValue("String, outer value"));
             Assert.IsTrue(hasKeyLast);
         }
 
@@ -186,11 +190,11 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(map, "HASVALUE" , "2");
+            var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASVALUE" , new StringValue("2"));
             Assert.IsFalse(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(map, "HASVALUE" , "3");
+            var hasKeySecond = (BooleanValue)InvokeDelegate(map, "HASVALUE" , new StringValue("3"));
             Assert.IsFalse(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(map, "HASVALUE" , "testing");
+            var hasKeyLast = (BooleanValue)InvokeDelegate(map, "HASVALUE" , new StringValue("testing"));
             Assert.IsFalse(hasKeyLast);
         }
 
@@ -211,13 +215,13 @@ namespace kOS.Safe.Test.Collections
             var mapCopy = (IDumper)InvokeDelegate(map, "COPY");
 
 
-            var hasKeyFirst = (bool)InvokeDelegate(map, "HASKEY" , "first");
+            var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("first"));
             Assert.IsTrue(hasKeyFirst);
-            InvokeDelegate(map, "REMOVE" , "first");
-            var hasKeyFirstAfterRemove = (bool)InvokeDelegate(map, "HASKEY" , "first");
+            InvokeDelegate(map, "REMOVE" , new StringValue("first"));
+            var hasKeyFirstAfterRemove = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("first"));
             Assert.IsFalse(hasKeyFirstAfterRemove);
 
-            var copyHasKeyFirstAfterRemove = (bool)InvokeDelegate(mapCopy, "HASKEY" , "first");
+            var copyHasKeyFirstAfterRemove = (BooleanValue)InvokeDelegate(mapCopy, "HASKEY" , new StringValue("first"));
             Assert.IsTrue(copyHasKeyFirstAfterRemove);
 
         }
@@ -227,13 +231,13 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
 
-            var hasKeyInner = (bool)InvokeDelegate(map, "HASKEY" , "inner");
+            var hasKeyInner = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("inner"));
             Assert.IsTrue(hasKeyInner);
 
             var inner = (Lexicon) ((Lexicon)map)[new StringValue("inner")];
             Assert.IsNotNull(inner);
 
-            var hasNumericKey = (bool)InvokeDelegate(inner, "HASKEY" , 3);
+            var hasNumericKey = (BooleanValue)InvokeDelegate(inner, "HASKEY" , new ScalarIntValue(3));
             Assert.IsTrue(hasNumericKey);
 
             var innerString = inner.ToString();
@@ -247,23 +251,23 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
 
-            var length = (int)InvokeDelegate(map, "LENGTH");
+            var length = (ScalarIntValue)InvokeDelegate(map, "LENGTH");
 
             Assert.IsTrue(length > 0);
 
-            map.SetSuffix("CASESENSITIVE", true);
+            map.SetSuffix("CASESENSITIVE", BooleanValue.True);
 
-            length = (int)InvokeDelegate(map, "LENGTH");
+            length = (ScalarIntValue)InvokeDelegate(map, "LENGTH");
             Assert.IsTrue(length == 0);
 
-            InvokeDelegate(map,"ADD", "first", 100);
+            InvokeDelegate(map,"ADD", new StringValue("first"), new ScalarIntValue(100));
 
-            length = (int)InvokeDelegate(map, "LENGTH");
+            length = (ScalarIntValue)InvokeDelegate(map, "LENGTH");
             Assert.IsTrue(length > 0);
 
-            map.SetSuffix("CASESENSITIVE", false);
+            map.SetSuffix("CASESENSITIVE", BooleanValue.False);
 
-            length = (int)InvokeDelegate(map, "LENGTH");
+            length = (ScalarIntValue)InvokeDelegate(map, "LENGTH");
             Assert.IsTrue(length == 0);
         }
 
@@ -287,23 +291,32 @@ namespace kOS.Safe.Test.Collections
             innerMap2.Add(new StringValue("testing"), new StringValue("string,two.one") );
             innerMap2.Add(new StringValue("2"), new StringValue("string,two.two") );
             
-            InvokeDelegate(map,"ADD", "first", 100);
-            InvokeDelegate(map,"ADD", "second", 200);
-            InvokeDelegate(map,"ADD", "inner", innerMap1);            
-            InvokeDelegate(map,"ADD", "inner2", innerMap2);            
-            InvokeDelegate(map,"ADD", "last", OUTER_STRING);
+            InvokeDelegate(map,"ADD", new StringValue("first"), new ScalarIntValue(100));
+            InvokeDelegate(map,"ADD", new StringValue("second"), new ScalarIntValue(200));
+            InvokeDelegate(map,"ADD", new StringValue("inner"), innerMap1);
+            InvokeDelegate(map,"ADD", new StringValue("inner2"), innerMap2);
+            InvokeDelegate(map,"ADD", new StringValue("last"), new StringValue(OUTER_STRING));
             
             return map;
         }
 
-        private object InvokeDelegate(IDumper map, string suffixName, params object[] parameters)
+        private Encapsulation.Structure InvokeDelegate(ISuffixed map, string suffixName, params Encapsulation.Structure[] parameters)
         {
-            var lengthObj = map.GetSuffix(suffixName);
-            Assert.IsNotNull(lengthObj);
-            var lengthDelegate = lengthObj as Delegate;
-            Assert.IsNotNull(lengthDelegate);
-            var toReturn = lengthDelegate.DynamicInvoke(parameters);
-            return toReturn;
+            ISuffixResult lengthResult = map.GetSuffix(suffixName);
+            Assert.IsNotNull(lengthResult);
+
+            if (!lengthResult.HasValue)
+            {
+                var delegateResult = lengthResult as DelegateSuffixResult;
+                if (delegateResult != null)
+                {
+                    var temp = delegateResult.Del.DynamicInvoke(parameters);
+                    
+                    return temp as Encapsulation.Structure;
+                }
+            }
+
+            return lengthResult.Value;
         }
     }
 }

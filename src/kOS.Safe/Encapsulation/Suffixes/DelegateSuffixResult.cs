@@ -12,7 +12,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
         private readonly Delegate del;
         private Structure value;
 
-        protected Delegate Del
+        public Delegate Del
         {
             get { return del; }
         }
@@ -29,7 +29,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public bool HasValue
         {
-            get { return true; }
+            get { return value != null; }
         }
 
         public void Invoke(ICpu cpu)

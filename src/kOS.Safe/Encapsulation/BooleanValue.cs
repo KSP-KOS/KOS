@@ -68,6 +68,16 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
+        public static BooleanValue True
+        {
+            get { return new BooleanValue(true);}
+        }
+
+        public static BooleanValue False
+        {
+            get { return new BooleanValue(false);}
+        }
+
         public override int GetHashCode()
         {
             return internalValue.GetHashCode();
