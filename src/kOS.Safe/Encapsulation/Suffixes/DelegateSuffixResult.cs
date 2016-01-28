@@ -7,7 +7,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class DeletageSuffixResult : ISuffixResult 
+    public class DelegateSuffixResult : ISuffixResult 
     {
         private readonly Delegate del;
         private Structure value;
@@ -22,7 +22,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             get { return value; }
         }
 
-        public DeletageSuffixResult(Delegate del)
+        public DelegateSuffixResult(Delegate del)
         {
             this.del = del;
         }
@@ -32,7 +32,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             get { return true; }
         }
 
-        public void InitState(ICpu cpu, Type argMarkerType)
+        public void Invoke(ICpu cpu)
         {
             MethodInfo methInfo = del.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
@@ -42,33 +42,33 @@ namespace kOS.Safe.Encapsulation.Suffixes
             // Will be true iff the lastmost parameter of the delegate is using the C# 'param' keyword and thus
             // expects the remainder of the arguments marshalled together into one array object.
             bool isParamArrayArg = false;
-            
-            CpuUtility.ReverseStackArgs(cpu, false, argMarkerType);
-            for (int i = 0 ; i < paramArray.Length ; ++i)
+
+            CpuUtility.ReverseStackArgs(cpu, false);
+            for (int i = 0; i < paramArray.Length; ++i)
             {
                 object arg = cpu.PopValue();
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
-                
+
                 // If this is the lastmost parameter then it might be a 'param' array which expects all the rest of
                 // the arguments to be collected together into one single array parameter when invoking the method:
-                isParamArrayArg = i == paramArray.Length-1 && Attribute.IsDefined(paramInfo, typeof(ParamArrayAttribute));
+                isParamArrayArg = (i == paramArray.Length - 1 && Attribute.IsDefined(paramInfo, typeof(ParamArrayAttribute)));
 
-                if (arg != null && arg.GetType() == argMarkerType)
+                if (arg != null && arg.GetType() == CpuUtility.ArgMarkerType)
                 {
                     if (isParamArrayArg)
                         break; // with param arguments, you want to consume everything to the arg bottom - it's normal.
                     else
-                        throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
+                        throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i + 1));
                 }
-                                
+
                 // Either the expected type of this one parameter, or if it's a 'param' array as the last arg, then
                 // the expected type of that array's elements:
-                Type paramType = isParamArrayArg ? paramInfo.ParameterType.GetElementType() : paramInfo.ParameterType;
-                
+                Type paramType = (isParamArrayArg ? paramInfo.ParameterType.GetElementType() : paramInfo.ParameterType);
+
                 // Parameter type-safe checking:
                 bool inheritable = paramType.IsAssignableFrom(argType);
-                if (! inheritable)
+                if (!inheritable)
                 {
                     bool castError = false;
                     // If it's not directly assignable to the expected type, maybe it's "castable" to it:
@@ -80,14 +80,16 @@ namespace kOS.Safe.Encapsulation.Suffixes
                     {
                         throw new KOSCastException(argType, paramType);
                     }
-                    catch (FormatException) {
+                    catch (FormatException)
+                    {
                         castError = true;
                     }
-                    if (castError) {
-                        throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", paramArray.Length - i, arg, methInfo.Name, paramType.Name, argType));
+                    if (castError)
+                    {
+                        throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (paramArray.Length - i), arg, methInfo.Name, paramType.Name, argType));
                     }
                 }
-                
+
                 if (isParamArrayArg)
                 {
                     paramArrayArgs.Add(arg);
@@ -113,7 +115,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 while (cpu.GetStackSize() > 0 && !foundArgMarker)
                 {
                     object marker = cpu.PopValue();
-                    if (marker != null && marker.GetType() == argMarkerType)
+                    if (marker != null && marker.GetType() == CpuUtility.ArgMarkerType)
                         foundArgMarker = true;
                     else
                         ++numExtraArgs;
@@ -121,10 +123,10 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 if (numExtraArgs > 0)
                     throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
             }
-            
+
             // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
             // there are no arguments to pass:
-            object[] argArray = args.Count>0 ? args.ToArray() : null;
+            object[] argArray = (args.Count > 0) ? args.ToArray() : null;
 
             try
             {
@@ -134,7 +136,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 if (methInfo.ReturnType == typeof(void))
                 {
                     del.DynamicInvoke(argArray);
-                    return; // By adding this we can unconditionally assume all functions
+                    value = null; // By adding this we can unconditionally assume all functions
                                  // have a return value to be used or popped away, even if "void".
                 }
                 // Convert a primitive return type to a structure.  This is done in the opcode, since

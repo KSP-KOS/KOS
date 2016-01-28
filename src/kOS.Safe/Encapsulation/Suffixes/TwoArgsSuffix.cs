@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public override ISuffixResult Get()
         {
-            return new DeletageSuffixResult(del);
+            return new DelegateSuffixResult(del);
         }
     }
 
@@ -32,7 +32,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public override ISuffixResult Get()
         {
-            return new DeletageSuffixResult(del);
+            return new DelegateSuffixResult(del);
         }
     }
 }

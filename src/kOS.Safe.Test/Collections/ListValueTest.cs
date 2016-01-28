@@ -195,21 +195,21 @@ namespace kOS.Safe.Test.Collections
 
             var baseList = new ListValue();
             var baseDelegate = baseList.GetSuffix("LENGTH");
-            baseDelegate.InitState(cpu, typeof(object));
+            baseDelegate.Invoke(cpu);
             Assert.AreEqual(0, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
             var castDelegate = castList.GetSuffix("LENGTH");
-            baseDelegate.InitState(cpu, typeof(KOSArgMarkerType));
+            baseDelegate.Invoke(cpu);
             Assert.AreEqual(0, castDelegate.Value);
 
             var copyDelegate = baseList.GetSuffix("COPY");
-            baseDelegate.InitState(cpu, typeof(KOSArgMarkerType));
+            baseDelegate.Invoke(cpu);
             Assert.AreEqual(0, castDelegate.Value);
             var copyList = copyDelegate.Value;
 
             var lengthDelegate = copyList.GetSuffix("LENGTH");
-            baseDelegate.InitState(cpu, typeof(KOSArgMarkerType));
+            baseDelegate.Invoke(cpu);
             Assert.AreEqual(0, lengthDelegate);
         }
 

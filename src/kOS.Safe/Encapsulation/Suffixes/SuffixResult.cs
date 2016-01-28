@@ -25,7 +25,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             get { return true; }
         }
 
-        public void InitState(ICpu cpu, Type argMarkerType)
+        public void Invoke(ICpu cpu)
         {
             throw new NotImplementedException();
         }

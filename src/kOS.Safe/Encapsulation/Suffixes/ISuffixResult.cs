@@ -9,6 +9,6 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         bool HasValue { get; }
 
-        void InitState(ICpu cpu, Type argMarkerType);
+        void Invoke(ICpu cpu);
     }
 }

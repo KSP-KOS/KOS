@@ -6,6 +6,7 @@ namespace kOS.Safe.Utilities
 {
     public class CpuUtility
     {
+        public static readonly Type ArgMarkerType = typeof (KOSArgMarkerType);
 
         /// <summary>
         /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
@@ -18,11 +19,11 @@ namespace kOS.Safe.Utilities
         /// then that means it also needs to consume the indirect reference off the stack just under
         /// the args</param>
         /// </summary>
-        public static void ReverseStackArgs(ICpu cpu, bool direct, Type argMarkerType)
+        public static void ReverseStackArgs(ICpu cpu, bool direct)
         {
             List<object> args = new List<object>();
             object arg = cpu.PopValue();
-            while (cpu.GetStackSize() > 0 && arg.GetType() != argMarkerType)
+            while (cpu.GetStackSize() > 0 && arg.GetType() != ArgMarkerType)
             {
                 args.Add(arg);
 

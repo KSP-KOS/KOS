@@ -1420,7 +1420,7 @@ namespace kOS.Safe.Compilation
             // as an encapsulated ScalarValue, preventing an unboxing collision.
             if (functionPointer is int || functionPointer is ScalarValue)
             {
-                CpuUtility.ReverseStackArgs(cpu, direct, ArgMarkerType);
+                CpuUtility.ReverseStackArgs(cpu, direct);
                 var contextRecord = new SubroutineContext(cpu.InstructionPointer+1);
                 newIP = Convert.ToInt32(functionPointer);
                 
@@ -1459,14 +1459,15 @@ namespace kOS.Safe.Compilation
 
                 if (!result.HasValue)
                 {
-                    result.InitState(cpu, ArgMarkerType);
+                    result.Invoke(cpu);
                 }
 
                 delegateReturn = result.Value;
             }
+            // TODO:erendrake This else if is likely never used anymore
             else if (functionPointer is Delegate)
             {
-                delegateReturn = ExecuteDelegate(cpu, (Delegate)functionPointer);
+                throw new KOSYouShouldNeverSeeThisException("OpcodeCall unexpected function pointer delegate");
             }
             else
             {
@@ -1481,147 +1482,13 @@ namespace kOS.Safe.Compilation
 
             return newIP;
         }
-        
-        /// <summary>
-        /// Call this when executing a C# delegate function whose delegate object was stored on
-        /// the stack underneath the arguments.  The code here is using reflection and complex
-        /// enough that it needed to be separated from the main Execute method.
-        /// <br/><br/>
-        /// Note that this method is only supposed to be used for things that are actual C# delegates,
-        /// and NOT for our KOS delegates that we handle through different means (like UserDelegates
-        /// or BuiltInFunction delegates).  This code uses reflection to learn about the signature of
-        /// the C# delegate - it's intended paramerters and return type, and thus won't work on things
-        /// that aren't actually C# delegates.
-        /// </summary>
-        /// <param name="cpu">the cpu this opcode is being called on</param>
-        /// <param name="dlg">the delegate object this opcode is being called for.</param>
-        /// <returns>whatever object the delegate method returned</returns>
-        public static object ExecuteDelegate(ICpu cpu, Delegate dlg)
-        {
-            MethodInfo methInfo = dlg.Method;
-            ParameterInfo[] paramArray = methInfo.GetParameters();
-            var args = new List<object>();
-            var paramArrayArgs = new List<object>();
-
-            // Will be true iff the lastmost parameter of the delegate is using the C# 'param' keyword and thus
-            // expects the remainder of the arguments marshalled together into one array object.
-            bool isParamArrayArg = false;
-            
-            CpuUtility.ReverseStackArgs(cpu, false, ArgMarkerType);
-            for (int i = 0 ; i < paramArray.Length ; ++i)
-            {
-                object arg = cpu.PopValue();
-                Type argType = arg.GetType();
-                ParameterInfo paramInfo = paramArray[i];
-                
-                // If this is the lastmost parameter then it might be a 'param' array which expects all the rest of
-                // the arguments to be collected together into one single array parameter when invoking the method:
-                isParamArrayArg = (i == paramArray.Length-1 && Attribute.IsDefined(paramInfo, typeof(ParamArrayAttribute)));
-
-                if (arg != null && arg.GetType() == ArgMarkerType)
-                {
-                    if (isParamArrayArg)
-                        break; // with param arguments, you want to consume everything to the arg bottom - it's normal.
-                    else
-                        throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
-                }
-                                
-                // Either the expected type of this one parameter, or if it's a 'param' array as the last arg, then
-                // the expected type of that array's elements:
-                Type paramType = (isParamArrayArg ? paramInfo.ParameterType.GetElementType() : paramInfo.ParameterType);
-                
-                // Parameter type-safe checking:
-                bool inheritable = paramType.IsAssignableFrom(argType);
-                if (! inheritable)
-                {
-                    bool castError = false;
-                    // If it's not directly assignable to the expected type, maybe it's "castable" to it:
-                    try
-                    {
-                        arg = Convert.ChangeType(arg, Type.GetTypeCode(paramType));
-                    }
-                    catch (InvalidCastException)
-                    {
-                        throw new KOSCastException(argType, paramType);
-                    }
-                    catch (FormatException) {
-                        castError = true;
-                    }
-                    if (castError) {
-                        throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (paramArray.Length - i), arg, methInfo.Name, paramType.Name, argType));
-                    }
-                }
-                
-                if (isParamArrayArg)
-                {
-                    paramArrayArgs.Add(arg);
-                    --i; // keep hitting the last item in the param list again and again until a forced break because of arg bottom marker.
-                }
-                else
-                {
-                    args.Add(arg);
-                }
-            }
-            if (isParamArrayArg)
-            {
-                // collect the param array args that were at the end into the one single
-                // array item that will be sent to the method when invoked:
-                args.Add(paramArrayArgs.ToArray());
-            }
-            // Consume the bottom marker under the args, which had better be
-            // immediately under the args we just popped, or the count was off.
-            if (!isParamArrayArg) // A param array arg will have already consumed the arg bottom mark.
-            {
-                bool foundArgMarker = false;
-                int numExtraArgs = 0;
-                while (cpu.GetStackSize() > 0 && !foundArgMarker)
-                {
-                    object marker = cpu.PopValue();
-                    if (marker != null && marker.GetType() == ArgMarkerType)
-                        foundArgMarker = true;
-                    else
-                        ++numExtraArgs;
-                }
-                if (numExtraArgs > 0)
-                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
-            }
-            
-            // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
-            // there are no arguments to pass:
-            object[] argArray = (args.Count>0) ? args.ToArray() : null;
-
-            try
-            {
-                // I could find no documentation on what DynamicInvoke returns when the delegate
-                // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
-                // problem, I split this into these two cases:
-                if (methInfo.ReturnType == typeof(void))
-                {
-                    dlg.DynamicInvoke(argArray);
-                    return null; // By adding this we can unconditionally assume all functions
-                                 // have a return value to be used or popped away, even if "void".
-                }
-                // Convert a primitive return type to a structure.  This is done in the opcode, since
-                // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                return Structure.FromPrimitive(dlg.DynamicInvoke(argArray));
-            }
-            catch (TargetInvocationException e)
-            {
-                // Annoyingly, calling DynamicInvoke on a delegate wraps any exceptions the delegate throws inside
-                // this TargetInvocationException, which hides them from the kOS user unless we do this:
-                if (e.InnerException != null)
-                    throw e.InnerException;
-                throw;
-            }
-        }
-        
 
         public override string ToString()
         {
             return string.Format("{0} {1}", Name, Destination);
         }
     }
-    
+
     /// <summary>
     /// Returns from an OpcodeCall, popping a number of scope depths off
     /// the stack as it does so.  It evals the topmost thing on the stack.

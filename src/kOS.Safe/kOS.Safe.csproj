@@ -60,6 +60,7 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Exceptions\KOSYouShouldNeverSeeThisException.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\ConfigKey.cs" />
-    <Compile Include="Encapsulation\Suffixes\DeletageSuffixResult.cs" />
+    <Compile Include="Encapsulation\Suffixes\DelegateSuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\ISuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
