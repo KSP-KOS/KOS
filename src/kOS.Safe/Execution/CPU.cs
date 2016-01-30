@@ -566,7 +566,7 @@ namespace kOS.Safe.Execution
         {
             var msg = new StringBuilder();
             msg.AppendLine("============== STACK VARIABLES ===============");
-            msg.AppendLine(stack.Dump());
+            DumpStack();
             msg.AppendLine("============== GLOBAL VARIABLES ==============");
             foreach (string ident in globalVariables.Variables.Keys)
             {
@@ -590,6 +590,11 @@ namespace kOS.Safe.Execution
             }
             SafeHouse.Logger.Log(msg.ToString());
             return "Variable dump is in the output log";
+        }
+
+        public string DumpStack()
+        {
+            return stack.Dump();
         }
 
         /// <summary>
@@ -1126,6 +1131,7 @@ namespace kOS.Safe.Execution
             if (SafeHouse.Config.DebugEachOpcode)
             {
                 executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
+                executeLog.Append(string.Format("Prior to exeucting, stack looks like this:\n{0}\n", DumpStack()));
             }
             try
             {

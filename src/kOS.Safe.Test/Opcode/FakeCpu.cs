@@ -133,6 +133,11 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
+        public string DumpStack()
+        {
+            throw new NotImplementedException();
+        }
+
         public void RemoveVariable(string identifier)
         {
             throw new NotImplementedException();

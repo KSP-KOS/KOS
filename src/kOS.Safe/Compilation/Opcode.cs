@@ -444,7 +444,7 @@ namespace kOS.Safe.Compilation
         protected OperandPair Operands { get; private set; }
 
         public override void Execute(ICpu cpu)
-        {
+        {            
             object right = cpu.PopValue();
             object left = cpu.PopValue();
 

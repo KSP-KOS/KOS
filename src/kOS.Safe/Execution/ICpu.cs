@@ -28,6 +28,7 @@ namespace kOS.Safe.Execution
         void SetGlobal(string identifier, object value);
         bool IdentifierExistsInScope(string identifier);
         string DumpVariables();
+        string DumpStack();
         void RemoveVariable(string identifier);
         int InstructionPointer { get; set; }
         double SessionTime { get; }

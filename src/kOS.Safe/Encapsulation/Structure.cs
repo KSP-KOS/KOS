@@ -178,7 +178,8 @@ namespace kOS.Safe.Encapsulation
             var convert = value as IConvertible;
             if (convert == null)
                 throw new KOSException("Contact the kOS developers:  This is an internal bug.  " +
-                                       "Mention the phrase 'FromPrimitive not IConvertable' in your error report.");
+                                       "Mention the exact sentence: \"FromPrimitive attempting to convert a " +
+                                       value.GetType().ToString() + ", which is not IConvertable.\" in your error report.");
 
             TypeCode code = convert.GetTypeCode();
             switch (code)
