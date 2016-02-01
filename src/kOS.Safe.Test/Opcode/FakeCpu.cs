@@ -198,5 +198,11 @@ namespace kOS.Safe.Test.Opcode
         {
             throw new NotImplementedException();
         }
+
+
+        public int InstructionsThisUpdate
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }
