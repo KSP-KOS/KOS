@@ -18,9 +18,11 @@ namespace kOS.Safe.Execution
         object PopValue(bool barewordOkay = false);
         object PeekValue(int digDepth, bool barewordOkay = false);
         object PeekRaw(int digDepth, out bool checkOkay);
-        Structure GetValueEncapsulated(Structure testValue, bool barewordOkay = false);
-        Structure PopValueEncapsulated(bool barewordOkay = false);
-        Structure PeekValueEncapsulated(int digDepth, bool barewordOkay = false);
+        object PopValueEncapsulated(bool barewordOkay = false);
+        object PeekValueEncapsulated(int digDepth, bool barewordOkay = false);
+        Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false);
+        Structure PopStructureEncapsulated(bool barewordOkay = false);
+        Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false);
         int GetStackSize();
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);

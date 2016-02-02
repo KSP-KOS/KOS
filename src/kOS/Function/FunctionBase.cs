@@ -219,10 +219,10 @@ namespace kOS.Function
         /// into a Structure to be sure, so it won't return primitives.
         /// </summary>
         /// <returns>value after coercion into a kOS Structure</returns>
-        protected Structure PopValueAssertEncapsulated(SharedObjects shared, bool barewordOkay = false)
+        protected Structure PopStructureAssertEncapsulated(SharedObjects shared, bool barewordOkay = false)
         {
             object returnValue = PopValueAssert(shared, barewordOkay);
-            return Structure.FromPrimitive(returnValue);
+            return Structure.FromPrimitiveWithAssert(returnValue);
         }
         
         protected string GetFuncName()

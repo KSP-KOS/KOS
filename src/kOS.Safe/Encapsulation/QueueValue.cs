@@ -78,7 +78,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static QueueValue CreateQueue<T>(IEnumerable<T> toCopy)
         {
-            return new QueueValue(toCopy.Select(x => FromPrimitive(x)));
+            return new QueueValue(toCopy.Select(x => FromPrimitiveWithAssert(x)));
         }
     }
 }

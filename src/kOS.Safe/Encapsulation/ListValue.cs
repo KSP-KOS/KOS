@@ -152,7 +152,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static ListValue CreateList<T>(IEnumerable<T> toCopy)
         {
-            return new ListValue(toCopy.Select(x => FromPrimitive(x)));
+            return new ListValue(toCopy.Select(x => FromPrimitiveWithAssert(x)));
         }
     }
 }

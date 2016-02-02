@@ -31,7 +31,7 @@ namespace kOS.Safe.Encapsulation
             }));
             AddSuffix("ATEND", new NoArgsSuffix<BooleanValue>(() => !status));
             AddSuffix("INDEX", new NoArgsSuffix<ScalarIntValue>(() => index));
-            AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitive(enumerator.Current)));
+            AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitiveWithAssert(enumerator.Current)));
         }
 
         public override string ToString()

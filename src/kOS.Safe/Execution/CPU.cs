@@ -847,35 +847,50 @@ namespace kOS.Safe.Execution
         /// Identical to PopValue(), except that it guarantees the return value is either already a Structure,
         /// or it converts it into a Structure if it's a primitive.
         /// It bombs out with an exception if it can't be converted thusly.
+        /// <br/>
+        /// Use this in places where the stack value *must* come out as an encapsulated value and something
+        /// has gone seriously wrong if it can't.  This applies to cases where you are attempting to store
+        /// its value inside a user's variable, mostly.
         /// </summary>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PopValueEncapsulated(bool barewordOkay = false)
+        public Structure PopStructureEncapsulated(bool barewordOkay = false)
         {
-            return Structure.FromPrimitive( PopValue(barewordOkay) );
+            return Structure.FromPrimitiveWithAssert( PopValue(barewordOkay) );
         }
 
         /// <summary>
         /// Identical to PeekValue(), except that it guarantees the return value is either already a Structure,
         /// or it converts it into a Structure if it's a primitive.
         /// It bombs out with an exception if it can't be converted thusly.
+        /// <br/>
+        /// Use this in places where the stack value *must* come out as an encapsulated value and something
+        /// has gone seriously wrong if it can't.  This applies to cases where you are attempting to store
+        /// its value inside a user's variable, mostly.
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
         }
 
         /// <summary>
         /// Identical to GetValue(), except that it guarantees the return value is either already a Structure,
         /// or it converts it into a Structure if it's a primitive.
         /// It bombs out with an exception if it can't be converted thusly.
+        /// <br/>
+        /// Use this in places where the stack value *must* come out as an encapsulated value and something
+        /// has gone seriously wrong if it can't.  This applies to cases where you are attempting to store
+        /// its value inside another user's variable, mostly.
+        /// <br/>
+        /// Hypothetically this should never really be required, as the value is coming FROM a user varible
+        /// in the first place.
         /// </summary>
         /// <param name="testValue">the object which might be a variable name</param>
         /// <param name="barewordOkay">
@@ -884,9 +899,44 @@ namespace kOS.Safe.Execution
         ///   is the value?
         /// </param>
         /// <returns>The value after the steps described have been performed.</returns>
-        public Structure GetValueEncapsulated(Structure testValue, bool barewordOkay = false)
+        public Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false)
         {
-            return Structure.FromPrimitive(GetValue(testValue, barewordOkay));
+            return Structure.FromPrimitiveWithAssert(GetValue(testValue, barewordOkay));
+        }
+
+        /// <summary>
+        /// Identical to PopStructureEncapsulated(), except that it doesn't complain if the
+        /// result can't be converted to a Structure.  It's acceptable for it to not be
+        /// a Structure, in which case the original object is returned as-is.
+        /// <br/>
+        /// Use this in places where the stack value *should* come out as an encapsulated value if it can,
+        /// but there are some valid cases where it might not be.
+        /// </summary>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public object PopValueEncapsulated(bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive( PopValue(barewordOkay) );
+        }
+
+        /// <summary>
+        /// Identical to PeekStructureEncapsulated(), except that it doesn't complain if the
+        /// result can't be converted to a Structure.  It's acceptable for it to not be
+        /// a Structure, in which case the original object is returned as-is.
+        /// <br/>
+        /// Use this in places where the stack value *should* come out as an encapsulated value if it can,
+        /// but there are some valid cases where it might not be.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
         }
 
         /// <summary>

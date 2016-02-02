@@ -433,9 +433,19 @@ namespace kOS.Safe.Compilation
         /// the value atop the stack isn't the arg bottom marker.
         /// </summary>
         /// <returns>object popped if it all worked fine</returns>
-        protected Structure PopValueAssertEncapsulated(ICpu cpu, bool barewordOkay = false)
+        protected object PopValueAssertEncapsulated(ICpu cpu, bool barewordOkay = false)
         {
             return Structure.FromPrimitive(PopValueAssert(cpu, barewordOkay));
+        }
+
+        /// <summary>
+        /// A utility function that will do the same as a cpu.PopStructureEncapsulated, but with an additional check to ensure
+        /// the value atop the stack isn't the arg bottom marker.
+        /// </summary>
+        /// <returns>object popped if it all worked fine</returns>
+        protected Structure PopStructureAssertEncapsulated(ICpu cpu, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitiveWithAssert(PopValueAssert(cpu, barewordOkay));
         }
     }
 
@@ -490,7 +500,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulated(cpu);
+            Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -542,7 +552,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulated(cpu);
+            Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -577,7 +587,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulated(cpu);
+            Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -606,7 +616,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = PopValueAssertEncapsulated(cpu);
+            Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
             var identifier = Convert.ToString(cpu.PopStack());
@@ -642,12 +652,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            Structure popValue = cpu.PopValueEncapsulated();
-            // We convert the popValue to a structure to ensure that we can get suffixes on values
-            // stored in primitive form as a fall back.  All variables should be stored as a structure
-            // now, other than system variables like pointers and labels.  This technically means that
-            // a change performed by calling a function on Scalar, Boolean, or String values might not
-            // save the value to the original objet.
+            object popValue = cpu.PopValueEncapsulated();
 
             var specialValue = popValue as ISuffixed;
             
@@ -656,16 +661,23 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            ISuffixResult value = specialValue.GetSuffix(suffixName);
-            if (value != null && !IsMethodCallAttempt)
+            ISuffixResult result = specialValue.GetSuffix(suffixName);
+
+            // If the result is a suffix that is still in need of being invoked and hasn't resolved to a value yet:
+            if (result != null && !IsMethodCallAttempt && !result.HasValue)
             {
                 // This is what happens when someone tries to call a suffix method as if
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
                 // member returned is a delegate that needs to be called to get its actual
                 // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
-                cpu.PushStack(value);
+
+                cpu.PushStack(result);
                 cpu.PushStack(new KOSArgMarkerType());
                 OpcodeCall.StaticExecute(cpu, false, "", false); // this will push the return value on the stack for us.
+            }
+            else
+            {
+                cpu.PushStack(result.Value);
             }
         }
     }
@@ -697,9 +709,9 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = cpu.PopValueEncapsulated();             // new value to set it to
+            Structure value = cpu.PopStructureEncapsulated();         // new value to set it to
             string suffixName = cpu.PopStack().ToString().ToUpper();  // name of suffix being set
-            Structure popValue = cpu.PopValueEncapsulated();          // object to which the suffix is attached.
+            Structure popValue = cpu.PopStructureEncapsulated();      // object to which the suffix is attached.
 
             // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
             // the referenced variable wouldn't be updated.  The primitives themselves are treated as value
@@ -730,8 +742,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure index = cpu.PopValueEncapsulated();
-            Structure collection = cpu.PopValueEncapsulated();
+            Structure index = cpu.PopStructureEncapsulated();
+            Structure collection = cpu.PopStructureEncapsulated();
 
             Structure result;
 
@@ -757,9 +769,9 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = cpu.PopValueEncapsulated();
-            Structure index = cpu.PopValueEncapsulated();
-            Structure list = cpu.PopValueEncapsulated();
+            Structure value = cpu.PopStructureEncapsulated();
+            Structure index = cpu.PopStructureEncapsulated();
+            Structure list = cpu.PopStructureEncapsulated();
 
             if (index == null || value == null)
             {
@@ -1038,7 +1050,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = cpu.PopValueEncapsulated();
+            Structure value = cpu.PopStructureEncapsulated();
 
             var scalarValue = value as ScalarValue;
 

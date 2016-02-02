@@ -146,7 +146,7 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            return key != null ? new SuffixResult(FromPrimitive(key.Value)) : base.GetSuffix(suffixName);
+            return key != null ? new SuffixResult(FromPrimitiveWithAssert(key.Value)) : base.GetSuffix(suffixName);
         }
 
         public override bool SetSuffix(string suffixName, object value)

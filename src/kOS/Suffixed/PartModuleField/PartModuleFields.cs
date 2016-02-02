@@ -432,7 +432,7 @@ namespace kOS.Suffixed.PartModuleField
                 throw new KOSLookupFailException("FIELD", suffixName, this);
             if (!FieldIsVisible(field))
                 throw new KOSLookupFailException("FIELD", suffixName, this, true);
-            Structure obj = FromPrimitive(field.GetValue(partModule));
+            Structure obj = FromPrimitiveWithAssert(field.GetValue(partModule));
             return obj;
         }
 

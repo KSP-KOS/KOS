@@ -190,7 +190,7 @@ namespace kOS.Function
         {
             Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var listValue = new ListValue(argArray.ToList());
             ReturnValue = listValue;
@@ -204,7 +204,7 @@ namespace kOS.Function
         {
             Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var queueValue = new QueueValue(argArray.ToList());
             ReturnValue = queueValue;
@@ -218,7 +218,7 @@ namespace kOS.Function
         {
             Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var stackValue = new StackValue(argArray.ToList());
             ReturnValue = stackValue;

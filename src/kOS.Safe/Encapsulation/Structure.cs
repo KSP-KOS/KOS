@@ -169,18 +169,27 @@ namespace kOS.Safe.Encapsulation
             return new StringValue(string.Concat(val1, val2));
         }
 
-        public static Structure FromPrimitive(object value)
+        /// <summary>
+        /// Attempt to convert the given object into a kOS encapsulation type (something
+        /// derived from kOS.Safe.Encapsulation.Structure), returning that instead.
+        /// This never throws exception or complains in any way if the conversion cannot happen.
+        /// Insted in that case it just silently ignores the request and returns the original object
+        /// reference unchanged.  Thus it is safe to call it "just in case", even in places where it won't
+        /// always be necessary, or have an effect at all.  You should use in anywhere you need to
+        /// ensure that a value a user's script might see on the stack or in a script variable is properly
+        /// wrapped in a kOS Structure, and not just a raw primitive like int or double.
+        /// </summary>
+        /// <param name="value">value to convert</param>
+        /// <returns>new converted value, or original value if conversion couldn't happen or was unnecesary</returns>
+        public static object FromPrimitive(object value)
         {
-            // No conversion if already encapsulated:
             if (value is Structure)
-                return (Structure)value;
+                return value; // Conversion is unnecessary - it's already a Structure.
             
             var convert = value as IConvertible;
             if (convert == null)
-                throw new KOSException("Contact the kOS developers:  This is an internal bug.  " +
-                                       "Mention the exact sentence: \"FromPrimitive attempting to convert a " +
-                                       value.GetType().ToString() + ", which is not IConvertable.\" in your error report.");
-
+                return value; // Conversion isn't even theoretically possible.
+            
             TypeCode code = convert.GetTypeCode();
             switch (code)
             {
@@ -204,8 +213,24 @@ namespace kOS.Safe.Encapsulation
                 default:
                     break;
             }
-            throw new KOSException("Contact the kOS developers:  This is an internal bug.  " +
-                                   "Mention the phrase 'FromPrimitive arg was "+code.ToString()+"' in your error report.");
+            return value; // Conversion is one this method didn't implement.
+        }
+        
+        /// <summary>
+        /// This is identical to FromPrimitive, except that it WILL throw an exception
+        /// if it was unable to guarantee that the result became (or already was) a kOS Structure.
+        /// </summary>
+        /// <param name="value">value to convert</param>
+        /// <returns>value after conversion, or original value if conversion unnecessary</returns>
+        public static Structure FromPrimitiveWithAssert(object value)
+        {
+            object convertedVal = FromPrimitive(value);
+            Structure returnValue = convertedVal as Structure;
+            if (returnValue == null)
+                throw new KOSException(
+                    String.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
+                                  value.GetType().ToString()));
+            return returnValue;
         }
 
         public static object ToPrimitive(object value)

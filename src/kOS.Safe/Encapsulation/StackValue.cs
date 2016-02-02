@@ -83,7 +83,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static StackValue CreateStack<T>(IEnumerable<T> toCopy)
         {
-            return new StackValue(toCopy.Select(x => Structure.FromPrimitive(x)));
+            return new StackValue(toCopy.Select(x => Structure.FromPrimitiveWithAssert(x)));
         }
     }
 }

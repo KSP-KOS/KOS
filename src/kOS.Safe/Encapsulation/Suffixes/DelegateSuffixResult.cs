@@ -141,7 +141,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 }
                 // Convert a primitive return type to a structure.  This is done in the opcode, since
                 // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                value = Structure.FromPrimitive(del.DynamicInvoke(argArray));
+                value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
             }
             catch (TargetInvocationException e)
             {
@@ -152,6 +152,13 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 throw;
             }
         }
+        
+        // Not something the user should ever see, but still useful for our debugging when we dump the stack:
+        public override string ToString()
+        {
+            return string.Format("[DelegateSuffixResult Del={0}, Value={1}]", del, (HasValue ? value.ToString() : "<null>") );
+        }
+ 
     }
 
 }

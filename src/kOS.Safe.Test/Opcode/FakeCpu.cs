@@ -83,17 +83,27 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure GetValueEncapsulated(Encapsulation.Structure testValue, bool barewordOkay = false)
+        public Encapsulation.Structure GetStructureEncapsulated(Encapsulation.Structure testValue, bool barewordOkay = false)
         {
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure PopValueEncapsulated(bool barewordOkay = false)
+        public Encapsulation.Structure PopStructureEncapsulated(bool barewordOkay = false)
         {
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public Encapsulation.Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public object PopValueEncapsulated(bool barewordOkay = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
         {
             throw new NotImplementedException();
         }

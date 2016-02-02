@@ -224,7 +224,7 @@ namespace kOS.Safe.Encapsulation
         // actually trying to call this:
         public Structure GetIndex(int index)
         {
-            return internalDictionary[FromPrimitive(index)];
+            return internalDictionary[FromPrimitiveWithAssert(index)];
         }
 
         public void SetIndex(Structure index, Structure value)
@@ -236,7 +236,7 @@ namespace kOS.Safe.Encapsulation
         // actually trying to call this:
         public void SetIndex(int index, Structure value)
         {
-            internalDictionary[FromPrimitive(index)] = value;
+            internalDictionary[FromPrimitiveWithAssert(index)] = value;
         }
 
         public override string ToString()
@@ -260,7 +260,9 @@ namespace kOS.Safe.Encapsulation
 
             foreach (KeyValuePair<object, object> entry in dump)
             {
-                internalDictionary.Add(Structure.FromPrimitive(entry.Key), Structure.FromPrimitive(entry.Value));
+                internalDictionary.Add(
+                    Structure.FromPrimitiveWithAssert(entry.Key),
+                    Structure.FromPrimitiveWithAssert(entry.Value));
             }
         }
     }
