@@ -45,6 +45,10 @@ namespace kOS.Module
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
         private bool firstUpdate = true;
 
+        // This is the "constant" byte count used when calculating the EC 
+        // required by the archive volume (which has infinite space).
+        private const int ARCHIVE_EFFECTIVE_BYTES = 50000;
+
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
 
@@ -86,7 +90,7 @@ namespace kOS.Module
         // when you change to another volume).
         // TODO: This value mirrors the existing default.  A new balanced value needs to be found.
         [KSPField(isPersistant = false, guiActive = false)]
-        public float ECPerBytePerSecond = 0.000004F;
+        public float ECPerBytePerSecond = 0F;
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
@@ -95,7 +99,7 @@ namespace kOS.Module
             OpenWindow();
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Required Power", guiActive = true, guiActiveEditor = true)]
+        [KSPField(isPersistant = true, guiName = "kOS Max Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.00")]
         public float RequiredPower;
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
@@ -179,7 +183,7 @@ namespace kOS.Module
                 "-ElectricCharge: {1:N3}/s";
             // For the sake of GetInfo, prorate the EC usage based on the smallest physics frame the settings UI allows: 0.02s.
             // Because this is called before the part is set, we need to manually calculate it instead of letting Update handle it.
-            double power = diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / 0.02;
+            double power = diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / Time.fixedDeltaTime;
             return string.Format(format, diskSpace, power);
         }
 
@@ -444,7 +448,7 @@ namespace kOS.Module
                     UpdateCostAndMass();
                     GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
                 }
-                RequiredPower = this.diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction;
+                RequiredPower = this.diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / Time.fixedDeltaTime;
             }
             if (!IsAlive()) return;
             UpdateVessel();
@@ -643,7 +647,7 @@ namespace kOS.Module
             {
                 // TODO: Like with the default value of ECPerBytePerSecond, this corresponds to the existing value.
                 // It should be adjusted for balance.
-                volumePower = 50000 * ECPerBytePerSecond;
+                volumePower = ARCHIVE_EFFECTIVE_BYTES * ECPerBytePerSecond;
             }
             else
             {
