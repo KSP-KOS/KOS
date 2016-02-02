@@ -26,52 +26,52 @@ namespace kOS.Module
         [KSPField(isPersistant = false, guiName = "Last requested power", guiActive = true)]
         public float lastResource = 0.2f;
 
+        [KSPField(isPersistant = false, guiActive = false)]
+        public string animationName = "";
+
         private double lastTime = double.MaxValue;
 
-        private readonly Color powerStarvedColor = new Color(0, 0, 0, 0);
+        private readonly Color powerOffColor = new Color(0, 0, 0, 0);
 
         private ModuleLight lightModule;
         private Light[] lights;
         private Renderer[] renderers;
+        private Animation[] animations;
 
         public override void OnLoad(ConfigNode node)
         {
-            lightModule = part.GetComponent<ModuleLight>();
-            lightModule.resourceAmount = 0;
-            lightModule.Fields["resourceAmount"].guiActive = false;
-            lightModule.useResources = false;
-            lights = part.FindModelComponents<Light>();
-            renderers = part.FindModelComponents<Renderer>();
+            updateReferences();
         }
 
         public void Update()
         {
             if (HighLogic.LoadedScene == GameScenes.EDITOR)
             {
-                red = lightModule.lightR;
-                green = lightModule.lightG;
-                blue = lightModule.lightB;
+                if (lightModule != null)
+                {
+                    red = lightModule.lightR;
+                    green = lightModule.lightG;
+                    blue = lightModule.lightB;
+                }
+                else
+                {
+                    updateReferences();
+                }
             }
-            else if (HighLogic.LoadedScene == GameScenes.FLIGHT)
-            {
-                updateColor();
-            }
+            updateColor();
         }
 
         public void FixedUpdate()
         {
             if (HighLogic.LoadedScene == GameScenes.FLIGHT)
             {
-                if (lights != null && lights.Length > 0)
+                if (lightModule != null && lightModule.isOn)
                 {
-                    if (lights[0].enabled)
-                    {
-                        processElectricity();
-                    }
-                    else
-                    {
-                        lastTime = double.MaxValue;
-                    }
+                    processElectricity();
+                }
+                else
+                {
+                    lastTime = double.MaxValue;
                 }
             }
         }
@@ -82,6 +82,17 @@ namespace kOS.Module
                 "Configurable color.\n" +
                 "Maximum power consumption: {0}EC/s";
             return string.Format(format, resourceAmount);
+        }
+
+        public void updateReferences()
+        {
+            lightModule = part.GetComponent<ModuleLight>();
+            lightModule.resourceAmount = 0;
+            lightModule.Fields["resourceAmount"].guiActive = false;
+            lightModule.useResources = false;
+            lights = part.FindModelComponents<Light>();
+            renderers = part.FindModelComponents<Renderer>();
+            animations = part.FindModelAnimators();
         }
 
         private void processElectricity()
@@ -107,19 +118,36 @@ namespace kOS.Module
 
         private void updateColor()
         {
-            Color currentColor = powerStarved ? powerStarvedColor : new Color(red, green, blue, 1);
-            if (lights != null)
+            if (lightModule != null)
             {
-                foreach (Light lgt in lights)
+                Color currentColor = powerStarved || !lightModule.isOn ? powerOffColor : new Color(red, green, blue, 1);
+                if (lights != null)
                 {
-                    lgt.color = currentColor;
+                    foreach (Light lgt in lights)
+                    {
+                        lgt.color = currentColor;
+                    }
                 }
-            }
-            if (renderers != null)
-            {
-                foreach (Renderer rnd in renderers)
+                if (renderers != null)
                 {
-                    rnd.material.SetColor("_EmissiveColor", currentColor);
+                    foreach (Renderer rnd in renderers)
+                    {
+                        rnd.material.SetColor("_EmissiveColor", currentColor);
+                    }
+                }
+                if (animations != null && !string.IsNullOrEmpty(animationName))
+                {
+                    foreach (var animation in animations)
+                    {
+                        if (!animation.isPlaying && lightModule.isOn && !powerStarved)
+                        {
+                            animation.Play(animationName);
+                        }
+                        else if (animation.isPlaying && (!lightModule.isOn || powerStarved))
+                        {
+                            animation.Stop();
+                        }
+                    }
                 }
             }
         }
