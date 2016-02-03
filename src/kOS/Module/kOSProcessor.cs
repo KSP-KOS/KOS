@@ -45,8 +45,11 @@ namespace kOS.Module
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
         private bool firstUpdate = true;
 
+        private MovingAverage averagePower = new MovingAverage();
+
         // This is the "constant" byte count used when calculating the EC 
         // required by the archive volume (which has infinite space).
+        // TODO: This corresponds to the existing value and should be adjusted for balance.
         private const int ARCHIVE_EFFECTIVE_BYTES = 50000;
 
         //640K ought to be enough for anybody -sic
@@ -81,14 +84,16 @@ namespace kOS.Module
 
         // This represents how much EC to consume per executed instruction.
         // This would be the "variable" component of the processor's power.
-        // TODO: This value needs to be changed to a non-zero number and balanced.
+        // IMPORTANT: The value defaults to zero and must be overriden in the module
+        // definition for any given part (within the part.cfg file).
         [KSPField(isPersistant = false, guiActive = false)]
         public float ECPerInstruction = 0F;
 
         // This represents how much EC to consume per Byte of the current volume, per second.
         // This would be the "continuous" compoenent of the processor's power (though it varies
         // when you change to another volume).
-        // TODO: This value mirrors the existing default.  A new balanced value needs to be found.
+        // IMPORTANT: The value defaults to zero and must be overriden in the module
+        // definition for any given part (within the part.cfg file).
         [KSPField(isPersistant = false, guiActive = false)]
         public float ECPerBytePerSecond = 0F;
 
@@ -99,8 +104,8 @@ namespace kOS.Module
             OpenWindow();
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Max Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.00")]
-        public float RequiredPower;
+        [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000")]
+        public float RequiredPower = 0;
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
@@ -645,24 +650,64 @@ namespace kOS.Module
             var volume = shared.VolumeMgr.CurrentVolume;
             if (volume.Name == "Archive")
             {
-                // TODO: Like with the default value of ECPerBytePerSecond, this corresponds to the existing value.
-                // It should be adjusted for balance.
                 volumePower = ARCHIVE_EFFECTIVE_BYTES * ECPerBytePerSecond;
             }
             else
             {
                 volumePower = volume.Capacity * ECPerBytePerSecond;
             }
-            RequiredPower = (float)(volumePower + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / TimeWarp.fixedDeltaTime);
-            var request = volumePower * time + shared.Cpu.InstructionsThisUpdate * ECPerInstruction;
-            var available = partObj.RequestResource("ElectricCharge", request);
-            if (available / request > 0.5f)
+
+            if (ProcessorMode == ProcessorModes.STARVED)
             {
-                if (ProcessorMode == ProcessorModes.STARVED) SetMode(ProcessorModes.READY);
+                // If the processor is STARVED, check to see if there is enough EC to turn it back on.
+                var request = averagePower.Mean;  // use the average power draw as a baseline of the power needed to restart.
+                if (request > 0)
+                {
+                    var available = partObj.RequestResource("ElectricCharge", request);
+                    if (available / request > 0.5)
+                    {
+                        SetMode(ProcessorModes.READY);
+                    }
+                    // Since we're just checking to see if there is enough power to restart, return
+                    // the consumed EC.  The actual demand value will be drawn on the next update after
+                    // the cpu boots.  This should give the ship a chance to collect a little more EC
+                    // before the cpu actually boots.
+                    partObj.RequestResource("ElectricCharge", -available);
+                }
+                else
+                {
+                    // If there is no historical power request, simply turn the processor back on.  This
+                    // should not be possible, since it means that some how the processor got set to
+                    // the STARVED mode, even though no power was requested.
+                    SetMode(ProcessorModes.READY);
+                }
+                RequiredPower = (float)request; // Make sure RequiredPower matches the average.
             }
             else
             {
-                if (ProcessorMode == ProcessorModes.READY) SetMode(ProcessorModes.STARVED);
+                // Because the processor is not STARVED, evaluate the power requirement based on actual operation.
+                int instructions = shared.Cpu.InstructionsThisUpdate;
+                var request = volumePower * time + instructions * ECPerInstruction;
+                if (request > 0)
+                {
+                    // only check the available EC if the request is greater than 0EC.  If the request value
+                    // is zero, then available will always be zero and it appears that mono/.net treat
+                    // "0 / 0" as equaling "0", which prevents us from checking the ratio.  Since getting
+                    // "0" available of "0" requested is a valid state, the processor mode is only evaluated
+                    // if request is greater than zero.
+                    var available = partObj.RequestResource("ElectricCharge", request);
+                    if (available / request < 0.5)
+                    {
+                        // 0.5 is an arbitrary ratio for triggering the STARVED mode.  It allows for some
+                        // fluctuation away from the exact requested EC, ando adds some fuzzy math to how
+                        // we deal with the descreet physics frames.  Essentially if there was enough power
+                        // to run for half of a physics frame, the processor stays on.
+                        SetMode(ProcessorModes.STARVED);
+                    }
+                }
+                // Set RequiredPower to the average requested power.  This should help "de-bounce" the value
+                // so that it doesn't fluctuate wildly (between 0.2 and 0.000001 in a single frame for example)
+                RequiredPower = (float)averagePower.Update(request) / TimeWarp.fixedDeltaTime;
             }
         }
 
