@@ -4,19 +4,19 @@ using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
     public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
         where T : Structure
     {
-
         public ListValue()
             : this(new List<T>())
         {
         }
 
-        public ListValue(IEnumerable<T> listValue) : base("LIST", new List<T>(listValue))
+        public ListValue(IEnumerable<T> listValue) : base(new List<T>(listValue))
         {
             ListInitializeSuffixes();
         }
@@ -57,11 +57,25 @@ namespace kOS.Safe.Encapsulation
             set { Collection[index] = value; }
         }
             
-        public override void LoadDump(IDictionary<object, object> dump)
+        public override Dump Dump()
+        {
+            var result = new DumpWithHeader
+            {
+                Header = "LIST of " + Collection.Count() + " items:"
+            };
+
+            result.Add(kOS.Safe.Dump.Items, Collection);
+
+            return result;
+        }
+
+        public override void LoadDump(Dump dump)
         {
             Collection.Clear();
 
-            foreach (Structure item in dump.Values)
+            List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
+
+            foreach (object item in values)
             {
                 Collection.Add((T)FromPrimitive(item));
             }

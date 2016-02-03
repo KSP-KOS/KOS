@@ -4,6 +4,7 @@ using kOS.Safe.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -244,25 +245,35 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            var result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary)
+            var result = new DumpWithHeader
             {
-                Header = "LEXICON of " + internalDictionary.Count + " items:"
+                Header = "LEXICON of " + internalDictionary.Count() + " items:"
             };
+
+            List<object> list = new List<object>();
+
+            foreach (KeyValuePair<Structure, Structure> entry in internalDictionary)
+            {
+                list.Add(entry.Key);
+                list.Add(entry.Value);
+            }
+
+            result.Add(kOS.Safe.Dump.Entries, list);
 
             return result;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             internalDictionary.Clear();
 
-            foreach (KeyValuePair<object, object> entry in dump)
+            List<object> values = (List<object>)dump[kOS.Safe.Dump.Entries];
+
+            for (int i = 0; 2 * i < values.Count; i++)
             {
-                internalDictionary.Add(
-                    Structure.FromPrimitiveWithAssert(entry.Key),
-                    Structure.FromPrimitiveWithAssert(entry.Value));
+                internalDictionary.Add(Structure.FromPrimitiveWithAssert(values[2 * i]), Structure.FromPrimitiveWithAssert(values[2 * i + 1]));
             }
         }
     }

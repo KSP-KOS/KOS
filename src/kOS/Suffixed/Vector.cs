@@ -5,6 +5,7 @@ using UnityEngine;
 using kOS.Safe.Serialization;
 using System.Collections.Generic;
 using kOS.Safe.Utilities;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
@@ -224,9 +225,9 @@ namespace kOS.Suffixed
             return a * (-1d);
         }
 
-        public IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
+            DumpWithHeader dump = new DumpWithHeader();
 
             dump.Add(DumpX, X);
             dump.Add(DumpY, Y);
@@ -235,7 +236,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             X = Convert.ToDouble(dump[DumpX]);
             Y = Convert.ToDouble(dump[DumpY]);

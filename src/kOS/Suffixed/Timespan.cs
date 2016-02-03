@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
 using System.Collections.Generic;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
@@ -175,9 +176,9 @@ namespace kOS.Suffixed
             return string.Format("TIME({0:0})", span);
         }
 
-        public IDictionary<object, object> Dump()
+        public Dump Dump()
         {
-            var dump = new DictionaryWithHeader
+            var dump = new Dump
             {
                 {DumpSpan, span}
             };
@@ -185,7 +186,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump (IDictionary<object, object> dump)
+        public void LoadDump(Dump dump)
         {
             span = Convert.ToDouble(dump[DumpSpan]);
         }

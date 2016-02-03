@@ -4,12 +4,12 @@ namespace kOS.Safe.Serialization
 {
     public interface IFormatWriter
     {
-        string Write(IDictionary<object, object> value);
+        string Write(Dump value);
     }
 
     public interface IFormatReader
     {
-        IDictionary<object, object> Read(string input);
+        Dump Read(string input);
     }
 }
 

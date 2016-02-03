@@ -5,7 +5,7 @@ namespace kOS.Safe.Encapsulation
     /// <summary>
     /// Classes implementing this interface can dump their data to a dictionary.
     ///
-    /// Dumps should not contain any encapsulation types, only Dictionaries, primitives and strings.
+    /// Dumps should only contain primitives, strings, lists and other Dumps.
     /// SerializationMgr, for convenience, will handle any encapsulation types that implement
     /// ISerializableValue when serializing.
     ///
@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation
     /// </summary>
     public interface IDumper : ISuffixed
     {
-        IDictionary<object, object> Dump();
-        void LoadDump(IDictionary<object, object> dump);
+        Dump Dump();
+        void LoadDump(Dump dump);
     }
 }

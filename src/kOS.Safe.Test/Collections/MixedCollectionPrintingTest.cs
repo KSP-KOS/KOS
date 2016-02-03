@@ -27,7 +27,7 @@ namespace kOS.Safe.Test.Collections
             var result = (string)InvokeDelegate(lexicon, "DUMP");
 
             Assert.IsTrue(result.Contains("LEXICON of 2 items"));
-            Assert.IsTrue(result.Contains("[\"list\"]= LIST of 3 items"));
+            Assert.IsTrue(result.Contains("[\"list\"] = LIST of 3 items"));
             Assert.IsTrue(result.Contains("Last In List"));
         }
 
