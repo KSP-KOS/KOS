@@ -38,7 +38,15 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
         * - :attr:`POWERREQUIREMENT`
           - scalar
-          - Amount of power consumed when this volume is set as the current volume
+          - Amount of power consumed when this volume is set as the current 
+		
+		* - :meth:`DISASSEMBLE(filename)`
+		  - `String`
+		  - Disassembles a compiled file into a textual format
+		
+		* - :meth:`ASSEMBLE(assembly,filename)`
+		  - `String`
+		  - Assembles a textual format into a compiled file
 
 .. attribute:: Volume:FREESPACE
 
@@ -83,3 +91,15 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
     Amount of power consumed when this volume is set as the current volume
 
+.. method:: Volume:DISASSEMBLE(filename)
+
+    :parameter filename: (string) Filename of the compiled file
+
+    Disassembles a compiled file into a textual format
+
+.. method:: Volume:ASSEMBLE(assembly,filename)
+
+	:parameter assembly: (string) Assembly representation
+    :parameter filename: (string) Filename of the compiled file
+
+    Assembles a textual format into a compiled file

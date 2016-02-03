@@ -51,6 +51,7 @@
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\IBindingManager.cs" />
+    <Compile Include="Compilation\KASM\AssemblyObject.cs" />
     <Compile Include="Compilation\Calculator.cs" />
     <Compile Include="Compilation\CalculatorBool.cs" />
     <Compile Include="Compilation\CalculatorScalar.cs" />
@@ -60,6 +61,9 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Compilation\KASM\Parser.cs" />
+    <Compile Include="Compilation\KASM\ParseTree.cs" />
+    <Compile Include="Compilation\KASM\Scanner.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />

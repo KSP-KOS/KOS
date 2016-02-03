@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
+using kOS.Safe.Compilation.KASM;
 
 namespace kOS.Safe.Persistence
 {
@@ -147,6 +148,22 @@ namespace kOS.Safe.Persistence
             return parts;
         }
 
+        public void Assemble(string assembly, string filePath)
+        {
+            var parts = AssemblyObject.Assemble(assembly, null).ToList();
+            SaveObjectFile(filePath, parts);
+        }
+
+        public string Disassemble(string filePath)
+        {
+            var file = GetByName(filePath, true);
+            if (file.Extension != KOS_MACHINELANGUAGE_EXTENSION)
+                throw new ArgumentException("File is not a compiled program.");
+
+            List<CodePart> parts = CompiledObject.UnPack(filePath, "", file.BinaryContent);
+            return AssemblyObject.Disassemble(parts);
+        }
+
         protected int GetUsedSpace()
         {
             return files.Values.Sum(file => file.GetSize());
@@ -184,6 +201,8 @@ namespace kOS.Safe.Persistence
             AddSuffix("RENAMEABLE" , new Suffix<bool>(() => Renameable));
             AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
             AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
+            AddSuffix("DISASSEMBLE" , new OneArgsSuffix<string, string>((filename) => Disassemble(filename)));
+            AddSuffix("ASSEMBLE", new TwoArgsSuffix<string, string>((assembly, filename) => Assemble(assembly, filename)));
         }
 
         private ProgramFile FileSearch(string name, bool ksmDefault = false)

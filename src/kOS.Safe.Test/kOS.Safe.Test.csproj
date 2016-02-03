@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
+    <Compile Include="Compilation\AssemblyTest.cs" />
     <Compile Include="Structures\BooleanValueTest.cs" />
     <Compile Include="Structures\ScalarValueTest.cs" />
     <Compile Include="Structures\StringValueTest.cs" />
@@ -84,7 +85,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Serialization\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

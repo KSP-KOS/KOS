@@ -93,9 +93,36 @@ Downsides to Using KSM Files
 
 1. Be aware that if you use this feature, you do lose the ability to have the line of code printed out for you when the kOS computer finds an error in your program. It will still tell you what line number the error happened on, but it cannot show you the line of code. Just the number.
 
-2. Know that you cannot view the program inside the in-game editor anymore when you do this. A KSM file will not appear right in the editor. It requires a magic tool called a "hex editor" to properly see what's happening inside the file.
+2. Know that you cannot view the program inside the in-game editor anymore when you do this. A KSM file will not appear right in the editor. You can however create a textual representation of it by disassembling the KSM file.
 
 3. **The file isn't always smaller**. There's a threshold at which the KSM file is actually bigger than the source KS file. For large KS files, the KSM file will be smaller, but for short KS files, the KSM file will be bigger, because there's a small amount of overhead they have to store that is only efficient if the data was large enough.
+
+Disassembling
+-------------
+
+When you have a .ksm file, you can create a textual representation of it using disassembly:
+
+    print CORE:CURRENTVOLUME:DISASSEMBLE("myprog1.ksm").
+
+You can convert this representation back to a program:
+
+    SET assembly TO CORE:CURRENTVOLUME:DISASSEMBLE("myprog1.ksm").
+    CORE:CURRENTVOLUME:ASSEMBLE(assembly, "myprog2.ksm").
+	
+For example, the spec_char.ksm file looks like this:
+
+    .functions:
+    .main:
+	    push "quote"
+		push "\""
+		storeglobal
+		push "endl"
+		push "\n"
+		storeglobal
+		push "beep"
+		push "\u0007"
+		storeglobal
+	
 
 More Reading and Fiddling with Your Bits
 ----------------------------------------
