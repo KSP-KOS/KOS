@@ -21,7 +21,8 @@ namespace kOS.Safe.Encapsulation.Suffixes
             }
             else
             {
-                toSet = (TValue)Convert.ChangeType(value, typeof(TValue));
+                Structure newValue = Structure.FromPrimitiveWithAssert(value);  // Handles the string -> StringValue case that Convert.ChangeType() can't.
+                toSet = (TValue)Convert.ChangeType(newValue, typeof(TValue));
             }
             setter.Invoke(toSet);
         }

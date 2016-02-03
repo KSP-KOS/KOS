@@ -44,7 +44,13 @@ namespace kOS.Safe.Encapsulation
                 Header = "STACK of " + Collection.Count() + " items:"
             };
 
-            result.Add(kOS.Safe.Dump.Items, Collection.ToList());
+            // This conversion is needed because TerminalFormatter.WriteIndented() demands to only
+            // work with exactly List<object> and bombs out on List<Structure>'s:
+            List<object> list = new List<object>();
+            foreach (object entry in Collection.ToList())
+                list.Add(entry);
+
+            result.Add(kOS.Safe.Dump.Items, list);
 
             return result;
         }

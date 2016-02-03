@@ -42,7 +42,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             // Will be true iff the lastmost parameter of the delegate is using the C# 'param' keyword and thus
             // expects the remainder of the arguments marshalled together into one array object.
             bool isParamArrayArg = false;
-
+            
             CpuUtility.ReverseStackArgs(cpu, false);
             for (int i = 0; i < paramArray.Length; ++i)
             {
@@ -138,10 +138,17 @@ namespace kOS.Safe.Encapsulation.Suffixes
                     del.DynamicInvoke(argArray);
                     value = null; // By adding this we can unconditionally assume all functions
                                  // have a return value to be used or popped away, even if "void".
+
+                    // @erendrake:
+                    // I'm not sure I like returning a null here.  But fixing that is outside the
+                    // remit of this refactor.  Returning a null is the same behaviour it used to have.
                 }
-                // Convert a primitive return type to a structure.  This is done in the opcode, since
-                // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
+                else
+                {
+                   // Convert a primitive return type to a structure.  This is done in the opcode, since
+                   // the opcode calls the deligate directly and cannot be (quickly) intercepted
+                   value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
+                }
             }
             catch (TargetInvocationException e)
             {

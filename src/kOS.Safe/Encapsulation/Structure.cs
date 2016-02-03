@@ -183,6 +183,9 @@ namespace kOS.Safe.Encapsulation
         /// <returns>new converted value, or original value if conversion couldn't happen or was unnecesary</returns>
         public static object FromPrimitive(object value)
         {
+            if (value == null)
+                return value; // If a null exists, let it pass through so it will bomb elsewhere, not here in FromPrimitive() where the exception message would be obtuse.
+            
             if (value is Structure)
                 return value; // Conversion is unnecessary - it's already a Structure.
             
@@ -229,7 +232,7 @@ namespace kOS.Safe.Encapsulation
             if (returnValue == null)
                 throw new KOSException(
                     String.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
-                                  value.GetType().ToString()));
+                                  (value == null ? "<null>" : value.GetType().ToString())));
             return returnValue;
         }
 

@@ -677,7 +677,21 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                cpu.PushStack(result.Value);
+                if (result.HasValue)
+                {
+                    // Push the already calculated value.
+
+                    cpu.PushStack(result.Value);
+                }
+                else
+                {
+                    // Push the indirect suffix delegate, but don't execute it yet
+                    // because we need to put the upcoming arg list above it on the stack.
+                    // Eventually an <indirect> OpcodeCall will occur further down the program which
+                    // will actually execute this.
+                    
+                    cpu.PushStack(result);
+                }
             }
         }
     }
@@ -1361,7 +1375,7 @@ namespace kOS.Safe.Compilation
                         ++argsCount;
                 }
                 functionPointer = cpu.PeekValue(digDepth);
-                if (! ( functionPointer is Delegate || functionPointer is KOSDelegate))
+                if (! ( functionPointer is Delegate || functionPointer is KOSDelegate || functionPointer is ISuffixResult))
                 {
                     // Indirect calls are meant to be delegates.  If they are not, then that means the
                     // function parentheses were put on by the user when they weren't required.  Just dig

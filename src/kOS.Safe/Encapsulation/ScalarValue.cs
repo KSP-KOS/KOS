@@ -398,7 +398,16 @@ namespace kOS.Safe.Encapsulation
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            return Convert.ChangeType(GetDoubleValue(), conversionType);
+            // These can't be handled by ScalarValue.Create() because they MUST coerce into the asked-for type,
+            // ignoring the logic used in Create() to vary the type depending on content.
+            if (conversionType == GetType())
+                return this;  // no conversion needed
+            else if (conversionType == typeof(ScalarDoubleValue))
+                return new ScalarDoubleValue(GetDoubleValue());
+            else if (conversionType == typeof(ScalarIntValue))
+                return new ScalarIntValue(GetIntValue());
+            else
+                return Convert.ChangeType(GetDoubleValue(), conversionType);
         }
 
         ushort IConvertible.ToUInt16(IFormatProvider provider)

@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Binding;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -45,8 +46,16 @@ namespace kOS.Binding
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
             {
                 var cName = scName;
-                shared.BindingMgr.AddGetter(scName, () => new VesselTarget(shared).GetSuffix(cName));
+                shared.BindingMgr.AddGetter(scName, () => VesselShortcutGetter(shared, cName));
             }
+        }
+        
+        public object VesselShortcutGetter(SharedObjects shared, string name)
+        {
+            ISuffixResult suffix = new VesselTarget(shared).GetSuffix(name);
+            if (! suffix.HasValue)
+                suffix.Invoke(shared.Cpu);
+            return suffix.Value;
         }
     }
 }
