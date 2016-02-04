@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -14,7 +16,7 @@ namespace kOS.Safe.Encapsulation
     /// necessary.
     /// 
     /// </summary>
-    public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue
+    public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue, IEnumerable<string>
     {
         private readonly string internalString;
 
@@ -165,6 +167,19 @@ namespace kOS.Safe.Encapsulation
             throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
 
+        public IEnumerator<string> GetEnumerator ()
+        {
+            for (int i = 0; i < internalString.Length; i++) {
+                yield return internalString[i].ToString();
+            }
+
+        }
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         // As the regular Split, except returning a ListValue rather than an array.
         public ListValue<StringValue> SplitToList(string separator)
         {
@@ -177,24 +192,24 @@ namespace kOS.Safe.Encapsulation
 
         private void StringInitializeSuffixes()
         {
-            AddSuffix("LENGTH",     new NoArgsSuffix<ScalarIntValue>                           (() => Length));
-            AddSuffix("SUBSTRING",  new TwoArgsSuffix<StringValue, ScalarIntValue, ScalarIntValue>             ( (one, two) => Substring(one, two)));
-            AddSuffix("CONTAINS",   new OneArgsSuffix<BooleanValue, StringValue>                 (one => Contains(one)));
-            AddSuffix("ENDSWITH",   new OneArgsSuffix<BooleanValue, StringValue>                 (one => EndsWith(one)));
-            AddSuffix("FINDAT",     new TwoArgsSuffix<ScalarIntValue, StringValue, ScalarIntValue>             ( (one, two) => FindAt(one, two)));
-            AddSuffix("INSERT",     new TwoArgsSuffix<StringValue, ScalarIntValue, StringValue>          ( (one, two) => Insert(one, two)));
-            AddSuffix("FINDLASTAT", new TwoArgsSuffix<ScalarIntValue, StringValue, ScalarIntValue>             ( (one, two) => FindLastAt(one, two)));
-            AddSuffix("PADLEFT",    new OneArgsSuffix<StringValue, ScalarIntValue>                  (one => PadLeft(one)));
-            AddSuffix("PADRIGHT",   new OneArgsSuffix<StringValue, ScalarIntValue>                  ( one => PadRight(one)));
-            AddSuffix("REMOVE",     new TwoArgsSuffix<StringValue, ScalarIntValue, ScalarIntValue>             ( (one, two) => Remove(one, two)));
-            AddSuffix("REPLACE",    new TwoArgsSuffix<StringValue, StringValue, StringValue>       ( (one, two) => Replace(one, two)));
-            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<StringValue>, StringValue>    (one => SplitToList(one)));
-            AddSuffix("STARTSWITH", new OneArgsSuffix<BooleanValue, StringValue>                 (one => StartsWith(one)));
-            AddSuffix("TOLOWER",    new NoArgsSuffix<StringValue>                        (() => ToLower()));
-            AddSuffix("TOUPPER",    new NoArgsSuffix<StringValue>                        (() => ToUpper()));
-            AddSuffix("TRIM",       new NoArgsSuffix<StringValue>                        (() => Trim()));
-            AddSuffix("TRIMEND",    new NoArgsSuffix<StringValue>                        (() => TrimEnd()));
-            AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>                        (() => TrimStart()));
+            AddSuffix("LENGTH",     new NoArgsSuffix<ScalarIntValue>( () => Length));
+            AddSuffix("SUBSTRING",  new TwoArgsSuffix<StringValue, ScalarIntValue, ScalarIntValue>( (one, two) => Substring(one, two)));
+            AddSuffix("CONTAINS",   new OneArgsSuffix<BooleanValue, StringValue>( one => Contains(one)));
+            AddSuffix("ENDSWITH",   new OneArgsSuffix<BooleanValue, StringValue>( one => EndsWith(one)));
+            AddSuffix("FINDAT",     new TwoArgsSuffix<ScalarIntValue, StringValue, ScalarIntValue>( (one, two) => FindAt(one, two)));
+            AddSuffix("INSERT",     new TwoArgsSuffix<StringValue, ScalarIntValue, StringValue>( (one, two) => Insert(one, two)));
+            AddSuffix("FINDLASTAT", new TwoArgsSuffix<ScalarIntValue, StringValue, ScalarIntValue>( (one, two) => FindLastAt(one, two)));
+            AddSuffix("PADLEFT",    new OneArgsSuffix<StringValue, ScalarIntValue>( one => PadLeft(one)));
+            AddSuffix("PADRIGHT",   new OneArgsSuffix<StringValue, ScalarIntValue>( one => PadRight(one)));
+            AddSuffix("REMOVE",     new TwoArgsSuffix<StringValue, ScalarIntValue, ScalarIntValue>( (one, two) => Remove(one, two)));
+            AddSuffix("REPLACE",    new TwoArgsSuffix<StringValue, StringValue, StringValue>( (one, two) => Replace(one, two)));
+            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<StringValue>, StringValue>( one => SplitToList(one)));
+            AddSuffix("STARTSWITH", new OneArgsSuffix<BooleanValue, StringValue>( one => StartsWith(one)));
+            AddSuffix("TOLOWER",    new NoArgsSuffix<StringValue>(() => ToLower()));
+            AddSuffix("TOUPPER",    new NoArgsSuffix<StringValue>(() => ToUpper()));
+            AddSuffix("TRIM",       new NoArgsSuffix<StringValue>(() => Trim()));
+            AddSuffix("TRIMEND",    new NoArgsSuffix<StringValue>(() => TrimEnd()));
+            AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
             AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarIntValue, StringValue>   ( one => IndexOf(one)));

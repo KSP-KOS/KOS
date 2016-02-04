@@ -41,6 +41,13 @@ namespace kOS.Binding
 
                 return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0], shared);
             });
+            shared.BindingMgr.AddGetter("HASNODE", () =>
+            {
+                var vessel = shared.Vessel;
+                if (vessel.patchedConicSolver == null)
+                    return false; // Since there is no solver, there can be no node.
+                return vessel.patchedConicSolver.maneuverNodes.Count > 0;
+            });
 
             // These are now considered shortcuts to SHIP:suffix
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
