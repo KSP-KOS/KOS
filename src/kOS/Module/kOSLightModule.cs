@@ -37,7 +37,7 @@ namespace kOS.Module
         private Light[] lights;
         private Renderer[] renderers;
         private Animation[] animations;
-
+        private bool lastLightModuleIsOn = false;
         public override void OnLoad(ConfigNode node)
         {
             updateReferences();
@@ -139,7 +139,7 @@ namespace kOS.Module
                 {
                     foreach (var animation in animations)
                     {
-                        if (!animation.isPlaying && lightModule.isOn && !powerStarved)
+                        if (!animation.isPlaying && (lightModule.isOn & !lastLightModuleIsOn) && !powerStarved) // <<-- extra check
                         {
                             animation.Play(animationName);
                         }
@@ -148,6 +148,7 @@ namespace kOS.Module
                             animation.Stop();
                         }
                     }
+                    lastLightModuleIsOn = lightModule.isOn;
                 }
             }
         }
