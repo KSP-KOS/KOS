@@ -30,7 +30,7 @@ namespace kOS.Safe.Execution
         {
             if (!SafeHouse.Config.EnableSafeMode)
                 return;
-            if (!(item is double || item is float || item is ScalarDoubleValue))
+            if (!(item is double || item is float || item is ScalarValue))
                 return;
 
             double unboxed = Convert.ToDouble(item);

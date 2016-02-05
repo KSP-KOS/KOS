@@ -2,7 +2,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class ClampSetSuffix<TValue> : SetSuffix<TValue> where TValue : Structure
+    public class ClampSetSuffix<TValue> : SetSuffix<TValue> where TValue : ScalarValue
     {
         private readonly double min;
         private readonly double max;
@@ -23,8 +23,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public override void Set(object value)
         {
-            //HACK, this is assumes the value parses as a double
-            var dblValue = double.Parse(value.ToString());
+            var dblValue = System.Convert.ToDouble(value);
 
             base.Set(System.Math.Abs(stepIncrement) < 0.0001
                 ? Math.Clamp(dblValue, min, max)

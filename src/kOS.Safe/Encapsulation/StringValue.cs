@@ -342,6 +342,10 @@ namespace kOS.Safe.Encapsulation
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
+            if (conversionType == typeof(StringValue))
+                return this;
+            else if (conversionType.IsSubclassOf(typeof(Structure)))
+                throw new KOSCastException(typeof(StringValue), conversionType);
             return Convert.ChangeType(internalString, conversionType);
         }
 

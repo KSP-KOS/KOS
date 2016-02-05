@@ -330,6 +330,11 @@ namespace kOS.Safe.Encapsulation
             return val.GetDoubleValue();
         }
 
+        public static implicit operator float(ScalarValue val)
+        {
+            return (float)val.GetDoubleValue();
+        }
+
         TypeCode IConvertible.GetTypeCode()
         {
             return TypeCode.Object;
@@ -402,10 +407,14 @@ namespace kOS.Safe.Encapsulation
             // ignoring the logic used in Create() to vary the type depending on content.
             if (conversionType == GetType())
                 return this;  // no conversion needed
+            else if (conversionType == typeof(ScalarValue))
+                return this; // no conversion needed
             else if (conversionType == typeof(ScalarDoubleValue))
                 return new ScalarDoubleValue(GetDoubleValue());
             else if (conversionType == typeof(ScalarIntValue))
                 return new ScalarIntValue(GetIntValue());
+            else if (conversionType.IsSubclassOf(typeof(Structure)))
+                throw new KOSCastException(typeof(ScalarValue), conversionType);
             else
                 return Convert.ChangeType(GetDoubleValue(), conversionType);
         }
