@@ -56,6 +56,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
+     :attr:`UNPACKED`                      Boolean                   The ship has individual parts unpacked
      :attr:`LOADDISTANCE`                  :struct:`LoadDistance`    the :struct:`LoadDistance` object for this vessel
      :attr:`ISDEAD`                        Boolean                   True if the vessel refers to a ship that has gone away.
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
@@ -308,7 +309,18 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: Boolean
     :access: Get only
 
-    true if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
+    True if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
+    See :struct:`LoadDistance` for details.
+
+.. attribute:: Vessel:UNPACKED
+
+    :type: Boolean
+    :access: Get only
+
+    True if the vessel is fully unpacked.  That is to say that all of the individual parts are loaded
+    and can be interacted with.  This allows docking ports to be targeted, and controls if some
+    actions/events on parts will actually trigger.  See :struct:`LoadDistance` for details.
+
 
 .. attribute:: Vessel:LOADDISTANCE
 

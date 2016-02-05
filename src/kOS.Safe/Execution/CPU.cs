@@ -576,7 +576,7 @@ namespace kOS.Safe.Execution
                     Variable v = globalVariables.Variables[ident];
                     line = ident;
                     if (v == null || v.Value == null)
-                        line += "is <null>";
+                        line += " is <null>";
                     else
                         line += " is a " + v.Value.GetType().FullName + " with value = " + v.Value;
                 }
@@ -584,7 +584,7 @@ namespace kOS.Safe.Execution
                 {
                     // This is necessary because of the deprecation exceptions that
                     // get raised by FlightStats when you try to print all of them out:
-                    line = ident + "= <value caused exception>\n    " + e.Message;
+                    line = ident + " is <value caused exception>\n    " + e.Message;
                 }
                 msg.AppendLine(line);
             }
