@@ -1,0 +1,182 @@
+// @TinyPG - a Tiny Parser Generator v1.3
+<% @TinyPG Namespace="TinyPG" %>
+
+// Terminals:
+NEGATIVE		-> @"-";
+OPERATION		-> @"\w+";
+FUNCTIONSECTIONMARK	-> @"\.functions:";
+INITSECTIONMARK	-> @"\.init:";
+MAINSECTIONMARK	-> @"\.main:";
+LABEL			-> @"[^\.]\w+:";
+WRAPPEDVALUEINDICATOR -> @":";
+ARGUMENTSEPARATOR	-> @",";
+
+UNICODE_CHAR		-> @"\\u[a-fA-F0-9]{4}";
+ENCODED_NEWLINE	-> @"\\n";
+ENCODED_TAB		-> @"\\t";
+ENCODED_QUOTE		-> @"\\""";
+ENCODED_BACKSLASH	-> @"\\\\";
+OTHER_CHAR		-> @"[^\""\\]+";
+STRING_DELIMITER	-> @"\""";
+
+// Whitespace
+WHITESPACE		-> @"[^\S\n]+";
+ENDL			-> @"[^\S\n]*((;[^\n|$]*)?(\n|$)[^\S\n]*)+";
+EOF			-> @"^$";
+
+// Arguments
+PSEUDONULL		-> @"null";
+MARK			-> @"mark";
+BOOLEAN		-> @"true|false";
+STRING             	-> @"\""([^\\\""]|\\[\\nt\""])*\""";
+DOUBLE			-> @"-?(\d*\.\d+|\d+)(E-?\d+)?d";
+SINGLE			-> @"-?(\d*\.\d+|\d+)(E-?\d+)?f";
+BYTE			-> @"\d+B";
+CHAR			-> @"\d+C";
+DECIMAL		-> @"-?(\d*\.\d+|\d+)(E-?\d+)?m";
+SHORT			-> @"-?\d+s";
+LONG			-> @"-?\d+l";
+INT			-> @"-?\d+i";
+UNSIGNEDSHORT		-> @"\d+S";
+UNSIGNEDINT		-> @"\d+I";
+UNSIGNEDLONG		-> @"\d+L";
+SIGNEDBYTE		-> @"-?\d+b";
+
+DecodedUnicode	-> UNICODE_CHAR {
+	string original = (string)$UNICODE_CHAR;
+	string hexpart = original.Substring(2);
+	char c = (char)int.Parse(hexpart, NumberStyles.HexNumber);
+	return "" + c;
+};
+
+StringChar		-> OTHER_CHAR | ENCODED_NEWLINE | ENCODED_TAB | ENCODED_QUOTE | ENCODED_BACKSLASH | DecodedUnicode {
+	if ( $OTHER_CHAR != null ) return $OTHER_CHAR;
+	if ( $ENCODED_NEWLINE != null ) return "\n";
+	if ( $ENCODED_TAB != null ) return "\t";
+	if ( $ENCODED_QUOTE != null ) return "\"";
+	if ( $ENCODED_BACKSLASH != null ) return "\\";
+	if ( $DecodedUnicode != null ) return $DecodedUnicode;
+	return "";
+};
+
+ParsedString		-> STRING_DELIMITER StringChar* STRING_DELIMITER {
+	StringBuilder b = new StringBuilder();
+	int i = 0;
+
+	while($StringChar[i] != null) {
+		b.Append($StringChar[i++]);
+	}
+
+	return b.ToString();
+};
+
+ParsedInt		-> INT {
+	return Int32.Parse($INT.ToString().Substring(0, $INT.ToString().Length - 1));
+};
+
+ParsedBoolean		-> BOOLEAN {
+	return bool.Parse($BOOLEAN.ToString());
+};
+
+ParsedDouble		-> DOUBLE {
+	return double.Parse($DOUBLE.ToString().Substring(0, $DOUBLE.ToString().Length - 1), CultureInfo.InvariantCulture);
+};
+
+WrappedValue		-> WRAPPEDVALUEINDICATOR (ParsedInt | ParsedDouble | ParsedBoolean | ParsedString) {
+	if ( $ParsedInt != null ) return new ScalarIntValue( (int)$ParsedInt );
+	if ( $ParsedDouble != null ) return new ScalarDoubleValue( (double)$ParsedDouble );
+	if ( $ParsedBoolean != null ) return new BooleanValue( (bool)$ParsedBoolean );
+	if ( $ParsedString!= null ) return new StringValue( (string)$ParsedString);
+	return null;
+};
+
+Argument		-> PSEUDONULL | ParsedBoolean | ParsedString | ParsedDouble
+				| SINGLE | BYTE | CHAR | DECIMAL | SHORT | LONG | ParsedInt
+				| UNSIGNEDSHORT | UNSIGNEDINT | UNSIGNEDLONG | SIGNEDBYTE
+				| WrappedValue | MARK {
+	if ( $PSEUDONULL != null) return null;
+	if ( $ParsedBoolean != null) return $ParsedBoolean;
+	if ( $ParsedString!= null) return $ParsedString;
+	if ( $ParsedDouble != null) return $ParsedDouble;
+	if ( $SINGLE != null) return float.Parse($SINGLE.ToString().Substring(0, $SINGLE.ToString().Length - 1));
+	if ( $BYTE != null) return byte.Parse($BYTE.ToString().Substring(0, $BYTE.ToString().Length - 1));
+	if ( $CHAR != null) return (char)Int32.Parse($CHAR.ToString().Substring(0, $CHAR.ToString().Length - 1));
+	if ( $DECIMAL != null) return Decimal.Parse($DECIMAL.ToString().Substring(0, $DECIMAL.ToString().Length - 1), CultureInfo.InvariantCulture);
+	if ( $SHORT != null) return Int16.Parse($SHORT.ToString().Substring(0, $SHORT.ToString().Length - 1), CultureInfo.InvariantCulture);
+	if ( $LONG != null) return Int64.Parse($LONG.ToString().Substring(0, $LONG.ToString().Length - 1));
+	if ( $ParsedInt != null) return $ParsedInt;
+	if ( $UNSIGNEDSHORT != null) return UInt16.Parse($UNSIGNEDSHORT.ToString().Substring(0, $UNSIGNEDSHORT.ToString().Length - 1));
+	if ( $UNSIGNEDINT != null) return UInt32.Parse($UNSIGNEDINT.ToString().Substring(0, $UNSIGNEDINT.ToString().Length - 1));
+	if ( $UNSIGNEDLONG != null) return UInt64.Parse($UNSIGNEDLONG.ToString().Substring(0, $UNSIGNEDLONG.ToString().Length - 1));
+	if ( $SIGNEDBYTE != null) return sbyte.Parse($SIGNEDBYTE.ToString().Substring(0, $SIGNEDBYTE.ToString().Length - 1));
+	if ( $WrappedValue != null) return $WrappedValue;
+	if ( $MARK != null ) return new KOSArgMarkerType();
+	return null;
+};
+
+SecondArgument	-> ARGUMENTSEPARATOR WHITESPACE? Argument WHITESPACE? { return $Argument; };
+ArgumentList		-> WHITESPACE Argument WHITESPACE? SecondArgument* {
+	int i = 0;
+	List<object> results = new List<object>();
+	results.Add($Argument);
+	while($SecondArgument[i] != null) {
+		results.Add($SecondArgument[i++]);
+	}
+	return results;
+};
+
+Instruction		-> OPERATION ArgumentList? ENDL {
+	List<object> operation = new List<object>();
+	operation.Add($OPERATION);
+	if($ArgumentList != null)
+		operation.AddRange((List<object>)$ArgumentList);
+
+	return operation;
+};
+
+Line			-> WHITESPACE? (LABEL WHITESPACE)? Instruction {
+	List<object> result = new List<object>();
+	if($LABEL != null) {
+		string label = $LABEL.ToString();
+		label = label.Substring(0, label.Length - 1);
+		result.Add(label);
+	} else {
+		result.Add(null);
+	}
+	result.AddRange((List<object>)$Instruction);
+	return result;
+};
+
+CodeBlock		-> Line* {
+	int i = 0;
+	List<List<object>> block = new List<List<object>>();
+	while($Line[i] != null) {
+		block.Add((List<object>)$Line[i++]);
+	}
+	return block;
+};
+
+FunctionSection	-> FUNCTIONSECTIONMARK ENDL CodeBlock { return $CodeBlock; };
+InitSection		-> INITSECTIONMARK ENDL CodeBlock { return $CodeBlock; };
+MainSection		-> MAINSECTIONMARK ENDL CodeBlock { return $CodeBlock; };
+
+CodePart		-> FunctionSection (InitSection MainSection? | MainSection InitSection?)? {
+	List<List<List<object>>> part = new List<List<List<object>>>();
+
+	part.Add((List<List<object>>)$FunctionSection);
+	part.Add((List<List<object>>)$InitSection);
+	part.Add((List<List<object>>)$MainSection);
+
+	return part;
+};
+
+Start			-> ENDL? CodePart* EOF {
+	List<List<List<List<object>>>> file = new List<List<List<List<object>>>>();
+	int i = 0;
+	while($CodePart[i] != null) {
+		file.Add((List<List<List<object>>>)$CodePart[i++]);
+	}
+	return file;
+};
+
+

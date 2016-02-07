@@ -24,7 +24,7 @@ namespace kOS.Safe.Compilation
     /// make this a lot easier to follow and understand.
     /// 
     /// </summary>
-    public static class CompiledObject
+    public class CompiledObject
     {
         /// <summary>A homemade magic number for file identifcation, that will
         /// appear as the first part of the file contents and is hopefully
@@ -642,7 +642,7 @@ namespace kOS.Safe.Compilation
         /// </summary>
         /// <param name="label">label to test</param>
         /// <returns>Next label string</returns>
-        private static string NextConsecutiveLabel( string label)
+        protected static string NextConsecutiveLabel( string label)
         {
             string outLabel;
             Match m = trailingDigitsRegex.Match(label);

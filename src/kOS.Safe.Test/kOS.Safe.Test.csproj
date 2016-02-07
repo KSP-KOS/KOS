@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
+    <Compile Include="Compilation\AssemblyTest.cs" />
     <Compile Include="Structures\BooleanValueTest.cs" />
     <Compile Include="Structures\ScalarValueTest.cs" />
     <Compile Include="Structures\StringValueTest.cs" />
@@ -86,9 +87,5 @@
   -->
   <ItemGroup>
     <Folder Include="Serialization\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ProfilingSessions\Session20160127_233127.sdps" />
-    <Content Include="ProfilingSessions\Session20160127_233506.sdps" />
   </ItemGroup>
 </Project>
