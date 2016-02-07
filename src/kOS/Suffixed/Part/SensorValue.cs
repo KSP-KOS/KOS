@@ -20,7 +20,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("TYPE", new Suffix<StringValue>(() => sensor.sensorType));
             AddSuffix("DISPLAY", new Suffix<StringValue>(() => sensor.readoutInfo));
             AddSuffix("POWERCONSUMPTION", new Suffix<ScalarDoubleValue>(() => sensor.powerConsumption));
-            AddSuffix("TOGGLE", new NoArgsSuffix(() => sensor.Toggle()));
+            AddSuffix("TOGGLE", new NoArgsVoidSuffix(() => sensor.Toggle()));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)

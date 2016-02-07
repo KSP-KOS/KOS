@@ -29,7 +29,7 @@ namespace kOS.Suffixed.Part
 
         private void PartInitializeSuffixes()
         {
-            AddSuffix("CONTROLFROM", new NoArgsSuffix(ControlFrom));
+            AddSuffix("CONTROLFROM", new NoArgsVoidSuffix(ControlFrom));
             AddSuffix("NAME", new Suffix<StringValue>(() => Part.name));
             AddSuffix("FUELCROSSFEED", new Suffix<BooleanValue>(() => Part.fuelCrossFeed));
             AddSuffix("TITLE", new Suffix<StringValue>(() => Part.partInfo.title));

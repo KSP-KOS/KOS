@@ -103,7 +103,7 @@ namespace kOS.Suffixed.PartModuleField
         ///    alter the value to an acceptable replacement which is why it passes by ref</param>
         /// <param name="except">An exception you can choose to throw if you want, or null if the value is legal.</param>
         /// <returns>Is it legal?</returns>
-        private bool IsLegalValue(BaseField field, ref object newVal, out KOSException except)
+        private bool IsLegalValue(BaseField field, ref Structure newVal, out KOSException except)
         {
             except = null;
             bool isLegal = true;
@@ -177,7 +177,7 @@ namespace kOS.Suffixed.PartModuleField
                 if (!isLegal)
                     break;
             }
-            newVal = convertedVal;
+            newVal = FromPrimitiveWithAssert(convertedVal);
             return isLegal;
         }
 
@@ -401,9 +401,9 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("ALLACTIONNAMES", new Suffix<ListValue>(AllActionNames));
             AddSuffix("HASACTION", new OneArgsSuffix<BooleanValue, StringValue>(HasAction));
             AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldValue));
-            AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, object>(SetKSPFieldValue));
+            AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, Structure>(SetKSPFieldValue));
             AddSuffix("DOEVENT", new OneArgsSuffix<StringValue>(CallKSPEvent));
-            AddSuffix("DOACTION", new TwoArgsSuffix<string, bool>(CallKSPAction));
+            AddSuffix("DOACTION", new TwoArgsSuffix<StringValue, BooleanValue>(CallKSPAction));
         }
 
         private static bool FieldIsVisible(BaseField field)
@@ -441,7 +441,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="newValue"></param>
-        protected virtual void SetKSPFieldValue(StringValue suffixName, object newValue)
+        protected virtual void SetKSPFieldValue(StringValue suffixName, Structure newValue)
         {
             ThrowIfNotCPUVessel();
             BaseField field = GetField(suffixName);
@@ -494,7 +494,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="param">true = activate, false = de-activate</param>
-        private void CallKSPAction(string suffixName, bool param)
+        private void CallKSPAction(StringValue suffixName, BooleanValue param)
         {
             ThrowIfNotCPUVessel();
             BaseAction act = GetAction(suffixName);

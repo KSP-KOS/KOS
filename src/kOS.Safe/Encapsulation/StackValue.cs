@@ -77,7 +77,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Push(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Pop()));
             AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                      (() => Collection.Clear()));
         }
 
         public static StackValue<T> CreateStack<TU>(IEnumerable<TU> list)

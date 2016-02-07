@@ -21,8 +21,8 @@ namespace kOS.Suffixed
             AddSuffix("CANREVERT", new Suffix<BooleanValue>(CanRevert));
             AddSuffix("CANREVERTTOLAUNCH", new Suffix<BooleanValue>(CanRevertToLaunch));
             AddSuffix("CANREVERTTOEDITOR", new Suffix<BooleanValue>(CanRevvertToEditor));
-            AddSuffix("REVERTTOLAUNCH", new NoArgsSuffix(RevertToLaunch));
-            AddSuffix("REVERTTOEDITOR", new NoArgsSuffix(RevertToEditor));
+            AddSuffix("REVERTTOLAUNCH", new NoArgsVoidSuffix(RevertToLaunch));
+            AddSuffix("REVERTTOEDITOR", new NoArgsVoidSuffix(RevertToEditor));
             AddSuffix("REVERTTO", new OneArgsSuffix<StringValue>(RevertTo));
             AddSuffix("ORIGINEDITOR", new Suffix<StringValue>(OriginatingEditor));
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));

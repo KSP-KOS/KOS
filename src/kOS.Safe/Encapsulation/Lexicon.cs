@@ -64,7 +64,7 @@ namespace kOS.Safe.Encapsulation
 
         private void InitalizeSuffixes()
         {
-            AddSuffix("CLEAR", new NoArgsSuffix(Clear, "Removes all items from Lexicon"));
+            AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear, "Removes all items from Lexicon"));
             AddSuffix("KEYS", new Suffix<ListValue<Structure>>(GetKeys, "Returns the lexicon keys"));
             AddSuffix("HASKEY", new OneArgsSuffix<BooleanValue, Structure>(HasKey, "Returns true if a key is in the Lexicon"));
             AddSuffix("HASVALUE", new OneArgsSuffix<BooleanValue, Structure>(HasValue, "Returns true if value is in the Lexicon"));

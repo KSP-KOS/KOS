@@ -38,7 +38,7 @@ namespace kOS.AddOns.RemoteTech
             AddSuffix("ALLFIELDNAMES", new Suffix<ListValue>(AllFieldNames));
             AddSuffix("HASFIELD", new OneArgsSuffix<BooleanValue, StringValue>(HasField));
             AddSuffix("GETFIELD", new OneArgsSuffix<Structure, StringValue>(GetKSPFieldValue));
-            AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, object>(SetKSPFieldValue));
+            AddSuffix("SETFIELD", new TwoArgsSuffix<StringValue, Structure>(SetKSPFieldValue));
         }
 
         public override BooleanValue HasField(StringValue fieldName)
@@ -176,7 +176,8 @@ namespace kOS.AddOns.RemoteTech
                 "', Body or Vessel expected");
         }
 
-        protected override void SetKSPFieldValue(StringValue suffixName, object newValue)
+
+        protected override void SetKSPFieldValue(StringValue suffixName, Structure newValue)
         {
             if (Equals(suffixName, new StringValue(RTTargetField)))
             {

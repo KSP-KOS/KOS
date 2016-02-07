@@ -18,8 +18,8 @@ namespace kOS.Suffixed.PartModuleField
         private void InitializeSuffixes()
         {
             AddSuffix("MODE", new NoArgsSuffix<StringValue>(() => processor.ProcessorMode.ToString(), "This processor's mode"));
-            AddSuffix("ACTIVATE", new NoArgsSuffix(Activate, "Activate this processor"));
-            AddSuffix("DEACTIVATE", new NoArgsSuffix(Deactivate, "Deactivate this processor"));
+            AddSuffix("ACTIVATE", new NoArgsVoidSuffix(Activate, "Activate this processor"));
+            AddSuffix("DEACTIVATE", new NoArgsVoidSuffix(Deactivate, "Deactivate this processor"));
             AddSuffix("VOLUME", new NoArgsSuffix<Volume>(() => processor.HardDisk, "This processor's hard disk"));
             AddSuffix("TAG", new NoArgsSuffix<StringValue>(() => processor.Tag, "This processor's tag"));
             AddSuffix("BOOTFILENAME", new SetSuffix<StringValue>(GetBootFilename, SetBootFilename, "The name of the processor's boot file."));

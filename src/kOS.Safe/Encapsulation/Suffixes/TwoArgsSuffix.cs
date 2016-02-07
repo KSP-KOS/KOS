@@ -18,7 +18,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
         }
     }
 
-    public class TwoArgsSuffix<TParam, TParam2> : SuffixBase
+    public class TwoArgsSuffix<TParam, TParam2> : SuffixBase where TParam : Structure where TParam2 : Structure
     {
         private readonly Del<TParam, TParam2> del;
 

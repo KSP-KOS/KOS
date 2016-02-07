@@ -17,7 +17,7 @@ namespace kOS.Safe.Encapsulation
 
         private void EnumeratorInitializeSuffixes()
         {
-            AddSuffix("RESET", new NoArgsSuffix(() =>
+            AddSuffix("RESET", new NoArgsVoidSuffix(() =>
             {
                 index = -1;
                 status = false;

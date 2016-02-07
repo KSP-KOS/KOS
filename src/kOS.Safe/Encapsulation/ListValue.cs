@@ -90,9 +90,9 @@ namespace kOS.Safe.Encapsulation
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
             AddSuffix("LENGTH",   new NoArgsSuffix<ScalarIntValue>      (() => Collection.Count));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                      (() => Collection.Clear()));
             AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Collection.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => Collection.Insert(index, toAdd)));
+            AddSuffix("INSERT",   new TwoArgsSuffix<ScalarIntValue, T>  ((index, toAdd) => Collection.Insert(index, toAdd)));
             AddSuffix("REMOVE",   new OneArgsSuffix<ScalarIntValue>     (toRemove => Collection.RemoveAt(toRemove)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarIntValue, ScalarIntValue>(SubListMethod));
        }

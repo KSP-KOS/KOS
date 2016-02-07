@@ -37,14 +37,14 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("LOCKED", new SetSuffix<BooleanValue>(() => servo.IsLocked, value => servo.IsLocked = value));
             AddSuffix("INVERTED", new SetSuffix<BooleanValue>(() => servo.IsAxisInverted, value => servo.IsAxisInverted = value));
 
-            AddSuffix("MOVERIGHT", new NoArgsSuffix(MoveRight));
-            AddSuffix("MOVELEFT", new NoArgsSuffix(MoveLeft));
-            AddSuffix("MOVECENTER", new NoArgsSuffix(MoveCenter));
-            AddSuffix("MOVENEXTPRESET", new NoArgsSuffix(MoveNextPreset));
-            AddSuffix("MOVEPREVPRESET", new NoArgsSuffix(MovePrevPreset));
-            AddSuffix("STOP", new NoArgsSuffix(Stop));
+            AddSuffix("MOVERIGHT", new NoArgsVoidSuffix(MoveRight));
+            AddSuffix("MOVELEFT", new NoArgsVoidSuffix(MoveLeft));
+            AddSuffix("MOVECENTER", new NoArgsVoidSuffix(MoveCenter));
+            AddSuffix("MOVENEXTPRESET", new NoArgsVoidSuffix(MoveNextPreset));
+            AddSuffix("MOVEPREVPRESET", new NoArgsVoidSuffix(MovePrevPreset));
+            AddSuffix("STOP", new NoArgsVoidSuffix(Stop));
 
-            AddSuffix("MOVETO", new TwoArgsSuffix<float, float>(MoveTo));
+            AddSuffix("MOVETO", new TwoArgsSuffix<ScalarDoubleValue, ScalarDoubleValue>(MoveTo));
 
             AddSuffix("PART", new Suffix<PartValue>(GetPart));
         }
@@ -80,7 +80,7 @@ namespace kOS.AddOns.InfernalRobotics
             servo.Stop();
         }
 
-        public void MoveTo(float position, float speed)
+        public void MoveTo(ScalarDoubleValue position, ScalarDoubleValue speed)
         {
             servo.MoveTo(position, speed);
         }
