@@ -65,7 +65,7 @@ namespace kOS.Safe.Encapsulation
         private void QueueInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<QueueValue<T>>       (() => new QueueValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarIntValue>                 (() => Collection.Count));
+            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarValue>                 (() => Collection.Count));
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Enqueue(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Dequeue()));
             AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));

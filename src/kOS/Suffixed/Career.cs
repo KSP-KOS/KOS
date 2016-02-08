@@ -10,7 +10,7 @@ namespace kOS.Suffixed
         {
             AddGlobalSuffix<Career>("CANTRACKOBJECTS", new StaticSuffix<BooleanValue>(CanTrackObjects,
                                                                               "Can the Tracking Center track small space objects (asteroids)?"));
-            AddGlobalSuffix<Career>("PATCHLIMIT", new StaticSuffix<ScalarIntValue>(PatchLimit,
+            AddGlobalSuffix<Career>("PATCHLIMIT", new StaticSuffix<ScalarValue>(PatchLimit,
                                                                         "The Tracking Center's orbit patch prediction limit (an integer)"));
             AddGlobalSuffix<Career>("CANMAKENODES", new StaticSuffix<BooleanValue>(CanMakeNodes,
                                                                            "Can the Mission Control support maneuver nodes yet?"));
@@ -65,7 +65,7 @@ namespace kOS.Suffixed
         /// only because you can't default out parameters like 'out string reason' to make them optional.)
         /// </summary>
         /// <returns>max number of patches ahead (not including the current one).</returns>
-        public static ScalarIntValue PatchLimit()
+        public static ScalarValue PatchLimit()
         {
             string dummy;
             return PatchLimit(out dummy);

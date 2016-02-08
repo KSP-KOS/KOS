@@ -20,7 +20,7 @@ namespace kOS.AddOns.InfernalRobotics
         private void InitializeSuffixes()
         {
             AddSuffix("NAME", new SetSuffix<StringValue>(() => cg.Name, value => cg.Name = value));
-            AddSuffix("SPEED", new SetSuffix<ScalarDoubleValue>(() => cg.Speed, value => cg.Speed = value));
+            AddSuffix("SPEED", new SetSuffix<ScalarValue>(() => cg.Speed, value => cg.Speed = value));
             AddSuffix("EXPANDED", new SetSuffix<BooleanValue>(() => cg.Expanded, value => cg.Expanded = value));
             AddSuffix("FORWARDKEY", new SetSuffix<StringValue>(() => cg.ForwardKey, value => cg.ForwardKey = value));
             AddSuffix("REVERSEKEY", new SetSuffix<StringValue>(() => cg.ReverseKey, value => cg.ReverseKey = value));

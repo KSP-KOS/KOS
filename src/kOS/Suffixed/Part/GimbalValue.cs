@@ -19,11 +19,11 @@ namespace kOS.Suffixed.Part
             {
                 gimbal.gimbalLock = value;
             }, "Is the Gimbal free to travel?"));
-            AddSuffix("RANGE", new Suffix<ScalarDoubleValue>(() => gimbal.gimbalRange ,"The Gimbal's Possible Range of movement"));
-            AddSuffix("RESPONSESPEED", new Suffix<ScalarDoubleValue>(() => gimbal.gimbalResponseSpeed, "The Gimbal's Possible Rate of travel"));
-            AddSuffix("PITCHANGLE", new Suffix<ScalarDoubleValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAnglePitch, "Current Gimbal Pitch"));
-            AddSuffix("YAWANGLE", new Suffix<ScalarDoubleValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAngleYaw, "Current Gimbal Yaw" ));
-            AddSuffix("ROLLANGLE", new Suffix<ScalarDoubleValue>(() => gimbal.gimbalLock ? 0 : gimbal.gimbalAngleRoll, "Current Gimbal Roll"));
+            AddSuffix("RANGE", new Suffix<ScalarValue>(() => gimbal.gimbalRange ,"The Gimbal's Possible Range of movement"));
+            AddSuffix("RESPONSESPEED", new Suffix<ScalarValue>(() => gimbal.gimbalResponseSpeed, "The Gimbal's Possible Rate of travel"));
+            AddSuffix("PITCHANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAnglePitch, "Current Gimbal Pitch"));
+            AddSuffix("YAWANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAngleYaw, "Current Gimbal Yaw" ));
+            AddSuffix("ROLLANGLE", new Suffix<ScalarValue>(() => gimbal.gimbalLock ? 0 : gimbal.gimbalAngleRoll, "Current Gimbal Roll"));
         }
     }
 }

@@ -43,12 +43,12 @@ namespace kOS.Safe.Encapsulation
             StringInitializeSuffixes();
         }
 
-        public ScalarIntValue Length
+        public ScalarValue Length
         {
             get { return internalString.Length; }
         }
 
-        public string Substring(ScalarIntValue start, ScalarIntValue count)
+        public string Substring(ScalarValue start, ScalarValue count)
         {
             return internalString.Substring(start, count);
         }
@@ -63,19 +63,19 @@ namespace kOS.Safe.Encapsulation
             return internalString.EndsWith(s, StringComparison.OrdinalIgnoreCase);
         }
 
-        public ScalarIntValue IndexOf(string s)
+        public ScalarValue IndexOf(string s)
         {
             return internalString.IndexOf(s, StringComparison.OrdinalIgnoreCase);
         }
 
         // IndexOf with a start position.
         // This was named FindAt because IndexOfAt made little sense.
-        public ScalarIntValue FindAt(string s, ScalarIntValue start)
+        public ScalarValue FindAt(string s, ScalarValue start)
         {
             return internalString.IndexOf(s, start, StringComparison.OrdinalIgnoreCase);
         }
 
-        public string Insert(ScalarIntValue location, string s)
+        public string Insert(ScalarValue location, string s)
         {
             return internalString.Insert(location, s);
         }
@@ -192,16 +192,16 @@ namespace kOS.Safe.Encapsulation
 
         private void StringInitializeSuffixes()
         {
-            AddSuffix("LENGTH",     new NoArgsSuffix<ScalarIntValue>( () => Length));
-            AddSuffix("SUBSTRING",  new TwoArgsSuffix<StringValue, ScalarIntValue, ScalarIntValue>( (one, two) => Substring(one, two)));
+            AddSuffix("LENGTH",     new NoArgsSuffix<ScalarValue>( () => Length));
+            AddSuffix("SUBSTRING",  new TwoArgsSuffix<StringValue, ScalarValue, ScalarValue>( (one, two) => Substring(one, two)));
             AddSuffix("CONTAINS",   new OneArgsSuffix<BooleanValue, StringValue>( one => Contains(one)));
             AddSuffix("ENDSWITH",   new OneArgsSuffix<BooleanValue, StringValue>( one => EndsWith(one)));
-            AddSuffix("FINDAT",     new TwoArgsSuffix<ScalarIntValue, StringValue, ScalarIntValue>( (one, two) => FindAt(one, two)));
-            AddSuffix("INSERT",     new TwoArgsSuffix<StringValue, ScalarIntValue, StringValue>( (one, two) => Insert(one, two)));
-            AddSuffix("FINDLASTAT", new TwoArgsSuffix<ScalarIntValue, StringValue, ScalarIntValue>( (one, two) => FindLastAt(one, two)));
-            AddSuffix("PADLEFT",    new OneArgsSuffix<StringValue, ScalarIntValue>( one => PadLeft(one)));
-            AddSuffix("PADRIGHT",   new OneArgsSuffix<StringValue, ScalarIntValue>( one => PadRight(one)));
-            AddSuffix("REMOVE",     new TwoArgsSuffix<StringValue, ScalarIntValue, ScalarIntValue>( (one, two) => Remove(one, two)));
+            AddSuffix("FINDAT",     new TwoArgsSuffix<ScalarValue, StringValue, ScalarValue>( (one, two) => FindAt(one, two)));
+            AddSuffix("INSERT",     new TwoArgsSuffix<StringValue, ScalarValue, StringValue>( (one, two) => Insert(one, two)));
+            AddSuffix("FINDLASTAT", new TwoArgsSuffix<ScalarValue, StringValue, ScalarValue>( (one, two) => FindLastAt(one, two)));
+            AddSuffix("PADLEFT",    new OneArgsSuffix<StringValue, ScalarValue>( one => PadLeft(one)));
+            AddSuffix("PADRIGHT",   new OneArgsSuffix<StringValue, ScalarValue>( one => PadRight(one)));
+            AddSuffix("REMOVE",     new TwoArgsSuffix<StringValue, ScalarValue, ScalarValue>( (one, two) => Remove(one, two)));
             AddSuffix("REPLACE",    new TwoArgsSuffix<StringValue, StringValue, StringValue>( (one, two) => Replace(one, two)));
             AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<StringValue>, StringValue>( one => SplitToList(one)));
             AddSuffix("STARTSWITH", new OneArgsSuffix<BooleanValue, StringValue>( one => StartsWith(one)));
@@ -212,8 +212,8 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
-            AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarIntValue, StringValue>   ( one => IndexOf(one)));
-            AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<ScalarIntValue, StringValue>   ( s => LastIndexOf(s)));
+            AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));
+            AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<ScalarValue, StringValue>   ( s => LastIndexOf(s)));
 
         }
 

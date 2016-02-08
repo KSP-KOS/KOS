@@ -212,8 +212,8 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("NAME", new Suffix<StringValue>(GetName));
-            AddSuffix("APOAPSIS", new Suffix<ScalarDoubleValue>(() => Orbit.ApA));
-            AddSuffix("PERIAPSIS", new Suffix<ScalarDoubleValue>(() => Orbit.PeA));
+            AddSuffix("APOAPSIS", new Suffix<ScalarValue>(() => Orbit.ApA));
+            AddSuffix("PERIAPSIS", new Suffix<ScalarValue>(() => Orbit.PeA));
             AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(Orbit.referenceBody, Shared)));
             AddSuffix("UP", new Suffix<Direction>(() => new Direction(GetUpVector(), false)));
             AddSuffix("NORTH", new Suffix<Direction>(() => new Direction(GetNorthVector(), false)));
@@ -224,16 +224,16 @@ namespace kOS.Suffixed
             AddSuffix(new[] {"OBT","ORBIT"}, new Suffix<OrbitInfo>(GetOrbitInfo));
             AddSuffix("POSITION", new Suffix<Vector>(GetPosition));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(GetVelocities));
-            AddSuffix("DISTANCE", new Suffix<ScalarDoubleValue>(GetDistance));
+            AddSuffix("DISTANCE", new Suffix<ScalarValue>(GetDistance));
             AddSuffix("DIRECTION", new Suffix<Direction>(() => new Direction(GetPosition(), false)));
-            AddSuffix("LATITUDE", new Suffix<ScalarDoubleValue>(()=> PositionToLatitude(GetPosition())));
-            AddSuffix("LONGITUDE", new Suffix<ScalarDoubleValue>(() => PositionToLongitude(GetPosition())));
-            AddSuffix("ALTITUDE", new Suffix<ScalarDoubleValue>(() => PositionToAltitude(GetPosition())));
+            AddSuffix("LATITUDE", new Suffix<ScalarValue>(()=> PositionToLatitude(GetPosition())));
+            AddSuffix("LONGITUDE", new Suffix<ScalarValue>(() => PositionToLongitude(GetPosition())));
+            AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => PositionToAltitude(GetPosition())));
             AddSuffix("GEOPOSITION", new Suffix<GeoCoordinates>(() => new GeoCoordinates(this, Shared)));
             AddSuffix("PATCHES", new Suffix<ListValue>(BuildPatchList));
         }
 
-        private ScalarDoubleValue GetDistance()
+        private ScalarValue GetDistance()
         {
             return GetPosition().Magnitude();
         }

@@ -16,9 +16,9 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("NAME", new Suffix<StringValue>(() => partResource.resourceName));
-            AddSuffix("AMOUNT", new Suffix<ScalarDoubleValue>(() => partResource.amount));
-            AddSuffix("DENSITY", new Suffix<ScalarDoubleValue>(() => partResource.info.density));
-            AddSuffix("CAPACITY", new Suffix<ScalarDoubleValue>(() => partResource.maxAmount));
+            AddSuffix("AMOUNT", new Suffix<ScalarValue>(() => partResource.amount));
+            AddSuffix("DENSITY", new Suffix<ScalarValue>(() => partResource.info.density));
+            AddSuffix("CAPACITY", new Suffix<ScalarValue>(() => partResource.maxAmount));
             AddSuffix("TOGGLEABLE", new Suffix<BooleanValue>(() => partResource.isTweakable));
             AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => partResource.flowState, value =>
             {

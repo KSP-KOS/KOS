@@ -87,8 +87,8 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("GOAL", new Suffix<ScalarDoubleValue>(() => amount ?? -1));
-            AddSuffix("TRANSFERRED", new Suffix<ScalarDoubleValue>(() => transferredAmount));
+            AddSuffix("GOAL", new Suffix<ScalarValue>(() => amount ?? -1));
+            AddSuffix("TRANSFERRED", new Suffix<ScalarValue>(() => transferredAmount));
             AddSuffix("STATUS", new Suffix<StringValue>(() => Status.ToString()));
             AddSuffix("MESSAGE", new Suffix<StringValue>(() => StatusMessage));
             AddSuffix("RESOURCE", new Suffix<StringValue>(() => resourceInfo.name));

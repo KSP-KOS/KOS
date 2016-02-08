@@ -50,10 +50,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("X", new SetSuffix<ScalarDoubleValue>(() => X, value => X = value));
-            AddSuffix("Y", new SetSuffix<ScalarDoubleValue>(() => Y, value => Y = value));
-            AddSuffix("Z", new SetSuffix<ScalarDoubleValue>(() => Z, value => Z = value));
-            AddSuffix("MAG", new SetSuffix<ScalarDoubleValue>(Magnitude, value =>
+            AddSuffix("X", new SetSuffix<ScalarValue>(() => X, value => X = value));
+            AddSuffix("Y", new SetSuffix<ScalarValue>(() => Y, value => Y = value));
+            AddSuffix("Z", new SetSuffix<ScalarValue>(() => Z, value => Z = value));
+            AddSuffix("MAG", new SetSuffix<ScalarValue>(Magnitude, value =>
             {
                 double oldMag = new Vector3d(X, Y, Z).magnitude;
 
@@ -65,7 +65,7 @@ namespace kOS.Suffixed
             }));
             AddSuffix("VEC", new Suffix<Vector>(() => new Vector(X, Y, Z)));
             AddSuffix("NORMALIZED", new Suffix<Vector>(Normalized));
-            AddSuffix("SQRMAGNITUDE", new Suffix<ScalarDoubleValue>(() => new Vector3d(X, Y, Z).sqrMagnitude));
+            AddSuffix("SQRMAGNITUDE", new Suffix<ScalarValue>(() => new Vector3d(X, Y, Z).sqrMagnitude));
             AddSuffix("DIRECTION", new SetSuffix<Direction>(ToDirection, value =>
             {
                 var newMagnitude = Vector3d.forward * new Vector3d(X, Y, Z).magnitude;
@@ -125,7 +125,7 @@ namespace kOS.Suffixed
             return null;
         }
 
-        public ScalarDoubleValue Magnitude()
+        public ScalarValue Magnitude()
         {
             return new Vector3d(X, Y, Z).magnitude;
         }

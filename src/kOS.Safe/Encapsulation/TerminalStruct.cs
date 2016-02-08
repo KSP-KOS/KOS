@@ -35,12 +35,12 @@ namespace kOS.Safe.Encapsulation
         {
             // TODO: Uncomment the following if IsOpen gets implemented later:
             // AddSuffix("ISOPEN", new SetSuffix<BooleanValue>(() => IsOpen, Isopen = value, "true=open, false=closed.  You can set it to open/close the window."));
-            AddSuffix("HEIGHT", new ClampSetSuffix<ScalarIntValue>(() => Shared.Screen.RowCount,
+            AddSuffix("HEIGHT", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.RowCount,
                                                          value => Shared.Screen.SetSize(value, Shared.Screen.ColumnCount),
                                                          MINROWS,
                                                          MAXROWS,
                                                          "Get or Set the number of rows on the screen.  Value is limited to the range [" + MINROWS + "," + MAXROWS + "]"));
-            AddSuffix("WIDTH", new ClampSetSuffix<ScalarIntValue>(() => Shared.Screen.ColumnCount,
+            AddSuffix("WIDTH", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.ColumnCount,
                                                         value => Shared.Screen.SetSize(Shared.Screen.RowCount, value),
                                                         MINCOLUMNS,
                                                         MAXCOLUMNS,

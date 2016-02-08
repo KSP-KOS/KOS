@@ -18,10 +18,10 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("ACC", new Suffix<Vector>(() => GetSensorVectorValue("ACC")));
-            AddSuffix("PRES", new Suffix<ScalarDoubleValue>(() => GetSensorDoubleValue("PRES")));
-            AddSuffix("TEMP", new Suffix<ScalarDoubleValue>(() => GetSensorDoubleValue("TEMP")));
+            AddSuffix("PRES", new Suffix<ScalarValue>(() => GetSensorDoubleValue("PRES")));
+            AddSuffix("TEMP", new Suffix<ScalarValue>(() => GetSensorDoubleValue("TEMP")));
             AddSuffix("GRAV", new Suffix<Vector>(() => GetSensorVectorValue("GRAV")));
-            AddSuffix("LIGHT", new Suffix<ScalarDoubleValue>(() => GetSunLightValue()));
+            AddSuffix("LIGHT", new Suffix<ScalarValue>(() => GetSunLightValue()));
         }
 
         private Vector GetSensorVectorValue (string sensorType)

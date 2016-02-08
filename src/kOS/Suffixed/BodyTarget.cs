@@ -102,21 +102,21 @@ namespace kOS.Suffixed
         {
             AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
             AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
-            AddSuffix("MASS", new Suffix<ScalarDoubleValue>(() => Body.Mass));
-            AddSuffix("ALTITUDE", new Suffix<ScalarDoubleValue>(() => Body.orbit.altitude));
-            AddSuffix("RADIUS", new Suffix<ScalarDoubleValue>(() => Body.Radius));
-            AddSuffix("MU", new Suffix<ScalarDoubleValue>(() => Body.gravParameter));
-            AddSuffix("ROTATIONPERIOD", new Suffix<ScalarDoubleValue>(() => Body.rotationPeriod));
+            AddSuffix("MASS", new Suffix<ScalarValue>(() => Body.Mass));
+            AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Body.orbit.altitude));
+            AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
+            AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
+            AddSuffix("ROTATIONPERIOD", new Suffix<ScalarValue>(() => Body.rotationPeriod));
             AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
-            AddSuffix("SOIRADIUS", new Suffix<ScalarDoubleValue>(() => Body.sphereOfInfluence));
-            AddSuffix("ROTATIONANGLE", new Suffix<ScalarDoubleValue>(() => Body.rotationAngle));
+            AddSuffix("SOIRADIUS", new Suffix<ScalarValue>(() => Body.sphereOfInfluence));
+            AddSuffix("ROTATIONANGLE", new Suffix<ScalarValue>(() => Body.rotationAngle));
             AddSuffix("GEOPOSITIONOF",
                       new OneArgsSuffix<GeoCoordinates, Vector>(
                               GeoCoordinatesFromPosition,
                               "Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body."));
             AddSuffix("ALTITUDEOF",
-                      new OneArgsSuffix<ScalarDoubleValue, Vector>(
+                      new OneArgsSuffix<ScalarValue, Vector>(
                               AltitudeFromPosition,
                               "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
         }
@@ -139,7 +139,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="position">Vector to use as the 3D position in ship-raw coords</param>
         /// <returns>The altitude above 'sea level'.</returns>
-        public ScalarDoubleValue AltitudeFromPosition(Vector position)
+        public ScalarValue AltitudeFromPosition(Vector position)
         {
             Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
             return Body.GetAltitude(unityWorldPosition);

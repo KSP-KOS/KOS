@@ -13,9 +13,9 @@ namespace kOS.AddOns.RemoteTech
 
         private void InitializeSuffixes()
         {
-            AddSuffix("DELAY", new OneArgsSuffix<ScalarDoubleValue, VesselTarget>(RTGetDelay, "Get current Shortest Signal Delay for Vessel"));
+            AddSuffix("DELAY", new OneArgsSuffix<ScalarValue, VesselTarget>(RTGetDelay, "Get current Shortest Signal Delay for Vessel"));
 
-            AddSuffix("KSCDELAY", new OneArgsSuffix<ScalarDoubleValue, VesselTarget>(RTGetKSCDelay, "Get current KSC Signal Delay"));
+            AddSuffix("KSCDELAY", new OneArgsSuffix<ScalarValue, VesselTarget>(RTGetKSCDelay, "Get current KSC Signal Delay"));
 
             AddSuffix("HASCONNECTION", new OneArgsSuffix<BooleanValue, VesselTarget>(RTHasConnection, "True if ship has any connection"));
 
@@ -25,7 +25,7 @@ namespace kOS.AddOns.RemoteTech
 
         }
 
-        private static ScalarDoubleValue RTGetDelay(VesselTarget tgtVessel)
+        private static ScalarValue RTGetDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 
@@ -37,7 +37,7 @@ namespace kOS.AddOns.RemoteTech
             return waitTotal;
         }
 
-        private static ScalarDoubleValue RTGetKSCDelay(VesselTarget tgtVessel)
+        private static ScalarValue RTGetKSCDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 

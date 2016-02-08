@@ -19,18 +19,18 @@ namespace kOS.AddOns.InfernalRobotics
         private void InitializeSuffixes()
         {
             AddSuffix("NAME", new SetSuffix<StringValue>(() => servo.Name, value => servo.Name = value));
-            AddSuffix("UID", new Suffix<ScalarIntValue>(() => new ScalarIntValue((int)servo.UID)));
+            AddSuffix("UID", new Suffix<ScalarValue>(() => ScalarValue.Create((int)servo.UID)));
             AddSuffix("HIGHLIGHT", new SetSuffix<BooleanValue>(() => true, value => servo.Highlight = value));
 
-            AddSuffix("POSITION", new Suffix<ScalarDoubleValue>(() => servo.Position));
-            AddSuffix("MINCFGPOSITION", new Suffix<ScalarDoubleValue>(() => servo.MinConfigPosition));
-            AddSuffix("MAXCFGPOSITION", new Suffix<ScalarDoubleValue>(() => servo.MaxConfigPosition));
-            AddSuffix("MINPOSITION", new SetSuffix<ScalarDoubleValue>(() => servo.MinPosition, value => servo.MinPosition = value));
-            AddSuffix("MAXPOSITION", new SetSuffix<ScalarDoubleValue>(() => servo.MaxPosition, value => servo.MaxPosition = value));
-            AddSuffix("CONFIGSPEED", new Suffix<ScalarDoubleValue>(() => servo.ConfigSpeed));
-            AddSuffix("CURRENTSPEED", new SetSuffix<ScalarDoubleValue>(() => servo.CurrentSpeed, value => servo.CurrentSpeed = value));
-            AddSuffix("SPEED", new SetSuffix<ScalarDoubleValue>(() => servo.Speed, value => servo.Speed = value));
-            AddSuffix("ACCELERATION", new SetSuffix<ScalarDoubleValue>(() => servo.Acceleration, value => servo.Acceleration = value));
+            AddSuffix("POSITION", new Suffix<ScalarValue>(() => servo.Position));
+            AddSuffix("MINCFGPOSITION", new Suffix<ScalarValue>(() => servo.MinConfigPosition));
+            AddSuffix("MAXCFGPOSITION", new Suffix<ScalarValue>(() => servo.MaxConfigPosition));
+            AddSuffix("MINPOSITION", new SetSuffix<ScalarValue>(() => servo.MinPosition, value => servo.MinPosition = value));
+            AddSuffix("MAXPOSITION", new SetSuffix<ScalarValue>(() => servo.MaxPosition, value => servo.MaxPosition = value));
+            AddSuffix("CONFIGSPEED", new Suffix<ScalarValue>(() => servo.ConfigSpeed));
+            AddSuffix("CURRENTSPEED", new SetSuffix<ScalarValue>(() => servo.CurrentSpeed, value => servo.CurrentSpeed = value));
+            AddSuffix("SPEED", new SetSuffix<ScalarValue>(() => servo.Speed, value => servo.Speed = value));
+            AddSuffix("ACCELERATION", new SetSuffix<ScalarValue>(() => servo.Acceleration, value => servo.Acceleration = value));
 
             AddSuffix("ISMOVING", new Suffix<BooleanValue>(() => servo.IsMoving));
             AddSuffix("ISFREEMOVING", new Suffix<BooleanValue>(() => servo.IsFreeMoving));

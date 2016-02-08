@@ -21,7 +21,7 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NUMBER", new Suffix<ScalarIntValue>(() => Staging.CurrentStage));
+            AddSuffix("NUMBER", new Suffix<ScalarValue>(() => Staging.CurrentStage));
             AddSuffix("READY", new Suffix<BooleanValue>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
             AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
@@ -61,7 +61,7 @@ namespace kOS.Suffixed
             }
 
             var resourceAmount = GetResourceOfCurrentStage(suffixName);
-            return new SuffixResult(new ScalarDoubleValue(resourceAmount.HasValue ? resourceAmount.Value : 0.0));
+            return new SuffixResult(ScalarValue.Create(resourceAmount.HasValue ? resourceAmount.Value : 0.0));
         }
 
         private bool IsResource(string suffixName)

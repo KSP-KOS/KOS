@@ -33,20 +33,20 @@ namespace kOS.AddOns.KerbalAlarmClock
 
             AddSuffix("TYPE", new Suffix<StringValue>(() => alarm.AlarmType.ToString()));
 
-            AddSuffix("REMAINING", new Suffix<ScalarDoubleValue>(GetTimeToAlarm));
+            AddSuffix("REMAINING", new Suffix<ScalarValue>(GetTimeToAlarm));
 
-            AddSuffix("TIME", new SetSuffix<ScalarDoubleValue>(() => alarm.AlarmTime, value => alarm.AlarmTime = value));
-            AddSuffix("MARGIN", new SetSuffix<ScalarDoubleValue>(() => alarm.AlarmMargin, value => alarm.AlarmMargin = value));
+            AddSuffix("TIME", new SetSuffix<ScalarValue>(() => alarm.AlarmTime, value => alarm.AlarmTime = value));
+            AddSuffix("MARGIN", new SetSuffix<ScalarValue>(() => alarm.AlarmMargin, value => alarm.AlarmMargin = value));
 
             AddSuffix("REPEAT", new SetSuffix<BooleanValue>(() => alarm.RepeatAlarm, value => alarm.RepeatAlarm = value));
 
-            AddSuffix("REPEATPERIOD", new SetSuffix<ScalarDoubleValue>(() => alarm.RepeatAlarmPeriod, value => alarm.RepeatAlarmPeriod = value));
+            AddSuffix("REPEATPERIOD", new SetSuffix<ScalarValue>(() => alarm.RepeatAlarmPeriod, value => alarm.RepeatAlarmPeriod = value));
 
             AddSuffix("ORIGINBODY", new SetSuffix<StringValue>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
             AddSuffix("TARGETBODY", new SetSuffix<StringValue>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
         }
 
-        private ScalarDoubleValue GetTimeToAlarm()
+        private ScalarValue GetTimeToAlarm()
         {
             //workaround for alarm.Remaining type mismatch
             return alarm.AlarmTime - Planetarium.GetUniversalTime();

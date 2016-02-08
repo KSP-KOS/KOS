@@ -30,7 +30,7 @@ namespace kOS.Safe.Encapsulation
                 return status;
             }));
             AddSuffix("ATEND", new NoArgsSuffix<BooleanValue>(() => !status));
-            AddSuffix("INDEX", new NoArgsSuffix<ScalarIntValue>(() => index));
+            AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => index));
             AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitiveWithAssert(enumerator.Current)));
         }
 

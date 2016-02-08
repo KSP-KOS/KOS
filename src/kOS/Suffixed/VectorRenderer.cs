@@ -139,14 +139,14 @@ namespace kOS.Suffixed
                 Start = value;
                 RenderPointCoords();
             }));
-            AddSuffix("SCALE", new SetSuffix<ScalarDoubleValue>(() => Scale, value =>
+            AddSuffix("SCALE", new SetSuffix<ScalarValue>(() => Scale, value =>
             {
                 Scale = value;
                 RenderPointCoords();
             }));
 
             AddSuffix("LABEL", new SetSuffix<StringValue>(() => labelStr, SetLabel));
-            AddSuffix("WIDTH", new SetSuffix<ScalarDoubleValue>(() => Width, value =>
+            AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => Width, value =>
             {
                 Width = value;
                 RenderPointCoords();

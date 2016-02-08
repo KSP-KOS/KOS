@@ -38,7 +38,7 @@ namespace kOS.Suffixed
             AddSuffix("TOURIST", new Suffix<BooleanValue>(() => crewMember.type == ProtoCrewMember.KerbalType.Tourist));
             AddSuffix("GENDER", new Suffix<StringValue>(() => Gender));
             AddSuffix("TRAIT", new Suffix<StringValue>(() => Trait));
-            AddSuffix("EXPERIENCE", new Suffix<ScalarIntValue>(() => Experience));
+            AddSuffix("EXPERIENCE", new Suffix<ScalarValue>(() => Experience));
             AddSuffix("PART", new Suffix<PartValue>(() => PartValueFactory.Construct(crewMember.seat.part, shared)));
         }
 

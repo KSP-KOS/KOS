@@ -45,10 +45,10 @@ namespace kOS.Suffixed
 
             public void InitializeSuffixes()
             {
-                AddSuffix("LOAD", new SetSuffix<ScalarDoubleValue>(() => situationValue.load, value => SetLoad(value)));
-                AddSuffix("UNLOAD", new SetSuffix<ScalarDoubleValue>(() => situationValue.unload, value => SetUnload(value)));
-                AddSuffix("PACK", new SetSuffix<ScalarDoubleValue>(() => situationValue.pack, value => SetPack(value)));
-                AddSuffix("UNPACK", new SetSuffix<ScalarDoubleValue>(() => situationValue.unpack, value => SetUnpack(value)));
+                AddSuffix("LOAD", new SetSuffix<ScalarValue>(() => situationValue.load, value => SetLoad(value)));
+                AddSuffix("UNLOAD", new SetSuffix<ScalarValue>(() => situationValue.unload, value => SetUnload(value)));
+                AddSuffix("PACK", new SetSuffix<ScalarValue>(() => situationValue.pack, value => SetPack(value)));
+                AddSuffix("UNPACK", new SetSuffix<ScalarValue>(() => situationValue.unpack, value => SetUnpack(value)));
             }
 
             public void SetLoad(float val)

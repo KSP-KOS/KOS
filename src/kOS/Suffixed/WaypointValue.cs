@@ -29,10 +29,10 @@ namespace kOS.Suffixed
             AddSuffix("GEOPOSITION", new NoArgsSuffix<GeoCoordinates>(BuildGeoCoordinates, "the LATLNG of this waypoint"));
             AddSuffix("POSITION", new NoArgsSuffix<Vector>(() => GetPosition() - new Vector(Shared.Vessel.findWorldCenterOfMass())));
             AddSuffix("ALTITUDE", new NoArgsSuffix<ScalarValue>(BuildSeaLevelAltitude, "Altitude of waypoint above sea level.  Warning, this a point somewhere in the " + "midst of the contract altitude range, not the edge of the altitude range."));
-            AddSuffix("AGL", new NoArgsSuffix<ScalarDoubleValue>(() => WrappedWaypoint.altitude, "Altitude of waypoint above ground.  Warning, this a point somewhere" + "in the midst of the contract altitude range, not the edge of the altitude range."));
+            AddSuffix("AGL", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.altitude, "Altitude of waypoint above ground.  Warning, this a point somewhere" + "in the midst of the contract altitude range, not the edge of the altitude range."));
             AddSuffix("NEARSURFACE", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isOnSurface, "True if waypoint is a point near or on the body rather than high in orbit."));
             AddSuffix("GROUNDED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground.")); 
-            AddSuffix("INDEX", new NoArgsSuffix<ScalarIntValue>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
+            AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
             AddSuffix("CLUSTERED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
         }
 

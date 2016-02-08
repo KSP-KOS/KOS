@@ -119,27 +119,27 @@ namespace kOS.Suffixed
 
         private void InitializePilotSuffixes()
         {
-            AddSuffix(new[] { "PILOTYAW" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.yaw)));
-            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.yawTrim)));
-            AddSuffix(new[] { "PILOTROLL" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.roll)));
-            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.rollTrim)));
-            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.pitch)));
-            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim)));
+            AddSuffix(new[] { "PILOTYAW" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yaw)));
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.yawTrim)));
+            AddSuffix(new[] { "PILOTROLL" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.roll)));
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.rollTrim)));
+            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitch)));
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim)));
 
-            AddSuffix(new[] { "PILOTFORE" }, new Suffix<ScalarDoubleValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.Z))));
-            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<ScalarDoubleValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.X))));
+            AddSuffix(new[] { "PILOTFORE" }, new Suffix<ScalarValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.Z))));
+            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<ScalarValue>(() => Invert(ReadPilot(ref FlightInputHandler.state.X))));
             
-            AddSuffix(new[] { "PILOTTOP" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.Y)));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle)));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim)));
-            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteer)));
-            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim)));
+            AddSuffix(new[] { "PILOTTOP" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.Y)));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle)));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim)));
+            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteer)));
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim)));
             AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<BooleanValue>(() => Vessel == FlightGlobals.ActiveVessel && FlightInputHandler.state.isNeutral));
 
             AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(GetPilotRotation));
             AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(GetPilotTranslation));
 
-            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<ScalarDoubleValue>(() => ReadPilot(ref FlightInputHandler.state.mainThrottle), value =>
+            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<ScalarValue>(() => ReadPilot(ref FlightInputHandler.state.mainThrottle), value =>
             {
                 Vessel.ctrlState.mainThrottle = value;
                 if (Vessel == FlightGlobals.ActiveVessel)
@@ -157,29 +157,29 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             //ROTATION
-            AddSuffix(new[] { "YAW" }, new ClampSetSuffix<ScalarDoubleValue>(() => yaw, value => yaw = value, -1, 1));
-            AddSuffix(new[] { "YAWTRIM" }, new ClampSetSuffix<ScalarDoubleValue>(() => yawTrim, value => yawTrim = value, -1, 1));
-            AddSuffix(new[] { "ROLL" }, new ClampSetSuffix<ScalarDoubleValue>(() => roll, value => roll = value, -1, 1));
-            AddSuffix(new[] { "ROLLTRIM" }, new ClampSetSuffix<ScalarDoubleValue>(() => rollTrim, value => rollTrim = value, -1, 1));
-            AddSuffix(new[] { "PITCH" }, new ClampSetSuffix<ScalarDoubleValue>(() => pitch, value => pitch = value, -1, 1));
-            AddSuffix(new[] { "PITCHTRIM" }, new ClampSetSuffix<ScalarDoubleValue>(() => pitchTrim, value => pitchTrim = value, -1, 1));
+            AddSuffix(new[] { "YAW" }, new ClampSetSuffix<ScalarValue>(() => yaw, value => yaw = value, -1, 1));
+            AddSuffix(new[] { "YAWTRIM" }, new ClampSetSuffix<ScalarValue>(() => yawTrim, value => yawTrim = value, -1, 1));
+            AddSuffix(new[] { "ROLL" }, new ClampSetSuffix<ScalarValue>(() => roll, value => roll = value, -1, 1));
+            AddSuffix(new[] { "ROLLTRIM" }, new ClampSetSuffix<ScalarValue>(() => rollTrim, value => rollTrim = value, -1, 1));
+            AddSuffix(new[] { "PITCH" }, new ClampSetSuffix<ScalarValue>(() => pitch, value => pitch = value, -1, 1));
+            AddSuffix(new[] { "PITCHTRIM" }, new ClampSetSuffix<ScalarValue>(() => pitchTrim, value => pitchTrim = value, -1, 1));
             AddSuffix(new[] { "ROTATION" }, new SetSuffix<Vector>(() => new Vector(yaw, pitch, roll), SetRotation));
 
             //TRANSLATION
-            AddSuffix(new[] { "FORE" }, new ClampSetSuffix<ScalarDoubleValue>(() => fore, value => fore = value, -1, 1));
-            AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<ScalarDoubleValue>(() => starboard, value => starboard = value, -1, 1));
-            AddSuffix(new[] { "TOP" }, new ClampSetSuffix<ScalarDoubleValue>(() => top, value => top = value, -1, 1));
+            AddSuffix(new[] { "FORE" }, new ClampSetSuffix<ScalarValue>(() => fore, value => fore = value, -1, 1));
+            AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<ScalarValue>(() => starboard, value => starboard = value, -1, 1));
+            AddSuffix(new[] { "TOP" }, new ClampSetSuffix<ScalarValue>(() => top, value => top = value, -1, 1));
             AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
 
             //ROVER
-            AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<ScalarDoubleValue>(() => wheelSteer, value => wheelSteer = value, -1, 1));
-            AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<ScalarDoubleValue>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
+            AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<ScalarValue>(() => wheelSteer, value => wheelSteer = value, -1, 1));
+            AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<ScalarValue>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
             
 
             //THROTTLE
-            AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<ScalarDoubleValue>(() => mainThrottle, value => mainThrottle = value, 0, 1));
-            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<ScalarDoubleValue>(() => wheelThrottle, value => wheelThrottle = value, -1, 1));
-            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<ScalarDoubleValue>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, -1, 1));
+            AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<ScalarValue>(() => mainThrottle, value => mainThrottle = value, 0, 1));
+            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<ScalarValue>(() => wheelThrottle, value => wheelThrottle = value, -1, 1));
+            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<ScalarValue>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, -1, 1));
 
             //OTHER
             AddSuffix(new[] { "BOUND" }, new SetSuffix<BooleanValue>(() => bound, value => bound = value));

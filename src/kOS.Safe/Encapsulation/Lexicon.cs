@@ -70,7 +70,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("HASVALUE", new OneArgsSuffix<BooleanValue, Structure>(HasValue, "Returns true if value is in the Lexicon"));
             AddSuffix("VALUES", new Suffix<ListValue<Structure>>(GetValues, "Returns the lexicon values"));
             AddSuffix("COPY", new NoArgsSuffix<Lexicon>(() => new Lexicon(this), "Returns a copy of Lexicon"));
-            AddSuffix("LENGTH", new NoArgsSuffix<ScalarIntValue>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
+            AddSuffix("LENGTH", new NoArgsSuffix<ScalarValue>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
             AddSuffix("REMOVE", new OneArgsSuffix<BooleanValue, Structure>(one => Remove(one), "Removes the value at the given key"));
             AddSuffix("ADD", new TwoArgsSuffix<Structure, Structure>(Add, "Adds a new item to the lexicon, will error if the key already exists"));
             AddSuffix("DUMP", new NoArgsSuffix<StringValue>(() => ToString(), "Serializes the collection to a string for printing"));

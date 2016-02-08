@@ -42,10 +42,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixColor()
         {
-            AddSuffix(new[] { "R", "RED" }, new ClampSetSuffix<ScalarDoubleValue>(() => Red, value => { Red = value; Recalculate(); }, 0, 255));
-            AddSuffix(new[] { "G", "GREEN" }, new ClampSetSuffix<ScalarDoubleValue>(() => Green, value => { Green = value; Recalculate(); }, 0, 255));
-            AddSuffix(new[] { "B", "BLUE" }, new ClampSetSuffix<ScalarDoubleValue>(() => Blue, value => { Blue = value; Recalculate(); }, 0, 255));
-            AddSuffix(new[] { "A", "ALPHA" }, new ClampSetSuffix<ScalarDoubleValue>(() => Alpha, value => { Alpha = value; Recalculate(); }, 0, 1));
+            AddSuffix(new[] { "R", "RED" }, new ClampSetSuffix<ScalarValue>(() => Red, value => { Red = value; Recalculate(); }, 0, 255));
+            AddSuffix(new[] { "G", "GREEN" }, new ClampSetSuffix<ScalarValue>(() => Green, value => { Green = value; Recalculate(); }, 0, 255));
+            AddSuffix(new[] { "B", "BLUE" }, new ClampSetSuffix<ScalarValue>(() => Blue, value => { Blue = value; Recalculate(); }, 0, 255));
+            AddSuffix(new[] { "A", "ALPHA" }, new ClampSetSuffix<ScalarValue>(() => Alpha, value => { Alpha = value; Recalculate(); }, 0, 1));
             AddSuffix(new[] { "HTML", "HEX" }, new NoArgsSuffix<StringValue>(ToHexNotation, "Returns a string representing the color in HTML, i.e. \"#ff0000\".  Ignores transparency (alpha) information."));
         }
 

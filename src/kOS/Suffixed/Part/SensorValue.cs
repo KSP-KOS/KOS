@@ -19,7 +19,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("ACTIVE", new SetSuffix<BooleanValue>(() => sensor.sensorActive, value => sensor.sensorActive = value));
             AddSuffix("TYPE", new Suffix<StringValue>(() => sensor.sensorType));
             AddSuffix("DISPLAY", new Suffix<StringValue>(() => sensor.readoutInfo));
-            AddSuffix("POWERCONSUMPTION", new Suffix<ScalarDoubleValue>(() => sensor.powerConsumption));
+            AddSuffix("POWERCONSUMPTION", new Suffix<ScalarValue>(() => sensor.powerConsumption));
             AddSuffix("TOGGLE", new NoArgsSuffix(() => sensor.Toggle()));
         }
 

@@ -32,7 +32,7 @@ namespace kOS.Safe.Encapsulation
         private void InitializeSuffixes()
         {
             AddSuffix("NAME", new Suffix<StringValue>(() => Name));
-            AddSuffix("SIZE", new Suffix<ScalarIntValue>(() => Size));
+            AddSuffix("SIZE", new Suffix<ScalarValue>(() => Size));
             AddSuffix("FILETYPE", new Suffix<StringValue>(() => Extension));
         }
 

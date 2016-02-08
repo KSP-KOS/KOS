@@ -178,12 +178,12 @@ namespace kOS.Safe.Persistence
 
         private void InitializeVolumeSuffixes()
         {
-            AddSuffix("FREESPACE" , new Suffix<ScalarDoubleValue>(() => GetFreeSpace()));
-            AddSuffix("CAPACITY" , new Suffix<ScalarDoubleValue>(() => Capacity));
+            AddSuffix("FREESPACE" , new Suffix<ScalarValue>(() => GetFreeSpace()));
+            AddSuffix("CAPACITY" , new Suffix<ScalarValue>(() => Capacity));
             AddSuffix("NAME" , new Suffix<StringValue>(() => Name));
             AddSuffix("RENAMEABLE" , new Suffix<BooleanValue>(() => Renameable));
             AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
-            AddSuffix("POWERREQUIREMENT" , new Suffix<ScalarDoubleValue>(() => RequiredPower()));
+            AddSuffix("POWERREQUIREMENT" , new Suffix<ScalarValue>(() => RequiredPower()));
         }
 
         private ProgramFile FileSearch(string name, bool ksmDefault = false)

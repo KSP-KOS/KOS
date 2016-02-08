@@ -89,16 +89,16 @@ namespace kOS.Safe.Encapsulation
         private void ListInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarIntValue>      (() => Collection.Count));
+            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarValue>      (() => Collection.Count));
             AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
             AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Collection.Add(toAdd), Resources.ListAddDescription));
             AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => Collection.Insert(index, toAdd)));
-            AddSuffix("REMOVE",   new OneArgsSuffix<ScalarIntValue>     (toRemove => Collection.RemoveAt(toRemove)));
-            AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarIntValue, ScalarIntValue>(SubListMethod));
+            AddSuffix("REMOVE",   new OneArgsSuffix<ScalarValue>     (toRemove => Collection.RemoveAt(toRemove)));
+            AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarValue, ScalarValue>(SubListMethod));
        }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
-        private ListValue SubListMethod(ScalarIntValue start, ScalarIntValue runLength)
+        private ListValue SubListMethod(ScalarValue start, ScalarValue runLength)
         {
             var subList = new ListValue();
             for (int i = start; i < Collection.Count && i < start + runLength; ++i)

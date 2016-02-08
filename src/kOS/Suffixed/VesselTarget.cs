@@ -220,7 +220,7 @@ namespace kOS.Suffixed
 
         // TODO: We will need to replace with the same thing Orbitable:DISTANCE does
         // in order to implement the orbit solver later.
-        public ScalarDoubleValue GetDistance()
+        public ScalarValue GetDistance()
         {
             return Vector3d.Distance(CurrentVessel.findWorldCenterOfMass(), Vessel.findWorldCenterOfMass());
         }
@@ -416,30 +416,30 @@ namespace kOS.Suffixed
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
             AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
-            AddSuffix("BEARING", new Suffix<ScalarDoubleValue>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
-            AddSuffix("HEADING", new Suffix<ScalarDoubleValue>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
-            AddSuffix("AVAILABLETHRUST", new Suffix<ScalarDoubleValue>(() => VesselUtils.GetAvailableThrust(Vessel)));
-            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<ScalarDoubleValue, ScalarDoubleValue>(GetAvailableThrustAt));
-            AddSuffix("MAXTHRUST", new Suffix<ScalarDoubleValue>(() => VesselUtils.GetMaxThrust(Vessel)));
-            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarDoubleValue, ScalarDoubleValue>(GetMaxThrustAt));
+            AddSuffix("BEARING", new Suffix<ScalarValue>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
+            AddSuffix("HEADING", new Suffix<ScalarValue>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
+            AddSuffix("AVAILABLETHRUST", new Suffix<ScalarValue>(() => VesselUtils.GetAvailableThrust(Vessel)));
+            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetAvailableThrustAt));
+            AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => VesselUtils.GetMaxThrust(Vessel)));
+            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetMaxThrustAt));
             AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
             AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
-            AddSuffix("MASS", new Suffix<ScalarDoubleValue>(() => Vessel.GetTotalMass()));
-            AddSuffix("VERTICALSPEED", new Suffix<ScalarDoubleValue>(() => Vessel.verticalSpeed));
-            AddSuffix("GROUNDSPEED", new Suffix<ScalarDoubleValue>(GetHorizontalSrfSpeed));
-            AddSuffix("SURFACESPEED", new Suffix<ScalarDoubleValue>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
-            AddSuffix("AIRSPEED", new Suffix<ScalarDoubleValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
+            AddSuffix("MASS", new Suffix<ScalarValue>(() => Vessel.GetTotalMass()));
+            AddSuffix("VERTICALSPEED", new Suffix<ScalarValue>(() => Vessel.verticalSpeed));
+            AddSuffix("GROUNDSPEED", new Suffix<ScalarValue>(GetHorizontalSrfSpeed));
+            AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
+            AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<StringValue>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<StringValue>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
-            AddSuffix("TERMVELOCITY", new Suffix<ScalarDoubleValue>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
-            AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<ScalarDoubleValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
+            AddSuffix("TERMVELOCITY", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
+            AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<ScalarValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<BooleanValue>(() => Vessel.loaded));
             AddSuffix("UNPACKED", new Suffix<BooleanValue>(() => !Vessel.packed));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
-            AddSuffix("DRYMASS", new Suffix<ScalarDoubleValue>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
-            AddSuffix("WETMASS", new Suffix<ScalarDoubleValue>(() => Vessel.GetWetMass(), "The Ship's mass when full"));
+            AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
+            AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Vessel.GetWetMass(), "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
             AddSuffix("LOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(Vessel)));
             AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (Vessel.state == Vessel.State.DEAD)));
@@ -448,14 +448,14 @@ namespace kOS.Suffixed
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
             //// available:
-            AddSuffix("LATITUDE", new Suffix<ScalarDoubleValue>(() => VesselUtils.GetVesselLatitude(Vessel)));
-            AddSuffix("LONGITUDE", new Suffix<ScalarDoubleValue>(() => VesselUtils.GetVesselLongitude(Vessel)));
-            AddSuffix("ALTITUDE", new Suffix<ScalarDoubleValue>(() => Vessel.altitude));
+            AddSuffix("LATITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLatitude(Vessel)));
+            AddSuffix("LONGITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLongitude(Vessel)));
+            AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Vessel.altitude));
             AddSuffix("CREW", new NoArgsSuffix<ListValue>(GetCrew));
-            AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarIntValue> (GetCrewCapacity));
+            AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue> (GetCrewCapacity));
         }
 
-        public ScalarIntValue GetCrewCapacity() {
+        public ScalarValue GetCrewCapacity() {
             return Vessel.GetCrewCapacity();
         }
 
@@ -481,12 +481,12 @@ namespace kOS.Suffixed
             return FlightControlManager.GetControllerByVessel(Vessel);
         }
 
-        public ScalarDoubleValue GetAvailableThrustAt(ScalarDoubleValue atmPressure)
+        public ScalarValue GetAvailableThrustAt(ScalarValue atmPressure)
         {
             return VesselUtils.GetAvailableThrust(Vessel, atmPressure);
         }
 
-        public ScalarDoubleValue GetMaxThrustAt(ScalarDoubleValue atmPressure)
+        public ScalarValue GetMaxThrustAt(ScalarValue atmPressure)
         {
             return VesselUtils.GetMaxThrust(Vessel, atmPressure);
         }
@@ -504,7 +504,7 @@ namespace kOS.Suffixed
             }
         }
         
-        private ScalarDoubleValue GetHorizontalSrfSpeed()
+        private ScalarValue GetHorizontalSrfSpeed()
         {
             // NOTE: THIS Function replaces the functionality of the 
             // single KSP API CALL:
@@ -564,7 +564,7 @@ namespace kOS.Suffixed
             double dblValue;
             if (VesselUtils.TryGetResource(Vessel, suffixName, out dblValue))
             {
-                return new SuffixResult(new ScalarDoubleValue(dblValue));
+                return new SuffixResult(ScalarValue.Create(dblValue));
             }
 
             return base.GetSuffix(suffixName);

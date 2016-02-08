@@ -17,13 +17,13 @@ namespace kOS.Suffixed.Part
 
         private void DockingInitializeSuffixes()
         {
-            AddSuffix("AQUIRERANGE", new Suffix<ScalarDoubleValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRERANGE", "ACQUIRERANGE", string.Empty); }));
-            AddSuffix("AQUIREFORCE", new Suffix<ScalarDoubleValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIREFORCE", "ACQUIREFORCE", string.Empty); }));
-            AddSuffix("AQUIRETORQUE", new Suffix<ScalarDoubleValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRETORQUE", "ACQUIRETORQUE", string.Empty); }));
-            AddSuffix("ACQUIRERANGE", new Suffix<ScalarDoubleValue>(() => module.acquireRange));
-            AddSuffix("ACQUIREFORCE", new Suffix<ScalarDoubleValue>(() => module.acquireForce));
-            AddSuffix("ACQUIRETORQUE", new Suffix<ScalarDoubleValue>(() => module.acquireTorque));
-            AddSuffix("REENGAGEDISTANCE", new Suffix<ScalarDoubleValue>(() => module.minDistanceToReEngage));
+            AddSuffix("AQUIRERANGE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRERANGE", "ACQUIRERANGE", string.Empty); }));
+            AddSuffix("AQUIREFORCE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIREFORCE", "ACQUIREFORCE", string.Empty); }));
+            AddSuffix("AQUIRETORQUE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRETORQUE", "ACQUIRETORQUE", string.Empty); }));
+            AddSuffix("ACQUIRERANGE", new Suffix<ScalarValue>(() => module.acquireRange));
+            AddSuffix("ACQUIREFORCE", new Suffix<ScalarValue>(() => module.acquireForce));
+            AddSuffix("ACQUIRETORQUE", new Suffix<ScalarValue>(() => module.acquireTorque));
+            AddSuffix("REENGAGEDISTANCE", new Suffix<ScalarValue>(() => module.minDistanceToReEngage));
             AddSuffix("DOCKEDSHIPNAME", new Suffix<StringValue>(() => module.vesselInfo != null ? module.vesselInfo.name : string.Empty));
             AddSuffix("STATE", new Suffix<StringValue>(() => module.state));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => true));
