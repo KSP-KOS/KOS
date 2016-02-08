@@ -30,10 +30,10 @@ namespace kOS.Suffixed.PartModuleField
 
         private void InitializeSuffixes()
         {
-            AddSuffix("DEPLOY", new NoArgsSuffix(DeployExperiment, "Deploy and run this experiment"));
-            AddSuffix("RESET", new NoArgsSuffix(ResetExperiment, "Reset this experiment"));
-            AddSuffix("TRANSMIT", new NoArgsSuffix(TransmitData, "Transmit experiment data back to Kerbin"));
-            AddSuffix("DUMP", new NoArgsSuffix(DumpData, "Dump experiment data"));
+            AddSuffix("DEPLOY", new NoArgsVoidSuffix(DeployExperiment, "Deploy and run this experiment"));
+            AddSuffix("RESET", new NoArgsVoidSuffix(ResetExperiment, "Reset this experiment"));
+            AddSuffix("TRANSMIT", new NoArgsVoidSuffix(TransmitData, "Transmit experiment data back to Kerbin"));
+            AddSuffix("DUMP", new NoArgsVoidSuffix(DumpData, "Dump experiment data"));
             AddSuffix("INOPERABLE", new Suffix<BooleanValue>(() => module.Inoperable, "Is this experiment inoperable"));
             AddSuffix("DEPLOYED", new Suffix<BooleanValue>(() => module.Deployed, "Is this experiment deployed"));
             AddSuffix("RERUNNABLE", new Suffix<BooleanValue>(() => module.rerunnable, "Is this experiment rerunnable"));

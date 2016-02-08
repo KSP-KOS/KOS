@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Execution
+﻿using kOS.Safe.Encapsulation;
+
+namespace kOS.Safe.Execution
 {
     /// <summary>
     /// This is a special "type" used as a dummy return type for
@@ -26,7 +28,17 @@
     /// <br/>
     /// (For example, when performing user delegate calls with :CALL).
     /// </summary>
-    public class KOSPassThruReturn
+    public class KOSPassThruReturn : Structure
+        
+        // This is derived from Structure ONLY because it is 
+        // a thing the :CALL() suffix can temporarily return
+        // on the stack, and suffixes have been changed so the
+        // thing they return MUST now be derived from Structure.
+        // Making this be derived from Structure was the easiest
+        // way to keep the CALL() suffix working.  This is a dummy
+        // placeholder anyway, so the fact that it's derived from
+        // Suffix doesn't mean much, other than allowing it to
+        // be the value of DelegateSuffixResult.value.
     {
         public KOSPassThruReturn()
         {

@@ -18,8 +18,8 @@ namespace kOS.Suffixed.Part
 
         private void EngineInitializeSuffixes()
         {
-            AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
-            AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
+            AddSuffix("ACTIVATE", new NoArgsVoidSuffix(() => engine.Activate()));
+            AddSuffix("SHUTDOWN", new NoArgsVoidSuffix(() => engine.Shutdown()));
             AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => engine.ThrustPercentage,
                                                           value => engine.ThrustPercentage = value,
                                                           0f, 100f, 0f,

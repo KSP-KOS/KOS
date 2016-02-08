@@ -321,7 +321,7 @@ namespace kOS.Binding
             AddSuffix("ROLLPID", new Suffix<PIDLoop>(() => rollRatePI));
             AddSuffix("ENABLED", new Suffix<BooleanValue>(() => Enabled));
             AddSuffix("TARGET", new Suffix<Direction>(() => TargetDirection));
-            AddSuffix("RESETPIDS", new NoArgsSuffix(ResetIs));
+            AddSuffix("RESETPIDS", new NoArgsVoidSuffix(ResetIs));
             AddSuffix("SHOWFACINGVECTORS", new SetSuffix<BooleanValue>(() => ShowFacingVectors, value => ShowFacingVectors = value));
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
             AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() => ShowThrustVectors, value => ShowThrustVectors = value));

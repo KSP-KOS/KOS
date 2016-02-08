@@ -27,8 +27,8 @@ namespace kOS.Suffixed.Part
             AddSuffix("DOCKEDSHIPNAME", new Suffix<StringValue>(() => module.vesselInfo != null ? module.vesselInfo.name : string.Empty));
             AddSuffix("STATE", new Suffix<StringValue>(() => module.state));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => true));
-            AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
-            AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
+            AddSuffix("UNDOCK", new NoArgsVoidSuffix(() => module.Undock()));
+            AddSuffix("TARGET", new NoArgsVoidSuffix(() => module.SetAsTarget()));
             AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing,
                                                                "The direction facing outward from the docking port.  This " +
                                                                "can differ from :FACING in the case of sideways-facing " +

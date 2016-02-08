@@ -69,7 +69,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Enqueue(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Dequeue()));
             AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                      (() => Collection.Clear()));
         }
 
         public static QueueValue<T> CreateQueue<TU>(IEnumerable<TU> list)

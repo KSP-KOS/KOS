@@ -105,7 +105,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("ITERM", new Suffix<ScalarValue>(() => ITerm));
             AddSuffix("DTERM", new Suffix<ScalarValue>(() => DTerm));
             AddSuffix("CHANGERATE", new Suffix<ScalarValue>(() => ChangeRate));
-            AddSuffix("RESET", new NoArgsSuffix(ResetI));
+            AddSuffix("RESET", new NoArgsVoidSuffix(ResetI));
             AddSuffix("UPDATE", new TwoArgsSuffix<ScalarValue, ScalarValue, ScalarValue>(Update));
         }
 

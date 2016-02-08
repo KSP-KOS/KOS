@@ -37,7 +37,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             MethodInfo methInfo = del.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
             var args = new List<object>();
-            var paramArrayArgs = new List<object>();
+            var paramArrayArgs = new List<Structure>();
 
             // Will be true iff the lastmost parameter of the delegate is using the C# 'param' keyword and thus
             // expects the remainder of the arguments marshalled together into one array object.
@@ -92,12 +92,12 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
                 if (isParamArrayArg)
                 {
-                    paramArrayArgs.Add(arg);
+                    paramArrayArgs.Add(Structure.FromPrimitiveWithAssert(arg));
                     --i; // keep hitting the last item in the param list again and again until a forced break because of arg bottom marker.
                 }
                 else
                 {
-                    args.Add(arg);
+                    args.Add(Structure.FromPrimitiveWithAssert(arg));
                 }
             }
             if (isParamArrayArg)
@@ -130,6 +130,8 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
             try
             {
+                Console.WriteLine("eraseme: In DelegateSuffixResult.Invoke(), the argArray before invokation is this...");
+                foreach (object arg in argArray) { Console.WriteLine("eraseme:      a " + arg.GetType().ToString() + " with value = " + arg.GetType()); }
                 // I could find no documentation on what DynamicInvoke returns when the delegate
                 // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
                 // problem, I split this into these two cases:
