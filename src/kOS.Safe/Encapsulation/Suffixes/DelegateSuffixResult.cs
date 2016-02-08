@@ -130,8 +130,6 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
             try
             {
-                Console.WriteLine("eraseme: In DelegateSuffixResult.Invoke(), the argArray before invokation is this...");
-                foreach (object arg in argArray) { Console.WriteLine("eraseme:      a " + arg.GetType().ToString() + " with value = " + arg.GetType()); }
                 // I could find no documentation on what DynamicInvoke returns when the delegate
                 // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
                 // problem, I split this into these two cases:
