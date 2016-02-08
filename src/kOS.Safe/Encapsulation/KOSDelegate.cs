@@ -90,11 +90,11 @@ namespace kOS.Safe.Encapsulation
             // Now re-push the args back, putting the preBound ones at the bottom
             // where they belong:
             Cpu.PushStack(new KOSArgMarkerType());
-            foreach (Structure item in PreBoundArgs)
+            foreach (object item in PreBoundArgs)
             {
                 Cpu.PushStack(item);
             }
-            foreach (Structure item in aboveArgs) // Because this was pushed to a stack, this should show in reverse order.
+            foreach (object item in aboveArgs) // Because this was pushed to a stack, this should show in reverse order.
             {
                 Cpu.PushStack(item);
             }
