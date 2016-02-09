@@ -115,9 +115,9 @@ namespace kOS.AddOns.RemoteTech
             return base.GetKSPFieldValue(suffixName);
         }
 
-        private Guid GetTargetGuid(object target)
+        private Guid GetTargetGuid(Structure target)
         {
-            var str = target as string;
+            var str = target as StringValue;
             if (str != null)
             {
                 string targetString = str;
