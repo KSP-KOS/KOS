@@ -452,13 +452,16 @@ namespace kOS.Binding
             sw.Reset();
             sw.Start();
             lastSessionTime = sessionTime;
-            sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
+            sessionTime = shared.UpdateHandler.CurrentFixedTime;
+            if (sessionTime - lastSessionTime > 1) ResetIs();
             //if (sessionTime > lastSessionTime)
             //{
             //}
             if (shared.Vessel.ActionGroups[KSPActionGroup.SAS])
             {
+                UpdateStateVectors();
                 UpdateControl(c);
+                UpdateVectorRenders();
             }
             else
             {
@@ -491,8 +494,9 @@ namespace kOS.Binding
                 }
             }
             DisableControl();
-            throw new Safe.Exceptions.KOSWrongControlValueTypeException(
-                "STEERING", Value.GetType().Name, "Direction, Vector, Maneuver Node, or special string \"KILL\"");
+            SafeHouse.Logger.LogException(new Safe.Exceptions.KOSWrongControlValueTypeException(
+                "STEERING", Value.GetType().Name, "Direction, Vector, Maneuver Node, or special string \"KILL\""));
+            return new Direction(vesselRotation);
         }
 
         public void UpdateStateVectors()
@@ -1130,7 +1134,7 @@ namespace kOS.Binding
                 }
             }
 
-            if (ShowAngularVectors && enabled)
+            if (ShowAngularVectors && enabled && !Vessel.ActionGroups[KSPActionGroup.SAS])
             {
                 if (vOmegaX == null)
                 {
@@ -1224,7 +1228,7 @@ namespace kOS.Binding
                 }
             }
 
-            if (ShowThrustVectors && enabled)
+            if (ShowThrustVectors && enabled && !Vessel.ActionGroups[KSPActionGroup.SAS])
             {
                 foreach (var fv in engineNeutVectors)
                 {
@@ -1289,7 +1293,7 @@ namespace kOS.Binding
                 vEngines.Clear();
             }
 
-            if (ShowRCSVectors && enabled && Vessel.ActionGroups[KSPActionGroup.RCS])
+            if (ShowRCSVectors && enabled && Vessel.ActionGroups[KSPActionGroup.RCS] && !Vessel.ActionGroups[KSPActionGroup.SAS])
             {
                 foreach (var force in rcsVectors)
                 {
