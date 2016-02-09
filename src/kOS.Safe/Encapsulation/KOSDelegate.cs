@@ -90,7 +90,7 @@ namespace kOS.Safe.Encapsulation
             // Now re-push the args back, putting the preBound ones at the bottom
             // where they belong:
             Cpu.PushStack(new KOSArgMarkerType());
-            foreach (object item in PreBoundArgs)
+            foreach (Structure item in PreBoundArgs)
             {
                 Cpu.PushStack(item);
             }
