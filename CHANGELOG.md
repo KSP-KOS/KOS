@@ -15,7 +15,9 @@ release if the PR's about them don't get merged before release.
 * As usual, you must recompile any KSM files when using the new version.
 * Vecdraw :SCALE no longer applied to :START.  Only applied to :VEC.
 * Varying power consumption might make it so if you have high IPU settings some designs might run out of power when they didn't before.  (in most cases it should draw less power for most people).
-* 
+* !!!! Default extension of ".ks" is no longer applied to all new filenames created.  But it still will be looked for when reading existing files if you leave the extension off !!!!
+* FileInfo information now moved to VolumeInfo (TODO Docs).
+* VOLUME:FILES was returning a LIST(), now it returns a LEXICON who's keys are the filename.
 
 ### NEW FEATURES
 * Varying power consumption.  Units of electric charge used now varies depending on CPU speed and how much the CPU is being actually used.  If your IPU setting is low, or if your program isn't doing very much and is just stuck on a `wait` statement, it won't use as much power. (TODO link to docs)
