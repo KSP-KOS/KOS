@@ -344,6 +344,8 @@ namespace kOS.Safe.Encapsulation
         {
             if (conversionType == typeof(StringValue))
                 return this;
+            else if (conversionType == typeof(BooleanValue))
+                return new BooleanValue(string.IsNullOrEmpty(internalString) ? false : true);
             else if (conversionType.IsSubclassOf(typeof(Structure)))
                 throw new KOSCastException(typeof(StringValue), conversionType);
             return Convert.ChangeType(internalString, conversionType);

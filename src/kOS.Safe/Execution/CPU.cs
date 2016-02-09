@@ -628,7 +628,7 @@ namespace kOS.Safe.Execution
                 string trimmedTail = identifier.TrimEnd('*');
                 Variable retryVal = GetVariable(trimmedTail, barewordOkay, failOkay);
                 string trimmedLeader = trimmedTail.TrimStart('$');
-                if (retryVal.Value is KOSDelegate /* || retryVal.Value is Delegate ((hypothetically impossible now???)) */)
+                if (retryVal.Value is KOSDelegate)
                     return retryVal;
                 throw new KOSNotInvokableException(trimmedLeader);
             }

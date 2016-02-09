@@ -413,6 +413,8 @@ namespace kOS.Safe.Encapsulation
                 return new ScalarDoubleValue(GetDoubleValue());
             else if (conversionType == typeof(ScalarIntValue))
                 return new ScalarIntValue(GetIntValue());
+            else if (conversionType == typeof(BooleanValue))
+                return new BooleanValue(GetIntValue() == 0 ? false : true);
             else if (conversionType.IsSubclassOf(typeof(Structure)))
                 throw new KOSCastException(typeof(ScalarValue), conversionType);
             else

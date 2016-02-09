@@ -15,7 +15,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Abs(argument);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -28,7 +28,7 @@ namespace kOS.Function
             double dividend = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = dividend % divisor;
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -40,7 +40,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Floor(argument);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -52,7 +52,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Ceiling(argument);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -79,7 +79,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Round(argument, decimals);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -91,7 +91,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Sqrt(argument);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -104,7 +104,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Log(argument);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -116,7 +116,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Log10(argument);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -132,7 +132,7 @@ namespace kOS.Function
             var pair = new OperandPair(argument1, argument2);
             Calculator calculator = Calculator.GetCalculator(pair);
             object result = calculator.Min(pair);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -148,7 +148,7 @@ namespace kOS.Function
             var pair = new OperandPair(argument1, argument2);
             Calculator calculator = Calculator.GetCalculator(pair);
             object result = calculator.Max(pair);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -195,7 +195,7 @@ namespace kOS.Function
             if (vector1 != null && vector2 != null)
             {
                 object result = Vector3d.Dot(vector1, vector2);
-                ReturnValue = Structure.FromPrimitive(result);
+                ReturnValue = result;
             }
             else
                 throw new KOSException("vector dot product attempted with a non-vector value");
@@ -233,7 +233,7 @@ namespace kOS.Function
             if (vector1 != null && vector2 != null)
             {
                 object result = Vector3d.Angle(vector1, vector2);
-                ReturnValue = Structure.FromPrimitive(result);
+                ReturnValue = result;
             }
             else
                 throw new KOSException("vector angle calculation attempted with a non-vector value");

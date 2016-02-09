@@ -125,7 +125,8 @@ namespace kOS.Safe.Encapsulation
                 int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
                 return GetIndex(i);
             }
-            throw new KOSCastException(index.GetType(), typeof(int)/*So the message will say it needs integer, not just any Scalar*/);
+            // Throw cast exception with ScalarIntValue, instead of just any ScalarValue
+            throw new KOSCastException(index.GetType(), typeof(ScalarIntValue));
         }
 
         public void SetIndex(Structure index, Structure value)

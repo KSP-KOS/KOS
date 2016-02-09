@@ -1,8 +1,7 @@
-﻿using System;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 namespace kOS.Safe.Test.Structure
 {
@@ -40,6 +39,5 @@ namespace kOS.Safe.Test.Structure
 
             mockDel.ReceivedWithAnyArgs(1);
         }
-
     }
 }

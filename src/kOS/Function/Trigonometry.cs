@@ -13,7 +13,7 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             double radians = DegreesToRadians(degrees);
             double result = Math.Sin(radians);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -26,7 +26,7 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             double radians = DegreesToRadians(degrees);
             double result = Math.Cos(radians);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -39,7 +39,7 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             double radians = DegreesToRadians(degrees);
             double result = Math.Tan(radians);
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -51,7 +51,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Asin(argument));
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -63,7 +63,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Acos(argument));
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -75,7 +75,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Atan(argument));
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -88,7 +88,7 @@ namespace kOS.Function
             double y = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Atan2(y, x));
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 
@@ -101,7 +101,7 @@ namespace kOS.Function
             double ang1 = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = kOS.Utilities.Utils.DegreeFix( ang2 - ang1, -180 );
-            ReturnValue = Structure.FromPrimitive(result);
+            ReturnValue = result;
         }
     }
 }

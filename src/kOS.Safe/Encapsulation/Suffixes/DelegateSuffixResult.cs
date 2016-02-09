@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using kOS.Safe.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class DelegateSuffixResult : ISuffixResult 
+    public class DelegateSuffixResult : ISuffixResult
     {
         private readonly Delegate del;
         private Structure value;
@@ -42,7 +42,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             // Will be true iff the lastmost parameter of the delegate is using the C# 'param' keyword and thus
             // expects the remainder of the arguments marshalled together into one array object.
             bool isParamArrayArg = false;
-            
+
             CpuUtility.ReverseStackArgs(cpu, false);
             for (int i = 0; i < paramArray.Length; ++i)
             {
@@ -124,7 +124,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
                     throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
             }
 
-            // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
+            // Delegate.DynamicInvoke expects a null, rather than an array of zero length, when
             // there are no arguments to pass:
             object[] argArray = (args.Count > 0) ? args.ToArray() : null;
 
@@ -136,18 +136,17 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 if (methInfo.ReturnType == typeof(void))
                 {
                     del.DynamicInvoke(argArray);
-                    value = null; // By adding this we can unconditionally assume all functions
-                                 // have a return value to be used or popped away, even if "void".
-
-                    // @erendrake:
-                    // I'm not sure I like returning a null here.  But fixing that is outside the
-                    // remit of this refactor.  Returning a null is the same behaviour it used to have.
+                    value = ScalarValue.Create(0);
+                    // By adding this we can unconditionally assume all functionshave a return value
+                    // to be used or popped away, even if "void".  In order to mainain consistency with
+                    // the void return value of functions, and to ensure that we don't accidentally pass
+                    // a value back to the user that they cannot interact with (null), we return zero.
                 }
                 else
                 {
-                   // Convert a primitive return type to a structure.  This is done in the opcode, since
-                   // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                   value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
+                    // Convert a primitive return type to a structure.  This is done in the opcode, since
+                    // the opcode calls the deligate directly and cannot be (quickly) intercepted
+                    value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
                 }
             }
             catch (TargetInvocationException e)
@@ -159,13 +158,11 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 throw;
             }
         }
-        
+
         // Not something the user should ever see, but still useful for our debugging when we dump the stack:
         public override string ToString()
         {
-            return string.Format("[DelegateSuffixResult Del={0}, Value={1}]", del, (HasValue ? value.ToString() : "<null>") );
+            return string.Format("[DelegateSuffixResult Del={0}, Value={1}]", del, (HasValue ? value.ToString() : "<null>"));
         }
- 
     }
-
 }
