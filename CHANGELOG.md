@@ -1,16 +1,51 @@
 kOS Mod Changelog
 =================
 
-# v0.18.3
 
-Optional Parameters
-------------------------------
+
+----------------- TODO ----------------------
+TODO:  Notice I'm writing this before all of these have
+been merged.  Some of these might need to be deleted before
+release if the PR's about them don't get merged before release.
+---------------------------------------------
+
+# v0.19.0
 
 ### BREAKING CHANGES
+* As usual, you must recompile any KSM files when using the new version.
+* Vecdraw :SCALE no longer applied to :START.  Only applied to :VEC.
+* Varying power consumption might make it so if you have high IPU settings some designs might run out of power when they didn't before.  (in most cases it should draw less power for most people).
+* 
 
 ### NEW FEATURES
+* Varying power consumption.  Units of electric charge used now varies depending on CPU speed and how much the CPU is being actually used.  If your IPU setting is low, or if your program isn't doing very much and is just stuck on a `wait` statement, it won't use as much power. (TODO link to docs)
+* Ability to read and write whole files at a time as one big string. (TODO link to docs)
+* User Functions can now be referred to with function pointers, or "delegates".  (TODO link to docs)
+* Automatic serialization system to save/load some kinds of data values to JSON-format files (TODO link to docs)
+* User Programs and Functions now allow trailing optional parameters with defaulted values. (TODO link to docs).
+* There are now some suffixes that work on all value types, even primitive scalars.  To accomplish this, a new "encapsulation" system has wrapped all kOS structures and primitive types inside a generic base type.  (TODO link to docs page about basic structure suffixes)
+* Better support for DMagic's Orbital Science mod (TODO link to orbital science addon doc page here)
+* Char() and Unchar() functions for translating unicode numbers to characters and visa versa (TODO link to doc here)
+* New Range type for iterating over hardcoded lists (TODO link to doc here).
+* Ability to iterate over the characters in a string using a FOR loop, as if the string was a LIST() of chars (TODO link to doc here)
+* New higher level cpu part. (https://github.com/KSP-KOS/KOS/pull/1380)
+* HASTARGET and HASNODE functions (TODO docs link)
+* :JOIN suffix for LIST to make a string of the elements (TODO docs link)
+* KUNIVERSE now lets you read hours per day setting (TODO link to docs)
 
 ### BUG FIXES
+* Numerous attitional checks to prevent control of other vessels the kOS CPU isn't attached to. 
+* The error beep and keyboard click sounds now obey game's UI volume settings. (https://github.com/KSP-KOS/KOS/pull/1287)
+* Fixed two bugs with obtaining waypoints by name. (https://github.com/KSP-KOS/KOS/issues/1313) (https://github.com/KSP-KOS/KOS/pull/1319)
+* Removed unnecessary rounding of THRUSTLIMIT to nearest 0.5%, now it can be more precise. (https://github.com/KSP-KOS/KOS/pull/1329)
+* Fixed bug that caused hitting ESC to crash the telnet server. (https://github.com/KSP-KOS/KOS/issues/1328)
+* Some exceptions didn't cause beep, now they all do. (https://github.com/KSP-KOS/KOS/issues/1317)
+* Vecdraw :SCALE no longer applied to :START.  Only applied to :VEC. (https://github.com/KSP-KOS/KOS/issues/1200)
+* Fixed bug that made up-arrow work incorrectly when the cursor is at the bottom of the terminal window. (https://github.com/KSP-KOS/KOS/issues/1289)
+* A multitude of small documentation fixes (https://github.com/KSP-KOS/KOS/pull/1341)
+* Fixed a bug when performing an undock (https://github.com/KSP-KOS/KOS/issues/1321)
+* IR:AVAILABLE was reporting incorrectly ()
+* Boot files now wait until the ship is fully unpacked and ready (https://github.com/KSP-KOS/KOS/issues/1280)
 
 # v0.18.2
 
