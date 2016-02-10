@@ -14,21 +14,21 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixEta()
         {
-            AddSuffix("APOAPSIS" , new NoArgsSuffix<double>(GetApoapsis));
-            AddSuffix("PERIAPSIS" , new NoArgsSuffix<double>(GetPeriapsis));
-            AddSuffix("TRANSITION" , new NoArgsSuffix<double>(GetTransition));
+            AddSuffix("APOAPSIS" , new NoArgsSuffix<ScalarValue>(GetApoapsis));
+            AddSuffix("PERIAPSIS" , new NoArgsSuffix<ScalarValue>(GetPeriapsis));
+            AddSuffix("TRANSITION" , new NoArgsSuffix<ScalarValue>(GetTransition));
         }
-        public double GetApoapsis()
+        public ScalarValue GetApoapsis()
         {
             return shared.Vessel.orbit.timeToAp;            
         }
         
-        public double GetPeriapsis()
+        public ScalarValue GetPeriapsis()
         {
             return shared.Vessel.orbit.timeToPe;
         }
         
-        public double GetTransition()
+        public ScalarValue GetTransition()
         {
             return shared.Vessel.orbit.EndUT - Planetarium.GetUniversalTime();
         }

@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace kOS.Safe.Serialization
 {
@@ -31,46 +34,136 @@ namespace kOS.Safe.Serialization
             instance = new JsonFormatter();
         }
 
-        private object MakeStringDictionaries(object value)
+        private object WriteJsonObjects(object value)
         {
             var objects = value as IDictionary<object, object>;
-            if (objects == null) return value;
+            if (objects != null) {
+                var stringKeys = new JsonObject();
 
-            var stringKeys = new Dictionary<string, object>();
+                foreach (var entry in objects) {
+                    stringKeys[entry.Key.ToString()] = WriteJsonObjects(entry.Value);
+                }
 
-            foreach (var entry in objects)
+                return stringKeys;
+            } else if (value is List<object>)
             {
-                stringKeys[entry.Key.ToString()] = MakeStringDictionaries(entry.Value);
+                return (value as List<object>).Select(item => WriteJsonObjects(item)).ToList();
             }
 
-            return stringKeys;
+            return value;
         }
 
-        public string Write(IDictionary<object, object> value)
+        public string Write(Dump value)
         {
-            return SimpleJson.SerializeObject(MakeStringDictionaries(value));
+            return JsonHelper.FormatJson(SimpleJson.SerializeObject(WriteJsonObjects(value)));
         }
-            
-        private object Unwrap(object read)
+
+        private Dump ReadJsonObject(JsonObject dictionary)
         {
-            var objects = read as IDictionary<string, object>;
-            if (objects == null) return read;
+            var result = new Dump();
 
-            var result = new Dictionary<object, object>();
-
-            foreach (var entry in objects)
+            foreach (var entry in dictionary)
             {
-                result[entry.Key] = Unwrap(entry.Value);
+                result[entry.Key] = ReadValue(entry.Value);
             }
 
             return result;
         }
 
-        public IDictionary<object, object> Read(string input)
+        private object ReadValue(object read)
         {
-            return (IDictionary<object, object>)Unwrap(SimpleJson.DeserializeObject<Dictionary<string, object>>(input));
+            var objects = read as JsonObject;
+            if (objects != null)
+            {
+                return ReadJsonObject(objects);
+            } if (read is List<object>) {
+                return (read as List<object>).Select(item => ReadValue(item)).ToList();
+            } else
+            {
+                return read;
+            }
         }
 
+        public Dump Read(string input)
+        {
+            return ReadJsonObject(SimpleJson.DeserializeObject<JsonObject>(input));
+        }
+
+
+        // This handles JSON indentation
+        class JsonHelper
+        {
+            private const string INDENT_STRING = "    ";
+            public static string FormatJson(string str)
+            {
+                var indent = 0;
+                var quoted = false;
+                var sb = new StringBuilder();
+                for (var i = 0; i < str.Length; i++)
+                {
+                    var ch = str[i];
+                    switch (ch)
+                    {
+                    case '{':
+                    case '[':
+                        sb.Append(ch);
+                        if (!quoted)
+                        {
+                            sb.AppendLine();
+                            Enumerable.Range(0, ++indent).ForEach(item => sb.Append(INDENT_STRING));
+                        }
+                        break;
+                    case '}':
+                    case ']':
+                        if (!quoted)
+                        {
+                            sb.AppendLine();
+                            Enumerable.Range(0, --indent).ForEach(item => sb.Append(INDENT_STRING));
+                        }
+                        sb.Append(ch);
+                        break;
+                    case '"':
+                        sb.Append(ch);
+                        bool escaped = false;
+                        var index = i;
+                        while (index > 0 && str[--index] == '\\')
+                            escaped = !escaped;
+                        if (!escaped)
+                            quoted = !quoted;
+                        break;
+                    case ',':
+                        sb.Append(ch);
+                        if (!quoted)
+                        {
+                            sb.AppendLine();
+                            Enumerable.Range(0, indent).ForEach(item => sb.Append(INDENT_STRING));
+                        }
+                        break;
+                    case ':':
+                        sb.Append(ch);
+                        if (!quoted)
+                            sb.Append(" ");
+                        break;
+                    default:
+                        sb.Append(ch);
+                        break;
+                    }
+                }
+                return sb.ToString();
+            }
+        }
+
+    }
+
+    static class Extensions
+    {
+        public static void ForEach<T>(this IEnumerable<T> ie, Action<T> action)
+        {
+            foreach (var i in ie)
+            {
+                action(i);
+            }
+        }
     }
 }
 

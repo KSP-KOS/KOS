@@ -35,7 +35,7 @@ namespace kOS.Function
                 internalReturn = value;
             }
         }
-        private object internalReturn = null;
+        private object internalReturn = 0; // really should be 'null', but kerboscript can't deal with that.
         
         /// <summary>
         /// In the *extremely* rare case where a built-in function is NOT supposed to
@@ -212,6 +212,17 @@ namespace kOS.Function
             if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
+        }
+
+        /// <summary>
+        /// Identical to PopValueAssert, but with the additional step of coercing the result
+        /// into a Structure to be sure, so it won't return primitives.
+        /// </summary>
+        /// <returns>value after coercion into a kOS Structure</returns>
+        protected Structure PopStructureAssertEncapsulated(SharedObjects shared, bool barewordOkay = false)
+        {
+            object returnValue = PopValueAssert(shared, barewordOkay);
+            return Structure.FromPrimitiveWithAssert(returnValue);
         }
         
         protected string GetFuncName()

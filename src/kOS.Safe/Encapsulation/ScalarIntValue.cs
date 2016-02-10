@@ -16,5 +16,21 @@
         {
             Value = value;
         }
+
+        public static implicit operator ScalarIntValue(int val)
+        {
+            return new ScalarIntValue(val);
+        }
+
+        public static ScalarIntValue MinValue()
+        {
+            return new ScalarIntValue(int.MinValue);
+        }
+
+        public static ScalarIntValue MaxValue()
+        {
+            return new ScalarIntValue(int.MaxValue);
+        }
+
     }
 }

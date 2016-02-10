@@ -60,6 +60,7 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Exceptions\KOSYouShouldNeverSeeThisException.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
@@ -106,6 +107,8 @@
     <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\ConfigKey.cs" />
+    <Compile Include="Encapsulation\Suffixes\DelegateSuffixResult.cs" />
+    <Compile Include="Encapsulation\Suffixes\ISuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\NoArgsSuffix.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="Encapsulation\Suffixes\SetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
+    <Compile Include="Encapsulation\Suffixes\SuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />
@@ -202,6 +206,7 @@
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
+    <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
@@ -218,9 +223,10 @@
     <Compile Include="Serialization\TerminalFormatter.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />
-    <Compile Include="Serialization\DictionaryWithHeader.cs" />
     <Compile Include="Serialization\SafeSerializationMgr.cs" />
     <Compile Include="Encapsulation\ISerializableValue.cs" />
+    <Compile Include="Serialization\Dump.cs" />
+    <Compile Include="Serialization\DumpWithHeader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
