@@ -18,18 +18,18 @@ namespace kOS.Suffixed
         
         public void InitializeSuffixes()
         {
-            AddSuffix("CANREVERT", new Suffix<bool>(CanRevert));
-            AddSuffix("CANREVERTTOLAUNCH", new Suffix<bool>(CanRevertToLaunch));
-            AddSuffix("CANREVERTTOEDITOR", new Suffix<bool>(CanRevvertToEditor));
-            AddSuffix("REVERTTOLAUNCH", new NoArgsSuffix(RevertToLaunch));
-            AddSuffix("REVERTTOEDITOR", new NoArgsSuffix(RevertToEditor));
-            AddSuffix("REVERTTO", new OneArgsSuffix<string>(RevertTo));
-            AddSuffix("ORIGINEDITOR", new Suffix<string>(OriginatingEditor));
+            AddSuffix("CANREVERT", new Suffix<BooleanValue>(CanRevert));
+            AddSuffix("CANREVERTTOLAUNCH", new Suffix<BooleanValue>(CanRevertToLaunch));
+            AddSuffix("CANREVERTTOEDITOR", new Suffix<BooleanValue>(CanRevvertToEditor));
+            AddSuffix("REVERTTOLAUNCH", new NoArgsVoidSuffix(RevertToLaunch));
+            AddSuffix("REVERTTOEDITOR", new NoArgsVoidSuffix(RevertToEditor));
+            AddSuffix("REVERTTO", new OneArgsSuffix<StringValue>(RevertTo));
+            AddSuffix("ORIGINEDITOR", new Suffix<StringValue>(OriginatingEditor));
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
             AddSuffix("ACTIVEVESSEL", new SetSuffix<VesselTarget>(() => new VesselTarget(FlightGlobals.ActiveVessel, shared), SetActiveVessel));
             AddSuffix("FORCESETACTIVEVESSEL", new OneArgsSuffix<VesselTarget>(ForceSetActiveVessel));
-            AddSuffix("HOURSPERDAY", new Suffix<int>(GetHoursPerDay));
-            AddSuffix("DEBUGLOG", new OneArgsSuffix<string>(DebugLog));
+            AddSuffix("HOURSPERDAY", new Suffix<ScalarValue>(GetHoursPerDay));
+            AddSuffix("DEBUGLOG", new OneArgsSuffix<StringValue>(DebugLog));
         }
 
         public void RevertToLaunch()
@@ -51,7 +51,7 @@ namespace kOS.Suffixed
             else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
         }
 
-        public void RevertTo(string editor)
+        public void RevertTo(StringValue editor)
         {
             if (CanRevvertToEditor())
             {
@@ -73,24 +73,24 @@ namespace kOS.Suffixed
             else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTO", "When revert is disabled", "When revert is enabled");
         }
 
-        public bool CanRevert()
+        public BooleanValue CanRevert()
         {
             return FlightDriver.CanRevert;
         }
 
-        public bool CanRevertToLaunch()
+        public BooleanValue CanRevertToLaunch()
         {
             return FlightDriver.CanRevertToPostInit && HighLogic.CurrentGame.Parameters.Flight.CanRestart;
         }
 
-        public bool CanRevvertToEditor()
+        public BooleanValue CanRevvertToEditor()
         {
             return FlightDriver.CanRevertToPrelaunch &&
                 HighLogic.CurrentGame.Parameters.Flight.CanLeaveToEditor &&
                 ShipConstruction.ShipConfig != null;
         }
 
-        public string OriginatingEditor()
+        public StringValue OriginatingEditor()
         {
             if (ShipConstruction.ShipConfig != null)
             {
@@ -118,12 +118,12 @@ namespace kOS.Suffixed
             }
         }
         
-        public int GetHoursPerDay()
+        public ScalarValue GetHoursPerDay()
         {
             return GameSettings.KERBIN_TIME ? TimeSpan.HOURS_IN_KERBIN_DAY : TimeSpan.HOURS_IN_EARTH_DAY;
         }
         
-        public void DebugLog(string message)
+        public void DebugLog(StringValue message)
         {
             SafeHouse.Logger.Log("(KUNIVERSE:DEBUGLOG) " + message);
         }

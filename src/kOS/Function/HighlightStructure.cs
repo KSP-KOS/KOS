@@ -43,7 +43,7 @@ namespace kOS.Function
                 color = value;
                 stale = true;
             }));
-            AddSuffix("ENABLED", new SetSuffix<bool>(() => enabled, value =>
+            AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => enabled, value =>
             {
                 enabled = value;
                 stale = true;

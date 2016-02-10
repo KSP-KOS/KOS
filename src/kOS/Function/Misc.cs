@@ -44,9 +44,9 @@ namespace kOS.Function
         {
             bool      echo      = Convert.ToBoolean(PopValueAssert(shared));
             RgbaColor rgba      = GetRgba(PopValueAssert(shared));
-            int       size      = Convert.ToInt32 (PopValueAssert(shared));
-            int       style     = Convert.ToInt32 (PopValueAssert(shared));
-            int       delay     = Convert.ToInt32 (PopValueAssert(shared));
+            int       size      = Convert.ToInt32(PopValueAssert(shared));
+            int       style     = Convert.ToInt32(PopValueAssert(shared));
+            int       delay     = Convert.ToInt32(PopValueAssert(shared));
             string    textToHud = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
             string htmlColour = rgba.ToHexNotation();

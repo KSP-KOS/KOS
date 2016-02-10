@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
+using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
@@ -162,17 +164,19 @@ namespace kOS.Safe.Test.Collections
             ListValue list = new ListValue();
             ListValue innerList1 = new ListValue();
             ListValue innerList2 = new ListValue();
-            ListValue innerInnerList = new ListValue();
-            
-            innerInnerList.Add( "inner string 1");
-            innerInnerList.Add( 2 );
-            
-            innerList1.Add( innerInnerList );
-            innerList1.Add( "string,one.two" );
-            innerList1.Add( "string,one.three" );
+            ListValue innerInnerList = new ListValue
+            {
+                new StringValue("inner string 1"),
+                new ScalarIntValue(2)
+            };
 
-            innerList2.Add( "string,two.one" );
-            innerList2.Add( "string,two.two" );
+
+            innerList1.Add( innerInnerList );
+            innerList1.Add( new StringValue("string,one.two") );
+            innerList1.Add( new StringValue("string,one.three") );
+
+            innerList2.Add( new StringValue("string,two.one") );
+            innerList2.Add( new StringValue("string,two.two") );
             
             InvokeDelegate(list,"ADD", 100);
             InvokeDelegate(list,"ADD", 200);
@@ -186,18 +190,27 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void EachListConstructor()
         {
+            var cpu = new FakeCpu();
+            cpu.PushStack(new KOSArgMarkerType());
+
             var baseList = new ListValue();
-            var baseDelegate = ((NoArgsSuffix<int>.Del<int>)baseList.GetSuffix("LENGTH"));
-            Assert.AreEqual(0, baseDelegate.Invoke());
+            var baseDelegate = baseList.GetSuffix("LENGTH");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
-            var castDelegate = ((NoArgsSuffix<int>.Del<int>)castList.GetSuffix("LENGTH"));
-            Assert.AreEqual(0, castDelegate.Invoke());
+            var castDelegate = castList.GetSuffix("LENGTH");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, castDelegate.Value);
 
-            var copyDelegate = (NoArgsSuffix<ListValue>.Del<ListValue>)baseList.GetSuffix("COPY");
-            var copyList = copyDelegate.Invoke();
+            var copyDelegate = baseList.GetSuffix("COPY");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, castDelegate.Value);
+            var copyList = copyDelegate.Value;
 
-            Assert.AreEqual(0, ((NoArgsSuffix<int>.Del<int>)copyList.GetSuffix("LENGTH")).Invoke());
+            var lengthDelegate = copyList.GetSuffix("LENGTH");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, lengthDelegate);
         }
 
         private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)

@@ -106,7 +106,7 @@ Structure
           - removes the pair with the given key
 .. note::
 
-    This type is serializable. Please note however that non-string keys will not be properly serialized/deserialized.
+    This type is serializable.
 
 .. method:: Lexicon:ADD(key, value)
 
