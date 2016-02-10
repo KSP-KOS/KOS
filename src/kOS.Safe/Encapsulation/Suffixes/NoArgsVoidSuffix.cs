@@ -1,19 +1,25 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class NoArgsSuffix : SuffixBase
+    /// <summary>
+    /// Although we always have a dummy return from every call in the VM,
+    /// in the underlying C# a suffix might be backed by a Delegate that
+    /// returns void.  Use this construct for suffixes that take no args
+    /// and return nothing.  (that are only called for their effect).
+    /// </summary>
+    public class NoArgsVoidSuffix : SuffixBase
     {
         private readonly Del del;
 
         public delegate void Del();
 
-        public NoArgsSuffix(Del del, string description = ""):base(description)
+        public NoArgsVoidSuffix(Del del, string description = ""):base(description)
         {
             this.del = del;
         }
 
-        public override object Get()
+        public override ISuffixResult Get()
         {
-            return del;
+            return new DelegateSuffixResult(del);
         }
     }
 }

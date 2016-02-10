@@ -6,7 +6,7 @@
         {
             Description = description;
         }
-        public abstract object Get();
+        public abstract ISuffixResult Get();
 
         public string Description { get; private set; }
     }

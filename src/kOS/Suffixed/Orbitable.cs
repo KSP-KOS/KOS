@@ -10,7 +10,7 @@ namespace kOS.Suffixed
     /// in orbit around something.  It could be a vessel or a planet
     /// or a moon.
     /// </summary>
-    abstract public class Orbitable : Structure
+    public abstract class Orbitable : Structure
     {
         protected Orbitable(SharedObjects shareObj) : this()
         {
@@ -25,7 +25,7 @@ namespace kOS.Suffixed
         /// <summary>
         ///   The KSP Orbit object attached to this object.
         /// </summary>
-        abstract public Orbit Orbit{get;}
+        public abstract Orbit Orbit{get;}
 
         /// <summary>
         ///   The shared context for the CPU running the code.
@@ -42,7 +42,7 @@ namespace kOS.Suffixed
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        abstract public Vector GetPosition();
+        public abstract Vector GetPosition();
         
         /// <summary>
         ///   Subclasses must override this method to return the velocity of this object right now.
@@ -54,7 +54,7 @@ namespace kOS.Suffixed
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        abstract public OrbitableVelocity GetVelocities();
+        public abstract OrbitableVelocity GetVelocities();
 
         /// <summary>
         ///   Subclasses must override this method to return the position of this object at some
@@ -71,7 +71,7 @@ namespace kOS.Suffixed
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        abstract public Vector GetPositionAtUT( TimeSpan timeStamp );
+        public abstract Vector GetPositionAtUT( TimeSpan timeStamp );
 
         /// <summary>
         ///   Subclasses must override this method to return the OrbitableVelocity of this object at some
@@ -88,7 +88,7 @@ namespace kOS.Suffixed
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        abstract public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp );
+        public abstract OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp );
 
         /// <summary>
         ///   Return the Orbit that the object will be in at some point in the future.
@@ -98,28 +98,28 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="desiredUT">the timestamp when to query for </param>
         /// <returns>An OrbitInfo constructed from the orbit patch in question</returns>
-        abstract public Orbit GetOrbitAtUT(double desiredUT);
+        public abstract Orbit GetOrbitAtUT(double desiredUT);
         
         /// <summary>
         ///   Subclasses must override this method to return a unit vector in
         ///   the upward direction away from its SOI body.
         /// </summary>
         /// <returns>A vector pointing upward away from the SOI body.</returns>
-        abstract public Vector GetUpVector();
+        public abstract Vector GetUpVector();
         
         /// <summary>
         ///   Subclasses must override this method to return a unit vector in
         ///   the northward direction of its SOI body.
         /// </summary>
         /// <returns>A vector pointing northward away from the SOI body.</returns>
-        abstract public Vector GetNorthVector();
+        public abstract Vector GetNorthVector();
 
         /// <summary>
         ///   Subclasses must override this method to return a string name of
         ///   this orbital thing (its vessel name or body name)
         /// </summary>
         /// <returns> string name of the thing</returns>
-        abstract public string GetName();
+        public abstract StringValue GetName();
 
         /// <summary>
         ///   Get the OrbitInfo object associated with this Orbitable.
@@ -160,7 +160,7 @@ namespace kOS.Suffixed
             OrbitableVelocity vels = GetVelocities();
             Vector3d normOrbVec = vels.Orbital.Normalized();
 
-            var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec*(-1), up)};
+            var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec*-1, up)};
             return d;
         }
 
@@ -180,7 +180,7 @@ namespace kOS.Suffixed
             OrbitableVelocity vels = GetVelocities();
             Vector3d normSrfVec = vels.Surface.Normalized();
 
-            var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec*(-1), up)};
+            var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec*-1, up)};
             return d;
         }
 
@@ -211,9 +211,9 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(GetName));
-            AddSuffix("APOAPSIS", new Suffix<double>(() => Orbit.ApA));
-            AddSuffix("PERIAPSIS", new Suffix<double>(() => Orbit.PeA));
+            AddSuffix("NAME", new Suffix<StringValue>(GetName));
+            AddSuffix("APOAPSIS", new Suffix<ScalarValue>(() => Orbit.ApA));
+            AddSuffix("PERIAPSIS", new Suffix<ScalarValue>(() => Orbit.PeA));
             AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(Orbit.referenceBody, Shared)));
             AddSuffix("UP", new Suffix<Direction>(() => new Direction(GetUpVector(), false)));
             AddSuffix("NORTH", new Suffix<Direction>(() => new Direction(GetNorthVector(), false)));
@@ -224,16 +224,16 @@ namespace kOS.Suffixed
             AddSuffix(new[] {"OBT","ORBIT"}, new Suffix<OrbitInfo>(GetOrbitInfo));
             AddSuffix("POSITION", new Suffix<Vector>(GetPosition));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(GetVelocities));
-            AddSuffix("DISTANCE", new Suffix<double>(GetDistance));
+            AddSuffix("DISTANCE", new Suffix<ScalarValue>(GetDistance));
             AddSuffix("DIRECTION", new Suffix<Direction>(() => new Direction(GetPosition(), false)));
-            AddSuffix("LATITUDE", new Suffix<double>(()=> PositionToLatitude(GetPosition())));
-            AddSuffix("LONGITUDE", new Suffix<double>(() => PositionToLongitude(GetPosition())));
-            AddSuffix("ALTITUDE", new Suffix<double>(() => PositionToAltitude(GetPosition())));
+            AddSuffix("LATITUDE", new Suffix<ScalarValue>(()=> PositionToLatitude(GetPosition())));
+            AddSuffix("LONGITUDE", new Suffix<ScalarValue>(() => PositionToLongitude(GetPosition())));
+            AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => PositionToAltitude(GetPosition())));
             AddSuffix("GEOPOSITION", new Suffix<GeoCoordinates>(() => new GeoCoordinates(this, Shared)));
             AddSuffix("PATCHES", new Suffix<ListValue>(BuildPatchList));
         }
 
-        private double GetDistance()
+        private ScalarValue GetDistance()
         {
             return GetPosition().Magnitude();
         }
@@ -246,7 +246,7 @@ namespace kOS.Suffixed
             int highestAllowedIndex = Career.PatchLimit();
             while (index <= highestAllowedIndex)
             {
-                if (orb == null || (!orb.activePatch))
+                if (orb == null || !orb.activePatch)
                 {
                     break;
                 }

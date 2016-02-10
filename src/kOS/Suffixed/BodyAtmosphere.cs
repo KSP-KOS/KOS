@@ -12,13 +12,13 @@ namespace kOS.Suffixed
         {
             this.celestialBody = celestialBody;
 
-            AddSuffix("BODY", new Suffix<string>(()=> celestialBody.bodyName));
-            AddSuffix("EXISTS", new Suffix<bool>(()=> celestialBody.atmosphere));
-            AddSuffix("OXYGEN", new Suffix<bool>(()=> celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
-            AddSuffix("SEALEVELPRESSURE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel : 0));
-            AddSuffix("HEIGHT", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
+            AddSuffix("BODY", new Suffix<StringValue>(()=> celestialBody.bodyName));
+            AddSuffix("EXISTS", new Suffix<BooleanValue>(()=> celestialBody.atmosphere));
+            AddSuffix("OXYGEN", new Suffix<BooleanValue>(()=> celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
+            AddSuffix("SEALEVELPRESSURE", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel : 0));
+            AddSuffix("HEIGHT", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
 
-            AddSuffix("SCALE", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("0.17.2","SCALE","<None>",string.Empty); }));
+            AddSuffix("SCALE", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereDeprecationException("0.17.2","SCALE","<None>",string.Empty); }));
         }
 
         public override string ToString()

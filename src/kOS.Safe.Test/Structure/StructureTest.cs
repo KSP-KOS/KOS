@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using NSubstitute;
@@ -209,7 +210,7 @@ namespace kOS.Safe.Test.Structure
             testStructure.TestAddInstanceSuffix(suffixName, testSuffix);
 
             var testSuffixStatic = Substitute.For<ISuffix>();
-            testSuffixStatic.Get().ReturnsForAnyArgs(info => int.MaxValue);
+            testSuffixStatic.Get().ReturnsForAnyArgs(new SuffixResult(ScalarIntValue.MaxValue()));
             TestStructure.TestAddGlobal<object>(suffixName, testSuffixStatic);
 
             Assert.IsNotNull(testStructure.GetSuffix(suffixName));
