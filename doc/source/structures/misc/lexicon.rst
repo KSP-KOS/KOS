@@ -104,6 +104,9 @@ Structure
         * - :meth:`REMOVE(keyvalue)`
           - None
           - removes the pair with the given key
+.. note::
+
+    This type is serializable.
 
 .. method:: Lexicon:ADD(key, value)
 

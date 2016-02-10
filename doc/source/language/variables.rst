@@ -63,7 +63,7 @@ Detailed Description of the syntax:
    * After that it must contain some expression for the initial starting
      value of the variable.
    * After that it must contain a dot ("period"), like all commands in
-     kerboscript.
+     Kerboscript.
    
    ::
 
@@ -186,6 +186,53 @@ are always local to the location they were declared at, the keyword
 
 The ``DECLARE PARAMETER`` statements can appear anywhere in a program as long as they are in the file at a point earlier than the point at which the parameter is being used. The order the arguments need to be passed in by the caller is the order the ``DECLARE PARAMETER`` statements appear in the program being called.
 
+Optional Parameters (defaulted parameters)
+::::::::::::::::::::::::::::::::::::::::::
+
+If you wish, you may make some of the parameters of a program or a user
+function optional by defaulting them to a starting value with the ``IS`` keyword, as follows:
+
+    // Imagine this is a file called MYPROG
+
+    DECLARE PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+    print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+
+
+    // Imagine this is a different file that runs it:
+
+    run MYPROG(1,2).         // prints "1, 2, 0, cheese".
+    run MYPROG(1,2,3).       // prints "1, 2, 3, cheese".
+    run MYPROG(1,2,3,"hi").  // prints "1, 2, 3, hi".
+
+Whenever arguments are missing, the system always makes up the difference by
+using defaults for the lastmost parameters until the correct number have been
+padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's 
+the last argument, P4, that gets defaulted, but P3 does not.  But if you call
+it with 2 arguments, both P4 and P3 get defaulted.)
+
+It is illegal to put mandatory (not defaulted) parameters after defaulted ones.
+
+This will not work::
+
+    DECLARE PARAMETER thisIsOptional is 0,
+                      thisIsOptionalToo is 0.
+                      thisIsMandatory.
+
+Because the optional parameters didn't come at the end.
+
+Default parameters follow short-circuit logic
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Remember that if you have an optional parameter with an initializer
+expression, the expression will not get executed if the calling
+function had an argument present in that position.  The expression
+only gets executed if the system needed to pad a missing argument.
+
+.. versionadded:: 0.18.3
+   Optional Parameters were added as a new feature in kOS 0.18.3
+
+
+
 .. note::
 
     **Pass By Value**
@@ -218,7 +265,7 @@ up, then it won't be created and instead the existing one will be used.
     DEFINED identifier
 
 Returns a boolean true or false according to whether or not an 
-identifer is defined in such a way that you can use it from
+identifier is defined in such a way that you can use it from
 this part of the program.  (i.e. is it declared and is it in scope
 and visible right now)::
 
@@ -327,7 +374,7 @@ File2.ks::
 
     lock x to "this is x".
 
-But now with the kerboscript of kOS 0.17.0, you can make it work
+But now with the Kerboscript of kOS 0.17.0, you can make it work
 by inserting empty parentheses after the lock name to help give
 the compiler the hint that you expected x to be a function call
 (which is what a lock really is):
@@ -430,7 +477,7 @@ Scoping terms
 
 .. note::
     .. versionadded:: 0.17
-        In prior versions of kerboscript, all identifiers other than
+        In prior versions of Kerboscript, all identifiers other than
         DECLARE PARAMETER identifiers were always global variables no
         matter what, even if you used the DECLARE statement to make them.
 
@@ -445,7 +492,7 @@ What is Scope?
 Global scope
     The simplest scope is called "global".  Global scope simply means
     "this variable can be used from anywhere in the program".  If you
-    never use the DECLARE statement, then your variables in kerboscript
+    never use the DECLARE statement, then your variables in Kerboscript
     will all be in *global scope*.  For simple easy scripts used by
     beginners, this is often enough and you don't have to read the rest
     of this topic until you start advancing to more intermediate scripts.
@@ -624,7 +671,7 @@ down the road.  If you make a typo in a variable name, you end up
 creating a new variable instead of generating an error.  Or you may just
 forget to mark the variable as local when you intended to.  
 
-If you wish to instruct kerboscript to alter its behavior and
+If you wish to instruct Kerboscript to alter its behavior and
 disable its normal implicit globals, and instead demand that all
 variables MUST be explicitly declared and may not use implied
 lazy scoping, the ``@LAZYGLOBAL`` compiler directive allows you to
@@ -639,6 +686,14 @@ lazy global feature and it will require you to explicitly mention
 all variables you use in a declaration somewhere (with the 
 exception of the built-in variables such as THROTTLE, STEERING,
 SHIP, and so on.)
+
+.. note::
+    The @LAZYGLOBAL directive does not affect LOCK statements.
+    LOCKS are a special case that define new pseudo-functions
+    when encountered and don't quite work the same way as
+    SET statements do. Thus even with @LAZYGLOBAL OFF, it's still
+    possible to make a LOCK statement with a typo in the identifier
+    name and it will still create the new typo'ed lock that way.
 
 @LAZYGLOBAL Can only exist at the top of your code.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -720,13 +775,13 @@ History:
     variable implicitly by just using it in a SET statement.
 
     There are a variety of programming languages that work like this,
-    such as Perl, Javascript, and Lua.  However, they all share one
+    such as Perl, JavaScript, and Lua.  However, they all share one
     thing in common - once you want to allow the possibility of having
     local variables, you have to figure out how this should work with
     the implicit variable declaration feature.
 
     And all those languages went with the same solution, which 
-    kerboscript now follows as well.  Because implicit undeclared
+    Kerboscript now follows as well.  Because implicit undeclared
     variables are intended to be a nice easy way for new users to
     ease into programming, they should always default to being 
     global so that people who wish to keep programming that way

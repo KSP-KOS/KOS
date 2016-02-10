@@ -2,16 +2,29 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using UnityEngine;
+using kOS.Safe.Serialization;
+using System.Collections.Generic;
+using kOS.Safe.Utilities;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class Vector : Structure
+    public class Vector : Structure, IDumper
     {
+        public const string DumpX = "x";
+        public const string DumpY = "y";
+        public const string DumpZ = "z";
+
         public double X { get; set; }
 
         public double Y { get; set; }
 
         public double Z { get; set; }
+
+        public Vector()
+        {
+            InitializeSuffixes();
+        }
 
         public Vector(Vector3d init)
             : this(init.x, init.y, init.z)
@@ -28,20 +41,19 @@ namespace kOS.Suffixed
         {
         }
 
-        public Vector(double x, double y, double z)
+        public Vector(double x, double y, double z) : this()
         {
             X = x;
             Y = y;
             Z = z;
-            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
         {
-            AddSuffix("X", new SetSuffix<double>(() => X, value => X = value));
-            AddSuffix("Y", new SetSuffix<double>(() => Y, value => Y = value));
-            AddSuffix("Z", new SetSuffix<double>(() => Z, value => Z = value));
-            AddSuffix("MAG", new SetSuffix<double>(Magnitude, value =>
+            AddSuffix("X", new SetSuffix<ScalarValue>(() => X, value => X = value));
+            AddSuffix("Y", new SetSuffix<ScalarValue>(() => Y, value => Y = value));
+            AddSuffix("Z", new SetSuffix<ScalarValue>(() => Z, value => Z = value));
+            AddSuffix("MAG", new SetSuffix<ScalarValue>(Magnitude, value =>
             {
                 double oldMag = new Vector3d(X, Y, Z).magnitude;
 
@@ -53,7 +65,7 @@ namespace kOS.Suffixed
             }));
             AddSuffix("VEC", new Suffix<Vector>(() => new Vector(X, Y, Z)));
             AddSuffix("NORMALIZED", new Suffix<Vector>(Normalized));
-            AddSuffix("SQRMAGNITUDE", new Suffix<double>(() => new Vector3d(X, Y, Z).sqrMagnitude));
+            AddSuffix("SQRMAGNITUDE", new Suffix<ScalarValue>(() => new Vector3d(X, Y, Z).sqrMagnitude));
             AddSuffix("DIRECTION", new SetSuffix<Direction>(ToDirection, value =>
             {
                 var newMagnitude = Vector3d.forward * new Vector3d(X, Y, Z).magnitude;
@@ -69,6 +81,7 @@ namespace kOS.Suffixed
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             other = ConvertToDoubleIfNeeded(other);
+            other = Structure.ToPrimitive(other);
 
             switch (op)
             {
@@ -112,7 +125,7 @@ namespace kOS.Suffixed
             return null;
         }
 
-        public double Magnitude()
+        public ScalarValue Magnitude()
         {
             return new Vector3d(X, Y, Z).magnitude;
         }
@@ -172,6 +185,31 @@ namespace kOS.Suffixed
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
+        public static Vector operator *(Vector a, ScalarValue b)
+        {
+            return a * b.GetDoubleValue();
+        }
+
+        public static Vector operator *(float b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(double b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(ScalarValue b, Vector a)
+        {
+            return a * b.GetDoubleValue();
+        }
+
+        public static Vector operator /(Vector a, ScalarValue b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.ToVector3D() + b.ToVector3D());
@@ -184,7 +222,25 @@ namespace kOS.Suffixed
 
         public static Vector operator -(Vector a)
         {
-            return a * (-1);
+            return a * (-1d);
+        }
+
+        public Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader();
+
+            dump.Add(DumpX, X);
+            dump.Add(DumpY, Y);
+            dump.Add(DumpZ, Z);
+
+            return dump;
+        }
+
+        public void LoadDump(Dump dump)
+        {
+            X = Convert.ToDouble(dump[DumpX]);
+            Y = Convert.ToDouble(dump[DumpY]);
+            Z = Convert.ToDouble(dump[DumpZ]);
         }
     }
 }

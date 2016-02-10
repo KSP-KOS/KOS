@@ -91,41 +91,43 @@ namespace kOS.Suffixed.Part
 
         private void EngineInitializeSuffixes()
         {
-            AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
-            AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
-            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value, 0, 100, 0.5f));
-            AddSuffix("MAXTHRUST", new Suffix<float>(() => engine.MaxThrust));
-            AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
-            AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));
-            AddSuffix("ISP", new Suffix<float>(() => engine.SpecificImpulse));
-            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<float>(() => engine.VacuumSpecificImpluse));
-            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<float>(() => engine.SeaLevelSpecificImpulse));
-            AddSuffix("FLAMEOUT", new Suffix<bool>(() => engine.Flameout));
-            AddSuffix("IGNITION", new Suffix<bool>(() => engine.Ignition));
-            AddSuffix("ALLOWRESTART", new Suffix<bool>(() => engine.AllowRestart));
-            AddSuffix("ALLOWSHUTDOWN", new Suffix<bool>(() => engine.AllowShutdown));
-            AddSuffix("THROTTLELOCK", new Suffix<bool>(() => engine.ThrottleLock));
-            AddSuffix("ISPAT", new OneArgsSuffix<float, double>(GetIspAtAtm));
-            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<float, double>(GetMaxThrustAtAtm));
-            AddSuffix("AVAILABLETHRUST", new Suffix<float>(() => engine.AvailableThrust));
-            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<float, double>(GetAvailableThrustAtAtm));
+            AddSuffix("ACTIVATE", new NoArgsVoidSuffix(() => engine.Activate()));
+            AddSuffix("SHUTDOWN", new NoArgsVoidSuffix(() => engine.Shutdown()));
+            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => engine.ThrustPercentage,
+                                                          value => engine.ThrustPercentage = value,
+                                                          0f, 100f, 0f,
+                                                          "thrust limit percentage for this engine"));
+            AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => engine.MaxThrust));
+            AddSuffix("THRUST", new Suffix<ScalarValue>(() => engine.FinalThrust));
+            AddSuffix("FUELFLOW", new Suffix<ScalarValue>(() => engine.FuelFlow));
+            AddSuffix("ISP", new Suffix<ScalarValue>(() => engine.SpecificImpulse));
+            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(() => engine.VacuumSpecificImpluse));
+            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(() => engine.SeaLevelSpecificImpulse));
+            AddSuffix("FLAMEOUT", new Suffix<BooleanValue>(() => engine.Flameout));
+            AddSuffix("IGNITION", new Suffix<BooleanValue>(() => engine.Ignition));
+            AddSuffix("ALLOWRESTART", new Suffix<BooleanValue>(() => engine.AllowRestart));
+            AddSuffix("ALLOWSHUTDOWN", new Suffix<BooleanValue>(() => engine.AllowShutdown));
+            AddSuffix("THROTTLELOCK", new Suffix<BooleanValue>(() => engine.ThrottleLock));
+            AddSuffix("ISPAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetIspAtAtm));
+            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetMaxThrustAtAtm));
+            AddSuffix("AVAILABLETHRUST", new Suffix<ScalarValue>(() => engine.AvailableThrust));
+            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetAvailableThrustAtAtm));
             //MultiMode features
-            AddSuffix("MULTIMODE", new Suffix<bool>(() => MultiMode));
+            AddSuffix("MULTIMODE", new Suffix<BooleanValue>(() => MultiMode));
             AddSuffix("MODES", new Suffix<ListValue>(GetAllModes, "A List of all modes of this engine"));
             if (MultiMode)
             {
-                AddSuffix("MODE", new Suffix<string>(() => MMengine.mode));
-                AddSuffix("TOGGLEMODE", new NoArgsSuffix(() => ToggleMode() ));
-                AddSuffix("PRIMARYMODE", new SetSuffix<bool>(() => MMengine.runningPrimary, value =>     ToggleSetMode(value)));
-                AddSuffix("AUTOSWITCH", new SetSuffix<bool>(() => MMengine.autoSwitch, value => SetAutoswitch(value)));  
+                AddSuffix("MODE", new Suffix<StringValue>(() => MMengine.mode));
+                AddSuffix("TOGGLEMODE", new NoArgsVoidSuffix(() => ToggleMode() ));
+                AddSuffix("PRIMARYMODE", new SetSuffix<BooleanValue>(() => MMengine.runningPrimary, value => ToggleSetMode(value)));
+                AddSuffix("AUTOSWITCH", new SetSuffix<BooleanValue>(() => MMengine.autoSwitch, value => SetAutoswitch(value)));  
             }
             //gimbal interface
-            AddSuffix("HASGIMBAL", new Suffix<bool>(() => HasGimbal));
+            AddSuffix("HASGIMBAL", new Suffix<BooleanValue>(() => HasGimbal));
             if (HasGimbal)
             {
                 AddSuffix("GIMBAL", new Suffix<GimbalValue>(() => gimbal));
             }
-
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
@@ -166,18 +168,18 @@ namespace kOS.Suffixed.Part
             return toReturn;
         }
 
-        public float GetIspAtAtm(double atmPressure)
+        public ScalarValue GetIspAtAtm(ScalarValue atmPressure)
         {
 
             return engine.IspAtAtm(atmPressure);
         }
 
-        public float GetMaxThrustAtAtm(double atmPressure)
+        public ScalarValue GetMaxThrustAtAtm(ScalarValue atmPressure)
         {
             return engine.MaxThrustAtAtm(atmPressure);
         }
 
-        public float GetAvailableThrustAtAtm(double atmPressure)
+        public ScalarValue GetAvailableThrustAtAtm(ScalarValue atmPressure)
         {
             return engine.AvailableThrustAtAtm(atmPressure);
         }

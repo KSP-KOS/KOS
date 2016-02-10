@@ -30,6 +30,7 @@ namespace kOS.Module
         {
             SafeHouse.Init(
                 Config.Instance, 
+                Core.VersionInfo,
                 Application.platform == RuntimePlatform.WindowsPlayer,
                 GameDatabase.Instance.PluginDataFolder + "/Ships/Script/"
                 );

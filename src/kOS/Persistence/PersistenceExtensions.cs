@@ -63,7 +63,7 @@ namespace kOS.Persistence
             }
             else
             {
-                if (Config.Instance.UseCompressedPersistence)
+                if (SafeHouse.Config.UseCompressedPersistence)
                 {
                     node.AddValue("line", EncodeBase64(programFile.StringContent));
                 }
@@ -151,7 +151,7 @@ namespace kOS.Persistence
         }
 
         // Provide a way to check the range limit of the archive without requesting the current volume (which throws an error if not in range)
-        public static bool CheckCurrentVolumeRange(this VolumeManager volumeManager, Vessel vessel)
+        public static bool CheckCurrentVolumeRange(this IVolumeManager volumeManager, Vessel vessel)
         {
             var rtManager = volumeManager as RemoteTechVolumeManager;
             if (rtManager == null) return true;

@@ -146,5 +146,24 @@ namespace kOS.Safe.Test.Structures
             //Case Sensitive
             Assert.AreEqual(expectedIndex, sv.GetIndex(0));
         }
+
+        [Test]
+        public void CanNullCheck()
+        {
+            StringValue testValue = null;
+            Assert.IsTrue(testValue == null);
+            Assert.IsFalse(testValue != null);
+            Assert.IsTrue(null == testValue);
+            Assert.IsFalse(null != testValue);
+            Assert.AreEqual(testValue, null);
+            Assert.AreEqual(null, testValue);
+            testValue = new StringValue("FooBar");
+            Assert.IsTrue(testValue != null);
+            Assert.IsFalse(testValue == null);
+            Assert.IsTrue(null != testValue);
+            Assert.IsFalse(null == testValue);
+            Assert.AreNotEqual(testValue, null);
+            Assert.AreNotEqual(null, testValue);
+        }
     }
 }

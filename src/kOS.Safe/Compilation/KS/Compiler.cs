@@ -4,6 +4,7 @@ using System.Linq;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Safe.Execution;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -33,7 +34,6 @@ namespace kOS.Safe.Compilation.KS
         private Int16 braceNestLevel;
         private readonly List<Int16> scopeStack = new List<Int16>();
         private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
-        private readonly List<ParseNode> programParameters = new List<ParseNode>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
@@ -73,7 +73,6 @@ namespace kOS.Safe.Compilation.KS
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
-            programParameters.Clear();
         }
 
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
@@ -87,27 +86,11 @@ namespace kOS.Safe.Compilation.KS
             
             ++context.NumCompilesSoFar;
 
-            try
+            if (tree.Nodes.Count > 0)
             {
-                if (tree.Nodes.Count > 0)
-                {
-                    PreProcess(tree);
-                    CompileProgram(tree);
-                }
+                PreProcess(tree);
+                CompileProgram(tree);
             }
-            catch (KOSException kosException)
-            {
-                if (lastNode != null)
-                {
-                    throw;  // TODO something more sophisticated will go here that will
-                    // attach source/line information to the exception before throwing it upward.
-                    // that's why this seemingly pointless "catch and then throw again" is here.
-                }
-                SafeHouse.Logger.Log("Exception in Compiler: " + kosException.Message);
-                SafeHouse.Logger.Log(kosException.StackTrace);
-                throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
-            }
-                        
             return part;
         }
 
@@ -115,7 +98,6 @@ namespace kOS.Safe.Compilation.KS
         {
             currentCodeSection = part.MainCode;
             
-            PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
             if (addBranchDestination || currentCodeSection.Count == 0)
@@ -127,31 +109,45 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// Set the current line/column info and potentially also make a helpful
         /// debug trace useful when making syntax changes.
-        /// 
         /// </summary>
-        /// <returns>true if a line number was found in this node.  mostly used for internal recursion
-        /// and can be safely ignored when this is called.</returns>
-        private bool NodeStartHousekeeping(ParseNode node)
+        private void NodeStartHousekeeping(ParseNode node)
         {
             if (node == null) { throw new ArgumentNullException("node"); }
 
             if (TRACE_PARSE)
                 SafeHouse.Logger.Log("traceParse: visiting node: " + node.Token.Type.ToString() + ", " + node.Token.Text);
 
+            LineCol location = GetLineCol(node);
+            lastLine = location.Line;
+            lastColumn = location.Column;
+        }
+        
+        /// <summary>
+        /// Get a line number and column for a given parse node.  Handles the
+        /// fact that TinyPG does not provide line and col information for all
+        /// nodes - just the terminals.  This means if you, say, ask for the
+        /// line or column of a complex node like an expression, you get the bogus answer 0,0 back
+        /// from TinyPG normally.  This method performs a leftmost walk of the
+        /// parse tree to get the first instance where a token exists with actual
+        /// line and column information populated, and returns that.
+        /// </summary>
+        /// <param name="node">The node to get the line number for</param>
+        /// <returns>line and column pair of the firstmost terminal within the parse node</returns>
+        private LineCol GetLineCol(ParseNode node)
+        {
             if (node.Token == null || node.Token.Line <= 0)
             {
-                // Only those nodes which are primitive tokens will have line number
-                // information.  So perform a leftmost search of the subtree of nodes
-                // until a node with a token with a line number is found:
-                return node.Nodes.Any(NodeStartHousekeeping);
+                foreach (ParseNode child in node.Nodes)
+                {
+                    LineCol candidate = GetLineCol(child);
+                    if (candidate.Line >= 0)
+                        return candidate;
+                }
             }
 
-            lastLine = (short)(node.Token.Line + (startLineNum - 1));
-            lastColumn = (short)(node.Token.Column);
-            return true;
-
+            return new LineCol( (node.Token.Line + (startLineNum - 1)), (node.Token.Column) );
         }
-
+        
         private Opcode AddOpcode(Opcode opcode, string destinationLabel)
         {
             opcode.Label = GetNextLabel(true);
@@ -326,13 +322,13 @@ namespace kOS.Safe.Compilation.KS
             
             // These probably can't happen because the parser would have barfed before it got to this method:
             if (initBlock == null)
-                throw new KOSCompileException("Missing FROM block in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing FROM block in FROM loop.");
             if (checkExpression == null || untilTokenNode == null)
-                throw new KOSCompileException("Missing UNTIL check expression in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing UNTIL check expression in FROM loop.");
             if (stepBlock == null)
-                throw new KOSCompileException("Missing STEP block in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing STEP block in FROM loop.");
             if (doBlock == null)
-                throw new KOSCompileException("Missing loop body (DO block) in FROM loop.");
+                throw new KOSCompileException(node.Token, "Missing loop body (DO block) in FROM loop.");
             
             // Append the step instructions to the tail end of the body block's instructions:
             foreach (ParseNode child in stepBlock.Nodes)
@@ -389,6 +385,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:
+                case TokenType.declare_stmt:
                     PreProcessChildNodes(node);
                     break;
                 case TokenType.on_stmt:
@@ -398,10 +395,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
-                    break;
-                case TokenType.declare_stmt:
-                    PreProcessChildNodes(node);
-                    PreProcessProgramParameters(node);
                     break;
                 case TokenType.run_stmt:
                     PreProcessRunStatement(node);
@@ -692,8 +685,8 @@ namespace kOS.Safe.Compilation.KS
 
                 // build default dummy function to be used when this is a LOCK:
                 currentCodeSection = userFuncObject.GetUserFunctionOpcodes(0);
-                AddOpcode(new OpcodeArgBottom());
-                AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier)).Label = userFuncObject.DefaultLabel;
+                AddOpcode(new OpcodeArgBottom()).Label = userFuncObject.DefaultLabel;;
+                AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier));
                 AddOpcode(new OpcodeReturn(0));
             }
 
@@ -770,25 +763,6 @@ namespace kOS.Safe.Compilation.KS
             while (node != null && node.Token.Type != TokenType.instruction_block)
                 node = node.Parent;
             return node;
-        }
-
-        private void PreProcessProgramParameters(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            // if the declaration is a parameter,
-            // and this is NOT contained inside a DEFINE FUNCTION block and
-            // is therefore a global program parameter (for the run statement):
-            if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                (!(IsInsideDefineFunctionStatement(node))))
-            {
-                for (int index = 1; index < lastSubNode.Nodes.Count; index += 2)
-                {
-                    programParameters.Add(lastSubNode.Nodes[index]);
-                }
-            }
-            // If it's any other sort of Declare statement, do nothing and instead
-            // allow the PreProcessChildNodes handle all the work.
         }
 
         private void PreProcessRunStatement(ParseNode node)
@@ -870,19 +844,6 @@ namespace kOS.Safe.Compilation.KS
                         // removed pointer initialization since it overwrote any existing values when loading ksm files.
                     }
                 }
-            }
-        }
-
-        private void PushReversedParameters()
-        {
-            // reverse the order of parameters so the stack
-            // is popped in the correct order
-            programParameters.Reverse();
-            foreach (ParseNode node in programParameters)
-            {
-                VisitNode(node);
-                AddOpcode(new OpcodeSwap());
-                AddOpcode(new OpcodeStore());
             }
         }
 
@@ -1231,9 +1192,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
-                case TokenType.suffixterm:
-                    VisitSuffixTerm(node);
-                    break;
+                case TokenType.suffixterm:   // TODO: If the exception in VisitSuffixTerm never gets
+                    VisitSuffixTerm(node);   // thrown during our testing, we can then safely remove
+                    break;                   // this clause from the switch.
                 case TokenType.IDENTIFIER:
                     VisitIdentifier(node);
                     break;
@@ -1526,7 +1487,7 @@ namespace kOS.Safe.Compilation.KS
                 number = double.Parse(node.Token.Text);
             }
 
-            AddOpcode(new OpcodePush(number));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitDouble(ParseNode node)
@@ -1534,7 +1495,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             object number = double.Parse(node.Token.Text);
 
-            AddOpcode(new OpcodePush(number));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitTrueFalse(ParseNode node)
@@ -1543,7 +1504,7 @@ namespace kOS.Safe.Compilation.KS
             bool boolValue;
             if (bool.TryParse(node.Token.Text, out boolValue))
             {
-                AddOpcode(new OpcodePush(boolValue));
+                AddOpcode(new OpcodePush(new BooleanValue(boolValue)));
             }
         }
 
@@ -1559,9 +1520,13 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="node">parse node for the function term of the parse tree.</param>
         /// <param name="isDirect">true if it should make an OpcodeCall that is Direct, false if it should make an indirect one.
         /// See the documentation for OpcodeCall.Direct for the full explanation of the difference.  If isDirect is true, then
-        /// the name to the left of the parentheses will be the name of the function call.  If isDirect is false, then it will
-        /// ignore the name to the left of the parentheses and presume the function name, delegate, or branch index was
-        /// already placed atop the stack by other parts of this compiler.</param>
+        /// the name to the left of the parentheses will be the name of the function call or the name of the
+        /// identifier variable that holds the function's jump address in the case of user functions.  But in either case
+        /// the important thing is that when isDirect is true, that means the OpcodeCall uses the Opcode's argument to
+        /// decide where to call.  On the other hand, if isDirect is false, then it will
+        /// presume the function name, delegate, or branch index was
+        /// already placed atop the stack by other parts of this compiler, rather than encoding it into the
+        /// OpcodeCall's argument itself.</param>
         /// <param name="directName">In the case where it's a direct function, what's the name of it?  In the case
         /// where it's not direct, this argument doesn't matter.</param>
         private void VisitActualFunction(ParseNode node, bool isDirect, string directName = "")
@@ -1569,6 +1534,12 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             ParseNode trailerNode = node; // the function_trailer rule is here.
+
+            if (trailerNode.Nodes.Count > 0 && trailerNode.Nodes[0].Token.Type == TokenType.ATSIGN)
+            {
+                BuildFunctionDelegate(isDirect, directName);
+                return;
+            }
 
             // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
             // Even if there are no arguments, it still has to be TOLD that by showing
@@ -1607,6 +1578,60 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[nodeIndex]);
                 nodeIndex += 2;
             }
+        }
+
+        // For the case where you wish to eval the args lastmost-first, such
+        // that they'll push onto the stack like so:
+        //   arg1 <-- top
+        //   arg2
+        //   arg3 <-- bottom
+        //
+        // instead of the usual stack order of:
+        //   arg3 <-- top
+        //   arg2
+        //   arg1 <-- bottom
+        private void VisitArgListReversed(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            int nodeIndex = node.Nodes.Count - 1;
+            while (nodeIndex >= 0)
+            {
+                VisitNode(node.Nodes[nodeIndex]);
+                nodeIndex -= 2;
+            }
+        }
+        
+        /// <summary>
+        /// When a function identifier or suffix ends in '@' where parentheses could have gone,
+        /// then its not really being called like a function.  Instead it's being asked to generate
+        /// a delegate of itself to be put atop the stack.
+        /// This builds the code that does that.
+        /// </summary>
+        /// <param name="isDirect">If true, then the directName is the name of the function being called or the user
+        /// variable holding the function delegate to be called.  If false, then the compiler should have built code
+        /// that will have left a suffix or function reference atop the stack already.</param>
+        /// <param name="directName">only needed when isDirect is true</param>
+        private void BuildFunctionDelegate(bool isDirect, string directName = "")
+        {
+            if (isDirect)
+            {
+                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuiltInDelegate
+                {
+                    AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                    AddOpcode(new OpcodePush(directName));
+                    AddOpcode(new OpcodeCall("makebuiltindelegate()"));
+                }
+                else
+                {
+                    // It is not a built-in, so instead get its value as a user function pointer variable, despite 
+                    // the fact that it's being called AS IF it was direct.
+                    if (!directName.EndsWith("*")) directName = directName + "*";
+                    if (!directName.StartsWith("$")) directName = "$" + directName;
+                    AddOpcode(new OpcodePush(directName));
+                }
+            }
+            // Else we shouldn't have to do any work because the thing atop the stack will already
+            // be a suffix delegate.
         }
 
         private void VisitVarIdentifier(ParseNode node)
@@ -1690,12 +1715,13 @@ namespace kOS.Safe.Compilation.KS
                     ParseNode trailerTerm = suffixTerm.Nodes[trailerIndex].Nodes[0];
                     bool isFunc = (trailerTerm.Token.Type == TokenType.function_trailer);
                     bool isArray = (trailerTerm.Token.Type == TokenType.array_trailer);
+                    bool thisTermIsDirect = (isDirect && trailerIndex == 1); // only the firstmost term in a chain can be direct.
 
                     if (isFunc || isUserFunc)
                     {
                         // direct if it's just one term like foo(aaa) but indirect
                         // if it's a list of suffixes like foo:bar(aaa):
-                        VisitActualFunction(trailerTerm, isDirect, firstIdentifier);
+                        VisitActualFunction(trailerTerm, thisTermIsDirect, firstIdentifier);
                     }
                     if (isArray)
                     {
@@ -1821,8 +1847,26 @@ namespace kOS.Safe.Compilation.KS
             return string.Empty;
         }
 
+        
         private void VisitSuffixTerm(ParseNode node)
         {
+            // TODO: DELETE THIS METHOD BEFORE RELEASE OF 0.19.0
+            //
+            // NOTE: I suspect this method never ever gets called anymore, 
+            // having been superceeded by the work in VisitSuffix() quite a few
+            // months ago.  But with the tree walk of the compiler and its frequent
+            // use of the open-ended VisitNode(), it's quite hard to prove by
+            // eyeball that this is never called.
+            //
+            // Therefore I added this exception to complain loudly if any test
+            // program happens to make the compiler walk a path that uses this
+            // method.
+            
+            throw new KOSCompileException(node.Token, 
+                "TESTING TESTING TESTING.  TELL @dunbaratu IMMEDIATELY IF YOU SEE THIS ERROR. " +
+                "THIS MESSAGE IS A CHECK TO ENSURE THAT VisitSuffixTerm IS NEVER REALLY GETTING CALLED. " +
+                "IF NONE OF THE KOS DEVS EVER SEE THIS DURING OUR TESTS OF 0.19.0, THEN VisitSuffixTerm " +
+                "SHOULD BE DELETED BEFORE RELEASING 0.19.0" );
             NodeStartHousekeeping(node);
             
             if (node.Nodes.Count > 1 &&
@@ -1908,7 +1952,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitString(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
+            AddOpcode(new OpcodePush(new StringValue(node.Token.Text.Trim('"'))));
         }
 
         ///<summary>
@@ -2220,24 +2264,58 @@ namespace kOS.Safe.Compilation.KS
         /// inside it that pertains to this function.  Note, parameters inside functions
         /// nested inside the current one don't count.  This method performs a recursive
         /// walk.
+        /// <br/><br/>
+        /// While it does this walk, it also tests for whether or not there exists a
+        /// non-defaulted parameter after a defaulted one, which is illegal and throws an error.
         /// </summary>
-        private bool HasParameterStmtNested(ParseNode node)
+        /// <param name="node">The node to check</param>
+        /// <param name="sawMandatoryParam">true once a parameter without a default clause occurs.</param>
+        private bool HasParameterStmtNested(ParseNode node, ref bool sawMandatoryParam)
         {
             // Base case:
             if (node.Token.Type == TokenType.declare_parameter_clause)
-                return true;
-
-            // Recurive case:
-            foreach (ParseNode child in node.Nodes)
             {
+                // found one, double check that we don't have an undefaulted param after a defaulted one while we're at it:
+                // The logic counts backward here.
+                for (int i = node.Nodes.Count-2 ; i > 0 ; i -= 2)
+                {
+                    // If this is an expression, then we have a defaultable optional arg.
+                    // else we have a mandatory arg.
+                    TokenType tType = node.Nodes[i].Token.Type;
+                    bool isOptionalParam = (tType == TokenType.expr);
+                    if (isOptionalParam)
+                    {
+                        if (sawMandatoryParam)
+                        {
+                            LineCol location = GetLineCol(node);
+                            throw new KOSDefaultParamNotAtEndException(location);
+                        }
+
+                        i -= 2; // skip back a bit further to pass over the extra terms a defaulter has.
+                    }
+                    else
+                    {
+                        sawMandatoryParam = true;
+                    }
+                }
+                
+                return true;
+            }
+
+
+            // Recursive case - make sure to walk backward, and don't abort the scan when a thing is found:
+            bool rememberReturnVal = false;
+            for (int i = node.Nodes.Count - 1 ; i >= 0 ; --i)
+            {
+                ParseNode child = node.Nodes[i];
                 if (child.Token.Type != TokenType.declare_function_clause) // functions nested in functions don't count
                 {
-                    if (HasParameterStmtNested(child))
-                        return true;
+                    if (HasParameterStmtNested(child, ref sawMandatoryParam))
+                        rememberReturnVal = true;
                 }
             }
                 
-            return false; // default if nothing found in the above search.
+            return rememberReturnVal;
         }
         
         /// <summary>
@@ -2252,13 +2330,18 @@ namespace kOS.Safe.Compilation.KS
         private int FindArgBottomSpot(ParseNode node)
         {
             int lastmostDefParamStmt = -1;
-            
+            bool sawMandatoryParam = false;
             for (int i = node.Nodes.Count-1 ; i >= 0 ; --i)
             {
-                if (HasParameterStmtNested(node.Nodes[i]))
+                if (HasParameterStmtNested(node.Nodes[i], ref sawMandatoryParam))
                 {
-                    lastmostDefParamStmt = i;
-                    break;
+                    // Only set this the very fist time a hit is seen - counting backward from the
+                    // end that will be the lastmost parameter statement:
+                    if (lastmostDefParamStmt == -1)
+                        lastmostDefParamStmt = i;
+                    
+                    // Would break here but instead need to keep checking for defaulted params prior to
+                    // mandatory ones for throwing KOSDefaultParamNotAtEndException
                 }
             }
             
@@ -2301,8 +2384,15 @@ namespace kOS.Safe.Compilation.KS
                 // This is typical of an OOP language.  The physical code is always static for all
                 // methods and functions, and always has exactly one copy in memory whether there are
                 // one, many, or zero "instances" of it present in scope at the moment.
+                //
+                // Note that because we now allow the capture of UserDelegates in user-land variables
+                // to be called later perhaps from a different scope, we now store a closure context
+                // for all functions just in case they may get used this way.  It's unneded overhead
+                // to do so most of the time, but it makes the algorithm simple for the few cases
+                // where it is needed.
+                
                 AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushDelegateRelocateLater(null,false), func.GetFuncLabel());
+                AddOpcode(new OpcodePushDelegateRelocateLater(null,true), func.GetFuncLabel());
                 if (node == null) // global scope, so unconditionally use a normal Store:
                     AddOpcode(new OpcodeStore()); //
                 else
@@ -2445,7 +2535,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             if (nowCompilingTrigger)
-                throw new KOSWaitInvalidHereException();
+                throw new KOSWaitInvalidHereException(new LineCol(lastLine, lastColumn));
 
             if (node.Nodes.Count == 3)
             {
@@ -2483,18 +2573,25 @@ namespace kOS.Safe.Compilation.KS
             // If the declare statement is of the form:
             //    DECLARE PARAMETER ident.
             // or
+            //    DECLARE PARAMETER ident IS expr.
+            // or
             //    DECLARE PARAMETER ident,ident,ident...
-            // AND this is inside a function definition rather than being at the global script level.
-            // (at the global script level a DEFINE PARAMETER statement is for RUN parameters, which
-            // get handled differently.)
-            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                IsInsideDefineFunctionStatement(node))
+            // or
+            //    DECLARE PARAMETER ident,ident,ident IS expr, ident IS EXPR...
+            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
                 for (int i = 1 ; i < lastSubNode.Nodes.Count ; i += 2)
                 {
-                    VisitNode(lastSubNode.Nodes[i]);
-                    AddOpcode(new OpcodeSwap());
-                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true));
+                    bool hasInit = ( i < lastSubNode.Nodes.Count - 2 &&
+                                    ( lastSubNode.Nodes[i+1].Token.Type == TokenType.IS ||
+                                     lastSubNode.Nodes[i+1].Token.Type == TokenType.TO )
+                                   );
+                    ParseNode initExpressionNode = hasInit ? lastSubNode.Nodes[i+2] : null;
+                    VisitDeclareOneParameter(whereToStore, lastSubNode.Nodes[i], initExpressionNode);
+                    if (hasInit)
+                    {
+                        i += 2; // skip the "TO expr" part when looking for the next param.
+                    }
                 }
             }
             
@@ -2507,6 +2604,41 @@ namespace kOS.Safe.Compilation.KS
             
             // Note: DECLARE FUNCTION is dealt with entirely during
             // PreprocessDeclareStatement, with nothing for VisitNode to do.
+        }
+        
+        /// <summary>
+        /// Process a single parameter from the parameter list for a
+        /// function or program.  i.e. if encountering the statement
+        /// "DECLARE PARAMETER AA, BB, CC is 0." , then this method needs to be
+        /// called 3 times, once for AA, once for BB, and once for "CC is 0":
+        /// </summary>
+        /// <param name="whereToStore">is it local or global or lazyglobal</param>
+        /// <param name="identifierNode">Parse node holding the identifier of the param</param>
+        /// <param name="expressionNode">Parse node holding the expression to initialize to if
+        /// this is a defaultable parameter.  If it is not a defaultable parameter, pass null here</param>
+        private void VisitDeclareOneParameter(StorageModifier whereToStore, ParseNode identifierNode, ParseNode expressionNode)
+        {
+            if (expressionNode != null)
+            {
+                // This tests each defaultable parameter to see if it's at arg bottom.
+                // The test must be repeated for each parameter rather than optimizing by
+                // falling through to all subsequent defaulter expressions for the rest of
+                // the parameters once the first one finds arg bottom.
+                // This is because kerboscript does not require the declare parameters to
+                // be contiguous statements so there may be code in between them you're
+                // not supposed to skip over.
+
+                AddOpcode(new OpcodeTestArgBottom());
+                OpcodeBranchIfFalse branchSkippingInit = new OpcodeBranchIfFalse();
+                AddOpcode(branchSkippingInit);
+                
+                VisitNode(expressionNode); // evals init expression on the top of the stack where the arg would have been
+
+                branchSkippingInit.DestinationLabel = GetNextLabel(false);
+            }
+            VisitNode(identifierNode);
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true));                
         }
                 
         /// <summary>
@@ -2528,9 +2660,9 @@ namespace kOS.Safe.Compilation.KS
                     return new OpcodeStoreGlobal();
                 default:
                     if (lazyGlobal)
-                        return AddOpcode(new OpcodeStore());
+                        return new OpcodeStore();
                     else
-                        return AddOpcode(new OpcodeStoreExist());
+                        return new OpcodeStoreExist();
             }
         }
         
@@ -2593,14 +2725,23 @@ namespace kOS.Safe.Compilation.KS
                 lastSubNode.Token.Type == TokenType.declare_identifier_clause &&
                 !allowLazyGlobal)
             {
-                throw new KOSCommandInvalidHereException("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
-                                                "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
-                                                "in a file where the default @LAZYGLOBAL behavior is on");
+                LineCol location = GetLineCol(node);
+                throw new KOSCommandInvalidHereException(location, 
+                                                         "a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
+                                                         "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
+                                                         "in a file where the default @LAZYGLOBAL behavior is on");
             }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-                throw new KOSCommandInvalidHereException("GLOBAL", "in a function declaration", "in a variable declaration");
+            {
+                LineCol location = GetLineCol(node);
+                throw new KOSCommandInvalidHereException(location, "GLOBAL",
+                                                         "in a function declaration", "in a variable declaration");
+            }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
-                throw new KOSCommandInvalidHereException("GLOBAL", "in a parameter declaration", "in a variable declaration");
+            {
+                LineCol location = GetLineCol(node);
+                throw new KOSCommandInvalidHereException(location, "GLOBAL", "in a parameter declaration", "in a variable declaration");
+            }
 
             return modifier;
         }
@@ -2697,7 +2838,7 @@ namespace kOS.Safe.Compilation.KS
                 ++progNameIndex;
             }
             if (hasOnce && ! options.LoadProgramsInSameAddressSpace)
-                throw new KOSOnceInvalidHereException();
+                throw new KOSOnceInvalidHereException(new LineCol(lastLine, lastColumn));
 
             // process program arguments
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // regardless of whether it's called directly or indirectly, we still need at least one.
@@ -2727,7 +2868,10 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
             {
-                VisitNode(node.Nodes[argListIndex]);
+                // Run args need to get pushed to the stack in the opposite order to how
+                // function args do, because they pass through two levels of OpcodeCall, and
+                // thus get reversed twice, whereas function args only get reversed once:
+                VisitArgListReversed(node.Nodes[argListIndex]);
                 volumeIndex += 3;
             }
 
@@ -2895,7 +3039,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             if (!nowInALoop)
-                throw new KOSBreakInvalidHereException();
+                throw new KOSBreakInvalidHereException(new LineCol(lastLine, lastColumn));
 
             // Will need to pop out the number of variables scopes equal to the
             // number of braces we're skipping out of.  For now just record the
@@ -2922,8 +3066,8 @@ namespace kOS.Safe.Compilation.KS
             var nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
-                throw new KOSReturnInvalidHereException();
-
+                throw new KOSReturnInvalidHereException(new LineCol(lastLine, lastColumn));
+            
             // Push the return expression onto the stack, or if it was a naked RETURN
             // keyword with no expression, then push a secret dummy return value of zero:
             if (node.Nodes.Count > 2)
@@ -2948,7 +3092,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
 
             if (!nowCompilingTrigger)
-                throw new KOSPreserveInvalidHereException();
+                throw new KOSPreserveInvalidHereException(new LineCol(lastLine, lastColumn));
 
             string flagName = PeekTriggerRemoveName();
             AddOpcode(new OpcodePush(flagName));
@@ -3084,6 +3228,8 @@ namespace kOS.Safe.Compilation.KS
         
         public void VisitDirective(ParseNode node)
         {
+            NodeStartHousekeeping(node);
+            
             // For now, let the compiler decide if the compiler directive is in the wrong place, 
             // not the parser.  Therefore the parser treats it like a normal statement and here in
             // the compiler we'll decide per-directive which directives can go where:
@@ -3091,7 +3237,7 @@ namespace kOS.Safe.Compilation.KS
             ParseNode directiveNode = node.Nodes[0]; // a directive contains the exact directive node nested one step inside it.
             
             if (directiveNode.Nodes.Count < 2)
-                throw new KOSCompileException("Kerboscript compiler directive ('@') without a keyword after it.");
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive ('@') without a keyword after it.");
             
             
             switch (directiveNode.Nodes[1].Token.Type)
@@ -3103,14 +3249,14 @@ namespace kOS.Safe.Compilation.KS
                 // There is room for expansion here if we want to add more compiler directives.
                 
                 default:
-                    throw new KOSCompileException("Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
+                    throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
             }
         }
         
         public void VisitLazyGlobalDirective(ParseNode node)
         {
             if (node.Nodes.Count < 3 || node.Nodes[2].Token.Type != TokenType.onoff_trailer)
-                throw new KOSCompileException("Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
+                throw new KOSCompileException(new LineCol(lastLine, lastColumn), "Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
             
             // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
             // ---------------------------------------------------------------------------------------------------------------
@@ -3156,7 +3302,7 @@ namespace kOS.Safe.Compilation.KS
                 }
             }
             if (!validLocation)
-                throw new KOSCommandInvalidHereException("@LAZYGLOBAL",
+                throw new KOSCommandInvalidHereException(new LineCol(node.Token.Line, node.Token.Column), "@LAZYGLOBAL",
                                                 "after the first command in the file",
                                                 "at the start of a script file, prior to any other statements");
 

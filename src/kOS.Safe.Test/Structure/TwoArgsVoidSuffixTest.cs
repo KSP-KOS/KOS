@@ -1,7 +1,7 @@
-﻿using System;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 namespace kOS.Safe.Test.Structure
 {
@@ -11,14 +11,14 @@ namespace kOS.Safe.Test.Structure
         [Test]
         public void CanCreate()
         {
-            var suffix = new TwoArgsSuffix<object, object>((one, two) => { });
+            var suffix = new TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>((one, two) => { });
             Assert.IsNotNull(suffix.Get());
         }
 
         [Test]
         public void CanGetDelegate()
         {
-            var suffix = new TwoArgsSuffix<object, object>((one, two) => { });
+            var suffix = new TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>((one, two) => { });
             var del = suffix.Get();
             Assert.IsNotNull(del);
             var delegateAsDelegate = del as Delegate;
@@ -28,9 +28,9 @@ namespace kOS.Safe.Test.Structure
         [Test]
         public void CanExecuteDelegate()
         {
-            var mockDel = Substitute.For<TwoArgsSuffix<object, object>.Del<object, object>>();
+            var mockDel = Substitute.For<TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>.Del<object, object>>();
 
-            var suffix = new TwoArgsSuffix<object, object>(mockDel);
+            var suffix = new TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>(mockDel);
             var del = suffix.Get();
             Assert.IsNotNull(del);
             var delegateAsDelegate = del as Delegate;
@@ -39,6 +39,5 @@ namespace kOS.Safe.Test.Structure
 
             mockDel.ReceivedWithAnyArgs(1);
         }
-
     }
 }

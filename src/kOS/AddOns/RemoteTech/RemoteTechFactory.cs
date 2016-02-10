@@ -16,7 +16,7 @@ namespace kOS.AddOns.RemoteTech
             return new RemoteTechArchive();
         }
 
-        public VolumeManager CreateVolumeManager(SharedObjects sharedObjects)
+        public IVolumeManager CreateVolumeManager(SharedObjects sharedObjects)
         {
             return new RemoteTechVolumeManager(sharedObjects);
         }

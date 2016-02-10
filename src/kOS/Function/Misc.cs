@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using kOS.Suffixed.PartModuleField;
 using kOS.Module;
+using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
@@ -43,9 +44,9 @@ namespace kOS.Function
         {
             bool      echo      = Convert.ToBoolean(PopValueAssert(shared));
             RgbaColor rgba      = GetRgba(PopValueAssert(shared));
-            int       size      = Convert.ToInt32 (PopValueAssert(shared));
-            int       style     = Convert.ToInt32 (PopValueAssert(shared));
-            int       delay     = Convert.ToInt32 (PopValueAssert(shared));
+            int       size      = Convert.ToInt32(PopValueAssert(shared));
+            int       style     = Convert.ToInt32(PopValueAssert(shared));
+            int       delay     = Convert.ToInt32(PopValueAssert(shared));
             string    textToHud = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
             string htmlColour = rgba.ToHexNotation();
@@ -130,7 +131,7 @@ namespace kOS.Function
             }
             else if (!shared.Vessel.isActiveVessel)
             {
-                throw new KOSCommandInvalidHereException("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+                throw new KOSCommandInvalidHereException(LineCol.Unknown(), "STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
             }
         }
     }
@@ -426,8 +427,8 @@ namespace kOS.Function
 
             if (processorTagOrVolume is Volume) {
                 processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
-            } else if (processorTagOrVolume is string) {
-                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as string);
+            } else if (processorTagOrVolume is string || processorTagOrVolume is StringValue) {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume.ToString());
             } else {
                 throw new KOSInvalidArgumentException("processor", "processorId", "String or Volume expected");
             }
@@ -479,6 +480,18 @@ namespace kOS.Function
                     throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
             }
             AssertArgBottomAndConsume(shared);
+        }
+    }
+    
+    [Function("makebuiltindelegate")]
+    public class MakeBuiltinDelegate : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+           string name = PopValueAssert(shared).ToString();
+           AssertArgBottomAndConsume(shared);
+           
+           ReturnValue = new BuiltinDelegate(shared.Cpu, name);
         }
     }
 }

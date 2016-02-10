@@ -6,7 +6,6 @@ using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
-using System;
 using System.Linq;
 
 namespace kOS
