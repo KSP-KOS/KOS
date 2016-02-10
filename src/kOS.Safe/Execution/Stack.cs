@@ -30,7 +30,7 @@ namespace kOS.Safe.Execution
         {
             if (!SafeHouse.Config.EnableSafeMode)
                 return;
-            if (!(item is double || item is float || item is ScalarDoubleValue))
+            if (!(item is double || item is float || item is ScalarValue))
                 return;
 
             double unboxed = Convert.ToDouble(item);
@@ -162,7 +162,9 @@ namespace kOS.Safe.Execution
             for (int index = stack.Count - 1; index >= 0; --index)
             {
                 object item = stack[index];
-                builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index == stackPointer ? "SP->" : ""), item));
+                builder.AppendLine(string.Format("{0:000} {1,4} {2} (type: {3})", index, (index == stackPointer ? "SP->" : ""),
+                                                 (item == null ? "<null>" : item.ToString()),
+                                                 (item == null ? "<n/a>" : item.GetType().ToString())));
                 VariableScope dict = item as VariableScope;
                 if (dict != null)
                 {

@@ -15,7 +15,7 @@ namespace kOS.Safe.Encapsulation
                 name = value;
 
                 var fileParts = name.Split('.');
-                Extension = fileParts.Count() > 1 ? fileParts.Last() : string.Empty;
+                Extension = fileParts.Length > 1 ? fileParts.Last() : string.Empty;
             }
         }
 
@@ -31,9 +31,9 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => Name));
-            AddSuffix("SIZE", new Suffix<int>(() => Size));
-            AddSuffix("FILETYPE", new Suffix<string>(() => Extension));
+            AddSuffix("NAME", new Suffix<StringValue>(() => Name));
+            AddSuffix("SIZE", new Suffix<ScalarValue>(() => Size));
+            AddSuffix("FILETYPE", new Suffix<StringValue>(() => Extension));
         }
 
         public FileInfo(System.IO.FileInfo fileInfo)
