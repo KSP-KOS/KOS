@@ -110,7 +110,7 @@ namespace kOS.Safe.Test.Structures
         {
             var testValue = "FooBarFooBar";
             var findChar = "F";
-            var expectedList = new List<string> { string.Empty, "ooBar", "ooBar" };
+            var expectedList = new List<StringValue> { new StringValue(string.Empty), new StringValue("ooBar"), new StringValue("ooBar") };
             var sv = new StringValue(testValue);
 
             //Case Sensitive
@@ -140,7 +140,7 @@ namespace kOS.Safe.Test.Structures
         {
             var testValue = "FooBarFooBar";
             var findChar = 0;
-            var expectedIndex = "F";
+            var expectedIndex = new StringValue("F");
             var sv = new StringValue(testValue);
 
             //Case Sensitive

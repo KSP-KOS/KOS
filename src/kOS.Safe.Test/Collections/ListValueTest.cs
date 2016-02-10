@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace kOS.Safe.Test.Collections
 {
     [TestFixture]
-    public class ListValueTest
+    public class ListValueTest : CollectionValueTest
     {
         [Test]
         public void CanCreate()
@@ -24,12 +24,12 @@ namespace kOS.Safe.Test.Collections
             var list = new ListValue();
             Assert.IsNotNull(list);
             var length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(0,length);
+            Assert.AreEqual(ScalarIntValue.Zero, length);
 
-            InvokeDelegate(list, "ADD", new object());
+            InvokeDelegate(list, "ADD", ScalarIntValue.Zero);
 
             length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(1,length);
+            Assert.AreEqual(ScalarIntValue.One, length);
         }
 
         [Test]
@@ -37,14 +37,14 @@ namespace kOS.Safe.Test.Collections
         {
             var list = new ListValue();
 
-            InvokeDelegate(list, "ADD", new object());
-            InvokeDelegate(list, "ADD", new object());
+            InvokeDelegate(list, "ADD", ScalarIntValue.Zero);
+            InvokeDelegate(list, "ADD", ScalarIntValue.Zero);
 
             var length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(2,length);
+            Assert.AreEqual(ScalarIntValue.Two,length);
             InvokeDelegate(list, "CLEAR");
             length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(0,length);
+            Assert.AreEqual(ScalarIntValue.Zero,length);
         }
 
         [Test]
@@ -52,28 +52,28 @@ namespace kOS.Safe.Test.Collections
         {
             var list = new ListValue();
 
-            var zedObject = new object();
+            var zedObject = ScalarIntValue.Zero;
             InvokeDelegate(list, "ADD", zedObject);
-            var firstObject = new object();
+            var firstObject = ScalarIntValue.One;
             InvokeDelegate(list, "ADD", firstObject);
-            var secondObject = new object();
+            var secondObject = ScalarIntValue.Two;
             InvokeDelegate(list, "ADD", secondObject);
-            var thirdObject = new object();
+            var thirdObject = new ScalarIntValue(4);
             InvokeDelegate(list, "ADD", thirdObject);
 
             var length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(4,length);
+            Assert.AreEqual(new ScalarIntValue(4),length);
 
             Assert.AreSame(zedObject, list[0]);
             Assert.AreSame(firstObject, list[1]);
             Assert.AreSame(secondObject, list[2]);
             Assert.AreSame(thirdObject, list[3]);
-            Assert.AreNotSame(list[0],list[1]);
-            Assert.AreNotSame(list[0],list[2]);
-            Assert.AreNotSame(list[0],list[3]);
-            Assert.AreNotSame(list[1],list[2]);
-            Assert.AreNotSame(list[1],list[3]);
-            Assert.AreNotSame(list[2],list[3]);
+            Assert.AreNotSame(list[0], list[1]);
+            Assert.AreNotSame(list[0], list[2]);
+            Assert.AreNotSame(list[0], list[3]);
+            Assert.AreNotSame(list[1], list[2]);
+            Assert.AreNotSame(list[1], list[3]);
+            Assert.AreNotSame(list[2], list[3]);
         }
 
         [Test]
@@ -81,31 +81,31 @@ namespace kOS.Safe.Test.Collections
         {
             var list = new ListValue();
 
-            var zedObject = new object();
+            var zedObject = ScalarIntValue.Zero;
             InvokeDelegate(list, "ADD", zedObject);
-            var firstObject = new object();
+            var firstObject = ScalarIntValue.One;
             InvokeDelegate(list, "ADD", firstObject);
-            var secondObject = new object();
+            var secondObject = ScalarIntValue.Two;
             InvokeDelegate(list, "ADD", secondObject);
-            var thirdObject = new object();
+            var thirdObject = new ScalarIntValue(4);
             InvokeDelegate(list, "ADD", thirdObject);
 
             var length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(4,length);
+            Assert.AreEqual(new ScalarIntValue(4), length);
 
             var copy = InvokeDelegate(list, "COPY") as ListValue;
             Assert.AreNotSame(list, copy);
 
             var copyLength = InvokeDelegate(copy, "LENGTH");
-            Assert.AreEqual(4,copyLength);
+            Assert.AreEqual(new ScalarIntValue(4), copyLength);
 
             InvokeDelegate(copy, "CLEAR");
 
             copyLength = InvokeDelegate(copy, "LENGTH");
-            Assert.AreEqual(0,copyLength);
+            Assert.AreEqual(ScalarIntValue.Zero, copyLength);
 
             length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(4,length);
+            Assert.AreEqual(new ScalarIntValue(4), length);
         }
 
         [Test]
@@ -113,21 +113,21 @@ namespace kOS.Safe.Test.Collections
         {
             var list = new ListValue();
 
-            var zedObject = new object();
+            var zedObject = ScalarIntValue.Zero;
             InvokeDelegate(list, "ADD", zedObject);
-            var firstObject = new object();
+            var firstObject = ScalarIntValue.One;
             InvokeDelegate(list, "ADD", firstObject);
-            var secondObject = new object();
-            var thirdObject = new object();
+            var secondObject = ScalarIntValue.Two;
+            var thirdObject = new ScalarIntValue(4);
 
             var length = InvokeDelegate(list, "LENGTH");
-            Assert.AreEqual(2,length);
+            Assert.AreEqual(ScalarIntValue.Two, length);
 
 
-            Assert.IsTrue((bool)InvokeDelegate(list, "CONTAINS", zedObject));
-            Assert.IsTrue((bool)InvokeDelegate(list, "CONTAINS", firstObject));
-            Assert.IsFalse((bool)InvokeDelegate(list, "CONTAINS", secondObject));
-            Assert.IsFalse((bool)InvokeDelegate(list, "CONTAINS", thirdObject));
+            Assert.IsTrue((BooleanValue)InvokeDelegate(list, "CONTAINS", zedObject));
+            Assert.IsTrue((BooleanValue)InvokeDelegate(list, "CONTAINS", firstObject));
+            Assert.IsFalse((BooleanValue)InvokeDelegate(list, "CONTAINS", secondObject));
+            Assert.IsFalse((BooleanValue)InvokeDelegate(list, "CONTAINS", thirdObject));
         }
         
         /// <summary>
@@ -178,8 +178,8 @@ namespace kOS.Safe.Test.Collections
             innerList2.Add( new StringValue("string,two.one") );
             innerList2.Add( new StringValue("string,two.two") );
             
-            InvokeDelegate(list,"ADD", 100);
-            InvokeDelegate(list,"ADD", 200);
+            InvokeDelegate(list,"ADD", new ScalarIntValue(100));
+            InvokeDelegate(list,"ADD", new ScalarIntValue(200));
             InvokeDelegate(list,"ADD", innerList1);            
             InvokeDelegate(list,"ADD", innerList2);            
             InvokeDelegate(list,"ADD", OUTER_STRING);
@@ -196,31 +196,21 @@ namespace kOS.Safe.Test.Collections
             var baseList = new ListValue();
             var baseDelegate = baseList.GetSuffix("LENGTH");
             baseDelegate.Invoke(cpu);
-            Assert.AreEqual(0, baseDelegate.Value);
+            Assert.AreEqual(ScalarIntValue.Zero, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
             var castDelegate = castList.GetSuffix("LENGTH");
             baseDelegate.Invoke(cpu);
-            Assert.AreEqual(0, castDelegate.Value);
+            Assert.AreEqual(ScalarIntValue.Zero, castDelegate.Value);
 
             var copyDelegate = baseList.GetSuffix("COPY");
             baseDelegate.Invoke(cpu);
-            Assert.AreEqual(0, castDelegate.Value);
+            Assert.AreEqual(ScalarIntValue.Zero, castDelegate.Value);
             var copyList = copyDelegate.Value;
 
             var lengthDelegate = copyList.GetSuffix("LENGTH");
             baseDelegate.Invoke(cpu);
-            Assert.AreEqual(0, lengthDelegate);
-        }
-
-        private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)
-        {
-            var lengthObj = list.GetSuffix(suffixName);
-            Assert.IsNotNull(lengthObj);
-            var lengthDelegate = lengthObj as Delegate;
-            Assert.IsNotNull(lengthDelegate);
-            var length = lengthDelegate.DynamicInvoke(parameters);
-            return length;
+            Assert.AreEqual(ScalarIntValue.Zero, lengthDelegate);
         }
     }
 }
