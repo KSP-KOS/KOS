@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Serialization;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
