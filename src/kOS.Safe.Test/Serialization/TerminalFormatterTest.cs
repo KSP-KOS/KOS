@@ -34,7 +34,7 @@ namespace kOS.Safe.Test.Serialization
             Assert.AreEqual(string.Join(Environment.NewLine, lines), Serialize(lex));
         }
 
-        private string Serialize(IDumper o)
+        private string Serialize(SerializableStructure o)
         {
             return new SafeSerializationMgr().Serialize(o, TerminalFormatter.Instance, false);
         }

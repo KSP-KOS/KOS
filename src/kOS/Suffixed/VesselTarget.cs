@@ -17,7 +17,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
+    public class VesselTarget : Orbitable, IKOSTargetable
     {
         private static string DumpGuid = "guid";
 
@@ -598,7 +598,7 @@ namespace kOS.Suffixed
             return !Equals(left, right);
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             DumpWithHeader dump = new DumpWithHeader();
 
@@ -609,7 +609,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             string guid = dump[DumpGuid] as string;
 

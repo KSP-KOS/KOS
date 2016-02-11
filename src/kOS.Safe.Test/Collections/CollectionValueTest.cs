@@ -2,13 +2,14 @@
 using kOS.Safe.Encapsulation;
 using NUnit.Framework;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Test
 {
     public abstract class CollectionValueTest
     {
 
-        protected object InvokeDelegate(IDumper stack, string suffixName, params object[] parameters)
+        protected object InvokeDelegate(SerializableStructure stack, string suffixName, params object[] parameters)
         {
             var lengthObj = stack.GetSuffix(suffixName) as DelegateSuffixResult;
             Assert.IsNotNull(lengthObj);

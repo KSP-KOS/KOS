@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Test.Collections
 {
@@ -212,7 +213,7 @@ namespace kOS.Safe.Test.Collections
         public void CopyIsDifferentObject()
         {
             var map = MakeNestedExample();
-            var mapCopy = (IDumper)InvokeDelegate(map, "COPY");
+            var mapCopy = (SerializableStructure)InvokeDelegate(map, "COPY");
 
 
             var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("first"));
@@ -271,7 +272,7 @@ namespace kOS.Safe.Test.Collections
             Assert.IsTrue(length == 0);
         }
 
-        private IDumper MakeNestedExample()
+        private SerializableStructure MakeNestedExample()
         {
             const string OUTER_STRING = "String, outer value";
             

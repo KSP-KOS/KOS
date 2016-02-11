@@ -5,6 +5,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Test.Collections
 {

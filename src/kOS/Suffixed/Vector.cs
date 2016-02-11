@@ -9,7 +9,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class Vector : Structure, IDumper
+    public class Vector : SerializableStructure
     {
         public const string DumpX = "x";
         public const string DumpY = "y";
@@ -225,7 +225,7 @@ namespace kOS.Suffixed
             return a * (-1d);
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             DumpWithHeader dump = new DumpWithHeader();
 
@@ -236,7 +236,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             X = Convert.ToDouble(dump[DumpX]);
             Y = Convert.ToDouble(dump[DumpY]);

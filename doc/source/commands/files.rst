@@ -312,7 +312,12 @@ Example::
 Serializes the given object to JSON format and saves it under the given filename on the current volume.
 
 **Important:** only certain types of objects can be serialized. If a type is serializable then that fact
-is explicitly mentioned in the type's documentation, see :struct:`Lexicon` for an example.
+is explicitly mentioned in the type's documentation like so:
+
+.. note::
+
+  This type is serializable.
+
 
 Usage example::
 
@@ -322,7 +327,7 @@ Usage example::
     L:ADD("key1", "value1").
     L:ADD("key2", NESTED).
 
-    NESTED:ADD("nestedkey1", "nestedvalue1").
+    NESTED:ADD("nestedvalue").
 
     WRITEJSON(l, "output.json").
 

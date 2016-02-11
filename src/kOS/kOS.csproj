@@ -182,7 +182,7 @@
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
-    <Compile Include="Serialization\IDumperWithSharedObjects.cs" />
+    <Compile Include="Serialization\IHasSharedObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

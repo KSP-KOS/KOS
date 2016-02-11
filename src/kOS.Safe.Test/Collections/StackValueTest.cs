@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Test.Collections
 {

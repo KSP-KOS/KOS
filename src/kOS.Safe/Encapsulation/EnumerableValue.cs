@@ -6,7 +6,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
-    public abstract class EnumerableValue<T, TC> : Structure, IEnumerable<T>, IDumper where TC : IEnumerable<T> where T : Structure
+    public abstract class EnumerableValue<T, TC> : SerializableStructure, IEnumerable<T> where TC : IEnumerable<T> where T : Structure
     {
         protected TC Collection { get; private set; }
 
@@ -38,10 +38,6 @@ namespace kOS.Safe.Encapsulation
         {
             return new SafeSerializationMgr().ToString(this);
         }
-
-        public abstract Dump Dump();
-
-        public abstract void LoadDump(Dump dump);
 
         private void InitializeEnumerableSuffixes()
         {

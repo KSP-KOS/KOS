@@ -22,7 +22,7 @@ namespace kOS.Safe.Serialization
 
         private object DumpValue(object value, bool includeType)
         {
-            var valueDumper = value as IDumper;
+            var valueDumper = value as SerializableStructure;
 
             if (valueDumper != null) {
                 return Dump(valueDumper, includeType);
@@ -35,7 +35,7 @@ namespace kOS.Safe.Serialization
             }
         }
 
-        public Dump Dump(IDumper dumper, bool includeType = true)
+        public Dump Dump(SerializableStructure dumper, bool includeType = true)
         {
             var dump = dumper.Dump();
 
@@ -54,7 +54,7 @@ namespace kOS.Safe.Serialization
             return dump;
         }
 
-        public string Serialize(IDumper serialized, IFormatWriter formatter, bool includeType = true)
+        public string Serialize(SerializableStructure serialized, IFormatWriter formatter, bool includeType = true)
         {
             return formatter.Write(Dump(serialized, includeType));
         }
@@ -73,7 +73,7 @@ namespace kOS.Safe.Serialization
             return value;
         }
 
-        public IDumper CreateFromDump(Dump dump)
+        public SerializableStructure CreateFromDump(Dump dump)
         {
             var data = new Dump();
             foreach (KeyValuePair<object, object> entry in dump)
@@ -96,7 +96,7 @@ namespace kOS.Safe.Serialization
             return CreateInstance(typeFullName, data);
         }
 
-        public virtual IDumper CreateInstance(string typeFullName, Dump data)
+        public virtual SerializableStructure CreateInstance(string typeFullName, Dump data)
         {
             var deserializedType = Type.GetType(typeFullName);
 
@@ -105,21 +105,21 @@ namespace kOS.Safe.Serialization
                 throw new KOSSerializationException("Unrecognized type: " + typeFullName);
             }
 
-            IDumper instance = Activator.CreateInstance(deserializedType) as IDumper;
+            SerializableStructure instance = Activator.CreateInstance(deserializedType) as SerializableStructure;
 
             instance.LoadDump(data);
 
             return instance;
         }
 
-        public object Deserialize(string input, IFormatReader formatter)
+        public SerializableStructure Deserialize(string input, IFormatReader formatter)
         {
             Dump dump = formatter.Read(input);
 
             return dump == null ? null : CreateFromDump(dump);
         }
 
-        public string ToString(IDumper dumper)
+        public string ToString(SerializableStructure dumper)
         {
             return Serialize(dumper, TerminalFormatter.Instance, false);
         }
