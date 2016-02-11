@@ -6,6 +6,7 @@ using kOS.AddOns.RemoteTech;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Persistence
 {
@@ -16,26 +17,28 @@ namespace kOS.Persistence
         public static Harddisk ToHardDisk(this ConfigNode configNode)
         {
             var capacity = 10000;
-            if (configNode.HasValue("capacity")) capacity = int.Parse(configNode.GetValue("capacity"));
+            if (configNode.HasValue("capacity"))
+                capacity = int.Parse(configNode.GetValue("capacity"));
 
             var toReturn = new Harddisk(capacity);
             
-            if (configNode.HasValue("volumeName")) toReturn.Name = configNode.GetValue("volumeName");
+            if (configNode.HasValue("volumeName"))
+                toReturn.Name = configNode.GetValue("volumeName");
             
             foreach (ConfigNode fileNode in configNode.GetNodes("file"))
             {
-                toReturn.Add(fileNode.ToProgramFile());
+                toReturn.Save(fileNode.ToHarddiskFile(toReturn));
             }
             return toReturn;
         }
 
-        public static ProgramFile ToProgramFile(this ConfigNode configNode)
+        public static HarddiskFile ToHarddiskFile(this ConfigNode configNode, Harddisk harddisk)
         {
             var filename = configNode.GetValue(FILENAME_VALUE_STRING);
-            var toReturn = new ProgramFile(filename);
 
-            Decode(toReturn, configNode.GetValue("line"));
-            return toReturn;
+            FileContent fileContent = Decode(configNode.GetValue("line"));
+            harddisk.Save(filename, fileContent);
+            return new HarddiskFile(harddisk, filename);
         }
 
         public static ConfigNode ToConfigNode(this Harddisk harddisk, string nodeName)
@@ -44,7 +47,7 @@ namespace kOS.Persistence
             node.AddValue("capacity", harddisk.Capacity);
             node.AddValue("volumeName", harddisk.Name);
 
-            foreach (ProgramFile file in harddisk.FileList.Values)
+            foreach (HarddiskFile file in harddisk.FileList.Values)
             {
                 node.AddNode(file.ToConfigNode("file"));
             }
@@ -52,96 +55,41 @@ namespace kOS.Persistence
             return node;
         }
 
-        public static ConfigNode ToConfigNode(this ProgramFile programFile, string nodeName)
+        public static ConfigNode ToConfigNode(this HarddiskFile file, string nodeName)
         {
             var node = new ConfigNode(nodeName);
-            node.AddValue(FILENAME_VALUE_STRING, programFile.Filename);
+            node.AddValue(FILENAME_VALUE_STRING, file.Name);
 
-            if (programFile.Category == FileCategory.KSM)
+            FileContent content = file.ReadAll();
+
+            if (content.Category == FileCategory.KSM)
             {
-                node.AddValue("line", EncodeBase64(programFile.BinaryContent));
-            }
-            else
+                node.AddValue("line", PersistenceUtilities.EncodeBase64(content.Bytes));
+            } else
             {
                 if (SafeHouse.Config.UseCompressedPersistence)
                 {
-                    node.AddValue("line", EncodeBase64(programFile.StringContent));
-                }
-                else
+                    node.AddValue("line", EncodeBase64(content.String));
+                } else
                 {
-                    node.AddValue("line", PersistenceUtilities.EncodeLine(programFile.StringContent));
+                    node.AddValue("line", PersistenceUtilities.EncodeLine(content.String));
                 }
             }
             return node;
         }
 
-        private static string EncodeBase64(string input)
+        private static FileContent Decode(string input)
         {
-            return EncodeBase64(Encoding.ASCII.GetBytes(input));
-        }
-
-        private static string EncodeBase64(byte[] input)
-        {
-            using (var compressedStream = new MemoryStream())
-            {
-                // mono requires an installed zlib library for GZipStream to work :(
-                // using (Stream csStream = new GZipStream(compressedStream, CompressionMode.Compress))
-                using (Stream csStream = new GZipOutputStream(compressedStream))
-                {
-                    csStream.Write(input, 0, input.Length);
-                }
-
-                string returnValue = Convert.ToBase64String(compressedStream.ToArray());
-                
-                // Added the following to fix issue #429:  Base64 content can include the slash character '/', and
-                // if it happens to have two of them contiguously, it forms a comment in the persistence file and
-                // truncates the value.  So change them to a different character to protect the file.
-                // The comma ',' char is not used by base64 so it's a safe alternative to use as we'll be able to
-                // swap all of the commas back to slashes on reading, knowing that commas can only appear as the
-                // result of this swap on writing:
-                returnValue = returnValue.Replace('/',',');
-
-                SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
-
-                return returnValue;
-            }
-        }
-
-        private static void Decode(ProgramFile programFile, string input)
-        {
+            string decodedString;
             try
             {
-                string decodedString;
-                try
-                {
-                    // base64 encoding
+                return new FileContent(PersistenceUtilities.DecodeBase64ToBinary(input));
+            } catch (FormatException) {
+                // standard encoding
+                decodedString = PersistenceUtilities.DecodeLine(input);
+                return new FileContent(decodedString);
+            }
 
-                    // Fix for issue #429.  See comment up in EncodeBase64() method above for an explanation:
-                    string massagedInput = input.Replace(',','/');
-                    
-                    byte[] decodedBuffer = DecodeBase64ToBinary(massagedInput);
-                    FileCategory whatKind = PersistenceUtilities.IdentifyCategory(decodedBuffer);
-                    if (whatKind == FileCategory.ASCII || whatKind == FileCategory.KERBOSCRIPT)
-                    {
-                        decodedString = Encoding.ASCII.GetString(decodedBuffer);
-                        programFile.StringContent = decodedString;
-                    }
-                    else
-                    {
-                        programFile.BinaryContent = decodedBuffer;
-                    }
-                }
-                catch (FormatException)
-                {
-                    // standard encoding
-                    decodedString = PersistenceUtilities.DecodeLine(input);
-                    programFile.StringContent = decodedString;
-                }
-            }
-            catch (Exception e)
-            {
-                SafeHouse.Logger.Log(string.Format("Exception decoding: {0} | {1}", e, e.Message));
-            }
         }
 
         public static bool CheckRange(this Volume volume, Vessel vessel)
@@ -154,31 +102,14 @@ namespace kOS.Persistence
         public static bool CheckCurrentVolumeRange(this IVolumeManager volumeManager, Vessel vessel)
         {
             var rtManager = volumeManager as RemoteTechVolumeManager;
-            if (rtManager == null) return true;
+            if (rtManager == null)
+                return true;
             return rtManager.CheckCurrentVolumeRange(vessel);
         }
 
-        private static byte[] DecodeBase64ToBinary(string input)
+        private static string EncodeBase64(string input)
         {
-            byte[] inputBuffer = Convert.FromBase64String(input);
-
-            using (var inputStream = new MemoryStream(inputBuffer))
-            // mono requires an installed zlib library for GZipStream to work :(
-            //using (var zipStream = new GZipStream(inputStream, CompressionMode.Decompress))
-            using (var zipStream = new GZipInputStream(inputStream))
-            using (var decompressedStream = new MemoryStream())
-            {
-                var buffer = new byte[4096];
-                int read;
-
-                while ((read = zipStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    decompressedStream.Write(buffer, 0, read);
-                }
-
-                return decompressedStream.ToArray();
-            }
+            return PersistenceUtilities.EncodeBase64(Encoding.ASCII.GetBytes(input));
         }
-
     }
 }

@@ -1,13 +1,21 @@
-﻿using kOS.Safe.Compilation;
-using kOS.Safe.Exceptions;
-using System;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
+using ICSharpCode.SharpZipLib.GZip;
+using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Persistence
 {
     public static class PersistenceUtilities
     {
+        public static bool IsBinary(FileCategory category)
+        {
+            return category == FileCategory.BINARY || category == FileCategory.KSM;
+        }
+
         /// <summary>
         /// Given the first few bytes of content, decide what the FileCategory
         /// should be, based on what's in the Content.<br/>
@@ -18,9 +26,9 @@ namespace kOS.Safe.Persistence
         public static FileCategory IdentifyCategory(byte[] firstBytes)
         {
             var firstFour = new Byte[4];
-            int atMostFour = Math.Min(4, firstBytes.Length);
+            int atMostFour = System.Math.Min(4, firstBytes.Length);
             Array.Copy(firstBytes, 0, firstFour, 0, atMostFour);
-            var returnCat = (atMostFour < 4) ? FileCategory.TOOSHORT : FileCategory.OTHER; // default if none of the conditions pass
+            var returnCat = (atMostFour < 4) ? FileCategory.TOOSHORT : FileCategory.BINARY; // default if none of the conditions pass
 
             if (firstFour.SequenceEqual(CompiledObject.MagicId))
             {
@@ -137,6 +145,59 @@ namespace kOS.Safe.Persistence
         public static bool CharNeedsEncoding(char character)
         {
             return !(Char.IsLetterOrDigit(character) || WHITELISTED_SYMBOLS.Contains(character));
+        }
+
+
+        public static string EncodeBase64(byte[] input)
+        {
+            using (var compressedStream = new MemoryStream())
+            {
+                // mono requires an installed zlib library for GZipStream to work :(
+                // using (Stream csStream = new GZipStream(compressedStream, CompressionMode.Compress))
+                using (Stream csStream = new GZipOutputStream(compressedStream))
+                {
+                    csStream.Write(input, 0, input.Length);
+                }
+
+                string returnValue = Convert.ToBase64String(compressedStream.ToArray());
+
+                // Added the following to fix issue #429:  Base64 content can include the slash character '/', and
+                // if it happens to have two of them contiguously, it forms a comment in the persistence file and
+                // truncates the value.  So change them to a different character to protect the file.
+                // The comma ',' char is not used by base64 so it's a safe alternative to use as we'll be able to
+                // swap all of the commas back to slashes on reading, knowing that commas can only appear as the
+                // result of this swap on writing:
+                returnValue = returnValue.Replace('/',',');
+
+                SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
+
+                return returnValue;
+            }
+        }
+
+        public static byte[] DecodeBase64ToBinary(string input)
+        {
+            // Fix for issue #429.  See comment up in EncodeBase64() method above for an explanation:
+            string massagedInput = input.Replace(',','/');
+
+            byte[] inputBuffer = Convert.FromBase64String(massagedInput);
+
+            using (var inputStream = new MemoryStream(inputBuffer))
+                // mono requires an installed zlib library for GZipStream to work :(
+                //using (var zipStream = new GZipStream(inputStream, CompressionMode.Decompress))
+            using (var zipStream = new GZipInputStream(inputStream))
+            using (var decompressedStream = new MemoryStream())
+            {
+                var buffer = new byte[4096];
+                int read;
+
+                while ((read = zipStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    decompressedStream.Write(buffer, 0, read);
+                }
+
+                return decompressedStream.ToArray();
+            }
         }
 
         // Note: deliberately missing from the whitelist are:

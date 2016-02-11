@@ -7,7 +7,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
-    public abstract class Structure : ISuffixed, IOperable 
+    public abstract class Structure : ISuffixed, IOperable
     {
         private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
         private readonly IDictionary<string, ISuffix> instanceSuffixes;
@@ -185,14 +185,14 @@ namespace kOS.Safe.Encapsulation
         {
             if (value == null)
                 return value; // If a null exists, let it pass through so it will bomb elsewhere, not here in FromPrimitive() where the exception message would be obtuse.
-            
+
             if (value is Structure)
                 return value; // Conversion is unnecessary - it's already a Structure.
-            
+
             var convert = value as IConvertible;
             if (convert == null)
                 return value; // Conversion isn't even theoretically possible.
-            
+
             TypeCode code = convert.GetTypeCode();
             switch (code)
             {
@@ -218,7 +218,7 @@ namespace kOS.Safe.Encapsulation
             }
             return value; // Conversion is one this method didn't implement.
         }
-        
+
         /// <summary>
         /// This is identical to FromPrimitive, except that it WILL throw an exception
         /// if it was unable to guarantee that the result became (or already was) a kOS Structure.

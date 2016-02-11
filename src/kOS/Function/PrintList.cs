@@ -92,13 +92,13 @@ namespace kOS.Function
                 {
                     list.Title = "Volume " + shared.VolumeMgr.GetVolumeBestIdentifier(volume);
 
-                    foreach (FileInfo info in volume.GetFileList())
+                    foreach (KeyValuePair<string, VolumeFile> pair in volume.FileList)
                     {
-                        list.AddItem(info.Name, info.Size);
+                        list.AddItem(pair.Key, pair.Value.Size);
                     }
 
-                    int freeSpace = volume.GetFreeSpace();
-                    list.Footer = "Free space remaining: " + (freeSpace > -1 ? freeSpace.ToString() : " infinite");
+                    long freeSpace = volume.FreeSpace;
+                    list.Footer = "Free space remaining: " + (freeSpace != Volume.INFINITE_CAPACITY ? freeSpace.ToString() : " infinite");
                 }
             }
 

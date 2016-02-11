@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using kOS.Safe.Persistence;
 using UnityEngine;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Screen
 {
@@ -146,12 +147,8 @@ namespace kOS.Screen
         
         public void SaveContents()
         {
-            var file = new ProgramFile(fileName)
-            {
-                StringContent = contents
-            };
 
-            if (! volume.SaveFile(file) )
+            if (volume.Save(fileName, new FileContent(contents)) == null)
             {
                 // For some reason the normal trap that prints exceptions on
                 // the terminal doesn't work here in this part of the code,
@@ -251,7 +248,7 @@ namespace kOS.Screen
         {
             me.volume = me.loadingVolume;
             me.fileName = me.loadingFileName;
-            ProgramFile file = me.volume.GetByName( me.fileName );
+            VolumeFile file = me.volume.Open( me.fileName );
             if ( file == null )
             {
                 me.term.Print("[New File]");
@@ -259,7 +256,7 @@ namespace kOS.Screen
             }
             else
             {
-                me.contents = file.StringContent;
+                me.contents = file.ReadAll().String;
             }
             me.isDirty = false;
         }

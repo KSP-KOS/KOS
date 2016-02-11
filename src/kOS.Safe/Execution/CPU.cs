@@ -114,7 +114,7 @@ namespace kOS.Safe.Execution
             // Check to make sure the boot file name is valid, and then that the boot file exists.
             if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
             else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-            else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
+            else if (shared.VolumeMgr.CurrentVolume.Open(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
             else
             {
                 var bootContext = "program";
