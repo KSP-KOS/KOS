@@ -43,6 +43,9 @@ Structure
           - Type
           - Description
 
+        * - All suffixes of :struct:`Enumerable`
+          -
+          - :struct:`List` objects are a type of :struct:`Enumerable`
         * - :meth:`ADD(item)`
           - None
           - append an item
@@ -55,27 +58,12 @@ Structure
         * - :attr:`CLEAR`
           - None
           - remove all elements
-        * - :attr:`LENGTH`
-          - integer
-          - number of elements in list
-        * - :attr:`ITERATOR`
-          - :struct:`Iterator`
-          - for iterating over the list
         * - :attr:`COPY`
           - :struct:`List`
           - a new copy of this list
-        * - :meth:`CONTAINS(item)`
-          - boolean
-          - check if list contains an item
         * - :meth:`SUBLIST(index,length)`
           - :struct:`List`
           - new list of given length starting with index
-        * - :attr:`EMPTY`
-          - boolean
-          - check if list if empty
-        * - :attr:`DUMP`
-          - string
-          - verbose dump of all contained elements
 
 .. note::
 
@@ -107,33 +95,12 @@ Structure
 
         SET dummy TO myList:CLEAR.
 
-.. attribute:: List:LENGTH
-
-    :type: integer
-    :access: Get only
-
-    Returns the number of elements in the list.
-
-.. attribute:: List:ITERATOR
-
-    :type: :struct:`Iterator`
-    :access: Get only
-
-    An alternate means of iterating over a list. See: :struct:`Iterator`.
-
 .. attribute:: List:COPY
 
     :type: :struct:`List`
     :access: Get only
 
     Returns a new list that contains the same thing as the old list.
-
-.. method:: List:CONTAINS(item)
-
-    :parameter index: (integer) starting index (from zero)
-    :return: boolean
-
-    Returns true if the list contains an item equal to the one passed as an argument
 
 .. method:: List:SUBLIST(index,length)
 
@@ -143,19 +110,6 @@ Structure
 
     Returns a new list that contains a subset of this list starting at the given index number, and running for the given length of items.
 
-.. attribute:: List:EMPTY
-
-    :type: boolean
-    :access: Get only
-
-    Returns true if the list has zero items in it.
-
-.. attribute:: List:DUMP
-
-    :type: string
-    :access: Get only
-
-    Returns a string containing a verbose dump of the list's contents.
 
 Access to Individual Elements
 -----------------------------

@@ -12,71 +12,59 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public QueueValue(IEnumerable<T> queueValue) : base(new Queue<T>(queueValue))
+        public QueueValue(IEnumerable<T> queueValue) : base("QUEUE", new Queue<T>(queueValue))
         {
             QueueInitializeSuffixes();
         }
 
-        public override int Count
-        {
-            get { return Collection.Count; }
-        }
-
         public T Pop()
         {
-            return Collection.Dequeue();
+            return InnerEnum.Dequeue();
         }
 
         public void Push(T val)
         {
-            Collection.Enqueue(val);
+            InnerEnum.Enqueue(val);
         }
 
         public override Dump Dump()
         {
             var result = new DumpWithHeader
             {
-                Header = "QUEUE of " + Collection.Count() + " items:"
+                Header = "QUEUE of " + InnerEnum.Count() + " items:"
             };
-            
-            // This conversion is needed because TerminalFormatter.WriteIndented() demands to only
-            // work with exactly List<object> and bombs out on List<Structure>'s:
-            List<object> list = new List<object>();
-            foreach (object entry in Collection.ToList())
-                list.Add(entry);
 
-            result.Add(kOS.Safe.Dump.Items, list);
+            result.Add(kOS.Safe.Dump.Items, InnerEnum.Cast<object>().ToList());
 
             return result;
         }
 
         public override void LoadDump(Dump dump)
         {
-            Collection.Clear();
+            InnerEnum.Clear();
 
             List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
 
             foreach (object item in values)
             {
-                Collection.Enqueue((T)FromPrimitive(item));
+                InnerEnum.Enqueue((T)FromPrimitive(item));
             }
         }
 
         private void QueueInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<QueueValue<T>>       (() => new QueueValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarValue>                 (() => Collection.Count));
-            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Enqueue(toPush)));
-            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Dequeue()));
-            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
-            AddSuffix("CLEAR",    new NoArgsVoidSuffix                      (() => Collection.Clear()));
+
+            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => InnerEnum.Enqueue(toPush)));
+            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => InnerEnum.Dequeue()));
+            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => InnerEnum.Peek()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => InnerEnum.Clear()));
         }
 
         public static QueueValue<T> CreateQueue<TU>(IEnumerable<TU> list)
         {
             return new QueueValue<T>(list.Cast<T>());
         }
-
     }
 
     public class QueueValue : QueueValue<Structure>

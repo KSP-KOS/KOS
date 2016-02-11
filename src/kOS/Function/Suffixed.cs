@@ -8,6 +8,7 @@ using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
 using FinePrint;
+using kOS.Safe;
 
 namespace kOS.Function
 {
@@ -222,6 +223,38 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             var stackValue = new StackValue(argArray.ToList());
             ReturnValue = stackValue;
+        }
+    }
+
+    [Function("range")]
+    public class FunctionRange : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            object[] argArray = new object[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
+            AssertArgBottomAndConsume(shared);
+
+            int[] intArray = argArray.Select((o) => Convert.ToInt32(o)).ToArray();
+
+            RangeValue range;
+
+            switch (argArray.Count()) {
+            case 1:
+                range = new RangeValue(intArray[0]);
+                break;
+            case 2:
+                range = new RangeValue(intArray[0], intArray[1]);
+                break;
+            case 3:
+                range = new RangeValue(intArray[0], intArray[1], intArray[2]);
+                break;
+            default:
+                throw new KOSException("Invalid number of arguments for RANGE()");
+            }
+
+            ReturnValue = range;
         }
     }
 

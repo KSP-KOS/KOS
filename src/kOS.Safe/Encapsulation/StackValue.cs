@@ -12,52 +12,41 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public StackValue(IEnumerable<T> stackValue) : base(new Stack<T>(stackValue))
+        public StackValue(IEnumerable<T> stackValue) : base("STACK", new Stack<T>(stackValue))
         {
             StackInitializeSuffixes();
         }
 
         public override IEnumerator<T> GetEnumerator()
         {
-            return Collection.Reverse().GetEnumerator();
-        }
-
-        public override int Count
-        {
-            get { return Collection.Count; }
+            return InnerEnum.Reverse().GetEnumerator();
         }
 
         public T Pop()
         {
-            return Collection.Pop();
+            return InnerEnum.Pop();
         }
 
         public void Push(T val)
         {
-            Collection.Push(val);
+            InnerEnum.Push(val);
         }
 
         public override Dump Dump()
         {
             var result = new DumpWithHeader
             {
-                Header = "STACK of " + Collection.Count() + " items:"
+                Header = "STACK of " + InnerEnum.Count() + " items:"
             };
 
-            // This conversion is needed because TerminalFormatter.WriteIndented() demands to only
-            // work with exactly List<object> and bombs out on List<Structure>'s:
-            List<object> list = new List<object>();
-            foreach (object entry in Collection.ToList())
-                list.Add(entry);
-
-            result.Add(kOS.Safe.Dump.Items, list);
+            result.Add(kOS.Safe.Dump.Items, InnerEnum.Cast<object>().ToList());
 
             return result;
         }
 
         public override void LoadDump(Dump dump)
         {
-            Collection.Clear();
+            InnerEnum.Clear();
 
             List<object> values = ((List<object>)dump[kOS.Safe.Dump.Items]);
 
@@ -65,7 +54,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (object item in values)
             {
-                Collection.Push((T)Structure.FromPrimitive(item));
+                InnerEnum.Push((T)Structure.FromPrimitive(item));
             }
         }
 
@@ -73,11 +62,10 @@ namespace kOS.Safe.Encapsulation
         private void StackInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarValue>      (() => Collection.Count));
-            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => Collection.Push(toPush)));
-            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => Collection.Pop()));
-            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => Collection.Peek()));
-            AddSuffix("CLEAR",    new NoArgsVoidSuffix                      (() => Collection.Clear()));
+            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => InnerEnum.Push(toPush)));
+            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => InnerEnum.Pop()));
+            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => InnerEnum.Peek()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => InnerEnum.Clear()));
         }
 
         public static StackValue<T> CreateStack<TU>(IEnumerable<TU> list)
