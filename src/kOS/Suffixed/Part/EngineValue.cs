@@ -1,27 +1,28 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Part;
 using kOS.Safe.Encapsulation.Suffixes;
-using System.Collections.Generic;
 using kOS.Safe.Exceptions;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
     public class EngineValue : PartValue
     {
-        private IModuleEngine engine 
-        {get {
-                if ((!MultiMode)||(MMengine.runningPrimary)) { return engine1; }
+        private IModuleEngine engine
+        {
+            get
+            {
+                if ((!MultiMode) || (MMengine.runningPrimary)) { return engine1; }
                 else { return engine2; }
             }
-         }
+        }
 
         private readonly IModuleEngine engine1;
-        private readonly IModuleEngine engine2; 
+        private readonly IModuleEngine engine2;
         private readonly MultiModeEngine MMengine; //multimodeengine module (null if not multimode)
         private readonly bool MultiMode;
         private readonly GimbalValue gimbal;
         private readonly bool HasGimbal;
-
 
         public EngineValue(global::Part part, IModuleEngine engine, SharedObjects sharedObj)
             : base(part, sharedObj)
@@ -33,11 +34,10 @@ namespace kOS.Suffixed.Part
             if (gimbalModule != null) { HasGimbal = true; gimbal = new GimbalValue(gimbalModule, sharedObj); }
             else { HasGimbal = false; };
             EngineInitializeSuffixes();
-
         }
 
         public EngineValue(global::Part part, MultiModeEngine engine, SharedObjects sharedObj)
-    : base(part, sharedObj)
+            : base(part, sharedObj)
         {
             MMengine = engine;
 
@@ -61,8 +61,7 @@ namespace kOS.Suffixed.Part
                 {
                     engine2 = new ModuleEngineAdapter(enginesFX);
                 }
-
-            } 
+            }
             // throw exception if not found
             if (engine1 == null) { throw new KOSException("Engine module error " + MMengine.primaryEngineID); }
             if (engine2 == null) { throw new KOSException("Engine module error " + MMengine.secondaryEngineID); }
@@ -74,7 +73,6 @@ namespace kOS.Suffixed.Part
 
             EngineInitializeSuffixes();
         }
-
 
         private ModuleGimbal findGimbal()
         {
@@ -118,9 +116,9 @@ namespace kOS.Suffixed.Part
             if (MultiMode)
             {
                 AddSuffix("MODE", new Suffix<StringValue>(() => MMengine.mode));
-                AddSuffix("TOGGLEMODE", new NoArgsVoidSuffix(() => ToggleMode() ));
+                AddSuffix("TOGGLEMODE", new NoArgsVoidSuffix(() => ToggleMode()));
                 AddSuffix("PRIMARYMODE", new SetSuffix<BooleanValue>(() => MMengine.runningPrimary, value => ToggleSetMode(value)));
-                AddSuffix("AUTOSWITCH", new SetSuffix<BooleanValue>(() => MMengine.autoSwitch, value => SetAutoswitch(value)));  
+                AddSuffix("AUTOSWITCH", new SetSuffix<BooleanValue>(() => MMengine.autoSwitch, value => SetAutoswitch(value)));
             }
             //gimbal interface
             AddSuffix("HASGIMBAL", new Suffix<BooleanValue>(() => HasGimbal));
@@ -146,7 +144,8 @@ namespace kOS.Suffixed.Part
                         ismultimode = true;
                     }
                 }
-                if (!ismultimode) {
+                if (!ismultimode)
+                {
                     foreach (PartModule module in part.Modules)
                     {
                         var engines = module as ModuleEngines;
@@ -170,7 +169,6 @@ namespace kOS.Suffixed.Part
 
         public ScalarValue GetIspAtAtm(ScalarValue atmPressure)
         {
-
             return engine.IspAtAtm(atmPressure);
         }
 
@@ -187,8 +185,15 @@ namespace kOS.Suffixed.Part
         public ListValue GetAllModes()
         {
             var toReturn = new ListValue();
-            if (MultiMode) { toReturn.Add(MMengine.primaryEngineID); toReturn.Add(MMengine.secondaryEngineID); }
-            else { toReturn.Add("Single mode"); }
+            if (MultiMode)
+            {
+                toReturn.Add(new StringValue(MMengine.primaryEngineID));
+                toReturn.Add(new StringValue(MMengine.secondaryEngineID));
+            }
+            else
+            {
+                toReturn.Add(new StringValue("Single mode"));
+            }
 
             return toReturn;
         }
@@ -208,6 +213,5 @@ namespace kOS.Suffixed.Part
             if (auto) { MMengine.Invoke("EnableAutoSwitch", 0); }
             else { MMengine.Invoke("DisableAutoSwitch", 0); }
         }
-
     }
 }
