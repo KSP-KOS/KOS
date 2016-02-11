@@ -20,33 +20,21 @@ namespace kOS.Suffixed.Part
 
         public static PartValue Construct(global::Part part, SharedObjects shared)
         {
-            foreach (PartModule module in part.Modules) //Check for mutimode engine (let's not run into usual engine modules first)
-            {
-                MultiModeEngine mmEng = module as MultiModeEngine;
-                if (mmEng != null)
-                    return new EngineValue(part, mmEng, shared);
-            }
-            foreach (PartModule module in part.Modules)
-            {
-                ModuleEngines mEng = module as ModuleEngines;
-                if (mEng != null)
-                    return new EngineValue(part, new ModuleEngineAdapter(mEng), shared);
-                ModuleEnginesFX mEngFX = module as ModuleEnginesFX;
-                if (mEngFX != null)
-                    return new EngineValue(part, new ModuleEngineAdapter(mEngFX), shared);
-                ModuleDockingNode mDock = module as ModuleDockingNode;
-                if (mDock != null)
-                    return new DockingPortValue(mDock, shared);
-                ModuleEnviroSensor mSense = module as ModuleEnviroSensor;
-                if (mSense != null)
-                    return new SensorValue(part, mSense, shared);     
-            }
-            foreach (PartModule module in part.Modules) //gimbal is checked after engines not found
-            {
-                var gimbalModule = module as ModuleGimbal;
-                if (gimbalModule != null)
-                    return new GimbalValue(gimbalModule, shared);
-            }
+            var multiModeEngines = part.Modules.GetModules<MultiModeEngine>();
+            if (multiModeEngines.Count > 0)
+                return new EngineValue(part, multiModeEngines.First(), shared);
+            
+            var moduleEngines = part.Modules.GetModules<ModuleEngines>();
+            if (moduleEngines.Count > 0)
+                return new EngineValue(part, new ModuleEngineAdapter(moduleEngines.First()), shared);
+            
+            var moduleDockingNodes = part.Modules.GetModules<ModuleDockingNode>();
+            if (moduleDockingNodes.Count > 0)
+                return new DockingPortValue(moduleDockingNodes.First(), shared);
+            
+            var moduleEnviroSensors = part.Modules.GetModules<ModuleEnviroSensor>();
+            if (moduleEnviroSensors.Count > 0)
+                return new SensorValue(part, moduleEnviroSensors.First(), shared);
 
             // Fallback if none of the above: then just a normal part:
             return new PartValue(part, shared);

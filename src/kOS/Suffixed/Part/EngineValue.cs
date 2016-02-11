@@ -2,7 +2,9 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Part;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Suffixed.PartModuleField;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Suffixed.Part
 {
@@ -19,20 +21,18 @@ namespace kOS.Suffixed.Part
 
         private readonly IModuleEngine engine1;
         private readonly IModuleEngine engine2;
-        private readonly MultiModeEngine MMengine; //multimodeengine module (null if not multimode)
-        private readonly bool MultiMode;
-        private readonly GimbalValue gimbal;
-        private readonly bool HasGimbal;
+        private readonly MultiModeEngine MMengine;
+        private readonly bool MultiMode = false;
+        private GimbalFields gimbal;
+        private bool HasGimbal = false;
 
         public EngineValue(global::Part part, IModuleEngine engine, SharedObjects sharedObj)
             : base(part, sharedObj)
         {
-            MMengine = null;
             engine1 = engine;
-            MultiMode = false;
-            ModuleGimbal gimbalModule = findGimbal();
-            if (gimbalModule != null) { HasGimbal = true; gimbal = new GimbalValue(gimbalModule, sharedObj); }
-            else { HasGimbal = false; };
+
+            findGimbal();
+
             EngineInitializeSuffixes();
         }
 
@@ -41,50 +41,41 @@ namespace kOS.Suffixed.Part
         {
             MMengine = engine;
 
-            foreach (PartModule module in this.Part.Modules)
+            var moduleEngines = part.Modules.GetModules<ModuleEngines>();
+            if (moduleEngines.Count == 2)
             {
-                var engines = module as ModuleEngines;
-                if ((engines != null) && (engines.engineID == MMengine.primaryEngineID))
-                {
-                    engine1 = new ModuleEngineAdapter(engines);
-                }
-                if ((engines != null) && (engines.engineID == MMengine.secondaryEngineID))
-                {
-                    engine2 = new ModuleEngineAdapter(engines);
-                }
-                var enginesFX = module as ModuleEnginesFX;
-                if ((enginesFX != null) && (enginesFX.engineID == MMengine.primaryEngineID))
-                {
-                    engine1 = new ModuleEngineAdapter(enginesFX);
-                }
-                if ((enginesFX != null) && (enginesFX.engineID == MMengine.secondaryEngineID))
-                {
-                    engine2 = new ModuleEngineAdapter(enginesFX);
-                }
+                var modEngine1 = moduleEngines.Where(e => e.engineID == MMengine.primaryEngineID).FirstOrDefault();
+                if (modEngine1 != null)
+                    engine1 = new ModuleEngineAdapter(modEngine1);
+                else
+                    throw new KOSException("Attempted to build a MultiModeEngine with no engine matching Primary ID");
+                var modEngine2 = moduleEngines.Where(e => e.engineID == MMengine.secondaryEngineID).FirstOrDefault();
+                if (modEngine2 != null)
+                    engine2 = new ModuleEngineAdapter(modEngine2);
+                else
+                    throw new KOSException("Attempted to build a MultiModeEngine with no engine matching Secondary ID");
             }
-            // throw exception if not found
-            if (engine1 == null) { throw new KOSException("Engine module error " + MMengine.primaryEngineID); }
-            if (engine2 == null) { throw new KOSException("Engine module error " + MMengine.secondaryEngineID); }
+            else
+            {
+                throw new KOSException(string.Format("Attempted to build a MultiModeEngine with {0} engine modules defined instead of 2", moduleEngines.Count));
+            }
+
             MultiMode = true;
 
-            ModuleGimbal gimbalModule = findGimbal();
-            if (gimbalModule != null) { HasGimbal = true; gimbal = new GimbalValue(gimbalModule, sharedObj); }
-            else { HasGimbal = false; };
+            findGimbal();
 
             EngineInitializeSuffixes();
         }
 
-        private ModuleGimbal findGimbal()
+        private void findGimbal()
         {
-            foreach (PartModule module in Part.Modules)
+            // if the part definition includes a ModuleGimbal, create GimbalFields and set HasGimbal to true
+            var gimbalModule = Part.Modules.GetModules<ModuleGimbal>().FirstOrDefault();
+            if (gimbalModule != null)
             {
-                var gimbalModule = module as ModuleGimbal;
-                if (gimbalModule != null)
-                {
-                    return gimbalModule;
-                }
+                HasGimbal = true;
+                gimbal = new GimbalFields(gimbalModule, Shared);
             }
-            return null;
         }
 
         private void EngineInitializeSuffixes()
@@ -113,19 +104,13 @@ namespace kOS.Suffixed.Part
             //MultiMode features
             AddSuffix("MULTIMODE", new Suffix<BooleanValue>(() => MultiMode));
             AddSuffix("MODES", new Suffix<ListValue>(GetAllModes, "A List of all modes of this engine"));
-            if (MultiMode)
-            {
-                AddSuffix("MODE", new Suffix<StringValue>(() => MMengine.mode));
-                AddSuffix("TOGGLEMODE", new NoArgsVoidSuffix(() => ToggleMode()));
-                AddSuffix("PRIMARYMODE", new SetSuffix<BooleanValue>(() => MMengine.runningPrimary, value => ToggleSetMode(value)));
-                AddSuffix("AUTOSWITCH", new SetSuffix<BooleanValue>(() => MMengine.autoSwitch, value => SetAutoswitch(value)));
-            }
+            AddSuffix("MODE", new Suffix<StringValue>(GetCurrentMode));
+            AddSuffix("TOGGLEMODE", new NoArgsVoidSuffix(ToggleMode));
+            AddSuffix("PRIMARYMODE", new SetSuffix<BooleanValue>(GetRunningPrimary, SetRunningPrimary));
+            AddSuffix("AUTOSWITCH", new SetSuffix<BooleanValue>(GetAutoSwitch, SetAutoswitch));
             //gimbal interface
             AddSuffix("HASGIMBAL", new Suffix<BooleanValue>(() => HasGimbal));
-            if (HasGimbal)
-            {
-                AddSuffix("GIMBAL", new Suffix<GimbalValue>(() => gimbal));
-            }
+            AddSuffix("GIMBAL", new Suffix<GimbalFields>(GetGimbal));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
@@ -133,35 +118,14 @@ namespace kOS.Suffixed.Part
             var toReturn = new ListValue();
             foreach (var part in parts)
             {
-                bool ismultimode = false;
-                foreach (PartModule module in part.Modules)
+                var multiModeEngines = part.Modules.GetModules<MultiModeEngine>();
+                if (multiModeEngines.Count > 0)
+                    toReturn.Add(new EngineValue(part, multiModeEngines.First(), sharedObj));
+                else
                 {
-                    var enginesMM = module as MultiModeEngine;
-
-                    if (enginesMM != null)
-                    {
-                        toReturn.Add(new EngineValue(part, enginesMM, sharedObj));
-                        ismultimode = true;
-                    }
-                }
-                if (!ismultimode)
-                {
-                    foreach (PartModule module in part.Modules)
-                    {
-                        var engines = module as ModuleEngines;
-                        if (engines != null)
-                        {
-                            toReturn.Add(new EngineValue(part, new ModuleEngineAdapter(engines), sharedObj));
-                        }
-                        else
-                        {
-                            var enginesFX = module as ModuleEnginesFX;
-                            if (engines != null)
-                            {
-                                toReturn.Add(new EngineValue(part, new ModuleEngineAdapter(enginesFX), sharedObj));
-                            }
-                        }
-                    }
+                    var moduleEngines = part.Modules.GetModules<ModuleEngines>();
+                    if (moduleEngines.Count > 0)
+                        toReturn.Add(new EngineValue(part, new ModuleEngineAdapter(moduleEngines.First()), sharedObj));
                 }
             }
             return toReturn;
@@ -200,18 +164,61 @@ namespace kOS.Suffixed.Part
 
         public void ToggleMode()
         {
+            if (!MultiMode)
+                throw new KOSException("Attempted to call the TOGGLEMODE suffix on a non-multi mode engine.");
+            // Use Invoke to call ModeEvent, since the underlying method is private.
             MMengine.Invoke("ModeEvent", 0);
         }
 
-        public void ToggleSetMode(bool prim)
+        public BooleanValue GetRunningPrimary()
         {
-            if (prim != MMengine.runningPrimary) { ToggleMode(); }
+            if (!MultiMode)
+                throw new KOSException("Attempted to get the PRIMARYMODE suffix on a non-multi mode engine.");
+            return MMengine.runningPrimary;
         }
 
-        public void SetAutoswitch(bool auto)
+        public void SetRunningPrimary(BooleanValue prim)
         {
-            if (auto) { MMengine.Invoke("EnableAutoSwitch", 0); }
-            else { MMengine.Invoke("DisableAutoSwitch", 0); }
+            if (!MultiMode)
+                throw new KOSException("Attempted to set the PRIMARYMODE suffix on a non-multi mode engine.");
+            // If runningPrimary does not match prim, call ToggleMode
+            if (prim != MMengine.runningPrimary)
+                ToggleMode();
+        }
+
+        public BooleanValue GetAutoSwitch()
+        {
+            if (!MultiMode)
+                throw new KOSException("Attempted to get the AUTOSWITCH suffix on a non-multi mode engine.");
+            return MMengine.autoSwitch;
+        }
+
+        public void SetAutoswitch(BooleanValue auto)
+        {
+            if (!MultiMode)
+                throw new KOSException("Attempted to set the AUTOSWITCH suffix on a non-multi mode engine.");
+            // if autoSwitch doesn't equal auto, use invoke to call the autoswitch method because the method is private
+            if (MMengine.autoSwitch != auto)
+            {
+                if (auto)
+                    MMengine.Invoke("EnableAutoSwitch", 0);
+                else
+                    MMengine.Invoke("DisableAutoSwitch", 0);
+            }
+        }
+
+        public StringValue GetCurrentMode()
+        {
+            if (!MultiMode)
+                throw new KOSException("Attempted to get the MODE suffix on a non-multi mode engine.");
+            return MMengine.mode;
+        }
+
+        public GimbalFields GetGimbal()
+        {
+            if (gimbal != null)
+                return gimbal;
+            throw new KOSException("Attempted to get the GIMBAL suffix on an engine that does not have a gimbal.");
         }
     }
 }
