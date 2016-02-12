@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -16,12 +17,25 @@ namespace kOS.Safe.Encapsulation
         static Structure()
         {
             globalSuffixes = new Dictionary<Type, IDictionary<string, ISuffix>>();
+            
         }
 
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
-            AddSuffix("TYPE", new Suffixes.Suffix<StringValue>(() => GetType().ToString()));
+            InitializeInstanceSuffixes();
+        }
+
+
+        private void InitializeInstanceSuffixes()
+        {
+              // Need to choose what sort of naming scheme to return before
+              // enabling this one:
+              //     AddSuffix("TYPENAME",   new NoArgsSuffix<StringValue>(() => GetType().ToString()));
+
+              AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToString()));
+              AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
+              AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -126,6 +140,27 @@ namespace kOS.Safe.Encapsulation
                 throw new KOSSuffixUseException("get",suffixName,this);
             }
             return suffix.Get();
+        }
+        
+        public virtual BooleanValue HasSuffix(StringValue suffixName)
+        {
+            if (instanceSuffixes.ContainsKey(suffixName.ToString()))
+                return true;
+            if (GetStaticSuffixesForType(GetType()).ContainsKey(suffixName.ToString()))
+                return true;
+            return false;
+        }
+        
+        public virtual ListValue<StringValue> GetSuffixNames()
+        {
+            List<StringValue> names = new List<StringValue>();            
+            
+            names.AddRange(instanceSuffixes.Keys.Select(item => (StringValue)item));
+            names.AddRange(GetStaticSuffixesForType(GetType()).Keys.Select(item => (StringValue)item));
+            
+            // Return the list alphabetized by suffix name.  The key lookups above, since they're coming
+            // from a hashed dictionary, won't be in any predictable ordering:
+            return new ListValue<StringValue>(names.OrderBy(item => item.ToString()));
         }
 
         public virtual object TryOperation(string op, object other, bool reverseOrder)
