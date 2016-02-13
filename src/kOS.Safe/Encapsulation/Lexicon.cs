@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class Lexicon : Structure, IDictionary<Structure, Structure>, IIndexable, IDumper
+    public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
@@ -245,7 +245,7 @@ namespace kOS.Safe.Encapsulation
             return new SafeSerializationMgr().ToString(this);
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             var result = new DumpWithHeader
             {
@@ -265,7 +265,7 @@ namespace kOS.Safe.Encapsulation
             return result;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             internalDictionary.Clear();
 

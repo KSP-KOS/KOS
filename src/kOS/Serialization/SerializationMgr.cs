@@ -16,7 +16,7 @@ namespace kOS.Serialization
             this.sharedObjects = sharedObjects;
         }
 
-        public override IDumper CreateInstance(string typeFullName, Dump data)
+        public override SerializableStructure CreateInstance(string typeFullName, Dump data)
         {
             var deserializedType = Type.GetType(typeFullName) ??
                                    Type.GetType(typeFullName + ", " + typeof(SafeSerializationMgr).Assembly.FullName);
@@ -26,11 +26,11 @@ namespace kOS.Serialization
                 throw new KOSSerializationException("Unrecognized type: " + typeFullName);
             }
 
-            IDumper instance = Activator.CreateInstance(deserializedType) as IDumper;
+            SerializableStructure instance = Activator.CreateInstance(deserializedType) as SerializableStructure;
 
-            if (instance is IDumperWithSharedObjects)
+            if (instance is IHasSharedObjects)
             {
-                IDumperWithSharedObjects withSharedObjects = instance as IDumperWithSharedObjects;
+                IHasSharedObjects withSharedObjects = instance as IHasSharedObjects;
                 withSharedObjects.Shared = sharedObjects;
             }
 

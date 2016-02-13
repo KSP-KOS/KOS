@@ -92,12 +92,12 @@ namespace kOS.Safe.Test.Serialization
             Assert.IsTrue(deserialized.Pop() is QueueValue);
         }
 
-        private string Serialize(IDumper o)
+        private string Serialize(SerializableStructure o)
         {
             return new SafeSerializationMgr().Serialize(o, JsonFormatter.WriterInstance);
         }
 
-        private object Deserialize(string s)
+        private SerializableStructure Deserialize(string s)
         {
             return new SafeSerializationMgr().Deserialize(s, JsonFormatter.ReaderInstance);
         }

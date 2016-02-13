@@ -2,6 +2,8 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
+using kOS.Safe.Serialization;
+using kOS.Serialization;
 
 namespace kOS.Suffixed
 {
@@ -10,7 +12,7 @@ namespace kOS.Suffixed
     /// in orbit around something.  It could be a vessel or a planet
     /// or a moon.
     /// </summary>
-    public abstract class Orbitable : Structure
+    public abstract class Orbitable : SerializableStructure, IHasSharedObjects
     {
         protected Orbitable(SharedObjects shareObj) : this()
         {

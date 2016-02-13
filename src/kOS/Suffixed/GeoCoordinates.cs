@@ -9,7 +9,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class GeoCoordinates : Structure, IDumperWithSharedObjects
+    public class GeoCoordinates : SerializableStructure
     {
         private static string DumpLat = "lat";
         private static string DumpLng = "lng";
@@ -255,7 +255,7 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             var dictionary = new DumpWithHeader
             {
@@ -267,7 +267,7 @@ namespace kOS.Suffixed
             return dictionary;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             Body = (dump[DumpBody] as BodyTarget).Body;
             lat = Convert.ToDouble(dump[DumpLat]);

@@ -90,7 +90,6 @@
     <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
-    <Compile Include="Encapsulation\IDumper.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
@@ -224,9 +223,10 @@
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />
     <Compile Include="Serialization\SafeSerializationMgr.cs" />
-    <Compile Include="Encapsulation\ISerializableValue.cs" />
     <Compile Include="Serialization\Dump.cs" />
     <Compile Include="Serialization\DumpWithHeader.cs" />
+    <Compile Include="Serialization\SerializableStructure.cs" />
+    <Compile Include="Encapsulation\ISerializableValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

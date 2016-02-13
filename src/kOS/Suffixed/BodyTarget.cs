@@ -5,13 +5,13 @@ using System;
 using kOS.Serialization;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
-using kOS.Safe.Serialization;
 using kOS.Safe.Exceptions;
 using kOS.Safe;
+using kOS.Safe.Serialization;
 
 namespace kOS.Suffixed
 {
-    public class BodyTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
+    public class BodyTarget : Orbitable, IKOSTargetable
     {
         private static string DumpName = "name";
 
@@ -219,7 +219,7 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             var dump = new DumpWithHeader
             {
@@ -231,7 +231,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             string name = dump[DumpName] as string;
 

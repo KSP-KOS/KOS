@@ -16,7 +16,7 @@ namespace kOS.Safe.Test.Structure
             float value = 0.5f;
             var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(new ScalarDoubleValue(value), suffix.Get().Value);
 
         }
 
@@ -25,14 +25,14 @@ namespace kOS.Safe.Test.Structure
         {
             const int MIN_VALUE = 0;
             const int MAX_VALUE = 1;
-            const float SET_VALUE = 0.5f;
+            ScalarDoubleValue SET_VALUE = 0.5f;
 
-            float value = 0;
+            ScalarDoubleValue value = 0;
             var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
             suffix.Set(SET_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(value, suffix.Get().Value);
             Assert.AreEqual(value, SET_VALUE);
 
         }
