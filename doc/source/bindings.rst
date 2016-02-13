@@ -27,8 +27,18 @@ TARGET:
 | **Variable Name**: TARGET
 | **Gettable**: yes
 | **Settable**: yes
-| **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__ 
-| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targetted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.
+| **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__
+| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targeted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.  This will throw an exception if called from a vessel other than the active vessel, as limitations in how KSP sets the
+target vessel limit the implementation to working with only the active vessel.
+
+HASTARGET:
+
+| **Variable Name**: TARGET
+| **Gettable**: yes
+| **Settable**: no
+| **Type**: boolean
+| **Description**: Will return true if the ship has a target selected.  This will always return false
+when not on the active vessel, due to limitations in how KSP sets the target vessel.
 
 Alias shortcuts for SHIP fields
 -------------------------------
@@ -113,7 +123,14 @@ which triggers the next stage.
 NextNode
 --------
 
-Get-only. ``nextnode`` returns the next planned manuever :struct:`node` in the SHIP's flight plan.  Bombs out if no such node exists.
+Get-only. ``nextnode`` returns the next planned maneuver :struct:`node` in the SHIP's flight plan.  Will throw an exception if
+no node exists, or if called on a ship that is not the active vessel.
+
+HasNode
+--------
+
+Get-only. ``hasnode`` returns true if there is a planned maneuver :struct:`node` in the SHIP's flight plan.  This will always return
+false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.
 
 Resource Types
 --------------
@@ -323,6 +340,14 @@ on-rails into full physics.
 TIME is the time since the entire saved game campaign started, in the
 kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
 just started.
+
+KUNIVERSE
+~~~~~~~~~
+
+:ref:`Kuniverse <kuniverse>` is a structure that contains many settings that
+break the fourth wall a little bit and control the game simulation directly.
+The eventual goal is probably to move many of the variables you see listed
+below into ``kuniverse``.
 
 Config
 ~~~~~~

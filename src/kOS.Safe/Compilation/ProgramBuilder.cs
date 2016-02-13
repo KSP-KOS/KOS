@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Compilation
 {
@@ -125,7 +126,14 @@ namespace kOS.Safe.Compilation
                 {
                     if (labels.ContainsKey(program[index].Label))
                     {
-                        throw new kOS.Safe.Exceptions.KOSCompileException(string.Format(
+                        // This is one of those "should never happen" errors that if it happens
+                        // it means kOS devs screwed up - so dump the partially relabeled program
+                        // to the log just to help in diagnosing the bug report that may happen:
+                        //
+                        Utilities.SafeHouse.Logger.LogError("=====Relabeled Program so far is: =========");
+                        Utilities.SafeHouse.Logger.LogError(Utilities.Debug.GetCodeFragment(program));
+
+                        throw new Exceptions.KOSCompileException(LineCol.Unknown(), string.Format(
                             "ProgramBuilder.ReplaceLabels: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
                     }
                     labels.Add(program[index].Label, index);

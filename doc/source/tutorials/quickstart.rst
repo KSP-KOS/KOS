@@ -172,7 +172,7 @@ Okay, so type the lines below in an external *text editor of your choice* (i.e. 
         WAIT 1. // pauses the script here for 1 second.
     }
 
-See those things with the two slashes ("//")? Those are comments in the kerboscript language and they're just ways to write things in the program that don't do anything - they're there for humans like you to read so you understand what's going on. In these examples you never actually have to type in the things you see after the slashes. They're there for your benefit when reading this document but you can leave them out if you wish.
+See those things with the two slashes ("//")? Those are comments in the Kerboscript language and they're just ways to write things in the program that don't do anything - they're there for humans like you to read so you understand what's going on. In these examples you never actually have to type in the things you see after the slashes. They're there for your benefit when reading this document but you can leave them out if you wish.
 
 Save the file in your ``Ships/Script`` folder of your **KSP** installation under the filename "hellolaunch.ks". DO NOT save it anywhere under ``GameData/kOS/``. Do NOT. According to the **KSP** standard, normally **KSP** mods should put their files in ``GameData/[mod name]``, but **kOS** puts the archive outside the ``GameData`` folder because it represents content owned by you, the player, not content owned by the **kOS** mod.
 
@@ -394,8 +394,10 @@ So for example, HEADING(45,10) would aim northeast, 10 degrees above the horizon
 
 Instead of using WAIT UNTIL to pause the script and keep it from exiting, we can use an UNTIL loop to constantly perform actions until a certain condition is met. For example::
 
+    SET MYSTEER TO HEADING(90,90). //90 degrees east and pitched up 90 degrees (straight up)
+    LOCK STEERING TO MYSTEER. // from now on we'll be able to change steering by just assigning a new value to MYSTEER
     UNTIL APOAPSIS > 100000 {
-        LOCK STEERING TO HEADING(90,90). //90 degrees east and pitched up 90 degrees (straight up)
+        SET MYSTEER TO HEADING(90,90). //90 degrees east and pitched up 90 degrees (straight up)
         PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16). // prints new number, rounded to the nearest integer.
         //We use the PRINT AT() command here to keep from printing the same thing over and
         //over on a new line every time the loop iterates. Instead, this will always print 
@@ -406,6 +408,8 @@ This loop will continue to execute all of its instructions until the apoapsis re
 
 We can combine this with IF statements in order to have one main loop that only executes certain chunks of its code under certain conditions. For example::
 
+    SET MYSTEER TO HEADING(90,90).
+    LOCK STEERING TO MYSTEER.
     UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not kilometers
         
         //For the initial ascent, we want our steering to be straight
@@ -413,11 +417,11 @@ We can combine this with IF statements in order to have one main loop that only 
         IF SHIP:VELOCITY:SURFACE:MAG < 100 {
             //This sets our steering 90 degrees up and yawed to the compass
             //heading of 90 degrees (east)
-            LOCK STEERING TO HEADING(90,90).
+            SET MYSTEER TO HEADING(90,90).
         
         //Once we pass 100m/s, we want to pitch down ten degrees
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 AND SHIP:VELOCITY:SURFACE:MAG < 200 {
-            LOCK STEERING TO HEADING(90,80).
+            SET MYSTEER TO HEADING(90,80).
             PRINT "Pitching to 80 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         }.
@@ -458,6 +462,8 @@ Putting this into your script, it should look like this::
     //than 100km. Each cycle, it will check each of the IF
     //statements inside and perform them if their conditions
     //are met
+    SET MYSTEER TO HEADING(90,90).
+    LOCK STEERING TO MYSTEER. // from now on we'll be able to change steering by just assigning a new value to MYSTEER
     UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not kilometers
         
         //For the initial ascent, we want our steering to be straight
@@ -465,11 +471,11 @@ Putting this into your script, it should look like this::
         IF SHIP:VELOCITY:SURFACE:MAG < 100 {
             //This sets our steering 90 degrees up and yawed to the compass
             //heading of 90 degrees (east)
-            LOCK STEERING TO HEADING(90,90).
+            SET MYSTEER TO HEADING(90,90).
         
         //Once we pass 100m/s, we want to pitch down ten degrees
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 {
-            LOCK STEERING TO HEADING(90,80).
+            SET MYSTEER TO HEADING(90,80).
             PRINT "Pitching to 80 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         }.
@@ -524,6 +530,8 @@ Copy this into your script and run it. It should take you nearly to orbit::
     //than 100km. Each cycle, it will check each of the IF
     //statements inside and perform them if their conditions
     //are met
+    SET MYSTEER TO HEADING(90,90).
+    LOCK STEERING TO MYSTEER. // from now on we'll be able to change steering by just assigning a new value to MYSTEER
     UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not kilometers
         
         //For the initial ascent, we want our steering to be straight
@@ -531,11 +539,11 @@ Copy this into your script and run it. It should take you nearly to orbit::
         IF SHIP:VELOCITY:SURFACE:MAG < 100 {
             //This sets our steering 90 degrees up and yawed to the compass
             //heading of 90 degrees (east)
-            LOCK STEERING TO HEADING(90,90).
+            SET MYSTEER TO HEADING(90,90).
         
         //Once we pass 100m/s, we want to pitch down ten degrees
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 AND SHIP:VELOCITY:SURFACE:MAG < 200 {
-            LOCK STEERING TO HEADING(90,80).
+            SET MYSTEER TO HEADING(90,80).
             PRINT "Pitching to 80 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
@@ -543,39 +551,39 @@ Copy this into your script and run it. It should take you nearly to orbit::
         //is within a 100m/s block and adjusts our heading down another
         //ten degrees if so
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 200 AND SHIP:VELOCITY:SURFACE:MAG < 300 {
-            LOCK STEERING TO HEADING(90,70).
+            SET MYSTEER TO HEADING(90,70).
             PRINT "Pitching to 70 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 300 AND SHIP:VELOCITY:SURFACE:MAG < 400 {
-            LOCK STEERING TO HEADING(90,60).
+            SET MYSTEER TO HEADING(90,60).
             PRINT "Pitching to 60 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 400 AND SHIP:VELOCITY:SURFACE:MAG < 500 {
-            LOCK STEERING TO HEADING(90,50).
+            SET MYSTEER TO HEADING(90,50).
             PRINT "Pitching to 50 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 500 AND SHIP:VELOCITY:SURFACE:MAG < 600 {
-            LOCK STEERING TO HEADING(90,40).
+            SET MYSTEER TO HEADING(90,40).
             PRINT "Pitching to 40 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 600 AND SHIP:VELOCITY:SURFACE:MAG < 700 {
-            LOCK STEERING TO HEADING(90,30).
+            SET MYSTEER TO HEADING(90,30).
             PRINT "Pitching to 30 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 700 AND SHIP:VELOCITY:SURFACE:MAG < 800 {
-            LOCK STEERING TO HEADING(90,11).
+            SET MYSTEER TO HEADING(90,11).
             PRINT "Pitching to 20 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         //Beyond 800m/s, we can keep facing towards 10 degrees above the horizon and wait
         //for the main loop to recognize that our apoapsis is above 100km
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 800 {
-            LOCK STEERING TO HEADING(90,10).
+            SET MYSTEER TO HEADING(90,10).
             PRINT "Pitching to 10 degrees" AT(0,15).
             PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
             
@@ -611,5 +619,5 @@ As you can probably see, it would still have a long way to go before it would be
 - You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a "too high" launch that's a bit inefficient. In addition, this method relies on velocity to determine pitch angle, which could result in some very firey launches for other ships with a higher TWR profile.
 - This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid velocities that result in high atmospheric heating.
 - This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.
-- With even more sophisticated checks, the script could be made to work with fancy staging methods like asaparagus.
+- With even more sophisticated checks, the script could be made to work with fancy staging methods like asparagus.
 - Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.

@@ -18,9 +18,9 @@ namespace kOS.Safe.Encapsulation
 
         private void VersionInitializeSuffixes()
         {
-            AddSuffix("MAJOR", new StaticSuffix<int>(() => major));
-            AddSuffix("MINOR", new StaticSuffix<int>(() => minor));
-            AddSuffix("BUILD", new StaticSuffix<int>(() => build));
+            AddSuffix("MAJOR", new StaticSuffix<ScalarValue>(() => major));
+            AddSuffix("MINOR", new StaticSuffix<ScalarValue>(() => minor));
+            AddSuffix("BUILD", new StaticSuffix<ScalarValue>(() => build));
         }
 
         public override string ToString()

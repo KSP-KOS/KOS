@@ -89,6 +89,9 @@ Structure
           - Has a next :struct:`Orbit`
 
 
+.. note::
+
+    This type is serializable.
 
 
 .. attribute:: Orbit:NAME

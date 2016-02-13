@@ -20,7 +20,7 @@ namespace kOS.Safe.Test.Opcode
         public void CanGetListIndex()
         {
             var list = new ListValue();
-            list.Add("bar");
+            list.Add(new StringValue("bar"));
             cpu.PushStack(list);
 
             const int INDEX = 0;
@@ -38,9 +38,9 @@ namespace kOS.Safe.Test.Opcode
         public void CanGetCorrectListIndex()
         {
             var list = new ListValue();
-            list.Add("bar");
-            list.Add("foo");
-            list.Add("fizz");
+            list.Add(new StringValue("bar"));
+            list.Add(new StringValue("foo"));
+            list.Add(new StringValue("fizz"));
             cpu.PushStack(list);
 
             const int INDEX = 1;
@@ -58,9 +58,9 @@ namespace kOS.Safe.Test.Opcode
         public void CanGetDoubleIndex()
         {
             var list = new ListValue();
-            list.Add("bar");
-            list.Add("foo");
-            list.Add("fizz");
+            list.Add(new StringValue("bar"));
+            list.Add(new StringValue("foo"));
+            list.Add(new StringValue("fizz"));
             cpu.PushStack(list);
 
             const double INDEX = 2.5;
@@ -77,8 +77,8 @@ namespace kOS.Safe.Test.Opcode
         [Test]
         public void CanGetLexiconIndex()
         {
-            var list = new Lexicon<object,object>();
-            list.Add("foo", "bar");
+            var list = new Lexicon();
+            list.Add(new StringValue("foo"), new StringValue("bar"));
             cpu.PushStack(list);
 
             const string INDEX = "foo";
@@ -95,9 +95,9 @@ namespace kOS.Safe.Test.Opcode
         [Test]
         public void CanGetCorrectLexiconIndex()
         {
-            var list = new Lexicon<object, object>();
-            list.Add("foo", "bar");
-            list.Add("fizz", "bang");
+            var list = new Lexicon();
+            list.Add(new StringValue("foo"), new StringValue("bar"));
+            list.Add(new StringValue("fizz"), new StringValue("bang"));
             cpu.PushStack(list);
 
             const string INDEX = "fizz";

@@ -1,7 +1,7 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
 
-    public class StaticSuffix<TReturn> : SuffixBase
+    public class StaticSuffix<TReturn> : SuffixBase where TReturn : Structure
     {
         private readonly StaticSuffixGetDlg<TReturn> getter;
 
@@ -10,9 +10,9 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.getter = getter;
         }
 
-        public override object Get()
+        public override ISuffixResult Get()
         {
-            return getter.Invoke();
+            return new SuffixResult(getter.Invoke());
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
+using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
@@ -162,17 +164,19 @@ namespace kOS.Safe.Test.Collections
             ListValue list = new ListValue();
             ListValue innerList1 = new ListValue();
             ListValue innerList2 = new ListValue();
-            ListValue innerInnerList = new ListValue();
-            
-            innerInnerList.Add( "inner string 1");
-            innerInnerList.Add( 2 );
-            
-            innerList1.Add( innerInnerList );
-            innerList1.Add( "string,one.two" );
-            innerList1.Add( "string,one.three" );
+            ListValue innerInnerList = new ListValue
+            {
+                new StringValue("inner string 1"),
+                new ScalarIntValue(2)
+            };
 
-            innerList2.Add( "string,two.one" );
-            innerList2.Add( "string,two.two" );
+
+            innerList1.Add( innerInnerList );
+            innerList1.Add( new StringValue("string,one.two") );
+            innerList1.Add( new StringValue("string,one.three") );
+
+            innerList2.Add( new StringValue("string,two.one") );
+            innerList2.Add( new StringValue("string,two.two") );
             
             InvokeDelegate(list,"ADD", 100);
             InvokeDelegate(list,"ADD", 200);
@@ -186,55 +190,27 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void EachListConstructor()
         {
+            var cpu = new FakeCpu();
+            cpu.PushStack(new KOSArgMarkerType());
+
             var baseList = new ListValue();
-            var baseDelegate = ((NoArgsSuffix<int>.Del<int>)baseList.GetSuffix("LENGTH"));
-            Assert.AreEqual(0, baseDelegate.Invoke());
+            var baseDelegate = baseList.GetSuffix("LENGTH");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
-            var castDelegate = ((NoArgsSuffix<int>.Del<int>)castList.GetSuffix("LENGTH"));
-            Assert.AreEqual(0, castDelegate.Invoke());
+            var castDelegate = castList.GetSuffix("LENGTH");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, castDelegate.Value);
 
-            var copyDelegate = (NoArgsSuffix<ListValue>.Del<ListValue>)baseList.GetSuffix("COPY");
-            var copyList = copyDelegate.Invoke();
+            var copyDelegate = baseList.GetSuffix("COPY");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, castDelegate.Value);
+            var copyList = copyDelegate.Value;
 
-            Assert.AreEqual(0, ((NoArgsSuffix<int>.Del<int>)copyList.GetSuffix("LENGTH")).Invoke());
-        }
-
-        [Test]
-        public void CanShallowToString()
-        {
-            ListValue list = MakeNestedExample();
-            
-            string result = list.ToString();
-            
-            Assert.IsTrue(result.Contains("100"),"CanShallowToString(): ToString from list isn't shallow enough and is finding number 100\n"+result);
-            Assert.IsTrue(result.Contains("String, outer value"),"CanShallowToString(): ToString from list isn't shallow enough and is finding \"string,outer value\"\n"+result);
-            Assert.IsTrue(result.Contains("LIST of 5 items"),"CanShallowToString(): failed to find expected inner list object terse dump\n"+result);
-            Assert.IsFalse(result.Contains("string,one.two"),"CanShallowToString(): ToString from list isn't shallow enough and is finding inner component 'string,one.two'\n"+result);
-        }
-
-        [Test]
-        public void CanDeepToString()
-        {
-            ListValue list = MakeNestedExample();
-            
-            string result = (string)InvokeDelegate(list, "DUMP");
-            
-            Assert.IsTrue(result.Contains("100"),"CanDeepToString(): failed to find expected integer 100 in string output\n"+result);
-            Assert.IsTrue(result.Contains("String, outer value"),"CanDeepToString(): failed to find expected string value in string output\n"+result);
-            Assert.IsTrue(result.Contains("string,one.two"),"CanDeepToString(): Listvalue:DUMP isn't going deep enough to print inner member 'string,one.two'\n"+result);
-            Assert.IsTrue(result.Contains("inner string 1"),"CanDeepToString(): Listvalue:DUMP isn't going deep enough to print inner member 'inner string 1'\n"+result);
-        }
-
-        [Test]
-        public void DoesNotContainInvalidToString()
-        {
-            ListValue list = MakeNestedExample();
-
-            string result = (string) InvokeDelegate(list, "DUMP");
-
-            Assert.IsFalse(result.Contains("System"));
-            Assert.IsFalse(result.Contains("string[]"));
+            var lengthDelegate = copyList.GetSuffix("LENGTH");
+            baseDelegate.Invoke(cpu);
+            Assert.AreEqual(0, lengthDelegate);
         }
 
         private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)

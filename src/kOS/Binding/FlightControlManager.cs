@@ -281,7 +281,7 @@ namespace kOS.Binding
         {
             private readonly string name;
             private FlightControl control;
-            private readonly BindingManager binding;
+            private readonly IBindingManager binding;
             private object value;
             private bool enabled;
             private readonly SharedObjects shared;

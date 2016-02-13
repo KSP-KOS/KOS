@@ -1,5 +1,4 @@
-﻿using System;
-using kOS.Safe.Compilation;
+﻿using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
@@ -22,7 +21,7 @@ namespace kOS.Safe.Test.Opcode
         public void CanSetListIndex()
         {
             var list = new ListValue();
-            list.Add("bar");
+            list.Add(new StringValue("bar"));
             cpu.PushStack(list);
 
             const int INDEX = 0;
@@ -44,7 +43,7 @@ namespace kOS.Safe.Test.Opcode
         public void CanSetListIndexWithFloat()
         {
             var list = new ListValue();
-            list.Add("bar");
+            list.Add(new StringValue("bar"));
             cpu.PushStack(list);
 
             const float INDEX = 0.0f;
@@ -66,7 +65,7 @@ namespace kOS.Safe.Test.Opcode
         public void CanSetListIndexWithDouble()
         {
             var list = new ListValue();
-            list.Add("bar");
+            list.Add(new StringValue("bar"));
             cpu.PushStack(list);
 
             const double INDEX = 0.0d;
@@ -89,7 +88,7 @@ namespace kOS.Safe.Test.Opcode
         public void WillThrowOnNonIntListIndex()
         {
             var list = new ListValue();
-            list.Add("bar");
+            list.Add(new StringValue("bar"));
             cpu.PushStack(list);
 
             const string INDEX = "fizz";
@@ -106,13 +105,13 @@ namespace kOS.Safe.Test.Opcode
         [Test]
         public void CanSetLexiconIndex()
         {
-            const string INDEX = "foo";
+            Encapsulation.Structure index = new StringValue("foo");
 
-            var lex = new Lexicon<object,object>();
-            lex.Add(INDEX, "bar");
+            var lex = new Lexicon();
+            lex.Add(index, new StringValue("bar"));
             cpu.PushStack(lex);
 
-            cpu.PushStack(INDEX);
+            cpu.PushStack(index);
 
             const string VALUE = "fizz";
             cpu.PushStack(VALUE);
@@ -122,7 +121,7 @@ namespace kOS.Safe.Test.Opcode
             opcode.Execute(cpu);
 
             Assert.AreEqual(1, lex.Count);
-            Assert.AreNotEqual("bar", lex["foo"]);
+            Assert.AreNotEqual("bar", lex[new StringValue("foo")]);
         }
 
         [Test]

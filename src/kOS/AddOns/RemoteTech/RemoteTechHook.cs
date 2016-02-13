@@ -44,7 +44,7 @@ namespace kOS.AddOns.RemoteTech
 
         public static bool IsAvailable()
         {
-            var integrationEnabled = Config.Instance.EnableRTIntegration;
+            var integrationEnabled = SafeHouse.Config.EnableRTIntegration;
             if (!integrationEnabled)
             {
                 return false;

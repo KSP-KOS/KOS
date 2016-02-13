@@ -17,21 +17,21 @@ namespace kOS.Safe.Encapsulation
 
         private void EnumeratorInitializeSuffixes()
         {
-            AddSuffix("RESET", new NoArgsSuffix(() =>
+            AddSuffix("RESET", new NoArgsVoidSuffix(() =>
             {
                 index = -1;
                 status = false;
                 enumerator.Reset();
             }));
-            AddSuffix("NEXT", new NoArgsSuffix<bool>(() =>
+            AddSuffix("NEXT", new NoArgsSuffix<BooleanValue>(() =>
             {
                 status = enumerator.MoveNext();
                 index++;
                 return status;
             }));
-            AddSuffix("ATEND", new NoArgsSuffix<bool>(() => !status));
-            AddSuffix("INDEX", new NoArgsSuffix<int>(() => index));
-            AddSuffix("VALUE", new NoArgsSuffix<object>(() => enumerator.Current));
+            AddSuffix("ATEND", new NoArgsSuffix<BooleanValue>(() => !status));
+            AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => index));
+            AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitiveWithAssert(enumerator.Current)));
         }
 
         public override string ToString()

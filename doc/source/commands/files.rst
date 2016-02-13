@@ -5,9 +5,25 @@ File I/O
 
 For information about where files are kept and how to deal with volumes see the :ref:`Volumes <volumes>` page in the general topics section of this documentation.
 
+.. contents::
+    :local:
+    :depth: 2
+
 .. note::
 
-    All file names (program names) must be valid Identifiers. They can not contain spaces or special characters. For example, you can't have a file name called "this is my-file".
+    *Limitations on file names used for programs*
+
+    All file names used as program names with the ``run`` command must be
+    valid identifiers.  They can not contain spaces or special characters. For
+    example, you can't have a program named ``this is my-file.ks``.  This rule
+    does not necessarily apply to other filenames such as log files.  However
+    to use a filename that contains spaces, you will have to put quotes around
+    it.
+
+    On case-sensitive filesystems typically found on Linux and Mac, you should
+    name program files used with the ``run`` command entirely with
+    lowercase-only filenames or the system may fail to find them when you
+    use the ``run`` command.
 
 .. warning::
 
@@ -103,7 +119,7 @@ Please see :ref:`the details of the Kerboscript ML
 Executable <compiling>`.
 
 ``COPY programFile FROM/TO Volume|volumeId|volumeName.``
------------------------------------------
+--------------------------------------------------------
 
 Arguments
 ^^^^^^^^^
@@ -133,7 +149,7 @@ Example::
 
 
 ``DELETE filename FROM Volume|volumeId|volumeName.``
---------------------------------------
+----------------------------------------------------
 
 Deletes a file. Volumes can be referenced by instances of :struct:`Volume`, their ID numbers or their names
 if they’ve been given one.
@@ -197,9 +213,10 @@ Example::
 
 
 ``RENAME VOLUME Volume|volumeId|oldVolumeName TO name.``
---------------------------
+--------------------------------------------------------
+
 ``RENAME FILE oldName TO newName.``
---------------------------
+-----------------------------------
 
 Renames a file or volume. Volumes can be referenced by
 instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one.
@@ -215,8 +232,10 @@ Example::
     RENAME VOLUME 1 TO AwesomeDisk
     RENAME FILE MyFile TO AutoLaunch.
 
+.. _run_once:
+
 ``RUN [ONCE] <program>.``
-------------------
+-------------------------
 
 Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.
 
@@ -264,20 +283,17 @@ RUN only works when the filename is a bareword filename. It cannot use expressio
                      // called "ProgName.ksm" or "ProgName.ks", when it sees this,
                      // rather than "MyProgram".
 
-    The reasons for the exception to how filenames work for the RUN
-    command are too complex to go into in large detail here. Here's the
-    short version: While the kOS system does defer the majority of the
-    work
-    of actually compiling subprogram scripts until run-time, it still
-    has to
-    generate some header info about them at compile time, and the
-    filename
-    has to be set in stone at that time. Changing this would require a
-    large re-write of some of the architecture of the virtual machine.
+The reasons for the exception to how filenames work for the RUN command are
+too complex to go into in large detail here. Here's the short version: While
+the kOS system does defer the majority of the work of actually compiling
+subprogram scripts until run-time, it still has to generate some header info
+about them at compile time, and the filename has to be set in stone at that
+time. Changing this would require a large re-write of some of the architecture
+of the virtual machine.
 
 
 ``SWITCH TO Volume|volumeId|volumeName.``
------------------------------
+-----------------------------------------
 
 Switches to the specified volume. Volumes can be referenced by
 instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how
@@ -290,10 +306,39 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+``WRITEJSON(OBJECT, FILENAME).``
+--------------------------------
+
+Serializes the given object to JSON format and saves it under the given filename on the current volume.
+
+**Important:** only certain types of objects can be serialized. If a type is serializable then that fact
+is explicitly mentioned in the type's documentation, see :struct:`Lexicon` for an example.
+
+Usage example::
+
+    SET L TO LEXICON().
+    SET NESTED TO QUEUE().
+
+    L:ADD("key1", "value1").
+    L:ADD("key2", NESTED).
+
+    NESTED:ADD("nestedkey1", "nestedvalue1").
+
+    WRITEJSON(l, "output.json").
+
+``READJSON(FILENAME).``
+-----------------------
+
+Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them. Example::
+
+    SET L TO READJSON("output.json").
+    PRINT L["key1"].
+
+
 .. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------------------------
 **(experimental)**
 
 For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.

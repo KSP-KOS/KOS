@@ -16,7 +16,7 @@ namespace kOS.AddOns.KerbalAlarmClock
             InitializeSuffixes();
         }
 
-        public KACAlarmWrapper(String alarmID)
+        public KACAlarmWrapper(string alarmID)
         {
             alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);
             InitializeSuffixes();
@@ -24,41 +24,41 @@ namespace kOS.AddOns.KerbalAlarmClock
 
         private void InitializeSuffixes()
         {
-            AddSuffix("ID", new Suffix<string>(() => alarm.ID));
-            AddSuffix("NAME", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
+            AddSuffix("ID", new Suffix<StringValue>(() => alarm.ID));
+            AddSuffix("NAME", new SetSuffix<StringValue>(() => alarm.Name, value => alarm.Name = value));
 
-            AddSuffix("NOTES", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
+            AddSuffix("NOTES", new SetSuffix<StringValue>(() => alarm.Name, value => alarm.Name = value));
 
-            AddSuffix("ACTION", new SetSuffix<string>(GetAlarmAction, SetAlarmAction));
+            AddSuffix("ACTION", new SetSuffix<StringValue>(GetAlarmAction, SetAlarmAction));
 
-            AddSuffix("TYPE", new Suffix<string>(alarm.AlarmType.ToString));
+            AddSuffix("TYPE", new Suffix<StringValue>(() => alarm.AlarmType.ToString()));
 
-            AddSuffix("REMAINING", new Suffix<double>(GetTimeToAlarm));
+            AddSuffix("REMAINING", new Suffix<ScalarValue>(GetTimeToAlarm));
 
-            AddSuffix("TIME", new SetSuffix<double>(() => alarm.AlarmTime, value => alarm.AlarmTime = value));
-            AddSuffix("MARGIN", new SetSuffix<double>(() => alarm.AlarmMargin, value => alarm.AlarmMargin = value));
+            AddSuffix("TIME", new SetSuffix<ScalarValue>(() => alarm.AlarmTime, value => alarm.AlarmTime = value));
+            AddSuffix("MARGIN", new SetSuffix<ScalarValue>(() => alarm.AlarmMargin, value => alarm.AlarmMargin = value));
 
-            AddSuffix("REPEAT", new SetSuffix<Boolean>(() => alarm.RepeatAlarm, value => alarm.RepeatAlarm = value));
+            AddSuffix("REPEAT", new SetSuffix<BooleanValue>(() => alarm.RepeatAlarm, value => alarm.RepeatAlarm = value));
 
-            AddSuffix("REPEATPERIOD", new SetSuffix<double>(() => alarm.RepeatAlarmPeriod, value => alarm.RepeatAlarmPeriod = value));
+            AddSuffix("REPEATPERIOD", new SetSuffix<ScalarValue>(() => alarm.RepeatAlarmPeriod, value => alarm.RepeatAlarmPeriod = value));
 
-            AddSuffix("ORIGINBODY", new SetSuffix<string>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
-            AddSuffix("TARGETBODY", new SetSuffix<string>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
+            AddSuffix("ORIGINBODY", new SetSuffix<StringValue>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
+            AddSuffix("TARGETBODY", new SetSuffix<StringValue>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
         }
 
-        private double GetTimeToAlarm()
+        private ScalarValue GetTimeToAlarm()
         {
             //workaround for alarm.Remaining type mismatch
             return alarm.AlarmTime - Planetarium.GetUniversalTime();
         }
 
-        private string GetAlarmAction()
+        private StringValue GetAlarmAction()
         {
             //For some reason had to do it this way, otherwise ACTION suffix returned incorrect values
             return alarm.AlarmAction.ToString();
         }
 
-        private void SetAlarmAction(string newAlarmAction)
+        private void SetAlarmAction(StringValue newAlarmAction)
         {
             try
             {

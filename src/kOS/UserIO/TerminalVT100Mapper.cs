@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.UserIO;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace kOS.UserIO
 {
@@ -154,7 +155,8 @@ namespace kOS.UserIO
                 switch (inChars[index])
                 {
                     case ESCAPE_CHARACTER:
-                        if (inChars[index + 1] == '[') // ESC followed by '[' is called the CSI (Control Sequence Initiator) and it's how most VT100 codes start.
+                        if (index + 1 < inChars.Length && inChars[index + 1] == '[')
+                            // ESC followed by '[' is called the CSI (Control Sequence Initiator) and it's how most VT100 codes start.
                         {
                             int numConsumed;
                             char ch = ConvertVT100InputCSI(inChars, index + 2, out numConsumed);
@@ -194,16 +196,20 @@ namespace kOS.UserIO
         /// <returns>The UnicdeCommand equivalent.  NOTE that if numConsumed is zero, this value shouldn't be used as nothing was actually done.</returns>
         protected char ConvertVT100InputCSI(char[] inChars, int offset, out int numConsumed)
         {
-            char returnChar = '\0'; // dummy until changed.
-            switch (inChars[offset])
+            char returnChar = '\0'; // default until changed.
+            numConsumed = 0; // default if all the clauses below get skipped.
+            if (offset < inChars.Length)
             {
-                case 'A': returnChar = (char)UnicodeCommand.UPCURSORONE;    numConsumed = 1; break;
-                case 'B': returnChar = (char)UnicodeCommand.DOWNCURSORONE;  numConsumed = 1; break;
-                case 'C': returnChar = (char)UnicodeCommand.RIGHTCURSORONE; numConsumed = 1; break;
-                case 'D': returnChar = (char)UnicodeCommand.LEFTCURSORONE;  numConsumed = 1; break;
-                case 'H': returnChar = (char)UnicodeCommand.HOMECURSOR;     numConsumed = 1; break;
-                case 'F': returnChar = (char)UnicodeCommand.ENDCURSOR;      numConsumed = 1; break;
-                default: numConsumed = 0; break; // Do nothing if it's not a recognized sequence.  Leave the chars to be read normally.
+                switch (inChars[offset])
+                {
+                    case 'A': returnChar = (char)UnicodeCommand.UPCURSORONE;    numConsumed = 1; break;
+                    case 'B': returnChar = (char)UnicodeCommand.DOWNCURSORONE;  numConsumed = 1; break;
+                    case 'C': returnChar = (char)UnicodeCommand.RIGHTCURSORONE; numConsumed = 1; break;
+                    case 'D': returnChar = (char)UnicodeCommand.LEFTCURSORONE;  numConsumed = 1; break;
+                    case 'H': returnChar = (char)UnicodeCommand.HOMECURSOR;     numConsumed = 1; break;
+                    case 'F': returnChar = (char)UnicodeCommand.ENDCURSOR;      numConsumed = 1; break;
+                    default: numConsumed = 0; break; // Do nothing if it's not a recognized sequence.  Leave the chars to be read normally.
+                }
             }
             // The following are technically VT220 codes, not VT100, but I couldn't be bothered making a separate
             // mapper just for them.  (i.e. the proper way would be to make a VT220Mapper that inherits from this VT100Mapper,

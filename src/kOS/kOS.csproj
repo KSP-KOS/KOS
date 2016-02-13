@@ -114,7 +114,6 @@
     <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
     <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
-    <Compile Include="Suffixed\Part\GimbalValue.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\OrbitInfo.cs" />
-    <Compile Include="Execution\ProgramContext.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="Suffixed\Part\DockingPortValue.cs" />
     <Compile Include="Suffixed\Part\EngineValue.cs" />
@@ -160,11 +158,9 @@
     <Compile Include="Suffixed\Timespan.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Suffixed\Vector.cs" />
-    <Compile Include="Execution\CPU.cs" />
     <Compile Include="Suffixed\Direction.cs" />
     <Compile Include="Function\FunctionBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Execution\Stack.cs" />
     <Compile Include="Suffixed\VesselSensors.cs" />
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
@@ -184,6 +180,8 @@
     <Compile Include="Suffixed\CrewMember.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
+    <Compile Include="Serialization\SerializationMgr.cs" />
+    <Compile Include="Serialization\IDumperWithSharedObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -216,5 +214,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup />
   <ItemGroup />
 </Project>

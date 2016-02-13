@@ -152,7 +152,6 @@ namespace kOS.UserIO
                     if (newList[i] != availableCPUs[i])
                         itChanged = true;
 
-            Console.WriteLine("in CPUListChanged(): itChanged = {0}, newList.Count={1}, availableCPUs.Count={2}", itChanged, newList.Count, availableCPUs.Count);
             availableCPUs = newList;
             lastMenuQueryTime = DateTime.Now;
             return itChanged;

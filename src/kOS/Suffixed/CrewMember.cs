@@ -34,11 +34,11 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => Name));
-            AddSuffix("TOURIST", new Suffix<bool>(() => crewMember.type == ProtoCrewMember.KerbalType.Tourist));
-            AddSuffix("GENDER", new Suffix<string>(() => Gender));
-            AddSuffix("TRAIT", new Suffix<string>(() => Trait));
-            AddSuffix("EXPERIENCE", new Suffix<int>(() => Experience));
+            AddSuffix("NAME", new Suffix<StringValue>(() => Name));
+            AddSuffix("TOURIST", new Suffix<BooleanValue>(() => crewMember.type == ProtoCrewMember.KerbalType.Tourist));
+            AddSuffix("GENDER", new Suffix<StringValue>(() => Gender));
+            AddSuffix("TRAIT", new Suffix<StringValue>(() => Trait));
+            AddSuffix("EXPERIENCE", new Suffix<ScalarValue>(() => Experience));
             AddSuffix("PART", new Suffix<PartValue>(() => PartValueFactory.Construct(crewMember.seat.part, shared)));
         }
 

@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
+    <Compile Include="Structures\BooleanValueTest.cs" />
+    <Compile Include="Structures\ScalarValueTest.cs" />
     <Compile Include="Structures\StringValueTest.cs" />
     <Compile Include="Structure\ClampSetSuffixTest.cs" />
     <Compile Include="Collections\LexiconTest.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="Structure\TwoArgsVoidSuffixTest.cs" />
     <Compile Include="Collections\QueueValueTest.cs" />
     <Compile Include="Collections\StackValueTest.cs" />
+    <Compile Include="Serialization\JSONFormatterTest.cs" />
+    <Compile Include="Serialization\TerminalFormatterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -80,4 +84,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20160127_233127.sdps" />
+    <Content Include="ProfilingSessions\Session20160127_233506.sdps" />
+  </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@ namespace kOS.Safe.Module
     {
         void SetMode(ProcessorModes newProcessorMode);
         string BootFilename { get; set; }
+
+        bool CheckCanBoot();
     }
     public enum ProcessorModes { READY, STARVED, OFF };
 }
