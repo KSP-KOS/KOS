@@ -19,6 +19,10 @@ namespace kOS.Suffixed.PartModuleField
             {
                 gimbal.gimbalLock = value;
             }, "Is the Gimbal free to travel?"));
+            AddSuffix("LIMIT", new ClampSetSuffix<ScalarValue>(() => gimbal.gimbalLimiter,
+                                              value => gimbal.gimbalLimiter = value,
+                                              0f, 100f, 1f,
+                                              "Gimbal range limit percentage"));
             AddSuffix("RANGE", new Suffix<ScalarValue>(() => gimbal.gimbalRange ,"The Gimbal's Possible Range of movement"));
             AddSuffix("RESPONSESPEED", new Suffix<ScalarValue>(() => gimbal.gimbalResponseSpeed, "The Gimbal's Possible Rate of travel"));
             AddSuffix("PITCHANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAnglePitch, "Current Gimbal Pitch"));
