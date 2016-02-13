@@ -8,10 +8,9 @@ notifications:
 
 # Before the install the library dlls need to be downloaded
 before_install:
-- cd Resources
 - openssl aes-256-cbc -K $encrypted_6287ee711a27_key -iv $encrypted_6287ee711a27_iv -in kos-1.0.5.tar.enc -out kos-1.0.5.tar -d
-- tar -xvf kos-1.0.5.tar
-- cd ../
+- mkdir Resources
+- tar -xvf kos-1.0.5.tar -C Resources/
 
 # Cleanup the downloaded resources
 after_script:
