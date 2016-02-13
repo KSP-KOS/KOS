@@ -36,6 +36,7 @@ namespace kOS.Safe.Encapsulation
               AddSuffix("TOSTRING",       new NoArgsSuffix<StringValue>(() => ToString()));
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
               AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
+              AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)

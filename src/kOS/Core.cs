@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 using kOS.Module;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;

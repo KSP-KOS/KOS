@@ -288,6 +288,8 @@ namespace kOS.Module
             shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
             shared.SoundMaker = Sound.SoundMaker.Instance;
+            
+            KosNomenclature.GuaranteeStaticConstruction();
 
             // Make the window that is going to correspond to this kOS part:
             var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));
