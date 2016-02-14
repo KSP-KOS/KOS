@@ -29,7 +29,7 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
           - Percentage of the maximum range the Gimbal is allowed to travel 
 
         * - :attr:`RANGE`
-          - scalar
+          - scalar (deg)
           - The Gimbal's Possible Range of movement
 
         * - :attr:`RESPONSESPEED`
@@ -59,18 +59,18 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
     :type: boolean
     :access: Get/Set
         
-    Is this gimbal locked to neutral position and not responding to steeing controls right now? When you set it to true it will snap the engine back to 0s for pitch,yaw and roll
+    Is this gimbal locked to neutral position and not responding to steering controls right now? When you set it to true it will snap the engine back to 0s for pitch, yaw and roll
 
 .. attribute:: Gimbal:LIMIT
 
-    :type: scalar
+    :type: scalar (%)
     :access: Get/Set
         
     Percentage of maximum range this gimbal is allowed to travel
 
 .. attribute:: Gimbal:RANGE
 
-    :type: scalar
+    :type: scalar (deg)
     :access: Get only
 
     The maximum extent of travel possible for the gimbal along all 3 axis (Pitch, Yaw, Roll) 
