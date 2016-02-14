@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace kOS
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Core")]
     public class Core : kOSProcessorFields
     {
         public static VersionInfo VersionInfo;

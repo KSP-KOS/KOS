@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.PartModuleField
 {
+    [kOS.Safe.Utilities.KOSNomenclature("GimbalModule")]
     public class GimbalFields : PartModuleFields
     {
         private readonly ModuleGimbal gimbal;

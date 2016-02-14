@@ -4,6 +4,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.InfernalRobotics
 {
+    [kOS.Safe.Utilities.KOSNomenclature("IRServo")]
     public class IRServoWrapper : Structure
     {
         private readonly IRWrapper.IServo servo;

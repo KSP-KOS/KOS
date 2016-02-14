@@ -6,6 +6,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Enumerable")]
     public abstract class EnumerableValue<T, TC> : SerializableStructure, IEnumerable<T> where TC : IEnumerable<T> where T : Structure
     {
         protected TC Collection { get; private set; }

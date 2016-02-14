@@ -8,6 +8,7 @@ namespace kOS.Suffixed
     /// A generic addon description class for use in AddonList
     /// Addons must inherit from this one to implement functions
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("Addon")]
     public abstract class Addon : Structure
     {
         protected readonly string addonName;

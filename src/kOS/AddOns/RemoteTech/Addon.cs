@@ -4,6 +4,7 @@ using kOS.Suffixed;
 
 namespace kOS.AddOns.RemoteTech
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RTAddon")]
     public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("RT", shared)

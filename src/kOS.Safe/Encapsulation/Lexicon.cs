@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Lexicon")]
     public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>

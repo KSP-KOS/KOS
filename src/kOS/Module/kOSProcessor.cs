@@ -289,7 +289,7 @@ namespace kOS.Module
             shared.Cpu = new CPU(shared);
             shared.SoundMaker = Sound.SoundMaker.Instance;
             
-            KosNomenclature.GuaranteeStaticConstruction();
+            KOSNomenclature.PopulateMapping(typeof(kOS.Safe.Encapsulation.Structure).Assembly, this.GetType().Assembly);
 
             // Make the window that is going to correspond to this kOS part:
             var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));

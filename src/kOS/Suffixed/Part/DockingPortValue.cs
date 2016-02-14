@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("DockingPort")]
     public class DockingPortValue : PartValue
     {
         private readonly ModuleDockingNode module;

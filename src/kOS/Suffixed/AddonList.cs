@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Addons")]
     public class AddonList : Structure
     {
         private readonly SharedObjects shared;

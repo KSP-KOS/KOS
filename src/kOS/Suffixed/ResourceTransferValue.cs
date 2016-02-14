@@ -10,6 +10,7 @@ using Math = System.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Transfer")]
     public class ResourceTransferValue : Structure
     {
         private const float RESOURCE_SHARE_PER_UPDATE = 0.005f;

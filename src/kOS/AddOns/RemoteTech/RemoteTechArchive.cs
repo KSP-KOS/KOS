@@ -2,6 +2,7 @@
 
 namespace kOS.AddOns.RemoteTech
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RTArchive")]
     public class RemoteTechArchive : Archive
     {
         public bool CheckRange(Vessel vessel)

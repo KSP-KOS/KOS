@@ -17,6 +17,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Vessel")]
     public class VesselTarget : Orbitable, IKOSTargetable
     {
         private static string DumpGuid = "guid";

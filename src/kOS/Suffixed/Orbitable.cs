@@ -12,6 +12,7 @@ namespace kOS.Suffixed
     /// in orbit around something.  It could be a vessel or a planet
     /// or a moon.
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("Orbitable")]
     public abstract class Orbitable : SerializableStructure, IHasSharedObjects
     {
         protected Orbitable(SharedObjects shareObj) : this()

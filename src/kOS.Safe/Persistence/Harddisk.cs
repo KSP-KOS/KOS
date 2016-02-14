@@ -2,6 +2,7 @@
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("LocalVolume")]
     public sealed class Harddisk : Volume
     {
         public Harddisk(int size)

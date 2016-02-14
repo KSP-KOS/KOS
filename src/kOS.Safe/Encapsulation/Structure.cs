@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Collections.Generic;
 using System.Globalization;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
+    [KOSNomenclature("Structure")]
     public abstract class Structure : ISuffixed, IOperable 
     {
         private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
@@ -37,6 +40,9 @@ namespace kOS.Safe.Encapsulation
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
               AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
               AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
+              AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => KOSNomenclature.GetKOSName(this.GetType())));
+              AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
+              AddSuffix("INHERITANCE",    new NoArgsSuffix<StringValue>(GetKOSInheritance));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -162,6 +168,61 @@ namespace kOS.Safe.Encapsulation
             // Return the list alphabetized by suffix name.  The key lookups above, since they're coming
             // from a hashed dictionary, won't be in any predictable ordering:
             return new ListValue<StringValue>(names.OrderBy(item => item.ToString()));
+        }
+        
+        public virtual BooleanValue GetKOSIsType(StringValue queryTypeName)
+        {
+            // We can't use Reflection's IsAssignableFrom because of the annoying way Generics work under Reflection.
+            
+            for (Type t = GetType() ; t != null ; t = t.BaseType)
+            {
+                // Our KOSNomenclature mapping can't store a Dictionary mapping for all
+                // the new generics types that get made on the fly and weren't present when the static constructor was made.
+                // So instead we ask Reflection to get the base from which it came so we can look that up instead.
+                if (t.IsGenericType)
+                    t = t.GetGenericTypeDefinition();
+                
+                if (KOSNomenclature.HasKOSName(t))
+                {
+                    string kOSname = KOSNomenclature.GetKOSName(t);
+                    if (kOSname == queryTypeName)
+                        return true;
+                    if (t == typeof(Structure))
+                        break; // don't bother walking further up - there won't be any more KOS types above this.
+                }
+            }
+            return false;
+        }
+        
+        public virtual StringValue GetKOSInheritance()
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            string prevKosName = "";
+            
+            for (Type t = GetType() ; t != null ; t = t.BaseType)
+            {
+                // Our KOSNomenclature mapping can't store a Dictionary mapping for all
+                // the new generics types that get made on the fly and weren't present when the static constructor was made.
+                // So instead we ask Reflection to get the base from which it came so we can look that up instead.
+                if (t.IsGenericType)
+                    t = t.GetGenericTypeDefinition();
+                
+                if (KOSNomenclature.HasKOSName(t))
+                {
+                    string kOSname = KOSNomenclature.GetKOSName(t);
+                    if (kOSname != prevKosName) // skip extra iterations where we mash parent C# types and child C# types into the same KOS type.
+                    {
+                        if (prevKosName != "")
+                            sb.Append(" derived from ");
+                        sb.Append(kOSname);
+                    }
+                    prevKosName = kOSname;
+                    if (t == typeof(Structure))
+                        break; // don't bother walking further up - there won't be any more KOS types above this.
+                }
+            }
+            return sb.ToString();
         }
 
         public virtual object TryOperation(string op, object other, bool reverseOrder)

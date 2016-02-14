@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -14,8 +15,8 @@ namespace kOS.Safe.Encapsulation
     /// strings. Currently, strings are only boxed with this
     /// class temporarily when suffix/indexing support is
     /// necessary.
-    /// 
     /// </summary>
+    [KOSNomenclature("String")]
     public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue, IEnumerable<string>
     {
         private readonly string internalString;

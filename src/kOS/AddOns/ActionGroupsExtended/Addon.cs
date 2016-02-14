@@ -2,6 +2,7 @@
 
 namespace kOS.AddOns.ActionGroupsExtended
 {
+    [kOS.Safe.Utilities.KOSNomenclature("AGXAddon")]
     public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("AGX", shared)

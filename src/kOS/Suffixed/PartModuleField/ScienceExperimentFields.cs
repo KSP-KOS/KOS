@@ -7,6 +7,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.PartModuleField
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule")]
     public class ScienceExperimentFields : PartModuleFields
     {
         private readonly ModuleScienceExperiment module;

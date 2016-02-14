@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Part")]
     public class PartValue : Structure, IKOSTargetable
     {
         protected SharedObjects Shared { get; private set; }

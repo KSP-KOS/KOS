@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Engine")]
     public class EngineValue : PartValue
     {
         private readonly IModuleEngine engine;

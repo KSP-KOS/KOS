@@ -8,6 +8,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("List")]
     public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
         where T : Structure
     {
@@ -152,6 +153,7 @@ namespace kOS.Safe.Encapsulation
 
     }
 
+    [kOS.Safe.Utilities.KOSNomenclature("List", KOSToCSharp = false)] // one-way because the generic templated ListValue<T> is the canonical one.  
     public class ListValue : ListValue<Structure>
     {
         public ListValue()

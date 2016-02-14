@@ -9,6 +9,7 @@ using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Volume")]
     public abstract class Volume : Structure
     {
         public const string TEXT_EXTENSION = "txt";

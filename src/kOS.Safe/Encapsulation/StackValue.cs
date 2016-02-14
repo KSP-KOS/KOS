@@ -5,6 +5,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Stack")]
     public class StackValue<T> : EnumerableValue<T, Stack<T>>
         where T : Structure
     {
@@ -86,6 +87,7 @@ namespace kOS.Safe.Encapsulation
         }
     }
 
+    [kOS.Safe.Utilities.KOSNomenclature("Stack", KOSToCSharp = false)] // one-way because the generic templated StackValue<T> is the canonical one.  
     public class StackValue : StackValue<Structure>
     {
         public StackValue()

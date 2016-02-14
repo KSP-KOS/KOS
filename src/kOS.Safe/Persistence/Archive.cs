@@ -7,6 +7,7 @@ using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Archive")]
     public class Archive : Volume
     {
         private static string ArchiveFolder

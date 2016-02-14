@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Scalar")]
     abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
         abstract public bool IsInt { get; }
