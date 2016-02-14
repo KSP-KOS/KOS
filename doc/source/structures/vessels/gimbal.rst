@@ -3,7 +3,7 @@
 Gimbal
 ======
 
-Many engines in KSP have thrust vectoring gimbals and in ksp they are their own module
+Many engines in KSP have thrust vectoring gimbals which are handled by their own module
 
 
 .. structure:: Gimbal
@@ -11,18 +11,22 @@ Many engines in KSP have thrust vectoring gimbals and in ksp they are their own 
     .. list-table::
         :header-rows: 1
         :widths: 2 1 4
-		  
+
+        * - Suffix
+          - Type (units)
+          - Description
+
+        * - All suffixes of :struct:`PartModule`
+          -
+          -
+
         * - :attr:`LOCK`
           - boolean
           - Is the Gimbal locked in neutral position? 
           
         * - :attr:`LIMIT`
-          - scalar
+          - scalar (%)
           - Percentage of the maximum range the Gimbal is allowed to travel 
-
-        * - Suffix
-          - Type
-          - Description
 
         * - :attr:`RANGE`
           - scalar
