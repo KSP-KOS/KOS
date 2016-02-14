@@ -27,5 +27,10 @@ namespace kOS.Safe.Screen
         void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
         void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
         string DebugDump();
+        void putch(string ch);
+        string getch();
+        void flushKB();
+        int KeyStrokesReady();
+      
     }
 }

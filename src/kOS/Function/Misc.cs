@@ -496,24 +496,7 @@ namespace kOS.Function
     }
 
 
-    [Function("getch")]
-    public class FunctionGetCh : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            AssertArgBottomAndConsume(shared);
-            ReturnValue = shared.Window.getch().ToString();
-        }
-    }
-    [Function("flushkb")]
-    public class FunctionFlushKB : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            AssertArgBottomAndConsume(shared);
-            shared.Window.FlushBuffer();
-        }
-    }
+   
 
 
 }

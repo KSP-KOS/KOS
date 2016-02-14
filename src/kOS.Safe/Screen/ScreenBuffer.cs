@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using kOS.Safe.UserIO;
 
+
 namespace kOS.Safe.Screen
 {
     public class ScreenBuffer : IScreenBuffer
@@ -13,7 +14,7 @@ namespace kOS.Safe.Screen
         private int topRow;
         private readonly List<IScreenBufferLine> buffer;
         private readonly List<SubBuffer> subBuffers;
-        
+        private List<String> CharForScript;   // this will be a list of characters( really is a unity keycode string)  availble to the script that calls it.
         public int BeepsPending {get; set;}
         
         // These next two things really belong in TermWindow, but then they can't be reached from
@@ -64,6 +65,7 @@ namespace kOS.Safe.Screen
 
             RowCount = DEFAULT_ROWS;
             ColumnCount = DEFAULT_COLUMNS;
+            CharForScript = new List<String>() ;  // start a new script screen buffer 
             InitializeBuffer();
         }
 
@@ -359,6 +361,38 @@ namespace kOS.Safe.Screen
                 }
             }
             return sb.ToString();
+        }
+        
+     
+        
+        public string getch() // player calls this from a script returns key stroke buffer (FIFO)
+        {
+            if (CharForScript.Count > 0)
+            {
+                string c = CharForScript[0];
+                CharForScript.RemoveAt(0);
+                return c;
+            }
+
+            else {
+                return ("NONE"); // if there was no key press return "none" to player .
+            }
+        }
+
+        public void putch(string ch)
+        {
+        CharForScript.Add(ch);  // to be called from the telnet and gui console \
+        if (CharForScript.Count() > 30) CharForScript.RemoveAt(0); // If the buffer exceeds 30 inputs the user probably isn't using the buffer at all so lets start start dumping the older keys
+        }
+
+        public void flushKB()
+        {
+            CharForScript.Clear();  // a kos script can call this function to clear the character list
+        }
+
+        public int KeyStrokesReady()
+        {
+            return CharForScript.Count;
         }
     }
 }
