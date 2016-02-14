@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using kOS.Safe.UserIO;
 
-
 namespace kOS.Safe.Screen
 {
     public class ScreenBuffer : IScreenBuffer
