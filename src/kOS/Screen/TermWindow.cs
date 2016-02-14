@@ -30,7 +30,7 @@ namespace kOS.Screen
         private GUIStyle tinyToggleStyle;
         private Vector2 resizeOldSize;
         private bool resizeMouseDown;
-        
+        private List<UnityEngine.KeyCode> CharForScript;   // this will be a list of characters availble to the script that calls it.
         private bool consumeEvent;
         private bool keyClickEnabled;
         
@@ -135,8 +135,10 @@ namespace kOS.Screen
         public override void GetFocus()
         {
             Lock();
+            CharForScript = new List<UnityEngine.KeyCode>();  // start a new script screen buffer when the player moves focus to the terminal Window
+
         }
-        
+
         public override void LoseFocus()
         {
             Unlock();
@@ -356,6 +358,7 @@ namespace kOS.Screen
             Event e = Event.current;
             if (e.type == EventType.KeyDown)
             {
+                if (e.keyCode != KeyCode.None) CharForScript.Add(e.keyCode);  // add this keypress to the buffer for the user script to pick up later. 
                 // Unity handles some keys in a particular way
                 // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
                 var c = (char)(e.character & 0x007f);
@@ -959,6 +962,26 @@ namespace kOS.Screen
         {
             return (int)(WindowRect.width - 65) / CHARSIZE;
         }
+        public void FlushBuffer()
+        {
+            CharForScript.Clear();  // a kos script can call this function to clear the character list
+        }
 
+        public UnityEngine.KeyCode getch() // player calls this from a script returns key stroke buffer (FIFO)
+        {
+            if (CharForScript.Count > 0)
+            {
+                UnityEngine.KeyCode c = CharForScript[0];
+                CharForScript.RemoveAt(0);
+                return c;
+            }
+
+            else {
+                return (UnityEngine.KeyCode.None); // if there was no key press return "none" to player .
+            }
+        }
     }
+
+
+
 }
