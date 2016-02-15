@@ -80,8 +80,8 @@ namespace kOS.Suffixed.Part
 
         private void EngineInitializeSuffixes()
         {
-            AddSuffix("ACTIVATE", new NoArgsVoidSuffix(() => engine.Activate()));
-            AddSuffix("SHUTDOWN", new NoArgsVoidSuffix(() => engine.Shutdown()));
+            AddSuffix("ACTIVATE", new NoArgsVoidSuffix(Activate));
+            AddSuffix("SHUTDOWN", new NoArgsVoidSuffix(Shutdown));
             AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => engine.ThrustPercentage,
                                                           value => engine.ThrustPercentage = value,
                                                           0f, 100f, 0f,
@@ -131,6 +131,18 @@ namespace kOS.Suffixed.Part
             return toReturn;
         }
 
+        public void Activate()
+        {
+            ThrowIfNotCPUVessel();
+            engine.Activate();
+        }
+
+        public void Shutdown()
+        {
+            ThrowIfNotCPUVessel();
+            engine.Shutdown();
+        }
+
         public ScalarValue GetIspAtAtm(ScalarValue atmPressure)
         {
             return engine.IspAtAtm(atmPressure);
@@ -164,6 +176,7 @@ namespace kOS.Suffixed.Part
 
         public void ToggleMode()
         {
+            ThrowIfNotCPUVessel();
             if (!MultiMode)
                 throw new KOSException("Attempted to call the TOGGLEMODE suffix on a non-multi mode engine.");
             // Use Invoke to call ModeEvent, since the underlying method is private.
@@ -179,6 +192,7 @@ namespace kOS.Suffixed.Part
 
         public void SetRunningPrimary(BooleanValue prim)
         {
+            ThrowIfNotCPUVessel();
             if (!MultiMode)
                 throw new KOSException("Attempted to set the PRIMARYMODE suffix on a non-multi mode engine.");
             // If runningPrimary does not match prim, call ToggleMode
@@ -195,6 +209,7 @@ namespace kOS.Suffixed.Part
 
         public void SetAutoswitch(BooleanValue auto)
         {
+            ThrowIfNotCPUVessel();
             if (!MultiMode)
                 throw new KOSException("Attempted to set the AUTOSWITCH suffix on a non-multi mode engine.");
             // if autoSwitch doesn't equal auto, use invoke to call the autoswitch method because the method is private
