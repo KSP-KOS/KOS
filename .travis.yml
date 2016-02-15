@@ -8,7 +8,7 @@ notifications:
 
 # Before the install the library dlls need to be downloaded
 before_install:
-- wget --quiet https://github.com/KSP-KOS/KSP_LIB/blob/master/kos-1.0.5.tar.enc
+- wget --quiet https://github.com/KSP-KOS/KSP_LIB/blob/master/kos-1.0.5.tar.enc?raw=true
 - openssl aes-256-cbc -K $encrypted_6287ee711a27_key -iv $encrypted_6287ee711a27_iv -in kos-1.0.5.tar.enc -out kos-1.0.5.tar -d
 - mkdir -p Resources
 - tar -xvf kos-1.0.5.tar -C Resources/
