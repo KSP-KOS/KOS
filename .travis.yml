@@ -13,6 +13,14 @@ before_install:
 - mkdir -p Resources
 - tar -xvf kos-1.0.5.tar -C Resources/
 
+install:
+- nuget restore solution-name.sln
+- nuget install NUnit.Runners -Version 3.0.1 -OutputDirectory testrunner
+
+script:
+- xbuild /p:Configuration=Release solution-name.sln
+- mono ./testrunner/NUnit.Runners.3.0.1/tools/nunit-console.exe src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
+
 # Cleanup the downloaded resources
 after_script:
 - cd Resources
