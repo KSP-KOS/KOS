@@ -2,6 +2,8 @@
 {
     public class ScalarDoubleValue : ScalarValue
     {
+        public static ScalarDoubleValue Zero = new ScalarDoubleValue(0);
+
         public override bool IsDouble
         {
             get { return true; }

@@ -1,11 +1,12 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Serialization;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
 {
     [TestFixture]
-    public class MixedCollectionPrintingTest
+    public class MixedCollectionPrintingTest : CollectionValueTest
     {
 
         [Test]
@@ -24,7 +25,7 @@ namespace kOS.Safe.Test.Collections
                 {new StringValue("not list"), new ScalarIntValue(2)}
             };
 
-            var result = (string)InvokeDelegate(lexicon, "DUMP");
+            var result = (StringValue)InvokeDelegate(lexicon, "DUMP");
 
             Assert.IsTrue(result.Contains("LEXICON of 2 items"));
             Assert.IsTrue(result.Contains("[\"list\"] = LIST of 3 items"));
@@ -47,20 +48,10 @@ namespace kOS.Safe.Test.Collections
                 {new StringValue("not list"), new ScalarIntValue(2)}
             };
 
-            var result = (string)InvokeDelegate(lexicon, "DUMP");
+            var result = (StringValue)InvokeDelegate(lexicon, "DUMP");
 
             Assert.IsFalse(result.Contains("System"));
             Assert.IsFalse(result.Contains("string[]"));
-        }
-
-        private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)
-        {
-            var lengthObj = list.GetSuffix(suffixName);
-            Assert.IsNotNull(lengthObj);
-            var lengthDelegate = lengthObj as Delegate;
-            Assert.IsNotNull(lengthDelegate);
-            var length = lengthDelegate.DynamicInvoke(parameters);
-            return length;
         }
     }
 }

@@ -2,6 +2,11 @@
 {
     public class ScalarIntValue : ScalarValue
     {
+        // those are handy especially in tests
+        public static ScalarIntValue Zero = new ScalarIntValue(0);
+        public static ScalarIntValue One = new ScalarIntValue(1);
+        public static ScalarIntValue Two = new ScalarIntValue(2);
+
         public override bool IsDouble
         {
             get { return false; }

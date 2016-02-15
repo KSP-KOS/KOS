@@ -19,9 +19,9 @@ namespace kOS.Safe.Test.Structure
         public void CanGetDelegate()
         {
             var suffix = new TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>((one, two) => { });
-            var del = suffix.Get();
+            var del = suffix.Get() as DelegateSuffixResult;
             Assert.IsNotNull(del);
-            var delegateAsDelegate = del as Delegate;
+            var delegateAsDelegate = del.Del;
             Assert.IsNotNull(delegateAsDelegate);
         }
 
@@ -31,9 +31,9 @@ namespace kOS.Safe.Test.Structure
             var mockDel = Substitute.For<TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>.Del<object, object>>();
 
             var suffix = new TwoArgsSuffix<kOS.Safe.Encapsulation.Structure, kOS.Safe.Encapsulation.Structure>(mockDel);
-            var del = suffix.Get();
+            var del = suffix.Get() as DelegateSuffixResult;
             Assert.IsNotNull(del);
-            var delegateAsDelegate = del as Delegate;
+            var delegateAsDelegate = del.Del;
             Assert.IsNotNull(delegateAsDelegate);
             delegateAsDelegate.DynamicInvoke(new object(), new object());
 

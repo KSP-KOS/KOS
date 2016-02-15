@@ -199,7 +199,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string fileName = PopValueAssert(shared, true).ToString();
-            IDumper serialized = PopValueAssert(shared, true) as IDumper;
+            SerializableStructure serialized = PopValueAssert(shared, true) as SerializableStructure;
             AssertArgBottomAndConsume(shared);
 
             if (serialized == null)

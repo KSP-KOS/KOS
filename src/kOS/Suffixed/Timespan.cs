@@ -7,7 +7,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class TimeSpan : Structure, IDumper, IComparable<TimeSpan>
+    public class TimeSpan : SerializableStructure, IComparable<TimeSpan>
     {
         public const string DumpSpan = "span";
 
@@ -176,7 +176,7 @@ namespace kOS.Suffixed
             return string.Format("TIME({0:0})", span);
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             var dump = new Dump
             {
@@ -186,7 +186,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             span = Convert.ToDouble(dump[DumpSpan]);
         }

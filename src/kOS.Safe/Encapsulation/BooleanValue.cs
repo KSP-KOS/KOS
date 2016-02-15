@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class BooleanValue : Structure, IConvertible, ISerializableValue
+    public class BooleanValue : Structure, IConvertible
     {
         private readonly bool internalValue;
 

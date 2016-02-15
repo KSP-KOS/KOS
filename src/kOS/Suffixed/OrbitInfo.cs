@@ -7,7 +7,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class OrbitInfo : Structure, IDumperWithSharedObjects
+    public class OrbitInfo : SerializableStructure, IHasSharedObjects
     {
         public static string DumpInclination = "inclination";
         public static string DumpEccentricity = "eccentricity";
@@ -129,7 +129,7 @@ namespace kOS.Suffixed
             return "ORBIT of " + name;
         }
 
-        public Dump Dump()
+        public override Dump Dump()
         {
             DumpWithHeader dump = new DumpWithHeader
             {
@@ -148,7 +148,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(Dump dump)
+        public override void LoadDump(Dump dump)
         {
             name = "<unnamed>";
 
