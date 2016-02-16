@@ -8,6 +8,7 @@
     "author"         : "erendrake",
     "license"        : "GPL-3.0",
     "release_status" : "stable",
+    "x_netkan_version_edit": "^[vV]?(?<version>.+)$",
     "resources"      : {
         "homepage"   : "http://ksp-kos.github.io/KOS_DOC/",
         "manual"     : "http://ksp-kos.github.io/KOS_DOC/",
