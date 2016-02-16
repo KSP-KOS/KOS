@@ -114,7 +114,6 @@
     <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
     <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
-    <Compile Include="Suffixed\Part\GimbalValue.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
