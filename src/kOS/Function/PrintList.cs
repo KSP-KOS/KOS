@@ -273,7 +273,7 @@ namespace kOS.Function
             list.AddColumn("Name", 34, ColumnAlignment.Left);
             list.AddColumn("Value", 6, ColumnAlignment.Left);
 
-            foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
+            foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 list.AddItem(key.Alias, key.Name, key.Value);
             }
