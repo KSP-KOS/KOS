@@ -12,8 +12,6 @@ namespace kOS.Safe.Utilities
     /// <summary>
     /// A class for the purpose of holding the mapping information that goes
     /// back and forth between C# type names and thier KOS type name equivalents.
-    /// For the sake of this we are using unqualified C# names (without the namespace
-    /// prefixes).
     /// 
     /// Any time you add a new class derived from kOS.Safe.Encapsulated.Structure, you
     /// should check to see if you should add a mapping to this class to go with it.
@@ -51,7 +49,7 @@ namespace kOS.Safe.Utilities
             {
                 // Ensure an Assembly is never run through this twice in the life of the program:
                 if (seenAssemblies.Contains(a))
-                    return;
+                    continue;
 
                 PopulateOneAssemblyMapping(a);
                 seenAssemblies.Add(a);

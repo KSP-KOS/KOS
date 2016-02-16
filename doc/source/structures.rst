@@ -5,6 +5,8 @@ Structure Reference
 
 A general discussion of structures :ref:`can be found here <language structures>`.
 
+* :ref:`Common to all <reflection>`
+    * :ref:`Suffixes common to all objects <structure>`
 * :ref:`Mathematics <math>`
     * :ref:`Fundamental Constants <constants>`
     * :ref:`Mathematical Functions <math functions>`

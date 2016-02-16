@@ -306,6 +306,9 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+
+.. _writejson:
+
 ``WRITEJSON(OBJECT, FILENAME).``
 --------------------------------
 
