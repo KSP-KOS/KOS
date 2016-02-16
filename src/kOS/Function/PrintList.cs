@@ -231,30 +231,14 @@ namespace kOS.Function
             list.AddColumn("Stage", 8, ColumnAlignment.Left);
             list.AddColumn("Name", 28, ColumnAlignment.Left);
 
-            foreach (Part part in shared.Vessel.Parts)
+            ListValue PartList = EngineValue.PartsToList(shared.Vessel.Parts, shared);
+
+            foreach (PartValue part in PartList)
             {
-                bool enginefound = false;
-                foreach (PartModule module in part.Modules)
-                {
-                    if (!enginefound)
-                    {
-                        var enginesMM = module as MultiModeEngine;
-                        if (enginesMM != null) { enginefound = true; }
-                        else
-                        {
-                            var engines = module as ModuleEngines;
-                            if (engines != null) { enginefound = true; }
-                            else
-                            {
-                                var enginesFX = module as ModuleEnginesFX;
-                                if (engines != null) { enginefound = true; }
-                            }
-                        }
-                    }
-                }
-                if (enginefound) { list.AddItem(part.uid(), part.inverseStage, part.partInfo.name); }
+                list.AddItem(part.Part.uid(), part.Part.inverseStage, part.Part.partInfo.name);
             }
-                return list;
+
+            return list;
         }
 
         private kList GetSensorList(SharedObjects shared)
