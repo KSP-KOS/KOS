@@ -73,6 +73,9 @@ Structure
         * - :attr:`EMPTY`
           - boolean
           - check if list if empty
+        * - :meth:`JOIN(separator)`
+          - string
+          - joins all list elements into a string
         * - :attr:`DUMP`
           - string
           - verbose dump of all contained elements
@@ -149,6 +152,13 @@ Structure
     :access: Get only
 
     Returns true if the list has zero items in it.
+
+.. method:: List:JOIN(separator)
+
+    :parameter separator: (string) separator that will be inserted between the list items
+    :return: string
+
+    Returns a string created by converting each element of the array to a string, separated by the given separator.
 
 .. attribute:: List:DUMP
 
