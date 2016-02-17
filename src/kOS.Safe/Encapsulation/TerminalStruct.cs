@@ -51,6 +51,12 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("VISUALBEEP", new SetSuffix<BooleanValue>(() => Shared.Screen.VisualBeep,
                                                        value => Shared.Screen.VisualBeep = value,
                                                        "Get or set the value of whether or not the terminal shows beeps silently with a visual flash."));
+            AddSuffix("GETCH", new Suffix<StringValue>(() => Shared.Screen.getch(), "Retrieve a key stroke from the terminal(s)"));
+            AddSuffix("FLUSHKB", new NoArgsVoidSuffix(() =>shared.Screen.flushKB(), "Clear all pending key strokes from the terminal(s)"));
+            AddSuffix("KEYSTROKESREADY",new NoArgsSuffix<ScalarValue>( () => shared.Screen.KeyStrokesReady(),"Return the number of keystokes in buffer"));
+
+
+
         }
         
         public override string ToString()

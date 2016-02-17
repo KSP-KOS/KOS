@@ -494,4 +494,9 @@ namespace kOS.Function
            ReturnValue = new BuiltinDelegate(shared.Cpu, name);
         }
     }
+
+
+   
+
+
 }

@@ -30,7 +30,6 @@ namespace kOS.Screen
         private GUIStyle tinyToggleStyle;
         private Vector2 resizeOldSize;
         private bool resizeMouseDown;
-        
         private bool consumeEvent;
         private bool keyClickEnabled;
         
@@ -135,8 +134,10 @@ namespace kOS.Screen
         public override void GetFocus()
         {
             Lock();
+       
+
         }
-        
+
         public override void LoseFocus()
         {
             Unlock();
@@ -488,7 +489,10 @@ namespace kOS.Screen
             // bigger task than it may first seem.)
             if (0x0020 <= ch && ch <= 0x007f)
             {
-                 Type(ch);
+                Type(ch);
+                int chLower =  ch >64 && ch < 94  ?ch+32:ch ; // ignore case and just cast the lowercase keycode
+                shared.Screen.putch(((KeyCode)chLower).ToString());  // add this keypress to the buffer for the user script to pick up later. 
+               
             }
             else
             {
@@ -498,13 +502,16 @@ namespace kOS.Screen
                     // maps directly into nicely, otherwise just pass it through to SpecialKey():
 
                     case (char)UnicodeCommand.DELETELEFT:
+                        shared.Screen.putch(KeyCode.Backspace.ToString() );  // add this keypress to the buffer for the user script to pick up later. 
                         Type((char)8);
                         break;
                     case (char)UnicodeCommand.STARTNEXTLINE:
                         Type('\r');
+                        shared.Screen.putch(KeyCode.Return.ToString());  // add this keypress to the buffer for the user script to pick up later. 
                         break;
                     case '\t':
                         Type('\t');
+                        shared.Screen.putch(KeyCode.Tab.ToString());
                         break;
                     case (char)UnicodeCommand.RESIZESCREEN:
                         inputExpected = ExpectNextChar.RESIZEWIDTH;
@@ -539,6 +546,7 @@ namespace kOS.Screen
                         break;
                 }
             }
+         
 
             // else ignore it - unimplemented char.
         }
@@ -959,6 +967,9 @@ namespace kOS.Screen
         {
             return (int)(WindowRect.width - 65) / CHARSIZE;
         }
-
+  
     }
+
+
+
 }
