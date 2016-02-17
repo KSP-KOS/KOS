@@ -1,7 +1,8 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
+using kOS.Suffixed.Part;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
@@ -234,18 +235,11 @@ namespace kOS.Function
             list.AddColumn("Stage", 8, ColumnAlignment.Left);
             list.AddColumn("Name", 28, ColumnAlignment.Left);
 
-            foreach (Part part in VesselUtils.GetListOfActivatedEngines(shared.Vessel))
-            {
-                foreach (PartModule module in part.Modules)
-                {
-                    if (module == null) continue;
+            ListValue PartList = EngineValue.PartsToList(shared.Vessel.Parts, shared);
 
-                    var engines = module as ModuleEngines;
-                    if (engines != null)
-                    {
-                        list.AddItem(part.uid(), part.inverseStage, engines.moduleName);
-                    }
-                }
+            foreach (PartValue part in PartList)
+            {
+                list.AddItem(part.Part.uid(), part.Part.inverseStage, part.Part.partInfo.name);
             }
 
             return list;
