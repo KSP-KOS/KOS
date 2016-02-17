@@ -446,15 +446,18 @@ namespace kOS.Module
         {
             if (!IsAlive()) return;
 
-            if (firstUpdate)
+            if (!vessel.HoldPhysics)
             {
-                SafeHouse.Logger.LogWarning("First Update()");
-                firstUpdate = false;
-                shared.Cpu.Boot();
+                if (firstUpdate)
+                {
+                    SafeHouse.Logger.LogWarning("First Update()");
+                    firstUpdate = false;
+                    shared.Cpu.Boot();
+                }
+                UpdateVessel();
+                UpdateFixedObservers();
+                ProcessElectricity(part, TimeWarp.fixedDeltaTime);
             }
-            UpdateVessel();
-            UpdateFixedObservers();
-            ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
 
         private void UpdateVessel()
