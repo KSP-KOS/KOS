@@ -1,15 +1,15 @@
+using kOS.Module;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using kOS.Module;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 using Math = System.Math;
 
 namespace kOS.Function
