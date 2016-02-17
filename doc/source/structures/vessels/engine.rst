@@ -83,6 +83,30 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
         * - :attr:`THROTTLELOCK`
           - boolean
           - Check if throttle can not be changed
+        * - :attr:`MULTIMODE`
+          - boolean
+          - Check if engine has multiple modes
+        * - :attr:`MODES`
+          - :struct:`List`
+          - List (string) of the engine modes
+        * - :attr:`MODE`
+          - string
+          - Name of the current mode (only if multiple)
+        * - :attr:`TOGGLEMODE`
+          - 
+          - Switch to another mode (only if multiple)
+        * - :attr:`PRIMARYMODE`
+          - boolean
+          - Is the engine in primary mode? (only if multiple)
+        * - :attr:`AUTOSWITCH`
+          - boolean
+          - Can the engine switch modes automatically? (only if multiple)
+        * - :attr:`HASGIMBAL`
+          - boolean
+          - Check if engine has gimbal
+        * - :attr:`GIMBAL`
+          - :struct:`Gimbal`
+          - Gimbal of this engine (only if available)
 
 
 .. note::
@@ -248,5 +272,58 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :type: boolean
 
     Is this an engine that is stuck at a fixed throttle? (i.e. solid boosters)
+
+.. attribute:: Engine:MULTIMODE
+
+    :access: Get only
+    :type: boolean
+
+    Does this engine have multiple modes (i.e. RAPIER)? Check this before calling multi-mode specific suffixes.   
+    
+.. attribute:: Engine:MODES
+
+    :access: Get only
+    :type: :struct:`List` of strings
+
+    Lists names of modes of this engine if multimode, returns a list of 1 string "Single mode" otherwise.   
+
+.. attribute:: Engine:MODE
+
+    :access: Get only
+    :type: string
+
+    Name of the current mode. Only assessible for multi-mode engines.
+
+.. method:: Engine:TOGGLEMODE
+
+    Call to switch to another mode. Only assessible for multi-mode engines.  
+
+.. attribute:: Engine:PRIMARYMODE
+
+    :access: Get/Set
+    :type: boolean
+
+    True for primary mode, false for secondary. Setting to other value equals toggling the mode. Only assessible for multi-mode engines. 
+
+.. attribute:: Engine:AUTOSWITCH
+
+    :access: Get/Set
+    :type: boolean
+
+    Is automatic switching enabled? Can set to switch between manual and automatic switching. Only assessible for multi-mode engines. 
+
+.. attribute:: Engine:HASGIMBAL
+
+    :access: Get only
+    :type: boolean
+
+    Does this engine have a gimbal enabled?
+
+.. attribute:: Engine:GIMBAL
+
+    :access: Get only
+    :type: :struct:`Gimbal`
+
+    Returns the :struct:`Gimbal` attached to this engine. Only accessible if the gimbal is present (Use :attr:`Engine:HASGIMBAL` to check if available).
 
 .. _isp: http://en.wikipedia.org/wiki/Specific_impulse
