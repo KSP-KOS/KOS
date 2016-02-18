@@ -11,6 +11,7 @@ using System.Text;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("FileContent")]
     public class FileContent : SerializableStructure, IEnumerable<string>
     {
         private static readonly Encoding fileEncoding = Encoding.UTF8;

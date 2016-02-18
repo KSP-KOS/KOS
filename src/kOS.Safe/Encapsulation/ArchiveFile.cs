@@ -4,6 +4,7 @@ using System.IO;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class ArchiveFile : VolumeFile
     {
         private readonly FileInfo fileInfo;

@@ -2,6 +2,7 @@
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class HarddiskFile : VolumeFile
     {
         private readonly Harddisk harddisk;
