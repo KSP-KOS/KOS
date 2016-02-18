@@ -12,7 +12,6 @@ using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
-using kOS.Suffixed;
 using kOS.Utilities;
 using KSP.IO;
 using KSPAPIExtensions;
@@ -21,9 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Execution;
 using UnityEngine;
-using FileInfo = kOS.Safe.Encapsulation.VolumeFile;
 using kOS.Safe.Encapsulation;
-using kOS.Serialization;
 
 namespace kOS.Module
 {
@@ -306,7 +303,7 @@ namespace kOS.Module
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
 
-                if (!String.IsNullOrEmpty(Tag))
+                if (!string.IsNullOrEmpty(Tag))
                 {
                     HardDisk.Name = Tag;
                 }
@@ -346,7 +343,7 @@ namespace kOS.Module
                     if (b.part == null || b.part.vessel == null)
                         return 1;
                     // If on different vessels, sort by vessel name next:
-                    int compare = String.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
+                    int compare = string.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
                         StringComparison.CurrentCultureIgnoreCase);
                     // If on same vessel, sort by part UID last:
                     if (compare != 0)
@@ -562,7 +559,7 @@ namespace kOS.Module
                 // KSP Seems to want to make an instance of my partModule during initial load
                 if (vessel == null) return;
 
-                if (node.HasValue("activated") && !Boolean.Parse(node.GetValue("activated")))
+                if (node.HasValue("activated") && !bool.Parse(node.GetValue("activated")))
                 {
                     ProcessorMode = ProcessorModes.OFF;
                 }

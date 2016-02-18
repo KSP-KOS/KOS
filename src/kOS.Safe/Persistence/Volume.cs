@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Persistence
 {
@@ -23,7 +20,7 @@ namespace kOS.Safe.Persistence
         public abstract long Size { get; }
         public long FreeSpace {
             get {
-                return Capacity == Volume.INFINITE_CAPACITY ? Volume.INFINITE_CAPACITY : Capacity - Size;
+                return Capacity == INFINITE_CAPACITY ? INFINITE_CAPACITY : Capacity - Size;
             }
         }
         public bool Renameable { get; protected set; }
@@ -86,12 +83,12 @@ namespace kOS.Safe.Persistence
                 usedByThisFile = existingFile.ReadAll().Size;
             }
 
-            return Volume.INFINITE_CAPACITY == FreeSpace || (FreeSpace + usedByThisFile) >= fileContent.Size;
+            return INFINITE_CAPACITY == FreeSpace || FreeSpace + usedByThisFile >= fileContent.Size;
         }
 
         public virtual float RequiredPower()
         {
-            var multiplier = ((float)Capacity) / BASE_CAPACITY;
+            var multiplier = (float)Capacity / BASE_CAPACITY;
             var powerRequired = BASE_POWER * multiplier;
 
             return powerRequired;
@@ -110,17 +107,22 @@ namespace kOS.Safe.Persistence
             AddSuffix("RENAMEABLE" , new Suffix<BooleanValue>(() => Renameable));
             AddSuffix("POWERREQUIREMENT" , new Suffix<ScalarValue>(() => RequiredPower()));
 
-            AddSuffix("EXISTS" , new OneArgsSuffix<BooleanValue, StringValue>((name) => Exists(name)));
-            AddSuffix("FILES" , new Suffix<Lexicon>(() =>
-                new Lexicon(FileList.ToDictionary(item => Structure.FromPrimitiveWithAssert(item.Key), item => (Structure) item.Value))));
-            AddSuffix("CREATE" , new OneArgsSuffix<VolumeFile, StringValue>((name) => Create(name)));
-            AddSuffix("OPEN" , new OneArgsSuffix<VolumeFile, StringValue>((name) => Open(name)));
-            AddSuffix("DELETE" , new OneArgsSuffix<BooleanValue, StringValue>((name) => Delete(name)));
+            AddSuffix("EXISTS" , new OneArgsSuffix<BooleanValue, StringValue>(name => Exists(name)));
+            AddSuffix("FILES" , new Suffix<Lexicon>(BuildFileLexicon));
+            AddSuffix("CREATE" , new OneArgsSuffix<VolumeFile, StringValue>(name => Create(name)));
+            AddSuffix("OPEN" , new OneArgsSuffix<VolumeFile, StringValue>(name => Open(name)));
+            AddSuffix("DELETE" , new OneArgsSuffix<BooleanValue, StringValue>(name => Delete(name)));
         }
+
+        private Lexicon BuildFileLexicon()
+        {
+            return new Lexicon(FileList.ToDictionary(item => FromPrimitiveWithAssert(item.Key), item => (Structure) item.Value));
+        }
+
 
         private int FileInfoComparer(VolumeFile a, VolumeFile b)
         {
-            return String.CompareOrdinal(a.Name, b.Name);
+            return string.CompareOrdinal(a.Name, b.Name);
         }
     }    
 }

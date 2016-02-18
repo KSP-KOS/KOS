@@ -25,10 +25,10 @@ namespace kOS.Safe.Persistence
         /// <returns>The type that should be used to store this file.</returns>
         public static FileCategory IdentifyCategory(byte[] firstBytes)
         {
-            var firstFour = new Byte[4];
+            var firstFour = new byte[4];
             int atMostFour = System.Math.Min(4, firstBytes.Length);
             Array.Copy(firstBytes, 0, firstFour, 0, atMostFour);
-            var returnCat = (atMostFour < 4) ? FileCategory.TOOSHORT : FileCategory.BINARY; // default if none of the conditions pass
+            var returnCat = atMostFour < 4 ? FileCategory.TOOSHORT : FileCategory.BINARY; // default if none of the conditions pass
 
             if (firstFour.SequenceEqual(CompiledObject.MagicId))
             {
@@ -65,7 +65,7 @@ namespace kOS.Safe.Persistence
         /// <returns></returns>
         public static string CookedFilename(string fileName, string extensionName, bool trusted = false)
         {
-            if (String.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(fileName))
                 throw new KOSFileException("Attempted to use an empty filename.");
 
             int lastDotIndex = fileName.LastIndexOf('.');
@@ -111,7 +111,7 @@ namespace kOS.Safe.Persistence
                     if (semicolonPos < 0)
                         throw new KOSPersistenceException("Improperly encoded saved file contains '&' without closing ';'");
                     int charOrdinal;
-                    if (!int.TryParse(input.Substring(inputPos + 2, (semicolonPos - (inputPos + 2))), out charOrdinal))
+                    if (!int.TryParse(input.Substring(inputPos + 2, semicolonPos - (inputPos + 2)), out charOrdinal))
                         throw new KOSPersistenceException("Improperly encoded saved file contains non-digits between the '&#' and the ';'");
                     output.Append((char)charOrdinal);
                     inputPos = semicolonPos; // skip to the end of the encoding section, as if everything between '&' and ';' was one char of input.
@@ -144,7 +144,7 @@ namespace kOS.Safe.Persistence
         /// <returns>true if the character needs protective encoding</returns>
         public static bool CharNeedsEncoding(char character)
         {
-            return !(Char.IsLetterOrDigit(character) || WHITELISTED_SYMBOLS.Contains(character));
+            return !(char.IsLetterOrDigit(character) || WHITELISTED_SYMBOLS.Contains(character));
         }
 
 

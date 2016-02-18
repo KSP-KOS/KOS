@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using kOS.Safe.Exceptions;
-using System.IO;
-using System.Collections;
+﻿using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Persistence;
-using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
-namespace kOS.Safe.Encapsulation
+namespace kOS.Safe.Persistence
 {
     public class FileContent : SerializableStructure, IEnumerable<string>
     {
-        private static System.Text.Encoding FileEncoding = Encoding.UTF8;
-        private const string DumpContent = "content";
-        public string NewLine = "\n";
+        private static readonly Encoding fileEncoding = Encoding.UTF8;
+        private const string DUMP_CONTENT = "content";
+        private const string NEW_LINE = "\n";
+
         public byte[] Bytes { get; private set; }
-        public String String { get { return FileEncoding.GetString(Bytes); } }
+        public string String { get { return fileEncoding.GetString(Bytes); } }
 
         public int Size { get { return Bytes.Length; } }
         public FileCategory Category { get { return PersistenceUtilities.IdentifyCategory(Bytes); } }
@@ -29,9 +30,9 @@ namespace kOS.Safe.Encapsulation
             InitializeSuffixes();
         }
 
-        public FileContent(String content) : this()
+        public FileContent(string content) : this()
         {
-            Bytes = FileEncoding.GetBytes(content);
+            Bytes = fileEncoding.GetBytes(content);
         }
 
         public FileContent(byte[] content) : this()
@@ -55,16 +56,14 @@ namespace kOS.Safe.Encapsulation
 
         public override Dump Dump()
         {
-            Dump dump = new Dump();
-
-            dump.Add(DumpContent, PersistenceUtilities.EncodeBase64(Bytes));
+            Dump dump = new Dump { { DUMP_CONTENT, PersistenceUtilities.EncodeBase64(Bytes) } };
 
             return dump;
         }
 
         public override void LoadDump(Dump dump)
         {
-            string contentString = dump[DumpContent] as string;
+            string contentString = dump[DUMP_CONTENT] as string;
 
             if (contentString == null)
             {
@@ -81,12 +80,12 @@ namespace kOS.Safe.Encapsulation
 
         public static byte[] EncodeString(string content)
         {
-            return FileEncoding.GetBytes(content);
+            return fileEncoding.GetBytes(content);
         }
 
         public static string DecodeString(byte[] content)
         {
-            return FileEncoding.GetString(content);
+            return fileEncoding.GetString(content);
         }
 
         public void Write(string contentToWrite)
@@ -97,14 +96,14 @@ namespace kOS.Safe.Encapsulation
         public void Write(byte[] contentToWrite)
         {
             byte[] newContent = new byte[Bytes.Length + contentToWrite.Length];
-            System.Buffer.BlockCopy(Bytes, 0, newContent, 0, Bytes.Length);
-            System.Buffer.BlockCopy(contentToWrite, 0, newContent, Bytes.Length, contentToWrite.Length);
+            Buffer.BlockCopy(Bytes, 0, newContent, 0, Bytes.Length);
+            Buffer.BlockCopy(contentToWrite, 0, newContent, Bytes.Length, contentToWrite.Length);
             Bytes = newContent;
         }
 
         public void WriteLn(string content)
         {
-            Write(content + NewLine);
+            Write(content + NEW_LINE);
         }
 
         public void Clear()

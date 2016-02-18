@@ -46,7 +46,7 @@ namespace kOS.Function
                     list = ListValue.CreateList(shared.VolumeMgr.Volumes.Values.ToList());
                     break;
                 case "processors":
-                    list = ListValue.CreateList(shared.ProcessorMgr.processors.Values.ToList().Select((processor) => PartModuleFieldsFactory.Construct(processor, shared)));
+                    list = ListValue.CreateList(shared.ProcessorMgr.processors.Values.ToList().Select(processor => PartModuleFieldsFactory.Construct(processor, shared)));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -148,7 +148,7 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             // Now the args it is going to be passing on to the program:
-            var progArgs = new List<Object>();
+            var progArgs = new List<object>();
             int argc = CountRemainingArgs(shared);
             for (int i = 0; i < argc; ++i)
                 progArgs.Add(PopValueAssert(shared, true));
@@ -259,7 +259,7 @@ namespace kOS.Function
             if (fileName == null)
                 throw new KOSFileException("No filename to load was given.");
 
-            VolumeFile file = shared.VolumeMgr.CurrentVolume.Open(fileName, (!justCompiling)); // if running, look for KSM first.  If compiling look for KS first.
+            VolumeFile file = shared.VolumeMgr.CurrentVolume.Open(fileName, !justCompiling); // if running, look for KSM first.  If compiling look for KS first.
             if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", fileName));
             fileName = file.Name; // just in case GetByName picked an extension that changed it.
             FileContent fileContent = file.ReadAll();
@@ -282,7 +282,7 @@ namespace kOS.Function
                 // or to a file to save:
                 if (justCompiling)
                 {
-                    List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, fileContent.String, String.Empty, options);
+                    List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, fileContent.String, string.Empty, options);
                     VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Save(fileNameOut, new FileContent(compileParts));
                     if (volumeFile == null)
                     {

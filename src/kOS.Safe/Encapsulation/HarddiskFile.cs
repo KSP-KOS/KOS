@@ -1,11 +1,10 @@
-﻿using System;
-using kOS.Safe.Persistence;
+﻿using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Encapsulation
 {
     public class HarddiskFile : VolumeFile
     {
-        private Harddisk harddisk;
+        private readonly Harddisk harddisk;
 
         public override int Size { get { return ReadAll().Size; } }
 
@@ -26,13 +25,10 @@ namespace kOS.Safe.Encapsulation
 
         public override bool Write(byte[] content)
         {
-            if (harddisk.FreeSpace > content.Length)
-            {
-                GetFileContent().Write(content);
-                return true;
-            }
+            if (harddisk.FreeSpace <= content.Length) return false;
 
-            return false;
+            GetFileContent().Write(content);
+            return true;
         }
 
         public override bool WriteLn(string content)
@@ -46,4 +42,3 @@ namespace kOS.Safe.Encapsulation
         }
     }
 }
-

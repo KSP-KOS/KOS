@@ -1,9 +1,9 @@
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Persistence
 {
@@ -50,7 +50,6 @@ namespace kOS.Safe.Persistence
 
         public override bool Delete(string name)
         {
-
             var fullPath = FileSearch(name);
             if (fullPath == null)
             {
@@ -93,7 +92,10 @@ namespace kOS.Safe.Persistence
                 throw new KOSFileException("File already exists: " + name);
             }
 
-            using (File.Create(filePath));
+            using (File.Create(filePath))
+            {
+                // Do Nothing
+            }
 
             return new ArchiveFile(FileSearch(name));
         }
@@ -112,61 +114,33 @@ namespace kOS.Safe.Persistence
             return new ArchiveFile(FileSearch(name));
         }
 
-        public override Dictionary<string, VolumeFile> FileList {
-            get {
+        public override Dictionary<string, VolumeFile> FileList
+        {
+            get
+            {
                 var listFiles = Directory.GetFiles(ArchiveFolder);
                 var filterHid = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.Hidden) != 0);
                 var filterSys = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.System) != 0);
 
                 var visFiles = listFiles.Except(filterSys).Except(filterHid);
                 var kosFiles = visFiles.Except(Directory.GetFiles(ArchiveFolder, ".*"));
-                return kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new ArchiveFile(sysFileInfo)).
+                return kosFiles.Select(file => new FileInfo(file)).Select(sysFileInfo => new ArchiveFile(sysFileInfo)).
                     Cast<VolumeFile>().ToDictionary(f => f.Name, f => f);
             }
         }
 
-        public override long Size {
-            get {
+        public override long Size
+        {
+            get
+            {
                 return FileList.Values.Sum(i => i.Size);
             }
         }
-            
+
         public override bool Exists(string name)
         {
             return FileSearch(name) != null;
         }
-
-        /// <summary>
-        /// Get the file from the OS.
-        /// </summary>
-        /// <param name="name">filename to look for</param>
-        /// <param name="ksmDefault">if true, it prefers to use the KSM filename over the KS.  The default is to prefer KS.</param>
-        /// <returns>the full fileinfo of the filename if found</returns>
-        private System.IO.FileInfo FileSearch(string name, bool ksmDefault = false)
-        {
-            var path = Path.Combine(ArchiveFolder, name);
-            if (File.Exists(path))
-            {
-                return new System.IO.FileInfo(path);
-            }
-            var kerboscriptFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
-            var kosMlFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
-
-            if (kerboscriptFile.Exists && kosMlFile.Exists)
-            {
-                return ksmDefault ? kosMlFile : kerboscriptFile;
-            }
-            if (kerboscriptFile.Exists)
-            {
-                return kerboscriptFile;
-            }
-            if (kosMlFile.Exists)
-            {
-                return kosMlFile;
-            }
-            return null;
-        }
-
 
         public static byte[] ConvertToWindowsNewlines(byte[] bytes)
         {
@@ -196,6 +170,37 @@ namespace kOS.Safe.Persistence
             }
 
             return bytes;
+        }
+
+        /// <summary>
+        /// Get the file from the OS.
+        /// </summary>
+        /// <param name="name">filename to look for</param>
+        /// <param name="ksmDefault">if true, it prefers to use the KSM filename over the KS.  The default is to prefer KS.</param>
+        /// <returns>the full fileinfo of the filename if found</returns>
+        private FileInfo FileSearch(string name, bool ksmDefault = false)
+        {
+            var path = Path.Combine(ArchiveFolder, name);
+            if (File.Exists(path))
+            {
+                return new FileInfo(path);
+            }
+            var kerboscriptFile = new FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
+            var kosMlFile = new FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
+
+            if (kerboscriptFile.Exists && kosMlFile.Exists)
+            {
+                return ksmDefault ? kosMlFile : kerboscriptFile;
+            }
+            if (kerboscriptFile.Exists)
+            {
+                return kerboscriptFile;
+            }
+            if (kosMlFile.Exists)
+            {
+                return kosMlFile;
+            }
+            return null;
         }
     }
 }

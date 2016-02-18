@@ -1,11 +1,11 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Serialization;
+using System;
 
 namespace kOS.Function
 {
@@ -31,7 +31,7 @@ namespace kOS.Function
             }
         }
     }
-    
+
     [Function("edit")]
     public class FunctionEdit : FunctionBase
     {

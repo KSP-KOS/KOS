@@ -21,7 +21,7 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
-            AddSuffix("TYPE", new Suffixes.Suffix<StringValue>(() => GetType().ToString()));
+            AddSuffix("TYPE", new Suffix<StringValue>(() => GetType().ToString()));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -231,8 +231,8 @@ namespace kOS.Safe.Encapsulation
             Structure returnValue = convertedVal as Structure;
             if (returnValue == null)
                 throw new KOSException(
-                    String.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
-                                  (value == null ? "<null>" : value.GetType().ToString())));
+                    string.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
+                                  value == null ? "<null>" : value.GetType().ToString()));
             return returnValue;
         }
 

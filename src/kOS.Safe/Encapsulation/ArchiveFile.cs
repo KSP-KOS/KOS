@@ -1,16 +1,15 @@
-﻿using System;
+﻿using kOS.Safe.Persistence;
+using System;
 using System.IO;
-using System.Text;
-using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Encapsulation
 {
     public class ArchiveFile : VolumeFile
     {
-        private System.IO.FileInfo fileInfo;
+        private readonly FileInfo fileInfo;
         public override int Size { get { fileInfo.Refresh(); return (int)fileInfo.Length; } }
 
-        public ArchiveFile(System.IO.FileInfo fileInfo) : base(fileInfo.Name)
+        public ArchiveFile(FileInfo fileInfo) : base(fileInfo.Name)
         {
             this.fileInfo = fileInfo;
         }
@@ -32,7 +31,8 @@ namespace kOS.Safe.Encapsulation
             }
 
             byte[] bytes = Archive.ConvertToWindowsNewlines(content);
-            using (FileStream stream = fileInfo.Open(FileMode.Append, FileAccess.Write)) {
+            using (FileStream stream = fileInfo.Open(FileMode.Append, FileAccess.Write))
+            {
                 stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
             }
@@ -51,4 +51,3 @@ namespace kOS.Safe.Encapsulation
         }
     }
 }
-

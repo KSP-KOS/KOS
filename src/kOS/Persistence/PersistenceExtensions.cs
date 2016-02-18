@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using ICSharpCode.SharpZipLib.GZip;
-using kOS.AddOns.RemoteTech;
+﻿using kOS.AddOns.RemoteTech;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
-using kOS.Suffixed;
-using kOS.Safe.Encapsulation;
+using System;
+using System.Text;
 
 namespace kOS.Persistence
 {
@@ -21,10 +18,10 @@ namespace kOS.Persistence
                 capacity = int.Parse(configNode.GetValue("capacity"));
 
             var toReturn = new Harddisk(capacity);
-            
+
             if (configNode.HasValue("volumeName"))
                 toReturn.Name = configNode.GetValue("volumeName");
-            
+
             foreach (ConfigNode fileNode in configNode.GetNodes("file"))
             {
                 toReturn.Save(fileNode.ToHarddiskFile(toReturn));
@@ -47,11 +44,12 @@ namespace kOS.Persistence
             node.AddValue("capacity", harddisk.Capacity);
             node.AddValue("volumeName", harddisk.Name);
 
-            foreach (HarddiskFile file in harddisk.FileList.Values)
+            foreach (VolumeFile volumeFile in harddisk.FileList.Values)
             {
+                var file = (HarddiskFile) volumeFile;
                 node.AddNode(file.ToConfigNode("file"));
             }
-            
+
             return node;
         }
 
@@ -65,12 +63,14 @@ namespace kOS.Persistence
             if (content.Category == FileCategory.KSM)
             {
                 node.AddValue("line", PersistenceUtilities.EncodeBase64(content.Bytes));
-            } else
+            }
+            else
             {
                 if (SafeHouse.Config.UseCompressedPersistence)
                 {
                     node.AddValue("line", EncodeBase64(content.String));
-                } else
+                }
+                else
                 {
                     node.AddValue("line", PersistenceUtilities.EncodeLine(content.String));
                 }
@@ -80,16 +80,16 @@ namespace kOS.Persistence
 
         private static FileContent Decode(string input)
         {
-            string decodedString;
             try
             {
                 return new FileContent(PersistenceUtilities.DecodeBase64ToBinary(input));
-            } catch (FormatException) {
+            }
+            catch (FormatException)
+            {
                 // standard encoding
-                decodedString = PersistenceUtilities.DecodeLine(input);
+                string decodedString = PersistenceUtilities.DecodeLine(input);
                 return new FileContent(decodedString);
             }
-
         }
 
         public static bool CheckRange(this Volume volume, Vessel vessel)

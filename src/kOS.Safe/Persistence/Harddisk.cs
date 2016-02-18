@@ -1,7 +1,7 @@
-﻿using kOS.Safe.Utilities;
-using kOS.Safe.Encapsulation;
-using System.Collections.Generic;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace kOS.Safe.Persistence
@@ -18,8 +18,10 @@ namespace kOS.Safe.Persistence
             }
         }
 
-        public override long Size {
-            get {
+        public override long Size
+        {
+            get
+            {
                 return files.Values.Sum(x => x.Size);
             }
         }

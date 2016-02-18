@@ -1,7 +1,7 @@
-using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
-using System.Collections.Generic;
 using kOS.Safe.Exceptions;
+using System.Linq;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -10,48 +10,28 @@ namespace kOS.Safe.Encapsulation
         public string Name { get; private set; }
 
         public abstract int Size { get; }
-        public string Extension { get {
+
+        public string Extension
+        {
+            get
+            {
                 var fileParts = Name.Split('.');
 
-                return fileParts.Count() > 1 ? fileParts.Last() : string.Empty;
+                return fileParts.Length > 1 ? fileParts.Last() : string.Empty;
             }
         }
 
-        public VolumeFile(string name)
+        protected VolumeFile(string name)
         {
             Name = name;
 
             InitializeSuffixes();
         }
 
-        private void InitializeSuffixes()
-        {
-            AddSuffix("NAME", new Suffix<StringValue>(() => Name));
-            AddSuffix("SIZE", new Suffix<ScalarIntValue>(() => new ScalarIntValue(Size)));
-            AddSuffix("EXTENSION", new Suffix<StringValue>(() => Extension));
-
-            AddSuffix("READALL", new Suffix<FileContent>(ReadAll));
-            AddSuffix("WRITE", new OneArgsSuffix<BooleanValue, Structure>((str) => WriteObject(str)));
-            AddSuffix("WRITELN", new OneArgsSuffix<BooleanValue, StringValue>((str) => new BooleanValue(WriteLn(str))));
-            AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
-        }
-
-        private bool WriteObject(Structure content)
-        {
-            if (content is StringValue)
-            {
-                return Write(content.ToString());
-            } else if (content is FileContent)
-            {
-                FileContent fileContent = (FileContent)content;
-                return Write(fileContent.Bytes);
-            } else {
-                throw new KOSException("Only instances of string and FileContent can be written");
-            }
-        }
-
         public abstract FileContent ReadAll();
+
         public abstract bool Write(byte[] content);
+
         public abstract bool WriteLn(string content);
 
         public bool Write(string content)
@@ -64,6 +44,35 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return Name;
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("NAME", new Suffix<StringValue>(() => Name));
+            AddSuffix("SIZE", new Suffix<ScalarIntValue>(() => new ScalarIntValue(Size)));
+            AddSuffix("EXTENSION", new Suffix<StringValue>(() => Extension));
+
+            AddSuffix("READALL", new Suffix<FileContent>(ReadAll));
+            AddSuffix("WRITE", new OneArgsSuffix<BooleanValue, Structure>(str => WriteObject(str)));
+            AddSuffix("WRITELN", new OneArgsSuffix<BooleanValue, StringValue>(str => new BooleanValue(WriteLn(str))));
+            AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
+        }
+
+        private bool WriteObject(Structure content)
+        {
+            if (content is StringValue)
+            {
+                return Write(content.ToString());
+            }
+
+            var stringValue = content as FileContent;
+            if (stringValue != null)
+            {
+                FileContent fileContent = stringValue;
+                return Write(fileContent.Bytes);
+            }
+
+            throw new KOSException("Only instances of string and FileContent can be written");
         }
     }
 }

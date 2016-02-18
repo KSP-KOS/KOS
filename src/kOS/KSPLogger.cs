@@ -129,7 +129,7 @@ namespace kOS
                         int numPadSpaces = useColumn-1;
                         if (numPadSpaces < 0)
                             numPadSpaces = 0;
-                        msg += new String(' ', numPadSpaces) + "^" + "\n";
+                        msg += new string(' ', numPadSpaces) + "^" + "\n";
                     }
                 }
                 return msg;
