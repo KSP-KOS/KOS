@@ -41,10 +41,10 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeEnumerableSuffixes()
         {
-            AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator (Collection.GetEnumerator())));
+            AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator(Collection.GetEnumerator())));
             AddSuffix("CONTAINS",   new OneArgsSuffix<BooleanValue, T>    (item => Collection.Contains(item)));
             AddSuffix("EMPTY",      new NoArgsSuffix<BooleanValue>        (() => !Collection.Any()));
-            AddSuffix("DUMP",       new NoArgsSuffix<StringValue>         (() => ToString()));
+            AddSuffix("DUMP",       new NoArgsSuffix<StringValue>         (() => new StringValue(ToString())));
         }
     }
 }

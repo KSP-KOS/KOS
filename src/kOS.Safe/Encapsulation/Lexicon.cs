@@ -53,7 +53,7 @@ namespace kOS.Safe.Encapsulation
             InitalizeSuffixes();
         }
 
-        private Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon)
+        public Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon)
             : this()
         {
             foreach (var u in lexicon)

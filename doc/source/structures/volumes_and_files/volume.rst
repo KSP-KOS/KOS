@@ -33,12 +33,28 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
           - True if the name can be changed
 
         * - :attr:`FILES`
-          - :struct:`List`
-          - List of all files on the volume
+          - :struct:`Lexicon`
+          - Lexicon of all files on the volume
 
         * - :attr:`POWERREQUIREMENT`
           - scalar
           - Amount of power consumed when this volume is set as the current volume
+
+        * - :meth:`EXISTS(filename)`
+          - boolean
+          - Returns true if the given file exists
+
+        * - :meth:`CREATE(filename)`
+          - :struct:`VolumeFile`
+          - Creates a file
+
+        * - :meth:`OPEN(filename)`
+          - :struct:`VolumeFile`
+          - Opens a file
+
+        * - :meth:`DELETE(filename)`
+          - boolean
+          - Deletes a file
 
 .. attribute:: Volume:FREESPACE
 
@@ -71,10 +87,11 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
 .. attribute:: Volume:FILES
 
-    :type: :struct:`List` of :struct:`FileInfo`
+    :type: :struct:`Lexicon` of :struct:`VolumeFile`
     :access: Get only
 
-    List of files on this volume
+    List of files on this volume. Keys are the names of all files on this volume and values are the associated :struct:`VolumeFile` structures.
+
 
 .. attribute:: Volume:POWERREQUIREMENT
 
@@ -82,4 +99,30 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
     :access: Get only
 
     Amount of power consumed when this volume is set as the current volume
+
+
+.. method:: Volume:EXISTS(filename)
+
+    :return: boolean
+
+    Returns true if the given file exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
+    Use ``Volume:FILES:HASKEY(filename)`` to perform a strict check.
+
+.. method:: Volume:OPEN(filename)
+
+    :return: :struct:`VolumeFile`
+
+    Opens the file with the given name and returns :struct:`VolumeFile`. It will fail if the file doesn't exist.
+
+.. method:: Volume:CREATE(filename)
+
+    :return: :struct:`VolumeFile`
+
+    Creates a file with the given name and returns :struct:`VolumeFile`. It will fail if the file already exists.
+
+.. method:: Volume:DELETE(filename)
+
+    :return: boolean
+
+    Deletes the given file. It will return true if file was successfully deleted and false otherwise.
 

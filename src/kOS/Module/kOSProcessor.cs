@@ -21,7 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Execution;
 using UnityEngine;
-using FileInfo = kOS.Safe.Encapsulation.FileInfo;
+using FileInfo = kOS.Safe.Encapsulation.VolumeFile;
+using kOS.Safe.Encapsulation;
+using kOS.Serialization;
 
 namespace kOS.Module
 {
@@ -241,13 +243,13 @@ namespace kOS.Module
             var bootFiles = new List<string>();
 
             var temp = new Archive();
-            var files = temp.GetFileList();
+            var files = temp.FileList;
             var maxchoice = 0;
             bootFiles.Add("None");
-            foreach (FileInfo file in files)
+            foreach (KeyValuePair<string, VolumeFile> pair in files)
             {
-                if (!file.Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
-                bootFiles.Add(file.Name);
+                if (!pair.Key.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                bootFiles.Add(pair.Key);
                 maxchoice++;
             }
             //no need to show the control if there are no files starting with boot
@@ -312,12 +314,10 @@ namespace kOS.Module
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
                 if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
                 {
-                    var bootProgramFile = archive.GetByName(bootFile);
-                    if (bootProgramFile != null)
+                    var bootVolumeFile = archive.Open(bootFile);
+                    if (bootVolumeFile != null)
                     {
-                        // Copy to HardDisk as "boot".
-                        var boot = new ProgramFile(bootProgramFile) { Filename = bootFile };
-                        HardDisk.Add(boot);
+                        HardDisk.Save(bootFile, bootVolumeFile.ReadAll());
                     }
                 }
             }
