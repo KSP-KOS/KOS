@@ -30,13 +30,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\Dropbox\kOS\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Scale_Redist">
-      <HintPath>..\..\..\..\..\Dropbox\kOS\Scale_Redist.dll</HintPath>
+      <HintPath>..\..\Resources\Scale_Redist.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,10 +45,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Dropbox\kOS\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="KSPAPIExtensions">
-      <HintPath>..\..\..\..\..\Dropbox\kOS\KSPAPIExtensions.dll</HintPath>
+      <HintPath>..\..\Resources\KSPAPIExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
