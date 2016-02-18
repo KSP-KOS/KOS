@@ -40,13 +40,13 @@ namespace kOS.Function
                     list = shared.Vessel.PartList(listType, shared);
                     break;
                 case "files":
-                    list = ListValue.CreateList(shared.VolumeMgr.CurrentVolume.GetFileList());
+                    list = ListValue.CreateList(shared.VolumeMgr.CurrentVolume.FileList.ToList());
                     break;
                 case "volumes":
                     list = ListValue.CreateList(shared.VolumeMgr.Volumes.Values.ToList());
                     break;
                 case "processors":
-                    list = ListValue.CreateList(shared.ProcessorMgr.processors.Values.ToList().Select((processor) => PartModuleFieldsFactory.Construct(processor, shared)));
+                    list = ListValue.CreateList(shared.ProcessorMgr.processors.Values.ToList().Select(processor => PartModuleFieldsFactory.Construct(processor, shared)));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -54,10 +54,9 @@ namespace kOS.Safe.Encapsulation
             InitalizeSuffixes();
         }
 
-        private Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon)
-            : this()
+        public Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon) : this()
         {
-            foreach (var u in lexicon)
+            foreach (KeyValuePair<Structure, Structure> u in lexicon)
             {
                 internalDictionary.Add(u);
             }
@@ -233,7 +232,7 @@ namespace kOS.Safe.Encapsulation
         {
             internalDictionary[index] = value;
         }
-        
+
         // Only needed because IIndexable demands it.  For a lexicon, none of the code is
         // actually trying to call this:
         public void SetIndex(int index, Structure value)

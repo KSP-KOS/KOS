@@ -69,7 +69,7 @@ File System Lists
 These generate :struct:`lists <List>` about the files in the system:
 
 ``Files``
-    :struct:`List` the :struct:`files <FileInfo>` on the current Volume. (note below)
+    :struct:`List` the :struct:`files <VolumeFile>` on the current Volume. (note below)
 ``Volumes``
     :struct:`List` all the :struct:`volumes <Volume>` that exist.
 
@@ -84,7 +84,7 @@ Examples::
     LIST VOLUMES. // which volumes can be seen by this CPU?
     LIST FILES IN fileList. // fileList is now a LIST() containing file structures.
 
-The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <fileinfo>`.
+The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <VolumeFile>`.
 
 Here are some more examples::
 

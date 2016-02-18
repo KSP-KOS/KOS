@@ -5,6 +5,7 @@ Structure Reference
 
 A general discussion of structures :ref:`can be found here <language structures>`.
 
+<<<<<<< HEAD
 * :ref:`Common to all <reflection>`
     * :ref:`Suffixes common to all objects <structure>`
 * :ref:`Mathematics <math>`
@@ -53,12 +54,16 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :ref:`Time <time>`
     * :ref:`Drawing Vectors <vecdraw>`
 
+=======
+>>>>>>> develop
 .. toctree::
-    :hidden:
+    :maxdepth: 2
 
+    Collections      <structures/collections>
+    Volumes & Files  <structures/volumes_and_files>
+    Vessels & Parts  <structures/vessels>
+    Core             <structures/core>
     Orbits           <structures/orbits>
     Celestial Bodies <structures/celestial_bodies>
-    Vessels & Parts  <structures/vessels>
-    Waypoints        <structures/waypoint>
     Miscellaneous    <structures/misc>
-    Core             <structures/core>
+    Waypoints        <structures/waypoint>

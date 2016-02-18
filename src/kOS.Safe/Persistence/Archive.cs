@@ -1,9 +1,9 @@
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Safe.Persistence
 {
@@ -22,46 +22,25 @@ namespace kOS.Safe.Persistence
             Name = "Archive";
         }
 
-        public override bool IsRoomFor(ProgramFile newFile)
+        public override float RequiredPower()
         {
-            return true;
+            const int MULTIPLIER = 5;
+            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
+
+            return POWER_REQUIRED;
         }
 
-        /// <summary>
-        /// Get a file given its name
-        /// </summary>
-        /// <param name="name">filename to get.  if it has no filename extension, one will be guessed at, ".ks" usually.</param>
-        /// <param name="ksmDefault">true if a filename of .ksm is preferred in contexts where the extension was left off.  The default is to prefer .ks</param>
-        /// <returns>the file</returns>
-        public override ProgramFile GetByName(string name, bool ksmDefault = false)
+        public override VolumeFile Open(string name, bool ksmDefault = false)
         {
             try
             {
-                SafeHouse.Logger.Log("Archive: Getting File By Name: " + name);
                 var fileInfo = FileSearch(name, ksmDefault);
                 if (fileInfo == null)
                 {
                     return null;
                 }
 
-                using (var infile = new BinaryReader(File.Open(fileInfo.FullName, FileMode.Open)))
-                {
-                    byte[] fileBody = ProcessBinaryReader(infile);
-
-                    var retFile = new ProgramFile(fileInfo.Name);
-                    FileCategory whatKind = PersistenceUtilities.IdentifyCategory(fileBody);
-                    if (whatKind == FileCategory.KSM)
-                        retFile.BinaryContent = fileBody;
-                    else
-                        retFile.StringContent = System.Text.Encoding.UTF8.GetString(fileBody);
-
-                    if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
-                        retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
-
-                    base.Add(retFile, true);
-
-                    return retFile;
-                }
+                return new ArchiveFile(fileInfo);
             }
             catch (Exception e)
             {
@@ -70,82 +49,21 @@ namespace kOS.Safe.Persistence
             }
         }
 
-        public override bool SaveFile(ProgramFile file)
+        public override bool Delete(string name)
         {
-            base.SaveFile(file);
-
-            Directory.CreateDirectory(ArchiveFolder);
-
-            try
+            var fullPath = FileSearch(name);
+            if (fullPath == null)
             {
-                SafeHouse.Logger.Log("Archive: Saving File Name: " + file.Filename);
-                byte[] fileBody;
-                string fileExtension;
-                switch (file.Category)
-                {
-                    case FileCategory.OTHER:
-                    case FileCategory.TOOSHORT:
-                    case FileCategory.ASCII:
-                    case FileCategory.KERBOSCRIPT:
-                        string tempString = file.StringContent;
-                        if (SafeHouse.IsWindows)
-                        {
-                            // Only evil windows gets evil windows line breaks, and only if this is some sort of ASCII:
-                            tempString = tempString.Replace("\n", "\r\n");
-                        }
-                        fileBody = System.Text.Encoding.UTF8.GetBytes(tempString.ToCharArray());
-                        fileExtension = KERBOSCRIPT_EXTENSION;
-                        break;
-
-                    case FileCategory.KSM:
-                        fileBody = file.BinaryContent;
-                        fileExtension = KOS_MACHINELANGUAGE_EXTENSION;
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                var fileName = string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(file.Filename, fileExtension, true));
-                using (var outfile = new BinaryWriter(File.Open(fileName, FileMode.Create)))
-                {
-                    outfile.Write(fileBody);
-                }
-            }
-            catch (Exception e)
-            {
-                SafeHouse.Logger.Log(e);
                 return false;
             }
-
+            File.Delete(fullPath.FullName);
             return true;
-        }
-
-        public override bool DeleteByName(string name)
-        {
-            try
-            {
-                SafeHouse.Logger.Log("Archive: Deleting File Name: " + name);
-                base.DeleteByName(name);
-
-                var fullPath = FileSearch(name);
-                if (fullPath == null)
-                {
-                    return false;
-                }
-                File.Delete(fullPath.FullName);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public override bool RenameFile(string name, string newName)
         {
             try
             {
-                SafeHouse.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
                 var fullSourcePath = FileSearch(name);
                 if (fullSourcePath == null)
                 {
@@ -167,35 +85,92 @@ namespace kOS.Safe.Persistence
             }
         }
 
-        public override List<FileInfo> GetFileList()
+        public override VolumeFile Create(string name)
         {
-            var retList = new List<FileInfo>();
-
-            try
+            string filePath = Path.Combine(ArchiveFolder, name);
+            if (File.Exists(filePath))
             {
-                SafeHouse.Logger.Log(string.Format("Archive: Listing Files"));
+                throw new KOSFileException("File already exists: " + name);
+            }
+
+            using (File.Create(filePath))
+            {
+                // Do Nothing
+            }
+
+            return new ArchiveFile(FileSearch(name));
+        }
+
+        public override VolumeFile Save(string name, FileContent content)
+        {
+            Directory.CreateDirectory(ArchiveFolder);
+
+            byte[] fileBody = ConvertToWindowsNewlines(content.Bytes);
+
+            using (var outfile = new BinaryWriter(File.Open(Path.Combine(ArchiveFolder, name), FileMode.Create)))
+            {
+                outfile.Write(fileBody);
+            }
+
+            return new ArchiveFile(FileSearch(name));
+        }
+
+        public override Dictionary<string, VolumeFile> FileList
+        {
+            get
+            {
                 var listFiles = Directory.GetFiles(ArchiveFolder);
                 var filterHid = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.Hidden) != 0);
                 var filterSys = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.System) != 0);
 
                 var visFiles = listFiles.Except(filterSys).Except(filterHid);
                 var kosFiles = visFiles.Except(Directory.GetFiles(ArchiveFolder, ".*"));
-                
-                retList.AddRange(kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new FileInfo(sysFileInfo)));
+                return kosFiles.Select(file => new FileInfo(file)).Select(sysFileInfo => new ArchiveFile(sysFileInfo)).
+                    Cast<VolumeFile>().ToDictionary(f => f.Name, f => f);
             }
-            catch (DirectoryNotFoundException)
-            {
-            }
-
-            return retList;
         }
 
-        public override float RequiredPower()
+        public override long Size
         {
-            const int MULTIPLIER = 5;
-            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
+            get
+            {
+                return FileList.Values.Sum(i => i.Size);
+            }
+        }
 
-            return POWER_REQUIRED;
+        public override bool Exists(string name)
+        {
+            return FileSearch(name) != null;
+        }
+
+        public static byte[] ConvertToWindowsNewlines(byte[] bytes)
+        {
+            FileCategory category = PersistenceUtilities.IdentifyCategory(bytes);
+
+            if (SafeHouse.IsWindows && !PersistenceUtilities.IsBinary(category))
+            {
+                string asString = FileContent.DecodeString(bytes);
+                // Only evil windows gets evil windows line breaks, and only if this is some sort of ASCII:
+                asString = asString.Replace("\n", "\r\n");
+                return FileContent.EncodeString(asString);
+            }
+
+            return bytes;
+        }
+
+        public static byte[] ConvertFromWindowsNewlines(byte[] bytes)
+        {
+            FileCategory category = PersistenceUtilities.IdentifyCategory(bytes);
+
+            if (!PersistenceUtilities.IsBinary(category))
+            {
+                string asString = FileContent.DecodeString(bytes);
+                // Only evil windows gets evil windows line breaks, and only if this is some sort of ASCII:
+                asString = asString.Replace("\r\n", "\n");
+                return FileContent.EncodeString(asString);
+            }
+
+            return bytes;
         }
 
         /// <summary>
@@ -204,15 +179,15 @@ namespace kOS.Safe.Persistence
         /// <param name="name">filename to look for</param>
         /// <param name="ksmDefault">if true, it prefers to use the KSM filename over the KS.  The default is to prefer KS.</param>
         /// <returns>the full fileinfo of the filename if found</returns>
-        private System.IO.FileInfo FileSearch(string name, bool ksmDefault = false)
+        private FileInfo FileSearch(string name, bool ksmDefault = false)
         {
-            var path = ArchiveFolder + name;
-            if (Path.HasExtension(path))
+            var path = Path.Combine(ArchiveFolder, name);
+            if (File.Exists(path))
             {
-                return File.Exists(path) ? new System.IO.FileInfo(path) : null;
+                return new FileInfo(path);
             }
-            var kerboscriptFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
-            var kosMlFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
+            var kerboscriptFile = new FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
+            var kosMlFile = new FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
 
             if (kerboscriptFile.Exists && kosMlFile.Exists)
             {
@@ -227,51 +202,6 @@ namespace kOS.Safe.Persistence
                 return kosMlFile;
             }
             return null;
-        }
-
-        private byte[] ProcessBinaryReader(BinaryReader infile)
-        {
-            const int BUFFER_SIZE = 4096;
-            using (var ms = new MemoryStream())
-            {
-                var buffer = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = infile.Read(buffer, 0, buffer.Length)) != 0)
-                    ms.Write(buffer, 0, count);
-                return ms.ToArray();
-            }
-        }
-
-        public override bool AppendToFile(string name, string textToAppend)
-        {
-            SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
-            System.IO.FileInfo info = FileSearch(name);
-
-            string fullPath = info == null ? string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true)) : info.FullName;
-
-            // Using binary writer so we can bypass the OS behavior about ASCII end-of-lines and always use \n's no matter the OS:
-            // Deliberately not catching potential I/O exceptions from this, so they will percolate upward and be seen by the user:
-            using (var outfile = new BinaryWriter(File.Open(fullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
-            {
-                byte[] binaryLine = System.Text.Encoding.UTF8.GetBytes((textToAppend + "\n").ToCharArray());
-                outfile.Write(binaryLine);
-            }
-            return true;
-        }
-
-        public override bool AppendToFile(string name, byte[] bytesToAppend)
-        {
-            SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
-            System.IO.FileInfo info = FileSearch(name);
-
-            string fullPath = info == null ? string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true)) : info.FullName;
-
-            // Deliberately not catching potential I/O exceptions from this, so they will percolate upward and be seen by the user:
-            using (var outfile = new BinaryWriter(File.Open(fullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
-            {
-                outfile.Write(bytesToAppend);
-            }
-            return true;
         }
     }
 }
