@@ -2,7 +2,7 @@ using System;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class SetSuffix<TValue> : Suffix<TValue>, ISetSuffix
+    public class SetSuffix<TValue> : Suffix<TValue>, ISetSuffix where TValue : Structure
     {
         private readonly SuffixSetDlg<TValue> setter;
 
@@ -13,7 +13,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
         }
 
         public virtual void Set(object value)
-        {
+        {            
             TValue toSet;
             if (value is TValue)
             {
@@ -21,7 +21,8 @@ namespace kOS.Safe.Encapsulation.Suffixes
             }
             else
             {
-                toSet = (TValue)Convert.ChangeType(value, typeof(TValue));
+                Structure newValue = Structure.FromPrimitiveWithAssert(value);  // Handles converting built in types to Structures that Convert.ChangeType() can't.
+                toSet = (TValue)Convert.ChangeType(newValue, typeof(TValue));
             }
             setter.Invoke(toSet);
         }

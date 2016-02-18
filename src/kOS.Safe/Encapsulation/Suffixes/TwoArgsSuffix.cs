@@ -1,6 +1,6 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class TwoArgsSuffix<TReturn, TParam, TParam2> : SuffixBase
+    public class TwoArgsSuffix<TReturn, TParam, TParam2> : SuffixBase where TReturn : Structure where TParam : Structure where TParam2 : Structure
     {
         private readonly Del<TReturn, TParam, TParam2> del;
 
@@ -12,13 +12,13 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override object Get()
+        public override ISuffixResult Get()
         {
-            return del;
+            return new DelegateSuffixResult(del);
         }
     }
 
-    public class TwoArgsSuffix<TParam, TParam2> : SuffixBase
+    public class TwoArgsSuffix<TParam, TParam2> : SuffixBase where TParam : Structure where TParam2 : Structure
     {
         private readonly Del<TParam, TParam2> del;
 
@@ -30,9 +30,9 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override object Get()
+        public override ISuffixResult Get()
         {
-            return del;
+            return new DelegateSuffixResult(del);
         }
     }
 }

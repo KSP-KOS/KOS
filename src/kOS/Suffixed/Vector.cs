@@ -5,10 +5,11 @@ using UnityEngine;
 using kOS.Safe.Serialization;
 using System.Collections.Generic;
 using kOS.Safe.Utilities;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class Vector : Structure, IDumper
+    public class Vector : SerializableStructure
     {
         public const string DumpX = "x";
         public const string DumpY = "y";
@@ -49,10 +50,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("X", new SetSuffix<double>(() => X, value => X = value));
-            AddSuffix("Y", new SetSuffix<double>(() => Y, value => Y = value));
-            AddSuffix("Z", new SetSuffix<double>(() => Z, value => Z = value));
-            AddSuffix("MAG", new SetSuffix<double>(Magnitude, value =>
+            AddSuffix("X", new SetSuffix<ScalarValue>(() => X, value => X = value));
+            AddSuffix("Y", new SetSuffix<ScalarValue>(() => Y, value => Y = value));
+            AddSuffix("Z", new SetSuffix<ScalarValue>(() => Z, value => Z = value));
+            AddSuffix("MAG", new SetSuffix<ScalarValue>(Magnitude, value =>
             {
                 double oldMag = new Vector3d(X, Y, Z).magnitude;
 
@@ -64,7 +65,7 @@ namespace kOS.Suffixed
             }));
             AddSuffix("VEC", new Suffix<Vector>(() => new Vector(X, Y, Z)));
             AddSuffix("NORMALIZED", new Suffix<Vector>(Normalized));
-            AddSuffix("SQRMAGNITUDE", new Suffix<double>(() => new Vector3d(X, Y, Z).sqrMagnitude));
+            AddSuffix("SQRMAGNITUDE", new Suffix<ScalarValue>(() => new Vector3d(X, Y, Z).sqrMagnitude));
             AddSuffix("DIRECTION", new SetSuffix<Direction>(ToDirection, value =>
             {
                 var newMagnitude = Vector3d.forward * new Vector3d(X, Y, Z).magnitude;
@@ -124,7 +125,7 @@ namespace kOS.Suffixed
             return null;
         }
 
-        public double Magnitude()
+        public ScalarValue Magnitude()
         {
             return new Vector3d(X, Y, Z).magnitude;
         }
@@ -186,7 +187,7 @@ namespace kOS.Suffixed
 
         public static Vector operator *(Vector a, ScalarValue b)
         {
-            return new Vector(a.X * b, a.Y * b, a.Z * b);
+            return a * b.GetDoubleValue();
         }
 
         public static Vector operator *(float b, Vector a)
@@ -201,7 +202,7 @@ namespace kOS.Suffixed
 
         public static Vector operator *(ScalarValue b, Vector a)
         {
-            return new Vector(a.X * b, a.Y * b, a.Z * b);
+            return a * b.GetDoubleValue();
         }
 
         public static Vector operator /(Vector a, ScalarValue b)
@@ -224,9 +225,9 @@ namespace kOS.Suffixed
             return a * (-1d);
         }
 
-        public IDictionary<object, object> Dump()
+        public override Dump Dump()
         {
-            DictionaryWithHeader dump = new DictionaryWithHeader();
+            DumpWithHeader dump = new DumpWithHeader();
 
             dump.Add(DumpX, X);
             dump.Add(DumpY, Y);
@@ -235,7 +236,7 @@ namespace kOS.Suffixed
             return dump;
         }
 
-        public void LoadDump(IDictionary<object, object> dump)
+        public override void LoadDump(Dump dump)
         {
             X = Convert.ToDouble(dump[DumpX]);
             Y = Convert.ToDouble(dump[DumpY]);

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Test.Collections
 {
     [TestFixture]
-    public class QueueValueTest
+    public class QueueValueTest : CollectionValueTest
     {
         [Test]
         public void CanCreate()
@@ -22,22 +23,22 @@ namespace kOS.Safe.Test.Collections
             var queue = new QueueValue();
             Assert.IsNotNull(queue);
             var length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(0,length);
+            Assert.AreEqual(ScalarIntValue.Zero, length);
 
-            InvokeDelegate(queue, "PUSH", "value1");
-            InvokeDelegate(queue, "PUSH", "value2");
+            InvokeDelegate(queue, "PUSH", new StringValue("value1"));
+            InvokeDelegate(queue, "PUSH", new StringValue("value2"));
 
             length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(2,length);
+            Assert.AreEqual(ScalarIntValue.Two, length);
 
             object popped = InvokeDelegate(queue, "POP");
-            Assert.AreEqual("value1", popped);
+            Assert.AreEqual(new StringValue("value1"), popped);
 
             popped = InvokeDelegate(queue, "POP");
-            Assert.AreEqual("value2", popped);
+            Assert.AreEqual(new StringValue("value2"), popped);
 
             length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(0, length);
+            Assert.AreEqual(ScalarIntValue.Zero, length);
         }
 
         [Test]
@@ -45,14 +46,14 @@ namespace kOS.Safe.Test.Collections
         {
             var queue = new QueueValue();
 
-            InvokeDelegate(queue, "PUSH", 1);
-            InvokeDelegate(queue, "PUSH", new object());
+            InvokeDelegate(queue, "PUSH", ScalarIntValue.One);
+            InvokeDelegate(queue, "PUSH", ScalarIntValue.Two);
 
             var length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(2,length);
+            Assert.AreEqual(ScalarIntValue.Two, length);
             InvokeDelegate(queue, "CLEAR");
             length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(0,length);
+            Assert.AreEqual(ScalarIntValue.Zero, length);
         }
 
         [Test]
@@ -60,31 +61,31 @@ namespace kOS.Safe.Test.Collections
         {
             var queue = new QueueValue();
 
-            var zedObject = new object();
+            var zedObject = ScalarIntValue.Zero;
             InvokeDelegate(queue, "PUSH", zedObject);
-            var firstObject = new object();
+            var firstObject = ScalarIntValue.One;
             InvokeDelegate(queue, "PUSH", firstObject);
-            var secondObject = new object();
+            var secondObject = ScalarIntValue.Two;
             InvokeDelegate(queue, "PUSH", secondObject);
-            var thirdObject = new object();
+            var thirdObject = new ScalarIntValue(4);
             InvokeDelegate(queue, "PUSH", thirdObject);
 
             var length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(4,length);
+            Assert.AreEqual(new ScalarIntValue(4), length);
 
             var copy = InvokeDelegate(queue, "COPY") as QueueValue;
             Assert.AreNotSame(queue, copy);
 
             var copyLength = InvokeDelegate(copy, "LENGTH");
-            Assert.AreEqual(4,copyLength);
+            Assert.AreEqual(new ScalarIntValue(4), copyLength);
 
             InvokeDelegate(copy, "CLEAR");
 
             copyLength = InvokeDelegate(copy, "LENGTH");
-            Assert.AreEqual(0,copyLength);
+            Assert.AreEqual(ScalarIntValue.Zero, copyLength);
 
             length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(4,length);
+            Assert.AreEqual(new ScalarIntValue(4), length);
         }
 
         [Test]
@@ -92,31 +93,21 @@ namespace kOS.Safe.Test.Collections
         {
             var queue = new QueueValue();
 
-            var zedObject = new object();
+            var zedObject = new StringValue("abc");
             InvokeDelegate(queue, "PUSH", zedObject);
-            var firstObject = new object();
+            var firstObject = new StringValue("def");
             InvokeDelegate(queue, "PUSH", firstObject);
-            var secondObject = new object();
-            var thirdObject = new object();
+            var secondObject = new StringValue("xyz");
+            var thirdObject = ScalarIntValue.Zero;
 
             var length = InvokeDelegate(queue, "LENGTH");
-            Assert.AreEqual(2,length);
+            Assert.AreEqual(ScalarIntValue.Two, length);
 
 
-            Assert.IsTrue((bool)InvokeDelegate(queue, "CONTAINS", zedObject));
-            Assert.IsTrue((bool)InvokeDelegate(queue, "CONTAINS", firstObject));
-            Assert.IsFalse((bool)InvokeDelegate(queue, "CONTAINS", secondObject));
-            Assert.IsFalse((bool)InvokeDelegate(queue, "CONTAINS", thirdObject));
-        }
-
-        private object InvokeDelegate(IDumper queue, string suffixName, params object[] parameters)
-        {
-            var lengthObj = queue.GetSuffix(suffixName);
-            Assert.IsNotNull(lengthObj);
-            var lengthDelegate = lengthObj as Delegate;
-            Assert.IsNotNull(lengthDelegate);
-            var length = lengthDelegate.DynamicInvoke(parameters);
-            return length;
+            Assert.IsTrue((BooleanValue)InvokeDelegate(queue, "CONTAINS", zedObject));
+            Assert.IsTrue((BooleanValue)InvokeDelegate(queue, "CONTAINS", firstObject));
+            Assert.IsFalse((BooleanValue)InvokeDelegate(queue, "CONTAINS", secondObject));
+            Assert.IsFalse((BooleanValue)InvokeDelegate(queue, "CONTAINS", thirdObject));
         }
     }
 }

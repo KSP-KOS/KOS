@@ -2,7 +2,7 @@
 
 namespace kOS.Serialization
 {
-    public interface IDumperWithSharedObjects : IDumper
+    public interface IHasSharedObjects
     {
         SharedObjects Shared { set; }
     }

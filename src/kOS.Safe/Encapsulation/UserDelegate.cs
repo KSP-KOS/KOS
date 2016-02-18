@@ -67,7 +67,7 @@ namespace kOS.Safe.Encapsulation
             Cpu.PushStack(this);
         }
         
-        public override object Call()
+        public override Structure Call()
         {
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)
