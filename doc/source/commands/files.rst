@@ -308,10 +308,6 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
-<<<<<<< HEAD
-
-.. _writejson:
-=======
 ``EXISTS(FILENAME).``
 --------------------------------
 
@@ -324,7 +320,8 @@ A shortcut for ``CORE:CURRENTVOLUME:CREATE(FILENAME)``. See :meth:`Volume:CREATE
 ``OPEN(FILENAME).``
 --------------------------------
 A shortcut for ``CORE:CURRENTVOLUME:OPEN(FILENAME)``. See :meth:`Volume:OPEN`.
->>>>>>> develop
+
+.. _writejson:
 
 ``WRITEJSON(OBJECT, FILENAME).``
 --------------------------------
