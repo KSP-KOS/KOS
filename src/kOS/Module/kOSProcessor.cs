@@ -12,7 +12,6 @@ using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
-using kOS.Suffixed;
 using kOS.Utilities;
 using KSP.IO;
 using KSPAPIExtensions;
@@ -21,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Execution;
 using UnityEngine;
-using FileInfo = kOS.Safe.Encapsulation.FileInfo;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Module
 {
@@ -241,13 +240,13 @@ namespace kOS.Module
             var bootFiles = new List<string>();
 
             var temp = new Archive();
-            var files = temp.GetFileList();
+            var files = temp.FileList;
             var maxchoice = 0;
             bootFiles.Add("None");
-            foreach (FileInfo file in files)
+            foreach (KeyValuePair<string, VolumeFile> pair in files)
             {
-                if (!file.Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
-                bootFiles.Add(file.Name);
+                if (!pair.Key.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                bootFiles.Add(pair.Key);
                 maxchoice++;
             }
             //no need to show the control if there are no files starting with boot
@@ -304,7 +303,7 @@ namespace kOS.Module
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
 
-                if (!String.IsNullOrEmpty(Tag))
+                if (!string.IsNullOrEmpty(Tag))
                 {
                     HardDisk.Name = Tag;
                 }
@@ -312,12 +311,10 @@ namespace kOS.Module
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
                 if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
                 {
-                    var bootProgramFile = archive.GetByName(bootFile);
-                    if (bootProgramFile != null)
+                    var bootVolumeFile = archive.Open(bootFile);
+                    if (bootVolumeFile != null)
                     {
-                        // Copy to HardDisk as "boot".
-                        var boot = new ProgramFile(bootProgramFile) { Filename = bootFile };
-                        HardDisk.Add(boot);
+                        HardDisk.Save(bootFile, bootVolumeFile.ReadAll());
                     }
                 }
             }
@@ -346,7 +343,7 @@ namespace kOS.Module
                     if (b.part == null || b.part.vessel == null)
                         return 1;
                     // If on different vessels, sort by vessel name next:
-                    int compare = String.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
+                    int compare = string.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
                         StringComparison.CurrentCultureIgnoreCase);
                     // If on same vessel, sort by part UID last:
                     if (compare != 0)
@@ -562,7 +559,7 @@ namespace kOS.Module
                 // KSP Seems to want to make an instance of my partModule during initial load
                 if (vessel == null) return;
 
-                if (node.HasValue("activated") && !Boolean.Parse(node.GetValue("activated")))
+                if (node.HasValue("activated") && !bool.Parse(node.GetValue("activated")))
                 {
                     ProcessorMode = ProcessorModes.OFF;
                 }

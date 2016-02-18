@@ -50,8 +50,10 @@ of the RUN command\*\*, follow these rules:
    filename.
 -  A bareword filename may contain file extensions with dots, provided
    it does not end in a dot.
--  If the filename does not contain a file extension, kOS will pad it
-   with a ".ks" extension and use that.
+-  Commands that try to read files will add '.ks' to filenames if
+   the original filename was not found, for example ``RUN abc.``
+   will first look for a file named ``abc``. If such a file is not found
+   it will look for ``abc.ks``.
 
 Putting the above rules together, you can refer to filenames in any of
 the following ways:
@@ -305,6 +307,19 @@ Example::
     RENAME VOLUME 1 TO AwesomeDisk.     // Name volume 1 as AwesomeDisk.
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
+
+``EXISTS(FILENAME).``
+--------------------------------
+
+A shortcut for ``CORE:CURRENTVOLUME:EXISTS(FILENAME)``. See :meth:`Volume:EXISTS`.
+
+``CREATE(FILENAME).``
+--------------------------------
+A shortcut for ``CORE:CURRENTVOLUME:CREATE(FILENAME)``. See :meth:`Volume:CREATE`.
+
+``OPEN(FILENAME).``
+--------------------------------
+A shortcut for ``CORE:CURRENTVOLUME:OPEN(FILENAME)``. See :meth:`Volume:OPEN`.
 
 ``WRITEJSON(OBJECT, FILENAME).``
 --------------------------------
