@@ -181,14 +181,17 @@ namespace kOS.Module
         //returns basic information on kOSProcessor module in Editor
         public override string GetInfo()
         {
+            int defaultAvgInstructions = 200;
             string format =
                 "Default disk capacity: {0}\n\n" +
-                "<color=#99ff00ff>Requires (default):</color>\n" +
-                "-ElectricCharge: {1:N3}/s";
-            // For the sake of GetInfo, prorate the EC usage based on the smallest physics frame the settings UI allows: 0.02s.
+                "<color=#99ff00ff>Requires:</color>\n" +
+                " - ElectricCharge: 1 per {3} instructions executed\n" +
+                "<color=#99ff00ff>Example:</color>\n" +
+                " - {1:N3}EC/s if IPU={2} and no wait instructions.";
+            // For the sake of GetInfo, prorate the EC usage based on the smallest physics frame currently selected
             // Because this is called before the part is set, we need to manually calculate it instead of letting Update handle it.
-            double power = diskSpace * ECPerBytePerSecond + SafeHouse.Config.InstructionsPerUpdate * ECPerInstruction / Time.fixedDeltaTime;
-            return string.Format(format, diskSpace, power);
+            double power = diskSpace * ECPerBytePerSecond + defaultAvgInstructions * ECPerInstruction / Time.fixedDeltaTime;
+            return string.Format(format, diskSpace, power, defaultAvgInstructions, (int)(1 / ECPerInstruction));
         }
 
         //implement IPartCostModifier component
