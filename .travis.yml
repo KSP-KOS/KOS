@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
     - python-sphinx
+    - nunit-console
 
 # Pre-shared token for pushing notifications to slack chat
 notifications:
@@ -14,6 +15,11 @@ notifications:
 # Before the install the library dlls need to be downloaded
 before_script:
 - chmod +x travis-before.sh && ./travis-before.sh
+
+script:
+- xbuild /p:Configuration=Release $TRAVIS_SOLUTION
+- nunit-console src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
+- cd doc && make html && cd ../
 
 # Cleanup the downloaded resources
 after_script:
