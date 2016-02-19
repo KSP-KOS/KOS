@@ -15,7 +15,6 @@ tar -xvf kos-1.0.5.tar -C Resources/
 
 python --version
 pip --version
-pip install sphinx_rtd_theme
 cd ../doc
 make html
 cd ../

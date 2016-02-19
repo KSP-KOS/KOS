@@ -11,6 +11,8 @@ addons:
 notifications:
   slack: ksp-kos:51DTQ4ZBP9SlGNnLWJ5D84vp
 
+install: pip install sphinx_rtd_theme
+
 # Before the install the library dlls need to be downloaded
 before_script:
 - chmod +x travis-before.sh && ./travis-before.sh
