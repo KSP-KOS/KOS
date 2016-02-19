@@ -15,6 +15,9 @@ tar -xvf kos-1.0.5.tar -C Resources/
 
 python --version
 pip --version
+# workaround for not being able to use pip outside of a python project
+export PATH=$HOME/.local/bin:$PATH
+pip install --user $USER sphinx_rtd_theme
 cd ../doc
 make html
 cd ../
