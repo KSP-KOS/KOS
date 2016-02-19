@@ -8,11 +8,11 @@ notifications:
 
 # Before the install the library dlls need to be downloaded
 before_install:
-- ./travis-before.sh
+- chmod +x travis-before.sh && ./travis-before.sh
 
 # Cleanup the downloaded resources
 after_script:
-- ./travis-after.sh
+- chmod +x travis-after.sh && ./travis-after.sh
 
 before_deploy:
 - mkdir src/kOS/bin/dist 
