@@ -35,9 +35,6 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Scale_Redist">
-      <HintPath>..\..\Resources\Scale_Redist.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
