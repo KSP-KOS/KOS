@@ -44,6 +44,7 @@ namespace kOS.Module
         private Renderer[] renderers;
         private Animation[] animations;
         private bool lastLightModuleIsOn = false;
+        
         public override void OnLoad(ConfigNode node)
         {
             updateReferences();
