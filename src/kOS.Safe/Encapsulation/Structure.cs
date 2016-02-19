@@ -7,7 +7,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
-    public abstract class Structure : ISuffixed, IOperable 
+    public abstract class Structure : ISuffixed, IOperable
     {
         private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
         private readonly IDictionary<string, ISuffix> instanceSuffixes;
@@ -21,7 +21,7 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
-            AddSuffix("TYPE", new Suffixes.Suffix<StringValue>(() => GetType().ToString()));
+            AddSuffix("TYPE", new Suffix<StringValue>(() => GetType().ToString()));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -185,14 +185,14 @@ namespace kOS.Safe.Encapsulation
         {
             if (value == null)
                 return value; // If a null exists, let it pass through so it will bomb elsewhere, not here in FromPrimitive() where the exception message would be obtuse.
-            
+
             if (value is Structure)
                 return value; // Conversion is unnecessary - it's already a Structure.
-            
+
             var convert = value as IConvertible;
             if (convert == null)
                 return value; // Conversion isn't even theoretically possible.
-            
+
             TypeCode code = convert.GetTypeCode();
             switch (code)
             {
@@ -218,7 +218,7 @@ namespace kOS.Safe.Encapsulation
             }
             return value; // Conversion is one this method didn't implement.
         }
-        
+
         /// <summary>
         /// This is identical to FromPrimitive, except that it WILL throw an exception
         /// if it was unable to guarantee that the result became (or already was) a kOS Structure.
@@ -231,8 +231,8 @@ namespace kOS.Safe.Encapsulation
             Structure returnValue = convertedVal as Structure;
             if (returnValue == null)
                 throw new KOSException(
-                    String.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
-                                  (value == null ? "<null>" : value.GetType().ToString())));
+                    string.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
+                                  value == null ? "<null>" : value.GetType().ToString()));
             return returnValue;
         }
 

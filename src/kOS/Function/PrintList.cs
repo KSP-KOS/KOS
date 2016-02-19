@@ -1,14 +1,14 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Module;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
-using kOS.Utilities;
+using kOS.Suffixed.Part;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using kOS.Module;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
+using kOS.Utilities;
 using Math = System.Math;
 
 namespace kOS.Function
@@ -92,13 +92,13 @@ namespace kOS.Function
                 {
                     list.Title = "Volume " + shared.VolumeMgr.GetVolumeBestIdentifier(volume);
 
-                    foreach (FileInfo info in volume.GetFileList())
+                    foreach (KeyValuePair<string, VolumeFile> pair in volume.FileList)
                     {
-                        list.AddItem(info.Name, info.Size);
+                        list.AddItem(pair.Key, pair.Value.Size);
                     }
 
-                    int freeSpace = volume.GetFreeSpace();
-                    list.Footer = "Free space remaining: " + (freeSpace > -1 ? freeSpace.ToString() : " infinite");
+                    long freeSpace = volume.FreeSpace;
+                    list.Footer = "Free space remaining: " + (freeSpace != Volume.INFINITE_CAPACITY ? freeSpace.ToString() : " infinite");
                 }
             }
 
@@ -234,18 +234,12 @@ namespace kOS.Function
             list.AddColumn("Stage", 8, ColumnAlignment.Left);
             list.AddColumn("Name", 28, ColumnAlignment.Left);
 
-            foreach (Part part in VesselUtils.GetListOfActivatedEngines(shared.Vessel))
-            {
-                foreach (PartModule module in part.Modules)
-                {
-                    if (module == null) continue;
+            ListValue partList = EngineValue.PartsToList(shared.Vessel.Parts, shared);
 
-                    var engines = module as ModuleEngines;
-                    if (engines != null)
-                    {
-                        list.AddItem(part.uid(), part.inverseStage, engines.moduleName);
-                    }
-                }
+            foreach (Structure structure in partList)
+            {
+                var part = (PartValue) structure;
+                list.AddItem(part.Part.uid(), part.Part.inverseStage, part.Part.partInfo.name);
             }
 
             return list;
@@ -279,7 +273,7 @@ namespace kOS.Function
             list.AddColumn("Name", 34, ColumnAlignment.Left);
             list.AddColumn("Value", 6, ColumnAlignment.Left);
 
-            foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
+            foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 list.AddItem(key.Alias, key.Name, key.Value);
             }
@@ -330,7 +324,7 @@ namespace kOS.Function
                     string alignment = columns[index].Alignment == ColumnAlignment.Left ? "-" : "";
                     string separator;
 
-                    if (index < (columns.Count - 1))
+                    if (index < columns.Count - 1)
                     {
                         columns[index].ItemWidth = columns[index].Width - 1;
                         separator = " ";

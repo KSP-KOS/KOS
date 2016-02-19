@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using kOS.Safe.Compilation;
 using kOS.Safe.Persistence;
+using kOS.Safe.Encapsulation;
 
 namespace kOS
 {
@@ -128,7 +129,7 @@ namespace kOS
                         int numPadSpaces = useColumn-1;
                         if (numPadSpaces < 0)
                             numPadSpaces = 0;
-                        msg += new String(' ', numPadSpaces) + "^" + "\n";
+                        msg += new string(' ', numPadSpaces) + "^" + "\n";
                     }
                 }
                 return msg;
@@ -203,14 +204,14 @@ namespace kOS
             
             if (fileName == "interpreter history")
                 return Shared.Interpreter.GetCommandHistoryAbsolute(line);
-            
-            ProgramFile file = vol.GetByName(fileName);
+
+            VolumeFile file = vol.Open(fileName);
             if (file!=null)
             {
-                if (file.Category == FileCategory.KSM)
+                if (file.ReadAll().Category == FileCategory.KSM)
                     return  "<<machine language file: can't show source line>>";
 
-                string[] splitLines = file.StringContent.Split('\n');
+                string[] splitLines = file.ReadAll().String.Split('\n');
                 if (splitLines.Length >= line)
                 {
                     returnVal = splitLines[line-1];
