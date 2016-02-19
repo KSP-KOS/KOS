@@ -2,6 +2,11 @@ language: csharp
 solution: src/kOS.sln
 sudo: false
 
+addons:
+  apt:
+    packages:
+    - python-sphinx
+
 # Pre-shared token for pushing notifications to slack chat
 notifications:
   slack: ksp-kos:51DTQ4ZBP9SlGNnLWJ5D84vp
