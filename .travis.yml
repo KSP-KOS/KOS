@@ -18,7 +18,8 @@ before_script:
 
 script:
 - xbuild /p:Configuration=Release $TRAVIS_SOLUTION
-- nunit-console src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
+# I know framework 4.0 is wrong, just trying it to see if it fixes the test
+- nunit-console -framework=4.0 src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
 - cd doc && make html && cd ../
 
 # Cleanup the downloaded resources
