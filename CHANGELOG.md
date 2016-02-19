@@ -26,6 +26,8 @@ release if the PR's about them don't get merged before release.
 * Automatic serialization system to save/load some kinds of data values to JSON-format files (TODO link to docs)
 * User Programs and Functions now allow trailing optional parameters with defaulted values. (TODO link to docs).
 * There are now some suffixes that work on all value types, even primitive scalars.  To accomplish this, a new "encapsulation" system has wrapped all kOS structures and primitive types inside a generic base type.  (TODO link to docs page about basic structure suffixes)
+* ENGINE type now supports multi-mode cases and has its gimbal accessible through :GIMBAL suffix (http://ksp-kos.github.io/KOS_DOC/structures/vessels/engine.html) 
+* Added GIMBAL:LIMIT suffix. (http://ksp-kos.github.io/KOS_DOC/structures/vessels/gimbal.html)
 * Better support for DMagic's Orbital Science mod (TODO link to orbital science addon doc page here)
 * Char() and Unchar() functions for translating unicode numbers to characters and visa versa (TODO link to doc here)
 * New Range type for iterating over hardcoded lists (TODO link to doc here).
@@ -40,6 +42,8 @@ release if the PR's about them don't get merged before release.
 * The error beep and keyboard click sounds now obey game's UI volume settings. (https://github.com/KSP-KOS/KOS/pull/1287)
 * Fixed two bugs with obtaining waypoints by name. (https://github.com/KSP-KOS/KOS/issues/1313) (https://github.com/KSP-KOS/KOS/pull/1319)
 * Removed unnecessary rounding of THRUSTLIMIT to nearest 0.5%, now it can be more precise. (https://github.com/KSP-KOS/KOS/pull/1329)
+* Removed the ability to activate both modes on multi-mode engine simultaneously.
+* LIST ENGINES now lists all engines and displays part names instead of module names. (https://github.com/KSP-KOS/issues/1251)
 * Fixed bug that caused hitting ESC to crash the telnet server. (https://github.com/KSP-KOS/KOS/issues/1328)
 * Some exceptions didn't cause beep, now they all do. (https://github.com/KSP-KOS/KOS/issues/1317)
 * Vecdraw :SCALE no longer applied to :START.  Only applied to :VEC. (https://github.com/KSP-KOS/KOS/issues/1200)
