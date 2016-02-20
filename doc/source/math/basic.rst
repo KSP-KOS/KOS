@@ -1,10 +1,15 @@
 .. _basic math:
 
+Basic Math Functions
+====================
+
+These functions are built-in for performing basic math operations in kOS.
+
 .. _constants:
 .. index:: Fundamental Constants
 
 Fundamental Constants
-=====================
+---------------------
 
 There is a bound variable called CONSTANT which contains some basic fundamental
 constants about the universe that you may find handy in your math operations.
@@ -117,7 +122,7 @@ constants about the universe that you may find handy in your math operations.
 .. index:: Mathematical Functions
 
 Mathematical Functions
-======================
+----------------------
 
 ==================== ===================================================
  Function             Description
@@ -234,7 +239,7 @@ Mathematical Functions
 .. index:: Trigonometric Functions
 
 Trigonometric Functions
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :header-rows: 1
