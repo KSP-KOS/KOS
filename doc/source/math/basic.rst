@@ -247,7 +247,7 @@ Trigonometric Functions
     * - :func:`ARCSIN(x)`
     * - :func:`ARCCOS(x)`
     * - :func:`ARCTAN(x)`
-    * - :func:`ARCTAN2(x,y)`
+    * - :func:`ARCTAN2(y,x)`
 
 .. function:: SIN(a)
 
