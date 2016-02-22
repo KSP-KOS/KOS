@@ -20,7 +20,7 @@ script:
 - xbuild /p:Configuration=Release $TRAVIS_SOLUTION
 # I know framework 4.0 is wrong, just trying it to see if it fixes the test
 # - nunit-console -framework=4.0 src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
-- chmod +x .ci/script-sphinxdocs.sh && ./.ci/script-sphinxdocs.sh
+- chmod +x .ci/travis/script-sphinxdocs.sh && ./.ci/travis/script-sphinxdocs.sh
 
 # Cleanup the downloaded resources
 after_script:
