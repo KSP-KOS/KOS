@@ -3,7 +3,7 @@ set -ev
 
 cd Resources
 rm *.dll
-cd ../docs
+cd ../doc
 rm -r gh-pages
 rm -r build
 cd ../
