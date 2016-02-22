@@ -12,7 +12,8 @@ The root of all kOS data types.
 Overview
 --------
 
-.. versionAdded:: 0.19.0
+.. versionadded:: 0.19.0
+
     This is a new feature of kOS v0.19.0.  Most of what is
     documented on this page won't work on earlier versions.
 
@@ -62,7 +63,7 @@ or ``42`` or ``"abc"``.  For example, you can do::
           - Boolean
           - Is true if this type is one that works with :ref:`WRITEJSON <writejson>`
 
-        * - :attr:`TYPENMAE`
+        * - :attr:`TYPENAME`
           - String
           - Gives a string for the name of the type of this object.
 

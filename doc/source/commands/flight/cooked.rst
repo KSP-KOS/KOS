@@ -89,7 +89,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    There are 3 kinds of value understood by WHEELSTEERING:
 
    - :struct:`GeoCoordinates` - If you lock wheelsteering to a
-     :ref:`latlng`, that will mean the rover will try to steer in
+     :struct:`GetCoordinates`, that will mean the rover will try to steer in
      whichever compass direction will aim at that location.
 
    - :struct:`Vessel` - If you try to lock wheelsteering to a vessel,

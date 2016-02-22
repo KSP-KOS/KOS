@@ -8,6 +8,8 @@ Scalar
         :header-rows: 1
         
         * - (Scalar values have no suffixes other than the ones inherited from :struct:`Structure <structure>`.)
+
+	* -
           
 A Scalar value is the kind the system gives you whenever you are working
 with a number of some sort which, unlike with a :struct:`Vector <vector>`,
