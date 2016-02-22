@@ -46,7 +46,7 @@ KUniverse 4th wall methods
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
         * - :attr:`HOURSPERDAY`
-          - :ref:`scalar <scalar`
+          - :ref:`scalar <scalar>`
           - Get
           - Number of hours per day (6 or 24) according to your game settings.
         * - :attr:`DEBUGLOG(message)`
@@ -156,7 +156,7 @@ KUniverse 4th wall methods
 .. attribute:: KUniverse:HOURSPERDAY
 
     :access: Get
-    :type: :ref:`scalar <scalar` (integer)
+    :type: :ref:`scalar <scalar>` (integer)
 
     Has the value of either 6 or 24, depending on what setting you used
     on Kerbal Space Program's main settings screen for whether you wanted

@@ -73,7 +73,7 @@ Configuration of kOS
 .. attribute:: Config:IPU
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar` integer. range = [50,2000]
+    :type: :ref:`scalar <scalar>` integer. range = [50,2000]
 
     Configures the ``InstructionsPerUpdate`` setting.
 
