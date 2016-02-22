@@ -391,7 +391,10 @@ Note that any ``WAIT`` statement, no matter what the actual expression is, will 
     The :ref:`WAIT <wait>` command only causes mainline code
     to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
     and LOCK THROTTLE, will continue executing while your program
-    is sitting still on the WAIT command.
+    is sitting still on the WAIT command.  Furthermore, you cannot
+    cause a WAIT to happen when executing a trigger's body like
+    WHEN or ON, or in the formula for a LOCK STEERING or LOCK
+    THROTTLE or LOCK WHEELSTEERING or LOCK WHEELTHROTTLE statement.
     
 
 .. index:: WHEN
@@ -415,6 +418,11 @@ The body of a ``THEN`` or an ``ON`` statement interrupts the normal flow of a **
 
 .. warning::
     Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+
+For the reason mentioned in the warning above, you also cannot
+make the system execute a ``WAIT`` command when inside the
+body of a WHEN/THEN statement.  Attempting to do so will have
+no effect.
 
 .. note::
     .. versionchanged:: 0.12
@@ -467,6 +475,12 @@ The body of an ``ON`` statement can be a list of commands inside curly braces, j
 
 .. warning::
     DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+
+For the reason mentioned in the warning above, you also cannot
+make the system execute a ``WAIT`` command when inside the
+body of a WHEN/THEN statement.  Attempting to do so will have
+no effect.
+
 
 Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
 

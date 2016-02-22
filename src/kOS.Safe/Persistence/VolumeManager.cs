@@ -67,14 +67,14 @@ namespace kOS.Safe.Persistence
             {
                 return GetVolume(Convert.ToInt32(volumeId));
             }
-            catch
+            catch (InvalidCastException)
             {
                 int id = GetVolumeId(volumeId.ToString());
                 if (id >= 0)
                 {
                     return GetVolume(id);
                 }
-                throw new kOS.Safe.Exceptions.KOSCastException(volumeId.GetType(), typeof(Volume));
+                throw new kOS.Safe.Exceptions.KOSCastException(volumeId.GetType().Name, "Scalar|String|Volume");
             }
         }
 
