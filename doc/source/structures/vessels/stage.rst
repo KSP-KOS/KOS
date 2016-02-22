@@ -56,7 +56,7 @@ Structure
           - Description
 
         * - :attr:`READY`
-          - :ref:`Boolean <boolean>`ean <boolean>`
+          - :ref:`Boolean <boolean>`
           - Get only
           - Is the craft ready to activate the next stage.
         * - :attr:`NUMBER`
