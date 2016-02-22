@@ -55,10 +55,10 @@ Structure
           - Description
 
         * - :meth:`CONTAINS(string)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True if the given string is contained within this string  
         * - :meth:`ENDSWITH(string)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True if this string ends with the given string 
         * - :meth:`FIND(string)`
           - integer
@@ -100,7 +100,7 @@ Structure
           - :struct:`String`
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True if this string starts with the given string 
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
@@ -125,14 +125,14 @@ Structure
 .. method:: String:CONTAINS(string)
 
     :parameter string: :struct:`String` to look for
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     
     True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     True if this string ends with the given string.
 
@@ -230,7 +230,7 @@ Structure
 .. method:: String:STARTSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     True if this string starts with the given string .
 

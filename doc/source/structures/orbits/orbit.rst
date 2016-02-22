@@ -31,49 +31,49 @@ Structure
           - Description
 
         * - :attr:`NAME`
-          - string
+          - :ref:`string <string>`
           - name of this orbit
         * - :attr:`APOAPSIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - Maximum altitude
         * - :attr:`PERIAPSIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - Minimum altitude
         * - :attr:`BODY`
           - :struct:`Body`
           - Focal body of orbit
         * - :attr:`PERIOD`
-          - scalar (s)
+          - :ref:`scalar <scalar>` (s)
           - `orbital period`_
         * - :attr:`INCLINATION`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
           - `orbital inclination`_
         * - :attr:`ECCENTRICITY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `orbital eccentricity`_
         * - :attr:`SEMIMAJORAXIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - `semi-major axis`_
         * - :attr:`SEMIMINORAXIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - `semi-minor axis`_
         * - :attr:`LAN`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
           - Same as :attr:`LONGITUDEOFASCENDINGNODE`
         * - :attr:`LONGITUDEOFASCENDINGNODE`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
           - Longitude of the ascending node
         * - :attr:`ARGUMENTOFPERIAPSIS`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `argument of periapsis`_
         * - :attr:`TRUEANOMALY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `true anomaly`_ in degrees (not radians)
         * - :attr:`MEANANOMALYATEPOCH`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `mean anomaly`_ in degrees (not radians)
         * - :attr:`TRANSITION`
-          - string
+          - :ref:`string <string>`
           - :ref:`Transition from this orbit <transitions>`
         * - :attr:`POSITION`
           - :struct:`Vector`
@@ -85,7 +85,7 @@ Structure
           - :struct:`Orbit`
           - Next :struct:`Orbit`
         * - :attr:`HASNEXTPATCH`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Has a next :struct:`Orbit`
 
 
@@ -96,21 +96,21 @@ Structure
 
 .. attribute:: Orbit:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     a name for this orbit.
 
 .. attribute:: Orbit:APOAPSIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     The max altitude expected to be reached.
 
 .. attribute:: Orbit:PERIAPSIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     The min altitude expected to be reached.
@@ -124,35 +124,35 @@ Structure
 
 .. attribute:: Orbit:PERIOD
 
-    :type: scalar (seconds)
+    :type: :ref:`scalar <scalar>` (seconds)
     :access: Get only
 
     `orbital period`_
 
 .. attribute:: Orbit:INCLINATION
 
-    :type: scalar (degree)
+    :type: :ref:`scalar <scalar>` (degree)
     :access: Get only
 
     `orbital inclination`_
 
 .. attribute:: Orbit:ECCENTRICITY
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     `orbital eccentricity`_
 
 .. attribute:: Orbit:SEMIMAJORAXIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     `semi-major axis`_
 
 .. attribute:: Orbit:SEMIMINORAXIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     `semi-minor axis`_
@@ -163,7 +163,7 @@ Structure
 
 .. attribute:: Orbit:LONGITUDEOFASCENDINGNODE
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
     The Longitude of the ascening node is the "celestial longitude" where
@@ -180,14 +180,14 @@ Structure
 
 .. attribute:: Orbit:ARGUMENTOFPERIAPSIS
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     `argument of periapsis`_
 
 .. attribute:: Orbit:TRUEANOMALY
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     `true anomaly`_ in degrees.  Even though orbital parameters are
@@ -197,7 +197,7 @@ Structure
 
 .. attribute:: Orbit:MEANANOMALYATEPOCH
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     `mean anomaly`_  in degrees. Even though orbital parameters are
@@ -208,7 +208,7 @@ Structure
 
 .. attribute:: Orbit:TRANSITION
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Describes the way in which this orbit will end and become a different orbit, with a value taken :ref:`from this list <transitions>`.
@@ -236,7 +236,7 @@ Structure
 
 .. attribute:: Orbit:HASNEXTPATCH
 
-    boolean
+    :ref:`boolean <boolean>`
     :access: Get only
 
     If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then ``HASNEXTPATCH`` will be false.

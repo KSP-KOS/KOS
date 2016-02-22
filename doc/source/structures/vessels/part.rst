@@ -16,31 +16,31 @@ These are the generic properties every PART has. You can obtain a list of values
           - Description
 
         * - :attr:`NAME`
-          - string
+          - :ref:`string <string>`
           - Name of this part
         * - :attr:`TITLE`
-          - string
+          - :ref:`string <string>`
           - Title as it appears in KSP
         * - :attr:`MASS`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Current mass of part and its resources
         * - :attr:`DRYMASS`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Mass of part if all resources were empty
         * - :attr:`WETMASS`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Mass of part if all resources were full
         * - :attr:`TAG`
-          - string
+          - :ref:`string <string>`
           - Name-tag if assigned by the player
         * - :attr:`CONTROLFROM`
           - Void
           - Call to control-from to this part
         * - :attr:`STAGE`
-          - scalar
+          - :ref:`scalar <scalar>`
           - The stage this is associated with
         * - :attr:`UID`
-          - string
+          - :ref:`string <string>`
           - Unique identifying number of this part
         * - :attr:`ROTATION`
           - :struct:`Direction`
@@ -55,7 +55,7 @@ These are the generic properties every PART has. You can obtain a list of values
           - :struct:`List`
           - list of the :struct:`Resource` in this part
         * - :attr:`TARGETABLE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - true if this part can be selected as a target
         * - :attr:`SHIP`
           - :struct:`Vessel`
@@ -65,7 +65,7 @@ These are the generic properties every PART has. You can obtain a list of values
           - Get one of the :struct:`PartModules <PartModule>` by name
         * - :attr:`MODULES`
           - :struct:`List`
-          - Names (string) of all :struct:`PartModules <PartModule>`
+          - Names (:ref:`string <string>`) of all :struct:`PartModules <PartModule>`
         * - :attr:`ALLMODULES`
           - :struct:`List`
           - Same as :attr:`MODULES`
@@ -73,10 +73,10 @@ These are the generic properties every PART has. You can obtain a list of values
           - :struct:`Part`
           - Adjacent :struct:`Part` on this :struct:`Vessel`.
         * - :attr:`HASPARENT`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if this part has a parent :struct:`Part`
         * - :attr:`HASPHYSICS`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Does this part have mass or drag
         * - :attr:`CHILDREN`
           - :struct:`List`
@@ -88,7 +88,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:NAME
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     Name of part as it is used behind the scenes in the game's API code.
 
@@ -97,7 +97,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:TITLE
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     The title of the part as it appears on-screen in the gui.
 
@@ -106,7 +106,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:TAG
 
     :access: Get / Set
-    :type: string
+    :type: :ref:`string <string>`
 
     The name tag value that may exist on this part if you have given the part a name via the :ref:`name-tag system <nametag>`.
 
@@ -147,14 +147,14 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:STAGE
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     the stage this part is part of.
 
 .. attribute:: Part:UID
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recommended to compare parts directly if possible.
 
@@ -182,21 +182,21 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:MASS
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The current mass or the part and its resources. If the part has no physics this will always be 0.
 
 .. attribute:: Part:WETMASS
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The mass of the part if all of its resources were full. If the part has no physics this will always be 0.
 
 .. attribute:: Part:DRYMASS
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The mass of the part if all of its resources were empty. If the part has no physics this will always be 0.
 
@@ -210,7 +210,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:TARGETABLE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     true if this part can be selected by KSP as a target.
 
@@ -223,7 +223,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. method:: Part:GETMODULE(name)
 
-    :parameter name: (string) Name of the part module
+    :parameter name: (:ref:`string <string>`) Name of the part module
     :returns: :struct:`PartModule`
 
     Get one of the :struct:`PartModules <PartModule>` attached to this part, given the name of the module. (See :attr:`Part:MODULES` for a list of all the names available).
@@ -258,7 +258,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:HASPARENT
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     When walking the :ref:`tree of parts <parts and partmodules>`, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).
 

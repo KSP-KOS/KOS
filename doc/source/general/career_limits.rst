@@ -61,32 +61,32 @@ Structure
           - Set
           
         * - :attr:`CANTRACKOBJECTS`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - yes
           - no
         * - :attr:`PATCHLIMIT`
-          - number
+          - :ref:`scalar <scalar>`
           - yes
           - no
         * - :attr:`CANMAKENODES`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - yes
           - no
         * - :attr:`CANDOACTIONS`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - yes
           - no
 
 .. attribute:: Career:CANTRACKOBJECTS
 
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get
 
     If your tracking center allows the tracking of unnamed objects (asteroids, mainly) then this will return true.
 
 .. attribute:: Career:PATCHLIMIT
 
-    :type: number
+    :type: :ref:`scalar <scalar>`
     :access: Get
 
     If your tracking center allows some patched conics predictions, then this number will be greater than zero.
@@ -95,7 +95,7 @@ Structure
 
 .. attribute:: Career:CANMAKENODES
 
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get
 
     If your tracking center and mission control buildings are both upgraded enough, then the game allows
@@ -104,7 +104,7 @@ Structure
 
 .. attribute:: Career:CANDOACTIONS
 
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get
 
     If your VAB or SPH are upgraded enough to allow custom action groups, then you will also be allowed

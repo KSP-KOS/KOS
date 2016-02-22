@@ -41,7 +41,7 @@ Structure
           - any type
           - returns the first element in the queue without removing it
         * - :attr:`LENGTH`
-          - integer
+          - :ref:`scalar <scalar>`
           - number of elements in the queue
         * - :meth:`CLEAR()`
           - None
@@ -53,13 +53,13 @@ Structure
           - :struct:`Queue`
           - a new copy of this queue
         * - :meth:`CONTAINS(item)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - check if queue contains an item
         * - :attr:`EMPTY`
-          - boolean
+          - :ref:`boolean <boolean>`
           - check if queue if empty
         * - :attr:`DUMP`
-          - string
+          - :ref:`string <string>`
           - verbose dump of all contained elements
 
 .. note::
@@ -87,7 +87,7 @@ Structure
 
 .. attribute:: Queue:LENGTH
 
-    :type: integer
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Returns the number of elements in the queue.
@@ -108,22 +108,22 @@ Structure
 
 .. method:: Queue:CONTAINS(item)
 
-    :parameter index: (integer) starting index (from zero)
-    :return: boolean
+    :parameter index: :ref:`scalar <scalar>` (integer) starting index (from zero)
+    :return: :ref:`boolean <boolean>`
 
     Returns true if the queue contains an item equal to the one passed as an argument
 
 .. attribute:: Queue:EMPTY
 
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     Returns true if the queue has zero items in it.
 
 .. attribute:: Queue:DUMP
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
-    Returns a string containing a verbose dump of the queue's contents.
+    Returns a :ref:`string <string>` containing a verbose dump of the queue's contents.
 

@@ -19,20 +19,20 @@ always presumes you're operating on the current SHIP vessel:
           - Description
 
         * - :attr:`APOAPSIS`
-          - Number, seconds
+          - :ref:`scalar <scalar`, seconds
           - Seconds until SHIP hits its apoapsis.
 
         * - :attr:`PERIAPSIS`
-          - Number, seconds
+          - :ref:`scalar <scalar`, seconds
           - Seconds until SHIP hits its periapsis.
 
         * - :attr:`TRANSITION`
-          - Number, seconds
+          - :ref:`scalar <scalar`, seconds
           - Seconds until SHIP hits the next orbit patch.
 		  
 .. attribute:: ETA:APOAPSIS
 
-    :type: Number, seconds
+    :type: :ref:`scalar <scalar`, seconds
     :access: Get only
 
     Seconds until SHIP hits its apoapsis.  If the ship is on an escape
@@ -41,7 +41,7 @@ always presumes you're operating on the current SHIP vessel:
 
 .. attribute:: ETA:PERIAPSIS
 
-    :type: Number, seconds
+    :type: :ref:`scalar <scalar`, seconds
     :access: Get only
 
     Seconds until SHIP hits its periapsis.  If the ship is on an intersect
@@ -52,7 +52,7 @@ always presumes you're operating on the current SHIP vessel:
 
 .. attribute:: ETA:TRANSITION
 
-    :type: Number, seconds
+    :type: :ref:`scalar <scalar`, seconds
     :access: Get only
 
     Seconds until SHIP hits its the end of its current orbit patch and

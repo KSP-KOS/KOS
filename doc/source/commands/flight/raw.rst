@@ -62,64 +62,64 @@ These "Raw" controls allow you the direct control of flight parameters while the
       - Equivalent Key
 
     * - :ref:`MAINTHROTTLE <SHIP CONTROL MAINTHROTTLE>`
-      - scalar [0,1]
+      - :ref:`scalar <scalar>` [0,1]
       - ``LEFT-CTRL``, ``LEFT-SHIFT``
 
     * - :ref:`YAW <SHIP CONTROL YAW>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``D``, ``A``
     * - :ref:`PITCH <SHIP CONTROL PITCH>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``W``, ``S``
     * - :ref:`ROLL <SHIP CONTROL ROLL>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``Q``, ``E``
     * - :ref:`ROTATION <SHIP CONTROL ROTATION>`
       - :struct:`Vector`
       - ``(YAW,PITCH,ROLL)``
 
     * - :ref:`YAWTRIM <SHIP CONTROL YAWTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+D``, ``ALT+A``
     * - :ref:`PITCHTRIM <SHIP CONTROL PITCHTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+W``, ``ALT+S``
     * - :ref:`ROLLTRIM <SHIP CONTROL ROLLTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+Q``, ``ALT+E``
 
     * - :ref:`FORE <SHIP CONTROL FORE>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``N``, ``H``
     * - :ref:`STARBOARD <SHIP CONTROL STARBOARD>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``L``, ``J``
     * - :ref:`TOP <SHIP CONTROL TOP>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``I``, ``K``
     * - :ref:`TRANSLATION <SHIP CONTROL TRANSLATION>`
       - :struct:`Vector`
       - ``(STARBOARD,TOP,FORE)``
 
     * - :ref:`WHEELSTEER <SHIP CONTROL WHEELSTEER>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``A``, ``D``
     * - :ref:`WHEELTHROTTLE <SHIP CONTROL WHEELTHROTTLE>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``W``, ``S``
 
     * - :ref:`WHEELSTEERTRIM <SHIP CONTROL WHEELSTEERTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+A``, ``ALT+D``
     * - :ref:`WHEELTHROTTLETRIM <SHIP CONTROL WHEELTHROTTLETRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+W``, ``ALT+S``
 
     * - :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>`
-      - boolean
+      - :ref:`Boolean <boolean>`
       - Is **kOS** Controlling?
     * - :ref:`NEUTRALIZE <SHIP CONTROL NEUTRALIZE>`
-      - boolean
+      - :ref:`Boolean <boolean>`
       - Releases Control
 
 

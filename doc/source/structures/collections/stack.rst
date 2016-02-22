@@ -41,7 +41,7 @@ Structure
           - any type
           - returns the item on top of the stack without removing it
         * - :attr:`LENGTH`
-          - integer
+          - :ref:`scalar <scalar>`
           - number of elements in the stack
         * - :meth:`CLEAR()`
           - None
@@ -53,13 +53,13 @@ Structure
           - :struct:`Stack`
           - a new copy of this stack
         * - :meth:`CONTAINS(item)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - check if stack contains an item
         * - :attr:`EMPTY`
-          - boolean
+          - :ref:`boolean <boolean>`
           - check if stack if empty
         * - :attr:`DUMP`
-          - string
+          - :ref:`string <string>`
           - verbose dump of all contained elements
 
 .. note::
@@ -87,7 +87,7 @@ Structure
 
 .. attribute:: Stack:LENGTH
 
-    :type: integer
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Returns the number of elements in the stack.
@@ -109,21 +109,21 @@ Structure
 .. method:: Stack:CONTAINS(item)
 
     :parameter index: (integer) starting index (from zero)
-    :return: boolean
+    :return: :ref:`boolean <boolean>`
 
     Returns true if the stack contains an item equal to the one passed as an argument
 
 .. attribute:: Stack:EMPTY
 
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     Returns true if the stack has zero items in it.
 
 .. attribute:: Stack:DUMP
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
-    Returns a string containing a verbose dump of the stack's contents.
+    Returns a :ref:`string <string>` containing a verbose dump of the stack's contents.
 

@@ -87,29 +87,29 @@ You can use the TIME special variable to detect whether or not a real physics 't
 
 
         * - :attr:`CLOCK`
-          - string
+          - :ref:`string <string>`
           - "HH:MM:SS"
         * - :attr:`CALENDAR`
-          - string
+          - :ref:`string <string>`
           - "Year YYYY, day DDD"
         * - :attr:`SECOND`
-          - integer (0-59)
+          - :ref:`scalar <scalar>` (0-59)
           - Second-hand number
         * - :attr:`MINUTE`
-          - integer (0-59)
+          - :ref:`scalar <scalar>` (0-59)
           - Minute-hand number
         * - :attr:`HOUR`
-          - integer (0-5)
+          - :ref:`scalar <scalar>` (0-5)
           - Hour-hand number
         * - :attr:`DAY`
-          - integer (1-426)
+          - :ref:`scalar <scalar>` (1-426)
           - Day-hand number
         * - :attr:`YEAR`
-          - integer
+          - :ref:`scalar <scalar>`
           - Year-hand number
         * - :attr:`SECONDS`
-          - Number (float)
-          - Total Seconds since Epoch
+          - :ref:`scalar <scalar>` (fractional)
+          - Total Seconds since Epoch (includes fractional partial seconds)
 
 
 .. note::
@@ -120,56 +120,56 @@ You can use the TIME special variable to detect whether or not a real physics 't
 .. attribute:: TimeSpan:CLOCK
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     Time in (HH:MM:SS) format.
 
 .. attribute:: TimeSpan:CALENDAR
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     Day in "Year YYYY, day DDD" format. (Kerbals don't have 'months'.)
 
 .. attribute:: TimeSpan:SECOND
 
     :access: Get only
-    :type: integer (0-59)
+    :type: :ref:`scalar <scalar>` (0-59)
 
     Second-hand number.
 
 .. attribute:: TimeSpan:MINUTE
 
     :access: Get only
-    :type: integer (0-59)
+    :type: :ref:`scalar <scalar>` (0-59)
 
     Minute-hand number
 
 .. attribute:: TimeSpan:HOUR
 
     :access: Get only
-    :type: integer (0-5) or (0-23)
+    :type: :ref:`scalar <scalar>` (0-5) or (0-23)
 
     Hour-hand number. Kerbin has six hours in its day.
 
 .. attribute:: TimeSpan:DAY
 
     :access: Get only
-    :type: integer (1-426) or (1-356)
+    :type: :ref:`scalar <scalar>` (1-426) or (1-356)
 
     Day-hand number. Kerbin has 426 days in its year.
 
 .. attribute:: TimeSpan:YEAR
 
     :access: Get only
-    :type: integer
+    :type: :ref:`scalar <scalar>`
 
     Year-hand number
 
 .. attribute:: TimeSpan:SECONDS
 
     :access: Get only
-    :type: Number (float)
+    :type: :ref:`scalar <scalar>` (float)
 
     Total Seconds since Epoch.  Epoch is defined as the moment your 
     current saved game's universe began (the point where you started

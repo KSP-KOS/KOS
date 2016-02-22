@@ -56,7 +56,7 @@ Structure
           - None
           - remove all elements
         * - :attr:`LENGTH`
-          - integer
+          - :ref:`scalar <scalar>`
           - number of elements in list
         * - :attr:`ITERATOR`
           - :struct:`Iterator`
@@ -74,7 +74,7 @@ Structure
           - boolean
           - check if list if empty
         * - :attr:`DUMP`
-          - string
+          - :ref:`string <string>`
           - verbose dump of all contained elements
 
 .. note::
@@ -109,7 +109,7 @@ Structure
 
 .. attribute:: List:LENGTH
 
-    :type: integer
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Returns the number of elements in the list.
@@ -152,10 +152,10 @@ Structure
 
 .. attribute:: List:DUMP
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
-    Returns a string containing a verbose dump of the list's contents.
+    Returns a :ref:`string <string>` containing a verbose dump of the list's contents.
 
 Access to Individual Elements
 -----------------------------

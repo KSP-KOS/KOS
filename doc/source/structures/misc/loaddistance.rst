@@ -186,26 +186,26 @@ Each of the above
         - Description
 
       * - :attr:`LOAD`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The load distance
       * - :attr:`UNLOAD`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The unload distance
       * - :attr:`UNPACK`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The unpack distance
       * - :attr:`PACK`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The pack distance
 
 .. attribute:: SituationLoadDistance:LOAD
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the load distance.  When another vessel is getting closer
     to you, because you are moving toward it or it is moving toward you,
@@ -219,7 +219,7 @@ Each of the above
 .. attribute:: SituationLoadDistance:UNLOAD
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the unload distance.  When another vessel is becoming more
     distant as you move away from it, or it moves away from you,
@@ -233,7 +233,7 @@ Each of the above
 .. attribute:: SituationLoadDistance:UNPACK
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the unpack distance.  When another vessel is getting closer
     to you, because you are moving toward it or it is moving toward you,
@@ -246,7 +246,7 @@ Each of the above
 .. attribute:: SituationLoadDistance:PACK
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the pack distance.  When another vessel is getting farther
     away from you, because you are moving away from it or it is moving

@@ -28,8 +28,7 @@ TARGET:
 | **Gettable**: yes
 | **Settable**: yes
 | **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__
-| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targeted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.  This will throw an exception if called from a vessel other than the active vessel, as limitations in how KSP sets the
-target vessel limit the implementation to working with only the active vessel.
+| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targeted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.  This will throw an exception if called from a vessel other than the active vessel, as limitations in how KSP sets the target vessel limit the implementation to working with only the active vessel.
 
 HASTARGET:
 
@@ -37,8 +36,7 @@ HASTARGET:
 | **Gettable**: yes
 | **Settable**: no
 | **Type**: boolean
-| **Description**: Will return true if the ship has a target selected.  This will always return false
-when not on the active vessel, due to limitations in how KSP sets the target vessel.
+| **Description**: Will return true if the ship has a target selected.  This will always return false when not on the active vessel, due to limitations in how KSP sets the target vessel.
 
 Alias shortcuts for SHIP fields
 -------------------------------

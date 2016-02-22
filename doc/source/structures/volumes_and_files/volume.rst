@@ -17,19 +17,19 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
           - Description
 
         * - :attr:`FREESPACE`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Free space left on the volume
 
         * - :attr:`CAPACITY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Total space on the volume
 
         * - :attr:`NAME`
-          - `String`
+          - :ref:`String`
           - Volume name
 
         * - :attr:`RENAMEABLE`
-          - scalar
+          - :ref:`scalar <scalar>`
           - True if the name can be changed
 
         * - :attr:`FILES`
@@ -37,11 +37,11 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
           - Lexicon of all files on the volume
 
         * - :attr:`POWERREQUIREMENT`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Amount of power consumed when this volume is set as the current volume
 
         * - :meth:`EXISTS(filename)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Returns true if the given file exists
 
         * - :meth:`CREATE(filename)`
@@ -53,33 +53,33 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
           - Opens a file
 
         * - :meth:`DELETE(filename)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Deletes a file
 
 .. attribute:: Volume:FREESPACE
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Free space left on the volume
 
 .. attribute:: Volume:CAPACITY
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Total space on the volume
 
 .. attribute:: Volume:NAME
 
-    :type: `String`
+    :type: :ref:`String`
     :access: Get only
 
     Volume name. This name can be used instead of the volumeId with some :ref:`file and volume-related commands<files>`
 
 .. attribute:: Volume:RENAMEABLE
 
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     True if the name of this volume can be changed. Currently only the name of the archive can't be changed.
@@ -95,7 +95,7 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
 .. attribute:: Volume:POWERREQUIREMENT
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Amount of power consumed when this volume is set as the current volume
@@ -103,7 +103,7 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
 .. method:: Volume:EXISTS(filename)
 
-    :return: boolean
+    :return: :ref:`boolean <boolean>`
 
     Returns true if the given file exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
     Use ``Volume:FILES:HASKEY(filename)`` to perform a strict check.

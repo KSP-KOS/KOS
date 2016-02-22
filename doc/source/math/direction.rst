@@ -125,21 +125,21 @@ Structure
 
     The suffixes of a :struct:`Direction` cannot be altered, so to get a new :struct:`Direction` you must construct a new one.
 
-    ========================= =================== ================================
-     Suffix                   Type                Description
-    ========================= =================== ================================
-     :attr:`PITCH`            scalar (deg)        Rotation around :math:`x` axis
-     :attr:`YAW`              scalar (deg)        Rotation around :math:`y` axis
-     :attr:`ROLL`             scalar (deg)        Rotation around :math:`z` axis
-     :attr:`FOREVECTOR`       :struct:`Vector`    This Direction's forward vector (z axis after rotation).
-     VECTOR                   :struct:`Vector`    Alias synonym for :attr:`FOREVECTOR`
-     :attr:`TOPVECTOR`        :struct:`Vector`    This Direction's top vector (y axis after rotation).
-     UPVECTOR                 :struct:`Vector`    Alias synonym for :attr:`TOPVECTOR`
-     :attr:`STARVECTOR`       :struct:`Vector`    This Direction's starboard vector (z axis after rotation).
-     RIGHTVECTOR              :struct:`Vector`    Alias synonym for :attr:`STARVECTOR`
-     :attr:`INVERSE`          :struct:`Direction` The inverse of this direction.
-     :attr:`unary minus`      :struct:`Direction` Using the negation operator "-" on a Direction does the same thing as using the :INVERSE suffix on it.
-    ========================= =================== ================================
+    ========================= ======================= ================================
+     Suffix                   Type                    Description
+    ========================= ======================= ================================
+     :attr:`PITCH`            :struct:`scalar` (deg)  Rotation around :math:`x` axis
+     :attr:`YAW`              :struct:`scalar` (deg)  Rotation around :math:`y` axis
+     :attr:`ROLL`             :struct:`scalar` (deg)  Rotation around :math:`z` axis
+     :attr:`FOREVECTOR`       :struct:`Vector`        This Direction's forward vector (z axis after rotation).
+     VECTOR                   :struct:`Vector`        Alias synonym for :attr:`FOREVECTOR`
+     :attr:`TOPVECTOR`        :struct:`Vector`        This Direction's top vector (y axis after rotation).
+     UPVECTOR                 :struct:`Vector`        Alias synonym for :attr:`TOPVECTOR`
+     :attr:`STARVECTOR`       :struct:`Vector`        This Direction's starboard vector (z axis after rotation).
+     RIGHTVECTOR              :struct:`Vector`        Alias synonym for :attr:`STARVECTOR`
+     :attr:`INVERSE`          :struct:`Direction`     The inverse of this direction.
+     :attr:`unary minus`      :struct:`Direction`     Using the negation operator "-" on a Direction does the same thing as using the :INVERSE suffix on it.
+    ========================= ======================= ================================
 
     The :struct:`Direction` object exists primarily to enable automated steering. You can initialize a :struct:`Direction` using a :struct:`Vector` or a ``Rotation``. :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. So for example, a :struct:`Direction` pointing along the :math:`x` axis might be represented as ``R(0,90,0)``, meaning the initial :math:`z`-axis direction was rotated *90 degrees* around the :math:`y` axis.
 
@@ -155,7 +155,7 @@ Structure
 
 .. attribute:: Direction:PITCH
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
 
@@ -163,14 +163,14 @@ Structure
 
 .. attribute:: Direction:YAW
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
     Rotation around the :math:`y` axis.
 
 .. attribute:: Direction:ROLL
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
 
