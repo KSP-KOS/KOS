@@ -33,7 +33,7 @@ Structure
 
 .. structure:: List
 
-    .. list-table:: Members
+    .. list-table::
         :header-rows: 1
         :widths: 2 1 4
 
