@@ -12,16 +12,14 @@ Numerous built-in functions in kOS return a list.  If you wish
 to make your own list from scratch you can do so with the
 LIST() built-in function.  You pass a varying number of arguments
 into it to pre-populate the list with an initial list of items:
+::
 
     // Make an empty list with zero items in it:
     set mylist to list().
-
     // Make a list with 3 numbers in it:
     set mylist to list(10,20,30).
-
     // Make a list with 3 strings in it:
     set mylist to list("10","20","30").
-
     // Make a two dimensional 2x3 list with heterogenious contents
     // mixing strings and numbers:
     set mylist to list( list("a","b","c"), list(1,2,3) ).
@@ -85,7 +83,7 @@ Structure
 .. method:: List:ADD(item)
 
     :parameter item: (any type) item to be added
-    
+
     Appends the new value given to the end of the list.
 
 .. method:: List:INSERT(index,item)
@@ -98,7 +96,7 @@ Structure
 .. method:: List:REMOVE(index)
 
     :parameter index: (integer) position in list (starting from zero)
-    
+
     Remove the item from the list at the numeric index given, with counting starting at the first item being item zero
 
 .. attribute:: List:CLEAR
@@ -245,12 +243,12 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     FOO[1]:ADD(10).    // Element 1,0 is now 10.
     FOO[1]:ADD(20).    // Element 1,1 is now 20.
     FOO:ADD(LIST()).   // Element 2 is now itself a list.
-    
+
     FOO[ FOO:LENGTH -1 ]:ADD(3.14159).
         // Element 2,0 is now 3.1519, using a more complex
         //     expression to dynamically obtain the current
         //     maximum index of '2'.
-                          
+
     FOO[ FOO:LENGTH -1 ]:ADD(7).
         // Element 2,1 is now 7, using a more complex
         //     expression to dynamically obtain the current
@@ -260,7 +258,7 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     //    A         B
     //    10        20
     //    3.14159   7
-    
+
     // or like this, depending on how you want
     // to visualize it as a row-first or column-first table:
     //    A    10     3.14159
@@ -272,7 +270,7 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     PRINT FOO[1][1]. // Prints 20.
     PRINT FOO[2][0]. // Prints 3.14159.
     PRINT FOO[2][1]. // Prints 7.
-    
+
     PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
 
 Comparing two lists
@@ -308,4 +306,3 @@ by item, like so::
     if still_same {
       print "they are equal".
     }
-
