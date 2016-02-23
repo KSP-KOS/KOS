@@ -1,13 +1,12 @@
-﻿using System;
-using kOS.Suffixed.PartModuleField;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using System.Reflection;
 
 namespace kOS.AddOns.OrbitalScience
 {
     public class DMBathymetryFields : DMModuleScienceAnimateFields
     {
-        public DMBathymetryFields(ModuleScienceExperiment mod, SharedObjects shared) : base(mod, shared)
+        public DMBathymetryFields(ModuleScienceExperiment mod, SharedObjects shared)
+            : base(mod, shared)
         {
             InitializeSuffixes();
         }
@@ -39,4 +38,3 @@ namespace kOS.AddOns.OrbitalScience
         }
     }
 }
-

@@ -1,16 +1,16 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed.PartModuleField;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Exceptions;
+using System.Reflection;
 
 namespace kOS
 {
     public class DMScienceExperimentFields : ScienceExperimentFields
     {
-        public DMScienceExperimentFields(PartModule mod, SharedObjects shared) : base(mod, shared)
+        public DMScienceExperimentFields(PartModule mod, SharedObjects shared)
+            : base(mod, shared)
         {
             InitializeSuffixes();
         }
@@ -93,10 +93,9 @@ namespace kOS
                 tranList.OrderBy(ScienceUtil.GetTransmitterScore).First().TransmitData(new List<ScienceData>(data));
 
                 DumpData();
-            } else
+            }
+            else
                 ScreenMessages.PostScreenMessage("No transmitters available on this vessel or no data to transmit.", 4f, ScreenMessageStyle.UPPER_LEFT);
-
         }
     }
 }
-

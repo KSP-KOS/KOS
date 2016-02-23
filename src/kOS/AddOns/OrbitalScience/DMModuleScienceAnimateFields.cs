@@ -1,14 +1,13 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.PartModuleField;
 using System.Reflection;
-using System.Collections;
-using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.AddOns.OrbitalScience
 {
     public class DMModuleScienceAnimateFields : StockScienceExperimentFields
     {
-        public DMModuleScienceAnimateFields(ModuleScienceExperiment module, SharedObjects sharedObj) : base(module, sharedObj)
+        public DMModuleScienceAnimateFields(ModuleScienceExperiment module, SharedObjects sharedObj)
+            : base(module, sharedObj)
         {
             InitializeSuffixes();
         }
@@ -44,7 +43,5 @@ namespace kOS.AddOns.OrbitalScience
 
             gatherDataMethod.Invoke(module, new object[] { true });
         }
-
     }
 }
-
