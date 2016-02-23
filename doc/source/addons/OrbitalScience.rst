@@ -6,7 +6,7 @@ DMagic Orbital Science
 DMagic Orbital Science is a modification for Squad’s "Kerbal Space Program" (KSP) which adds extra science experiments to the game. Those experiments under the hood work differently
 than stock ones and require dedicated support (see :ref:`ScienceExperimentModule <scienceexperimentmodule>`).
 
-- Download: https://kerbalstuff.com/mod/5/DMagic%20Orbital%20Science
+- Download: http://spacedock.info/mod/128/DMagic%20Orbital%20Science or https://github.com/DMagic1/Orbital-Science/releases
 - Sources: https://github.com/DMagic1/Orbital-Science
 
 Most of the time Orbital Science experiments should work exactly like stock ones,
@@ -24,7 +24,7 @@ they inherit all suffixes from :ref:`ScienceExperimentModule <scienceexperimentm
 All Orbital Science experiments do get an extra :code:`TOGGLE` suffix that activates and
 deactivates them::
 
-  
+
   SET P TO SHIP:PARTSTAGGED("collector")[0].
   SET M TO P:GETMODULE("dmsolarcollector").
 
