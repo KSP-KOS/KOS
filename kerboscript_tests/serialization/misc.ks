@@ -13,12 +13,6 @@ set read to readjson("misc.json").
 print read:lat = 10.
 print read:lng = 20.
 
-// Orbit
-writejson(ship:orbit, "misc.json").
-set read to readjson("misc.json").
-print read:body:name = "Kerbin".
-print read:period = ship:orbit:period.
-
 // Timespan
 set t to time.
 writejson(t, "misc.json").
