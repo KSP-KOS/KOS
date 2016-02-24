@@ -291,7 +291,7 @@ Controls that must be used with LOCK
 Time
 ----
 
-MISSIONTIME, or MET
+MISSIONTIME
 ~~~~~~~~~~~~~~~~~~~
 
 You can obtain the number of seconds it has been since the current
