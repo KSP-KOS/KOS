@@ -11,6 +11,7 @@ Boolean
         :widths: 1 
 
         * - (Boolean values have no suffixes, other than the :struct:`Structure <structure>` suffixes all values have.)
+        * -
 
 A Boolean value is the smallest unit of data possible in a computer program.
 It can contain one of exactly two values, either ``True``, or ``False``.

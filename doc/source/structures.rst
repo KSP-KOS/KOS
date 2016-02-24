@@ -8,7 +8,7 @@ A general discussion of structures :ref:`can be found here <language structures>
 .. toctree::
     :maxdepth: 2
 
-    Generic Structure <structure>
+    Generic Structure <structures/reflection>
     Collections       <structures/collections>
     Volumes & Files   <structures/volumes_and_files>
     Vessels & Parts   <structures/vessels>
