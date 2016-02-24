@@ -1,0 +1,8 @@
+# Auto detect text files and perform LF normalization
+# http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
+* text=auto
+
+*.cs     diff=csharp
+
+*.csproj text=auto merge=union
+*.sln text=auto eol=crlf merge=union

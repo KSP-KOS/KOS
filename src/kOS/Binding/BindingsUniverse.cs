@@ -5,6 +5,7 @@ using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using kOS.Safe.Persistence;
 
 namespace kOS.Binding
 {
@@ -132,6 +133,7 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
             shared.BindingMgr.AddGetter("SOLARPRIMEVECTOR", () => new Vector(Planetarium.right));
+            shared.BindingMgr.AddGetter("ARCHIVE", () => shared.VolumeMgr.GetVolume(Archive.ArchiveName));
         }
 
         private static void SetWarpRate(int newRate, int maxRate)

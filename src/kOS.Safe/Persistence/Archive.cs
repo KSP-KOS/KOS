@@ -10,6 +10,8 @@ namespace kOS.Safe.Persistence
     [kOS.Safe.Utilities.KOSNomenclature("Archive")]
     public class Archive : Volume
     {
+        public const string ArchiveName = "Archive";
+
         private static string ArchiveFolder
         {
             get { return SafeHouse.ArchiveFolder; }
@@ -19,7 +21,7 @@ namespace kOS.Safe.Persistence
         {
             Directory.CreateDirectory(ArchiveFolder);
             Renameable = false;
-            Name = "Archive";
+            Name = ArchiveName;
         }
 
         public override float RequiredPower()

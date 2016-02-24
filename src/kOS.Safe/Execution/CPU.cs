@@ -32,6 +32,8 @@ namespace kOS.Safe.Execution
         private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
 
+        public int InstructionsThisUpdate { get { return instructionsSoFarInUpdate; } }
+
         // statistics
         private double totalCompileTime;
 

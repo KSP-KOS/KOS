@@ -44,6 +44,7 @@ namespace kOS.Safe.Execution
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
+        int InstructionsThisUpdate { get; }
 
         /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.
