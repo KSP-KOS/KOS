@@ -31,6 +31,12 @@ Kerboscript provides this feature with a built-in type called a
 :struct:`KOSDelegate`, which remembers the details needed
 to be able to call a function later on.
 
+The topic can be a bit confusing to people new to it, but this video,
+produced shortly before the release of kOS 0.19.0 by one of the
+(then new) collaborators of the team may help:
+
+`CheersKevin's explanation of delegates <https://www.youtube.com/watch?v=pcbURdU_WyU>`__
+
 .. note::
     It's important to know before going into this explanation, that the
     feature described here does not work on structure suffixes as of

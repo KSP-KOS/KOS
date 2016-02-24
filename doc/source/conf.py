@@ -32,7 +32,9 @@ sys.path.insert(0, os.path.abspath('..'))
 extensions = [
     'sphinx.ext.mathjax',
     'ksdomain',
+    'KerboscriptLexer',
 ]
+
 
 primary_domain = 'ks'
 
@@ -46,7 +48,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'contents'
 
 # General information about the project.
 project = u'kOS'
@@ -92,7 +94,7 @@ exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
-highlight_language = 'c'
+highlight_language = 'kerboscript'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -142,6 +144,7 @@ html_theme = 'sphinx_rtd_theme'
 if html_theme == 'sphinx_rtd_theme':
     import sphinx_rtd_theme
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+    html_style = 'css/kos_theme.css'  # adjusts the read_the_docs CSS theme a tad.
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -160,7 +163,7 @@ if html_theme == 'sphinx_rtd_theme':
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '_images/kos_logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -170,7 +173,7 @@ html_favicon = '_images/favicon.ico'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_images']
+html_static_path = ['_images','_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
