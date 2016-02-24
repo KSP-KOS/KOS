@@ -32,11 +32,14 @@ namespace kOS.Safe.Encapsulation
 
         public abstract bool Write(byte[] content);
 
-        public abstract bool WriteLn(string content);
-
         public bool Write(string content)
         {
             return Write(FileContent.EncodeString(content));
+        }
+
+        public bool WriteLn(string content)
+        {
+            return Write(content + FileContent.NEW_LINE);
         }
 
         public abstract void Clear();

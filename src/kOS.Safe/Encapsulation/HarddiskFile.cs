@@ -31,11 +31,6 @@ namespace kOS.Safe.Encapsulation
             return true;
         }
 
-        public override bool WriteLn(string content)
-        {
-            return Write(content + "\n");
-        }
-
         public override void Clear()
         {
             GetFileContent().Clear();
