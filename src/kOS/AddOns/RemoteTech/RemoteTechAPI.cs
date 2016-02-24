@@ -13,5 +13,6 @@ namespace kOS.AddOns.RemoteTech
         public Func<Guid, double> GetShortestSignalDelay { get; internal set; }
         public Func<Guid, double> GetSignalDelayToKSC { get; internal set; }
         public Func<Guid, Guid, double> GetSignalDelayToSatellite { get; internal set; }
+        public Action<BaseEvent> InvokeOriginalEvent { get; internal set; }
     }
 }

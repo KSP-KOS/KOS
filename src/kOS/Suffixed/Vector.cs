@@ -2,16 +2,28 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using UnityEngine;
+using kOS.Safe.Serialization;
+using System.Collections.Generic;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class Vector : Structure
+    public class Vector : Structure, IDumper
     {
+        public const string DumpX = "x";
+        public const string DumpY = "y";
+        public const string DumpZ = "z";
+
         public double X { get; set; }
 
         public double Y { get; set; }
 
         public double Z { get; set; }
+
+        public Vector()
+        {
+            InitializeSuffixes();
+        }
 
         public Vector(Vector3d init)
             : this(init.x, init.y, init.z)
@@ -28,12 +40,11 @@ namespace kOS.Suffixed
         {
         }
 
-        public Vector(double x, double y, double z)
+        public Vector(double x, double y, double z) : this()
         {
             X = x;
             Y = y;
             Z = z;
-            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
@@ -69,6 +80,7 @@ namespace kOS.Suffixed
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             other = ConvertToDoubleIfNeeded(other);
+            other = Structure.ToPrimitive(other);
 
             switch (op)
             {
@@ -172,6 +184,31 @@ namespace kOS.Suffixed
             return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
+        public static Vector operator *(Vector a, ScalarValue b)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(float b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(double b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator *(ScalarValue b, Vector a)
+        {
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
+        }
+
+        public static Vector operator /(Vector a, ScalarValue b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.ToVector3D() + b.ToVector3D());
@@ -184,7 +221,25 @@ namespace kOS.Suffixed
 
         public static Vector operator -(Vector a)
         {
-            return a * (-1);
+            return a * (-1d);
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            DictionaryWithHeader dump = new DictionaryWithHeader();
+
+            dump.Add(DumpX, X);
+            dump.Add(DumpY, Y);
+            dump.Add(DumpZ, Z);
+
+            return dump;
+        }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            X = Convert.ToDouble(dump[DumpX]);
+            Y = Convert.ToDouble(dump[DumpY]);
+            Z = Convert.ToDouble(dump[DumpZ]);
         }
     }
 }

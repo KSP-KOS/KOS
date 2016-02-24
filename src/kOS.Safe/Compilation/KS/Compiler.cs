@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+using kOS.Safe.Execution;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -32,7 +34,6 @@ namespace kOS.Safe.Compilation.KS
         private Int16 braceNestLevel;
         private readonly List<Int16> scopeStack = new List<Int16>();
         private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
-        private readonly List<ParseNode> programParameters = new List<ParseNode>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
@@ -72,7 +73,6 @@ namespace kOS.Safe.Compilation.KS
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
-            programParameters.Clear();
         }
 
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
@@ -114,7 +114,6 @@ namespace kOS.Safe.Compilation.KS
         {
             currentCodeSection = part.MainCode;
             
-            PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
             if (addBranchDestination || currentCodeSection.Count == 0)
@@ -245,6 +244,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.on_stmt:
@@ -361,9 +361,12 @@ namespace kOS.Safe.Compilation.KS
             initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
             
             // The init block is now actually the entire loop, having been exploded and unrolled into its
-            // new form, make that be our only node node:
+            // new form, make that be our only node:
             node.Nodes.Clear();
             node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
+            
+            // The FROM loop node is still in the parent's list, but it contains this new rearranged sub-tree
+            // instead of its original.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -380,9 +383,11 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:
+                case TokenType.declare_stmt:
                     PreProcessChildNodes(node);
                     break;
                 case TokenType.on_stmt:
@@ -392,10 +397,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
-                    break;
-                case TokenType.declare_stmt:
-                    PreProcessChildNodes(node);
-                    PreProcessProgramParameters(node);
                     break;
                 case TokenType.run_stmt:
                     PreProcessRunStatement(node);
@@ -627,6 +628,7 @@ namespace kOS.Safe.Compilation.KS
 
             bool isLock = IsLockStatement(node);
             bool isDefFunc = IsDefineFunctionStatement(node);
+            bool needImplicitArgBottom = false;
             StorageModifier storageType = GetStorageModifierFor(node);
 
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
@@ -634,6 +636,7 @@ namespace kOS.Safe.Compilation.KS
             {
                 userFuncIdentifier = lastSubNode.Nodes[1].Token.Text; // The IDENT of: LOCK IDENT TO EXPR.
                 bodyNode = lastSubNode.Nodes[3]; // The EXPR of: LOCK IDENT TO EXPR.
+                needImplicitArgBottom = true;
             }
             else if (isDefFunc)
             {
@@ -684,6 +687,7 @@ namespace kOS.Safe.Compilation.KS
 
                 // build default dummy function to be used when this is a LOCK:
                 currentCodeSection = userFuncObject.GetUserFunctionOpcodes(0);
+                AddOpcode(new OpcodeArgBottom());
                 AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier)).Label = userFuncObject.DefaultLabel;
                 AddOpcode(new OpcodeReturn(0));
             }
@@ -699,6 +703,8 @@ namespace kOS.Safe.Compilation.KS
                     BeginScope(bodyNode);
                 if (isDefFunc)
                     nextBraceIsFunction = true;
+                if (needImplicitArgBottom)
+                    AddOpcode(new OpcodeArgBottom());
 
                 VisitNode(bodyNode);
 
@@ -742,7 +748,7 @@ namespace kOS.Safe.Compilation.KS
             List<Opcode> rememberCurrentCodeSection = currentCodeSection;
             currentCodeSection = triggerObject.Code;
             AddOpcode(new OpcodePush("$" + func.ScopelessIdentifier));
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // need these for all locks now.
+            AddOpcode(new OpcodePush(new KOSArgMarkerType())); // need these for all locks now.
             AddOpcode(new OpcodeCall(func.ScopelessPointerIdentifier));
             AddOpcode(new OpcodeStoreGlobal());
             AddOpcode(new OpcodeEOF());
@@ -761,34 +767,20 @@ namespace kOS.Safe.Compilation.KS
             return node;
         }
 
-        private void PreProcessProgramParameters(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            // if the declaration is a parameter,
-            // and this is NOT contained inside a DEFINE FUNCTION block and
-            // is therefore a global program parameter (for the run statement):
-            if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                (!(IsInsideDefineFunctionStatement(node))))
-            {
-                for (int index = 1; index < lastSubNode.Nodes.Count; index += 2)
-                {
-                    programParameters.Add(lastSubNode.Nodes[index]);
-                }
-            }
-            // If it's any other sort of Declare statement, do nothing and instead
-            // allow the PreProcessChildNodes handle all the work.
-        }
-
         private void PreProcessRunStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
             if (options.LoadProgramsInSameAddressSpace)
             {
+                int progNameIndex = 1;
+                if (node.Nodes[1].Token.Type == TokenType.ONCE)
+                {
+                    ++progNameIndex;
+                }
                 bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
                 if (!hasOn)
                 {
-                    string subprogramName = node.Nodes[1].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
+                    string subprogramName = node.Nodes[progNameIndex].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
                     if (!context.Subprograms.Contains(subprogramName)) // which it uses to decide how many of these blocks to make,
                     {                                                   // which is why we can't defer run filenames until runtime like we can with the others.
                         Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
@@ -796,13 +788,33 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(-1));
-                        AddOpcode(new OpcodeCompareEqual());
-                        OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
-                        AddOpcode(branchOpcode);
-                        // if it wasn't then load it now
+                        // Becuse of Cpu.SaveAndClearPointers(), the subprogram's pointer identifier won't
+                        // exist in this program context until it has been compiled once.  If it does exist,
+                        // then skip the compiling step and just run the code that's already there:
+                        AddOpcode(new OpcodeExists());
+                        // branch to where the compiler loads the code:
+                        OpcodeBranchIfFalse branchToLoad = new OpcodeBranchIfFalse();
+                        AddOpcode(branchToLoad);
+                        // Now the top of the stack should be the argument pushed by
+                        // VisitRunStatement that flags if there was a 'once' keyword:
+                        // If there was no 'once', then branch to where the already
+                        // loaded code gets run, even though it's been run before:
+                        OpcodeBranchIfFalse branchToRun = new OpcodeBranchIfFalse();
+                        AddOpcode(branchToRun);
+                        // If it falls through to here, that means the code was already
+                        // loaded, AND the 'once' keyword was present in the instance
+                        // where this loading function got called, so just do nothing
+                        // and return.
+                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodeReturn(0));
+                        // if it wasn't then load it now:
+                        // First throw away the 'once' argument since it doesn't matter when
+                        // we're going to be compiling regardless:
+                        OpcodePop firstOpcodeOfLoadSection = new OpcodePop();
+                        AddOpcode(firstOpcodeOfLoadSection);
+                        branchToLoad.DestinationLabel = firstOpcodeOfLoadSection.Label;
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                        AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                         AddOpcode(new OpcodePush(subprogramObject.SubprogramName));
                         AddOpcode(new OpcodePush(null)); // The output filename - only used for compile-to-file rather than for running.
                         AddOpcode(new OpcodeCall("load()"));
@@ -813,9 +825,9 @@ namespace kOS.Safe.Compilation.KS
                         // call the program
                         Opcode callOpcode = AddOpcode(new OpcodeCall(subprogramObject.PointerIdentifier));
                         // set the call opcode as the destination of the previous branch
-                        branchOpcode.DestinationLabel = callOpcode.Label;
+                        branchToRun.DestinationLabel = callOpcode.Label;
                         // return to the caller address, after adding a dummy return val:
-                        
+
                         // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
                         // a function declaration.  But in principle we could have programs return exit codes
                         // using the same architecture, and in fact that is why this dummy return value is needed,
@@ -831,25 +843,9 @@ namespace kOS.Safe.Compilation.KS
 
                         // Initialization code
                         currentCodeSection = subprogramObject.InitializationCode;
-                        // initialize the pointer to zero
-                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(-1));
-                        AddOpcode(new OpcodeStore());
+                        // removed pointer initialization since it overwrote any existing values when loading ksm files.
                     }
                 }
-            }
-        }
-
-        private void PushReversedParameters()
-        {
-            // reverse the order of parameters so the stack
-            // is popped in the correct order
-            programParameters.Reverse();
-            foreach (ParseNode node in programParameters)
-            {
-                VisitNode(node);
-                AddOpcode(new OpcodeSwap());
-                AddOpcode(new OpcodeStore());
             }
         }
 
@@ -1237,7 +1233,17 @@ namespace kOS.Safe.Compilation.KS
         private void VisitStartStatement(ParseNode node)
         {
             AddFunctionJumpVars(null);
-            VisitChildNodes(node);
+            int argbottomSpot = (options.IsCalledFromRun) ? FindArgBottomSpot(node) : -1;
+
+            // For each child node, but interrupting for the spot
+            // where to insert the argbottom opcode:
+            for (int i = 0 ; i < node.Nodes.Count ; ++i)
+            {
+                if (i == argbottomSpot)
+                    AddOpcode(new OpcodeArgBottom());
+                
+                VisitNode(node.Nodes[i]); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above.
+            }
         }
 
         private void VisitChildNodes(ParseNode node)
@@ -1383,6 +1389,7 @@ namespace kOS.Safe.Compilation.KS
 
             bool addNegation = false;
             bool addNot = false;
+            bool addDefined = false;
             int nodeIndex = 0;
 
             if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
@@ -1398,6 +1405,11 @@ namespace kOS.Safe.Compilation.KS
                 nodeIndex++;
                 addNot = true;
             }
+            else if (node.Nodes[0].Token.Type == TokenType.DEFINED)
+            {
+                nodeIndex++;
+                addDefined = true;
+            }
             
             VisitNode(node.Nodes[nodeIndex]);
 
@@ -1408,6 +1420,10 @@ namespace kOS.Safe.Compilation.KS
             if (addNot)
             {
                 AddOpcode(new OpcodeLogicNot());
+            }
+            if (addDefined)
+            {
+                AddOpcode(new OpcodeExists());
             }
         }
 
@@ -1473,7 +1489,7 @@ namespace kOS.Safe.Compilation.KS
                 number = double.Parse(node.Token.Text);
             }
 
-            AddOpcode(new OpcodePush(number));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitDouble(ParseNode node)
@@ -1481,7 +1497,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             object number = double.Parse(node.Token.Text);
 
-            AddOpcode(new OpcodePush(number));
+            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
         }
 
         private void VisitTrueFalse(ParseNode node)
@@ -1490,7 +1506,7 @@ namespace kOS.Safe.Compilation.KS
             bool boolValue;
             if (bool.TryParse(node.Token.Text, out boolValue))
             {
-                AddOpcode(new OpcodePush(boolValue));
+                AddOpcode(new OpcodePush(new BooleanValue(boolValue)));
             }
         }
 
@@ -1520,7 +1536,7 @@ namespace kOS.Safe.Compilation.KS
             // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
             // Even if there are no arguments, it still has to be TOLD that by showing
             // it the marker atop the stack with nothing above it.
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
 
             if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
             {
@@ -1553,6 +1569,27 @@ namespace kOS.Safe.Compilation.KS
             {
                 VisitNode(node.Nodes[nodeIndex]);
                 nodeIndex += 2;
+            }
+        }
+
+        // For the case where you wish to eval the args lastmost-first, such
+        // that they'll push onto the stack like so:
+        //   arg1 <-- top
+        //   arg2
+        //   arg3 <-- bottom
+        //
+        // instead of the usual stack order of:
+        //   arg3 <-- top
+        //   arg2
+        //   arg1 <-- bottom
+        private void VisitArgListReversed(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            int nodeIndex = node.Nodes.Count - 1;
+            while (nodeIndex >= 0)
+            {
+                VisitNode(node.Nodes[nodeIndex]);
+                nodeIndex -= 2;
             }
         }
 
@@ -1655,7 +1692,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     if (isDirect && isUserFunc)
                     {
-                        AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                        AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                         AddOpcode(new OpcodeCall(firstIdentifier));
                     }
                 }
@@ -1855,7 +1892,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitString(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
+            AddOpcode(new OpcodePush(new StringValue(node.Token.Text.Trim('"'))));
         }
 
         ///<summary>
@@ -2141,12 +2178,111 @@ namespace kOS.Safe.Compilation.KS
                 PushReturnList();
             
             AddFunctionJumpVars(node);
-            VisitChildNodes(node); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above. 
+            
+            int argbottomSpot = -1;
+            if (nextBraceWasFunction)
+                argbottomSpot = FindArgBottomSpot(node);
+
+            // For each child node, but interrupting for the spot
+            // where to insert the argbottom opcode:
+            for (int i = 0 ; i < node.Nodes.Count ; ++i)
+            {
+                if (i == argbottomSpot)
+                    AddOpcode(new OpcodeArgBottom());
+                
+                VisitNode(node.Nodes[i]); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above.
+            }
 
             if (nextBraceWasFunction)
                 PopReturnList();
 
             EndScope(node);
+        }
+        
+        /// <summary>
+        /// Checks whether or not the given ParseNode contains a declare parameter statment
+        /// inside it that pertains to this function.  Note, parameters inside functions
+        /// nested inside the current one don't count.  This method performs a recursive
+        /// walk.
+        /// <br/><br/>
+        /// While it does this walk, it also tests for whether or not there exists a
+        /// non-defaulted parameter after a defaulted one, which is illegal and throws an error.
+        /// </summary>
+        /// <param name="node">The node to check</param>
+        /// <param name="sawMandatoryParam">true once a parameter without a default clause occurs.</param>
+        private bool HasParameterStmtNested(ParseNode node, ref bool sawMandatoryParam)
+        {
+            // Base case:
+            if (node.Token.Type == TokenType.declare_parameter_clause)
+            {
+                // found one, double check that we don't have an undefaulted param after a defaulted one while we're at it:
+                // The logic counts backward here.
+                for (int i = node.Nodes.Count-2 ; i > 0 ; i -= 2)
+                {
+                    // If this is an expression, then we have a defaultable optional arg.
+                    // else we have a mandatory arg.
+                    TokenType tType = node.Nodes[i].Token.Type;
+                    bool isOptionalParam = (tType == TokenType.expr);
+                    if (isOptionalParam)
+                    {
+                        if (sawMandatoryParam)
+                            throw new KOSDefaultParamNotAtEndException();
+
+                        i -= 2; // skip back a bit further to pass over the extra terms a defaulter has.
+                    }
+                    else
+                    {
+                        sawMandatoryParam = true;
+                    }
+                }
+                
+                return true;
+            }
+
+
+            // Recursive case - make sure to walk backward, and don't abort the scan when a thing is found:
+            bool rememberReturnVal = false;
+            for (int i = node.Nodes.Count - 1 ; i >= 0 ; --i)
+            {
+                ParseNode child = node.Nodes[i];
+                if (child.Token.Type != TokenType.declare_function_clause) // functions nested in functions don't count
+                {
+                    if (HasParameterStmtNested(child, ref sawMandatoryParam))
+                        rememberReturnVal = true;
+                }
+            }
+                
+            return rememberReturnVal;
+        }
+        
+        /// <summary>
+        /// When parsing a function, we need to mark the spot where the lastmost PARAMETER
+        /// statement occurred, so it knows that that's the point during runtime where it
+        /// should assert all the arguments passed in have been consumed by the function.
+        /// <br/><br/>
+        /// This is done by inserting a fake extra __ARGBOTTOM "statement" into the parse tree just after
+        /// the last parameter, or if no parameters existed then right at the very top.
+        /// </summary>
+        /// <param name="node"></param>
+        private int FindArgBottomSpot(ParseNode node)
+        {
+            int lastmostDefParamStmt = -1;
+            bool sawMandatoryParam = false;
+            for (int i = node.Nodes.Count-1 ; i >= 0 ; --i)
+            {
+                if (HasParameterStmtNested(node.Nodes[i], ref sawMandatoryParam))
+                {
+                    // Only set this the very fist time a hit is seen - counting backward from the
+                    // end that will be the lastmost parameter statement:
+                    if (lastmostDefParamStmt == -1)
+                        lastmostDefParamStmt = i;
+                    
+                    // Would break here but instead need to keep checking for defaulted params prior to
+                    // mandatory ones for throwing KOSDefaultParamNotAtEndException
+                }
+            }
+            
+            return lastmostDefParamStmt+1;
         }
 
         /// <summary>
@@ -2228,7 +2364,7 @@ namespace kOS.Safe.Compilation.KS
                 }
                     
                 // enable this FlyByWire parameter
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 AddOpcode(new OpcodePush(lockIdentifier));
                 AddOpcode(new OpcodePush(true));
                 AddOpcode(new OpcodeCall("toggleflybywire()"));
@@ -2263,37 +2399,34 @@ namespace kOS.Safe.Compilation.KS
 
         private void UnlockIdentifier(UserFunction lockObject)
         {
-            if (lockObject.IsInitialized())
+            if (lockObject.IsSystemLock())
             {
-                if (lockObject.IsSystemLock())
+                // disable this FlyByWire parameter
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
+                // add a pop to clear out the dummy return value from toggleflybywire()
+                AddOpcode(new OpcodePop());
+
+                // remove update trigger
+                string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
+                if (context.Triggers.Contains(triggerIdentifier))
                 {
-                    // disable this FlyByWire parameter
-                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
-                    AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
-                    AddOpcode(new OpcodePush(false));
-                    AddOpcode(new OpcodeCall("toggleflybywire()"));
-                    // add a pop to clear out the dummy return value from toggleflybywire()
-                    AddOpcode(new OpcodePop());
-
-                    // remove update trigger
-                    string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
-                    if (context.Triggers.Contains(triggerIdentifier))
-                    {
-                        Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-                        AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                        AddOpcode(new OpcodeRemoveTrigger());
-                    }
+                    Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
+                    AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
+                    AddOpcode(new OpcodeRemoveTrigger());
                 }
-
-                // unlock variable
-                // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
-                AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
-                if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
-                else
-                    AddOpcode(new OpcodeStoreExist());
             }
+
+            // unlock variable
+            // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
+            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
+            AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
+            if (allowLazyGlobal)
+                AddOpcode(new OpcodeStore());
+            else
+                AddOpcode(new OpcodeStoreExist());
         }
 
         private void VisitOnStatement(ParseNode node)
@@ -2370,18 +2503,25 @@ namespace kOS.Safe.Compilation.KS
             // If the declare statement is of the form:
             //    DECLARE PARAMETER ident.
             // or
+            //    DECLARE PARAMETER ident IS expr.
+            // or
             //    DECLARE PARAMETER ident,ident,ident...
-            // AND this is inside a function definition rather than being at the global script level.
-            // (at the global script level a DEFINE PARAMETER statement is for RUN parameters, which
-            // get handled differently.)
-            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
-                IsInsideDefineFunctionStatement(node))
+            // or
+            //    DECLARE PARAMETER ident,ident,ident IS expr, ident IS EXPR...
+            else if (lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
                 for (int i = 1 ; i < lastSubNode.Nodes.Count ; i += 2)
                 {
-                    VisitNode(lastSubNode.Nodes[i]);
-                    AddOpcode(new OpcodeSwap());
-                    AddOpcode(CreateAppropriateStoreCode(whereToStore, true));
+                    bool hasInit = ( i < lastSubNode.Nodes.Count - 2 &&
+                                    ( lastSubNode.Nodes[i+1].Token.Type == TokenType.IS ||
+                                     lastSubNode.Nodes[i+1].Token.Type == TokenType.TO )
+                                   );
+                    ParseNode initExpressionNode = hasInit ? lastSubNode.Nodes[i+2] : null;
+                    VisitDeclareOneParameter(whereToStore, lastSubNode.Nodes[i], initExpressionNode);
+                    if (hasInit)
+                    {
+                        i += 2; // skip the "TO expr" part when looking for the next param.
+                    }
                 }
             }
             
@@ -2396,6 +2536,41 @@ namespace kOS.Safe.Compilation.KS
             // PreprocessDeclareStatement, with nothing for VisitNode to do.
         }
         
+        /// <summary>
+        /// Process a single parameter from the parameter list for a
+        /// function or program.  i.e. if encountering the statement
+        /// "DECLARE PARAMETER AA, BB, CC is 0." , then this method needs to be
+        /// called 3 times, once for AA, once for BB, and once for "CC is 0":
+        /// </summary>
+        /// <param name="whereToStore">is it local or global or lazyglobal</param>
+        /// <param name="identifierNode">Parse node holding the identifier of the param</param>
+        /// <param name="expressionNode">Parse node holding the expression to initialize to if
+        /// this is a defaultable parameter.  If it is not a defaultable parameter, pass null here</param>
+        private void VisitDeclareOneParameter(StorageModifier whereToStore, ParseNode identifierNode, ParseNode expressionNode)
+        {
+            if (expressionNode != null)
+            {
+                // This tests each defaultable parameter to see if it's at arg bottom.
+                // The test must be repeated for each parameter rather than optimizing by
+                // falling through to all subsequent defaulter expressions for the rest of
+                // the parameters once the first one finds arg bottom.
+                // This is because kerboscript does not require the declare parameters to
+                // be contiguous statements so there may be code in between them you're
+                // not supposed to skip over.
+
+                AddOpcode(new OpcodeTestArgBottom());
+                OpcodeBranchIfFalse branchSkippingInit = new OpcodeBranchIfFalse();
+                AddOpcode(branchSkippingInit);
+                
+                VisitNode(expressionNode); // evals init expression on the top of the stack where the arg would have been
+
+                branchSkippingInit.DestinationLabel = GetNextLabel(false);
+            }
+            VisitNode(identifierNode);
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true));                
+        }
+                
         /// <summary>
         /// Make the right sort of opcodestore-ish opcode for what storage
         /// mode we're in.
@@ -2415,9 +2590,9 @@ namespace kOS.Safe.Compilation.KS
                     return new OpcodeStoreGlobal();
                 default:
                     if (lazyGlobal)
-                        return AddOpcode(new OpcodeStore());
+                        return new OpcodeStore();
                     else
-                        return AddOpcode(new OpcodeStoreExist());
+                        return new OpcodeStoreExist();
             }
         }
         
@@ -2480,14 +2655,14 @@ namespace kOS.Safe.Compilation.KS
                 lastSubNode.Token.Type == TokenType.declare_identifier_clause &&
                 !allowLazyGlobal)
             {
-                throw new KOSCommandInvalidHere("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
+                throw new KOSCommandInvalidHereException("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
                                                 "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
                                                 "in a file where the default @LAZYGLOBAL behavior is on");
             }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-                throw new KOSCommandInvalidHere("GLOBAL", "in a function declaration", "in a variable declaration");
+                throw new KOSCommandInvalidHereException("GLOBAL", "in a function declaration", "in a variable declaration");
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
-                throw new KOSCommandInvalidHere("GLOBAL", "in a parameter declaration", "in a variable declaration");
+                throw new KOSCommandInvalidHereException("GLOBAL", "in a parameter declaration", "in a variable declaration");
 
             return modifier;
         }
@@ -2510,14 +2685,14 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             if (node.Nodes.Count == 3)
             {
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);
                 AddOpcode(new OpcodeCall("print()"));
                 AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
             }
             else
             {
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);
                 VisitNode(node.Nodes[4]);
                 VisitNode(node.Nodes[6]);
@@ -2529,7 +2704,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitStageStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             AddOpcode(new OpcodeCall("stage()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -2537,7 +2712,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitAddStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeCall("add()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
@@ -2546,7 +2721,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitRemoveStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeCall("remove()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
@@ -2555,7 +2730,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitClearStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             AddOpcode(new OpcodeCall("clearscreen()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -2563,7 +2738,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitEditStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeCall("edit()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
@@ -2573,9 +2748,21 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             int volumeIndex = 3;
+            int argListIndex = 3;
+            int progNameIndex = 1;
+            bool hasOnce = false;
+            if (node.Nodes[1].Token.Type == TokenType.ONCE)
+            {
+                hasOnce = true;
+                ++volumeIndex;
+                ++argListIndex;
+                ++progNameIndex;
+            }
+            if (hasOnce && ! options.LoadProgramsInSameAddressSpace)
+                throw new KOSOnceInvalidHereException();
 
             // process program arguments
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // regardless of whether it's called directly or indirectly, we still need at least one.
+            AddOpcode(new OpcodePush(new KOSArgMarkerType())); // regardless of whether it's called directly or indirectly, we still need at least one.
             bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
@@ -2583,18 +2770,35 @@ namespace kOS.Safe.Compilation.KS
                 // of the double-indirect call where we call the subroutine that was built in PreProcessRunStatement,
                 // and IT in turn calls the actual subprogram (after deciding whether or not it needs to compile it
                 // into existence).
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));                
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             }
-            
-            if (node.Nodes.Count > 3 && node.Nodes[3].Token.Type == TokenType.arglist)
+
+            // Needs to push a true/false onto the stack to record whether or not there was a "once"
+            // associated with this run (i.e. "run" versus "run once").  This has to go
+            // underneath the actual args.  This arg, and them, will get reversed by OpcodeCall, thus this
+            // boolean will end up atop the stack by the time the 'once' checker built in
+            // PreprocessRunStatement() gets to it:
+            if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
-                VisitNode(node.Nodes[3]);
+                string subprogramName = node.Nodes[progNameIndex].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
+                if (context.Subprograms.Contains(subprogramName))
+                {
+                    AddOpcode(new OpcodePush(hasOnce)); // tell that routine whether or not to skip the run when already compiled.
+                }
+            }
+
+            if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
+            {
+                // Run args need to get pushed to the stack in the opposite order to how
+                // function args do, because they pass through two levels of OpcodeCall, and
+                // thus get reversed twice, whereas function args only get reversed once:
+                VisitArgListReversed(node.Nodes[argListIndex]);
                 volumeIndex += 3;
             }
 
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
-                string subprogramName = node.Nodes[1].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
+                string subprogramName = node.Nodes[progNameIndex].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
                 if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
                 {
                     Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
@@ -2607,10 +2811,10 @@ namespace kOS.Safe.Compilation.KS
                 // When running in a new address space, we also need a second arg marker, but in this
                 // case it has to go over the top of the other args, not under them, to tell the RUN
                 // builtin function where its arguments end and the progs arguments start:
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));                
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
 
                 // program name
-                VisitNode(node.Nodes[1]);
+                VisitNode(node.Nodes[progNameIndex]);
 
                 // volume where program should be executed (null means local)
                 if (volumeIndex < node.Nodes.Count)
@@ -2630,7 +2834,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitCompileStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // for the load() function.
+            AddOpcode(new OpcodePush(new KOSArgMarkerType())); // for the load() function.
             VisitNode(node.Nodes[1]);
             if (node.Nodes.Count > 3)
             {
@@ -2651,7 +2855,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitSwitchStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[2]);
             AddOpcode(new OpcodeCall("switch()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
@@ -2660,7 +2864,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitCopyStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[1]);
 
             AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "from" : "to"));
@@ -2676,7 +2880,7 @@ namespace kOS.Safe.Compilation.KS
             int oldNameIndex = 2;
             int newNameIndex = 4;
 
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             if (node.Nodes.Count == 5)
             {
                 oldNameIndex--;
@@ -2697,7 +2901,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitDeleteStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[1]);
 
             if (node.Nodes.Count == 5)
@@ -2720,7 +2924,7 @@ namespace kOS.Safe.Compilation.KS
                 // destination variable
                 VisitVariableNode(node.Nodes[3]);
                 // list type
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);
                 // build list
                 AddOpcode(new OpcodeCall("buildlist()"));
@@ -2731,7 +2935,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 // list type
                 if (hasIdentifier) VisitNode(node.Nodes[1]);
                 else AddOpcode(new OpcodePush("files"));
@@ -2744,7 +2948,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitLogStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             VisitNode(node.Nodes[1]);
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodeCall("logfile()"));
@@ -2820,7 +3024,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitRebootStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             AddOpcode(new OpcodeCall("reboot()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if we ignore it.  Not sure it matters in the case of reboot() though.
         }
@@ -2828,7 +3032,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitShutdownStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             AddOpcode(new OpcodeCall("shutdown()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if we ignore it.  Not sure it matters in the case of shutdown() though.
         }
@@ -3001,14 +3205,14 @@ namespace kOS.Safe.Compilation.KS
                 }
                 ancestor = ancestor.Parent;
             }
-            // Check 2 - see if I am at the top.  The only statements allowed to preceed me are other directives:
+            // Check 2 - see if I am at the top.  The only statements allowed to precede me are other directives:
             if (validLocation && ancestor != null && ancestor.Token.Type == TokenType.Start)
             {
                 // ancestor is now the Start node for the compile:
                 int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
                 for (int i = 0; validLocation && i < myInstructionIndex; ++i)
                 {
-                    // if a statement preceeding me is anything other than another directive, it's wrong:
+                    // if a statement preceding me is anything other than another directive, it's wrong:
                     if (ancestor.Nodes[i].Token.Type != TokenType.directive ||
                             (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
                              ancestor.Nodes[i].Nodes[0].Token.Type != TokenType.directive)
@@ -3017,7 +3221,7 @@ namespace kOS.Safe.Compilation.KS
                 }
             }
             if (!validLocation)
-                throw new KOSCommandInvalidHere("@LAZYGLOBAL",
+                throw new KOSCommandInvalidHereException("@LAZYGLOBAL",
                                                 "after the first command in the file",
                                                 "at the start of a script file, prior to any other statements");
 

@@ -45,15 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClampSetSuffixTest.cs" />
-    <Compile Include="ListValueTest.cs" />
-    <Compile Include="NoArgsSuffixTest.cs" />
-    <Compile Include="SetSuffixTest.cs" />
-    <Compile Include="StructureSuffixIntegrationTest.cs" />
-    <Compile Include="StructureTest.cs" />
+    <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
+    <Compile Include="Structures\BooleanValueTest.cs" />
+    <Compile Include="Structures\ScalarValueTest.cs" />
+    <Compile Include="Structures\StringValueTest.cs" />
+    <Compile Include="Structure\ClampSetSuffixTest.cs" />
+    <Compile Include="Collections\LexiconTest.cs" />
+    <Compile Include="Collections\ListValueTest.cs" />
+    <Compile Include="Structure\NoArgsSuffixTest.cs" />
+    <Compile Include="Opcode\FakeCpu.cs" />
+    <Compile Include="Opcode\OpcodeGetIndexText.cs" />
+    <Compile Include="Opcode\OpcodeSetIndexTest.cs" />
+    <Compile Include="Structure\SetSuffixTest.cs" />
+    <Compile Include="Structure\StructureSuffixIntegrationTest.cs" />
+    <Compile Include="Structure\StructureTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestLogger.cs" />
-    <Compile Include="TwoArgsVoidSuffixTest.cs" />
+    <Compile Include="Structure\TwoArgsVoidSuffixTest.cs" />
+    <Compile Include="Collections\QueueValueTest.cs" />
+    <Compile Include="Collections\StackValueTest.cs" />
+    <Compile Include="Serialization\JSONFormatterTest.cs" />
+    <Compile Include="Serialization\TerminalFormatterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -72,4 +84,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
 </Project>

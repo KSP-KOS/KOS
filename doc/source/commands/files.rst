@@ -5,9 +5,25 @@ File I/O
 
 For information about where files are kept and how to deal with volumes see the :ref:`Volumes <volumes>` page in the general topics section of this documentation.
 
+.. contents::
+    :local:
+    :depth: 2
+
 .. note::
 
-    All file names (program names) must be valid Identifiers. They can not contain spaces or special characters. For example, you can't have a file name called "this is my-file".
+    *Limitations on file names used for programs*
+
+    All file names used as program names with the ``run`` command must be
+    valid identifiers.  They can not contain spaces or special characters. For
+    example, you can't have a program named ``this is my-file.ks``.  This rule
+    does not necessarily apply to other filenames such as log files.  However
+    to use a filename that contains spaces, you will have to put quotes around
+    it.
+
+    On case-sensitive filesystems typically found on Linux and Mac, you should
+    name program files used with the ``run`` command entirely with
+    lowercase-only filenames or the system may fail to find them when you
+    use the ``run`` command.
 
 .. warning::
 
@@ -102,8 +118,8 @@ placed on a separate page.
 Please see :ref:`the details of the Kerboscript ML
 Executable <compiling>`.
 
-``COPY programFile FROM/TO voumeNumber.``
------------------------------------------
+``COPY programFile FROM/TO Volume|volumeId|volumeName.``
+--------------------------------------------------------
 
 Arguments
 ^^^^^^^^^
@@ -112,7 +128,7 @@ Arguments
 -  argument 2: Target volume.
 
 Copies a file to or from another volume. Volumes can be referenced by
-their ID numbers or their names if they’ve been given one. See LIST,
+instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST,
 SWITCH and RENAME.
 
 Understanding how :ref:`volumes
@@ -121,19 +137,22 @@ understanding this command.
 
 Example::
 
-    SWITCH TO 1.             // Makes volume 1 the active volume
-    COPY file1 FROM 0.       // Copies a file called file1.ks from volume 0 to volume 1
-    COPY file2 TO 0.         // Copies a file called file1.ks from volume 1 to volume 0
-    COPY file1.ks FROM 0.    // Copies a file called file1.ks from volume 0 to volume 1
-    COPY file2.ksm TO 0.     // Copies a file called file1.ksm from volume 1 to volume 0
-    COPY "file1.ksm" FROM 0. // Copies a file called file1.ksm from volume 0 to volume 1
+    SWITCH TO 1.                      // Makes volume 1 the active volume
+    COPY file1 FROM 0.                // Copies a file called file1.ks from volume 0 to volume 1
+    COPY file2 TO 0.                  // Copies a file called file2.ks from volume 1 to volume 0
+    COPY file1.ks FROM 0.             // Copies a file called file1.ks from volume 0 to volume 1
+    COPY file2.ksm TO 0.              // Copies a file called file2.ksm from volume 1 to volume 0
+    COPY "file1.ksm" FROM 0.          // Copies a file called file1.ksm from volume 0 to volume 1
     COPY "file1" + "." + "ks" FROM 0. // Copies a file called file1.ks from volume 0 to volume 1
+    COPY file2.ksm TO CORE:VOLUME.    // Copies a file called file2.ksm to active processor's volume
+    COPY file2.ksm TO "other".        // Copies a file called file2.ksm to volume named 'other'
 
 
-``DELETE filename FROM volumeNumber.``
---------------------------------------
+``DELETE filename FROM Volume|volumeId|volumeName.``
+----------------------------------------------------
 
-Deletes a file. You can delete a file from the current volume, or from a named volume.
+Deletes a file. Volumes can be referenced by instances of :struct:`Volume`, their ID numbers or their names
+if they’ve been given one.
 
 Arguments
 ^^^^^^^^^
@@ -143,11 +162,13 @@ Arguments
 
 Example::
 
-    DELETE file1.         // Deletes file1.ks from the active volume.
-    DELETE "file1".       // Deletes file1.ks from the active volume.
-    DELETE file1.txt.     // Deletes file1.txt from the active volume.
-    DELETE "file1.txt".   // Deletes file1.txt from the active volume.
-    DELETE file1 FROM 1.  // Deletes file1.ks from volume 1
+    DELETE file1.                   // Deletes file1.ks from the active volume.
+    DELETE "file1".                 // Deletes file1.ks from the active volume.
+    DELETE file1.txt.               // Deletes file1.txt from the active volume.
+    DELETE "file1.txt".             // Deletes file1.txt from the active volume.
+    DELETE file1 FROM 1.            // Deletes file1.ks from volume 1
+    DELETE file1 FROM CORE:VOLUME.  // Deletes file1.ks from active processor's volume
+    DELETE file1 FROM "other".      // Deletes file1.ks from volume name 'other'
 
 
 ``EDIT program.``
@@ -191,10 +212,14 @@ Example::
     LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
 
 
-``RENAME name1 TO name2.``
---------------------------
+``RENAME VOLUME Volume|volumeId|oldVolumeName TO name.``
+--------------------------------------------------------
 
-Renames a file or volume.
+``RENAME FILE oldName TO newName.``
+-----------------------------------
+
+Renames a file or volume. Volumes can be referenced by
+instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one.
 
 Arguments
 ^^^^^^^^^
@@ -207,10 +232,21 @@ Example::
     RENAME VOLUME 1 TO AwesomeDisk
     RENAME FILE MyFile TO AutoLaunch.
 
-``RUN <program>.``
-------------------
+.. _run_once:
+
+``RUN [ONCE] <program>.``
+-------------------------
 
 Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.
+
+If the optional ``ONCE`` keyword is used after the word ``RUN``, it means
+the run will not actually occur if the program has already been run once
+during the current program context.  This is intended mostly for loading library
+program files that may have mainline code in them for initialization purposes
+that you don't want to get run a second time just because you use the library
+in two different subprograms.
+
+``RUN ONCE`` means "Run unless it's already been run, in which case skip it."
 
 Arguments
 ^^^^^^^^^
@@ -226,6 +262,8 @@ Example::
     RUN AutoLaunch( 75000, true, "hello" ).
     RUN AutoLaunch.ks( 75000, true, "hello" ).
     RUN AutoLaunch.ksm( 75000, true, "hello" ).
+
+    RUN ONCE myLibrary. // run myLibrary unless it's been run already.
 
 The program that is reading the arguments sees them in the variables it
 mentions in :ref:`DECLARE PARAMETER`.
@@ -245,25 +283,21 @@ RUN only works when the filename is a bareword filename. It cannot use expressio
                      // called "ProgName.ksm" or "ProgName.ks", when it sees this,
                      // rather than "MyProgram".
 
-    The reasons for the exception to how filenames work for the RUN
-    command are too complex to go into in large detail here. Here's the
-    short version: While the kOS system does defer the majority of the
-    work
-    of actually compiling subprogram scripts until run-time, it still
-    has to
-    generate some header info about them at compile time, and the
-    filename
-    has to be set in stone at that time. Changing this would require a
-    large re-write of some of the architecture of the virtual machine.
+The reasons for the exception to how filenames work for the RUN command are
+too complex to go into in large detail here. Here's the short version: While
+the kOS system does defer the majority of the work of actually compiling
+subprogram scripts until run-time, it still has to generate some header info
+about them at compile time, and the filename has to be set in stone at that
+time. Changing this would require a large re-write of some of the architecture
+of the virtual machine.
 
 
-``SWITCH TO <volumeNumber>.``
------------------------------
+``SWITCH TO Volume|volumeId|volumeName.``
+-----------------------------------------
 
-Switches to the specified volume. Volumes can be specified by number, or
-it’s name (if it has one). See LIST and RENAME. Understanding how
-:ref:`volumes work <volumes>` is important
-to understanding this command.
+Switches to the specified volume. Volumes can be referenced by
+instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how
+:ref:`volumes work <volumes>` is important to understanding this command.
 
 Example::
 
@@ -272,10 +306,39 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+``WRITEJSON(OBJECT, FILENAME).``
+--------------------------------
+
+Serializes the given object to JSON format and saves it under the given filename on the current volume.
+
+**Important:** only certain types of objects can be serialized. If a type is serializable then that fact
+is explicitly mentioned in the type's documentation, see :struct:`Lexicon` for an example.
+
+Usage example::
+
+    SET L TO LEXICON().
+    SET NESTED TO QUEUE().
+
+    L:ADD("key1", "value1").
+    L:ADD("key2", NESTED).
+
+    NESTED:ADD("nestedkey1", "nestedvalue1").
+
+    WRITEJSON(l, "output.json").
+
+``READJSON(FILENAME).``
+-----------------------
+
+Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them. Example::
+
+    SET L TO READJSON("output.json").
+    PRINT L["key1"].
+
+
 .. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------------------------
 **(experimental)**
 
 For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.

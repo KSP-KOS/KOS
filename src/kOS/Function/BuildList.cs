@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
+using kOS.Suffixed.PartModuleField;
 
 namespace kOS.Function
 {
@@ -18,7 +19,10 @@ namespace kOS.Function
             switch (listType)
             {
                 case "bodies":
-                    list = ListValue.CreateList(FlightGlobals.fetch.bodies);
+                    foreach (CelestialBody cBody in FlightGlobals.fetch.bodies)
+                    {                        
+                        list.Add(new BodyTarget(cBody, shared));
+                    }
                     break;
                 case "targets":
                     foreach (var vessel in FlightGlobals.Vessels)
@@ -40,6 +44,9 @@ namespace kOS.Function
                     break;
                 case "volumes":
                     list = ListValue.CreateList(shared.VolumeMgr.Volumes.Values.ToList());
+                    break;
+                case "processors":
+                    list = ListValue.CreateList(shared.ProcessorMgr.processors.Values.ToList().Select((processor) => PartModuleFieldsFactory.Construct(processor, shared)));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

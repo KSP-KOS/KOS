@@ -19,6 +19,7 @@ using KSPAPIExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Execution;
 using UnityEngine;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
@@ -29,6 +30,15 @@ namespace kOS.Module
         public ProcessorModes ProcessorMode = ProcessorModes.READY;
 
         public Harddisk HardDisk { get; private set; }
+
+        public string Tag
+        {
+            get
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                return tag == null ? string.Empty : tag.nameTag;
+            }
+        }
 
         private int vesselPartCount;
         private SharedObjects shared;
@@ -293,8 +303,14 @@ namespace kOS.Module
             if (HardDisk == null)
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+
+                if (!String.IsNullOrEmpty(Tag))
+                {
+                    HardDisk.Name = Tag;
+                }
+
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
-                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !Config.Instance.StartOnArchive)
+                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
                 {
                     var bootProgramFile = archive.GetByName(bootFile);
                     if (bootProgramFile != null)
@@ -308,7 +324,7 @@ namespace kOS.Module
             shared.VolumeMgr.Add(HardDisk);
 
             // process setting
-            if (!Config.Instance.StartOnArchive)
+            if (!SafeHouse.Config.StartOnArchive)
             {
                 shared.VolumeMgr.SwitchTo(HardDisk);
             }
@@ -374,7 +390,7 @@ namespace kOS.Module
             bool isAvailable;
             try
             {
-                isAvailable = RemoteTechHook.IsAvailable(vessel.id);
+                isAvailable = RemoteTechHook.IsAvailable();
             }
             catch
             {
@@ -436,6 +452,7 @@ namespace kOS.Module
                 firstUpdate = false;
                 shared.Cpu.Boot();
             }
+            UpdateVessel();
             UpdateFixedObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
@@ -452,7 +469,7 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.READY)
             {
-                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(TimeWarp.deltaTime);
                 UpdateParts();
             }
         }
@@ -461,7 +478,7 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.READY)
             {
-                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(TimeWarp.fixedDeltaTime);
             }
         }
 
@@ -542,6 +559,11 @@ namespace kOS.Module
                 // KSP Seems to want to make an instance of my partModule during initial load
                 if (vessel == null) return;
 
+                if (node.HasValue("activated") && !Boolean.Parse(node.GetValue("activated")))
+                {
+                    ProcessorMode = ProcessorModes.OFF;
+                }
+
                 if (node.HasNode("harddisk"))
                 {
                     var newDisk = node.GetNode("harddisk").ToHardDisk();
@@ -550,10 +572,6 @@ namespace kOS.Module
 
                 InitObjects();
 
-                if (shared != null && shared.Cpu != null)
-                {
-                    ((CPU)shared.Cpu).OnLoad(node);
-                }
                 base.OnLoad(node);
             }
             catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
@@ -567,6 +585,8 @@ namespace kOS.Module
         {
             try
             {
+                node.AddValue("activated", ProcessorMode != ProcessorModes.OFF);
+
                 if (HardDisk != null)
                 {
                     ConfigNode hdNode = HardDisk.ToConfigNode("harddisk");
@@ -575,8 +595,7 @@ namespace kOS.Module
 
                 if (shared != null && shared.Cpu != null)
                 {
-                    ((CPU)shared.Cpu).OnSave(node);
-                    Config.Instance.SaveConfig();
+                    SafeHouse.Config.SaveConfig();
                 }
 
                 base.OnSave(node);
@@ -624,7 +643,7 @@ namespace kOS.Module
                 switch (newProcessorMode)
                 {
                     case ProcessorModes.READY:
-                        shared.VolumeMgr.SwitchTo(Config.Instance.StartOnArchive
+                        shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
                             ? shared.VolumeMgr.GetVolume(0)
                             : HardDisk);
                         if (shared.Cpu != null) shared.Cpu.Boot();
@@ -662,6 +681,19 @@ namespace kOS.Module
         {
             get { return bootFile; }
             set { bootFile = value; }
+        }
+
+        public bool CheckCanBoot()
+        {
+            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
+            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            else
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

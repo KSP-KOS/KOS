@@ -7,6 +7,7 @@ using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 
 namespace kOS.Screen
@@ -138,7 +139,7 @@ namespace kOS.Screen
             var useBlizzyOnly = false;
 
             if (ToolbarManager.ToolbarAvailable)
-                useBlizzyOnly = Config.Instance.UseBlizzyToolbarOnly;
+                useBlizzyOnly = SafeHouse.Config.UseBlizzyToolbarOnly;
 
             if (!useBlizzyOnly && launcherButton == null)
             {
@@ -183,11 +184,11 @@ namespace kOS.Screen
         /// </summary>
         public void SetupBackingConfigInts()
         {
-            if (Config.Instance.TimeStamp() <= prevConfigTimeStamp)
+            if (SafeHouse.Config.TimeStamp <= prevConfigTimeStamp)
                 return;
             prevConfigTimeStamp = DateTime.Now;
 
-            List<ConfigKey> keys = Config.Instance.GetConfigKeys();
+            IList<ConfigKey> keys = SafeHouse.Config.GetConfigKeys();
             backingConfigInts = new List<int>();
             // Fills exactly the expected number of needed ints, in the same
             // order they will be encountered in when iterating over GetConfigKeys later
@@ -358,7 +359,7 @@ namespace kOS.Screen
 
             SetupBackingConfigInts();
 
-            foreach (ConfigKey key in Config.Instance.GetConfigKeys())
+            foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
                 CountBeginHorizontal();
 

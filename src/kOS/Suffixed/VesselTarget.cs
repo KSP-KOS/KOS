@@ -11,11 +11,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using kOS.Serialization;
+using kOS.Safe.Serialization;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : Orbitable, IKOSTargetable
+    public class VesselTarget : Orbitable, IKOSTargetable, IDumperWithSharedObjects
     {
+        private static string DumpGuid = "guid";
+
         override public Orbit Orbit { get { return Vessel.orbit; } }
 
         override public string GetName()
@@ -183,10 +187,15 @@ namespace kOS.Suffixed
                 {
                     "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
                     "LONGITUDE",
-                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
+                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
                     "AIRSPEED", "VESSELNAME", "SHIPNAME",
                     "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
                 };
+        }
+
+        public VesselTarget()
+        {
+            InitializeSuffixes();
         }
 
         public VesselTarget(Vessel target, SharedObjects shared)
@@ -405,7 +414,7 @@ namespace kOS.Suffixed
             AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
-            AddSuffix("CONTROL", new Suffix<FlightControl>(() => FlightControlManager.GetControllerByVessel(Vessel)));
+            AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
             AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
             AddSuffix("HEADING", new Suffix<float>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
             AddSuffix("AVAILABLETHRUST", new Suffix<double>(() => VesselUtils.GetAvailableThrust(Vessel)));
@@ -417,30 +426,23 @@ namespace kOS.Suffixed
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
-            AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
+            AddSuffix("GROUNDSPEED", new Suffix<double>(GetHorizontalSrfSpeed));
+            AddSuffix("SURFACESPEED", new Suffix<double>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
             AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
             AddSuffix("TERMVELOCITY", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
+            AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<double>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
+            AddSuffix("UNPACKED", new Suffix<bool>(() => !Vessel.packed));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
-            AddSuffix("PACKDISTANCE", new SetSuffix<float>(
-                () =>
-                {
-                    return System.Math.Min(Vessel.vesselRanges.landed.pack, Vessel.vesselRanges.prelaunch.pack);
-                },
-                value =>
-                {
-                    Vessel.vesselRanges.landed.pack = value;
-                    Vessel.vesselRanges.splashed.pack = value;
-                    Vessel.vesselRanges.prelaunch.pack = value;
-                }));
+            AddSuffix("LOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(Vessel)));
             AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD)));
-            AddSuffix("STATUS", new Suffix<String>(() => Vessel.situation.ToString()));
+            AddSuffix("STATUS", new Suffix<string>(() => Vessel.situation.ToString()));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
@@ -448,6 +450,34 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
+            AddSuffix("CREW", new NoArgsSuffix<ListValue>(GetCrew));
+            AddSuffix("CREWCAPACITY", new NoArgsSuffix<int> (GetCrewCapacity));
+        }
+
+        public int GetCrewCapacity() {
+            return Vessel.GetCrewCapacity();
+        }
+
+        public ListValue GetCrew() {
+            var crew = new ListValue();
+
+            foreach (var crewMember in Vessel.GetVesselCrew()) {
+                crew.Add(new CrewMember(crewMember, Shared));
+            }
+
+            return crew;
+        }
+
+        public void ThrowIfNotCPUVessel()
+        {
+            if (this.Vessel.id != Shared.Vessel.id)
+                throw new KOSWrongCPUVesselException();
+        }
+
+        public FlightControl GetFlightControl()
+        {
+            ThrowIfNotCPUVessel();
+            return FlightControlManager.GetControllerByVessel(Vessel);
         }
 
         public double GetAvailableThrustAt(double atmPressure)
@@ -471,6 +501,41 @@ namespace kOS.Suffixed
             {
                 Vessel.vesselName = value;
             }
+        }
+        
+        private double GetHorizontalSrfSpeed()
+        {
+            // NOTE: THIS Function replaces the functionality of the 
+            // single KSP API CALL:
+            //       Vessel.horizontalSrfSpeed;
+            // Which broke in KSP 1.0.3, badly, so we're just going to
+            // calculate it manually instead.
+            
+            // The logic, shamefully copied from the Kerbal Engineer mod,
+            // which had the same problem, is this:
+            //    Run the Pythagorean Theorem slightly backward.
+            //    If we know that:
+            //        srfspd == sqrt( a^2 + b^2 + c^2).
+            //    And we want to get what the speed would be if dimension C was excluded so it was projected
+            //    into the plane of just the a and b components, we can do this:
+            //        srfspd^2 == a^2 + b^2 + c^2.
+            //    solve for (a^2+b^2):
+            //        srfspd^2 - c^2 == a^2 + b^2.
+            //    We know that, in just the two dimensions:
+            //        speed_2D = sqrt(a^2+b^2).
+            //    Therefore:
+            //        speed_2D = sqrt(srfspd^2 - c^2)
+            //    Since C in our case is the vertical speed we want to remove, we get the following formula:
+
+            double squared2DSpeed = Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed;
+
+            // Due to floating point roundoff errrors in the KSP API, the above expression can sometimes come
+            // out slightly negative when it should be nearly zero.  (i.e. -0.0000012).  The Sqrt() would
+            // return NaN for such a case, so it needs to be protected from ever going negative like so:
+            if (squared2DSpeed < 0)
+                squared2DSpeed = 0;
+
+            return System.Math.Sqrt(squared2DSpeed);
         }
 
         /// <summary>
@@ -530,6 +595,37 @@ namespace kOS.Suffixed
         public static bool operator !=(VesselTarget left, VesselTarget right)
         {
             return !Equals(left, right);
+        }
+
+        public IDictionary<object, object> Dump()
+        {
+            DictionaryWithHeader dump = new DictionaryWithHeader();
+
+            dump.Header = "VESSEL '" + Vessel.vesselName + "'";
+
+            dump.Add(DumpGuid, Vessel.id.ToString());
+
+            return dump;
+        }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            string guid = dump[DumpGuid] as string;
+
+            if (guid == null)
+            {
+                throw new KOSSerializationException("Vessel's guid is null or invalid");
+            }
+
+            Vessel vessel = FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(guid));
+
+            if (vessel == null)
+            {
+                throw new KOSSerializationException("Vessel with the given id does not exist");
+            }
+
+            Vessel = vessel;
+
         }
     }
 }

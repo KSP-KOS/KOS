@@ -423,6 +423,7 @@ types supported is this:
 								    content of the string.
 								    kOS encodes the string
 								    as UTF-8.
+    8           | The magic mark pushed on the stack to help count args | nonexistent - like nulls it has no data.
 
 CodePart sections:
 ------------------

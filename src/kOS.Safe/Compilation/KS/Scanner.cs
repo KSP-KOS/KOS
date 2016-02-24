@@ -182,6 +182,10 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.DECLARE, regex);
             Tokens.Add(TokenType.DECLARE);
 
+            regex = new Regex(@"(?i)\bdefined\b");
+            Patterns.Add(TokenType.DEFINED, regex);
+            Tokens.Add(TokenType.DEFINED);
+
             regex = new Regex(@"(?i)\blocal\b");
             Patterns.Add(TokenType.LOCAL, regex);
             Tokens.Add(TokenType.LOCAL);
@@ -237,6 +241,10 @@ namespace kOS.Safe.Compilation.KS
             regex = new Regex(@"(?i)\brun\b");
             Patterns.Add(TokenType.RUN, regex);
             Tokens.Add(TokenType.RUN);
+
+            regex = new Regex(@"(?i)\bonce\b");
+            Patterns.Add(TokenType.ONCE, regex);
+            Tokens.Add(TokenType.ONCE);
 
             regex = new Regex(@"(?i)\bcompile\b");
             Patterns.Add(TokenType.COMPILE, regex);
@@ -610,48 +618,50 @@ namespace kOS.Safe.Compilation.KS
             BREAK   = 97,
             PRESERVE= 98,
             DECLARE = 99,
-            LOCAL   = 100,
-            GLOBAL  = 101,
-            PARAMETER= 102,
-            FUNCTION= 103,
-            RETURN  = 104,
-            SWITCH  = 105,
-            COPY    = 106,
-            FROM    = 107,
-            RENAME  = 108,
-            VOLUME  = 109,
-            FILE    = 110,
-            DELETE  = 111,
-            EDIT    = 112,
-            RUN     = 113,
-            COMPILE = 114,
-            LIST    = 115,
-            REBOOT  = 116,
-            SHUTDOWN= 117,
-            FOR     = 118,
-            UNSET   = 119,
-            BRACKETOPEN= 120,
-            BRACKETCLOSE= 121,
-            CURLYOPEN= 122,
-            CURLYCLOSE= 123,
-            SQUAREOPEN= 124,
-            SQUARECLOSE= 125,
-            COMMA   = 126,
-            COLON   = 127,
-            IN      = 128,
-            ARRAYINDEX= 129,
-            ALL     = 130,
-            IDENTIFIER= 131,
-            FILEIDENT= 132,
-            INTEGER = 133,
-            DOUBLE  = 134,
-            STRING  = 135,
-            EOI     = 136,
-            ATSIGN  = 137,
-            LAZYGLOBAL= 138,
-            EOF     = 139,
-            WHITESPACE= 140,
-            COMMENTLINE= 141
+            DEFINED = 100,
+            LOCAL   = 101,
+            GLOBAL  = 102,
+            PARAMETER= 103,
+            FUNCTION= 104,
+            RETURN  = 105,
+            SWITCH  = 106,
+            COPY    = 107,
+            FROM    = 108,
+            RENAME  = 109,
+            VOLUME  = 110,
+            FILE    = 111,
+            DELETE  = 112,
+            EDIT    = 113,
+            RUN     = 114,
+            ONCE    = 115,
+            COMPILE = 116,
+            LIST    = 117,
+            REBOOT  = 118,
+            SHUTDOWN= 119,
+            FOR     = 120,
+            UNSET   = 121,
+            BRACKETOPEN= 122,
+            BRACKETCLOSE= 123,
+            CURLYOPEN= 124,
+            CURLYCLOSE= 125,
+            SQUAREOPEN= 126,
+            SQUARECLOSE= 127,
+            COMMA   = 128,
+            COLON   = 129,
+            IN      = 130,
+            ARRAYINDEX= 131,
+            ALL     = 132,
+            IDENTIFIER= 133,
+            FILEIDENT= 134,
+            INTEGER = 135,
+            DOUBLE  = 136,
+            STRING  = 137,
+            EOI     = 138,
+            ATSIGN  = 139,
+            LAZYGLOBAL= 140,
+            EOF     = 141,
+            WHITESPACE= 142,
+            COMMENTLINE= 143
     }
 
     public class Token

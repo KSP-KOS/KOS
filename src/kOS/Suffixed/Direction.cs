@@ -148,6 +148,16 @@ namespace kOS.Suffixed
             return new Direction(a.Rotation * b.Rotation);
         }
 
+        public static Vector operator *(Direction a, Vector b)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
+        public static Vector operator *(Vector b, Direction a)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
         public static Direction operator +(Direction a, Direction b)
         {
             return new Direction(a.Euler + b.Euler, true);

@@ -13,6 +13,132 @@ of documentation again from scratch.
     :local:
     :depth: 3
 
+****
+
+Changes in 0.18.2
+-----------------
+
+Queue and Stack
+:::::::::::::::
+
+:ref:`Queues <queue>` and :ref:`Stacks <stack>` are now a feature 
+you can use along with lists.
+
+Run Once
+::::::::
+
+:ref:`New ONCE argment to the run command <run_once>`
+
+Volumes and Processors integration
+::::::::::::::::::::::::::::::::::
+
+:ref:`Volumes <volume>` now get a default name equal to the core
+processor's nametag, and have several suffixes that can be queried.
+
+Get the volume that goes with a :ref:`core <core>`
+
+Debuglog
+::::::::
+
+:ref:`Debuglog <debuglog>` suffix of KUNIVERSE for writing messages to the
+Unity log file.
+
+
+Changes in 0.18.1
+-----------------
+
+(This update had only bug fixes and nothing that affected these
+user documentation pages.)
+
+Changes in 0.18 - Steering Much Betterer
+----------------------------------------
+
+Steering Overhaul
+:::::::::::::::::
+
+A major change to Cooked Steering!
+
+Should help people using torque-less craft like with Realism Overhaul.
+Removed the old steering logic and replaced it with a nice auto-tuning system.
+
+:ref:`SteeringManager <steeringmanager>` structure now lests you acccess and alter parts of the cooked steering system.
+
+:ref:`PIDLoop <pidloop>` structure now lets you borrow the PID mechanism used by the new cooked steering, for your own purposes.
+
+Lexicon
+:::::::
+
+New :ref:`Lexicon <lexicon>` structure now allows associative arrays.
+
+String methods
+::::::::::::::
+
+New :ref:`String <string>` structure now allows string manipulations.
+
+Science Experiment Control
+::::::::::::::::::::::::::
+
+New :ref:`ScienceExperimentModule <scienceexperimentmodule>` allows you to fire off science experiments bypassing the user 
+interface dialog.
+
+Crew Member API
+:::::::::::::::
+
+New :ref:`CrewMember <crewmember>` structure allows you to query the registered crew - their class, gender, and skill.
+
+LOADISTANCE
+:::::::::::
+
+New :struct:`LOADDISTANCE` obsoletes the previous way it worked.
+
+Infernal Robotics Part suffix
+:::::::::::::::::::::::::::::
+
+Renamed built-ins
+:::::::::::::::::
+
+"AQUIRE" on docking ports is now "ACQUIRE".
+"SURFACESPEED" is now "GROUNDSPEED" instead.
+
+Enforces control of own-vessel only
+:::::::::::::::::::::::::::::::::::
+
+It was previously possible to control vessels that weren't attached to the kOS computer
+running the script.  This has been corrected.
+
+New quickstart tutorial
+:::::::::::::::::::::::
+
+`http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html <http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html>`_ 
+
+A few more constants
+::::::::::::::::::::
+
+:ref:`constants <constants>`
+
+Dynamic pressure
+::::::::::::::::
+
+DYNAMICPRESSURE, or Q, a new suffix of :struct:`Vessel`.
+
+DEFINED keyword
+:::::::::::::::
+
+:ref:`DEFINED keyword <defined>` that can be used to check if a variable has been declared.
+
+KUNIVERSE
+:::::::::
+
+:struct:`KUniverse` structure letting you break the 4th wall and revert from a script
+
+SolarPrimeVector
+::::::::::::::::
+
+:ref:`SolarPrimeVector <solarprimevector>`, a bound variable to provide universal longitude direction.
+
+
+****
+
 Changes in 0.17.3
 -----------------
 

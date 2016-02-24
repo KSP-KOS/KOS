@@ -48,6 +48,8 @@ Vessel Lists
 
 These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
 
+``Processors``
+    :struct:`List` of :struct:`Processors <kOSProcessor>`
 ``Resources``
     :struct:`List` of :struct:`AggregateResources <Resource>`
 ``Parts``
@@ -69,7 +71,7 @@ These generate :struct:`lists <List>` about the files in the system:
 ``Files``
     :struct:`List` the :struct:`files <FileInfo>` on the current Volume. (note below)
 ``Volumes``
-    :struct:`List` all the :ref:`volumes` that exist.
+    :struct:`List` all the :struct:`volumes <Volume>` that exist.
 
 .. note::
 

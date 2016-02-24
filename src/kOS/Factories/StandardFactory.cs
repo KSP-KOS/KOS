@@ -1,7 +1,6 @@
 ﻿using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
 using kOS.Screen;
-using kOS.Persistence;
 
 namespace kOS.Factories
 {
@@ -17,7 +16,7 @@ namespace kOS.Factories
             return new Archive();
         }
 
-        public VolumeManager CreateVolumeManager(SharedObjects sharedObjects)
+        public IVolumeManager CreateVolumeManager(SharedObjects sharedObjects)
         {
             return new VolumeManager();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 
@@ -19,6 +20,7 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
+            AddSuffix("TYPE", new Suffixes.Suffix<string>(() => GetType().ToString()));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -62,7 +64,10 @@ namespace kOS.Safe.Encapsulation
                     typeSuffixes.Add(suffixName, suffixToAdd);
                 }
             }
-            globalSuffixes[type] = typeSuffixes;
+            lock (globalSuffixLock)
+            {
+                globalSuffixes[type] = typeSuffixes;
+            }
         }
 
         private static IDictionary<string, ISuffix> GetStaticSuffixesForType(Type currentType)
@@ -156,6 +161,63 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return "Structure ";
+        }
+
+        public static StringValue operator +(Structure val1, Structure val2)
+        {
+            return new StringValue(string.Concat(val1, val2));
+        }
+
+        public static object FromPrimitive(object value)
+        {
+            var convert = value as IConvertible;
+            if (convert == null) return value;
+
+            TypeCode code = convert.GetTypeCode();
+            switch (code)
+            {
+                case TypeCode.Boolean:
+                    return new BooleanValue(Convert.ToBoolean(convert));
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return ScalarValue.Create(Convert.ToDouble(convert));
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                    return ScalarValue.Create(Convert.ToInt32(convert));
+                case TypeCode.String:
+                    return new StringValue(Convert.ToString(convert, CultureInfo.CurrentCulture));
+                default:
+                    break;
+            }
+            return value;
+        }
+
+        public static object ToPrimitive(object value)
+        {
+            var scalarValue = value as ScalarValue;
+            if (scalarValue != null)
+            {
+                return scalarValue.Value;
+            }
+            var booleanValue = value as BooleanValue;
+            if (booleanValue != null)
+            {
+                return booleanValue.Value;
+            }
+            var stringValue = value as StringValue;
+            if (stringValue != null)
+            {
+                return stringValue.ToString();
+            }
+
+            return value;
         }
     }
 }

@@ -104,13 +104,95 @@ and once its been "parsed" by the compiler, the function can be called
 from anywhere in the program.  
 
 The best design pattern is probably to create your library of function
-calls as one or more separate .ks files that contain ONLY function
-definitions and nothing else in them.  Then when you "run" the file
+calls as one or more separate .ks files that contain just function
+definitions and not much else in them.  Then when you "run" the file
 containing the functions, what you're really doing is just loading
 the function definitions into memory so they can be called by other
 programs.  At the top of your main script you can then "run" the
 other scripts containing the library of functions to get them
 compiled into memory.
+
+``Using RUN ONCE``
+------------------
+
+If you want to load a library of functions that ALSO perform some
+initialization mainline code, but you only want the mainline code
+to execute once when the library is first loaded, rather than 
+every time a subprogram runs your library, then use the 'once'
+keyword with the run command as follows::
+
+    // This will run mylib1 3 times, re-running the mainline code in it:`
+    run mylib1.
+    run mylib1.
+    run mylib1.
+
+    // This will run mylib2 only one time, ignoring the additional
+    // instances:
+    run once mylib2.
+    run once mylib2. // mylib2 was already run, will not be run again.
+    run once mylib2. // mylib2 was already run, will not be run again.
+
+Example:  Let's say you want to have a library that keeps a counter
+and always returns the next number up every time it's called.  You
+want it initialized to start with, but not get re-initialized every time
+another sub-program includes the library in its code.  So you have this:
+
+**prog1, which calls counterlib:** ::
+
+    // prog1
+    run once counterlib.
+
+    // Get some unique IDs:
+    print "prog1:      next counter ID = " + counter_next().
+    print "prog1:      next counter ID = " + counter_next().
+    print "prog1:      next counter ID = " + counter_next().
+
+    run subprogram.
+
+**subprogram, which ALSO calls counterlib:** ::
+
+    // subprogram
+    run once counterlib.
+
+    print "subprogram: next counter ID = " + counter_next().
+    print "subprogram: next counter ID = " + counter_next().
+    print "subprogram: next counter ID = " + counter_next().
+
+    
+**counterlib** ::
+
+    // init code:
+    global current_num is 0.
+
+    // counter_next()
+    function counter_next {
+       set current_num to current_num + 1.
+       return current_num.
+    }
+
+The above example prints this::
+
+    prog1:      next counter ID = 1
+    prog1:      next counter ID = 2
+    prog1:      next counter ID = 3
+    subprogram: next counter ID = 4
+    subprogram: next counter ID = 5
+    subprogram: next counter ID = 6
+    
+whereas, had you used just ``run counterlib.`` instead of
+``run once counterlib.``, then it would have printed this::
+
+    prog1:      next counter ID = 1
+    prog1:      next counter ID = 2
+    prog1:      next counter ID = 3
+    subprogram: next counter ID = 1
+    subprogram: next counter ID = 2
+    subprogram: next counter ID = 3
+
+because ``subprogram`` would have run the mainline code 
+``global current_num is 0`` again when it was run inside
+``subprogram``.
+
 
 ``DECLARE PARAMETER``
 ---------------------
@@ -146,6 +228,76 @@ just like when running a program.  You can see an example of this above
 in the previous example where it said::
 
     print_corner(4,"That's me in the corner").
+
+Optional Parameters (parameter defaults)
+----------------------------------------
+
+If you wish, you may make some of the parameters of a user function optional
+by defaulting them to a starting value with the ``IS`` keyword, as follows:
+
+example 1::
+
+    FUNCTION MYFUNC {
+      DECLARE PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+example 2::
+
+    FUNCTION MYFUNC {
+      PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+example 3::
+
+    FUNCTION MYFUNC {
+      PARAMETER P1.
+      PARAMETER P2.
+      PAREMETER P3 is 0.
+      PARAMETER P4 is "cheese".
+
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+In the above examples, all of which are the same, if you call the function
+with parameter 3 or 4 missing, kOS will assign it the default value mentioned
+in the ``PARAMETER`` statement, like in the examples below::
+
+    MYFUNC(1,2).         // prints "1, 2, 0, cheese".
+    MYFUNC(1,2,3).       // prints "1, 2, 3, cheese".
+    MYFUNC(1,2,3,"hi").  // prints "1, 2, 3, hi".
+
+Whenever arguments are missing, the system always makes up the difference by
+using defaults for the lastmost parameters until the correct number have been
+padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's 
+the last argument, P4, that gets defaulted, but P3 does not.  But if you call
+it with 2 arguments, both P4 and P3 get defaulted.)
+
+It is illegal to put mandatory (not defaulted) parameters after defaulted ones.
+
+This will not work::
+
+    DECLARE PARAMETER thisIsOptional is 0,
+                      thisIsOptionalToo is 0.
+                      thisIsMandatory.
+
+Because the optional parameters didn't come at the end.
+
+
+Default parameters follow short-circuit logic
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Remember that if you have an optional parameter with an initializer
+expression, the expression will not get executed if the calling
+function had an argument present in that position.  The expression
+only gets executed if the system needed to pad a missing argument.
+
+.. versionadded:: 0.18.3
+   Optional Parameters were added as a new feature in kOS 0.18.3
+
+
 
 .. _interpreter functions:
 
