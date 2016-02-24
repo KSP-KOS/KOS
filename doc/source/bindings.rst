@@ -296,7 +296,7 @@ MISSIONTIME
 
 You can obtain the number of seconds it has been since the current
 CPU vessel has been launched with the bound global variable
- ``MISSIONTIME``.  In real space programs this is referred to usually
+``MISSIONTIME``.  In real space programs this is referred to usually
 as "MET" - Mission Elapsed Time, and it's what's being measured when
 you hear that familiar voice saying "T minus 10 seconds..."  Point "T"
 is the zero point of the mission elapsed time, and everything before that
