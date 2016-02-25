@@ -132,7 +132,7 @@ Further reading about files and volumes:
 
 - :ref:`Volumes <volumes>`
 - :ref:`File Control <files>`
-- :ref:`File Information <fileinfo>`
+- :ref:`VolumeFile structure <volumefile>`
 
 Second Example: Doing something real
 ------------------------------------

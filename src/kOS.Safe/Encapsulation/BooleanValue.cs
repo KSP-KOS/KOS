@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class BooleanValue : Structure, IConvertible, ISerializableValue
+    public class BooleanValue : Structure, IConvertible
     {
         private readonly bool internalValue;
 
@@ -66,6 +66,16 @@ namespace kOS.Safe.Encapsulation
                 return val2.Equals(obj1);
             }
             return false;
+        }
+
+        public static BooleanValue True
+        {
+            get { return new BooleanValue(true);}
+        }
+
+        public static BooleanValue False
+        {
+            get { return new BooleanValue(false);}
         }
 
         public override int GetHashCode()
@@ -220,6 +230,10 @@ namespace kOS.Safe.Encapsulation
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
+            if (conversionType == GetType())
+                return this;
+            else if (conversionType.IsSubclassOf(typeof(Structure)))
+                throw new KOSCastException(typeof(BooleanValue), conversionType);
             return Convert.ChangeType(internalValue, conversionType);
         }
 

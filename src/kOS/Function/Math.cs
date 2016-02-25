@@ -3,6 +3,7 @@ using kOS.Safe.Compilation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
@@ -159,7 +160,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             AssertArgBottomAndConsume(shared);
-            ReturnValue = random.NextDouble();
+            ReturnValue = Structure.FromPrimitive(random.NextDouble());
         }
     }
 
@@ -248,7 +249,7 @@ namespace kOS.Function
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             string result = new string((char) argument, 1);
-            ReturnValue = result;
+            ReturnValue = new StringValue(result);
         }
     }
 
@@ -259,8 +260,8 @@ namespace kOS.Function
         {
             string argument = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            double result = (double) argument.ToCharArray()[0];
-            ReturnValue = result;
+            char result = argument.ToCharArray()[0];
+            ReturnValue = ScalarValue.Create(result);
         }
     }
 }

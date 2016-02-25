@@ -19,12 +19,12 @@ namespace kOS.Safe.Test.Serialization
             var lex = new Lexicon();
             var nested = new Lexicon();
 
-            lex["key1"] = "value1";
-            lex["key2"] = 1;
-            lex["key3"] = nested;
+            lex[new StringValue("key1")] = new StringValue("value1");
+            lex[new StringValue("key2")] = new ScalarIntValue(1);
+            lex[new StringValue("key3")] = nested;
 
-            nested["nested1"] = "nested1value";
-            nested["nested2"] = "nested2value";
+            nested[new StringValue("nested1")] = new StringValue("nested1value");
+            nested[new StringValue("nested2")] = new StringValue("nested2value");
 
             Lexicon deserialized = Deserialize(Serialize(lex)) as Lexicon;
 
@@ -40,11 +40,11 @@ namespace kOS.Safe.Test.Serialization
             var list = new ListValue();
             var nested = new ListValue();
 
-            list.Add("item1");
-            list.Add(2);
+            list.Add(new StringValue("item1"));
+            list.Add(new ScalarIntValue(2));
             list.Add(nested);
 
-            nested.Add("nested1");
+            nested.Add(new StringValue("nested1"));
 
             ListValue deserialized = Deserialize(Serialize(list)) as ListValue;
 
@@ -59,11 +59,11 @@ namespace kOS.Safe.Test.Serialization
             var stack = new StackValue();
             var nested = new StackValue();
 
-            stack.Push("item1");
-            stack.Push(2);
+            stack.Push(new StringValue("item1"));
+            stack.Push(new ScalarIntValue(2));
             stack.Push(nested);
 
-            nested.Push("nested1");
+            nested.Push(new StringValue("nested1"));
 
             StackValue deserialized = Deserialize(Serialize(stack)) as StackValue;
 
@@ -79,11 +79,11 @@ namespace kOS.Safe.Test.Serialization
             var queue = new QueueValue();
             var nested = new QueueValue();
 
-            queue.Push("item1");
-            queue.Push(2);
+            queue.Push(new StringValue("item1"));
+            queue.Push(new ScalarIntValue(2));
             queue.Push(nested);
 
-            nested.Push("nested1");
+            nested.Push(new StringValue("nested1"));
 
             QueueValue deserialized = Deserialize(Serialize(queue)) as QueueValue;
 
@@ -92,12 +92,12 @@ namespace kOS.Safe.Test.Serialization
             Assert.IsTrue(deserialized.Pop() is QueueValue);
         }
 
-        private string Serialize(IDumper o)
+        private string Serialize(SerializableStructure o)
         {
             return new SafeSerializationMgr().Serialize(o, JsonFormatter.WriterInstance);
         }
 
-        private object Deserialize(string s)
+        private SerializableStructure Deserialize(string s)
         {
             return new SafeSerializationMgr().Deserialize(s, JsonFormatter.ReaderInstance);
         }

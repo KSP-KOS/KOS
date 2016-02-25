@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Function;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {

@@ -685,8 +685,8 @@ namespace kOS.Safe.Compilation.KS
 
                 // build default dummy function to be used when this is a LOCK:
                 currentCodeSection = userFuncObject.GetUserFunctionOpcodes(0);
-                AddOpcode(new OpcodeArgBottom());
-                AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier)).Label = userFuncObject.DefaultLabel;
+                AddOpcode(new OpcodeArgBottom()).Label = userFuncObject.DefaultLabel;;
+                AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier));
                 AddOpcode(new OpcodeReturn(0));
             }
 

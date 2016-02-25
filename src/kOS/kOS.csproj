@@ -33,7 +33,7 @@
       <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\Resources\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -115,7 +115,6 @@
     <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
     <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
-    <Compile Include="Suffixed\Part\GimbalValue.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
@@ -183,7 +182,7 @@
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
-    <Compile Include="Serialization\IDumperWithSharedObjects.cs" />
+    <Compile Include="Serialization\IHasSharedObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

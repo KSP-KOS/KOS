@@ -1,11 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 using kOS.Suffixed;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using kOS.AddOns.InfernalRobotics;
 
 namespace kOS.AddOns.InfernalRobotics
 {
@@ -23,20 +19,20 @@ namespace kOS.AddOns.InfernalRobotics
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new SetSuffix<string>(() => cg.Name, value => cg.Name = value));
-            AddSuffix("SPEED", new SetSuffix<float>(() => cg.Speed, value => cg.Speed = value));
-            AddSuffix("EXPANDED", new SetSuffix<bool>(() => cg.Expanded, value => cg.Expanded = value));
-            AddSuffix("FORWARDKEY", new SetSuffix<string>(() => cg.ForwardKey, value => cg.ForwardKey = value));
-            AddSuffix("REVERSEKEY", new SetSuffix<string>(() => cg.ReverseKey, value => cg.ReverseKey = value));
+            AddSuffix("NAME", new SetSuffix<StringValue>(() => cg.Name, value => cg.Name = value));
+            AddSuffix("SPEED", new SetSuffix<ScalarValue>(() => cg.Speed, value => cg.Speed = value));
+            AddSuffix("EXPANDED", new SetSuffix<BooleanValue>(() => cg.Expanded, value => cg.Expanded = value));
+            AddSuffix("FORWARDKEY", new SetSuffix<StringValue>(() => cg.ForwardKey, value => cg.ForwardKey = value));
+            AddSuffix("REVERSEKEY", new SetSuffix<StringValue>(() => cg.ReverseKey, value => cg.ReverseKey = value));
 
             AddSuffix("SERVOS", new NoArgsSuffix<ListValue> (GetServos));
 
-            AddSuffix("MOVERIGHT", new NoArgsSuffix(MoveRight));
-            AddSuffix("MOVELEFT", new NoArgsSuffix(MoveLeft));
-            AddSuffix("MOVECENTER", new NoArgsSuffix(MoveCenter));
-            AddSuffix("MOVENEXTPRESET", new NoArgsSuffix(MoveNextPreset));
-            AddSuffix("MOVEPREVPRESET", new NoArgsSuffix(MovePrevPreset));
-            AddSuffix("STOP", new NoArgsSuffix(Stop));
+            AddSuffix("MOVERIGHT", new NoArgsVoidSuffix(MoveRight));
+            AddSuffix("MOVELEFT", new NoArgsVoidSuffix(MoveLeft));
+            AddSuffix("MOVECENTER", new NoArgsVoidSuffix(MoveCenter));
+            AddSuffix("MOVENEXTPRESET", new NoArgsVoidSuffix(MoveNextPreset));
+            AddSuffix("MOVEPREVPRESET", new NoArgsVoidSuffix(MovePrevPreset));
+            AddSuffix("STOP", new NoArgsVoidSuffix(Stop));
 
             AddSuffix("VESSEL", new Suffix<VesselTarget>(GetVessel));
         }

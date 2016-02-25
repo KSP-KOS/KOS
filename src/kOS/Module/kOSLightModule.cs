@@ -28,6 +28,12 @@ namespace kOS.Module
 
         [KSPField(isPersistant = false, guiActive = false)]
         public string animationName = "";
+        
+        [KSPField(isPersistant = false, guiActive = false)]
+        public string pulseWidth = "";
+
+        [KSPField(isPersistant = false, guiActive = false)]
+        public string gapWidth = "";
 
         private double lastTime = double.MaxValue;
 

@@ -14,46 +14,46 @@ namespace kOS.Safe.Encapsulation
     /// </summary>
     public abstract class KOSDelegate : Structure
     {
-        protected IList<object> PreBoundArgs { get; set; }
+        protected IList<Structure> PreBoundArgs { get; set; }
 
         protected ICpu Cpu { get; set; }
 
         protected KOSDelegate(ICpu cpu)
         {
             Cpu = cpu;
-            PreBoundArgs = new List<object>();
+            PreBoundArgs = new List<Structure>();
             InitializeSuffixes();
         }
 
         protected KOSDelegate(KOSDelegate oldCopy)
         {
             Cpu = oldCopy.Cpu;
-            PreBoundArgs = new List<object>();
+            PreBoundArgs = new List<Structure>();
             InitializeSuffixes();
-            foreach (object ca in oldCopy.PreBoundArgs)
+            foreach (Structure ca in oldCopy.PreBoundArgs)
                 PreBoundArgs.Add(ca);
         }
 
         private void InitializeSuffixes()
         {
-            AddSuffix("CALL", new VarArgsSuffix<object, object>(Call));
-            AddSuffix("BIND", new VarArgsSuffix<KOSDelegate, object>(Bind));
+            AddSuffix("CALL", new VarArgsSuffix<Structure, Structure>(Call));
+            AddSuffix("BIND", new VarArgsSuffix<KOSDelegate, Structure>(Bind));
         }
 
-        public void AddPreBoundArg(object arg)
+        public void AddPreBoundArg(Structure arg)
         {
             PreBoundArgs.Add(arg);
         }
 
-        public object Call(params object[] args)
+        public Structure Call(params Structure[] args)
         {
             PushUnderArgs();
             Cpu.PushStack(new KOSArgMarkerType());
-            foreach (object arg in PreBoundArgs)
+            foreach (Structure arg in PreBoundArgs)
             {
                 Cpu.PushStack(arg);
             }
-            foreach (object arg in args)
+            foreach (Structure arg in args)
             {
                 Cpu.PushStack(arg);
             }
@@ -90,7 +90,7 @@ namespace kOS.Safe.Encapsulation
             // Now re-push the args back, putting the preBound ones at the bottom
             // where they belong:
             Cpu.PushStack(new KOSArgMarkerType());
-            foreach (object item in PreBoundArgs)
+            foreach (Structure item in PreBoundArgs)
             {
                 Cpu.PushStack(item);
             }
@@ -104,7 +104,7 @@ namespace kOS.Safe.Encapsulation
         /// Assuming the args have been pushed onto the stack already, with
         /// the argbottom marker under them, do the call of this delegate.
         /// </summary>
-        public abstract object Call();
+        public abstract Structure Call();
 
         /// <summary>
         /// If the derivative class needs to put anything on the stack underneath the
@@ -128,11 +128,11 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         /// <param name="args">the arguments to be hardcoded at the front of the list of arguments, going left to right</param>
         /// <returns>a delegate that now takes fewer arguments, just the leftover ones that weren't hardcoded</returns>
-        public KOSDelegate Bind(params object[] args)
+        public KOSDelegate Bind(params Structure[] args)
         {
             KOSDelegate preBoundDel = Clone();
 
-            foreach (object arg in args)
+            foreach (Structure arg in args)
             {
                 preBoundDel.AddPreBoundArg(arg);
             }
@@ -144,7 +144,7 @@ namespace kOS.Safe.Encapsulation
         {
             StringBuilder str = new StringBuilder();
             str.Append("KOSDelegate(");
-            foreach (object arg in PreBoundArgs)
+            foreach (Structure arg in PreBoundArgs)
             {
                 str.Append("pre-bound arg " + arg + " ");
             }
