@@ -19,34 +19,34 @@ namespace kOS.Safe.Encapsulation
 
         public override IEnumerator<T> GetEnumerator()
         {
-            return InnerEnum.Reverse().GetEnumerator();
+            return InnerEnumerable.Reverse().GetEnumerator();
         }
 
         public T Pop()
         {
-            return InnerEnum.Pop();
+            return InnerEnumerable.Pop();
         }
 
         public void Push(T val)
         {
-            InnerEnum.Push(val);
+            InnerEnumerable.Push(val);
         }
 
         public override Dump Dump()
         {
             var result = new DumpWithHeader
             {
-                Header = "STACK of " + InnerEnum.Count() + " items:"
+                Header = "STACK of " + InnerEnumerable.Count() + " items:"
             };
 
-            result.Add(kOS.Safe.Dump.Items, InnerEnum.Cast<object>().ToList());
+            result.Add(kOS.Safe.Dump.Items, InnerEnumerable.Cast<object>().ToList());
 
             return result;
         }
 
         public override void LoadDump(Dump dump)
         {
-            InnerEnum.Clear();
+            InnerEnumerable.Clear();
 
             List<object> values = ((List<object>)dump[kOS.Safe.Dump.Items]);
 
@@ -54,7 +54,7 @@ namespace kOS.Safe.Encapsulation
 
             foreach (object item in values)
             {
-                InnerEnum.Push((T)Structure.FromPrimitive(item));
+                InnerEnumerable.Push((T)Structure.FromPrimitive(item));
             }
         }
 
@@ -62,10 +62,10 @@ namespace kOS.Safe.Encapsulation
         private void StackInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(this)));
-            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => InnerEnum.Push(toPush)));
-            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => InnerEnum.Pop()));
-            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => InnerEnum.Peek()));
-            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => InnerEnum.Clear()));
+            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => InnerEnumerable.Push(toPush)));
+            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => InnerEnumerable.Pop()));
+            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => InnerEnumerable.Peek()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => InnerEnumerable.Clear()));
         }
 
         public static StackValue<T> CreateStack<TU>(IEnumerable<TU> list)

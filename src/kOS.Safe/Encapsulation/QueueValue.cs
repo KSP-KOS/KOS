@@ -19,35 +19,35 @@ namespace kOS.Safe.Encapsulation
 
         public T Pop()
         {
-            return InnerEnum.Dequeue();
+            return InnerEnumerable.Dequeue();
         }
 
         public void Push(T val)
         {
-            InnerEnum.Enqueue(val);
+            InnerEnumerable.Enqueue(val);
         }
 
         public override Dump Dump()
         {
             var result = new DumpWithHeader
             {
-                Header = "QUEUE of " + InnerEnum.Count() + " items:"
+                Header = "QUEUE of " + InnerEnumerable.Count() + " items:"
             };
 
-            result.Add(kOS.Safe.Dump.Items, InnerEnum.Cast<object>().ToList());
+            result.Add(kOS.Safe.Dump.Items, InnerEnumerable.Cast<object>().ToList());
 
             return result;
         }
 
         public override void LoadDump(Dump dump)
         {
-            InnerEnum.Clear();
+            InnerEnumerable.Clear();
 
             List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
 
             foreach (object item in values)
             {
-                InnerEnum.Enqueue((T)FromPrimitive(item));
+                InnerEnumerable.Enqueue((T)FromPrimitive(item));
             }
         }
 
@@ -55,10 +55,10 @@ namespace kOS.Safe.Encapsulation
         {
             AddSuffix("COPY",     new NoArgsSuffix<QueueValue<T>>       (() => new QueueValue<T>(this)));
 
-            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => InnerEnum.Enqueue(toPush)));
-            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => InnerEnum.Dequeue()));
-            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => InnerEnum.Peek()));
-            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => InnerEnum.Clear()));
+            AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => InnerEnumerable.Enqueue(toPush)));
+            AddSuffix("POP",      new NoArgsSuffix<T>                   (() => InnerEnumerable.Dequeue()));
+            AddSuffix("PEEK",     new NoArgsSuffix<T>                   (() => InnerEnumerable.Peek()));
+            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => InnerEnumerable.Clear()));
         }
 
         public static QueueValue<T> CreateQueue<TU>(IEnumerable<TU> list)

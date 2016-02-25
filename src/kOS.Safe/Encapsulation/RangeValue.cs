@@ -1,10 +1,9 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Exceptions;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using System.Collections.Generic;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
-using System.Collections;
+using System;
+using System.Collections.Generic;
 
 namespace kOS.Safe
 {
@@ -15,39 +14,44 @@ namespace kOS.Safe
         private const string DumpStep = "step";
         private const string Label = "RANGE";
 
-        public RangeValue() : this(0)
+        public RangeValue()
+            : this(0)
         {
         }
 
-        public RangeValue(int to) : this(0, to, 1)
+        public RangeValue(int to)
+            : this(0, to, 1)
         {
         }
 
-        public RangeValue(int from, int to) : this(from, to, 1)
+        public RangeValue(int from, int to)
+            : this(from, to, 1)
         {
         }
 
-        public RangeValue(int from, int to, int step) : base(Label, new Range(from, to, step))
+        public RangeValue(int from, int to, int step)
+            : base(Label, new Range(from, to, step))
         {
             InitializeRangeSuffixes();
 
-            if (step < 1) {
+            if (step < 1)
+            {
                 throw new KOSException("Step must be a positive integer");
             }
         }
 
         private void InitializeRangeSuffixes()
         {
-            AddSuffix("FROM",   new NoArgsSuffix<ScalarValue>(() => InnerEnum.From));
-            AddSuffix("TO",     new NoArgsSuffix<ScalarValue>(() => InnerEnum.To));
-            AddSuffix("STEP",   new NoArgsSuffix<ScalarValue>(() => InnerEnum.Step));
+            AddSuffix("FROM", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.From));
+            AddSuffix("TO", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.To));
+            AddSuffix("STEP", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Step));
         }
 
         public override void LoadDump(Dump dump)
         {
-            InnerEnum.To = Convert.ToInt32(dump[DumpTo]);
-            InnerEnum.From = Convert.ToInt32(dump[DumpFrom]);
-            InnerEnum.Step = Convert.ToInt32(dump[DumpStep]);
+            InnerEnumerable.To = Convert.ToInt32(dump[DumpTo]);
+            InnerEnumerable.From = Convert.ToInt32(dump[DumpFrom]);
+            InnerEnumerable.Step = Convert.ToInt32(dump[DumpStep]);
         }
 
         public override Dump Dump()
@@ -56,24 +60,24 @@ namespace kOS.Safe
 
             result.Header = "RANGE";
 
-            result.Add(DumpTo, InnerEnum.To);
-            result.Add(DumpFrom, InnerEnum.From);
-            result.Add(DumpStep, InnerEnum.Step);
+            result.Add(DumpTo, InnerEnumerable.To);
+            result.Add(DumpFrom, InnerEnumerable.From);
+            result.Add(DumpStep, InnerEnumerable.Step);
 
             return result;
         }
 
         public override string ToString()
         {
-            return "RANGE(" + InnerEnum.From + ", " + InnerEnum.To + ", " + InnerEnum.Step + ")";
+            return "RANGE(" + InnerEnumerable.From + ", " + InnerEnumerable.To + ", " + InnerEnumerable.Step + ")";
         }
     }
 
-    public class Range : IEnumerable<ScalarIntValue> {
-
+    public class Range : IEnumerable<ScalarIntValue>
+    {
         public int From { get; set; }
         public int To { get; set; }
-        public int Step  { get; set; }
+        public int Step { get; set; }
 
         public Range(int from, int to, int step)
         {
@@ -84,12 +88,17 @@ namespace kOS.Safe
 
         IEnumerator<ScalarIntValue> IEnumerable<ScalarIntValue>.GetEnumerator()
         {
-            if (From < To) {
-                for (int i = From; i < To; i += Step) {
+            if (From < To)
+            {
+                for (int i = From; i < To; i += Step)
+                {
                     yield return i;
                 }
-            } else {
-                for (int i = From; i > To; i -= Step) {
+            }
+            else
+            {
+                for (int i = From; i > To; i -= Step)
+                {
                     yield return i;
                 }
             }
@@ -101,4 +110,3 @@ namespace kOS.Safe
         }
     }
 }
-

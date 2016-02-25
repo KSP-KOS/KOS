@@ -1,27 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
-    public abstract class EnumerableValue<T, TE> : SerializableStructure, IEnumerable<T> where TE : IEnumerable<T> where T : Structure
+    public abstract class EnumerableValue<T, TE> : SerializableStructure, IEnumerable<T>
+        where TE : IEnumerable<T>
+        where T : Structure
     {
-        protected TE Enum { get; private set; }
+        protected TE InnerEnumerable { get; private set; }
         private readonly string label;
 
         protected EnumerableValue(string label, TE enumerable)
         {
             this.label = label;
-            Enum = enumerable;
+            InnerEnumerable = enumerable;
 
             InitializeEnumerableSuffixes();
         }
 
         public virtual IEnumerator<T> GetEnumerator()
         {
-            return Enum.GetEnumerator();
+            return InnerEnumerable.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -31,12 +33,12 @@ namespace kOS.Safe.Encapsulation
 
         public bool Contains(T item)
         {
-            return Enum.Contains(item);
+            return InnerEnumerable.Contains(item);
         }
 
         public int Count()
         {
-            return Enum.Count();
+            return InnerEnumerable.Count();
         }
 
         public override string ToString()
@@ -48,7 +50,7 @@ namespace kOS.Safe.Encapsulation
         {
             var result = new DumpWithHeader
             {
-                Header = label + " of " + Enum.Count() + " items:"
+                Header = label + " of " + InnerEnumerable.Count() + " items:"
             };
 
             int i = 0;
@@ -63,12 +65,12 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeEnumerableSuffixes()
         {
-            AddSuffix("ITERATOR",           new NoArgsSuffix<Enumerator>          (() => new Enumerator(Enum.GetEnumerator())));
-            AddSuffix("REVERSEITERATOR",    new NoArgsSuffix<Enumerator>          (() => new Enumerator(Enumerable.Reverse(Enum).GetEnumerator())));
-            AddSuffix("LENGTH",             new NoArgsSuffix<ScalarValue>         (() => Enum.Count()));
-            AddSuffix("CONTAINS",           new OneArgsSuffix<BooleanValue, T>    ((n) => Contains(n)));
-            AddSuffix("EMPTY",              new NoArgsSuffix<BooleanValue>        (() => !Enum.Any()));
-            AddSuffix("DUMP",               new NoArgsSuffix<StringValue>         (() => new StringValue(ToString())));
+            AddSuffix("ITERATOR",        new NoArgsSuffix<Enumerator>(() => new Enumerator(InnerEnumerable.GetEnumerator())));
+            AddSuffix("REVERSEITERATOR", new NoArgsSuffix<Enumerator>(() => new Enumerator(Enumerable.Reverse(InnerEnumerable).GetEnumerator())));
+            AddSuffix("LENGTH",          new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Count()));
+            AddSuffix("CONTAINS",        new OneArgsSuffix<BooleanValue, T>((n) => Contains(n)));
+            AddSuffix("EMPTY",           new NoArgsSuffix<BooleanValue>(() => !InnerEnumerable.Any()));
+            AddSuffix("DUMP",            new NoArgsSuffix<StringValue>(() => new StringValue(ToString())));
         }
     }
 }
