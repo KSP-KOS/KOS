@@ -68,7 +68,7 @@ Structure
           - Get only
           - the :struct:`List` of :struct:`Resource` in the current stage
         * - :attr:`RESOURCESLEX`
-          - :struct:`List`
+          - :struct:`Lexicon`
           - Get only
           - the :struct:`Lexicon` of name :struct:`String` keyed :struct:`Resource` values in the current stage
 
