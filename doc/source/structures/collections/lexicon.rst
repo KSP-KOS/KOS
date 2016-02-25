@@ -51,6 +51,26 @@ LEXICON() built-in function::
     // Make an empty lexicon with zero items in it:
     set mylexicon to lexicon().
 
+If ``LEXICON()`` is given arguments then they are interpreted as alternating
+keys and values::
+
+    set mylexicon to lexicon("key1", "value1", "key2", "value2").
+
+Will have the same effect as::
+
+    set mylexicon to lexicon().
+    mylexicon["key1"] = "value1".
+    mylexicon["key2"] = "value2".
+
+Obviously when this syntax is used an even number of arguments is expected.
+
+You can also pass any enumerable to ``LEXICON()``. Its elements will be
+interpreted as alternating keys and values just like above. The following will have
+the same effect as the previous code fragment::
+
+    set mylist to list("key1", "value1", "key2", "value2").
+    set mylexicon to lexicon(mylist).
+
 The keys and the values of a lexicon can be any type you feel like, and do not
 need to be of a homogeneous type.
 

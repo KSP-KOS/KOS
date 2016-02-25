@@ -83,10 +83,12 @@ namespace kOS.Module
 
         // This represents how much EC to consume per executed instruction.
         // This would be the "variable" component of the processor's power.
-        // IMPORTANT: The value defaults to zero and must be overriden in the module
-        // definition for any given part (within the part.cfg file).
+        // Important: This value should be overriden in the part.cfg file
+        // for the kOS processor.  The only reason it's being given a value
+        // here is as a fallback for those cases where an old legacy part
+        // might be loaded from before the part files had this value.
         [KSPField(isPersistant = false, guiActive = false)]
-        public float ECPerInstruction = 0F;
+        public float ECPerInstruction = 0.000004F;
 
         // This represents how much EC to consume per Byte of the current volume, per second.
         // This would be the "continuous" compoenent of the processor's power (though it varies
@@ -141,7 +143,6 @@ namespace kOS.Module
             SafeHouse.Logger.Log("Toggle Power from ActionGroup");
             TogglePower();
         }
-
         public void OpenWindow()
         {
             shared.Window.Open();
@@ -185,13 +186,16 @@ namespace kOS.Module
             string format =
                 "Default disk capacity: {0}\n\n" +
                 "<color=#99ff00ff>Requires:</color>\n" +
-                " - ElectricCharge: 1 per {3} instructions executed\n" +
+                " - ElectricCharge: {1}\n" +
                 "<color=#99ff00ff>Example:</color>\n" +
-                " - {1:N3}EC/s if IPU={2} and no wait instructions.";
+                " - {2:N3}EC/s if IPU={3} and no wait instructions.";
             // For the sake of GetInfo, prorate the EC usage based on the smallest physics frame currently selected
             // Because this is called before the part is set, we need to manually calculate it instead of letting Update handle it.
             double power = diskSpace * ECPerBytePerSecond + defaultAvgInstructions * ECPerInstruction / Time.fixedDeltaTime;
-            return string.Format(format, diskSpace, power, defaultAvgInstructions, (int)(1 / ECPerInstruction));
+            string chargeText = (ECPerInstruction == 0) ? 
+                "None.  It's powered by pure magic ... apparently." : // for cheaters who use MM or editing part.cfg, to get rid of it.
+                string.Format("1 per {0} instructions executed", (int)(1 / ECPerInstruction));
+            return string.Format(format, diskSpace, chargeText, power, defaultAvgInstructions);
         }
 
         //implement IPartCostModifier component
@@ -689,7 +693,8 @@ namespace kOS.Module
             else
             {
                 // Because the processor is not STARVED, evaluate the power requirement based on actual operation.
-                int instructions = shared.Cpu.InstructionsThisUpdate;
+                // For EC drain purposes, always pretend atleast 1 instruction happened, so idle drain isn't quite zero:
+                int instructions = System.Math.Max(shared.Cpu.InstructionsThisUpdate, 1);
                 var request = volumePower * time + instructions * ECPerInstruction;
                 if (request > 0)
                 {
