@@ -67,6 +67,7 @@
     <Compile Include="Serialization\JSONFormatterTest.cs" />
     <Compile Include="Serialization\TerminalFormatterTest.cs" />
     <Compile Include="Collections\CollectionValueTest.cs" />
+    <Compile Include="Collections\RangeValueTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
