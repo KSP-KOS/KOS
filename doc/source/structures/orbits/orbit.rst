@@ -88,12 +88,6 @@ Structure
           - boolean
           - Has a next :struct:`Orbit`
 
-
-.. note::
-
-    This type is serializable.
-
-
 .. attribute:: Orbit:NAME
 
     :type: string

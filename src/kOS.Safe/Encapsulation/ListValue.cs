@@ -88,6 +88,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("INSERT",   new TwoArgsSuffix<ScalarValue, T>     ((index, toAdd) => Collection.Insert(index, toAdd)));
             AddSuffix("REMOVE",   new OneArgsSuffix<ScalarValue>        (toRemove => Collection.RemoveAt(toRemove)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarValue, ScalarValue>(SubListMethod));
+            AddSuffix("JOIN",     new OneArgsSuffix<StringValue, StringValue>(Join));
        }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
@@ -136,13 +137,15 @@ namespace kOS.Safe.Encapsulation
             Collection[idx] = (T)value;
         }
 
-
         public void SetIndex(int index, Structure value)
         {
             Collection[index] = (T)value;
         }
 
-
+        private StringValue Join(StringValue separator)
+        {
+            return string.Join(separator, Collection.Select(i => i.ToString()).ToArray());
+        }
     }
 
     public class ListValue : ListValue<Structure>
