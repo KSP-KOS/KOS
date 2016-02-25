@@ -14,18 +14,22 @@ namespace kOS.Safe
         private const string DumpStep = "step";
         private const string Label = "RANGE";
 
+        public static readonly int DEFAULT_FROM = 0;
+        public static readonly int DEFAULT_TO = 1;
+        public static readonly int DEFAULT_STEP = 1;
+
         public RangeValue()
-            : this(0)
+            : this(DEFAULT_TO)
         {
         }
 
         public RangeValue(int to)
-            : this(0, to, 1)
+            : this(DEFAULT_FROM, to)
         {
         }
 
         public RangeValue(int from, int to)
-            : this(from, to, 1)
+            : this(from, to, DEFAULT_STEP)
         {
         }
 

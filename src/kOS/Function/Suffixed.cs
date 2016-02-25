@@ -231,30 +231,33 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object[] argArray = new object[CountRemainingArgs(shared)];
-            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
+            // Default values for parameters
+            int from = RangeValue.DEFAULT_FROM;
+            int to = RangeValue.DEFAULT_TO;
+            int step = RangeValue.DEFAULT_STEP;
+
+            int argCount = CountRemainingArgs(shared);
+            // assign parameter values from the stack, pop them in reverse order
+            switch (argCount)
+            {
+                case 1:
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                case 2:
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                case 3:
+                    step = GetInt(PopStructureAssertEncapsulated(shared));
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new int[] { 1, 2, 3 }, argCount, "Thrown from function RANGE()");
+            }
             AssertArgBottomAndConsume(shared);
 
-            int[] intArray = argArray.Select((o) => Convert.ToInt32(o)).ToArray();
-
-            RangeValue range;
-
-            switch (argArray.Count()) {
-            case 1:
-                range = new RangeValue(intArray[0]);
-                break;
-            case 2:
-                range = new RangeValue(intArray[0], intArray[1]);
-                break;
-            case 3:
-                range = new RangeValue(intArray[0], intArray[1], intArray[2]);
-                break;
-            default:
-                throw new KOSException("Invalid number of arguments for RANGE()");
-            }
-
-            ReturnValue = range;
+            ReturnValue = new RangeValue(from, to, step);
         }
     }
 
