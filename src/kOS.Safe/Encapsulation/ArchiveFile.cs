@@ -41,11 +41,6 @@ namespace kOS.Safe.Encapsulation
             return true;
         }
 
-        public override bool WriteLn(string content)
-        {
-            return Write(content + Environment.NewLine);
-        }
-
         public override void Clear()
         {
             File.WriteAllText(fileInfo.FullName, string.Empty);

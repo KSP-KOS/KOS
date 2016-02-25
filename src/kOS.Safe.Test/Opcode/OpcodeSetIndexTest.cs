@@ -34,7 +34,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(1, list.Count());
             Assert.AreNotEqual("bar", list[0]);
             Assert.AreEqual("foo", list[0]);
         }
@@ -56,7 +56,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(1, list.Count());
             Assert.AreNotEqual("bar", list[0]);
             Assert.AreEqual("foo", list[0]);
         }
@@ -78,7 +78,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(1, list.Count());
             Assert.AreNotEqual("bar", list[0]);
             Assert.AreEqual("foo", list[0]);
         }

@@ -46,7 +46,7 @@ Constructing a lexicon
 ----------------------
 
 If you wish to make your own lexicon from scratch you can do so with the
-LEXICON() built-in function::
+LEXICON() or LEX() built-in function::
 
     // Make an empty lexicon with zero items in it:
     set mylexicon to lexicon().
