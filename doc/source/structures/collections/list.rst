@@ -53,7 +53,7 @@ Structure
         * - :meth:`REMOVE(index)`
           - None
           - remove item by index
-        * - :attr:`CLEAR`
+        * - :meth:`CLEAR()`
           - None
           - remove all elements
         * - :attr:`COPY`
@@ -90,11 +90,11 @@ Structure
 
     Remove the item from the list at the numeric index given, with counting starting at the first item being item zero
 
-.. attribute:: List:CLEAR
+.. method:: List:CLEAR()
 
-    Use this for its side-effect. Whenever ``myList:CLEAR`` exists in an expression, ``myList`` will be zeroed out, regardless of what you do with the value of the expression::
+    :return: none
 
-        SET dummy TO myList:CLEAR.
+    Calling this suffix will remove all of the items currently stored in the :struct:`List`.
 
 .. attribute:: List:COPY
 

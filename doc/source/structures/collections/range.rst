@@ -3,7 +3,14 @@
 Range
 =====
 
-:struct:`Range` is a type that represents a sequence of numbers. The sequence can start and finish at any number, can be either descending or ascending and can skip numbers.
+:struct:`Range` is a type that represents a sequence of scalar whole numbers. The sequence can start and finish at any whole number, can be either descending or ascending and can skip numbers.
+
+.. note::
+
+    This is one of the few places in kOS where there is a distinction between
+    decimal (floating point, or fractional) scalar numbers and whole (integer,
+    or round) scalar numbers.  Using a decimal scalar will not throw an error,
+    however it may give unexpected results due to rounding.
 
 There are 3 ways of constructing a :struct:`Range`:
 
@@ -82,4 +89,3 @@ Structure
     :access: Get only
 
     Returns the step size
-
