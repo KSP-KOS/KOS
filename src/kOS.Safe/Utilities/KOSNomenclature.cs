@@ -76,13 +76,12 @@ namespace kOS.Safe.Utilities
                         if (attrib.CSharpToKOS)
                             cSharpToKosMap.Add(t, attrib.KOSName);
                     }
-                    catch (ArgumentException e)
+                    catch (ArgumentException)
                     {
                         // There can be a many-to-one map (given two different C# types, they both return the same KOS type), but
                         // not a one-to-many map (given one C# type, it has two kOS types it tries to return).
                         string msg = "kOS developer error: name clash in KOSNomenclature: two mappings from C# class " + t.FullName + " found.";
                         Debug.AddNagMessage(Debug.NagType.NAGFOREVER, msg);
-                        throw new KOSException(msg);
                     }
                     
                     try
@@ -90,13 +89,12 @@ namespace kOS.Safe.Utilities
                         if (attrib.KOSToCSharp)
                              kosToCSharpMap.Add(attrib.KOSName, t);
                     }
-                    catch (ArgumentException e)
+                    catch (ArgumentException)
                     {
                         // There can be a many-to-one map (given two different kos types, they both return the same C# type), but
                         // not a one-to-many map (given one kos type, it has two C# types it tries to return).
                         string msg = "kOS developer error: name clash in KOSNomenclature: two mappings from KOS name " + attrib.KOSName + " found.";
                         Debug.AddNagMessage(Debug.NagType.NAGFOREVER, msg);
-                        throw new KOSException(msg);
                     }
                 }
             }

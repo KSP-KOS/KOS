@@ -24,6 +24,7 @@ namespace kOS.Module
 
             CheckForLegacyArchive();
 
+            KOSNomenclature.PopulateMapping(typeof(kOS.Safe.Encapsulation.Structure).Assembly, this.GetType().Assembly);
         }
 
         private void BuildEnvironment()
