@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace kOS.AddOns.OrbitalScience
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule", KOSToCSharp = false)]
     public class DMModuleScienceAnimateFields : StockScienceExperimentFields
     {
         public DMModuleScienceAnimateFields(ModuleScienceExperiment module, SharedObjects sharedObj)

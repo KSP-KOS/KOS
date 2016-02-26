@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace kOS.Safe
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Range")]
     public class RangeValue : EnumerableValue<ScalarIntValue, Range>
     {
         private const string DumpFrom = "from";

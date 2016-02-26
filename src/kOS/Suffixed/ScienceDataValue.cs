@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceData")]
     public class ScienceDataValue : Structure
     {
         private ScienceData scienceData;
