@@ -21,6 +21,8 @@ General Rules
 The following are **reserved command keywords** and special
 operator symbols:
 
+.. highlight:: none
+
 **Arithmetic Operators**::
 
     +  -  *  /  ^  e  (  )
@@ -41,14 +43,20 @@ operator symbols:
 
     {  }  [  ]  ,  :  //
 
+.. highlight:: kerboscript
+
 *Comments* consist of everything from a "//" symbol to the end of the line::
 
     set x to 1. // this is a comment.
+
+.. highlight:: none
 
 **Identifiers**: Identifiers consist of: a string of (letter, digit, or
 underscore). The first character must be a letter. The rest may be letters, digits or underscores. **Identifiers are case-insensitive**. The following are identical identifiers::
 
     My_Variable  my_varible  MY_VARAIBLE
+
+.. highlight:: kerboscript
 
 **case-insensitivity**
     The same case-insensitivity applies throughout the entire language, with all keywords except when comparing literal strings. The values inside the strings are still case-sensitive, for example, the following will print "unequal"::

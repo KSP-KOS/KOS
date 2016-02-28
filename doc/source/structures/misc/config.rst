@@ -127,10 +127,14 @@ Configuration of kOS
 
     Configures the ``EnableSafeMode`` setting.
 
+.. highlight:: none
+
     If true, then it enables the following error messages::
 
         Tried to push NaN into the stack.
         Tried to push Infinity into the stack.
+
+.. highlight:: kerboscript
 
     They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.
 

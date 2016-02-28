@@ -18,12 +18,16 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
         PRINT "Item at position " + MyIter:INDEX + " is [" + MyIter:VALUE + "].".
     }
 
+.. hightlight:: none
+
 Which would result in this output::
 
     After reset, position = -1.
     Item at position 0 is [Hello].
     Item at position 1 is [Aloha].
     Item at position 2 is [Bonjour].
+
+.. highlight:: kerboscript
 
 .. structure:: Iterator
 

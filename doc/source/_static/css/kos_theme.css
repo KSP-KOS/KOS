@@ -10,8 +10,16 @@
  * the default black just to make it stand out a
  * little bit more:
  */
-.k { color:#042 } /*keywords*/
-.o { color:#024 } /*operators*/
+.k { color:#042; } /*keywords*/
+.o { color:#024; } /*operators*/
+
+/* :struct: links were appearing as black text and didn't look
+ * at all like links.  This says that any border element put
+ * inside a link should share the link's blue color, thus
+ * the :struct: boxes are blue'ed when they are in a link, and
+ * default (black) when they are not links.
+ */
+.a { border-color: #2980B9; }
 
 /* It is possible to do a lot more here, but let's
  * leave it at that for now.

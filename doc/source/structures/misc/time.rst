@@ -32,6 +32,8 @@ Special variable TIME
 
     Any time you perform arithmetic on **TIME** you get a result back that is also a :struct:`TimeSpan`. In other words, TIME is a :struct:`TimeSpan`, but TIME + 100 is also a :struct:`TimeSpan`.
 
+.. highlight:: none
+
     Note that Kerbals do not have the concept of "months"::
 
         TIME                // Gets the current universal time
@@ -43,6 +45,8 @@ Special variable TIME
         TIME:MINUTE         // 50
         TIME:SECOND         // 26
         TIME:SECONDS        // Total Seconds since campaign began
+
+.. highlight:: kerboscript
 
 Using TIME to detect when the physics have been updated 'one tick'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

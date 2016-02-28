@@ -170,6 +170,8 @@ another sub-program includes the library in its code.  So you have this:
        return current_num.
     }
 
+.. highlight:: none
+
 The above example prints this::
 
     prog1:      next counter ID = 1
@@ -188,6 +190,8 @@ whereas, had you used just ``run counterlib.`` instead of
     subprogram: next counter ID = 1
     subprogram: next counter ID = 2
     subprogram: next counter ID = 3
+
+.. highlight:: kerboscript
 
 because ``subprogram`` would have run the mainline code 
 ``global current_num is 0`` again when it was run inside
@@ -488,11 +492,16 @@ value of the parameter, as in this example::
     embiggen(global_val).
     print global_val.
 
+
+.. highlight:: none
+
 The above example will print::
 
     30
     x has been embiggened to 40
     30
+
+.. highlight:: kerboscript
 
 Although the function added 10 to its OWN copy of the parameter, the 
 caller's copy of the parameter remained unchanged.
@@ -523,11 +532,15 @@ in the object really WILL change it, as shown here::
     half_vector(global_vec).
     print "afterward, global_vec is now " + global_vec.
 
+.. highlight:: none
+
 This will give the following result::
 
     full vector is v(10,20,30)
     half vector is v(5,10,15)
     afterward, global_vec is now v(5,10,15)
+
+.. highlight:: kerboscript
 
 Because a vector is a suffixed structure, it effectively acts as if 
 it was passed in by reference instead of by value, and so when it
