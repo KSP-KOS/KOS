@@ -43,9 +43,16 @@ Creation
 
 .. function:: Q(x,y,z,rot)
 
-    A :struct:`Direction` can also be created out of a *Quaternion* tuple, indicated with the :func:`Q()` function, as shown below where ``x``, ``y``, and ``z`` are a :struct:`Vector` to rotate around, and ``rot`` is how many degrees to rotate::
+    A :struct:`Direction` can also be created out of a *Quaternion* tuple,
+    indicated with the :func:`Q()` function, passing it the x, y, z, w
+    values of the Quaternion.
+    `The concept of a Quaternion <https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation>`_
+    uses complex numbers and is beyond the scope of the kOS
+    documentation, which is meant to be simple to understand.  It is
+    best to not use the Q() function unless Quaternions are something
+    you already understand.
 
-        SET myDir TO Q( x, y, z, rot ).
+        SET myDir TO Q( x, y, z, w ).
 
 .. _heading:
 .. function:: HEADING(dir,pitch)
