@@ -217,6 +217,8 @@
     <Compile Include="Utilities\TickGen.cs" />
     <Compile Include="Encapsulation\QueueValue.cs" />
     <Compile Include="Encapsulation\StackValue.cs" />
+    <Compile Include="Encapsulation\RangeValue.cs" />
+    <Compile Include="Encapsulation\CollectionValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
     <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />

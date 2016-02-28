@@ -47,7 +47,7 @@ Structure
           - scalar
           - yes
           - yes
-        * - :attr:`Y`
+        * - :attr:`Z`
           - scalar
           - yes
           - yes
