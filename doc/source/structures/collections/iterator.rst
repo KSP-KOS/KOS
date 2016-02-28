@@ -18,7 +18,7 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
         PRINT "Item at position " + MyIter:INDEX + " is [" + MyIter:VALUE + "].".
     }
 
-.. hightlight:: none
+.. highlight:: none
 
 Which would result in this output::
 

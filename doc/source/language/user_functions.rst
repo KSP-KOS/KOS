@@ -306,7 +306,7 @@ only gets executed if the system needed to pad a missing argument.
 .. _interpreter functions:
 
 Functions and the terminal interpreter
-::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You **cannot** call functions from the interpreter interactive
 command line if they were declared inside of script programs.
@@ -331,7 +331,7 @@ In the future we may find a way to fix this problem,
 but for right now, just don't do it.
     
 Calling a function without parentheses (please don't)
-:::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In some cases it is possible to call a function with the
 parentheses off, as shown below, but this is not recommended::
@@ -392,7 +392,7 @@ A more in-depth explanation of kerboscript's scoping rules and how they
 work is found :ref:`on another page <scope>`
 
 Initializers are now mandatory for the DECLARE statement
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is now **illegal** syntax::
 
@@ -418,7 +418,7 @@ initializer clause.
   use - a string, an integer, a floating point number, etc.*
 
 Difference between declare and set
-::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may think that::
 
@@ -507,7 +507,7 @@ Although the function added 10 to its OWN copy of the parameter, the
 caller's copy of the parameter remained unchanged.
 
 Important exception to passing by value - structures
-::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
@@ -608,7 +608,7 @@ User Function Gotchas
 ---------------------
 
 Calling program's functions from the interpreter
-::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As :ref:`explained above <interpreter functions>`, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
@@ -616,7 +616,7 @@ and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.
 
 Inconsistent returns
-::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~
 
 Note that if you sometimes do and sometimes don't return a value, from
 the same function, as in the example here::
@@ -648,7 +648,7 @@ a user function, that you *always* do so in every path through your
 function.
 
 Accidentally using globals
-::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is possible to accidentally create global variables
 when you didn't meant to, just because you made a typo.
