@@ -217,6 +217,7 @@ namespace kOS.Suffixed
             AddSuffix("APOAPSIS", new Suffix<ScalarValue>(() => Orbit.ApA));
             AddSuffix("PERIAPSIS", new Suffix<ScalarValue>(() => Orbit.PeA));
             AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(Orbit.referenceBody, Shared)));
+            AddSuffix(new [] {"HASBODY", "HASOBT", "HASORBIT"}, new NoArgsSuffix<BooleanValue>(HasBody));
             AddSuffix("UP", new Suffix<Direction>(() => new Direction(GetUpVector(), false)));
             AddSuffix("NORTH", new Suffix<Direction>(() => new Direction(GetNorthVector(), false)));
             AddSuffix("PROGRADE", new Suffix<Direction>(GetPrograde));
@@ -238,6 +239,11 @@ namespace kOS.Suffixed
         private ScalarValue GetDistance()
         {
             return GetPosition().Magnitude();
+        }
+        
+        private BooleanValue HasBody()
+        {
+            return (Orbit != null);
         }
 
         private ListValue BuildPatchList()
