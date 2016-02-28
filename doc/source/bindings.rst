@@ -112,7 +112,7 @@ Get-only. ``core`` returns a :struct:`core` structure referring to the CPU you
 are running on.
 
 Archive
-----
+-------
 
 Get-only. ``archive`` returns a :struct:`Volume` structure referring to the archive.
 You can read more about what archive is on the :ref:`File & volumes <volumes>` page.
