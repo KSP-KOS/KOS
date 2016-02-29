@@ -77,7 +77,6 @@ comparison, and then the string comparison looks one character at
 a time and notices that "1" is less than "9" and calls "1234" the
 lesser value.
 
-
 CASE SENSITIVIY
 ~~~~~~~~~~~~~~~
 
@@ -86,6 +85,10 @@ matches, and all string searches, are currently case **in** sensive,
 meaning that for example the letter "A" and the letter "a" are
 indistinguishable.  There are future plans to add mechanisms that
 will let you choose case-sensitivity when you prefer.
+
+At the moment the only way to force a case-sensitive comparison is
+to look at the characters one at a time and obtain their numerical
+ordinal Unicode value with the :func:`unchar(a)` function.
 	
 Structure
 ---------
@@ -330,9 +333,12 @@ Access to Individual Characters
 All string indexes start counting at zero. (The characters are numbered from 0 to N-1 rather than from 1 to N.)
 
 ``string[expression]``
-    operator: access the character at position 'expression'. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.
+
+  - operator: access the character at position 'expression'. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.
+    
 ``FOR VAR IN STRING { ... }.``
-    :ref:`A type of loop <flow>` in which var iterates over all the characters of the string from 0 to LENGTH-1.
+
+  - :ref:`A type of loop <flow>` in which var iterates over all the characters of the string from 0 to LENGTH-1.
 
 Examples::
 
