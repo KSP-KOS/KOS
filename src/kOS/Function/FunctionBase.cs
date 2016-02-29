@@ -68,7 +68,7 @@ namespace kOS.Function
             }
             catch(Exception)
             {
-                throw new KOSCastException(argument.GetType(),typeof(double));
+                throw new KOSCastException(argument.GetType(),typeof(ScalarValue));
             }    
         }
 
@@ -80,7 +80,7 @@ namespace kOS.Function
             }
             catch (Exception)
             {
-                throw new KOSCastException(argument.GetType(),typeof(int));
+                throw new KOSCastException(argument.GetType(),typeof(ScalarValue));
             }
         }
 

@@ -25,6 +25,9 @@ Which would result in this output::
     Item at position 1 is [Aloha].
     Item at position 2 is [Bonjour].
 
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
+
+
 .. structure:: Iterator
 
     .. list-table:: Members

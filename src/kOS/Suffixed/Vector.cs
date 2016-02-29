@@ -9,6 +9,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Vector")]
     public class Vector : SerializableStructure
     {
         public const string DumpX = "x";

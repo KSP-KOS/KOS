@@ -75,6 +75,9 @@ The keys and the values of a lexicon can be any type you feel like, and do not
 need to be of a homogeneous type.
 
 
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
+
+
 Structure
 ---------
 

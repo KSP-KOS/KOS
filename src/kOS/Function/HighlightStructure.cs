@@ -9,6 +9,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Function
 {
+    [kOS.Safe.Utilities.KOSNomenclature("HIGHLIGHT")]
     public class HighlightStructure : Structure, IUpdateObserver, IDisposable
     {
         private enum HighlightType

@@ -7,6 +7,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Timespan")]
     public class TimeSpan : SerializableStructure, IComparable<TimeSpan>
     {
         public const string DumpSpan = "span";

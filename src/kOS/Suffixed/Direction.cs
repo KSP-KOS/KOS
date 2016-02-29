@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Direction")]
+    [kOS.Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
     public class Direction : Structure
     {
         private Vector3d euler;

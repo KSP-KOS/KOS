@@ -27,6 +27,7 @@ into it to pre-populate the list with an initial list of items:
 The contents of a list can be any objects you feel like, and do not
 need to be of a homogeneous type.
 
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
 
 Structure
 ---------

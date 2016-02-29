@@ -19,6 +19,7 @@ namespace kOS.Suffixed.PartModuleField
     /// each KSPField of the PartModule becomes a suffix you can get to with
     /// GetSuffix().
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("PartModule")]
     public class PartModuleFields : Structure
     {
         protected readonly PartModule partModule;

@@ -9,6 +9,7 @@ using System;
 
 namespace kOS.Suffixed.PartModuleField
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule", KOSToCSharp=false)]
     public class StockScienceExperimentFields : ScienceExperimentFields
     {
         protected readonly ModuleScienceExperiment module;

@@ -14,14 +14,31 @@ Range
 
 There are 3 ways of constructing a :struct:`Range`:
 
-- :code:`RANGE(FROM, TO, STEP)`
-  Will create a sequence of numbers that starts with `FROM` and contains all numbers `N + STEP` such that `N` belongs to the sequence and that are smaller than `TO`. For example
-  :code:`RANGE(3,8,2)` will contain numbers 3, 5 and 7. If `FROM` > `TO` then the sequence will be descending. For example :code:`RANGE(2,-9,3)` will contain numbers 2, -1, -4 and -7.
-  `STEP` should always be > 0.
-- :code:`RANGE(FROM, TO)`
+- :code:`RANGE(START, STOP, STEP)`
+
+  Will create a sequence of numbers that starts counting with `START`,
+  and stops counting just before *but not including* `STOP`, counting
+  by increments of size `STEP`.  In formal mathematics terms, the bounds are
+  [`START`,`STOP`), rather than [`START`,`STOP`].
+
+  :code:`RANGE(3,8,1)` will contain numbers 3, 4, 5, 6, and 7.
+
+  :code:`RANGE(3,8,2)` will contain numbers 3, 5 and 7.
+
+  *Will count backward automatically if need be*: If `START` > `STOP` then
+  the sequence will be descending.  `STEP` should always be > 0 even when
+  the sequence counts backward like this.
+  
+  :code:`RANGE(2,-9,3)` will contain numbers 2, -1, -4 and -7.
+
+- :code:`RANGE(START, STOP)`
+
   Same as above but `STEP` is assumed to be 1.
-- :code:`RANGE(TO)`
-  Same as above but `FROM` is assumed to be 0.
+
+- :code:`RANGE(STOP)`
+
+  Same as above but `STEP` is assumed to be 1, and `START` is assumed to
+  be 0.
 
 Code examples
 -------------
@@ -31,12 +48,15 @@ Code examples
   FOR I IN RANGE(5) {
     PRINT I.
   }
-  // will print numbers from 0 to 4
+  // will print numbers 0,1,2,3,4
 
   FOR I IN RANGE(2, 5) {
     PRINT I*I.
   }
   // will print 4, 9 and 16
+
+
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
 
 Structure
 ---------
@@ -54,10 +74,10 @@ Structure
         * - All suffixes of :struct:`Enumerable`
           -
           - :struct:`Range` objects are a type of :struct:`Enumerable`
-        * - :attr:`FROM`
+        * - :attr:`START`
           - scalar
           - initial element of the range
-        * - :attr:`TO`
+        * - :attr:`STOP`
           - scalar
           - range limit
         * - :attr:`STEP`
@@ -69,14 +89,14 @@ Structure
     This type is serializable.
 
 
-.. attribute:: Range:FROM
+.. attribute:: Range:START
 
     :type: scalar
     :access: Get only
 
     Returns the initial element of the range.
 
-.. attribute:: Range:TO
+.. attribute:: Range:STOP
 
     :type: scalar
     :access: Get only

@@ -4,6 +4,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Atmosphere")]
     public class BodyAtmosphere : Structure
     {
         private readonly CelestialBody celestialBody;

@@ -232,8 +232,8 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             // Default values for parameters
-            int from = RangeValue.DEFAULT_FROM;
-            int to = RangeValue.DEFAULT_TO;
+            int from = RangeValue.DEFAULT_START;
+            int to = RangeValue.DEFAULT_STOP;
             int step = RangeValue.DEFAULT_STEP;
 
             int argCount = CountRemainingArgs(shared);
