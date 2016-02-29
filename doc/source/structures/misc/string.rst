@@ -30,16 +30,62 @@ Strings are iterable. This scripts prints the string's characters one per line::
     PRINT c.
   }
 
+Boolean Operators
+-----------------
+
+Equality
+~~~~~~~~
+
+Using the ``=`` and ``<>`` operators, two strings are equal
+if and only if they are the same length and have letters that differ
+only in capitalization (``a`` and ``A`` are considered the same letter
+for this test).
+
+Ordering
+~~~~~~~~
+
+Using the ``<``, ``>``, ``<=``, and ``>=`` operators, one
+string is considered to be less than the other if it is alphabetically
+sooner according to the ordering of its Unicode mapping, with the
+exception that capitalization is ingored (``a`` and ``A`` are
+considered the same letter).  Starting from the lefthand side of the
+two strings, the characters are compered one at a time until the first
+difference is found, and that first difference decides the ordering.
+If one of the strings is shorter length than the other, and the characters
+are all equal up until one of the two strings runs out of characters,
+then the shorter string will be considered "less than" the longer one.
+
+Mixtures of strings and non-strings
+:::::::::::::::::::::::::::::::::::
+
+If you attempt to compare two things only one of which is a string
+and the other is not, then the non-string will be converted into a
+string first, (Giving the same string as its :TOSTRING suffix would
+give), and the two will be compared as strings.  Example::
+
+    print (1234 < 99).    // prints "False"
+    print ("1234" < 99).  // prints "True"
+
+In the first example, both sides of the ``<`` operator are
+:ref:`scalars <scalar>`, so the comparison is done numerically,
+and 1234 is much bigger than 99.
+
+In the second example, one side of the ``<`` operator is a 
+string, so the other side is converted from the :ref:`scalar <scalar>`
+``99`` into the :ref:`string <string>` ``"99"`` to perform the
+comparison, and then the string comparison looks one character at
+a time and notices that "1" is less than "9" and calls "1234" the
+lesser value.
 
 
 CASE SENSITIVIY
 ~~~~~~~~~~~~~~~
 
-NOTE: All string comparisons, substring matches, and searches, are
-currently case **in** sensive, meaning that for example the letter
-"A" and the letter "a" are indistinguishable.  There are future
-plans to add mechanisms that will let you choose case-sensitivity
-when you prefer.
+NOTE: All string comparisons for equality and ordering, all substring
+matches, and all string searches, are currently case **in** sensive,
+meaning that for example the letter "A" and the letter "a" are
+indistinguishable.  There are future plans to add mechanisms that
+will let you choose case-sensitivity when you prefer.
 	
 Structure
 ---------
