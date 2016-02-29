@@ -50,7 +50,7 @@ kOS Mod Changelog
 * String sort-order comparisons with "<" and ">" operators were implemented wrongly and just compared lengths.  Now they do a character-by-character comparison (case-insensitively)
 * Small documentation edits and clarifications all over the place.
 
-### Contributors this release
+### CONTRIBUTORS THIS RELEASE
 
 (These are generated from records on Github of anyone who's Pull Requests are part of this release.)
 (Names are simply listed here alphabetically, not by code contribution size.  Anyone who even had so much as one line of change is mentioned.)
