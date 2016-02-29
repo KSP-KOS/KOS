@@ -153,7 +153,7 @@ namespace kOS.Safe.Encapsulation
                 int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
                 return new StringValue(internalString[i]);
             }
-            throw new KOSCastException(index.GetType(), typeof(int)/*So the message will say it needs integer, not just any Scalar*/);
+            throw new KOSCastException(index.GetType(), typeof(ScalarValue));
 
         }
 

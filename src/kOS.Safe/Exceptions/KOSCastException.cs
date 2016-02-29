@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Exceptions
 {
@@ -20,7 +21,8 @@ namespace kOS.Safe.Exceptions
         /// <summary>
         /// Make an exception when an attempt to convert from one type to another failed.
         /// </summary>
-        public KOSCastException(Type typeFrom, Type typeTo) : this(typeFrom.Name, typeTo.Name)
+        public KOSCastException(Type typeFrom, Type typeTo)
+            : this(KOSNomenclature.GetKOSName(typeFrom), KOSNomenclature.GetKOSName(typeTo))
         {
 
         }
