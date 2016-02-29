@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("HSVA")]
     public class HsvColor : RgbaColor
     {
         private float hue;

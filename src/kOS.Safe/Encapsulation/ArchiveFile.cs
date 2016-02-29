@@ -4,6 +4,7 @@ using System.IO;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class ArchiveFile : VolumeFile
     {
         private readonly FileInfo fileInfo;
@@ -38,11 +39,6 @@ namespace kOS.Safe.Encapsulation
             }
 
             return true;
-        }
-
-        public override bool WriteLn(string content)
-        {
-            return Write(content + Environment.NewLine);
         }
 
         public override void Clear()

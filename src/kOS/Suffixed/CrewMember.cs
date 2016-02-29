@@ -4,6 +4,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("CrewMember")]
     public class CrewMember : Structure
     {
         private readonly ProtoCrewMember crewMember;

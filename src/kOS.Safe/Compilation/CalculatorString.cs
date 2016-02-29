@@ -10,11 +10,11 @@ namespace kOS.Safe.Compilation
         {
             if (!(pair.Left is string))
             {
-                throw new KOSCastException(pair.Left.GetType(), typeof(string));
+                throw new KOSCastException(pair.Left.GetType(), typeof(StringValue));
             }
             if (!(pair.Right is string))
             {
-                throw new KOSCastException(pair.Right.GetType(), typeof(string));
+                throw new KOSCastException(pair.Right.GetType(), typeof(StringValue));
             }
         }
         public override object Add(OperandPair pair)

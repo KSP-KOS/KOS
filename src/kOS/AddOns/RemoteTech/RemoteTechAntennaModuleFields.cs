@@ -9,6 +9,7 @@ using System.Text;
 
 namespace kOS.AddOns.RemoteTech
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RTAddonAntennaModule")]
     public class RemoteTechAntennaModuleFields : PartModuleFields
     {
         // those Guids are hardcoded in RemoteTech

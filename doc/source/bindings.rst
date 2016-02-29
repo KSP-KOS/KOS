@@ -67,13 +67,11 @@ BODY             Same as SHIP:BODY
 ANGULARMOMENTUM  Same as SHIP:ANGULARMOMENTUM
 ANGULARVEL       Same as SHIP:ANGULARVEL
 ANGULARVELOCITY  Same as SHIP:ANGULARVEL
-COMMRANGE        Same as SHIP:COMMRANGE
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
 GROUNDSPEED      Same as SHIP:GROUNDSPEED 
 SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
-VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
 APOAPSIS         Same as SHIP:APOAPSIS
 PERIAPSIS        Same as SHIP:PERIAPSIS
@@ -112,6 +110,12 @@ Core
 
 Get-only. ``core`` returns a :struct:`core` structure referring to the CPU you
 are running on.
+
+Archive
+-------
+
+Get-only. ``archive`` returns a :struct:`Volume` structure referring to the archive.
+You can read more about what archive is on the :ref:`File & volumes <volumes>` page.
 
 Stage
 -----
@@ -290,6 +294,23 @@ Controls that must be used with LOCK
 
 Time
 ----
+
+MISSIONTIME
+~~~~~~~~~~~~~~~~~~~
+
+You can obtain the number of seconds it has been since the current
+CPU vessel has been launched with the bound global variable
+ ``MISSIONTIME``.  In real space programs this is referred to usually
+as "MET" - Mission Elapsed Time, and it's what's being measured when
+you hear that familiar voice saying "T minus 10 seconds..."  Point "T"
+is the zero point of the mission elapsed time, and everything before that
+is a negative number and everything after it is a positive number.
+kOS is only capable of returning the "T+" times, not the "T-" times,
+because it doesn't read your mind to know ahead of time when you plan
+to launch.
+
+Time Structure
+~~~~~~~~~~~~~~
 
 `Time <structures/misc/time.html>`__ is the simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
 

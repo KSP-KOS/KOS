@@ -12,16 +12,14 @@ Numerous built-in functions in kOS return a list.  If you wish
 to make your own list from scratch you can do so with the
 LIST() built-in function.  You pass a varying number of arguments
 into it to pre-populate the list with an initial list of items:
+::
 
     // Make an empty list with zero items in it:
     set mylist to list().
-
     // Make a list with 3 numbers in it:
     set mylist to list(10,20,30).
-
     // Make a list with 3 strings in it:
     set mylist to list("10","20","30").
-
     // Make a two dimensional 2x3 list with heterogenious contents
     // mixing strings and numbers:
     set mylist to list( list("a","b","c"), list(1,2,3) ).
@@ -29,13 +27,14 @@ into it to pre-populate the list with an initial list of items:
 The contents of a list can be any objects you feel like, and do not
 need to be of a homogeneous type.
 
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
 
 Structure
 ---------
 
 .. structure:: List
 
-    .. list-table:: Members
+    .. list-table::
         :header-rows: 1
         :widths: 2 1 4
 
@@ -43,6 +42,9 @@ Structure
           - Type
           - Description
 
+        * - All suffixes of :struct:`Enumerable`
+          -
+          - :struct:`List` objects are a type of :struct:`Enumerable`
         * - :meth:`ADD(item)`
           - None
           - append an item
@@ -52,30 +54,18 @@ Structure
         * - :meth:`REMOVE(index)`
           - None
           - remove item by index
-        * - :attr:`CLEAR`
+        * - :meth:`CLEAR()`
           - None
           - remove all elements
-        * - :attr:`LENGTH`
-          - integer
-          - number of elements in list
-        * - :attr:`ITERATOR`
-          - :struct:`Iterator`
-          - for iterating over the list
         * - :attr:`COPY`
           - :struct:`List`
           - a new copy of this list
-        * - :meth:`CONTAINS(item)`
-          - boolean
-          - check if list contains an item
         * - :meth:`SUBLIST(index,length)`
           - :struct:`List`
           - new list of given length starting with index
-        * - :attr:`EMPTY`
-          - boolean
-          - check if list if empty
-        * - :attr:`DUMP`
+        * - :meth:`JOIN(separator)`
           - string
-          - verbose dump of all contained elements
+          - joins all list elements into a string
 
 .. note::
 
@@ -85,7 +75,7 @@ Structure
 .. method:: List:ADD(item)
 
     :parameter item: (any type) item to be added
-    
+
     Appends the new value given to the end of the list.
 
 .. method:: List:INSERT(index,item)
@@ -98,28 +88,14 @@ Structure
 .. method:: List:REMOVE(index)
 
     :parameter index: (integer) position in list (starting from zero)
-    
+
     Remove the item from the list at the numeric index given, with counting starting at the first item being item zero
 
-.. attribute:: List:CLEAR
+.. method:: List:CLEAR()
 
-    Use this for its side-effect. Whenever ``myList:CLEAR`` exists in an expression, ``myList`` will be zeroed out, regardless of what you do with the value of the expression::
+    :return: none
 
-        SET dummy TO myList:CLEAR.
-
-.. attribute:: List:LENGTH
-
-    :type: integer
-    :access: Get only
-
-    Returns the number of elements in the list.
-
-.. attribute:: List:ITERATOR
-
-    :type: :struct:`Iterator`
-    :access: Get only
-
-    An alternate means of iterating over a list. See: :struct:`Iterator`.
+    Calling this suffix will remove all of the items currently stored in the :struct:`List`.
 
 .. attribute:: List:COPY
 
@@ -127,13 +103,6 @@ Structure
     :access: Get only
 
     Returns a new list that contains the same thing as the old list.
-
-.. method:: List:CONTAINS(item)
-
-    :parameter index: (integer) starting index (from zero)
-    :return: boolean
-
-    Returns true if the list contains an item equal to the one passed as an argument
 
 .. method:: List:SUBLIST(index,length)
 
@@ -143,19 +112,12 @@ Structure
 
     Returns a new list that contains a subset of this list starting at the given index number, and running for the given length of items.
 
-.. attribute:: List:EMPTY
+.. method:: List:JOIN(separator)
 
-    :type: boolean
-    :access: Get only
+    :parameter separator: (string) separator that will be inserted between the list items
+    :return: string
 
-    Returns true if the list has zero items in it.
-
-.. attribute:: List:DUMP
-
-    :type: string
-    :access: Get only
-
-    Returns a string containing a verbose dump of the list's contents.
+    Returns a string created by converting each element of the array to a string, separated by the given separator.
 
 Access to Individual Elements
 -----------------------------
@@ -245,12 +207,12 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     FOO[1]:ADD(10).    // Element 1,0 is now 10.
     FOO[1]:ADD(20).    // Element 1,1 is now 20.
     FOO:ADD(LIST()).   // Element 2 is now itself a list.
-    
+
     FOO[ FOO:LENGTH -1 ]:ADD(3.14159).
         // Element 2,0 is now 3.1519, using a more complex
         //     expression to dynamically obtain the current
         //     maximum index of '2'.
-                          
+
     FOO[ FOO:LENGTH -1 ]:ADD(7).
         // Element 2,1 is now 7, using a more complex
         //     expression to dynamically obtain the current
@@ -260,7 +222,7 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     //    A         B
     //    10        20
     //    3.14159   7
-    
+
     // or like this, depending on how you want
     // to visualize it as a row-first or column-first table:
     //    A    10     3.14159
@@ -272,7 +234,7 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     PRINT FOO[1][1]. // Prints 20.
     PRINT FOO[2][0]. // Prints 3.14159.
     PRINT FOO[2][1]. // Prints 7.
-    
+
     PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
 
 Comparing two lists
@@ -308,4 +270,3 @@ by item, like so::
     if still_same {
       print "they are equal".
     }
-

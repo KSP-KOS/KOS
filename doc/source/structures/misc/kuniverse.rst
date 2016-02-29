@@ -1,4 +1,4 @@
-.. kuniverse:
+.. _kuniverse:
 
 KUniverse 4th wall methods
 ==========================
