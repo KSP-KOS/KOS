@@ -10,32 +10,32 @@ namespace kOS.Safe
     [kOS.Safe.Utilities.KOSNomenclature("Range")]
     public class RangeValue : EnumerableValue<ScalarIntValue, Range>
     {
-        private const string DumpFrom = "from";
-        private const string DumpTo = "to";
+        private const string DumpStart = "start";
+        private const string DumpStop = "stop";
         private const string DumpStep = "step";
         private const string Label = "RANGE";
 
-        public static readonly int DEFAULT_FROM = 0;
-        public static readonly int DEFAULT_TO = 1;
+        public static readonly int DEFAULT_START = 0;
+        public static readonly int DEFAULT_STOP = 1;
         public static readonly int DEFAULT_STEP = 1;
 
         public RangeValue()
-            : this(DEFAULT_TO)
+            : this(DEFAULT_STOP)
         {
         }
 
-        public RangeValue(int to)
-            : this(DEFAULT_FROM, to)
+        public RangeValue(int stop)
+            : this(DEFAULT_START, stop)
         {
         }
 
-        public RangeValue(int from, int to)
-            : this(from, to, DEFAULT_STEP)
+        public RangeValue(int start, int stop)
+            : this(start, stop, DEFAULT_STEP)
         {
         }
 
-        public RangeValue(int from, int to, int step)
-            : base(Label, new Range(from, to, step))
+        public RangeValue(int start, int stop, int step)
+            : base(Label, new Range(start, stop, step))
         {
             InitializeRangeSuffixes();
 
@@ -47,15 +47,15 @@ namespace kOS.Safe
 
         private void InitializeRangeSuffixes()
         {
-            AddSuffix("FROM", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.From));
-            AddSuffix("TO", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.To));
+            AddSuffix("START", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Start));
+            AddSuffix("STOP", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Stop));
             AddSuffix("STEP", new NoArgsSuffix<ScalarValue>(() => InnerEnumerable.Step));
         }
 
         public override void LoadDump(Dump dump)
         {
-            InnerEnumerable.To = Convert.ToInt32(dump[DumpTo]);
-            InnerEnumerable.From = Convert.ToInt32(dump[DumpFrom]);
+            InnerEnumerable.Stop = Convert.ToInt32(dump[DumpStop]);
+            InnerEnumerable.Start = Convert.ToInt32(dump[DumpStart]);
             InnerEnumerable.Step = Convert.ToInt32(dump[DumpStep]);
         }
 
@@ -65,8 +65,8 @@ namespace kOS.Safe
 
             result.Header = "RANGE";
 
-            result.Add(DumpTo, InnerEnumerable.To);
-            result.Add(DumpFrom, InnerEnumerable.From);
+            result.Add(DumpStop, InnerEnumerable.Stop);
+            result.Add(DumpStart, InnerEnumerable.Start);
             result.Add(DumpStep, InnerEnumerable.Step);
 
             return result;
@@ -74,35 +74,35 @@ namespace kOS.Safe
 
         public override string ToString()
         {
-            return "RANGE(" + InnerEnumerable.From + ", " + InnerEnumerable.To + ", " + InnerEnumerable.Step + ")";
+            return "RANGE(" + InnerEnumerable.Start + ", " + InnerEnumerable.Stop + ", " + InnerEnumerable.Step + ")";
         }
     }
 
     public class Range : IEnumerable<ScalarIntValue>
     {
-        public int From { get; set; }
-        public int To { get; set; }
+        public int Start { get; set; }
+        public int Stop { get; set; }
         public int Step { get; set; }
 
-        public Range(int from, int to, int step)
+        public Range(int start, int stop, int step)
         {
-            From = from;
-            To = to;
+            Start = start;
+            Stop = stop;
             Step = step;
         }
 
         IEnumerator<ScalarIntValue> IEnumerable<ScalarIntValue>.GetEnumerator()
         {
-            if (From < To)
+            if (Start < Stop)
             {
-                for (int i = From; i < To; i += Step)
+                for (int i = Start; i < Stop; i += Step)
                 {
                     yield return i;
                 }
             }
             else
             {
-                for (int i = From; i > To; i -= Step)
+                for (int i = Start; i > Stop; i -= Step)
                 {
                     yield return i;
                 }

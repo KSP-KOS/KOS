@@ -29,7 +29,7 @@ namespace kOS.Safe.Encapsulation
             InitializeInstanceSuffixes();
         }
         
-        public string KOSName { get { KOSNomenclature.GetKOSName(GetType()); } }
+        public string KOSName { get { return KOSNomenclature.GetKOSName(GetType()); } }
 
 
         private void InitializeInstanceSuffixes()
