@@ -28,6 +28,8 @@ namespace kOS.Safe.Encapsulation
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
             InitializeInstanceSuffixes();
         }
+        
+        public string KOSName { get { KOSNomenclature.GetKOSName(GetType()); } }
 
 
         private void InitializeInstanceSuffixes()
@@ -40,7 +42,7 @@ namespace kOS.Safe.Encapsulation
               AddSuffix("HASSUFFIX",      new OneArgsSuffix<BooleanValue, StringValue>(HasSuffix));
               AddSuffix("SUFFIXNAMES",    new NoArgsSuffix<ListValue<StringValue>>(GetSuffixNames));
               AddSuffix("ISSERIALIZABLE", new NoArgsSuffix<BooleanValue>(() => this is SerializableStructure));
-              AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => KOSNomenclature.GetKOSName(this.GetType())));
+              AddSuffix("TYPENAME",       new NoArgsSuffix<StringValue>(() => new StringValue(KOSName)));
               AddSuffix("ISTYPE",         new OneArgsSuffix<BooleanValue,StringValue>(GetKOSIsType));
               AddSuffix("INHERITANCE",    new NoArgsSuffix<StringValue>(GetKOSInheritance));
         }
