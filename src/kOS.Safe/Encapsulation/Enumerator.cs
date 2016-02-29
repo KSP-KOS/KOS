@@ -3,6 +3,8 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Iterator")]
+    [kOS.Safe.Utilities.KOSNomenclature("Enumerator", CSharpToKOS = false)] // one-way mapping makes it just another alias, not canonical.
     public class Enumerator : Structure
     {
         private readonly IEnumerator enumerator;

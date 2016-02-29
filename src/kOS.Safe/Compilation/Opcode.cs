@@ -1197,7 +1197,7 @@ namespace kOS.Safe.Compilation
             }
             catch
             {
-                throw new KOSCastException(value.GetType(), typeof(bool));
+                throw new KOSCastException(value.GetType(), typeof(BooleanValue));
             }
             cpu.PushStack(Structure.FromPrimitive(result));
         }

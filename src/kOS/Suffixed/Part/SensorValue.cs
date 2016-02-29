@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Sensor")]
     public class SensorValue : PartValue
     {
         private readonly ModuleEnviroSensor sensor;

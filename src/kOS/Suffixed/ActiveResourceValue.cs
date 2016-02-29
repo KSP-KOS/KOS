@@ -4,6 +4,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ActiveResource")]
     public class ActiveResourceValue : Structure
     {
         private readonly Vessel.ActiveResource activeResource;

@@ -7,6 +7,7 @@ namespace kOS.Safe.Encapsulation
     /// A callback reference to a built-in function, (one of the kinds derived from kOS.Function.FunctionBase).<br/>
     /// <br/>
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("BuiltinDelegate")]
     public class BuiltinDelegate : KOSDelegate
     {
         public string Name { get; set; }

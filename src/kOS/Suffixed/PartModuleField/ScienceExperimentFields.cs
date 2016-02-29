@@ -8,6 +8,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.PartModuleField
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule")]
     public abstract class ScienceExperimentFields : PartModuleFields
     {
         protected IScienceDataContainer container;

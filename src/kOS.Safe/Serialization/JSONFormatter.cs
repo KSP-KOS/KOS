@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Serialization
 {
@@ -90,7 +91,9 @@ namespace kOS.Safe.Serialization
         }
 
 
-        // This handles JSON indentation
+        /// <summary>
+        /// Handles JSON indentation.
+        /// </summary>
         class JsonHelper
         {
             private const string INDENT_STRING = "    ";
@@ -109,7 +112,7 @@ namespace kOS.Safe.Serialization
                         sb.Append(ch);
                         if (!quoted)
                         {
-                            sb.AppendLine();
+                            sb.Append(FileContent.NEW_LINE);
                             Enumerable.Range(0, ++indent).ForEach(item => sb.Append(INDENT_STRING));
                         }
                         break;
@@ -117,7 +120,7 @@ namespace kOS.Safe.Serialization
                     case ']':
                         if (!quoted)
                         {
-                            sb.AppendLine();
+                            sb.Append(FileContent.NEW_LINE);
                             Enumerable.Range(0, --indent).ForEach(item => sb.Append(INDENT_STRING));
                         }
                         sb.Append(ch);
@@ -135,7 +138,7 @@ namespace kOS.Safe.Serialization
                         sb.Append(ch);
                         if (!quoted)
                         {
-                            sb.AppendLine();
+                            sb.Append(FileContent.NEW_LINE);
                             Enumerable.Range(0, indent).ForEach(item => sb.Append(INDENT_STRING));
                         }
                         break;

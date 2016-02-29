@@ -6,6 +6,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Kuniverse")]
     public class KUniverseValue : Structure
     {
         private readonly SharedObjects shared;

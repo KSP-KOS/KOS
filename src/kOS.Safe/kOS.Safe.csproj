@@ -209,6 +209,8 @@
     <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\KOSNomenclature.cs" />
+    <Compile Include="Utilities\KOSNomenclatureAttribute.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
