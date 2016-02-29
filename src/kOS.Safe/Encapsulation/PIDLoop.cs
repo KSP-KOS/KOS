@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("PIDLoop")]
     public class PIDLoop : Structure
     {
         public static PIDLoop DeepCopy(PIDLoop source)

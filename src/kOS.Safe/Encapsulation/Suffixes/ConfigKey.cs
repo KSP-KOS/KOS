@@ -2,6 +2,7 @@ using System;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ConfigKey")] // not even sure when anyone will ever see this in a script.
     public class ConfigKey : Structure
     {
         private object val;

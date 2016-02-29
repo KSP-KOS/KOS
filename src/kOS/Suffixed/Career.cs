@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Career")]
     public class Career : Structure
     {        
         static Career()

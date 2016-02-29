@@ -23,12 +23,6 @@ namespace kOS.Suffixed.PartModuleField
             if (moduleGimbal != null)
                 return new GimbalFields(moduleGimbal, shared);
 
-            var moduleScienceExperiment = mod as ModuleScienceExperiment;
-
-            if (moduleScienceExperiment != null) {
-                return new ScienceExperimentFields(moduleScienceExperiment, shared);
-            }
-
             var processor = mod as kOSProcessor;
 
             if (processor != null) {
@@ -37,6 +31,13 @@ namespace kOS.Suffixed.PartModuleField
 
             if (mod.moduleName.Equals(RemoteTechAntennaModuleFields.RTAntennaModule)) {
                 return new RemoteTechAntennaModuleFields(mod, shared);
+            }
+
+            var scienceExperimentFields = ScienceExperimentFieldsFactory.Construct(mod, shared);
+
+            if (scienceExperimentFields != null)
+            {
+                return scienceExperimentFields;
             }
 
             return new PartModuleFields(mod, shared);

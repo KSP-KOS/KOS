@@ -46,7 +46,7 @@ Constructing a lexicon
 ----------------------
 
 If you wish to make your own lexicon from scratch you can do so with the
-LEXICON() built-in function::
+LEXICON() or LEX() built-in function::
 
     // Make an empty lexicon with zero items in it:
     set mylexicon to lexicon().
@@ -73,6 +73,9 @@ the same effect as the previous code fragment::
 
 The keys and the values of a lexicon can be any type you feel like, and do not
 need to be of a homogeneous type.
+
+
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
 
 
 Structure

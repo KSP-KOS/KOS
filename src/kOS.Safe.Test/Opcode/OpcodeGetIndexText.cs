@@ -30,7 +30,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(1, list.Count());
             Assert.AreEqual("bar", cpu.PopStack());
         }
 
@@ -50,7 +50,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual(3, list.Count());
             Assert.AreEqual("foo", cpu.PopStack());
         }
 
@@ -70,7 +70,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual(3, list.Count());
             Assert.AreEqual("fizz", cpu.PopStack());
         }
 

@@ -18,6 +18,9 @@ Using a queue
   PRINT Q:POP. // will print 'alice'
   PRINT Q:POP. // will print 'bob'
 
+
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
+
 Structure
 ---------
 
@@ -31,6 +34,9 @@ Structure
           - Type
           - Description
 
+        * - All suffixes of :struct:`Enumerable`
+          -
+          - :struct:`Queue` objects are a type of :struct:`Enumerable`
         * - :meth:`PUSH(item)`
           - None
           - add item to the end of the queue
@@ -40,27 +46,12 @@ Structure
         * - :meth:`PEEK()`
           - any type
           - returns the first element in the queue without removing it
-        * - :attr:`LENGTH`
-          - :ref:`scalar <scalar>`
-          - number of elements in the queue
         * - :meth:`CLEAR()`
           - None
           - remove all elements
-        * - :attr:`ITERATOR`
-          - :struct:`Iterator`
-          - for iterating over the queue
         * - :attr:`COPY`
           - :struct:`Queue`
           - a new copy of this queue
-        * - :meth:`CONTAINS(item)`
-          - :ref:`boolean <boolean>`
-          - check if queue contains an item
-        * - :attr:`EMPTY`
-          - :ref:`boolean <boolean>`
-          - check if queue if empty
-        * - :attr:`DUMP`
-          - :ref:`string <string>`
-          - verbose dump of all contained elements
 
 .. note::
 
@@ -85,45 +76,10 @@ Structure
 
     Removes all elements from the queue.
 
-.. attribute:: Queue:LENGTH
-
-    :type: :ref:`scalar <scalar>`
-    :access: Get only
-
-    Returns the number of elements in the queue.
-
-.. attribute:: Queue:ITERATOR
-
-    :type: :struct:`Iterator`
-    :access: Get only
-
-    An alternate means of iterating over a queue. See: :struct:`Iterator`.
-
 .. attribute:: Queue:COPY
 
     :type: :struct:`Queue`
     :access: Get only
 
     Returns a new queue that contains the same thing as the old one.
-
-.. method:: Queue:CONTAINS(item)
-
-    :parameter index: :ref:`scalar <scalar>` (integer) starting index (from zero)
-    :return: :ref:`boolean <boolean>`
-
-    Returns true if the queue contains an item equal to the one passed as an argument
-
-.. attribute:: Queue:EMPTY
-
-    :type: :ref:`boolean <boolean>`
-    :access: Get only
-
-    Returns true if the queue has zero items in it.
-
-.. attribute:: Queue:DUMP
-
-    :type: :ref:`string <string>`
-    :access: Get only
-
-    Returns a :ref:`string <string>` containing a verbose dump of the queue's contents.
 

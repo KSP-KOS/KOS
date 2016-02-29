@@ -47,7 +47,7 @@ Structure
           - :ref:`scalar <scalar>`
           - yes
           - yes
-        * - :attr:`Y`
+        * - :attr:`Z`
           - :ref:`scalar <scalar>`
           - yes
           - yes

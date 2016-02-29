@@ -2,6 +2,7 @@
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class HarddiskFile : VolumeFile
     {
         private readonly Harddisk harddisk;
@@ -29,11 +30,6 @@ namespace kOS.Safe.Encapsulation
 
             GetFileContent().Write(content);
             return true;
-        }
-
-        public override bool WriteLn(string content)
-        {
-            return Write(content + "\n");
         }
 
         public override void Clear()

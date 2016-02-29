@@ -106,6 +106,7 @@ namespace kOS.Safe.Execution
 
                     bootMessage = nags.Aggregate(bootMessage, (current, msg) => current + (msg + "\n"));
                     bootMessage += "##################################################\n";
+                    shared.Processor.SetMode(Module.ProcessorModes.OFF);
                 }
                 shared.Screen.Print(bootMessage);
             }
