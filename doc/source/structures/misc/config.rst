@@ -120,13 +120,15 @@ Configuration of kOS
 
     If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.
 
+.. highlight:: none
+
 .. attribute:: Config:SAFE
 
     :access: Get/Set
     :type: :ref:`boolean <boolean>`
 
-    Configures the ``EnableSafeMode`` setting.
 
+    Configures the ``EnableSafeMode`` setting.
     If true, then it enables the following error messages::
 
         Tried to push NaN into the stack.
@@ -135,6 +137,8 @@ Configuration of kOS
     They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.
 
     If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program's API routines. KSP's own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.
+
+.. highlight:: kerboscript
 
 .. attribute:: Config:AUDIOERR
 

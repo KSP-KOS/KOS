@@ -18,6 +18,8 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
         PRINT "Item at position " + MyIter:INDEX + " is [" + MyIter:VALUE + "].".
     }
 
+.. highlight:: none
+
 Which would result in this output::
 
     After reset, position = -1.
@@ -25,8 +27,9 @@ Which would result in this output::
     Item at position 1 is [Aloha].
     Item at position 2 is [Bonjour].
 
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
+.. highlight:: kerboscript
 
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
 
 .. structure:: Iterator
 

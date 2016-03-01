@@ -23,6 +23,8 @@ This allows you to use a :struct:`TimeSpan` such as is returned by the TIME spec
 Special variable TIME
 ---------------------
 
+.. highlight:: none
+
 .. global:: TIME
 
     :access: Get only
@@ -43,6 +45,8 @@ Special variable TIME
         TIME:MINUTE         // 50
         TIME:SECOND         // 26
         TIME:SECONDS        // Total Seconds since campaign began
+
+.. highlight:: kerboscript
 
 Using TIME to detect when the physics have been updated 'one tick'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
