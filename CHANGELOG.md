@@ -34,7 +34,7 @@ kOS Mod Changelog
 * New Lexicon creation syntax to make a Lexicon and populate it all in one statement. (http://ksp-kos.github.io/KOS_DOC/structures/collections/lexicon.html?highlight=lexicon#constructing-a-lexicon)
 
 ### BUG FIXES
-* Numerous attitional checks to prevent control of other vessels the kOS CPU isn't attached to. 
+* Numerous additional checks to prevent control of other vessels the kOS CPU isn't attached to.
 * The error beep and keyboard click sounds now obey game's UI volume settings. (https://github.com/KSP-KOS/KOS/pull/1287)
 * Fixed two bugs with obtaining waypoints by name. (https://github.com/KSP-KOS/KOS/issues/1313) (https://github.com/KSP-KOS/KOS/pull/1319)
 * Removed unnecessary rounding of THRUSTLIMIT to nearest 0.5%, now it can be more precise. (https://github.com/KSP-KOS/KOS/pull/1329)
@@ -49,7 +49,7 @@ kOS Mod Changelog
 * IR:AVAILABLE was reporting incorrectly ()
 * Boot files now wait until the ship is fully unpacked and ready (https://github.com/KSP-KOS/KOS/issues/1280)
 * The Vessel :HASBODY (aliases :HASOBT and :HASORBIT) suffix was in the documentation, but had been lost in a refactor last year.  It is put back now.
-* String sort-order comparisons with "<" and ">" operators were implemented wrongly and just compared lengths.  Now they do a character-by-character comparison (case-insensitively)
+* String sort-order comparisons with "<" and ">" operators were implemented wrongly and just compared lengths. Now they do a character-by-character comparison (case-insensitively)
 * Small documentation edits and clarifications all over the place.
 
 ### CONTRIBUTORS THIS RELEASE

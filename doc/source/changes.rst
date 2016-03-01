@@ -65,9 +65,9 @@ unmentioned when calling them.
 File I/O
 ::::::::
 
-:ref:`VolumeFile <volumefile>` Now lets you read and write arbitrary
+:ref:`VolumeFile <volumefile>` now lets you read and write arbitrary
 strings in files in a more natural way than using the LOG command,
-and allows you read the whole file into one big string in one go.
+and allows you to read the whole file into one big string in one go.
 
 Serialization in JSON
 :::::::::::::::::::::
