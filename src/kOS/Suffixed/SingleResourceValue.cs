@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Resource")]
     public class SingleResourceValue : Structure
     {
         private readonly PartResource partResource;

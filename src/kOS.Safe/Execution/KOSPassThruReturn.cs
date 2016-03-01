@@ -28,6 +28,7 @@ namespace kOS.Safe.Execution
     /// <br/>
     /// (For example, when performing user delegate calls with :CALL).
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("ScriptsShouldntSeeThisType_KOSPassThruReturn")]
     public class KOSPassThruReturn : Structure
         
         // This is derived from Structure ONLY because it is 

@@ -321,6 +321,8 @@ A shortcut for ``CORE:CURRENTVOLUME:CREATE(FILENAME)``. See :meth:`Volume:CREATE
 --------------------------------
 A shortcut for ``CORE:CURRENTVOLUME:OPEN(FILENAME)``. See :meth:`Volume:OPEN`.
 
+.. _writejson:
+
 ``WRITEJSON(OBJECT, FILENAME).``
 --------------------------------
 

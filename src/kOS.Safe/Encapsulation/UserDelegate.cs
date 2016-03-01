@@ -9,6 +9,7 @@ namespace kOS.Safe.Encapsulation
     /// <br/>
     /// (As opposed to being a C# delegate, implemented in C# code).<br/>
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("UserDelegate")]
     public class UserDelegate : KOSDelegate, IUserDelegate
     {
         public IProgramContext ProgContext {get; private set;}

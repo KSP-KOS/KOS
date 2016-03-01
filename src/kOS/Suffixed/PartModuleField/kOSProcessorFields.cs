@@ -5,6 +5,7 @@ using kOS.Safe.Persistence;
 
 namespace kOS.Suffixed.PartModuleField
 {
+    [kOS.Safe.Utilities.KOSNomenclature("KOSProcessor")]
     public class kOSProcessorFields : PartModuleFields
     {
         private readonly kOSProcessor processor;

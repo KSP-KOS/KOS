@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Enumerable")]
     public abstract class EnumerableValue<T, TE> : SerializableStructure, IEnumerable<T>
         where TE : IEnumerable<T>
         where T : Structure
