@@ -59,7 +59,7 @@ class KerboscriptLexer(RegexLexer):
                 'list', 'reboot', 'shutdown', 'for', 'unset'), suffix=r'\b'), Keyword),
             (r'\b(declare|local|global|parameter|function)\b', Keyword.Declaration),
             (r'\b(true|false|on|off)\b', Name.Builtin),
-            ('\b[a-z_][a-z_\d]*\b', Name.Variable), # TODO - we could differentiate type of name: i.e. built-in vs user.
+            (r'\b[a-z_][a-z_\d]*\b', Name.Variable), # TODO - we could differentiate type of name: i.e. built-in vs user.
             (r'\b(\d+\.\d*|\.\d+|\d+)[eE][+-]?\d+\b', Number.Float),
             (r'\b(\d+)+\b', Number.Float), # markup ints just like floats
         ]
