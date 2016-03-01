@@ -6,6 +6,7 @@ using Math = kOS.Safe.Utilities.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
     public class RgbaColor : Structure
     {
         protected float Red { get; set; }

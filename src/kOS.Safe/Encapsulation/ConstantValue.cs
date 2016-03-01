@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Constant")]
     public class ConstantValue : Structure
     {
         /// <summary>

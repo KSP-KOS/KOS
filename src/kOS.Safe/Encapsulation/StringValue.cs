@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -14,8 +15,8 @@ namespace kOS.Safe.Encapsulation
     /// strings. Currently, strings are only boxed with this
     /// class temporarily when suffix/indexing support is
     /// necessary.
-    /// 
     /// </summary>
+    [KOSNomenclature("String")]
     public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue, IEnumerable<string>
     {
         private readonly string internalString;
@@ -152,7 +153,7 @@ namespace kOS.Safe.Encapsulation
                 int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
                 return new StringValue(internalString[i]);
             }
-            throw new KOSCastException(index.GetType(), typeof(int)/*So the message will say it needs integer, not just any Scalar*/);
+            throw new KOSCastException(index.GetType(), typeof(ScalarValue));
 
         }
 

@@ -6,6 +6,9 @@ Enumerable
 :struct:`Enumerable` is a parent structure that contains a set of suffixes common to few structures in kOS. As a user of kOS you will never handle pure instances of this structure,
 but rather concrete types like :struct:`List`, :struct:`Range`, :struct:`Queue` etc.
 
+.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
+
+
 Structure
 ---------
 

@@ -5,6 +5,7 @@ using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeFile")]
     public abstract class VolumeFile : Structure
     {
         public string Name { get; private set; }

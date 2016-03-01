@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Archive")]
     public class Archive : Volume
     {
         public const string ArchiveName = "Archive";

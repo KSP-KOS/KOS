@@ -5,6 +5,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Queue")]
     public class QueueValue<T> : EnumerableValue<T, Queue<T>>
         where T : Structure
     {
@@ -67,6 +68,7 @@ namespace kOS.Safe.Encapsulation
         }
     }
 
+    [kOS.Safe.Utilities.KOSNomenclature("Queue", KOSToCSharp = false)] // one-way because the generic templated QueueValue<T> is the canonical one.  
     public class QueueValue : QueueValue<Structure>
     {
         public QueueValue()
