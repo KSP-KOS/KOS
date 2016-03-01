@@ -9,11 +9,125 @@ users familiar with older versions of the documentation who want
 only a quick update to the docs without reading the entire set
 of documentation again from scratch.
 
+This list is NOT a comprehensive list of everything.  Specifically,
+minor one-line changes, or bug fixes, are not mentioned here.
+
+Most importantly, changes that might have broken previously working
+scripts are not always signposted here.  To be sure, you should read
+the change log in the main github repository, which is repeated in the
+release announcements that are made in various places with each
+release.
+
 .. contents::
     :local:
     :depth: 3
 
 ****
+
+Changes in 0.19.0
+-----------------
+
+Varying Power Consumption
+:::::::::::::::::::::::::
+
+:ref:`Electrical drain <electricdrain>` is now handled in a dynamically
+changing way that actually notices how much you are using the CPU and
+uses less power if the CPU is mostly idling (if it spends most of its
+time on WAIT statements).
+
+For mods that want to re-balance the meaning of electric charge units,
+the drain factor is also editable in
+:ref:`module config fields <kospartmodule>` in the various ``part.cfg``
+files the mod ships with.  This opens them up to being changed by
+ModuleManager rules.
+
+Delegates (function pointers)
+:::::::::::::::::::::::::::::
+
+User functions and built-in functions (but not suffixes yet) can
+now be referred to with function pointers called :ref:`delegates <delegates>`
+along with "currying" of pre-loaded arguments.
+
+Optional Defaulted Parameters
+:::::::::::::::::::::::::::::
+
+:ref:`User functions <user_functions>` and user programs can now be
+configured to have optional trailing parameters that receive
+unmentioned when calling them.
+
+File I/O
+::::::::
+
+:ref:`VolumeFile <volumefile>` Now lets you read and write arbitrary
+strings in files in a more natural way than using the LOG command,
+and allows you read the whole file into one big string in one go.
+
+Serialization in JSON
+:::::::::::::::::::::
+
+Automatic serialization system added to the :ref:`file operations <files>`
+to save/load some kinds of data values to
+`JSON-format files. <https://en.wikipedia.org/wiki/JSON#Example>`__
+
+Universal Object Suffixes
+:::::::::::::::::::::::::
+
+All user values now are a kind of :ref:`structure <structure>` and thus
+there are a few universal suffixes that can be used to query what
+type of data a thing is (``:ISTYPE`` and ``:TYPENAME``).
+
+Multimode Engine and Gimbal Support
+:::::::::::::::::::::::::::::::::::
+
+:ref:`Engines <engine>` can now support multiple-mode information, and can
+acces thei gimbal information in the ``:GIMBAL`` suffix.
+
+DMagic Orbital Science
+::::::::::::::::::::::
+
+Better support for :ref:`DMagic's Orbital Science mod <orbitalscience>`
+
+Range
+:::::
+
+New :ref:`Range <range>` type for getting arbitrary iterable collections 
+of ranges of integers.
+
+Char and Unchar
+:::::::::::::::
+
+:ref:`Two functions <char>` for getting the Unicode value of a character
+or making a character from its Unicode value.
+
+For loop on string chars
+::::::::::::::::::::::::
+
+The for loop can now iterate over the characters of a :ref:`string <string>`.
+
+HASTARGET, HASNODE
+::::::::::::::::::
+
+Lets you see if there is a target set for the active vessel or a manuever
+node set on the current ship.
+
+JOIN
+::::
+
+Join suffix on :ref:`lists <list>` now lets you make a string with a
+delimeter of the list's elements.
+
+Hours per day
+:::::::::::::
+
+:ref:`KUniverse <kuniverse>` now has a suffix to let you read the
+user setting for whether the clock is using a 24 hour day or a 
+Kerbin 6 hour day.
+
+Archive
+:::::::
+
+The reserved word ``Archive`` is now a first class citizen so that
+``SET FOO TO ARCHIVE.`` works like you'd expect it to.
 
 Changes in 0.18.2
 -----------------
