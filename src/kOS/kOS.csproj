@@ -46,14 +46,6 @@
     </Reference>
     <Reference Include="KSPAPIExtensions">
       <HintPath>..\..\Resources\KSPAPIExtensions.dll</HintPath>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="KSPAPIExtensions">
-      <HintPath>..\..\Resources\KSPAPIExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
