@@ -9,3 +9,4 @@ Addon release thread: http://forum.kerbalspaceprogram.com/threads/68089-0-23-kOS
 
 Addon development thread: http://forum.kerbalspaceprogram.com/threads/68096-kOS-Autopilot
 
+Contribution : If you have contributed to the development of the mod, and wish to be named a certain way in the next release notes, then add your edit to the ``### Contributors`` section of the CHANGELOG.md file in your pull request.
