@@ -29,8 +29,6 @@ Which would result in this output::
 
 .. highlight:: kerboscript
 
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
-
 .. structure:: Iterator
 
     .. list-table:: Members

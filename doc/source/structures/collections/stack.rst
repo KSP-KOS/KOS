@@ -18,9 +18,6 @@ Using a stack
   PRINT S:POP. // will print 'bob'
   PRINT S:POP. // will print 'alice'
 
-
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
-
 Structure
 ---------
 

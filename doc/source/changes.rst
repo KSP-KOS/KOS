@@ -27,6 +27,13 @@ release.
 Changes in 0.19.0
 -----------------
 
+Art asset changes
+:::::::::::::::::
+
+Though not represented in these documents, numerous changes to the
+part models and artwork are included as part of this update, including
+the new KAL9000 high-end computer part.
+
 Varying Power Consumption
 :::::::::::::::::::::::::
 
@@ -96,8 +103,8 @@ of ranges of integers.
 Char and Unchar
 :::::::::::::::
 
-:ref:`Two functions <char>` for getting the Unicode value of a character
-or making a character from its Unicode value.
+:func:`CHAR(a)` and :func:`UNCHAR(a)` functions for getting the Unicode
+value of a character or making a character from its Unicode value.
 
 For loop on string chars
 ::::::::::::::::::::::::
@@ -107,8 +114,8 @@ The for loop can now iterate over the characters of a :ref:`string <string>`.
 HASTARGET, HASNODE
 ::::::::::::::::::
 
-Lets you see if there is a target set for the active vessel or a manuever
-node set on the current ship.
+:ref:`HASTARGET <hastarget>`.
+:ref:`HASNODE <hasnode>`.
 
 JOIN
 ::::

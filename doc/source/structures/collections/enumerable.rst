@@ -6,9 +6,6 @@ Enumerable
 :struct:`Enumerable` is a parent structure that contains a set of suffixes common to few structures in kOS. As a user of kOS you will never handle pure instances of this structure,
 but rather concrete types like :struct:`List`, :struct:`Range`, :struct:`Queue` etc.
 
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
-
-
 Structure
 ---------
 
@@ -29,16 +26,16 @@ Structure
           - :struct:`Iterator`
           - for iterating over the elements in the reverse order
         * - :attr:`LENGTH`
-          - integer
+          - :ref:`scalar <scalar>`
           - number of elements in the enumerable
         * - :meth:`CONTAINS(item)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - check if enumerable contains an item
         * - :attr:`EMPTY`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - check if enumerable is empty
         * - :attr:`DUMP`
-          - string
+          - :ref:`string <string>`
           - verbose dump of all contained elements
 
 
@@ -58,7 +55,7 @@ Structure
 
 .. attribute:: Enumerable:LENGTH
 
-    :type: integer
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Returns the number of elements in the enumerable.
@@ -66,20 +63,20 @@ Structure
 .. method:: Enumerable:CONTAINS(item)
 
     :parameter item: element whose presence in the enumerable should be checked
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Returns true if the enumerable contains an item equal to the one passed as an argument
 
 .. attribute:: Enumerable:EMPTY
 
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get only
 
     Returns true if the enumerable has zero items in it.
 
 .. attribute:: Enumerable:DUMP
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Returns a string containing a verbose dump of the enumerable's contents.
