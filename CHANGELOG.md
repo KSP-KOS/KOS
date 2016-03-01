@@ -13,6 +13,7 @@ kOS Mod Changelog
 * String sort-order comparisons with "<" and ">" operators were implemented wrongly and just compared lengths.  Now they do a character-by-character comparison (case-insensitively).  On the off chance that anyone was actually trying to use the previous weird length-comparison behavior, that would break.
 
 ### NEW FEATURES
+* Art asset rework.  The meshes and textures of the kOS CPU parts have recieved an update, and a new KAL9000 high-end computer part was included.
 * Varying power consumption.  Units of electric charge used now varies depending on CPU speed and how much the CPU is being actually used.  If your IPU setting is low, or if your program isn't doing very much and is just stuck on a `wait` statement, it won't use as much power. (http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware#electricdrain)
 * Ability to read and write whole files at a time as one big string. (http://ksp-kos.github.io/KOS_DOC/structures/volumes_and_files/volumefile.html)
 * User Functions can now be referred to with function pointers, or "delegates".  (http://ksp-kos.github.io/KOS_DOC/language/delegates.html)
