@@ -51,7 +51,7 @@ underscore). The first character must be a letter. The rest may be letters, digi
     My_Variable  my_varible  MY_VARAIBLE
 
 **case-insensitivity**
-    The same case-insensitivity applies throughout the entire language, with all keywords except when comparing literal strings. The values inside the strings are still case-sensitive, for example, the following will print "unequal"::
+    The same case-insensitivity applies throughout the entire language, with all keywords and when comparing literal strings. The values inside the strings are also case-insensitive, for example, the following will print "equal"::
 
         if "hello" = "HELLO" {
             print "equal".
