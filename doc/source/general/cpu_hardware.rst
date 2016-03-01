@@ -112,7 +112,7 @@ page about :ref:`kOSProcessor part config values <EcPerInstruction>`.
 
 The shorthand version is this:  The more instructions per update
 actually get executed, the more power is drained.  This can be reduced
-by either lowering ``CONFIG:IPU` or by making sure your main loop
+by either lowering ``CONFIG:IPU`` or by making sure your main loop
 has a ``WAIT`` statement in it.  (When encountering a ``WAIT`` statement,
 the remainder of the instructions for that update are not used and end
 up not counting against electric charge).

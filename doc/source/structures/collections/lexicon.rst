@@ -136,7 +136,7 @@ Structure
 
 .. attribute:: Lexicon:CASESENSITIVE
 
-    :type: Boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get or Set
     
     The case sensitivity behaviour of the lexicon when the keys are strings.
@@ -155,7 +155,7 @@ Structure
 
 .. attribute:: Lexicon:CASE
 
-    :type: Boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get or Set
      
     Synonym for CASESENSITIVE (see above).

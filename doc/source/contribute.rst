@@ -47,8 +47,14 @@ This documentation was written using `reStructuredText`_ and compiled into HTML 
 
 To re-build the documentation tree locally, get a local clone of the project, `cd` into the `doc/` directory, and do these two commands:
 
-``make clean``
-``make html``
+.. highlight:: none
+
+::
+
+    make clean
+    make html
+
+.. highlight:: kerboscript
 
 Note, this requires you set up Sphinx and Read-the-Docs first, as described in the links above.
 

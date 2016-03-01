@@ -33,6 +33,22 @@ Change Log
 
     - `Change Log <https://github.com/KSP-KOS/KOS/blob/develop/CHANGELOG.md>`__ on Github.
 
+.. _koscommunity:
+
+Online Community
+----------------
+
+There are two good places to go for help and sharing of ideas with other
+users of kOS, and the developers of the mod frequent those locations too:
+
+- `/r/kos on reddit <https://www.reddit.com/r/kos>`__
+- `On Kerbal Space Program's forum <http://forum.kerbalspaceprogram.com/index.php?/topic/61827-/>`__
+
+Of these two locations, the Reddit one tends to be more active because it
+allows multiple sub-threads about kOS.  On the Kerbal Space Program
+forum, all kOS talk occurs in one uniform thread, which is a little less
+useful for discussing different ideas and different scripts.
+
 .. _showandtell:
 
 Show and Tell, and Tutorials

@@ -88,12 +88,17 @@ Here's the full example::
 Omitting :CALL
 ~~~~~~~~~~~~~~
 
-There are cases where you can call a KOSDelegate without the use of
-the ``:call`` suffix, instead just using parentheses directly abutted
-against the variable name.  This doesn't work in all cases due to
-some syntax difficulties in the language, so its best to just be in
-the habit of always explicitly using the ``:call`` suffix when working
-with KOSDelegates.
+You can call a KOSDelegate without the use of the ``:call`` suffix,
+instead just using parentheses directly abutted against the variable
+name like a normal function call::
+
+    function testfunc {print "test".}
+    set del to testfunc@.
+
+    // The following two are equivalent:
+
+    del:call().
+    del().
 
 Why the '@' sign?
 ~~~~~~~~~~~~~~~~~

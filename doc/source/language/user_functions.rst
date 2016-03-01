@@ -44,8 +44,8 @@ Help for the new user - What is a Function?
 
 .. _declare function:
 
-``DECLARE FUNCTION``
---------------------
+DECLARE FUNCTION
+----------------
 
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
@@ -112,8 +112,8 @@ programs.  At the top of your main script you can then "run" the
 other scripts containing the library of functions to get them
 compiled into memory.
 
-``Using RUN ONCE``
-------------------
+Using RUN ONCE
+--------------
 
 If you want to load a library of functions that ALSO perform some
 initialization mainline code, but you only want the mainline code
@@ -198,8 +198,8 @@ because ``subprogram`` would have run the mainline code
 ``subprogram``.
 
 
-``DECLARE PARAMETER``
----------------------
+DECLARE PARAMETER
+-----------------
 
 If your function expects to have parameters passed into it, you can
 use the :ref:`DECLARE PARAMETER <declare parameter>` command to do
@@ -232,6 +232,8 @@ just like when running a program.  You can see an example of this above
 in the previous example where it said::
 
     print_corner(4,"That's me in the corner").
+
+.. _default_parameters:
 
 Optional Parameters (parameter defaults)
 ----------------------------------------
@@ -357,8 +359,8 @@ function (a function you made for yourself in another file) then it
 does not work, for complex reason involving the compiler and late-time
 binding.
 
-``LOCAL .. TO``
------------------
+LOCAL .. TO
+-----------
 
 (aka: **local variables**)
 
@@ -436,8 +438,8 @@ be made (and that new ``x`` will be global, not local).
 
 .. _return:
 
-``RETURN``
-----------
+RETURN
+------
 
 ``return`` *expression(optional)* *dot(mandatory)*
 

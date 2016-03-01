@@ -58,8 +58,8 @@ along with "currying" of pre-loaded arguments.
 Optional Defaulted Parameters
 :::::::::::::::::::::::::::::
 
-:ref:`User functions <user_functions>` and user programs can now be
-configured to have optional trailing parameters that receive
+User functions and user programs can now be configured to have
+:ref:`optional trailing parameters <default_parameters>` that receive
 unmentioned when calling them.
 
 File I/O

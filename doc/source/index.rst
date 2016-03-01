@@ -16,8 +16,9 @@ kOS: Kerbal Operating System
 The do-it-yourself autopilot
 ----------------------------
 
-**kOS**, or Kerbal Operating System, is a community-supported mod for the popular game
- `Kerbal Space Program <https://kerbalspaceprogram.com/>`_
+**kOS**, or Kerbal Operating System, is a community-supported
+mod for the popular game
+`Kerbal Space Program <https://kerbalspaceprogram.com/>`__
 
 **kOS** is an autopilot you script yourself.  **kOS** is to
 programming, what Kerbal Space Program itself is to rocket science.
@@ -68,6 +69,12 @@ Documentation
 The page you are looking at right now is the entry point
 into the full documentation of kOS.  See the full table of
 contents here: :ref:`Full Documentation <contents>`.
+
+Online Community
+----------------
+
+:ref:`kOS has an active community <koscommunity>` of users willing
+to help each other with ideas and algorithms.
 
 History
 -------

@@ -33,6 +33,25 @@ for example::
 If printed to the terminal, a Boolean value will return the string
 ``"True"`` or ``"False"``.
 
+Operators
+---------
+
+Boolean expressions can use any of the following operators:
+
+These all assume both `a` and `b` are Boolean values:
+
+- `not a` returns true if a is false, or false if a is true.
+- `a and b` returns true if and only if both a and b are true, else returns false.
+- `a or b` returns false if either a is true, b is true, or both are true.
+  Only returns false with both a and b are false.
+
+The order of operations is as shown above.  First it performs `not`, then
+`and`, then `or`.  Parentheses can be used to force the order of operations
+to be the way you want, as usual.
+
+Example
+-------
+
 Boolean values stored in a variable can be used in place of any conditional
 check syntax anywhere.  Example::
 
