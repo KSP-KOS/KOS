@@ -10,9 +10,8 @@ General Features of the **KerboScript** Language
 Case Insensitivity
 ------------------
 
-Everything in **KerboScript** is case-insensitive, including your own variable names and filenames. The only exception is when you perform a string comparison, (``"Hello"="HELLO"`` will return false.)
-
-Most of the examples here will show the syntax in all-uppercase to help make it stand out from the explanatory text.
+Everything in **KerboScript** is case-insensitive, including your own variable names and filenames.
+This extends to string comparison as well. (``"Hello"="HELLO"`` will return true.)
 
 Expressions
 -----------
