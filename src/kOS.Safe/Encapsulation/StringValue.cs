@@ -229,6 +229,30 @@ namespace kOS.Safe.Encapsulation
             return !(val1 == val2);
         }
 
+        public static bool operator >(StringValue val1, StringValue val2)
+        {
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum > 0;
+        }
+
+        public static bool operator <(StringValue val1, StringValue val2)
+        {
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum < 0;
+        }
+
+        public static bool operator >=(StringValue val1, StringValue val2)
+        {
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum >= 0;
+        }
+
+        public static bool operator <=(StringValue val1, StringValue val2)
+        {
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum <= 0;
+        }
+
         // Implicitly converts to a string (i.e., unboxes itself automatically)
         public static implicit operator string(StringValue value)
         {
