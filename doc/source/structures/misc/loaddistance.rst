@@ -213,7 +213,7 @@ Each of the above
     vessel, it will transition from being *unloaded* to being *loaded*.
     See the description above for what it means for a vessel to be *loaded*.
 
-    This value must be greater than :attr:`UNLOAD`, and will automatically
+    This value must be less than :attr:`UNLOAD`, and will automatically
     be adjusted accordingly.
 
 .. attribute:: SituationLoadDistance:UNLOAD
@@ -227,7 +227,7 @@ Each of the above
     vessel, it will transition from being *loaded* to being *unloaded*.
     See the description above for what it means for a vessel to be *loaded*.
 
-    This value must be less than :attr:`LOAD`, and will automatically
+    This value must be greater than :attr:`LOAD`, and will automatically
     be adjusted accordingly.
 
 .. attribute:: SituationLoadDistance:UNPACK
@@ -310,8 +310,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:PACK TO 29999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNPACK TO 29000.
@@ -322,8 +322,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:PACK TO 39999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNPACK TO 29000.
@@ -334,8 +334,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:PACK TO 29999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNPACK TO 29000.
@@ -346,8 +346,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:PACK TO 29999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNPACK TO 29000.
