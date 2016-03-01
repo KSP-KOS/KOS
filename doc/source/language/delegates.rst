@@ -214,10 +214,10 @@ these types of function calls inside each other to perform a result, such
 as "get the average mass of the subset of the subset of the parts on my
 vessel that are fuel tanks that have oxidizer in them".  There is a style
 of programming called
-:ref:`Functional programming <https://en.wikipedia.org/wiki/Functional_programming>`_
+`Functional programming <https://en.wikipedia.org/wiki/Functional_programming>`__
 in which you are meant to try to think this way about all possible problems
 you are trying to solve.  While Kerboscript is mostly an
-:ref:`imperative programming language <https://en.wikipedia.org/wiki/Imperative_programming>`_,
+`imperative programming language <https://en.wikipedia.org/wiki/Imperative_programming>`__,
 some limited concepts of functional programming style are possible through the use
 of these delegates.
 
@@ -230,7 +230,7 @@ It was written to be released coinciding with the addition of this feature
 to Kerboscript.  In addition to being useful as a library, it also can
 serve as a good list of example cases for how you can use this
 "delegate" feature in your own code.  Please have a look at
-:ref:`the lib_enum library in KSLib <https://github.com/KSP-KOS/KSLib/blob/master/doc/lib_enum.md>`_
+`the lib_enum library in KSLib <https://github.com/KSP-KOS/KSLib/blob/master/doc/lib_enum.md>`__
 to see what it has to offer.  It allows you to do things such as sorting
 a LIST() based on whatever comparison criteria you like, finding the
 minimum or maximum from a list, transforming all items in the list according
@@ -317,16 +317,16 @@ of these ``:bind`` calls.  You could do this, for example::
 
 The technique of transforming a function that takes many arguments into
 a nested succession of functions that each only take one argument has a
-name.  It's called :ref:`Currying <https://en.wikipedia.org/wiki/Currying>`_.
+name.  It's called `Currying <https://en.wikipedia.org/wiki/Currying>`__.
 (It's named after mathematician
-:ref:`Haskell Curry <https://en.wikipedia.org/wiki/Haskell_Curry>`_
+`Haskell Curry <https://en.wikipedia.org/wiki/Haskell_Curry>`__
 and has nothing to do with delicious spicy food).
 
 (If anyone reading this is an experienced functional programmer and is thinking,
 "But ``:bind`` as described here isn't currying",  yes, we are aware that this is 
 correct.  The KOSDelegate suffix ``:bind`` is technically not a proper "curry" because
 it is actually a
-:ref:`partial function application <https://en.wikipedia.org/wiki/Partial_application>`_.
+`partial function application <https://en.wikipedia.org/wiki/Partial_application>`__.
 and thus doesn't *require* that you limit it to only one parameter at a time.)
 
 Anonymous functions

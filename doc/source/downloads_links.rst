@@ -49,7 +49,7 @@ Show and Tell, and Tutorials
 
     - `Seth Persigehl's Tutorial playlist <https://www.youtube.com/playlist?list=PLEpK8nolWr1rghS5cOEOL-JQ33h4CgPAP>`__
     - `CheersKevinGames <https://www.youtube.com/watch?v=fNlAME5eU3o&list=PLb6UbFXBdbCrvdXVgY_3jp5swtvW24fYv>`__
-      A channel devoded to a career mode game played with kOS from day 1, in which no
+      A channel devoted to a career mode game played with kOS from day 1, in which no
       Kerbals themselves are allowed to touch the controls.  All piloting is performed
       by kOS programs.  Also works as a good deep explanation of many topics to new
       users of the mod, and people new to programming in general.

@@ -23,6 +23,8 @@ This allows you to use a :struct:`TimeSpan` such as is returned by the TIME spec
 Special variable TIME
 ---------------------
 
+.. highlight:: none
+
 .. global:: TIME
 
     :access: Get only
@@ -31,8 +33,6 @@ Special variable TIME
     The special variable **TIME** is used to get the current time.
 
     Any time you perform arithmetic on **TIME** you get a result back that is also a :struct:`TimeSpan`. In other words, TIME is a :struct:`TimeSpan`, but TIME + 100 is also a :struct:`TimeSpan`.
-
-.. highlight:: none
 
     Note that Kerbals do not have the concept of "months"::
 

@@ -48,7 +48,7 @@ class KerboscriptLexer(RegexLexer):
             (r'"[^"]*"', String),
             (r'[\t\s\r\n]+', Text), #whitespace
             (r'[*/+|?<>=#^\-]', Operator),
-            (r'(to|is|not|and|or|all)', Operator.Word),
+            (r'\b(to|is|not|and|or|all)\b', Operator.Word),
             (r'[()\[\]\.,:\{\}@]', Punctuation),
             (words(( 'set', 'if', 'else', 'until', 'step', 'do',
                 'lock', 'unlock', 'print', 'at', 'toggle', 'wait',
@@ -57,11 +57,11 @@ class KerboscriptLexer(RegexLexer):
                 'global', 'return', 'switch', 'copy', 'from', 'rename',
                 'volume', 'file', 'delete', 'edit', 'run', 'once', 'compile',
                 'list', 'reboot', 'shutdown', 'for', 'unset'), suffix=r'\b'), Keyword),
-            (r'(declare|local|global|parameter|function)\b', Keyword.Declaration),
-            (r'(true|false|on|off)\b', Name.Builtin),
-            ('[a-z_][a-z_\d]*', Name.Variable), # TODO - we could differentiate type of name: i.e. built-in vs user.
-            (r'(\d+\.\d*|\.\d+|\d+)[eE][+-]?\d+', Number.Float),
-            (r'(\d+)+', Number.Float), # markup ints just like floats
+            (r'\b(declare|local|global|parameter|function)\b', Keyword.Declaration),
+            (r'\b(true|false|on|off)\b', Name.Builtin),
+            ('\b[a-z_][a-z_\d]*\b', Name.Variable), # TODO - we could differentiate type of name: i.e. built-in vs user.
+            (r'\b(\d+\.\d*|\.\d+|\d+)[eE][+-]?\d+\b', Number.Float),
+            (r'\b(\d+)+\b', Number.Float), # markup ints just like floats
         ]
     }
 
