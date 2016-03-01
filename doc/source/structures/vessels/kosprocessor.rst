@@ -20,7 +20,7 @@ The type of structures returned by kOS when querying a module that contains a kO
           -
           - :struct:`kOSProcessor` objects are a type of :struct:`PartModule`
         * - :attr:`MODE`
-          - `String`
+          - `:ref:`string <string>``
           - `OFF`, `READY` or `STARVED`
         * - :meth:`ACTIVATE`
           - None
@@ -29,13 +29,13 @@ The type of structures returned by kOS when querying a module that contains a kO
           - None
           - Deactivates this processor
         * - :attr:`TAG`
-          - `String`
+          - `:ref:`string <string>``
           - This processor's name tag
         * - :attr:`VOLUME`
           - :struct:`Volume`
           - This processor's hard disk
         * - :attr:`BOOTFILENAME`
-          - `String`
+          - `:ref:`string <string>``
           - The filename for the boot file on this processor
 
 .. note::
@@ -45,7 +45,7 @@ The type of structures returned by kOS when querying a module that contains a kO
 .. attribute:: kOSProcessor:MODE
 
     :access: Get only
-    :type: `String`
+    :type: `:ref:`string <string>``
 
     Indicates the current state of this processor. `OFF` - deactivated, `READY` - active, or `STARVED` - no power.
 
@@ -64,7 +64,7 @@ The type of structures returned by kOS when querying a module that contains a kO
 .. attribute:: kOSProcessor:TAG
 
     :access: Get only
-    :type: `String`
+    :type: `:ref:`string <string>``
 
     This processor's name tag
 
@@ -78,7 +78,7 @@ The type of structures returned by kOS when querying a module that contains a kO
 .. attribute:: kOSProcessor:BOOTFILENAME
 
     :access: Get or Set
-    :type: `String`
+    :type: `:ref:`string <string>``
 
-    The filename for the boot file on this processor. This may be set to an empty string “” or to “None” to disable the use of a boot file.
+    The filename for the boot file on this processor. This may be set to an empty :ref:`string <string>` “” or to “None” to disable the use of a boot file.
 

@@ -47,19 +47,19 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     ================================ ============
          Every Suffix of :struct:`Orbitable`
     ---------------------------------------------
-    :attr:`NAME`                     string
-    :attr:`DESCRIPTION`              string
-    :attr:`MASS`                     scalar (kg)
-    :attr:`ALTITUDE`                 scalar (m)
-    :attr:`ROTATIONPERIOD`           scalar (s)
-    :attr:`RADIUS`                   scalar (m)
-    :attr:`MU`                       scalar (:math:`m^3 s^{−2}`)
+    :attr:`NAME`                     :ref:`string <string>`
+    :attr:`DESCRIPTION`              :ref:`string <string>`
+    :attr:`MASS`                     :ref:`scalar <scalar>` (kg)
+    :attr:`ALTITUDE`                 :ref:`scalar <scalar>` (m)
+    :attr:`ROTATIONPERIOD`           :ref:`scalar <scalar>` (s)
+    :attr:`RADIUS`                   :ref:`scalar <scalar>` (m)
+    :attr:`MU`                       :ref:`scalar <scalar>` (:math:`m^3 s^{−2}`)
     :attr:`ATM`                      :struct:`Atmosphere`
     :attr:`ANGULARVEL`               :struct:`Vector` in :ref:`SHIP-RAW <ship-raw>`
     :attr:`GEOPOSITIONOF`            :struct:`GeoCoordinates` in :ref:`SHIP-RAW <ship-raw>`
-    :attr:`ALTITUDEOF`               scalar (m)
-    :attr:`SOIRADIUS`                scalar (m)
-    :attr:`ROTATIONANGLE`            scalar (deg)
+    :attr:`ALTITUDEOF`               :ref:`scalar <scalar>` (m)
+    :attr:`SOIRADIUS`                :ref:`scalar <scalar>` (m)
+    :attr:`ROTATIONANGLE`            :ref:`scalar <scalar>` (deg)
     ================================ ============
 
 .. note::

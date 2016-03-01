@@ -34,7 +34,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
           -
           - :struct:`Sensor` objects are a type of :struct:`Part`
         * - :attr:`ACTIVE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if this sensor is active
         * - :attr:`TYPE`
           -
@@ -43,7 +43,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
           - string
           - Value of the readout
         * - :attr:`POWERCONSUMPTION`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Rate of required electric charge
         * - :meth:`TOGGLE()`
           -
@@ -56,7 +56,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
 .. attribute:: Sensor:ACTIVE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True of the sensor is enabled. Can SET to cause the sensor to activate or de-activate.
 
@@ -74,7 +74,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
 .. attribute:: Sensor:POWERCONSUMPTION
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The rate at which this sensor drains ElectricCharge.
 

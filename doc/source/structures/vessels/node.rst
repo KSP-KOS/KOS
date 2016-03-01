@@ -147,19 +147,19 @@ Structure
           - Get only
           - Alias for :attr:`DELTAV`
         * - :attr:`ETA`
-          - scalar (s)
+          - :ref:`scalar <scalar>` (s)
           - Get/Set
           - Time until this maneuver
         * - :attr:`PROGRADE`
-          - scalar (m/s)
+          - :ref:`scalar <scalar>` (m/s)
           - Get/Set
           - Delta-V along prograde
         * - :attr:`RADIALOUT`
-          - scalar (m/s)
+          - :ref:`scalar <scalar>` (m/s)
           - Get/Set
           - Delta-V along radial to orbited :struct:`Body`
         * - :attr:`NORMAL`
-          - scalar (m/s)
+          - :ref:`scalar <scalar>` (m/s)
           - Get/Set
           - Delta-V along normal to the :struct:`Vessel`'s :struct:`Orbit`
         * - :attr:`ORBIT`
@@ -182,28 +182,28 @@ Structure
 .. attribute:: ManeuverNode:ETA
 
     :access: Get/Set
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The number of seconds until the expected burn time. If you SET this, it will actually move the maneuver node along the path in the map view, identically to grabbing the maneuver node and dragging it.
 
 .. attribute:: ManeuverNode:PROGRADE
 
     :access: Get/Set
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The delta V in (meters/s) along just the prograde direction (the yellow and green 'knobs' of the maneuver node). A positive value is a prograde burn and a negative value is a retrograde burn.
 
 .. attribute:: ManeuverNode:RADIALOUT
 
     :access: Get/Set
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The delta V in (meters/s) along just the radial direction (the cyan knobs' of the maneuver node). A positive value is a radial out burn and a negative value is a radial in burn.
 
 .. attribute:: ManeuverNode:NORMAL
 
     :access: Get/Set
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The delta V in (meters/s) along just the normal direction (the purple knobs' of the maneuver node). A positive value is a normal burn and a negative value is an anti-normal burn.
 

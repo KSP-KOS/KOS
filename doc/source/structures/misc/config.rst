@@ -22,58 +22,58 @@ Configuration of kOS
           - Description
 
         * - :attr:`IPU`
-          - integer
+          - :ref:`scalar <scalar>` (integer)
           - 150
           - Instructions per update
         * - :attr:`UCP`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Use compressed persistence
         * - :attr:`STAT`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Print statistics to screen
         * - :attr:`RT2`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable RemoteTech2 integration
         * - :attr:`ARCH`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Start on archive (instead of volume 1)
         * - :attr:`SAFE`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable safe mode
         * - :attr:`AUDIOERR`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable sound effect on kOS error
         * - :attr:`VERBOSE`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable verbose exceptions
         * - :attr:`TELNET`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - activate the telnet server
         * - :attr:`TPORT`
-          - integer
+          - :ref:`scalar <scalar>` (integer)
           - 5410
           - set the port the telnet server will run on
         * - :attr:`LOOPBACK`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True
           - Force the telnet server to use loopback (127.0.0.1) address
         * - :attr:`DEBUGEACHOPCODE`
-          - boolean
+          - :ref:`boolean <boolean>`
           - false
           - Unholy debug spam used by the kOS developers
 
 .. attribute:: Config:IPU
 
     :access: Get/Set
-    :type: integer. range = [50,2000]
+    :type: :ref:`scalar <scalar>` integer. range = [50,2000]
 
     Configures the ``InstructionsPerUpdate`` setting.
 
@@ -84,7 +84,7 @@ Configuration of kOS
 .. attribute:: Config:UCP
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``UseCompressedPersistence`` setting.
 
@@ -93,7 +93,7 @@ Configuration of kOS
 .. attribute:: Config:STAT
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``ShowStatistics`` setting.
 
@@ -102,7 +102,7 @@ Configuration of kOS
 .. attribute:: Config:RT2
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``EnableRT2Integration`` setting.
 
@@ -114,7 +114,7 @@ Configuration of kOS
 .. attribute:: Config:ARCH
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``StartOnArchive`` setting.
 
@@ -123,7 +123,7 @@ Configuration of kOS
 .. attribute:: Config:SAFE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``EnableSafeMode`` setting.
 
@@ -139,7 +139,7 @@ Configuration of kOS
 .. attribute:: Config:AUDIOERR
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``AudibleExceptions`` setting.
 
@@ -152,7 +152,7 @@ Configuration of kOS
 .. attribute:: Config:VERBOSE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``VerboseExceptions`` setting.
 
@@ -161,7 +161,7 @@ Configuration of kOS
 .. attribute:: Config:TELNET
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``EnableTelnet`` setting.
 
@@ -185,7 +185,7 @@ Configuration of kOS
 .. attribute:: Config:TPORT
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`scalar <scalar>` (integer)
 
     Configures the ``TelnetPort`` setting.
 
@@ -199,7 +199,7 @@ Configuration of kOS
 .. attribute:: Config:LOOPBACK
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``TelnetLoopback`` setting.
 
@@ -216,7 +216,7 @@ Configuration of kOS
 .. attribute:: Config:DEBUGEACHOPCODE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``DebugEachOpcode`` setting.
 

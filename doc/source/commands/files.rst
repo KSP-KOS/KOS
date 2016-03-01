@@ -209,9 +209,9 @@ Arguments
 
 Example::
 
-    LOG “Hello” to mylog.txt.    // logs to "mylog.txt".
+    LOG "Hello" to mylog.txt.    // logs to "mylog.txt".
     LOG 4+1 to "mylog" .         // logs to "mylog.ks" because .ks is the default extension.
-    LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
+    LOG "4 times 8 is: " + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
 
 
 ``RENAME VOLUME Volume|volumeId|oldVolumeName TO name.``
@@ -221,7 +221,7 @@ Example::
 -----------------------------------
 
 Renames a file or volume. Volumes can be referenced by
-instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one.
+instances of :struct:`Volume`, their ID numbers or their names if they've been given one.
 
 Arguments
 ^^^^^^^^^
@@ -298,7 +298,7 @@ of the virtual machine.
 -----------------------------------------
 
 Switches to the specified volume. Volumes can be referenced by
-instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how
+instances of :struct:`Volume`, their ID numbers or their names if they've been given one. See LIST and RENAME. Understanding how
 :ref:`volumes work <volumes>` is important to understanding this command.
 
 Example::
