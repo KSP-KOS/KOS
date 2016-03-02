@@ -110,28 +110,28 @@ Structure
           - :ref:`boolean <boolean>`
           - True if this string ends with the given string 
         * - :meth:`FIND(string)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the first occurrence of the given string in this string (starting from 0)
         * - :meth:`FINDAT(string, startAt)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the first occurrence of the given string in this string (starting from startAt)
         * - :meth:`FINDLAST(string)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the last occurrence of the given string in this string (starting from 0)
         * - :meth:`FINDLASTAT(string, startAt)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the last occurrence of the given string in this string (starting from startAt)
         * - :meth:`INDEXOF(string)`
-          - integer
+          - :struct:`Scalar`
           - Alias for FIND(string)
         * - :meth:`INSERT(index, string)`
           - :struct:`String`
           - Returns a new string with the given string inserted at the given index into this string
         * - :meth:`LASTINDEXOF(string)`
-          - integer
+          - :struct:`Scalar`
           - Alias for FINDLAST(string)
         * - :attr:`LENGTH`
-          - integer
+          - :struct:`Scalar`
           - Number of characters in the string
         * - :meth:`PADLEFT(width)`
           - :struct:`String`
@@ -195,7 +195,7 @@ Structure
 .. method:: String:FINDAT(string, startAt)
 
     :parameter string: :struct:`String` to look for
-    :parameter startAt: integer index to start searching at
+    :parameter startAt: :struct:`Scalar` (integer) index to start searching at
     :type: :struct:`String`
     
     Returns the index of the first occurrence of the given string in this string (starting from startAt).
@@ -210,7 +210,7 @@ Structure
 .. method:: String:FINDLASTAT(string, startAt)
 
     :parameter string: :struct:`String` to look for
-    :parameter startAt: integer index to start searching at
+    :parameter startAt: :struct:`Scalar` (integer) index to start searching at
     :type: :struct:`String`
 
     Returns the index of the last occurrence of the given string in this string (starting from startAt)
@@ -221,7 +221,7 @@ Structure
 
 .. method:: String:INSERT(index, string)
 
-    :parameter index: integer index to add the string at
+    :parameter index: :struct:`Scalar` (integer) index to add the string at
     :parameter string: :struct:`String` to insert
     :type: :struct:`String`
 
@@ -233,29 +233,29 @@ Structure
 
 .. attribute:: String:LENGTH
 
-    :type: integer
+    :type: :struct:`Scalar` (integer)
     :access: Get only
 
     Number of characters in the string
 
 .. method:: String:PADLEFT(width)
 
-    :parameter width: integer number of characters the resulting string will contain
+    :parameter width: :struct:`Scalar` (integer) number of characters the resulting string will contain
     :type: :struct:`String`
 
     Returns a new right-aligned version of this string padded to the given width by spaces.
 
 .. method:: String:PADRIGHT(width)
 
-    :parameter width: integer number of characters the resulting string will contain
+    :parameter width: :struct:`Scalar` (integer) number of characters the resulting string will contain
     :type: :struct:`String`
 
     Returns a new left-aligned version of this string padded to the given width by spaces.
 
 .. method:: String:REMOVE(index,count)
 
-    :parameter index: integer position of the string from which characters will be removed from the resulting string
-    :parameter count: integer number of characters that will be removing from the resulting string
+    :parameter index: :struct:`Scalar` (integer) position of the string from which characters will be removed from the resulting string
+    :parameter count: :struct:`Scalar` (integer) number of characters that will be removing from the resulting string
     :type: :struct:`String`
 
     Returns a new string out of this string with the given count of characters removed starting at the given index.
@@ -285,8 +285,8 @@ Structure
 
 .. method:: String:SUBSTRING(start,count)
 
-    :parameter start: (integer) starting index (from zero)
-    :parameter count: (integer) resulting length of returned :struct:`String`
+    :parameter start: :struct:`Scalar` (integer) starting index (from zero)
+    :parameter count: :struct:`Scalar` (integer) resulting length of returned :struct:`String`
     :return: :struct:`String`
 
     Returns a new string with the given count of characters from this string starting from the given start position.
