@@ -20,7 +20,7 @@ kOS Mod Changelog
 * Automatic serialization system to save/load some kinds of data values to JSON-format files (http://ksp-kos.github.io/KOS_DOC/commands/files.html#writejson-object-filename)
 * User Programs and Functions now allow trailing optional parameters with defaulted values. (http://ksp-kos.github.io/KOS_DOC/language/user_functions.html#optional-parameters-parameter-defaults).
 * There are now some suffixes that work on all value types, even primitive scalars.  To accomplish this, a new "encapsulation" system has wrapped all kOS structures and primitive types inside a generic base type.  (http://ksp-kos.github.io/KOS_DOC/structures/reflection.html)
-* ENGINE type now supports multi-mode cases and has its gimbal accessible through :GIMBAL suffix (http://ksp-kos.github.io/KOS_DOC/structures/vessels/engine.html) 
+* ENGINE type now supports multi-mode cases and has its gimbal accessible through :GIMBAL suffix (http://ksp-kos.github.io/KOS_DOC/structures/vessels/engine.html)
 * Added GIMBAL:LIMIT suffix. (http://ksp-kos.github.io/KOS_DOC/structures/vessels/gimbal.html)
 * Better support for DMagic's Orbital Science mod (http://ksp-kos.github.io/KOS_DOC/addons/OrbitalScience.html)
 * Char() and Unchar() functions for translating unicode numbers to characters and visa versa (http://ksp-kos.github.io/KOS_DOC/math/basic.html#function:CHAR)
@@ -51,6 +51,11 @@ kOS Mod Changelog
 * The Vessel :HASBODY (aliases :HASOBT and :HASORBIT) suffix was in the documentation, but had been lost in a refactor last year.  It is put back now.
 * String sort-order comparisons with "<" and ">" operators were implemented wrongly and just compared lengths. Now they do a character-by-character comparison (case-insensitively)
 * Small documentation edits and clarifications all over the place.
+
+### KNOWN issues
+* Using `lock` variables in compiled scripts with a duplicate identifier (like "throttle") throws an error (https://github.com/KSP-KOS/KOS/issues/1347 and https://github.com/KSP-KOS/KOS/issues/1253).
+* Occasionally staging with a probe core or root part in the ejected stage will break cooked steering (https://github.com/KSP-KOS/KOS/issues/1492).
+* The limitations of RemoteTech integration can be bypassed by storing a volume in a variable before the ship looses a connection to the KSC (https://github.com/KSP-KOS/KOS/issues/1464).
 
 ### CONTRIBUTORS THIS RELEASE
 
