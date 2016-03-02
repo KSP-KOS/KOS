@@ -21,29 +21,29 @@ Structure
 	  - Description
 
         * - :attr:`WIDTH`
-	  - integer
+	  - :ref:`scalar <scalar>`
 	  - get and set
 	  - Terminal width in characters
 
         * - :attr:`HEIGHT`
-	  - integer
+	  - :ref:`scalar <scalar>`
 	  - get and set
 	  - Terminal height in characters
 
         * - :attr:`REVERSE`
-	  - Boolean
+	  - :ref:`Boolean <boolean>`
 	  - get and set
 	  - Determines if the screen is displayed with foreground and background colors swapped.
 
         * - :attr:`VISUALBEEP`
-	  - Boolean
+	  - :ref:`Boolean <boolean>`
 	  - get and set
 	  - Turns beeps into silent visual screen flashes instead.
 
 .. attribute:: Terminal:WIDTH
 
     :access: Get/Set
-    :type: integer.
+    :type: :ref:`scalar <scalar>`.
 
     If you read the width it will return a number of character cells wide the terminal
     is.  If you set this value, it will cause the terminal to resize. 
@@ -58,7 +58,7 @@ Structure
 .. attribute:: Terminal:HEIGHT
 
     :access: Get/Set
-    :type: integer.
+    :type: :ref:`scalar <scalar>`.
 
     If you read the width it will return a number of character cells tall the terminal
     is.  If you set this value, it will cause the terminal to resize. 
@@ -73,7 +73,7 @@ Structure
 .. attribute:: Terminal:REVERSE
 
     :access: Get/Set
-    :type: Boolean.
+    :type: :ref:`Boolean <boolean>`.
 
     If true, then the terminal window is currently set to show
     the whole screen in reversed color - swapping the background
@@ -89,7 +89,7 @@ Structure
 .. attribute:: Terminal:VISUALBEEP
 
     :access: Get/Set
-    :type: Boolean.
+    :type: :ref:`Boolean <boolean>`.
 
     If true, then the terminal window is currently set to show any
     BEEP characters by silently flashing the screen for a moment

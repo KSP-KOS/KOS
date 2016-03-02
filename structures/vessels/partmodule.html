@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PartModule &mdash; kOS 0.18.2 documentation</title>
+  <title>PartModule &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Resource" href="resource.html"/>
         <link rel="prev" title="Part" href="part.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,100 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/processors.html">Processors</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">PartModule</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,16 +152,22 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">kOS</a>
+        <a href="../../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
       
@@ -172,24 +176,27 @@
     <li>PartModule</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/structures/vessels/partmodule.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../../_sources/structures/vessels/partmodule.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="partmodule">
 <h1>PartModule<a class="headerlink" href="#partmodule" title="Permalink to this headline">¶</a></h1>
-<p>Almost everything done with at right-click menus and action group action can be accessed via the <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a> objects that are attached to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a> of a <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>.</p>
-<p>The exact arrangement of <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a> to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a> to <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessels</span></tt></a>, and how to make use of a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a> is a complex enough topic to warrant its own separate subject, described on the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>Ship parts and Modules</em></a> page. If you have not read that page, it is recommended that you do so before using <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a>. The page you are reading now is meant as just a reference summary, not a tutorial.</p>
-<p>Once you have a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a>, you can use it to invoke the behaviors that are connected to its right-click menu and to its action groups.</p>
+<p>Almost everything done with at right-click menus and action group action can be accessed via the <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> objects that are attached to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> of a <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>.</p>
+<p>The exact arrangement of <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> to <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> to <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessels</span></code></a>, and how to make use of a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> is a complex enough topic to warrant its own separate subject, described on the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>Ship parts and Modules</span></a> page. If you have not read that page, it is recommended that you do so before using <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></code></a>. The page you are reading now is meant as just a reference summary, not a tutorial.</p>
+<p>Once you have a <a class="reference internal" href="#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a>, you can use it to invoke the behaviors that are connected to its right-click menu and to its action groups.</p>
 <dl class="structure">
 <dt id="structure:PARTMODULE">
-<em class="property">structure </em><tt class="descname">PartModule</tt><a class="headerlink" href="#structure:PARTMODULE" title="Permalink to this definition">¶</a></dt>
-<dd><table border="1" class="docutils">
-<caption>Members</caption>
+<em class="property">structure </em><code class="descname">PartModule</code><a class="headerlink" href="#structure:PARTMODULE" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">Members</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="29%" />
 <col width="14%" />
@@ -202,64 +209,64 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:NAME" title="PARTMODULE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:NAME" title="PARTMODULE:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
 <td>string</td>
 <td>Name of this part module</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:PART" title="PARTMODULE:PART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PART</span></tt></a></td>
-<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
-<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> attached to</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:PART" title="PARTMODULE:PART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PART</span></code></a></td>
+<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
+<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> attached to</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDS" title="PARTMODULE:ALLFIELDS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDS</span></tt></a></td>
-<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDS" title="PARTMODULE:ALLFIELDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDS</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 <td>Accessible fields</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="PARTMODULE:ALLFIELDNAMES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDNAMES</span></tt></a></td>
-<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="PARTMODULE:ALLFIELDNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDNAMES</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 <td>Accessible fields (name only)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTS" title="PARTMODULE:ALLEVENTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTS</span></tt></a></td>
-<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTS" title="PARTMODULE:ALLEVENTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTS</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 <td>Triggerable events</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="PARTMODULE:ALLEVENTNAMES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTNAMES</span></tt></a></td>
-<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="PARTMODULE:ALLEVENTNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTNAMES</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 <td>Triggerable event names</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONS" title="PARTMODULE:ALLACTIONS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONS</span></tt></a></td>
-<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONS" title="PARTMODULE:ALLACTIONS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONS</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 <td>Triggerable actions</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="PARTMODULE:ALLACTIONNAMES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONNAMES</span></tt></a></td>
-<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="PARTMODULE:ALLACTIONNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONNAMES</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 <td>Triggerable event names</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">GETFIELD(name)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETFIELD(name)</span></code></a></td>
 <td>&nbsp;</td>
 <td>Get value of a field by name</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SETFIELD(name,value)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETFIELD(name,value)</span></code></a></td>
 <td>&nbsp;</td>
 <td>Set value of a field by name</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DOEVENT(name)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><code class="xref ks ks-meth docutils literal"><span class="pre">DOEVENT(name)</span></code></a></td>
 <td>&nbsp;</td>
 <td>Trigger an event button</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DOACTION(name,bool)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">DOACTION(name,bool)</span></code></a></td>
 <td>&nbsp;</td>
 <td>Activate action by name with True or False</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASFIELD" title="PARTMODULE:HASFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASFIELD(name)</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASFIELD" title="PARTMODULE:HASFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASFIELD(name)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if field exists</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:HASEVENT" title="PARTMODULE:HASEVENT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASEVENT(name)</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:HASEVENT" title="PARTMODULE:HASEVENT method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASEVENT(name)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if event exists</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASACTION" title="PARTMODULE:HASACTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASACTION(name)</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASACTION" title="PARTMODULE:HASACTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASACTION(name)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if action exists</td>
 </tr>
 </tbody>
@@ -268,7 +275,7 @@
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:NAME">
-PartModule:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:PARTMODULE:NAME" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">NAME</code><a class="headerlink" href="#attribute:PARTMODULE:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -284,30 +291,30 @@ PartModule:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:PART">
-PartModule:<tt class="descname">PART</tt><a class="headerlink" href="#attribute:PARTMODULE:PART" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">PART</code><a class="headerlink" href="#attribute:PARTMODULE:PART" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>Get the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> that this PartModule is attached to.</p>
+<p>Get the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> that this PartModule is attached to.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLFIELDS">
-PartModule:<tt class="descname">ALLFIELDS</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDS" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">ALLFIELDS</code><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 </tr>
 </tbody>
 </table>
@@ -316,14 +323,14 @@ PartModule:<tt class="descname">ALLFIELDS</tt><a class="headerlink" href="#attri
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLFIELDNAMES">
-PartModule:<tt class="descname">ALLFIELDNAMES</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">ALLFIELDNAMES</code><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 </tr>
 </tbody>
 </table>
@@ -332,14 +339,14 @@ PartModule:<tt class="descname">ALLFIELDNAMES</tt><a class="headerlink" href="#a
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLEVENTS">
-PartModule:<tt class="descname">ALLEVENTS</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTS" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">ALLEVENTS</code><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 </tr>
 </tbody>
 </table>
@@ -348,14 +355,14 @@ PartModule:<tt class="descname">ALLEVENTS</tt><a class="headerlink" href="#attri
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLEVENTNAMES">
-PartModule:<tt class="descname">ALLEVENTNAMES</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">ALLEVENTNAMES</code><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 </tr>
 </tbody>
 </table>
@@ -364,14 +371,14 @@ PartModule:<tt class="descname">ALLEVENTNAMES</tt><a class="headerlink" href="#a
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLACTIONS">
-PartModule:<tt class="descname">ALLACTIONS</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONS" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">ALLACTIONS</code><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 </tr>
 </tbody>
 </table>
@@ -380,14 +387,14 @@ PartModule:<tt class="descname">ALLACTIONS</tt><a class="headerlink" href="#attr
 
 <dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLACTIONNAMES">
-PartModule:<tt class="descname">ALLACTIONNAMES</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">ALLACTIONNAMES</code><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of strings</td>
 </tr>
 </tbody>
 </table>
@@ -396,7 +403,7 @@ PartModule:<tt class="descname">ALLACTIONNAMES</tt><a class="headerlink" href="#
 
 <dl class="method">
 <dt id="method:PARTMODULE:GETFIELD">
-PartModule:<tt class="descname">GETFIELD</tt><big>(</big>name<big>)</big><a class="headerlink" href="#method:PARTMODULE:GETFIELD" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">GETFIELD</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:GETFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -416,7 +423,7 @@ PartModule:<tt class="descname">GETFIELD</tt><big>(</big>name<big>)</big><a clas
 
 <dl class="method">
 <dt id="method:PARTMODULE:SETFIELD">
-PartModule:<tt class="descname">SETFIELD</tt><big>(</big>name,value<big>)</big><a class="headerlink" href="#method:PARTMODULE:SETFIELD" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">SETFIELD</code><span class="sig-paren">(</span>name,value<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:SETFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -429,12 +436,12 @@ PartModule:<tt class="descname">SETFIELD</tt><big>(</big>name,value<big>)</big><
 </tbody>
 </table>
 <p>Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.</p>
-<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></p>
+<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="method:PARTMODULE:DOEVENT">
-PartModule:<tt class="descname">DOEVENT</tt><big>(</big>name<big>)</big><a class="headerlink" href="#method:PARTMODULE:DOEVENT" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">DOEVENT</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOEVENT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -447,31 +454,31 @@ PartModule:<tt class="descname">DOEVENT</tt><big>(</big>name<big>)</big><a class
 </tbody>
 </table>
 <p>Trigger an &#8220;event button&#8221; that is on the rightclick part menu at the moment. Note the Security comments below.</p>
-<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></p>
+<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="method:PARTMODULE:DOACTION">
-PartModule:<tt class="descname">DOACTION</tt><big>(</big>name,bool<big>)</big><a class="headerlink" href="#method:PARTMODULE:DOACTION" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">DOACTION</code><span class="sig-paren">(</span>name,bool<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:DOACTION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> &#8211; (string) Name of the action</li>
-<li><strong>bool</strong> &#8211; (boolean) Value to set: True or False</li>
+<li><strong>bool</strong> &#8211; (<a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a>) Value to set: True or False</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Activate one of this PartModule&#8217;s action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The boolean value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.</p>
-<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></p>
+<p>Activate one of this PartModule&#8217;s action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The <a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a> value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.</p>
+<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="method:PARTMODULE:HASFIELD">
-PartModule:<tt class="descname">HASFIELD</tt><big>(</big>name<big>)</big><a class="headerlink" href="#method:PARTMODULE:HASFIELD" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">HASFIELD</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASFIELD" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -481,7 +488,7 @@ PartModule:<tt class="descname">HASFIELD</tt><big>(</big>name<big>)</big><a clas
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">boolean</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -491,7 +498,7 @@ PartModule:<tt class="descname">HASFIELD</tt><big>(</big>name<big>)</big><a clas
 
 <dl class="method">
 <dt id="method:PARTMODULE:HASEVENT">
-PartModule:<tt class="descname">HASEVENT</tt><big>(</big>name<big>)</big><a class="headerlink" href="#method:PARTMODULE:HASEVENT" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">HASEVENT</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASEVENT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -501,7 +508,7 @@ PartModule:<tt class="descname">HASEVENT</tt><big>(</big>name<big>)</big><a clas
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">boolean</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -511,7 +518,7 @@ PartModule:<tt class="descname">HASEVENT</tt><big>(</big>name<big>)</big><a clas
 
 <dl class="method">
 <dt id="method:PARTMODULE:HASACTION">
-PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a class="headerlink" href="#method:PARTMODULE:HASACTION" title="Permalink to this definition">¶</a></dt>
+PartModule:<code class="descname">HASACTION</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PARTMODULE:HASACTION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -521,7 +528,7 @@ PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a cla
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">boolean</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -599,15 +606,16 @@ PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a cla
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="resource.html" class="btn btn-neutral float-right" title="Resource">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="resource.html" class="btn btn-neutral float-right" title="Resource" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="part.html" class="btn btn-neutral" title="Part"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="part.html" class="btn btn-neutral" title="Part" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -616,13 +624,14 @@ PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a cla
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -637,7 +646,7 @@ PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a cla
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -646,7 +655,7 @@ PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a cla
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

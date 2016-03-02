@@ -43,7 +43,14 @@ Raw Flight Controls Reference
 These "Raw" controls allow you the direct control of flight parameters while the current program is running.
 
 .. note::
-    The ``MAINTHROTTLE`` requires active engines and, of course, sufficient and appropriate fuel. The rotational controls ``YAW``, ``PITCH`` and ``ROW`` require active reaction wheels with sufficient energy or *RCS* to be ON with properly placed thrusters and appropriate fuel. The translational controls ``FORE``, ``STARBOARD`` and ``TOP`` require *RCS* to be ON with properly placed thrusters and appropriate fuel.
+    The ``MAINTHROTTLE`` requires active engines and, of course,
+    sufficient and appropriate fuel. The rotational controls ``YAW``,
+    ``PITCH`` and ``ROW`` require one of the following: active reaction
+    wheels with sufficient energy, *RCS* to be ON with properly placed
+    thrusters and appropriate fuel, or control surfaces with an atmosphere
+    in which to operate. The translational controls ``FORE``, ``STARBOARD``
+    and ``TOP`` only work with *RCS*, and require RCS to be ON with
+    properly placed thrusters and appropriate fuel.
 
 
 .. list-table::
@@ -55,64 +62,64 @@ These "Raw" controls allow you the direct control of flight parameters while the
       - Equivalent Key
 
     * - :ref:`MAINTHROTTLE <SHIP CONTROL MAINTHROTTLE>`
-      - scalar [0,1]
+      - :ref:`scalar <scalar>` [0,1]
       - ``LEFT-CTRL``, ``LEFT-SHIFT``
 
     * - :ref:`YAW <SHIP CONTROL YAW>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``D``, ``A``
     * - :ref:`PITCH <SHIP CONTROL PITCH>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``W``, ``S``
     * - :ref:`ROLL <SHIP CONTROL ROLL>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``Q``, ``E``
     * - :ref:`ROTATION <SHIP CONTROL ROTATION>`
       - :struct:`Vector`
       - ``(YAW,PITCH,ROLL)``
 
     * - :ref:`YAWTRIM <SHIP CONTROL YAWTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+D``, ``ALT+A``
     * - :ref:`PITCHTRIM <SHIP CONTROL PITCHTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+W``, ``ALT+S``
     * - :ref:`ROLLTRIM <SHIP CONTROL ROLLTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+Q``, ``ALT+E``
 
     * - :ref:`FORE <SHIP CONTROL FORE>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``N``, ``H``
     * - :ref:`STARBOARD <SHIP CONTROL STARBOARD>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``L``, ``J``
     * - :ref:`TOP <SHIP CONTROL TOP>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``I``, ``K``
     * - :ref:`TRANSLATION <SHIP CONTROL TRANSLATION>`
       - :struct:`Vector`
       - ``(STARBOARD,TOP,FORE)``
 
     * - :ref:`WHEELSTEER <SHIP CONTROL WHEELSTEER>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``A``, ``D``
     * - :ref:`WHEELTHROTTLE <SHIP CONTROL WHEELTHROTTLE>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``W``, ``S``
 
     * - :ref:`WHEELSTEERTRIM <SHIP CONTROL WHEELSTEERTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+A``, ``ALT+D``
     * - :ref:`WHEELTHROTTLETRIM <SHIP CONTROL WHEELTHROTTLETRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+W``, ``ALT+S``
 
     * - :ref:`NEUTRAL <SHIP CONTROL NEUTRAL>`
-      - boolean
+      - :ref:`Boolean <boolean>`
       - Is **kOS** Controlling?
     * - :ref:`NEUTRALIZE <SHIP CONTROL NEUTRALIZE>`
-      - boolean
+      - :ref:`Boolean <boolean>`
       - Releases Control
 
 
@@ -136,7 +143,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL ROLL:
 .. object:: SHIP:CONTROL:ROLL
 
-    Rotation about the logintudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
+    Rotation about the longitudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
 
 .. _SHIP CONTROL ROTATION:
 .. object:: SHIP:CONTROL:ROTATION

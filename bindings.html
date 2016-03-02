@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog of Bound Variable Names &mdash; kOS 0.18.2 documentation</title>
+  <title>Catalog of Bound Variable Names &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="index.html"/>
         <link rel="up" title="General Topics" href="general.html"/>
         <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
         <link rel="prev" title="General Topics" href="general.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,39 +51,58 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="general.html">General</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Bound Variables</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Bound Variables</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
@@ -91,62 +112,20 @@
 <li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +133,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">kOS</a>
+        <a href="contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
+    <li><a href="contents.html">Docs</a> &raquo;</li>
       
           <li><a href="general.html">General Topics</a> &raquo;</li>
       
     <li>Catalog of Bound Variable Names</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/bindings.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/bindings.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="catalog-of-bound-variable-names">
 <span id="bindings"></span><h1>Catalog of Bound Variable Names<a class="headerlink" href="#catalog-of-bound-variable-names" title="Permalink to this headline">¶</a></h1>
@@ -190,21 +178,41 @@ effective kOS scripts.</p>
 <div class="section" id="named-vessels-and-bodies">
 <h2>NAMED VESSELS AND BODIES<a class="headerlink" href="#named-vessels-and-bodies" title="Permalink to this headline">¶</a></h2>
 <p>SHIP:</p>
-<div class="line-block">
-<div class="line"><strong>Variable name</strong>: SHIP</div>
-<div class="line"><strong>Gettable</strong>: yes</div>
-<div class="line"><strong>Settable</strong>: no</div>
-<div class="line"><strong>Type</strong>: <a class="reference external" href="structures/vessels/vessel.html">Vessel</a></div>
-<div class="line"><strong>Description</strong>: Whichever vessel happens to be the one containing the CPU part that is running this Kerboscript code at the moment. This is the <a class="reference external" href="general/cpu_vessel.html">CPU Vessel</a>.</div>
-</div>
+<ul class="simple">
+<li><strong>Variable name</strong>: SHIP</li>
+<li><strong>Gettable</strong>: yes</li>
+<li><strong>Settable</strong>: no</li>
+<li><strong>Type</strong>: <a class="reference external" href="structures/vessels/vessel.html">Vessel</a></li>
+<li><strong>Description</strong>: Whichever vessel happens to be the one containing the
+CPU part that is running this Kerboscript code at the moment. This is
+the <a class="reference external" href="general/cpu_vessel.html">CPU Vessel</a>.</li>
+</ul>
 <p>TARGET:</p>
-<div class="line-block">
-<div class="line"><strong>Variable Name</strong>: TARGET</div>
-<div class="line"><strong>Gettable</strong>: yes</div>
-<div class="line"><strong>Settable</strong>: yes</div>
-<div class="line"><strong>Type</strong>: <a class="reference external" href="structures/vessels/vessel.html">Vessel</a> or <a class="reference external" href="structures/celestial_bodies/body.html">Body</a></div>
-<div class="line"><strong>Description</strong>: Whichever <a class="reference external" href="structures/orbits/orbitable.html">Orbitable</a> object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targetted and set it to a vessel by that name. For best results set it to Body(&#8220;some name&#8221;) or Vessel(&#8220;some name&#8221;) explicitly.</div>
-</div>
+<ul class="simple">
+<li><strong>Variable Name</strong>: TARGET</li>
+<li><strong>Gettable</strong>: yes</li>
+<li><strong>Settable</strong>: yes</li>
+<li><strong>Type</strong>: <a class="reference external" href="structures/vessels/vessel.html">Vessel</a> or
+<a class="reference external" href="structures/celestial_bodies/body.html">Body</a></li>
+<li><strong>Description</strong>: Whichever <a class="reference external" href="structures/orbits/orbitable.html">Orbitable</a>
+object happens to be the one selected as the current KSP target. If set
+to a string, it will assume the string is the name of a vessel being
+targeted and set it to a vessel by that name. For best results set it
+to Body(&#8220;some name&#8221;) or Vessel(&#8220;some name&#8221;) explicitly.  This will
+throw an exception if called from a vessel other than the active vessel,
+as limitations in how KSP sets the target vessel limit the
+implementation to working with only the active vessel.</li>
+</ul>
+<p id="hastarget">HASTARGET:</p>
+<ul class="simple">
+<li><strong>Variable Name</strong>: TARGET</li>
+<li><strong>Gettable</strong>: yes</li>
+<li><strong>Settable</strong>: no</li>
+<li><strong>Type</strong>: boolean</li>
+<li><strong>Description</strong>: Will return true if the ship has a target selected.
+This will always return false when not on the active vessel, due to
+limitations in how KSP sets the target vessel.</li>
+</ul>
 </div>
 <div class="section" id="alias-shortcuts-for-ship-fields">
 <h2>Alias shortcuts for SHIP fields<a class="headerlink" href="#alias-shortcuts-for-ship-fields" title="Permalink to this headline">¶</a></h2>
@@ -269,26 +277,20 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 <tr class="row-even"><td>ANGULARVELOCITY</td>
 <td>Same as SHIP:ANGULARVEL</td>
 </tr>
-<tr class="row-odd"><td>COMMRANGE</td>
-<td>Same as SHIP:COMMRANGE</td>
-</tr>
-<tr class="row-even"><td>MASS</td>
+<tr class="row-odd"><td>MASS</td>
 <td>Same as SHIP:MASS</td>
 </tr>
-<tr class="row-odd"><td>VERTICALSPEED</td>
+<tr class="row-even"><td>VERTICALSPEED</td>
 <td>Same as SHIP:VERTICALSPEED</td>
 </tr>
-<tr class="row-even"><td>GROUNDSPEED</td>
+<tr class="row-odd"><td>GROUNDSPEED</td>
 <td>Same as SHIP:GROUNDSPEED</td>
 </tr>
-<tr class="row-odd"><td>SURFACESPEED</td>
+<tr class="row-even"><td>SURFACESPEED</td>
 <td>This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.</td>
 </tr>
-<tr class="row-even"><td>AIRSPEED</td>
+<tr class="row-odd"><td>AIRSPEED</td>
 <td>Same as SHIP:AIRSPEED</td>
-</tr>
-<tr class="row-odd"><td>VESSELNAME</td>
-<td>Same as SHIP:VESSELNAME</td>
 </tr>
 <tr class="row-even"><td>ALTITUDE</td>
 <td>Same as SHIP:ALTITUDE</td>
@@ -323,62 +325,73 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 <div class="section" id="constants-pi-e-etc">
 <h2>Constants (pi, e, etc)<a class="headerlink" href="#constants-pi-e-etc" title="Permalink to this headline">¶</a></h2>
 <p>Get-only.</p>
-<p>The variable <tt class="docutils literal"><span class="pre">constant</span></tt> provides a way to access a few
-<a class="reference internal" href="math/basic.html#constants"><em>basic math and physics constants</em></a>, such as Pi, Euler&#8217;s
+<p>The variable <code class="docutils literal"><span class="pre">constant</span></code> provides a way to access a few
+<a class="reference internal" href="math/basic.html#constants"><span>basic math and physics constants</span></a>, such as Pi, Euler&#8217;s
 number, and so on.</p>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;Kerbin&#39;s circumference: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">constant</span><span class="o">:</span><span class="n">pi</span><span class="o">*</span><span class="n">Kerbin</span><span class="o">:</span><span class="n">radius</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;meters.&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;Kerbin&#39;s circumference: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mf">2</span><span class="o">*</span><span class="nv">constant</span><span class="p">:</span><span class="nv">pi</span><span class="o">*</span><span class="nv">Kerbin</span><span class="p">:</span><span class="nv">radius</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;meters.&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The full list is here: <a class="reference internal" href="math/basic.html#constants"><em>constants page</em></a>.</p>
+<p>The full list is here: <a class="reference internal" href="math/basic.html#constants"><span>constants page</span></a>.</p>
 </div>
 <div class="section" id="terminal">
 <h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h2>
-<p>Get-only. <tt class="docutils literal"><span class="pre">terminal</span></tt> returns a <a class="reference internal" href="structures/misc/terminal.html#structure:TERMINAL" title="TERMINAL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">terminal</span></tt></a> structure describing
+<p>Get-only. <code class="docutils literal"><span class="pre">terminal</span></code> returns a <a class="reference internal" href="structures/misc/terminal.html#structure:TERMINAL" title="TERMINAL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">terminal</span></code></a> structure describing
 the attributes of the current terminal screen associated with the
 CPU this script is running on.</p>
 </div>
 <div class="section" id="core">
 <h2>Core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h2>
-<p>Get-only. <tt class="docutils literal"><span class="pre">core</span></tt> returns a <a class="reference internal" href="structures/core.html#structure:CORE" title="CORE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">core</span></tt></a> structure referring to the CPU you
+<p>Get-only. <code class="docutils literal"><span class="pre">core</span></code> returns a <a class="reference internal" href="structures/core.html#structure:CORE" title="CORE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">core</span></code></a> structure referring to the CPU you
 are running on.</p>
+</div>
+<div class="section" id="archive">
+<h2>Archive<a class="headerlink" href="#archive" title="Permalink to this headline">¶</a></h2>
+<p>Get-only. <code class="docutils literal"><span class="pre">archive</span></code> returns a <a class="reference internal" href="structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a> structure referring to the archive.
+You can read more about what archive is on the <a class="reference internal" href="general/volumes.html#volumes"><span>File &amp; volumes</span></a> page.</p>
 </div>
 <div class="section" id="stage">
 <h2>Stage<a class="headerlink" href="#stage" title="Permalink to this headline">¶</a></h2>
-<p>Get-only. <tt class="docutils literal"><span class="pre">stage</span></tt> returns a <a class="reference internal" href="structures/vessels/stage.html#structure:STAGE" title="STAGE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">stage</span></tt></a> structure used to count resources
+<p>Get-only. <code class="docutils literal"><span class="pre">stage</span></code> returns a <a class="reference internal" href="structures/vessels/stage.html#structure:STAGE" title="STAGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">stage</span></code></a> structure used to count resources
 in the current stage.  Not to be confused with the COMMAND stage
 which triggers the next stage.</p>
 </div>
 <div class="section" id="nextnode">
 <h2>NextNode<a class="headerlink" href="#nextnode" title="Permalink to this headline">¶</a></h2>
-<p>Get-only. <tt class="docutils literal"><span class="pre">nextnode</span></tt> returns the next planned manuever <tt class="xref ks ks-struct docutils literal"><span class="pre">node</span></tt> in the SHIP&#8217;s flight plan.  Bombs out if no such node exists.</p>
+<p>Get-only. <code class="docutils literal"><span class="pre">nextnode</span></code> returns the next planned maneuver <code class="xref ks ks-struct docutils literal"><span class="pre">node</span></code> in the SHIP&#8217;s flight plan.  Will throw an exception if
+no node exists, or if called on a ship that is not the active vessel.</p>
+</div>
+<div class="section" id="hasnode">
+<span id="id1"></span><h2>HasNode<a class="headerlink" href="#hasnode" title="Permalink to this headline">¶</a></h2>
+<p>Get-only. <code class="docutils literal"><span class="pre">hasnode</span></code> returns true if there is a planned maneuver <code class="xref ks ks-struct docutils literal"><span class="pre">node</span></code> in the SHIP&#8217;s flight plan.  This will always return
+false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.</p>
 </div>
 <div class="section" id="resource-types">
 <h2>Resource Types<a class="headerlink" href="#resource-types" title="Permalink to this headline">¶</a></h2>
 <p>Any time there is a resource on the ship it can be queried. The
 resources are the values that appear when you click on the upper-right
 corner of the screen in the KSP window. <img alt="Resources" src="_images/resources.png" /></p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LIQUIDFUEL</span>
-<span class="n">OXIDIZER</span>
-<span class="n">ELECTRICCHARGE</span>
-<span class="n">MONOPROPELLANT</span>
-<span class="n">INTAKEAIR</span>
-<span class="n">SOLIDFUEL</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">LIQUIDFUEL</span>
+<span class="nv">OXIDIZER</span>
+<span class="nv">ELECTRICCHARGE</span>
+<span class="nv">MONOPROPELLANT</span>
+<span class="nv">INTAKEAIR</span>
+<span class="nv">SOLIDFUEL</span>
 </pre></div>
 </div>
 <p>All of the above resources can be queried using either the prefix SHIP
 or STAGE, depending on whether you are trying to query how much is left
 in the current stage or the entire ship:</p>
 <p>How much liquid fuel is left in the entire ship:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel on the ship.&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel on the ship.&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>How much liquid fuel is left in just the current stage:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">STAGE</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel in this stage.&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel in this stage.&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>How much liquid fuel is left in the target vessel:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">TARGET</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel in the target ship.&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="nv">TARGET</span><span class="p">:</span><span class="nv">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel in the target ship.&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Any other resources that you have added using other mods should be
@@ -409,9 +422,9 @@ access to a few time predictions:</p>
 <p>The orbit patch describing the next encounter with a body the current
 vessel will enter. If there is no such encounter coming, it will return
 the special string &#8220;None&#8221;.  If there is an encounter coming, it will
-return an object <a class="reference internal" href="structures/orbits/orbit.html#orbit"><em>of type Orbit</em></a>.  (i.e. to obtain the name
+return an object <a class="reference internal" href="structures/orbits/orbit.html#orbit"><span>of type Orbit</span></a>.  (i.e. to obtain the name
 of the planet the encounter is with, you can do:
-<tt class="docutils literal"><span class="pre">print</span> <span class="pre">ENCOUNTER:BODY:NAME.</span></tt>, for example.).</p>
+<code class="docutils literal"><span class="pre">print</span> <span class="pre">ENCOUNTER:BODY:NAME.</span></code>, for example.).</p>
 </div>
 <div class="section" id="boolean-toggle-fields">
 <h2>BOOLEAN TOGGLE FIELDS:<a class="headerlink" href="#boolean-toggle-fields" title="Permalink to this headline">¶</a></h2>
@@ -561,16 +574,31 @@ autopilot take them under advisement - sort of like how a
 fly-by-wire plane works.)</p>
 <div class="section" id="controls-that-must-be-used-with-lock">
 <h3>Controls that must be used with LOCK<a class="headerlink" href="#controls-that-must-be-used-with-lock" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">THROTTLE</span>            <span class="c1">// Lock to a decimal value between 0 and 1.</span>
-<span class="n">STEERING</span>            <span class="c1">// Lock to a direction, either a Vector or a Direction.</span>
-<span class="n">WHEELTHROTTLE</span>       <span class="c1">// Separate throttle for wheels</span>
-<span class="n">WHEELSTEERING</span>       <span class="c1">// Separate steering system for wheels</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">THROTTLE</span>            <span class="c1">// Lock to a decimal value between 0 and 1.</span>
+<span class="nv">STEERING</span>            <span class="c1">// Lock to a direction, either a Vector or a Direction.</span>
+<span class="nv">WHEELTHROTTLE</span>       <span class="c1">// Separate throttle for wheels</span>
+<span class="nv">WHEELSTEERING</span>       <span class="c1">// Separate steering system for wheels</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="time">
 <h2>Time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="missiontime">
+<h3>MISSIONTIME<a class="headerlink" href="#missiontime" title="Permalink to this headline">¶</a></h3>
+<p>You can obtain the number of seconds it has been since the current
+CPU vessel has been launched with the bound global variable
+<code class="docutils literal"><span class="pre">MISSIONTIME</span></code>.  In real space programs this is referred to usually
+as &#8220;MET&#8221; - Mission Elapsed Time, and it&#8217;s what&#8217;s being measured when
+you hear that familiar voice saying &#8220;T minus 10 seconds...&#8221;  Point &#8220;T&#8221;
+is the zero point of the mission elapsed time, and everything before that
+is a negative number and everything after it is a positive number.
+kOS is only capable of returning the &#8220;T+&#8221; times, not the &#8220;T-&#8221; times,
+because it doesn&#8217;t read your mind to know ahead of time when you plan
+to launch.</p>
+</div>
+<div class="section" id="time-structure">
+<h3>Time Structure<a class="headerlink" href="#time-structure" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="structures/misc/time.html">Time</a> is the simulated amount of time that passed since the beginning of the game&#8217;s universe epoch. (A brand new campaign that just started begins at TIME zero.)</p>
 <p>TIME is a useful system variable for calculating the passage of time
 between taking
@@ -593,6 +621,7 @@ is what TIME returns.</p>
 nature</a> of the kOS
 computer when reading TIME.</p>
 </div>
+</div>
 <div class="section" id="system-variables">
 <h2>System Variables<a class="headerlink" href="#system-variables" title="Permalink to this headline">¶</a></h2>
 <p>This section is about variables that describe the things that are slightly
@@ -600,11 +629,11 @@ outside the simulated universe of the game and are more about
 the game&#8217;s user interface or the kOS mod itself.  They represent things
 that slightly &#8220;break the fourth wall&#8221; and let your script access
 something entirely outside the in-character experience.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. e.g. 0.8.6</span>
-<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0</span>
-<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 8</span>
-<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">BUILD</span><span class="p">.</span>      <span class="c1">// Returns build version number. e.g. 6</span>
-<span class="n">PRINT</span> <span class="n">SESSIONTIME</span><span class="p">.</span>        <span class="c1">// Returns amount of time, in seconds, from vessel load.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. e.g. 0.8.6</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 8</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">BUILD</span><span class="p">.</span>      <span class="c1">// Returns build version number. e.g. 6</span>
+<span class="k">PRINT</span> <span class="nv">SESSIONTIME</span><span class="p">.</span>        <span class="c1">// Returns amount of time, in seconds, from vessel load.</span>
 </pre></div>
 </div>
 <p>NOTE the following important difference:</p>
@@ -613,6 +642,13 @@ on-rails into full physics.</p>
 <p>TIME is the time since the entire saved game campaign started, in the
 kerbal universe&#8217;s time. i.e. TIME = 0 means a brand new campaign was
 just started.</p>
+<div class="section" id="kuniverse">
+<h3>KUNIVERSE<a class="headerlink" href="#kuniverse" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/misc/kuniverse.html#kuniverse"><span>Kuniverse</span></a> is a structure that contains many settings that
+break the fourth wall a little bit and control the game simulation directly.
+The eventual goal is probably to move many of the variables you see listed
+below into <code class="docutils literal"><span class="pre">kuniverse</span></code>.</p>
+</div>
 <div class="section" id="config">
 <h3>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h3>
 <p>CONFIG is a special variable name that refers to the configuration
@@ -624,7 +660,7 @@ details.</p>
 <div class="section" id="warp-and-warpmode">
 <h3>WARP and WARPMODE<a class="headerlink" href="#warp-and-warpmode" title="Permalink to this headline">¶</a></h3>
 <p>Time warp can be controlled with the variables
-WARP and WARPMODE.  See <a class="reference internal" href="commands/flight/warp.html#warp"><em>WARP</em></a></p>
+WARP and WARPMODE.  See <a class="reference internal" href="commands/flight/warp.html#warp"><span>WARP</span></a></p>
 </div>
 <div class="section" id="mapview">
 <h3>MAPVIEW<a class="headerlink" href="#mapview" title="Permalink to this headline">¶</a></h3>
@@ -644,11 +680,11 @@ universally for all situations.</p>
 </div>
 </div>
 <div class="section" id="solarprimevector">
-<span id="id1"></span><h2>SOLARPRIMEVECTOR<a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h2>
-<p>Gives the Prime Meridian <a class="reference internal" href="math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> for the Solar System itself, in
+<span id="id2"></span><h2>SOLARPRIMEVECTOR<a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h2>
+<p>Gives the Prime Meridian <a class="reference internal" href="math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> for the Solar System itself, in
 current Ship-Raw XYZ coordinates.</p>
-<p>Both the <a class="reference internal" href="structures/orbits/orbit.html#attribute:ORBIT:LONGITUDEOFASCENDINGNODE" title="ORBIT:LONGITUDEOFASCENDINGNODE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Orbit:LONGITUDEOFASCENDINGNODE</span></tt></a> orbit suffix and the
-<a class="reference internal" href="structures/celestial_bodies/body.html#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Body:ROTATIONANGLE</span></tt></a> body suffix are expressed in terms of
+<p>Both the <a class="reference internal" href="structures/orbits/orbit.html#attribute:ORBIT:LONGITUDEOFASCENDINGNODE" title="ORBIT:LONGITUDEOFASCENDINGNODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Orbit:LONGITUDEOFASCENDINGNODE</span></code></a> orbit suffix and the
+<a class="reference internal" href="structures/celestial_bodies/body.html#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Body:ROTATIONANGLE</span></code></a> body suffix are expressed in terms of
 degree offsets from this <em>Prime Meridian Reference Vector</em>.</p>
 <div class="section" id="what-is-the-solar-prime-reference-vector">
 <h3>What is the Solar Prime Reference Vector?<a class="headerlink" href="#what-is-the-solar-prime-reference-vector" title="Permalink to this headline">¶</a></h3>
@@ -669,25 +705,26 @@ point in the firmament, also known as the &#8220;skybox&#8221;.</p>
 </div>
 <div class="section" id="addons">
 <h2>Addons<a class="headerlink" href="#addons" title="Permalink to this headline">¶</a></h2>
-<p>Get-only.  <tt class="docutils literal"><span class="pre">addons</span></tt> is a special variable used to access various extensions
-to kOS that are designed to support the features introduced by some other mods.  More info can be found on the <a class="reference internal" href="addons.html#addons"><em>addons</em></a> page.</p>
+<p>Get-only.  <code class="docutils literal"><span class="pre">addons</span></code> is a special variable used to access various extensions
+to kOS that are designed to support the features introduced by some other mods.  More info can be found on the <a class="reference internal" href="addons.html#addons"><span>addons</span></a> page.</p>
 </div>
 <div class="section" id="colors">
 <h2>Colors<a class="headerlink" href="#colors" title="Permalink to this headline">¶</a></h2>
-<p>There are several bound variables associated with <a class="reference internal" href="structures/misc/colors.html#colors"><em>hardcoded colors</em></a> such as WHITE, BLACK, RED, etc.  See the linked page for the full list.</p>
+<p>There are several bound variables associated with <a class="reference internal" href="structures/misc/colors.html#colors"><span>hardcoded colors</span></a> such as WHITE, BLACK, RED, etc.  See the linked page for the full list.</p>
 </div>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="general/cpu_vessel.html" class="btn btn-neutral float-right" title="CPU Vessel (SHIP)">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="general/cpu_vessel.html" class="btn btn-neutral float-right" title="CPU Vessel (SHIP)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="general.html" class="btn btn-neutral" title="General Topics"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="general.html" class="btn btn-neutral" title="General Topics" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -696,13 +733,14 @@ to kOS that are designed to support the features introduced by some other mods. 
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -717,7 +755,7 @@ to kOS that are designed to support the features introduced by some other mods. 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -726,7 +764,7 @@ to kOS that are designed to support the features introduced by some other mods. 
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

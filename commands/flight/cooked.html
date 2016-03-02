@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Cooked Control &mdash; kOS 0.18.2 documentation</title>
+  <title>Cooked Control &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Raw Control" href="raw.html"/>
         <link rel="prev" title="Flight Control" href="../flight.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,67 +51,65 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../commands.html">Commands</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Cooked Control</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="raw.html">Raw Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pilot.html">Pilot Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="systems.html">Ship Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp.html">Time Warping</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../prediction.html">Prediction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
@@ -119,34 +119,17 @@
 <li class="toctree-l2"><a class="reference internal" href="../processors.html">Processors</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,16 +137,22 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">kOS</a>
+        <a href="../../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../../commands.html">Command Reference</a> &raquo;</li>
       
@@ -172,87 +161,216 @@
     <li>Cooked Control</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/commands/flight/cooked.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../../_sources/commands/flight/cooked.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="cooked-control">
 <span id="cooked"></span><h1>Cooked Control<a class="headerlink" href="#cooked-control" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#unlocking-controls" id="id1">Unlocking controls</a></li>
-<li><a class="reference internal" href="#tuning-cooked-steering" id="id2">Tuning cooked steering</a></li>
-<li><a class="reference internal" href="#advantages-disadvantages" id="id3">Advantages/Disadvantages</a></li>
+<li><a class="reference internal" href="#the-special-lock-variables-for-cooked-steering" id="id1">The special LOCK variables for cooked steering</a></li>
+<li><a class="reference internal" href="#cannot-wait-during-cooked-control-calculation" id="id2">Cannot &#8216;WAIT&#8217; during cooked control calculation</a></li>
+<li><a class="reference internal" href="#unlocking-controls" id="id3">Unlocking controls</a></li>
+<li><a class="reference internal" href="#tuning-cooked-steering" id="id4">Tuning cooked steering</a></li>
+<li><a class="reference internal" href="#advantages-disadvantages" id="id5">Advantages/Disadvantages</a></li>
 </ul>
 </div>
-<p>For more information, check out the documentation for the <a class="reference internal" href="../../structures/misc/steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></tt></a> structure.</p>
+<p>For more information, check out the documentation for the <a class="reference internal" href="../../structures/misc/steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a> structure.</p>
 <p>In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:</p>
+<div class="section" id="the-special-lock-variables-for-cooked-steering">
+<h2><a class="toc-backref" href="#id1">The special LOCK variables for cooked steering</a><a class="headerlink" href="#the-special-lock-variables-for-cooked-steering" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="lock-throttle"></span><dl class="object">
 <dt>
-<tt class="descname">LOCK THROTTLE TO value.</tt></dt>
-<dd><p>This sets the main throttle of the ship to <em>value</em>. Where <em>value</em> is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.</p>
+<code class="descname">LOCK THROTTLE TO expression. // value range [0.0 .. 1.0]</code></dt>
+<dd><p>This sets the main throttle of the ship to <em>expression</em>. Where <em>expression</em> is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.</p>
+<p>The expression used in this statement can be any formula and can
+call your own user functions.  Just make sure it returns a value
+in the range [0..1].</p>
 </dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+LOCK THROTTLE.  See the note in the next section below.</p>
+</div>
 <span class="target" id="lock-steering"></span><dl class="object">
 <dt>
-<tt class="descname">LOCK STEERING TO value.</tt></dt>
-<dd><p>This sets the direction <strong>kOS</strong> should point the ship where <em>value</em> is a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> or a <a class="reference internal" href="../../math/direction.html#direction"><em>Direction</em></a> created from a <a class="reference internal" href="../../math/direction.html#rotation"><em>Rotation</em></a> or <a class="reference internal" href="../../math/direction.html#heading"><em>Heading</em></a>:</p>
+<code class="descname">LOCK STEERING TO expression.</code></dt>
+<dd><p>This sets the direction <strong>kOS</strong> should point the ship where <em>expression</em> is a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../../math/direction.html#direction"><span>Direction</span></a> created from a <a class="reference internal" href="../../math/direction.html#rotation"><span>Rotation</span></a> or <a class="reference internal" href="../../math/direction.html#heading"><span>Heading</span></a>:</p>
 <blockquote>
-<div><p><a class="reference internal" href="../../math/direction.html#rotation"><em>Rotation</em></a></p>
+<div><p><a class="reference internal" href="../../math/direction.html#rotation"><span>Rotation</span></a></p>
 <blockquote>
-<div><p>A Rotation expressed as <tt class="docutils literal"><span class="pre">R(pitch,yaw,roll)</span></tt>. Note that pitch, yaw and roll are not based on the horizon, but based on an internal coordinate system used by <strong>KSP</strong> that is hard to use. Thankfully, you can force the rotation into a sensible frame of reference by adding a rotation to a known direction first.</p>
+<div><p>A Rotation expressed as <code class="docutils literal"><span class="pre">R(pitch,yaw,roll)</span></code>. Note that pitch, yaw and roll are not based on the horizon, but based on an internal coordinate system used by <strong>KSP</strong> that is hard to use. Thankfully, you can force the rotation into a sensible frame of reference by adding a rotation to a known direction first.</p>
 <p>To select a direction that is 20 degrees off from straight up:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">Up</span> <span class="o">+</span> <span class="n">R</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">Up</span> <span class="o">+</span> <span class="nv">R</span><span class="p">(</span><span class="mf">20</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>To select a direction that is due east, aimed at the horizon:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">North</span> <span class="o">+</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">North</span> <span class="o">+</span> <span class="nv">R</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">90</span><span class="p">,</span><span class="mf">0</span><span class="p">).</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">UP</span></tt> and <tt class="docutils literal"><span class="pre">NORTH</span></tt> are the only two predefined rotations.</p>
+<p><code class="docutils literal"><span class="pre">UP</span></code> and <code class="docutils literal"><span class="pre">NORTH</span></code> are the only two predefined rotations.</p>
 </div></blockquote>
-<p><a class="reference internal" href="../../math/direction.html#heading"><em>Heading</em></a></p>
+<p><a class="reference internal" href="../../math/direction.html#heading"><span>Heading</span></a></p>
 <blockquote>
-<div><p>A heading expressed as <tt class="docutils literal"><span class="pre">HEADING(compass,</span> <span class="pre">pitch)</span></tt>. This will aim 30 degrees above the horizon, due south:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">30</span><span class="p">).</span>
+<div><p>A heading expressed as <code class="docutils literal"><span class="pre">HEADING(compass,</span> <span class="pre">pitch)</span></code>. This will aim 30 degrees above the horizon, due south:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">180</span><span class="p">,</span> <span class="mf">30</span><span class="p">).</span>
 </pre></div>
 </div>
 </div></blockquote>
-<p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></p>
+<p><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></p>
 <blockquote>
 <div><p>Any vector can also be used to lock steering:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">100</span><span class="p">,</span><span class="mf">50</span><span class="p">,</span><span class="mf">10</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Note that the internal coordinate system for <tt class="docutils literal"><span class="pre">(X,Y,Z)</span></tt> is quite complex to explain. To aim in the opposite of the surface velocity direction:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="p">.</span>
+<p>Note that the internal coordinate system for <code class="docutils literal"><span class="pre">(X,Y,Z)</span></code> is quite complex to explain. To aim in the opposite of the surface velocity direction:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>The following aims at a vector which is the cross product of velocity and direction down to the SOI planet - in other words, it aims at the &#8220;normal&#8221; direction to the orbit:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">VCRS</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span><span class="p">,</span> <span class="n">BODY</span><span class="o">:</span><span class="n">POSITION</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">VCRS</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">ORBIT</span><span class="p">,</span> <span class="nv">BODY</span><span class="p">:</span><span class="nv">POSITION</span><span class="p">).</span>
 </pre></div>
 </div>
 </div></blockquote>
 </div></blockquote>
 </dd></dl>
 
-<p>Like all <tt class="docutils literal"><span class="pre">LOCK</span></tt> expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other <tt class="docutils literal"><span class="pre">LOCK</span></tt> expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other <tt class="docutils literal"><span class="pre">LOCK</span></tt> expressions only get executed when you try to read the value of the variable. The reason is that the <strong>kOS</strong> computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.</p>
+<p>Like all <code class="docutils literal"><span class="pre">LOCK</span></code> expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other <code class="docutils literal"><span class="pre">LOCK</span></code> expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other <code class="docutils literal"><span class="pre">LOCK</span></code> expressions only get executed when you try to read the value of the variable. The reason is that the <strong>kOS</strong> computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+LOCK STEERING.  See the note in the next section below.</p>
+</div>
+<span class="target" id="lock-wheelthrottle"></span><dl class="object">
+<dt>
+<code class="descname">LOCK WHEELTHROTTLE TO expression. // value range [-1.0 .. 1.0]</code></dt>
+<dd><p><strong>(For Rovers)</strong> This is used to control the throttle that is used when
+driving a wheeled vehicle on the ground.  It is an entirely independent
+control from the flight throttle used with <code class="docutils literal"><span class="pre">LOCK</span> <span class="pre">THROTTLE</span></code> above.
+It is analogous to holding the &#8216;W&#8217; (value of +1) or &#8216;S&#8217; (value of -1)
+key when driving a rover manually under default keybindings.</p>
+<p><code class="docutils literal"><span class="pre">WHEELTHROTTLE</span></code> allows you to set
+a negative value, up to -1.0, while <code class="docutils literal"><span class="pre">THROTTLE</span></code> can&#8217;t go below zero.
+A negative value means you are trying to accelerate in reverse.</p>
+<p>Unlike trying to drive manually, using <code class="docutils literal"><span class="pre">WHEELTHROTTLE</span></code> in kOS does
+not cause the torque wheels to engage as well.  In stock KSP using
+the &#8216;W&#8217; or &#8216;S&#8217; keys on a rover engages both the wheel driving AND the
+torque wheel rotational power.  In kOS those two features are
+done independently.</p>
+<p>The expression used in this statement can be any formula and can
+call your own user functions.  Just make sure it returns a value
+in the range [0..1].</p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+LOCK WHEELTHROTTLE.  See the note in the next section below.</p>
+</div>
+<span class="target" id="lock-wheelsteering"></span><dl class="object">
+<dt>
+<code class="descname">LOCK WHEELSTEERING TO expression.</code></dt>
+<dd><p><strong>(For Rovers)</strong> This is used to tell the rover&#8217;s cooked steering
+where to go.  The rover&#8217;s cooked steering doesn&#8217;t use nearly as
+sophisticated a PID control system as the flight cooked steering
+does, but it does usually get the job done, as driving has more
+physical effects that help dampen the steering down automatically.</p>
+<p>There are 3 kinds of value understood by WHEELSTEERING:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> - If you lock wheelsteering to a
+<code class="xref ks ks-struct docutils literal"><span class="pre">GetCoordinates</span></code>, that will mean the rover will try to steer in
+whichever compass direction will aim at that location.</li>
+<li><a class="reference internal" href="../../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> - If you try to lock wheelsteering to a vessel,
+that will mean the rover will try to steer in whichever compass
+direction will aim at that vessel.  The vessel being aimed at
+does not need to be landed.  If it is in the sky, the rover will
+attempt to aim at a location directly underneath it on the ground.</li>
+<li><em>Scalar Number</em> - If you try to lock wheelsteering to just a plain
+scalar number, that will mean the rover will try to aim at that
+compass heading.  For example <code class="docutils literal"><span class="pre">lock</span> <span class="pre">wheelsteering</span> <span class="pre">to</span> <span class="pre">45.</span></code> will
+try to drive the rover northeast.</li>
+</ul>
+<p>For more precise control over steering, you can use raw steering to
+just directly tell the rover to yaw left and right as it drives and
+that will translate into wheel steering provided the vessel is landed
+and you have a probe core aiming the right way.</p>
+<p><strong>A warning about WHEELSTEERING and vertically mounted probe cores</strong>:</p>
+<p>If you built your rover in such a way that the probe core controlling it
+is stack-mounted facing up at the sky when the rover is driving, that
+will confuse the <code class="docutils literal"><span class="pre">lock</span> <span class="pre">WHEELSTEERING</span></code> cooked control mechanism.  This
+is a common building pattern for KSP players and it seems to work okay
+when driving manually, but when driving by a kOS script, the fact that
+the vessel&#8217;s facing is officially pointing up at the sky causes it to
+get confused.  If you notice that your rover tends to drive in the
+correct direction only when on a flat or slight downslope, but then
+turns around and around in circles when driving toward the target
+requires going up a slope, then this may be exactly what&#8217;s happening.
+When it tilted back, the &#8216;forward&#8217; vector aiming up at the sky started
+pointing behind it, and the cooked steering thought the rover was
+aimed in the opposite direction to the way it was really going.
+To fix this problem, either mount your rover probe core facing the
+front of the rover, or perform a &#8220;control from here&#8221; on some forward
+facing docking port or something like that to get it to stop thinking
+of the sky as &#8220;forward&#8221;.</p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+LOCK WHEELSTEERING.  See the note in the next section below.</p>
+</div>
+</div>
+<div class="section" id="cannot-wait-during-cooked-control-calculation">
+<h2><a class="toc-backref" href="#id2">Cannot &#8216;WAIT&#8217; during cooked control calculation</a><a class="headerlink" href="#cannot-wait-during-cooked-control-calculation" title="Permalink to this headline">¶</a></h2>
+<p>Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
+WHEELTHROTTLE, and LOCK WHEELSTEERING cause your expression
+to be calculated every single physics update tick behind
+the scenes, you cannot execute a <code class="docutils literal"><span class="pre">WAIT</span></code> command during
+the evaluation of the value used in them.</p>
+<p>For example, if you attempt this:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">get_throttle</span> <span class="p">{</span>
+    <span class="k">wait</span> <span class="mf">1</span><span class="p">.</span>  <span class="c1">// this line won&#39;t work.</span>
+    <span class="k">return</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span>
+<span class="p">}</span>
+<span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="nv">get_throttle</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>Then the <code class="docutils literal"><span class="pre">WAIT</span></code> command won&#8217;t work.  You can&#8217;t make the
+system pause execution while it&#8217;s trying to run the
+expression that tells it what to do 25 times a second.</p>
+<p>The entire expression that you LOCK any of the four cooked
+controls to must execute and finish quickly enough that it can
+be called 25 times a second (on typical default game settings
+that&#8217;s how often the steering manager will run your expression).</p>
+<p>Normally when you use a LOCK command, the expression is only evaluated
+when it needs to be by some other part of the script that is trying
+to read the value.  But with these special cooked control locks,
+remember that the kOS system <em>itself</em> will query the value repeatedly
+in the background so it knows how to adjust the piloting.  Unlike
+normal LOCKs, these LOCKs will be executed again and again even when
+you&#8217;re not explicitly trying to get their values.</p>
+</div>
 <div class="section" id="unlocking-controls">
-<h2><a class="toc-backref" href="#id1">Unlocking controls</a><a class="headerlink" href="#unlocking-controls" title="Permalink to this headline">¶</a></h2>
-<p>If you <tt class="docutils literal"><span class="pre">LOCK</span></tt> the <tt class="docutils literal"><span class="pre">THROTTLE</span></tt> or <tt class="docutils literal"><span class="pre">STEERING</span></tt>, be aware that this prevents the user from manually controlling them. Until they unlock, the manual controls are prevented from working. You can free up the controls by issuing these two commands:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">UNLOCK</span> <span class="n">STEERING</span><span class="p">.</span>
-<span class="n">UNLOCK</span> <span class="n">THROTTLE</span><span class="p">.</span>
+<h2><a class="toc-backref" href="#id3">Unlocking controls</a><a class="headerlink" href="#unlocking-controls" title="Permalink to this headline">¶</a></h2>
+<p>If you <code class="docutils literal"><span class="pre">LOCK</span></code> the <code class="docutils literal"><span class="pre">THROTTLE</span></code> or <code class="docutils literal"><span class="pre">STEERING</span></code>, be aware that this prevents the user from manually controlling them. Until they unlock, the manual controls are prevented from working. You can free up the controls by issuing these two commands:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">UNLOCK</span> <span class="nv">STEERING</span><span class="p">.</span>
+<span class="k">UNLOCK</span> <span class="nv">THROTTLE</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>When the program ends, these automatically unlock as well, which means that to control a craft you must make sure the program doesn&#8217;t end. The moment it ends it lets go of the controls.</p>
 </div>
 <div class="section" id="tuning-cooked-steering">
-<span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id2">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this headline">¶</a></h2>
+<span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id4">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this headline">¶</a></h2>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.18.0: </span>Version 0.18 of kOS completely gutted the internals of the old steering
 system and replaced them with the system described below.  Anything
@@ -267,7 +385,7 @@ scratch, while entirely possible with kOS, might be unnecessary if all
 you really want to do is just make the cooked steering behave slightly
 differently.</p>
 <p>The adjustments described below all come from the
-<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><em>SteeringManager</em></a> structure, which
+<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> structure, which
 has its own detailed documentation page.</p>
 <div class="section" id="some-simple-suggestions-to-try-fixing-common-problems">
 <h3>Some simple suggestions to try fixing common problems<a class="headerlink" href="#some-simple-suggestions-to-try-fixing-common-problems" title="Permalink to this headline">¶</a></h3>
@@ -338,7 +456,7 @@ actually do.</p>
 <p>If you don&#8217;t know what a PID controller is and want to learn more, you can
 read numerous descriptions of the concept on the internet that can be found
 in moments by a web search.  If you just want to know a two minute explanation
-for the sake of tuing the cooked steering a bit, read on.</p>
+for the sake of tuning the cooked steering a bit, read on.</p>
 </div>
 <div class="section" id="quick-and-dirty-description-of-a-pid-controller">
 <h3>Quick and Dirty description of a PID controller<a class="headerlink" href="#quick-and-dirty-description-of-a-pid-controller" title="Permalink to this headline">¶</a></h3>
@@ -357,12 +475,12 @@ its instructions of where to set the control lever, learns how to fine
 tune its commands about how to set the lever to get the measurement to
 settle on the value you asked for.</p>
 <p>A more complex discussion of PID controllers than that is outside the
-scope of this document, but you can check out <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><em>the PID Loop tutorial.</em></a></p>
+scope of this document, but you can check out <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span>the PID Loop tutorial.</span></a></p>
 </div>
 <div class="section" id="cooked-steering-s-use-of-pid-controllers">
 <h3>Cooked Steering&#8217;s use of PID controllers<a class="headerlink" href="#cooked-steering-s-use-of-pid-controllers" title="Permalink to this headline">¶</a></h3>
 <p>kOS&#8217;s cooked steering uses two nested PID controllers per axis of rotation:</p>
-<div class="highlight-c"><div class="highlight"><pre>Seek direction   Current Direction Measurement
+<div class="highlight-none"><div class="highlight"><pre><span></span>Seek direction   Current Direction Measurement
     |                |
     |                |
    \|/              \|/
@@ -405,7 +523,7 @@ on the control indicator meters in the lower-left of the screen).
 versus the direction the ship is meant to be pointed, and uses the offset
 between the two to decide how to set the desired rotational velocity (rate
 at which the angle is changing).</p>
-<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><em>SteeringManager</em></a> allow direct
+<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> allow direct
 manipulation of the rotational velocity&#8217;s PID tuning parameters.</p>
 </div>
 <div class="section" id="the-torque-pid">
@@ -420,11 +538,11 @@ rotational velocity to seek, the second PID controller takes over,
 the Torque PID, which uses that information to choose how to set
 the actual controls themselves (i.e. the WASDQE controls) to accelerate
 toward that goal rotational velocity.</p>
-<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><em>SteeringManager</em></a> don&#8217;t quite
+<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> don&#8217;t quite
 allow direct manipulation of the torque PID tuning parameters Kp, Ki,
 and Kd, because they are calculated indirectly from the ship&#8217;s own
 attributes.  However, there are several suffixes to
-<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><em>SteeringManager</em></a> that allow you to make
+<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> that allow you to make
 indirect adjustments to them that are used in calculating the values
 it uses for Kp, Ki, and Kd.</p>
 <hr class="docutils" />
@@ -461,14 +579,14 @@ still best to make your own control scheme from scratch with raw steering.</p>
 <div class="section" id="the-settings-to-change">
 <h4>The settings to change<a class="headerlink" href="#the-settings-to-change" title="Permalink to this headline">¶</a></h4>
 <p>First, you can modify how kOS decides how fast the ship should turn:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// MAXSTOPPINGTIME tells kOS how to calculate the maximum allowable</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// MAXSTOPPINGTIME tells kOS how to calculate the maximum allowable</span>
 <span class="c1">// angular velocity the Rotational Velocity PID is allowed to output.</span>
 <span class="c1">// Increasing the value will result in the ship turning</span>
 <span class="c1">// faster, but it may introduce more overshoot.</span>
 <span class="c1">// Adjust this setting if you have a small amount of torque on a large mass,</span>
 <span class="c1">// or if your ship appears to oscillate back and forth rapidly without</span>
 <span class="c1">// moving towards the target direction.</span>
-<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">MAXSTOPPINGTIME</span> <span class="n">TO</span> <span class="mf">10.</span>
+<span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">MAXSTOPPINGTIME</span> <span class="ow">TO</span> <span class="mf">10</span><span class="p">.</span>
 
 <span class="c1">// You can also modify the PID constants that calculate desired angular</span>
 <span class="c1">// velocity based on angular error, in the angular velocity PID controller.</span>
@@ -480,9 +598,9 @@ still best to make your own control scheme from scratch with raw steering.</p>
 <span class="c1">// Beware of large KD values: Due to the way angular velocity and part</span>
 <span class="c1">// facing directions are calculated in KSP, it is normal to have small rapid</span>
 <span class="c1">// fluctuations which may introduce instability in the derivative component.</span>
-<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">PITCHPID</span><span class="o">:</span><span class="n">KP</span> <span class="n">TO</span> <span class="mf">0.85</span><span class="p">.</span>
-<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">PITCHPID</span><span class="o">:</span><span class="n">KI</span> <span class="n">TO</span> <span class="mf">0.5</span><span class="p">.</span>
-<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">PITCHPID</span><span class="o">:</span><span class="n">KD</span> <span class="n">TO</span> <span class="mf">0.1</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">PITCHPID</span><span class="p">:</span><span class="nv">KP</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">85</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">PITCHPID</span><span class="p">:</span><span class="nv">KI</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">PITCHPID</span><span class="p">:</span><span class="nv">KD</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Second, you can change how the controls are manipulated to achieve the desired
@@ -492,31 +610,31 @@ calculate the PID constants.  Then the desired torque is calculated based on
 the desired angular velocity.  The steering controls are then set based on
 the the percentage the desired torque is of the available torque.  You can
 change the settling time for the torque calculation along each axis:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Increase the settling time to slow down control reaction time and</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Increase the settling time to slow down control reaction time and</span>
 <span class="c1">// reduce control spikes.  This is helpful in vessels that wobble enough to</span>
 <span class="c1">// cause fluctuations in the measured angular velocity.</span>
 <span class="c1">// This is recommended if your ship turns towards the target direction well</span>
 <span class="c1">// but then oscillates when close to the target direction.</span>
-<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">PITCHTS</span> <span class="n">TO</span> <span class="mf">10.</span>
-<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">ROLLTS</span> <span class="n">TO</span> <span class="mf">5.</span>
+<span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">PITCHTS</span> <span class="ow">TO</span> <span class="mf">10</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">ROLLTS</span> <span class="ow">TO</span> <span class="mf">5</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>If you find that kOS is regularly miscalculating the available torque, you can
-also define an adjust bias, or factor.  Check out these <a class="reference internal" href="../../structures/misc/steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></tt></a>
+also define an adjust bias, or factor.  Check out these <a class="reference internal" href="../../structures/misc/steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a>
 suffixes for more details: PITCHTORQUEADJUST, YAWTORQUEADJUST, ROLLTORQUEADJUST,
 PITCHTORQUEFACTOR, YAWTORQUEFACTOR, ROLLTORQUEFACTOR</p>
 </div>
 </div>
 </div>
 <div class="section" id="advantages-disadvantages">
-<h2><a class="toc-backref" href="#id3">Advantages/Disadvantages</a><a class="headerlink" href="#advantages-disadvantages" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Advantages/Disadvantages</a><a class="headerlink" href="#advantages-disadvantages" title="Permalink to this headline">¶</a></h2>
 <p>The advantage of &#8220;Cooked&#8221; control is that it is simpler to write scripts
 for, but the disadvantage is that you have only partial control over
 the details of the motion.</p>
 <p>Cooked controls perform best on ships that do not rely heavily on control
 surfaces, have medium levels of torque, and are structurally stable.  You can
 improve the control by placing the ship&#8217;s root part or control part close to the
-center of mass (preferablly both).  Adding struts to critical joints (like
+center of mass (preferably both).  Adding struts to critical joints (like
 decouplers) or installing a mod like Kerbal Joint Reinforcement will also help.</p>
 <p>But because of the impossibility of finding one setting that is universally
 correct for all possible vessels, sometimes the only way to make cooked
@@ -526,15 +644,16 @@ or to make your own steering control from scratch using raw steering.</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="raw.html" class="btn btn-neutral float-right" title="Raw Control">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="raw.html" class="btn btn-neutral float-right" title="Raw Control" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../flight.html" class="btn btn-neutral" title="Flight Control"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../flight.html" class="btn btn-neutral" title="Flight Control" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -543,13 +662,14 @@ or to make your own steering control from scratch using raw steering.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -564,7 +684,7 @@ or to make your own steering control from scratch using raw steering.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -573,7 +693,7 @@ or to make your own steering control from scratch using raw steering.</p>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

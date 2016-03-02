@@ -20,27 +20,27 @@ Structure
           - Description
 
         * - :attr:`STATUS`
-          - string
+          - :ref:`string <string>`
           - Get only
-          - The string status of the transfer (eg "Inactive", "Transferring", "Failed", "Finished")
+          - The :ref:`string <string>` status of the transfer (eg "Inactive", "Transferring", "Failed", "Finished")
         * - :attr:`MESSAGE`
-          - string
+          - :ref:`string <string>`
           - Get only
           - A message about the current status
         * - :attr:`GOAL`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Get only
           - This is how much of the resource will be transferred.
         * - :attr:`TRANSFERRED`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Get only
           - This is how much of the resource has been transferred.
         * - :attr:`RESOURCE`
-          - string
+          - :ref:`string <string>`
           - Get only
           - The name of the resource (eg oxidizer, liquidfuel)   
         * - :attr:`ACTIVE`
-          - bool
+          - :ref:`boolean <boolean>`
           - Get / Set
           - Setting this value will either start, pause or restart a transfer. Default is false.
     
@@ -48,7 +48,7 @@ Structure
 .. attribute:: RESOURCETRANSFER:STATUS
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     This enumerated type shows the status of the transfer. the possible values are:
     
@@ -64,14 +64,14 @@ Structure
 .. attribute:: RESOURCETRANSFER:MESSAGE
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     This shows the detail related to :attr:`STATUS`
     
 .. attribute:: RESOURCETRANSFER:GOAL
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     
     If you specified an amount to transfer in your transfer request, it will be shown here.
     If you did not, this will return the sentinel value -1.
@@ -79,21 +79,21 @@ Structure
 .. attribute:: RESOURCETRANSFER:TRANSFERRED
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     Returns the amount of the specified resource that has been transferred by this resource transfer.
     
 .. attribute:: RESOURCETRANSFER:RESOURCE
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     The name of the resource that will be transferred. (eg, oxidizer, liquidfuel)
     
 .. attribute:: RESOURCETRANSFER:ACTIVE
 
     :access: Get / Set
-    :type: bool
+    :type: :ref:`boolean <boolean>`
 
     When getting, this suffix is simply a shortcut to tell you if :attr:`STATUS` is Transferring.
     Setting true will change the status of the transfer to Transferring, setting false will change status to inactive.

@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS Telnet Server &mdash; kOS 0.18.2 documentation</title>
+  <title>The kOS Telnet Server &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Files and Volumes" href="volumes.html"/>
         <link rel="prev" title="kOS Control Panel" href="applauncher_panel.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,41 +51,60 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Telnet Server</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Telnet Server</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
@@ -91,62 +112,20 @@
 <li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +133,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../general.html">General Topics</a> &raquo;</li>
       
     <li>The kOS Telnet Server</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/general/telnet.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/general/telnet.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="the-kos-telnet-server">
 <span id="telnet"></span><h1>The kOS Telnet Server<a class="headerlink" href="#the-kos-telnet-server" title="Permalink to this headline">¶</a></h1>
@@ -199,21 +187,21 @@ If you want to read further about these concerns before deciding to turn it
 on, see the section called &#8220;<a class="reference internal" href="#security">Security</a>&#8221; at the bottom of this page.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#telnet-clients" id="id1">Telnet clients</a></li>
-<li><a class="reference internal" href="#using-it" id="id2">Using it</a></li>
-<li><a class="reference internal" href="#special-keys" id="id3">Special Keys</a></li>
-<li><a class="reference internal" href="#howto-putty-client" id="id4">HOWTO: Putty client</a></li>
-<li><a class="reference internal" href="#howto-command-line-client" id="id5">HOWTO: Command-line client</a></li>
-<li><a class="reference internal" href="#howto-other-client" id="id6">HOWTO: Other client</a></li>
-<li><a class="reference internal" href="#security" id="id7">Security</a></li>
-<li><a class="reference internal" href="#homemade-telnet-clients" id="id8">Homemade telnet clients</a></li>
+<li><a class="reference internal" href="#telnet-clients" id="id4">Telnet clients</a></li>
+<li><a class="reference internal" href="#using-it" id="id5">Using it</a></li>
+<li><a class="reference internal" href="#special-keys" id="id6">Special Keys</a></li>
+<li><a class="reference internal" href="#howto-putty-client" id="id7">HOWTO: Putty client</a></li>
+<li><a class="reference internal" href="#howto-command-line-client" id="id8">HOWTO: Command-line client</a></li>
+<li><a class="reference internal" href="#howto-other-client" id="id9">HOWTO: Other client</a></li>
+<li><a class="reference internal" href="#security" id="id10">Security</a></li>
+<li><a class="reference internal" href="#homemade-telnet-clients" id="id11">Homemade telnet clients</a></li>
 </ul>
 </div>
 <div class="figure">
 <a class="reference internal image-reference" href="../_images/telnet.png"><img alt="../_images/telnet.png" src="../_images/telnet.png" style="width: 95%;" /></a>
 </div>
 <div class="section" id="telnet-clients">
-<h2><a class="toc-backref" href="#id1">Telnet clients</a><a class="headerlink" href="#telnet-clients" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Telnet clients</a><a class="headerlink" href="#telnet-clients" title="Permalink to this headline">¶</a></h2>
 <p>The telnet server for kOS requires the use of a
 <a class="reference external" href="http://www.telnet.org/htm/applications.htm">telnet client program</a>. We
 recommend the following programs, although you can use others:</p>
@@ -238,12 +226,12 @@ command, as described by the section titled &#8220;<a class="reference internal"
 </dl>
 </div>
 <div class="section" id="using-it">
-<h2><a class="toc-backref" href="#id2">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first">Turn on the telnet server by going into the app control panel and clicking
 on the green circle next to the word &#8220;Telnet&#8221;.  Alternatively, you can
 issue the command:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">CONFIG</span><span class="o">:</span><span class="n">TELNET</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>from any terminal window in kOS.</p>
@@ -257,36 +245,38 @@ get a secondary warning message about that too.</p>
 <li><p class="first">Launch your telnet client (there is a list of telnet clients that are known
 to work listed below.</p>
 </li>
+</ol>
+<ol class="arabic" start="4">
 <li><p class="first">When you first log in to the server you should see the &#8220;Welcome menu&#8221;, which is a
 screen looking like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="nl">Terminal:</span> <span class="n">type</span> <span class="o">=</span> <span class="n">XTERM</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">80</span><span class="n">x24</span>
-<span class="n">________________________________________________________________________________</span>
-              <span class="n">Menu</span> <span class="n">GUI</span>   <span class="n">Other</span>
-              <span class="n">Pick</span> <span class="n">Open</span> <span class="n">Telnets</span>  <span class="n">Vessel</span> <span class="n">Name</span> <span class="p">(</span><span class="n">CPU</span> <span class="n">tagname</span><span class="p">)</span>
-              <span class="o">----</span> <span class="o">----</span> <span class="o">-------</span>  <span class="o">--------------------------------</span>
-               <span class="p">[</span><span class="mi">1</span><span class="p">]</span>   <span class="n">no</span>    <span class="mi">0</span>     <span class="n">Randy</span> <span class="n">Viewer</span> <span class="p">(</span><span class="n">CX</span><span class="o">-</span><span class="mi">4181</span><span class="p">())</span>
-               <span class="p">[</span><span class="mi">2</span><span class="p">]</span>   <span class="n">no</span>    <span class="mi">0</span>     <span class="n">Randy</span> <span class="n">Viewer</span> <span class="p">(</span><span class="n">CX</span><span class="o">-</span><span class="mi">4181</span><span class="p">())</span>
-               <span class="p">[</span><span class="mi">3</span><span class="p">]</span>   <span class="n">no</span>    <span class="mi">0</span>     <span class="n">Randy</span> <span class="n">Viewer</span> <span class="p">(</span><span class="n">CX</span><span class="o">-</span><span class="mi">4181</span><span class="p">())</span>
-               <span class="p">[</span><span class="mi">4</span><span class="p">]</span>   <span class="n">no</span>    <span class="mi">0</span>     <span class="n">Randy</span> <span class="n">Viewer</span> <span class="p">(</span><span class="n">CX</span><span class="o">-</span><span class="mi">4181</span><span class="p">())</span>
-               <span class="p">[</span><span class="mi">5</span><span class="p">]</span>   <span class="n">no</span>    <span class="mi">0</span>     <span class="n">Randy</span> <span class="n">Viewer</span> <span class="p">(</span><span class="n">CX</span><span class="o">-</span><span class="mi">4181</span><span class="p">())</span>
-               <span class="p">[</span><span class="mi">6</span><span class="p">]</span>   <span class="n">no</span>    <span class="mi">0</span>     <span class="n">Randy</span> <span class="n">Viewer</span> <span class="p">(</span><span class="n">CX</span><span class="o">-</span><span class="mi">4181</span><span class="p">())</span>
-<span class="o">--------------------------------------------------------------------------------</span>
-<span class="n">Choose</span> <span class="n">a</span> <span class="n">CPU</span> <span class="n">to</span> <span class="n">attach</span> <span class="n">to</span> <span class="n">by</span> <span class="n">typing</span> <span class="n">a</span> <span class="n">selection</span> <span class="n">number</span> <span class="n">and</span> <span class="n">pressing</span>
-<span class="k">return</span><span class="o">/</span><span class="n">enter</span><span class="p">.</span> <span class="n">Or</span> <span class="n">enter</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">to</span> <span class="n">quit</span> <span class="n">terminal</span> <span class="n">server</span><span class="p">.</span>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Terminal: type = XTERM, size = 80x24
+________________________________________________________________________________
+              Menu GUI   Other
+              Pick Open Telnets  Vessel Name (CPU tagname)
+              ---- ---- -------  --------------------------------
+               [1]   no    0     Randy Viewer (CX-4181())
+               [2]   no    0     Randy Viewer (CX-4181())
+               [3]   no    0     Randy Viewer (CX-4181())
+               [4]   no    0     Randy Viewer (CX-4181())
+               [5]   no    0     Randy Viewer (CX-4181())
+               [6]   no    0     Randy Viewer (CX-4181())
+--------------------------------------------------------------------------------
+Choose a CPU to attach to by typing a selection number and pressing
+return/enter. Or enter [Q] to quit terminal server.
 
-<span class="p">(</span><span class="n">After</span> <span class="n">attaching</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="p">(</span><span class="n">D</span><span class="p">)</span><span class="n">etach</span> <span class="n">and</span> <span class="k">return</span> <span class="n">to</span> <span class="n">this</span> <span class="n">menu</span> <span class="n">by</span> <span class="n">pressing</span> <span class="n">Control</span><span class="o">-</span><span class="n">D</span>
-<span class="n">as</span> <span class="n">the</span> <span class="n">first</span> <span class="n">character</span> <span class="n">on</span> <span class="n">a</span> <span class="n">new</span> <span class="n">command</span> <span class="n">line</span><span class="p">.)</span>
-<span class="o">--------------------------------------------------------------------------------</span>
-<span class="o">&gt;</span><span class="n">_</span>
+(After attaching, you can (D)etach and return to this menu by pressing Control-D
+as the first character on a new command line.)
+--------------------------------------------------------------------------------
+&gt;_
 </pre></div>
 </div>
 <p>Or, if there are no CPU&#8217;s within range, it will look like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="nl">Terminal:</span> <span class="n">type</span> <span class="o">=</span> <span class="n">XTERM</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">80</span><span class="n">x24</span>
-<span class="n">________________________________________________________________________________</span>
-              <span class="n">Menu</span> <span class="n">GUI</span>   <span class="n">Other</span>
-              <span class="n">Pick</span> <span class="n">Open</span> <span class="n">Telnets</span>  <span class="n">Vessel</span> <span class="n">Name</span> <span class="p">(</span><span class="n">CPU</span> <span class="n">tagname</span><span class="p">)</span>
-              <span class="o">----</span> <span class="o">----</span> <span class="o">-------</span>  <span class="o">--------------------------------</span>
-                                      <span class="o">&lt;</span><span class="n">NONE</span><span class="o">&gt;</span>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Terminal: type = XTERM, size = 80x24
+________________________________________________________________________________
+              Menu GUI   Other
+              Pick Open Telnets  Vessel Name (CPU tagname)
+              ---- ---- -------  --------------------------------
+                                      &lt;NONE&gt;
 </pre></div>
 </div>
 <p>At any moment you can force a redraw of the menu by entering any gibberish non-
@@ -295,9 +285,9 @@ numeric data and hitting enter.</p>
 control panel.</p>
 </li>
 </ol>
-<div class="figure">
+<div class="figure" id="id1">
 <a class="reference internal image-reference" href="../_images/telnet_welcomemenu.png"><img alt="../_images/telnet_welcomemenu.png" src="../_images/telnet_welcomemenu.png" style="width: 75%;" /></a>
-<p class="caption">The welcome menu, shown here in a Mac OSX terminal.</p>
+<p class="caption"><span class="caption-text">The welcome menu, shown here in a Mac OSX terminal.</span></p>
 </div>
 <ol class="arabic simple" start="5">
 <li><strong>Pick a CPU.</strong>  Pick one of the CPU&#8217;s listed by typing its number and hitting enter.</li>
@@ -331,7 +321,7 @@ other&#8217;s size.   If you experience this problem (your terminal window will 
 flipping back and forth between two different sizes, resizing itself over and over
 again in a neverending loop), you can try to get out of it by issuing a hardcoded
 command to set the terminal size, such as:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">TERMINAL</span><span class="o">:</span><span class="n">WIDTH</span> <span class="n">TO</span> <span class="mf">50.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TERMINAL</span><span class="p">:</span><span class="nv">WIDTH</span> <span class="ow">TO</span> <span class="mf">50</span><span class="p">.</span>
 </pre></div>
 </div>
 <p class="last">Doing this should force all the connected telnet XTERM windows to stop arguing with
@@ -344,7 +334,7 @@ the telnet welcome menu again.</li>
 </ol>
 </div>
 <div class="section" id="special-keys">
-<h2><a class="toc-backref" href="#id3">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this headline">¶</a></h2>
 <p>The following keys have special meaning in the telnet session:</p>
 <dl class="docutils">
 <dt>Control-L</dt>
@@ -393,7 +383,7 @@ terminal code for it.</dd>
 </dl>
 </div>
 <div class="section" id="howto-putty-client">
-<h2><a class="toc-backref" href="#id4">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this headline">¶</a></h2>
 <p>(These instructions assume you use the default kOS Telnet server settings, of
 the loopback address 127.0.0.1, and port number 5410.  If you&#8217;ve changed those
 settings then alter the numbers you see here accordingly.)</p>
@@ -416,14 +406,14 @@ time there&#8217;s a problem, making it very hard to diagnose because you can&#8
 message the server was sending back to you just before the window went away.</p>
 </div>
 <div class="section" id="howto-command-line-client">
-<h2><a class="toc-backref" href="#id5">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this headline">¶</a></h2>
-<div class="figure">
+<h2><a class="toc-backref" href="#id8">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this headline">¶</a></h2>
+<div class="figure" id="id2">
 <a class="reference internal image-reference" href="../_images/telnet_xterm.png"><img alt="../_images/telnet_xterm.png" src="../_images/telnet_xterm.png" style="width: 75%;" /></a>
-<p class="caption">Showing the use of telnet in an x-term window.</p>
+<p class="caption"><span class="caption-text">Showing the use of telnet in an x-term window.</span></p>
 </div>
-<div class="figure">
+<div class="figure" id="id3">
 <a class="reference internal image-reference" href="../_images/telnet_macterminal.png"><img alt="../_images/telnet_macterminal.png" src="../_images/telnet_macterminal.png" style="width: 75%;" /></a>
-<p class="caption">Showing the use of telnet in a Mac OSX terminal.</p>
+<p class="caption"><span class="caption-text">Showing the use of telnet in a Mac OSX terminal.</span></p>
 </div>
 <p>(These instructions assume you use the default kOS Telnet server settings, of
 the loopback address 127.0.0.1, and port number 5410.  If you&#8217;ve changed those
@@ -438,14 +428,14 @@ OSX, the default command shell should work fine.  For Linux, you should
 actually have the xterm program itself installed that you can use.</p>
 </li>
 <li><p class="first">At the shell prompt in that window, enter the command:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">telnet</span> <span class="mf">127.0.0.1</span> <span class="mi">5410</span>
+<div class="highlight-none"><div class="highlight"><pre><span></span>telnet 127.0.0.1 5410
 </pre></div>
 </div>
 </li>
 </ol>
 </div>
 <div class="section" id="howto-other-client">
-<h2><a class="toc-backref" href="#id6">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>Set the IP address to 127.0.0.1 using whatever means the program has for it.</li>
 <li>Set the port number to 5410 using whatever means the program has for it.</li>
@@ -455,7 +445,7 @@ less good, but still perhaps workable option.</li>
 </ol>
 </div>
 <div class="section" id="security">
-<h2><a class="toc-backref" href="#id7">Security</a><a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">Security</a><a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
 <p>The telnet protocol performs no encryption of its data, and as such any attempt
 at securing the system using a name/password combination would have been
 utterly pointless.  Rather than provide a false sense of security that&#8217;s not
@@ -505,7 +495,7 @@ of kOS.  (While implementing from scratch the server side of the older, simpler
 telnet protocol, while still work, was more doable).</p>
 </div>
 <div class="section" id="homemade-telnet-clients">
-<h2><a class="toc-backref" href="#id8">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this headline">¶</a></h2>
 <p>This section is only of interest to hobbyists making Kerbal console hardware rigs
 and software developers trying to make interface mods that pretend to be
 kOS terminals.  If you are neither of those two, then don&#8217;t worry if this section
@@ -633,15 +623,16 @@ should be able to capture and ignore it.</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="volumes.html" class="btn btn-neutral float-right" title="Files and Volumes">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="volumes.html" class="btn btn-neutral float-right" title="Files and Volumes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="applauncher_panel.html" class="btn btn-neutral" title="kOS Control Panel"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="applauncher_panel.html" class="btn btn-neutral" title="kOS Control Panel" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -650,13 +641,14 @@ should be able to capture and ignore it.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -671,7 +663,7 @@ should be able to capture and ignore it.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -680,7 +672,7 @@ should be able to capture and ignore it.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

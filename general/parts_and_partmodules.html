@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Parts and PartModules &mdash; kOS 0.18.2 documentation</title>
+  <title>Ship Parts and PartModules &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Career Limits" href="career_limits.html"/>
         <link rel="prev" title="The Name Tag System" href="nametag.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,81 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Parts &amp; PartModules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Parts &amp; PartModules</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +133,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../general.html">General Topics</a> &raquo;</li>
       
     <li>Ship Parts and PartModules</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/general/parts_and_partmodules.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/general/parts_and_partmodules.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="ship-parts-and-partmodules">
 <span id="parts-and-partmodules"></span><h1>Ship Parts and PartModules<a class="headerlink" href="#ship-parts-and-partmodules" title="Permalink to this headline">¶</a></h1>
@@ -197,7 +185,7 @@
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><strong>The short and quick thing to remember</strong></p>
-<p class="last">If you only remember one technique, it should be using the <tt class="xref ks ks-meth docutils literal"><span class="pre">Part:PARTSDUBBED</span></tt> method described down below. It&#8217;s the most useful one that covers all the other cases.</p>
+<p class="last">If you only remember one technique, it should be using the <code class="xref ks ks-meth docutils literal"><span class="pre">Part:PARTSDUBBED</span></code> method described down below. It&#8217;s the most useful one that covers all the other cases.</p>
 </div>
 <div class="section" id="accessing-the-parts-by-various-naming-systems">
 <h3>Accessing the parts by various naming systems<a class="headerlink" href="#accessing-the-parts-by-various-naming-systems" title="Permalink to this headline">¶</a></h3>
@@ -206,49 +194,49 @@
 <p><strong>Part Title</strong>: A part&#8217;s <em>title</em> is the name it has inside the GUI interface on the screen that you see as the user.</p>
 <p><strong>Part Name</strong>: A part&#8217;s <em>name</em> is the name it is given behind the scenes in KSP. It never appears in the normal GUI for the user to see, but it is used in places like Part.cfg files, the saved game persistence file, the ModuleManager mod, and so on.</p>
 <p>Assuming you&#8217;ve done one of these:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">somevessel</span> <span class="n">to</span> <span class="n">SHIP</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">somevessel</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">.</span>
 <span class="c1">//    Or this:</span>
-<span class="n">SET</span> <span class="n">somevessel</span> <span class="n">to</span> <span class="n">VESSEL</span><span class="p">(</span><span class="s">&quot;some vessel&#39;s name&quot;</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">somevessel</span> <span class="ow">to</span> <span class="nv">VESSEL</span><span class="p">(</span><span class="s">&quot;some vessel&#39;s name&quot;</span><span class="p">).</span>
 <span class="c1">//    Or this:</span>
-<span class="n">SET</span> <span class="n">somevessel</span> <span class="n">to</span> <span class="n">TARGET</span><span class="p">.</span> <span class="c1">// assuming TARGET is a vessel and not a body or docking port.</span>
+<span class="k">SET</span> <span class="nv">somevessel</span> <span class="ow">to</span> <span class="nv">TARGET</span><span class="p">.</span> <span class="c1">// assuming TARGET is a vessel and not a body or docking port.</span>
 </pre></div>
 </div>
 <p>Then you can do one of these to query based on any of the above schemes:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// --------- :PARTSTAGGED -----------</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// --------- :PARTSTAGGED -----------</span>
 <span class="c1">// Finds all parts that have a nametag (Part:Tag suffix) matching the value given:</span>
-<span class="n">SET</span> <span class="n">partlist</span> <span class="n">to</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSTAGGED</span><span class="p">(</span><span class="n">nametag_of_part</span><span class="p">)</span>
+<span class="k">SET</span> <span class="nv">partlist</span> <span class="ow">to</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSTAGGED</span><span class="p">(</span><span class="nv">nametag_of_part</span><span class="p">)</span>
 
 <span class="c1">// --------- :PARTSTITLED -----------</span>
 <span class="c1">// Finds all parts that have a title (Part:Title suffix) matching the value given:</span>
-<span class="n">SET</span> <span class="n">partlist</span> <span class="n">to</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSTITLED</span><span class="p">(</span><span class="n">title_of_part</span><span class="p">)</span>
+<span class="k">SET</span> <span class="nv">partlist</span> <span class="ow">to</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSTITLED</span><span class="p">(</span><span class="nv">title_of_part</span><span class="p">)</span>
 
 <span class="c1">// --------- :PARTSNAMED -----------</span>
 <span class="c1">// Finds all parts that have a name (Part:Name suffix) matching the value given:</span>
-<span class="n">SET</span> <span class="n">partlist</span> <span class="n">to</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="n">name_of_part</span><span class="p">)</span>
+<span class="k">SET</span> <span class="nv">partlist</span> <span class="ow">to</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="nv">name_of_part</span><span class="p">)</span>
 
 <span class="c1">// --------- :PARTSDUBBED -----------</span>
 <span class="c1">// Finds all parts matching the string in any naming scheme, without caring what kind of naming scheme it is</span>
 <span class="c1">// This is essentially the combination of all the above three searches.</span>
-<span class="n">SET</span> <span class="n">partlist</span> <span class="n">to</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="n">any_of_the_above</span><span class="p">)</span>
+<span class="k">SET</span> <span class="nv">partlist</span> <span class="ow">to</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSDUBBED</span><span class="p">(</span><span class="nv">any_of_the_above</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In all cases the checks are performed case-insensitively.</p>
 <p>These are different styles of naming parts, all slightly different, and you can use any of them you like to get access to the part or parts you&#8217;re interested in.</p>
 <p>They all return a <a class="reference external" href="../structures/misc/list.html">List</a> of <a class="reference external" href="../structures/vessels/part.html">Parts</a> rather than just one single part. This is because any name could have more than one hit. If you expect to get just one single hit, you can just look at the zero-th value of the list, like so:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">onePart</span> <span class="n">TO</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">onePart</span> <span class="ow">TO</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
 </pre></div>
 </div>
 <p>If the name does not exist, you can tell by seeing if the list returned
 has a length of zero:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">)</span><span class="o">:</span><span class="n">LENGTH</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
-  <span class="n">PRINT</span> <span class="s">&quot;There is no part named &#39;my favorite engine&#39;.&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">):</span><span class="nv">LENGTH</span> <span class="o">=</span> <span class="mf">0</span> <span class="p">{</span>
+  <span class="k">PRINT</span> <span class="s">&quot;There is no part named &#39;my favorite engine&#39;.&quot;</span><span class="p">.</span>
 <span class="p">}.</span>
 </pre></div>
 </div>
 <p>Examples:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Change the altitude at which all the drouge chutes will deploy:</span>
-<span class="n">FOR</span> <span class="n">somechute</span> <span class="n">IN</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;parachuteDrogue&quot;</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nl">somechute:</span><span class="n">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleParachute&quot;</span><span class="p">)</span><span class="o">:</span><span class="n">SETFIELD</span><span class="p">(</span><span class="s">&quot;DEPLOYALTITUDE&quot;</span><span class="p">,</span> <span class="mi">1500</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Change the altitude at which all the drouge chutes will deploy:</span>
+<span class="k">FOR</span> <span class="nv">somechute</span> <span class="nv">IN</span> <span class="nv">somevessel</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;parachuteDrogue&quot;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">somechute</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleParachute&quot;</span><span class="p">):</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;DEPLOYALTITUDE&quot;</span><span class="p">,</span> <span class="mf">1500</span><span class="p">).</span>
 <span class="p">}.</span>
 </pre></div>
 </div>
@@ -269,13 +257,13 @@ has a length of zero:</p>
 <h3>Shortcuts to smaller lists of parts<a class="headerlink" href="#shortcuts-to-smaller-lists-of-parts" title="Permalink to this headline">¶</a></h3>
 <p>If you know some of the properties of the parts you&#8217;re interested in, you can ask kOS to give you a shorter list of parts that just includes those parts, using the following suffixes:</p>
 <p>Return a List of just the parts who&#8217;s name is &#8220;someNameHere&#8221;:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">ves</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="p">.</span> <span class="c1">// or Target or Vessel(&quot;ship name&quot;).</span>
-<span class="n">SET</span> <span class="n">PLIST</span> <span class="n">TO</span> <span class="n">ves</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;someNameHere&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">ves</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">.</span> <span class="c1">// or Target or Vessel(&quot;ship name&quot;).</span>
+<span class="k">SET</span> <span class="nv">PLIST</span> <span class="ow">TO</span> <span class="nv">ves</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;someNameHere&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Return a List of just the parts that have had some sort of activity attached to action group 1:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">ves</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="p">.</span> <span class="c1">// or Target or Vessel(&quot;ship name&quot;).</span>
-<span class="n">SET</span> <span class="n">PLIST</span> <span class="n">TO</span> <span class="n">ves</span><span class="o">:</span><span class="n">PARTSINGROUP</span><span class="p">(</span><span class="n">AG1</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">ves</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">.</span> <span class="c1">// or Target or Vessel(&quot;ship name&quot;).</span>
+<span class="k">SET</span> <span class="nv">PLIST</span> <span class="ow">TO</span> <span class="nv">ves</span><span class="p">:</span><span class="nv">PARTSINGROUP</span><span class="p">(</span><span class="nv">AG1</span><span class="p">).</span>
 </pre></div>
 </div>
 </div>
@@ -337,17 +325,17 @@ has a length of zero:</p>
 <h3>What PartModules are there on a part?<a class="headerlink" href="#what-partmodules-are-there-on-a-part" title="Permalink to this headline">¶</a></h3>
 <p>To answer this question you can do one of two things:</p>
 <p>A: <strong>Use the part.cfg file</strong> All parts in KSP come with a part.cfg file defining them, both for modded parts and stock parts. If you look at this file, it will contain sections looking something like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Example snippet from a Part.cfg file:</span>
-<span class="n">MODULE</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Example snippet from a Part.cfg file:</span>
+<span class="nv">MODULE</span>
 <span class="p">{</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">ModuleCommand</span>
+    <span class="nv">name</span> <span class="o">=</span> <span class="nv">ModuleCommand</span>
 </pre></div>
 </div>
 <p>That would tell you that this part has a PartModule on it called ModuleCommand. there can be multiple such modules per part. But it doesn&#8217;t let you know about PartModules that get added afterward during runtime, by such things as the ModuleManager mod.</p>
 <p>B: <strong>Use the :MODULES suffix of Part:</strong> If you have a handle on any part in kOS, you can print out the value of :MODULES and it will tell you the string names of all the modules on the part. For example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">FOR</span> <span class="n">P</span> <span class="n">IN</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTS</span> <span class="p">{</span>
-  <span class="n">LOG</span> <span class="p">(</span><span class="s">&quot;MODULES FOR PART NAMED &quot;</span> <span class="o">+</span> <span class="n">P</span><span class="o">:</span><span class="n">NAME</span><span class="p">)</span> <span class="n">TO</span> <span class="n">MODLIST</span><span class="p">.</span>
-  <span class="n">LOG</span> <span class="n">P</span><span class="o">:</span><span class="n">MODULES</span> <span class="n">TO</span> <span class="n">MODLIST</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">FOR</span> <span class="nv">P</span> <span class="nv">IN</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTS</span> <span class="p">{</span>
+  <span class="k">LOG</span> <span class="p">(</span><span class="s">&quot;MODULES FOR PART NAMED &quot;</span> <span class="o">+</span> <span class="nv">P</span><span class="p">:</span><span class="nv">NAME</span><span class="p">)</span> <span class="ow">TO</span> <span class="nv">MODLIST</span><span class="p">.</span>
+  <span class="k">LOG</span> <span class="nv">P</span><span class="p">:</span><span class="nv">MODULES</span> <span class="ow">TO</span> <span class="nv">MODLIST</span><span class="p">.</span>
 <span class="p">}.</span>
 </pre></div>
 </div>
@@ -356,13 +344,13 @@ has a length of zero:</p>
 <div class="section" id="what-are-the-names-of-the-stuff-that-a-partmodule-can-do">
 <h3>What are the names of the stuff that a PartModule can do?<a class="headerlink" href="#what-are-the-names-of-the-stuff-that-a-partmodule-can-do" title="Permalink to this headline">¶</a></h3>
 <p>These three suffixes tell you everything a part module can do:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MOD</span> <span class="n">TO</span> <span class="n">P</span><span class="o">:</span><span class="n">GETMODULE</span><span class="p">(</span><span class="s">&quot;some name here&quot;</span><span class="p">).</span>
-<span class="n">LOG</span> <span class="p">(</span><span class="s">&quot;These are all the things that I can currently USE GETFIELD AND SETFIELD ON IN &quot;</span> <span class="o">+</span> <span class="n">MOD</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span><span class="p">)</span> <span class="n">TO</span> <span class="n">NAMELIST</span><span class="p">.</span>
-<span class="n">LOG</span> <span class="n">MOD</span><span class="o">:</span><span class="n">ALLFIELDS</span> <span class="n">TO</span> <span class="n">NAMELIST</span><span class="p">.</span>
-<span class="n">LOG</span> <span class="p">(</span><span class="s">&quot;These are all the things that I can currently USE DOEVENT ON IN &quot;</span> <span class="o">+</span>  <span class="n">MOD</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span><span class="p">)</span> <span class="n">TO</span> <span class="n">NAMELIST</span><span class="p">.</span>
-<span class="n">LOG</span> <span class="n">MOD</span><span class="o">:</span><span class="n">ALLEVENTS</span> <span class="n">TO</span> <span class="n">NAMELIST</span><span class="p">.</span>
-<span class="n">LOG</span> <span class="p">(</span><span class="s">&quot;These are all the things that I can currently USE DOACTION ON IN &quot;</span> <span class="o">+</span>  <span class="n">MOD</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span><span class="p">)</span> <span class="n">TO</span> <span class="n">NAMELIST</span><span class="p">.</span>
-<span class="n">LOG</span> <span class="n">MOD</span><span class="o">:</span><span class="n">ALLACTIONS</span> <span class="n">TO</span> <span class="n">NAMELIST</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MOD</span> <span class="ow">TO</span> <span class="nv">P</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;some name here&quot;</span><span class="p">).</span>
+<span class="k">LOG</span> <span class="p">(</span><span class="s">&quot;These are all the things that I can currently USE GETFIELD AND SETFIELD ON IN &quot;</span> <span class="o">+</span> <span class="nv">MOD</span><span class="p">:</span><span class="nv">NAME</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span><span class="p">)</span> <span class="ow">TO</span> <span class="nv">NAMELIST</span><span class="p">.</span>
+<span class="k">LOG</span> <span class="nv">MOD</span><span class="p">:</span><span class="nv">ALLFIELDS</span> <span class="ow">TO</span> <span class="nv">NAMELIST</span><span class="p">.</span>
+<span class="k">LOG</span> <span class="p">(</span><span class="s">&quot;These are all the things that I can currently USE DOEVENT ON IN &quot;</span> <span class="o">+</span>  <span class="nv">MOD</span><span class="p">:</span><span class="nv">NAME</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span><span class="p">)</span> <span class="ow">TO</span> <span class="nv">NAMELIST</span><span class="p">.</span>
+<span class="k">LOG</span> <span class="nv">MOD</span><span class="p">:</span><span class="nv">ALLEVENTS</span> <span class="ow">TO</span> <span class="nv">NAMELIST</span><span class="p">.</span>
+<span class="k">LOG</span> <span class="p">(</span><span class="s">&quot;These are all the things that I can currently USE DOACTION ON IN &quot;</span> <span class="o">+</span>  <span class="nv">MOD</span><span class="p">:</span><span class="nv">NAME</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span><span class="p">)</span> <span class="ow">TO</span> <span class="nv">NAMELIST</span><span class="p">.</span>
+<span class="k">LOG</span> <span class="nv">MOD</span><span class="p">:</span><span class="nv">ALLACTIONS</span> <span class="ow">TO</span> <span class="nv">NAMELIST</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>After that, the file NAMELIST would contain a dump of all the fields on this part module that you can use.</p>
@@ -370,7 +358,7 @@ has a length of zero:</p>
 <div class="section" id="be-warned-names-are-able-to-dynamically-change">
 <h3>BE WARNED! Names are able to dynamically change!<a class="headerlink" href="#be-warned-names-are-able-to-dynamically-change" title="Permalink to this headline">¶</a></h3>
 <p>Some PartModules are written to change the name of a field when something happens in the game. For example, you might find that after you&#8217;ve done this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="nl">SomeModule:</span><span class="n">DOEVENT</span><span class="p">(</span><span class="s">&quot;Activate&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">SomeModule</span><span class="p">:</span><span class="nv">DOEVENT</span><span class="p">(</span><span class="s">&quot;Activate&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>That this doesn&#8217;t work anymore after that, and the &#8220;Activate&#8221; event now causes an error.</p>
@@ -381,15 +369,16 @@ has a length of zero:</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="career_limits.html" class="btn btn-neutral float-right" title="Career Limits">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="career_limits.html" class="btn btn-neutral float-right" title="Career Limits" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="nametag.html" class="btn btn-neutral" title="The Name Tag System"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="nametag.html" class="btn btn-neutral" title="The Name Tag System" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -398,13 +387,14 @@ has a length of zero:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -419,7 +409,7 @@ has a length of zero:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -428,7 +418,7 @@ has a length of zero:</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

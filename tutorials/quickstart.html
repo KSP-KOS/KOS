@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quick Start Tutorial &mdash; kOS 0.18.2 documentation</title>
+  <title>Quick Start Tutorial &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="Tutorials" href="../tutorials.html"/>
         <link rel="next" title="Design Patterns and Considerations with kOS" href="designpatterns.html"/>
         <link rel="prev" title="Tutorials" href="../tutorials.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,74 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Quick Start</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exenode.html">Execute Node script</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +126,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
       
     <li>Quick Start Tutorial</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/tutorials/quickstart.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/tutorials/quickstart.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="quick-start-tutorial">
 <span id="quickstart"></span><h1>Quick Start Tutorial<a class="headerlink" href="#quick-start-tutorial" title="Permalink to this headline">¶</a></h1>
@@ -228,15 +209,15 @@
 <div class="section" id="step-4-invoke-the-terminal">
 <h3><a class="toc-backref" href="#id5">Step 4: Invoke the terminal</a><a class="headerlink" href="#step-4-invoke-the-terminal" title="Permalink to this headline">¶</a></h3>
 <p>Right click for the SCS part on the vessel and then click the button that says &#8220;Open Terminal&#8221;.</p>
-<p>Note that if the terminal is semi-transparent, this means it&#8217;s not currently selected. If you click on the terminal, then your keyboard input is directed to the terminal INSTEAD of to piloting. In other words if you type <tt class="docutils literal"><span class="pre">W</span></tt> <tt class="docutils literal"><span class="pre">A</span></tt> <tt class="docutils literal"><span class="pre">S</span></tt> <tt class="docutils literal"><span class="pre">D</span></tt>, you&#8217;ll actually get the word &#8220;wasd&#8221; to appear on the terminal, rather than the <tt class="docutils literal"><span class="pre">W</span></tt> <tt class="docutils literal"><span class="pre">A</span></tt> <tt class="docutils literal"><span class="pre">S</span></tt> <tt class="docutils literal"><span class="pre">D</span></tt> keys steering the ship. To switch back to manual control of the game instead of typing into the terminal, click outside the terminal window anywhere on the background of the screen.</p>
+<p>Note that if the terminal is semi-transparent, this means it&#8217;s not currently selected. If you click on the terminal, then your keyboard input is directed to the terminal INSTEAD of to piloting. In other words if you type <code class="docutils literal"><span class="pre">W</span></code> <code class="docutils literal"><span class="pre">A</span></code> <code class="docutils literal"><span class="pre">S</span></code> <code class="docutils literal"><span class="pre">D</span></code>, you&#8217;ll actually get the word &#8220;wasd&#8221; to appear on the terminal, rather than the <code class="docutils literal"><span class="pre">W</span></code> <code class="docutils literal"><span class="pre">A</span></code> <code class="docutils literal"><span class="pre">S</span></code> <code class="docutils literal"><span class="pre">D</span></code> keys steering the ship. To switch back to manual control of the game instead of typing into the terminal, click outside the terminal window anywhere on the background of the screen.</p>
 </div>
 <div class="section" id="step-5-see-what-an-interactive-command-is-like">
 <h3><a class="toc-backref" href="#id6">Step 5: See what an interactive command is like</a><a class="headerlink" href="#step-5-see-what-an-interactive-command-is-like" title="Permalink to this headline">¶</a></h3>
 <p>You should now see an old-school looking text terminal like the one shown below. Type the line:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">CLEARSCREEN</span><span class="p">.</span> <span class="n">PRINT</span> <span class="s">&quot;==HELLO WORLD==&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">CLEARSCREEN</span><span class="p">.</span> <span class="k">PRINT</span> <span class="s">&quot;==HELLO WORLD==&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>into the terminal (make sure to actually type the periods (&#8221;.&#8221;) as shown) and hit <tt class="docutils literal"><span class="pre">ENTER</span></tt>. Note that you can type it in uppercase or lowercase. <strong>kOS</strong> doesn&#8217;t care.</p>
+<p>into the terminal (make sure to actually type the periods (&#8221;.&#8221;) as shown) and hit <code class="docutils literal"><span class="pre">ENTER</span></code>. Note that you can type it in uppercase or lowercase. <strong>kOS</strong> doesn&#8217;t care.</p>
 <div class="figure">
 <a class="reference internal image-reference" href="../_images/terminal_open_1.png"><img alt="../_images/terminal_open_1.png" src="../_images/terminal_open_1.png" style="width: 80%;" /></a>
 </div>
@@ -248,7 +229,7 @@
 <div class="section" id="step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead">
 <h3><a class="toc-backref" href="#id7">Step 6: Okay that&#8217;s great, but how can you make that happen in a program script instead?</a><a class="headerlink" href="#step-6-okay-that-s-great-but-how-can-you-make-that-happen-in-a-program-script-instead" title="Permalink to this headline">¶</a></h3>
 <p>Like so: Enter this command:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">EDIT</span> <span class="n">HELLO</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">EDIT</span> <span class="nv">HELLO</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>(Don&#8217;t forget the period (&#8221;.&#8221;). All commands in <strong>kOS</strong> are ended with a period. Again, you can type it in uppercase or lowercase. <strong>kOS</strong> doesn&#8217;t care.)</p>
@@ -257,10 +238,10 @@
 <img alt="../_images/editor.png" src="../_images/editor.png" />
 </div>
 <p>Type this text into the window:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
-<span class="n">PRINT</span> <span class="s">&quot;      HELLO WORLD&quot;</span><span class="p">.</span>
-<span class="n">PRINT</span> <span class="s">&quot;THIS IS THE FIRST SCRIPT I WROTE IN kOS.&quot;</span><span class="p">.</span>
-<span class="n">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;      HELLO WORLD&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;THIS IS THE FIRST SCRIPT I WROTE IN kOS.&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;=========================================&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Click &#8220;Save&#8221; then &#8220;Exit&#8221; in the editor pop-up window.</p>
@@ -268,7 +249,7 @@
 <li><em>Side Note: The editor font</em> - Experienced programmers may have noticed that the editor&#8217;s font is proportional width rather than monospaced and that this is not ideal for programming work. You are right, but there is little that can be done about it for a variety of technical reasons that are too complex to go into right now.</li>
 </ul>
 <p>Then on the main text terminal Enter:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">RUN</span> <span class="n">HELLO</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="nv">HELLO</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>And you will see the program run, showing the text on the screen like so.</p>
@@ -278,11 +259,11 @@
 </div>
 <div class="section" id="step-7-okay-but-where-is-this-program">
 <h3><a class="toc-backref" href="#id8">Step 7: Okay, but where is this program?</a><a class="headerlink" href="#step-7-okay-but-where-is-this-program" title="Permalink to this headline">¶</a></h3>
-<p>To see where the &#8220;HELLO&#8221; program has been saved, Issue the command <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span></tt> like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LIST</span> <span class="n">FILES</span><span class="p">.</span>
+<p>To see where the &#8220;HELLO&#8221; program has been saved, Issue the command <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span></code> like this:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>(Note, that the default for the <tt class="docutils literal"><span class="pre">LIST</span></tt> command is to list <tt class="docutils literal"><span class="pre">FILES</span></tt>, so you can leave the word &#8220;FILES&#8221; off if you like.)</p>
+<p>(Note, that the default for the <code class="docutils literal"><span class="pre">LIST</span></code> command is to list <code class="docutils literal"><span class="pre">FILES</span></code>, so you can leave the word &#8220;FILES&#8221; off if you like.)</p>
 <p>It should look like this, showing you the HELLO program you just wrote:</p>
 <div class="figure">
 <img alt="../_images/hello_list.png" src="../_images/hello_list.png" />
@@ -295,24 +276,24 @@
 <h3><a class="toc-backref" href="#id9">Step 8: I don&#8217;t like the idea that the program is stored only on this vessel. Can&#8217;t I save it somewhere better? More permanent?</a><a class="headerlink" href="#step-8-i-don-t-like-the-idea-that-the-program-is-stored-only-on-this-vessel-can-t-i-save-it-somewhere-better-more-permanent" title="Permalink to this headline">¶</a></h3>
 <p>Yes. Yes you can.</p>
 <p>There is another VOLUME that always exists called the <em>Archive</em>, which is also referred to as volume 0. (either name can be used in commands). The archive is conceptually stored somewhere back at Kerbin home base in the Space Center rather than on your vessel. It has infinite storage space, and does not disappear when your vessel is gone. ALSO, it actually exists across saved games - if you launch one saved game, put a new file in the Archive, and then later launch a different saved game, that file will be there in that game too.</p>
-<p>To use the Archive, first we&#8217;ll have to introduce you to a new command, called <tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span></tt>. The <tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span></tt> command changes which VOLUME is the one that you are doing your work with.</p>
+<p>To use the Archive, first we&#8217;ll have to introduce you to a new command, called <code class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span></code>. The <code class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span></code> command changes which VOLUME is the one that you are doing your work with.</p>
 <p>To work with the archive, and create a second &#8220;hello world&#8221; file there, you issue these commands and see what they do:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">0.</span>
-<span class="n">EDIT</span> <span class="n">HELLO2</span><span class="p">.</span> <span class="c1">// Make a new file here that just says: PRINT &quot;hi again&quot;.</span>
-<span class="n">LIST</span> <span class="n">FILES</span><span class="p">.</span>
-<span class="n">RUN</span> <span class="n">HELLO2</span><span class="p">.</span>
-<span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">1.</span>
-<span class="n">LIST</span> <span class="n">FILES</span><span class="p">.</span>
-<span class="n">RUN</span> <span class="n">HELLO</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">EDIT</span> <span class="nv">HELLO2</span><span class="p">.</span> <span class="c1">// Make a new file here that just says: PRINT &quot;hi again&quot;.</span>
+<span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">HELLO2</span><span class="p">.</span>
+<span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">HELLO</span><span class="p">.</span>
 </pre></div>
 </div>
-<p><em>But where is it stored behind the scenes?</em> The archive is currently slightly violating the design of <strong>KSP</strong> mods that puts everything in the GameData folder. The kSP Archive is actually stored in the <tt class="docutils literal"><span class="pre">Ships/Script</span></tt> folder of your MAIN <strong>KSP</strong> home, not inside GameData.</p>
-<p>If a file is stored inside the archive, it can actually be edited <em>by an external text editor of your choice</em> instead of using <strong>kOS</strong>&#8216;s in-game editor. This is usually a much better practice once you start doing more complex things with <strong>kOS</strong>. You can also make new files in the archive folder. Just make sure that all the files end with a <tt class="docutils literal"><span class="pre">.ks</span></tt> file name suffix or <strong>kOS</strong> won&#8217;t use them.</p>
+<p><em>But where is it stored behind the scenes?</em> The archive is currently slightly violating the design of <strong>KSP</strong> mods that puts everything in the GameData folder. The kSP Archive is actually stored in the <code class="docutils literal"><span class="pre">Ships/Script</span></code> folder of your MAIN <strong>KSP</strong> home, not inside GameData.</p>
+<p>If a file is stored inside the archive, it can actually be edited <em>by an external text editor of your choice</em> instead of using <strong>kOS</strong>&#8216;s in-game editor. This is usually a much better practice once you start doing more complex things with <strong>kOS</strong>. You can also make new files in the archive folder. Just make sure that all the files end with a <code class="docutils literal"><span class="pre">.ks</span></code> file name suffix or <strong>kOS</strong> won&#8217;t use them.</p>
 <p>Further reading about files and volumes:</p>
 <ul class="simple">
-<li><a class="reference internal" href="../general/volumes.html#volumes"><em>Volumes</em></a></li>
-<li><a class="reference internal" href="../commands/files.html#files"><em>File Control</em></a></li>
-<li><a class="reference internal" href="../structures/misc/fileinfo.html#fileinfo"><em>File Information</em></a></li>
+<li><a class="reference internal" href="../general/volumes.html#volumes"><span>Volumes</span></a></li>
+<li><a class="reference internal" href="../commands/files.html#files"><span>File Control</span></a></li>
+<li><a class="reference internal" href="../structures/volumes_and_files/volumefile.html#volumefile"><span>VolumeFile structure</span></a></li>
 </ul>
 </div>
 </div>
@@ -334,30 +315,30 @@ You need to make the vessel you see here:</p>
 <div class="section" id="step-2-make-the-start-of-the-script">
 <h3><a class="toc-backref" href="#id12">Step 2: Make the start of the script</a><a class="headerlink" href="#step-2-make-the-start-of-the-script" title="Permalink to this headline">¶</a></h3>
 <p>Okay, so type the lines below in an external <em>text editor of your choice</em> (i.e. Notepad on Windows, or TextEdit on Mac, or whatever you fancy):</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
-<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="k">CLEARSCREEN</span><span class="p">.</span>
 
 <span class="c1">//This is our countdown loop, which cycles from 10 to 0</span>
-<span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
+<span class="k">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
+<span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">countdown</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">countdown</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">countdown</span> <span class="ow">to</span> <span class="nv">countdown</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="nv">countdown</span><span class="p">.</span>
+    <span class="k">WAIT</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>See those things with the two slashes (&#8220;//&#8221;)? Those are comments in the kerboscript language and they&#8217;re just ways to write things in the program that don&#8217;t do anything - they&#8217;re there for humans like you to read so you understand what&#8217;s going on. In these examples you never actually have to type in the things you see after the slashes. They&#8217;re there for your benefit when reading this document but you can leave them out if you wish.</p>
-<p>Save the file in your <tt class="docutils literal"><span class="pre">Ships/Script</span></tt> folder of your <strong>KSP</strong> installation under the filename &#8220;hellolaunch.ks&#8221;. DO NOT save it anywhere under <tt class="docutils literal"><span class="pre">GameData/kOS/</span></tt>. Do NOT. According to the <strong>KSP</strong> standard, normally <strong>KSP</strong> mods should put their files in <tt class="docutils literal"><span class="pre">GameData/[mod</span> <span class="pre">name]</span></tt>, but <strong>kOS</strong> puts the archive outside the <tt class="docutils literal"><span class="pre">GameData</span></tt> folder because it represents content owned by you, the player, not content owned by the <strong>kOS</strong> mod.</p>
-<p>By saving the file in <tt class="docutils literal"><span class="pre">Ships/Script</span></tt>, you have actually put it in your archive volume of <strong>kOS</strong>. <strong>kOS</strong> will see it there immediately without delay. You do not need to restart the game. If you do:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">0.</span>
-<span class="n">LIST</span> <span class="n">FILES</span><span class="p">.</span>
+<p>See those things with the two slashes (&#8220;//&#8221;)? Those are comments in the Kerboscript language and they&#8217;re just ways to write things in the program that don&#8217;t do anything - they&#8217;re there for humans like you to read so you understand what&#8217;s going on. In these examples you never actually have to type in the things you see after the slashes. They&#8217;re there for your benefit when reading this document but you can leave them out if you wish.</p>
+<p>Save the file in your <code class="docutils literal"><span class="pre">Ships/Script</span></code> folder of your <strong>KSP</strong> installation under the filename &#8220;hellolaunch.ks&#8221;. DO NOT save it anywhere under <code class="docutils literal"><span class="pre">GameData/kOS/</span></code>. Do NOT. According to the <strong>KSP</strong> standard, normally <strong>KSP</strong> mods should put their files in <code class="docutils literal"><span class="pre">GameData/[mod</span> <span class="pre">name]</span></code>, but <strong>kOS</strong> puts the archive outside the <code class="docutils literal"><span class="pre">GameData</span></code> folder because it represents content owned by you, the player, not content owned by the <strong>kOS</strong> mod.</p>
+<p>By saving the file in <code class="docutils literal"><span class="pre">Ships/Script</span></code>, you have actually put it in your archive volume of <strong>kOS</strong>. <strong>kOS</strong> will see it there immediately without delay. You do not need to restart the game. If you do:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">LIST</span> <span class="nv">FILES</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>after saving the file from your external text editor program, you will see a listing of your file &#8220;hellolaunch&#8221; right away. Okay, now copy it to your local drive and give it a try running it from there:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">1.</span>
-<span class="n">COPY</span> <span class="n">HELLOLAUNCH</span> <span class="n">FROM</span> <span class="mf">0.</span>
-<span class="n">RUN</span> <span class="n">HELLOLAUNCH</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<span class="k">COPY</span> <span class="nv">HELLOLAUNCH</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">HELLOLAUNCH</span><span class="p">.</span>
 </pre></div>
 </div>
 <div class="figure">
@@ -369,28 +350,28 @@ You need to make the vessel you see here:</p>
 <div class="section" id="step-3-make-the-script-actually-do-something">
 <h3><a class="toc-backref" href="#id13">Step 3: Make the script actually do something</a><a class="headerlink" href="#step-3-make-the-script-actually-do-something" title="Permalink to this headline">¶</a></h3>
 <p>Okay now go back into your <em>text editor of choice</em> and append a few more lines to the hellolaunch.ks file so it now looks like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
-<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="k">CLEARSCREEN</span><span class="p">.</span>
 
 <span class="c1">//Next, we&#39;ll lock our throttle to 100%.</span>
-<span class="n">LOCK</span> <span class="n">THROTTLE</span> <span class="n">TO</span> <span class="mf">1.0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
+<span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
 
 <span class="c1">//This is our countdown loop, which cycles from 10 to 0</span>
-<span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
+<span class="k">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
+<span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">countdown</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">countdown</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">countdown</span> <span class="ow">to</span> <span class="nv">countdown</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="nv">countdown</span><span class="p">.</span>
+    <span class="k">WAIT</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 
-<span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">MAXTHRUST</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
-    <span class="n">WAIT</span> <span class="mf">0.5</span><span class="p">.</span> <span class="c1">// pause half a second between stage attempts.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Stage activated.&quot;</span><span class="p">.</span>
-    <span class="n">STAGE</span><span class="p">.</span> <span class="c1">// same as hitting the spacebar.</span>
+<span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">MAXTHRUST</span> <span class="o">&gt;</span> <span class="mf">0</span> <span class="p">{</span>
+    <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span> <span class="c1">// pause half a second between stage attempts.</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Stage activated.&quot;</span><span class="p">.</span>
+    <span class="k">STAGE</span><span class="p">.</span> <span class="c1">// same as hitting the spacebar.</span>
 <span class="p">}</span>
 
-<span class="n">WAIT</span> <span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span> <span class="o">&gt;</span> <span class="mf">70000.</span>
+<span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">ALTITUDE</span> <span class="o">&gt;</span> <span class="mf">70000</span><span class="p">.</span>
 
 <span class="c1">// NOTE that it is vital to not just let the script end right away</span>
 <span class="c1">// here.  Once a kOS script just ends, it releases all the controls</span>
@@ -400,8 +381,8 @@ You need to make the vessel you see here:</p>
 </pre></div>
 </div>
 <p>Save this file to hellolaunch.ks again, and re-copy it to your vessel that should still be sitting on the launchpad, then run it, like so:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">COPY</span> <span class="n">HELLOLAUNCH</span> <span class="n">FROM</span> <span class="mf">0.</span>
-<span class="n">RUN</span> <span class="n">HELLOLAUNCH</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">COPY</span> <span class="nv">HELLOLAUNCH</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">HELLOLAUNCH</span><span class="p">.</span>
 </pre></div>
 </div>
 <div class="figure">
@@ -414,39 +395,39 @@ You need to make the vessel you see here:</p>
 <div class="section" id="step-4-make-the-script-actually-control-steering">
 <h3><a class="toc-backref" href="#id14">Step 4: Make the script actually control steering</a><a class="headerlink" href="#step-4-make-the-script-actually-control-steering" title="Permalink to this headline">¶</a></h3>
 <p>So to fix that problem, let&#8217;s add steering control to the script.</p>
-<p>The easy way to control steering is to use the <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> command.</p>
+<p>The easy way to control steering is to use the <code class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></code> command.</p>
 <p>Once you have mastered the basics of <strong>kOS</strong>, you should go and read <a class="reference external" href="../commands/flight.html">the documentation on ship steering techniques</a>, but that&#8217;s a more advanced topic for later.</p>
-<p>The way to use the <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> command is to set it to a thing called a <a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> or a <a class="reference internal" href="../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a>. There are several Directions built-in to <strong>kOS</strong>, one of which is called &#8220;UP&#8221;. &#8220;UP&#8221; is a Direction that always aims directly toward the sky (the center of the blue part of the navball).</p>
+<p>The way to use the <code class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></code> command is to set it to a thing called a <a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></code></a>. There are several Directions built-in to <strong>kOS</strong>, one of which is called &#8220;UP&#8221;. &#8220;UP&#8221; is a Direction that always aims directly toward the sky (the center of the blue part of the navball).</p>
 <p>So to steer always UP, just do this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">UP</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">UP</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>So if you just add this one line to your script, you&#8217;ll get something that should keep the craft aimed straight up and not let it tip over. Add the line just after the line that sets the THROTTLE, like so:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
-<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="k">CLEARSCREEN</span><span class="p">.</span>
 
 <span class="c1">//Next, we&#39;ll lock our throttle to 100%.</span>
-<span class="n">LOCK</span> <span class="n">THROTTLE</span> <span class="n">TO</span> <span class="mf">1.0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
+<span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
 
 <span class="c1">//This is our countdown loop, which cycles from 10 to 0</span>
-<span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
+<span class="k">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
+<span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">countdown</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">countdown</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">countdown</span> <span class="ow">to</span> <span class="nv">countdown</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="nv">countdown</span><span class="p">.</span>
+    <span class="k">WAIT</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 
 <span class="c1">//This is the line we added</span>
-<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">UP</span><span class="p">.</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">UP</span><span class="p">.</span>
 
-<span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">MAXTHRUST</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
-    <span class="n">WAIT</span> <span class="mf">0.5</span><span class="p">.</span> <span class="c1">// pause half a second between stage attempts.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Stage activated.&quot;</span><span class="p">.</span>
-    <span class="n">STAGE</span><span class="p">.</span> <span class="c1">// same as hitting the spacebar.</span>
+<span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">MAXTHRUST</span> <span class="o">&gt;</span> <span class="mf">0</span> <span class="p">{</span>
+    <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span> <span class="c1">// pause half a second between stage attempts.</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Stage activated.&quot;</span><span class="p">.</span>
+    <span class="k">STAGE</span><span class="p">.</span> <span class="c1">// same as hitting the spacebar.</span>
 <span class="p">}</span>
 
-<span class="n">WAIT</span> <span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span> <span class="o">&gt;</span> <span class="mf">70000.</span>
+<span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">ALTITUDE</span> <span class="o">&gt;</span> <span class="mf">70000</span><span class="p">.</span>
 
 <span class="c1">// NOTE that it is vital to not just let the script end right away</span>
 <span class="c1">// here.  Once a kOS script just ends, it releases all the controls</span>
@@ -456,9 +437,9 @@ You need to make the vessel you see here:</p>
 </pre></div>
 </div>
 <p>Again, copy this and run it, like before. If your craft crashed in the previous step, which it probably did, then revert to the VAB and re-launch it.:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">1.</span> <span class="c1">// should be the default already, but just in case.</span>
-<span class="n">COPY</span> <span class="n">HELLOLAUNCH</span> <span class="n">FROM</span> <span class="mf">0.</span>
-<span class="n">RUN</span> <span class="n">HELLOLAUNCH</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// should be the default already, but just in case.</span>
+<span class="k">COPY</span> <span class="nv">HELLOLAUNCH</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">HELLOLAUNCH</span><span class="p">.</span>
 </pre></div>
 </div>
 <div class="figure">
@@ -475,10 +456,10 @@ doing the next stage? how do I fix that?</em></p>
 <p>The quick and dirty explanation is that a WHEN section is a short section of code that you set up to run LATER rather than right now. It creates a check in the background that will constantly look for some condition to occur, and when it happens, it interrupts whatever else the code is doing, and it will run the body of the WHEN code before continuing from where it left off in the main script.</p>
 <p>There are some complex dangers with writing WHEN triggers that can cause <strong>KSP</strong> itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the <a class="reference external" href="../language/flow.html">Flow Control page</a> before you do so.</p>
 <p>The WHEN trigger we are going to add to the launch script looks like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">WHEN</span> <span class="n">MAXTHRUST</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
-    <span class="n">STAGE</span><span class="p">.</span>
-    <span class="n">PRESERVE</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WHEN</span> <span class="nv">MAXTHRUST</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">THEN</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
+    <span class="k">STAGE</span><span class="p">.</span>
+    <span class="k">PRESERVE</span><span class="p">.</span>
 <span class="p">}.</span>
 </pre></div>
 </div>
@@ -486,34 +467,34 @@ doing the next stage? how do I fix that?</em></p>
 If this block of code is inserted into the script, then it will set up a constant background check that will always hit the next stage as soon as the current stage has no thrust.
 UNLIKE with all the previous edits this tutorial has asked you to make to the script, this time you&#8217;re going to be asked to delete something and replace it. The new WHEN section above should actually <strong>REPLACE</strong> the existing &#8220;UNTIL SHIP:MAXTHRUST &gt; 0&#8221; loop that you had before.</p>
 <p>Now your script should look like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
-<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="k">CLEARSCREEN</span><span class="p">.</span>
 
 <span class="c1">//Next, we&#39;ll lock our throttle to 100%.</span>
-<span class="n">LOCK</span> <span class="n">THROTTLE</span> <span class="n">TO</span> <span class="mf">1.0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
+<span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
 
 <span class="c1">//This is our countdown loop, which cycles from 10 to 0</span>
-<span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
+<span class="k">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
+<span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">countdown</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">countdown</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">countdown</span> <span class="ow">to</span> <span class="nv">countdown</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="nv">countdown</span><span class="p">.</span>
+    <span class="k">WAIT</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 
 <span class="c1">//This is a trigger that constantly checks to see if our thrust is zero.</span>
 <span class="c1">//If it is, it will attempt to stage and then return to where the script</span>
 <span class="c1">//left off. The PRESERVE keyword keeps the trigger active even after it</span>
 <span class="c1">//has been triggered.</span>
-<span class="n">WHEN</span> <span class="n">MAXTHRUST</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
-    <span class="n">STAGE</span><span class="p">.</span>
-    <span class="n">PRESERVE</span><span class="p">.</span>
+<span class="k">WHEN</span> <span class="nv">MAXTHRUST</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">THEN</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
+    <span class="k">STAGE</span><span class="p">.</span>
+    <span class="k">PRESERVE</span><span class="p">.</span>
 <span class="p">}.</span>
 
-<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">UP</span><span class="p">.</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">UP</span><span class="p">.</span>
 
-<span class="n">WAIT</span> <span class="n">UNTIL</span> <span class="n">ALTITUDE</span> <span class="o">&gt;</span> <span class="mf">70000.</span>
+<span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">ALTITUDE</span> <span class="o">&gt;</span> <span class="mf">70000</span><span class="p">.</span>
 
 <span class="c1">// NOTE that it is vital to not just let the script end right away</span>
 <span class="c1">// here.  Once a kOS script just ends, it releases all the controls</span>
@@ -543,14 +524,16 @@ gravity turn?</em></p>
 <li>Pitch up a number of degrees from the horizon = to B.</li>
 </ul>
 <p>So for example, HEADING(45,10) would aim northeast, 10 degrees above the horizon. We can use this to easily set our orientation. For example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//This locks our steering to due east, pitched 45 degrees above the horizon.</span>
-<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">45</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//This locks our steering to due east, pitched 45 degrees above the horizon.</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">45</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Instead of using WAIT UNTIL to pause the script and keep it from exiting, we can use an UNTIL loop to constantly perform actions until a certain condition is met. For example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">UNTIL</span> <span class="n">APOAPSIS</span> <span class="o">&gt;</span> <span class="mi">100000</span> <span class="p">{</span>
-    <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">).</span> <span class="c1">//90 degrees east and pitched up 90 degrees (straight up)</span>
-    <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span> <span class="c1">// prints new number, rounded to the nearest integer.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span> <span class="c1">//90 degrees east and pitched up 90 degrees (straight up)</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">MYSTEER</span><span class="p">.</span> <span class="c1">// from now on we&#39;ll be able to change steering by just assigning a new value to MYSTEER</span>
+<span class="k">UNTIL</span> <span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">100000</span> <span class="p">{</span>
+    <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span> <span class="c1">//90 degrees east and pitched up 90 degrees (straight up)</span>
+    <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span> <span class="c1">// prints new number, rounded to the nearest integer.</span>
     <span class="c1">//We use the PRINT AT() command here to keep from printing the same thing over and</span>
     <span class="c1">//over on a new line every time the loop iterates. Instead, this will always print</span>
     <span class="c1">//the apoapsis at the same point on the screen.</span>
@@ -559,20 +542,22 @@ gravity turn?</em></p>
 </div>
 <p>This loop will continue to execute all of its instructions until the apoapsis reaches 100km. Once the apoapsis is past 100km, the loop exits and the rest of the code continues.</p>
 <p>We can combine this with IF statements in order to have one main loop that only executes certain chunks of its code under certain conditions. For example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span> <span class="o">&gt;</span> <span class="mi">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">MYSTEER</span><span class="p">.</span>
+<span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
 
     <span class="c1">//For the initial ascent, we want our steering to be straight</span>
     <span class="c1">//up and rolled due east</span>
-    <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">{</span>
+    <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">100</span> <span class="p">{</span>
         <span class="c1">//This sets our steering 90 degrees up and yawed to the compass</span>
         <span class="c1">//heading of 90 degrees (east)</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">).</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 
     <span class="c1">//Once we pass 100m/s, we want to pitch down ten degrees</span>
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">80</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 80 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">100</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">200</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">80</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 80 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
     <span class="p">}.</span>
 <span class="p">}.</span>
 </pre></div>
@@ -580,29 +565,29 @@ gravity turn?</em></p>
 <p>Each time this loop iterates, it will check the surface velocity. If the velocity is below 100m/s, it will continuously execute the first block of instructions.
 Once the velocity reaches 100m/s, it will stop executing the first block and start executing the second block, which will pitch the nose down to 80 degrees above the horizon.</p>
 <p>Putting this into your script, it should look like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
-<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="k">CLEARSCREEN</span><span class="p">.</span>
 
 <span class="c1">//Next, we&#39;ll lock our throttle to 100%.</span>
-<span class="n">LOCK</span> <span class="n">THROTTLE</span> <span class="n">TO</span> <span class="mf">1.0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
+<span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
 
 <span class="c1">//This is our countdown loop, which cycles from 10 to 0</span>
-<span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
+<span class="k">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
+<span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">countdown</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">countdown</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">countdown</span> <span class="ow">to</span> <span class="nv">countdown</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="nv">countdown</span><span class="p">.</span>
+    <span class="k">WAIT</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 
 <span class="c1">//This is a trigger that constantly checks to see if our thrust is zero.</span>
 <span class="c1">//If it is, it will attempt to stage and then return to where the script</span>
 <span class="c1">//left off. The PRESERVE keyword keeps the trigger active even after it</span>
 <span class="c1">//has been triggered.</span>
-<span class="n">WHEN</span> <span class="n">MAXTHRUST</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
-    <span class="n">STAGE</span><span class="p">.</span>
-    <span class="n">PRESERVE</span><span class="p">.</span>
+<span class="k">WHEN</span> <span class="nv">MAXTHRUST</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">THEN</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
+    <span class="k">STAGE</span><span class="p">.</span>
+    <span class="k">PRESERVE</span><span class="p">.</span>
 <span class="p">}.</span>
 
 <span class="c1">//This will be our main control loop for the ascent. It will</span>
@@ -610,20 +595,22 @@ Once the velocity reaches 100m/s, it will stop executing the first block and sta
 <span class="c1">//than 100km. Each cycle, it will check each of the IF</span>
 <span class="c1">//statements inside and perform them if their conditions</span>
 <span class="c1">//are met</span>
-<span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span> <span class="o">&gt;</span> <span class="mi">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
+<span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">MYSTEER</span><span class="p">.</span> <span class="c1">// from now on we&#39;ll be able to change steering by just assigning a new value to MYSTEER</span>
+<span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
 
     <span class="c1">//For the initial ascent, we want our steering to be straight</span>
     <span class="c1">//up and rolled due east</span>
-    <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">{</span>
+    <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">100</span> <span class="p">{</span>
         <span class="c1">//This sets our steering 90 degrees up and yawed to the compass</span>
         <span class="c1">//heading of 90 degrees (east)</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">).</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 
     <span class="c1">//Once we pass 100m/s, we want to pitch down ten degrees</span>
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">80</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 80 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">100</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">80</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 80 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
     <span class="p">}.</span>
 <span class="p">}.</span>
 </pre></div>
@@ -642,29 +629,29 @@ covers a 100m/s block of velocity, and will adjust the pitch 10 degrees farther 
 <p>You can see that with the AND statement, we can check multiple conditions and only execute that block when all of those conditions are true. We can carefully set up
 the conditions for each IF statement to allow a block of code to be executed no matter what our surface velocity is.</p>
 <p>Copy this into your script and run it. It should take you nearly to orbit:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">//hellolaunch</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//hellolaunch</span>
 
 <span class="c1">//First, we&#39;ll clear the terminal screen to make it look nice</span>
-<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="k">CLEARSCREEN</span><span class="p">.</span>
 
 <span class="c1">//Next, we&#39;ll lock our throttle to 100%.</span>
-<span class="n">LOCK</span> <span class="n">THROTTLE</span> <span class="n">TO</span> <span class="mf">1.0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
+<span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">.</span>   <span class="c1">// 1.0 is the max, 0.0 is idle.</span>
 
 <span class="c1">//This is our countdown loop, which cycles from 10 to 0</span>
-<span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
+<span class="k">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
+<span class="k">FROM</span> <span class="p">{</span><span class="k">local</span> <span class="nv">countdown</span> <span class="ow">is</span> <span class="mf">10</span><span class="p">.}</span> <span class="k">UNTIL</span> <span class="nv">countdown</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">STEP</span> <span class="p">{</span><span class="k">SET</span> <span class="nv">countdown</span> <span class="ow">to</span> <span class="nv">countdown</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.}</span> <span class="k">DO</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="nv">countdown</span><span class="p">.</span>
+    <span class="k">WAIT</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 
 <span class="c1">//This is a trigger that constantly checks to see if our thrust is zero.</span>
 <span class="c1">//If it is, it will attempt to stage and then return to where the script</span>
 <span class="c1">//left off. The PRESERVE keyword keeps the trigger active even after it</span>
 <span class="c1">//has been triggered.</span>
-<span class="n">WHEN</span> <span class="n">MAXTHRUST</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
-    <span class="n">STAGE</span><span class="p">.</span>
-    <span class="n">PRESERVE</span><span class="p">.</span>
+<span class="k">WHEN</span> <span class="nv">MAXTHRUST</span> <span class="o">=</span> <span class="mf">0</span> <span class="k">THEN</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Staging&quot;</span><span class="p">.</span>
+    <span class="k">STAGE</span><span class="p">.</span>
+    <span class="k">PRESERVE</span><span class="p">.</span>
 <span class="p">}.</span>
 
 <span class="c1">//This will be our main control loop for the ascent. It will</span>
@@ -672,74 +659,76 @@ the conditions for each IF statement to allow a block of code to be executed no 
 <span class="c1">//than 100km. Each cycle, it will check each of the IF</span>
 <span class="c1">//statements inside and perform them if their conditions</span>
 <span class="c1">//are met</span>
-<span class="n">UNTIL</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span> <span class="o">&gt;</span> <span class="mi">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
+<span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">MYSTEER</span><span class="p">.</span> <span class="c1">// from now on we&#39;ll be able to change steering by just assigning a new value to MYSTEER</span>
+<span class="k">UNTIL</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span> <span class="o">&gt;</span> <span class="mf">100000</span> <span class="p">{</span> <span class="c1">//Remember, all altitudes will be in meters, not kilometers</span>
 
     <span class="c1">//For the initial ascent, we want our steering to be straight</span>
     <span class="c1">//up and rolled due east</span>
-    <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">{</span>
+    <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">100</span> <span class="p">{</span>
         <span class="c1">//This sets our steering 90 degrees up and yawed to the compass</span>
         <span class="c1">//heading of 90 degrees (east)</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">).</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">90</span><span class="p">).</span>
 
     <span class="c1">//Once we pass 100m/s, we want to pitch down ten degrees</span>
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">80</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 80 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">100</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">200</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">80</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 80 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
     <span class="c1">//Each successive IF statement checks to see if our velocity</span>
     <span class="c1">//is within a 100m/s block and adjusts our heading down another</span>
     <span class="c1">//ten degrees if so</span>
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">300</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">70</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 70 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">200</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">300</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">70</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 70 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">300</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">400</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">60</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 60 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">300</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">400</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">60</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 60 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">400</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">500</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">50</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 50 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">400</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">500</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">50</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 50 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">500</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">600</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">40</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 40 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">500</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">600</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">40</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 40 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">600</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">700</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">30</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 30 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">600</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">700</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">30</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 30 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">700</span> <span class="n">AND</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&lt;</span> <span class="mi">800</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">11</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 20 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">700</span> <span class="ow">AND</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&lt;</span> <span class="mf">800</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">11</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 20 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
     <span class="c1">//Beyond 800m/s, we can keep facing towards 10 degrees above the horizon and wait</span>
     <span class="c1">//for the main loop to recognize that our apoapsis is above 100km</span>
-    <span class="p">}</span> <span class="n">ELSE</span> <span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="o">:</span><span class="n">MAG</span> <span class="o">&gt;=</span> <span class="mi">800</span> <span class="p">{</span>
-        <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">10</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="s">&quot;Pitching to 10 degrees&quot;</span> <span class="n">AT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">).</span>
-        <span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">APOAPSIS</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">AT</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">).</span>
+    <span class="p">}</span> <span class="k">ELSE</span> <span class="k">IF</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">SURFACE</span><span class="p">:</span><span class="nv">MAG</span> <span class="o">&gt;=</span> <span class="mf">800</span> <span class="p">{</span>
+        <span class="k">SET</span> <span class="nv">MYSTEER</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">90</span><span class="p">,</span><span class="mf">10</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Pitching to 10 degrees&quot;</span> <span class="k">AT</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">15</span><span class="p">).</span>
+        <span class="k">PRINT</span> <span class="nv">ROUND</span><span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">APOAPSIS</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">16</span><span class="p">).</span>
 
     <span class="p">}.</span>
 
 <span class="p">}.</span>
 
-<span class="n">PRINT</span> <span class="s">&quot;100km apoapsis reached, cutting throttle&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;100km apoapsis reached, cutting throttle&quot;</span><span class="p">.</span>
 
 <span class="c1">//At this point, our apoapsis is above 100km and our main loop has ended. Next</span>
 <span class="c1">//we&#39;ll make sure our throttle is zero and that we&#39;re pointed prograde</span>
-<span class="n">LOCK</span> <span class="n">THROTTLE</span> <span class="n">TO</span> <span class="mf">0.</span>
+<span class="k">LOCK</span> <span class="nv">THROTTLE</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
 
 <span class="c1">//This sets the user&#39;s throttle setting to zero to prevent the throttle</span>
 <span class="c1">//from returning to the position it was at before the script was run.</span>
-<span class="n">SET</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">CONTROL</span><span class="o">:</span><span class="n">PILOTMAINTHROTTLE</span> <span class="n">TO</span> <span class="mf">0.</span>
+<span class="k">SET</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">CONTROL</span><span class="p">:</span><span class="nv">PILOTMAINTHROTTLE</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>And here is it in action:</p>
@@ -756,7 +745,7 @@ the conditions for each IF statement to allow a block of code to be executed no 
 <li>You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a &#8220;too high&#8221; launch that&#8217;s a bit inefficient. In addition, this method relies on velocity to determine pitch angle, which could result in some very firey launches for other ships with a higher TWR profile.</li>
 <li>This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid velocities that result in high atmospheric heating.</li>
 <li>This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.</li>
-<li>With even more sophisticated checks, the script could be made to work with fancy staging methods like asaparagus.</li>
+<li>With even more sophisticated checks, the script could be made to work with fancy staging methods like asparagus.</li>
 <li>Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.</li>
 </ul>
 </div>
@@ -764,15 +753,16 @@ the conditions for each IF statement to allow a block of code to be executed no 
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="designpatterns.html" class="btn btn-neutral float-right" title="Design Patterns and Considerations with kOS">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="designpatterns.html" class="btn btn-neutral float-right" title="Design Patterns and Considerations with kOS" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../tutorials.html" class="btn btn-neutral" title="Tutorials"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../tutorials.html" class="btn btn-neutral" title="Tutorials" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -781,13 +771,14 @@ the conditions for each IF statement to allow a block of code to be executed no 
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -802,7 +793,7 @@ the conditions for each IF statement to allow a block of code to be executed no 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -811,7 +802,7 @@ the conditions for each IF statement to allow a block of code to be executed no 
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -47,20 +47,24 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     ================================ ============
          Every Suffix of :struct:`Orbitable`
     ---------------------------------------------
-    :attr:`NAME`                     string
-    :attr:`DESCRIPTION`              string
-    :attr:`MASS`                     scalar (kg)
-    :attr:`ALTITUDE`                 scalar (m)
-    :attr:`ROTATIONPERIOD`           scalar (s)
-    :attr:`RADIUS`                   scalar (m)
-    :attr:`MU`                       scalar (:math:`m^3 s^{−2}`)
+    :attr:`NAME`                     :ref:`string <string>`
+    :attr:`DESCRIPTION`              :ref:`string <string>`
+    :attr:`MASS`                     :ref:`scalar <scalar>` (kg)
+    :attr:`ALTITUDE`                 :ref:`scalar <scalar>` (m)
+    :attr:`ROTATIONPERIOD`           :ref:`scalar <scalar>` (s)
+    :attr:`RADIUS`                   :ref:`scalar <scalar>` (m)
+    :attr:`MU`                       :ref:`scalar <scalar>` (:math:`m^3 s^{−2}`)
     :attr:`ATM`                      :struct:`Atmosphere`
-    :attr:`ANGULARVEL`               :struct:`Direction` in :ref:`SHIP-RAW <ship-raw>`
+    :attr:`ANGULARVEL`               :struct:`Vector` in :ref:`SHIP-RAW <ship-raw>`
     :attr:`GEOPOSITIONOF`            :struct:`GeoCoordinates` in :ref:`SHIP-RAW <ship-raw>`
-    :attr:`ALTITUDEOF`               scalar (m)
-    :attr:`SOIRADIUS`                scalar (m)
-    :attr:`ROTATIONANGLE`            scalar (deg)
+    :attr:`ALTITUDEOF`               :ref:`scalar <scalar>` (m)
+    :attr:`SOIRADIUS`                :ref:`scalar <scalar>` (m)
+    :attr:`ROTATIONANGLE`            :ref:`scalar <scalar>` (deg)
     ================================ ============
+
+.. note::
+
+    This type is serializable.
 
 .. attribute:: Body:NAME
 
@@ -98,7 +102,23 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
 .. attribute:: Body:ANGULARVEL
 
-    Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.
+    Angular velocity of the body's rotation about its axis (its
+    day) expressed as a vector.
+
+    The direction the angular velocity points is in Ship-Raw orientation,
+    and represents the axis of rotation.  Remember that everything in
+    Kerbal Space Program uses a *left-handed coordinate system*, which
+    affects which way the angular velocity vector will point.  If you
+    curl the fingers of your **left** hand in the direction of the rotation,
+    and stick out your thumb, the thumb's direction is the way the
+    angular velocity vector will point.
+
+    The magnitude of the vector is the speed of the rotation.
+
+    Note, unlike many of the other parts of kOS, the rotation speed is
+    expressed in radians rather than degrees.  This is to make it
+    congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
+    backward compatibility with older kOS scripts.
 
 .. attribute:: Body:GEOPOSITIONOF
 

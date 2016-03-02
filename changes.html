@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Changes from version to version &mdash; kOS 0.18.2 documentation</title>
+  <title>Changes from version to version &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,19 +26,21 @@
 
   
   
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="index.html"/>
         <link rel="next" title="About kOS and KerboScript" href="about.html"/>
         <link rel="prev" title="Contribute" href="contribute.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -48,104 +50,68 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -153,27 +119,36 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">kOS</a>
+        <a href="contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
+    <li><a href="contents.html">Docs</a> &raquo;</li>
       
     <li>Changes from version to version</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/changes.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/changes.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="changes-from-version-to-version">
 <span id="changes"></span><h1>Changes from version to version<a class="headerlink" href="#changes-from-version-to-version" title="Permalink to this headline">¶</a></h1>
@@ -182,207 +157,328 @@ mentioned in the CHANGELOG, specifically for new features and for
 users familiar with older versions of the documentation who want
 only a quick update to the docs without reading the entire set
 of documentation again from scratch.</p>
+<p>This list is NOT a comprehensive list of everything.  Specifically,
+minor one-line changes, or bug fixes, are not mentioned here.</p>
+<p>Most importantly, changes that might have broken previously working
+scripts are not always signposted here.  To be sure, you should read
+the change log in the main github repository, which is repeated in the
+release announcements that are made in various places with each
+release.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#changes-in-0-18-2" id="id1">Changes in 0.18.2</a><ul>
-<li><a class="reference internal" href="#queue-and-stack" id="id2">Queue and Stack</a></li>
-<li><a class="reference internal" href="#run-once" id="id3">Run Once</a></li>
-<li><a class="reference internal" href="#volumes-and-processors-integration" id="id4">Volumes and Processors integration</a></li>
-<li><a class="reference internal" href="#debuglog" id="id5">Debuglog</a></li>
+<li><a class="reference internal" href="#changes-in-0-19-0" id="id1">Changes in 0.19.0</a><ul>
+<li><a class="reference internal" href="#art-asset-changes" id="id2">Art asset changes</a></li>
+<li><a class="reference internal" href="#varying-power-consumption" id="id3">Varying Power Consumption</a></li>
+<li><a class="reference internal" href="#delegates-function-pointers" id="id4">Delegates (function pointers)</a></li>
+<li><a class="reference internal" href="#optional-defaulted-parameters" id="id5">Optional Defaulted Parameters</a></li>
+<li><a class="reference internal" href="#file-i-o" id="id6">File I/O</a></li>
+<li><a class="reference internal" href="#serialization-in-json" id="id7">Serialization in JSON</a></li>
+<li><a class="reference internal" href="#universal-object-suffixes" id="id8">Universal Object Suffixes</a></li>
+<li><a class="reference internal" href="#multimode-engine-and-gimbal-support" id="id9">Multimode Engine and Gimbal Support</a></li>
+<li><a class="reference internal" href="#dmagic-orbital-science" id="id10">DMagic Orbital Science</a></li>
+<li><a class="reference internal" href="#range" id="id11">Range</a></li>
+<li><a class="reference internal" href="#char-and-unchar" id="id12">Char and Unchar</a></li>
+<li><a class="reference internal" href="#for-loop-on-string-chars" id="id13">For loop on string chars</a></li>
+<li><a class="reference internal" href="#hastarget-hasnode" id="id14">HASTARGET, HASNODE</a></li>
+<li><a class="reference internal" href="#join" id="id15">JOIN</a></li>
+<li><a class="reference internal" href="#hours-per-day" id="id16">Hours per day</a></li>
+<li><a class="reference internal" href="#archive" id="id17">Archive</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#changes-in-0-18-1" id="id6">Changes in 0.18.1</a></li>
-<li><a class="reference internal" href="#changes-in-0-18-steering-much-betterer" id="id7">Changes in 0.18 - Steering Much Betterer</a><ul>
-<li><a class="reference internal" href="#steering-overhaul" id="id8">Steering Overhaul</a></li>
-<li><a class="reference internal" href="#lexicon" id="id9">Lexicon</a></li>
-<li><a class="reference internal" href="#string-methods" id="id10">String methods</a></li>
-<li><a class="reference internal" href="#science-experiment-control" id="id11">Science Experiment Control</a></li>
-<li><a class="reference internal" href="#crew-member-api" id="id12">Crew Member API</a></li>
-<li><a class="reference internal" href="#loadistance" id="id13">LOADISTANCE</a></li>
-<li><a class="reference internal" href="#infernal-robotics-part-suffix" id="id14">Infernal Robotics Part suffix</a></li>
-<li><a class="reference internal" href="#renamed-built-ins" id="id15">Renamed built-ins</a></li>
-<li><a class="reference internal" href="#enforces-control-of-own-vessel-only" id="id16">Enforces control of own-vessel only</a></li>
-<li><a class="reference internal" href="#new-quickstart-tutorial" id="id17">New quickstart tutorial</a></li>
-<li><a class="reference internal" href="#a-few-more-constants" id="id18">A few more constants</a></li>
-<li><a class="reference internal" href="#dynamic-pressure" id="id19">Dynamic pressure</a></li>
-<li><a class="reference internal" href="#defined-keyword" id="id20">DEFINED keyword</a></li>
-<li><a class="reference internal" href="#kuniverse" id="id21">KUNIVERSE</a></li>
-<li><a class="reference internal" href="#solarprimevector" id="id22">SolarPrimeVector</a></li>
+<li><a class="reference internal" href="#changes-in-0-18-2" id="id18">Changes in 0.18.2</a><ul>
+<li><a class="reference internal" href="#queue-and-stack" id="id19">Queue and Stack</a></li>
+<li><a class="reference internal" href="#run-once" id="id20">Run Once</a></li>
+<li><a class="reference internal" href="#volumes-and-processors-integration" id="id21">Volumes and Processors integration</a></li>
+<li><a class="reference internal" href="#debuglog" id="id22">Debuglog</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#changes-in-0-17-3" id="id23">Changes in 0.17.3</a><ul>
-<li><a class="reference internal" href="#new-looping-control-flow-the-from-loop" id="id24">New Looping control flow, the FROM loop</a></li>
-<li><a class="reference internal" href="#short-circuit-booleans" id="id25">Short-Circuit Booleans</a></li>
-<li><a class="reference internal" href="#new-infernal-robotics-interface" id="id26">New Infernal Robotics interface</a></li>
-<li><a class="reference internal" href="#new-remotetech-interface" id="id27">New RemoteTech interface</a></li>
-<li><a class="reference internal" href="#deprecated-incommrange" id="id28">Deprecated INCOMMRANGE</a></li>
-<li><a class="reference internal" href="#updated-thrust-calculations-for-1-0-x" id="id29">Updated thrust calculations for 1.0.x</a></li>
-<li><a class="reference internal" href="#new-core-struct" id="id30">New CORE struct</a></li>
-<li><a class="reference internal" href="#updated-boot-file-name-handling" id="id31">Updated boot file name handling</a></li>
-<li><a class="reference internal" href="#docking-port-element-and-vessel-references" id="id32">Docking port, element, and vessel references</a></li>
-<li><a class="reference internal" href="#new-sounds-and-terminal-features" id="id33">New sounds and terminal features</a></li>
-<li><a class="reference internal" href="#clear-vecdraws-all-at-once" id="id34">Clear vecdraws all at once</a></li>
+<li><a class="reference internal" href="#changes-in-0-18-1" id="id23">Changes in 0.18.1</a></li>
+<li><a class="reference internal" href="#changes-in-0-18-steering-much-betterer" id="id24">Changes in 0.18 - Steering Much Betterer</a><ul>
+<li><a class="reference internal" href="#steering-overhaul" id="id25">Steering Overhaul</a></li>
+<li><a class="reference internal" href="#lexicon" id="id26">Lexicon</a></li>
+<li><a class="reference internal" href="#string-methods" id="id27">String methods</a></li>
+<li><a class="reference internal" href="#science-experiment-control" id="id28">Science Experiment Control</a></li>
+<li><a class="reference internal" href="#crew-member-api" id="id29">Crew Member API</a></li>
+<li><a class="reference internal" href="#loadistance" id="id30">LOADISTANCE</a></li>
+<li><a class="reference internal" href="#infernal-robotics-part-suffix" id="id31">Infernal Robotics Part suffix</a></li>
+<li><a class="reference internal" href="#renamed-built-ins" id="id32">Renamed built-ins</a></li>
+<li><a class="reference internal" href="#enforces-control-of-own-vessel-only" id="id33">Enforces control of own-vessel only</a></li>
+<li><a class="reference internal" href="#new-quickstart-tutorial" id="id34">New quickstart tutorial</a></li>
+<li><a class="reference internal" href="#a-few-more-constants" id="id35">A few more constants</a></li>
+<li><a class="reference internal" href="#dynamic-pressure" id="id36">Dynamic pressure</a></li>
+<li><a class="reference internal" href="#defined-keyword" id="id37">DEFINED keyword</a></li>
+<li><a class="reference internal" href="#kuniverse" id="id38">KUNIVERSE</a></li>
+<li><a class="reference internal" href="#solarprimevector" id="id39">SolarPrimeVector</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#changes-in-0-17-0" id="id35">Changes in 0.17.0</a><ul>
-<li><a class="reference internal" href="#variables-can-now-be-local" id="id36">Variables can now be local</a></li>
-<li><a class="reference internal" href="#kerboscript-has-user-functions" id="id37">Kerboscript has User Functions</a></li>
-<li><a class="reference internal" href="#community-examples-library" id="id38">Community Examples Library</a></li>
-<li><a class="reference internal" href="#physics-ticks-not-update-ticks" id="id39">Physics Ticks not Update Ticks</a></li>
-<li><a class="reference internal" href="#ability-to-use-sas-modes-from-ksp-0-90" id="id40">Ability to use SAS modes from KSP 0.90</a></li>
-<li><a class="reference internal" href="#blizzy-toolbar-support" id="id41">Blizzy ToolBar Support</a></li>
-<li><a class="reference internal" href="#ability-to-define-colors-using-hsv" id="id42">Ability to define colors using HSV</a></li>
-<li><a class="reference internal" href="#ability-to-highlight-a-part-in-color" id="id43">Ability to highlight a part in color</a></li>
-<li><a class="reference internal" href="#better-user-interface-for-selecting-boot-scripts" id="id44">Better user interface for selecting boot scripts</a></li>
-<li><a class="reference internal" href="#disks-can-be-made-bigger-with-tweakable-slider" id="id45">Disks can be made bigger with tweakable slider</a></li>
-<li><a class="reference internal" href="#you-can-transfer-resources" id="id46">You Can Transfer Resources</a></li>
-<li><a class="reference internal" href="#kerbal-alarm-clock-support" id="id47">Kerbal Alarm Clock support</a></li>
-<li><a class="reference internal" href="#query-the-docked-elements-of-a-vessel" id="id48">Query the docked elements of a vessel</a></li>
-<li><a class="reference internal" href="#support-for-action-groups-extended" id="id49">Support for Action Groups Extended</a></li>
-<li><a class="reference internal" href="#list-constructor-can-now-initialize-lists" id="id50">LIST constructor can now initialize lists</a></li>
-<li><a class="reference internal" href="#isdead-suffix-for-vessel" id="id51">ISDEAD suffix for Vessel</a></li>
+<li><a class="reference internal" href="#changes-in-0-17-3" id="id40">Changes in 0.17.3</a><ul>
+<li><a class="reference internal" href="#new-looping-control-flow-the-from-loop" id="id41">New Looping control flow, the FROM loop</a></li>
+<li><a class="reference internal" href="#short-circuit-booleans" id="id42">Short-Circuit Booleans</a></li>
+<li><a class="reference internal" href="#new-infernal-robotics-interface" id="id43">New Infernal Robotics interface</a></li>
+<li><a class="reference internal" href="#new-remotetech-interface" id="id44">New RemoteTech interface</a></li>
+<li><a class="reference internal" href="#deprecated-incommrange" id="id45">Deprecated INCOMMRANGE</a></li>
+<li><a class="reference internal" href="#updated-thrust-calculations-for-1-0-x" id="id46">Updated thrust calculations for 1.0.x</a></li>
+<li><a class="reference internal" href="#new-core-struct" id="id47">New CORE struct</a></li>
+<li><a class="reference internal" href="#updated-boot-file-name-handling" id="id48">Updated boot file name handling</a></li>
+<li><a class="reference internal" href="#docking-port-element-and-vessel-references" id="id49">Docking port, element, and vessel references</a></li>
+<li><a class="reference internal" href="#new-sounds-and-terminal-features" id="id50">New sounds and terminal features</a></li>
+<li><a class="reference internal" href="#clear-vecdraws-all-at-once" id="id51">Clear vecdraws all at once</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#changes-in-0-17-0" id="id52">Changes in 0.17.0</a><ul>
+<li><a class="reference internal" href="#variables-can-now-be-local" id="id53">Variables can now be local</a></li>
+<li><a class="reference internal" href="#kerboscript-has-user-functions" id="id54">Kerboscript has User Functions</a></li>
+<li><a class="reference internal" href="#community-examples-library" id="id55">Community Examples Library</a></li>
+<li><a class="reference internal" href="#physics-ticks-not-update-ticks" id="id56">Physics Ticks not Update Ticks</a></li>
+<li><a class="reference internal" href="#ability-to-use-sas-modes-from-ksp-0-90" id="id57">Ability to use SAS modes from KSP 0.90</a></li>
+<li><a class="reference internal" href="#blizzy-toolbar-support" id="id58">Blizzy ToolBar Support</a></li>
+<li><a class="reference internal" href="#ability-to-define-colors-using-hsv" id="id59">Ability to define colors using HSV</a></li>
+<li><a class="reference internal" href="#ability-to-highlight-a-part-in-color" id="id60">Ability to highlight a part in color</a></li>
+<li><a class="reference internal" href="#better-user-interface-for-selecting-boot-scripts" id="id61">Better user interface for selecting boot scripts</a></li>
+<li><a class="reference internal" href="#disks-can-be-made-bigger-with-tweakable-slider" id="id62">Disks can be made bigger with tweakable slider</a></li>
+<li><a class="reference internal" href="#you-can-transfer-resources" id="id63">You Can Transfer Resources</a></li>
+<li><a class="reference internal" href="#kerbal-alarm-clock-support" id="id64">Kerbal Alarm Clock support</a></li>
+<li><a class="reference internal" href="#query-the-docked-elements-of-a-vessel" id="id65">Query the docked elements of a vessel</a></li>
+<li><a class="reference internal" href="#support-for-action-groups-extended" id="id66">Support for Action Groups Extended</a></li>
+<li><a class="reference internal" href="#list-constructor-can-now-initialize-lists" id="id67">LIST constructor can now initialize lists</a></li>
+<li><a class="reference internal" href="#isdead-suffix-for-vessel" id="id68">ISDEAD suffix for Vessel</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <hr class="docutils" />
+<div class="section" id="changes-in-0-19-0">
+<h2><a class="toc-backref" href="#id1">Changes in 0.19.0</a><a class="headerlink" href="#changes-in-0-19-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="art-asset-changes">
+<h3><a class="toc-backref" href="#id2">Art asset changes</a><a class="headerlink" href="#art-asset-changes" title="Permalink to this headline">¶</a></h3>
+<p>Though not represented in these documents, numerous changes to the
+part models and artwork are included as part of this update, including
+the new KAL9000 high-end computer part.</p>
+</div>
+<div class="section" id="varying-power-consumption">
+<h3><a class="toc-backref" href="#id3">Varying Power Consumption</a><a class="headerlink" href="#varying-power-consumption" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="general/cpu_hardware.html#electricdrain"><span>Electrical drain</span></a> is now handled in a dynamically
+changing way that actually notices how much you are using the CPU and
+uses less power if the CPU is mostly idling (if it spends most of its
+time on WAIT statements).</p>
+<p>For mods that want to re-balance the meaning of electric charge units,
+the drain factor is also editable in
+<a class="reference internal" href="general/kospartmodule.html#kospartmodule"><span>module config fields</span></a> in the various <code class="docutils literal"><span class="pre">part.cfg</span></code>
+files the mod ships with.  This opens them up to being changed by
+ModuleManager rules.</p>
+</div>
+<div class="section" id="delegates-function-pointers">
+<h3><a class="toc-backref" href="#id4">Delegates (function pointers)</a><a class="headerlink" href="#delegates-function-pointers" title="Permalink to this headline">¶</a></h3>
+<p>User functions and built-in functions (but not suffixes yet) can
+now be referred to with function pointers called <a class="reference internal" href="language/delegates.html#delegates"><span>delegates</span></a>
+along with &#8220;currying&#8221; of pre-loaded arguments.</p>
+</div>
+<div class="section" id="optional-defaulted-parameters">
+<h3><a class="toc-backref" href="#id5">Optional Defaulted Parameters</a><a class="headerlink" href="#optional-defaulted-parameters" title="Permalink to this headline">¶</a></h3>
+<p>User functions and user programs can now be configured to have
+<a class="reference internal" href="language/user_functions.html#default-parameters"><span>optional trailing parameters</span></a> that receive
+unmentioned when calling them.</p>
+</div>
+<div class="section" id="file-i-o">
+<h3><a class="toc-backref" href="#id6">File I/O</a><a class="headerlink" href="#file-i-o" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/volumes_and_files/volumefile.html#volumefile"><span>VolumeFile</span></a> now lets you read and write arbitrary
+strings in files in a more natural way than using the LOG command,
+and allows you to read the whole file into one big string in one go.</p>
+</div>
+<div class="section" id="serialization-in-json">
+<h3><a class="toc-backref" href="#id7">Serialization in JSON</a><a class="headerlink" href="#serialization-in-json" title="Permalink to this headline">¶</a></h3>
+<p>Automatic serialization system added to the <a class="reference internal" href="commands/files.html#files"><span>file operations</span></a>
+to save/load some kinds of data values to
+<a class="reference external" href="https://en.wikipedia.org/wiki/JSON#Example">JSON-format files.</a></p>
+</div>
+<div class="section" id="universal-object-suffixes">
+<h3><a class="toc-backref" href="#id8">Universal Object Suffixes</a><a class="headerlink" href="#universal-object-suffixes" title="Permalink to this headline">¶</a></h3>
+<p>All user values now are a kind of <a class="reference internal" href="structures/reflection/structure.html#structure"><span>structure</span></a> and thus
+there are a few universal suffixes that can be used to query what
+type of data a thing is (<code class="docutils literal"><span class="pre">:ISTYPE</span></code> and <code class="docutils literal"><span class="pre">:TYPENAME</span></code>).</p>
+</div>
+<div class="section" id="multimode-engine-and-gimbal-support">
+<h3><a class="toc-backref" href="#id9">Multimode Engine and Gimbal Support</a><a class="headerlink" href="#multimode-engine-and-gimbal-support" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/vessels/engine.html#engine"><span>Engines</span></a> can now support multiple-mode information, and can
+acces thei gimbal information in the <code class="docutils literal"><span class="pre">:GIMBAL</span></code> suffix.</p>
+</div>
+<div class="section" id="dmagic-orbital-science">
+<h3><a class="toc-backref" href="#id10">DMagic Orbital Science</a><a class="headerlink" href="#dmagic-orbital-science" title="Permalink to this headline">¶</a></h3>
+<p>Better support for <a class="reference internal" href="addons/OrbitalScience.html#orbitalscience"><span>DMagic&#8217;s Orbital Science mod</span></a></p>
+</div>
+<div class="section" id="range">
+<h3><a class="toc-backref" href="#id11">Range</a><a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h3>
+<p>New <a class="reference internal" href="structures/collections/range.html#range"><span>Range</span></a> type for getting arbitrary iterable collections
+of ranges of integers.</p>
+</div>
+<div class="section" id="char-and-unchar">
+<h3><a class="toc-backref" href="#id12">Char and Unchar</a><a class="headerlink" href="#char-and-unchar" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="math/basic.html#function:CHAR" title="CHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">CHAR(a)</span></code></a> and <a class="reference internal" href="math/basic.html#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">UNCHAR(a)</span></code></a> functions for getting the Unicode
+value of a character or making a character from its Unicode value.</p>
+</div>
+<div class="section" id="for-loop-on-string-chars">
+<h3><a class="toc-backref" href="#id13">For loop on string chars</a><a class="headerlink" href="#for-loop-on-string-chars" title="Permalink to this headline">¶</a></h3>
+<p>The for loop can now iterate over the characters of a <a class="reference internal" href="structures/misc/string.html#string"><span>string</span></a>.</p>
+</div>
+<div class="section" id="hastarget-hasnode">
+<h3><a class="toc-backref" href="#id14">HASTARGET, HASNODE</a><a class="headerlink" href="#hastarget-hasnode" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="bindings.html#hastarget"><span>HASTARGET</span></a>.
+<a class="reference internal" href="bindings.html#hasnode"><span>HASNODE</span></a>.</p>
+</div>
+<div class="section" id="join">
+<h3><a class="toc-backref" href="#id15">JOIN</a><a class="headerlink" href="#join" title="Permalink to this headline">¶</a></h3>
+<p>Join suffix on <a class="reference internal" href="structures/collections/list.html#list"><span>lists</span></a> now lets you make a string with a
+delimeter of the list&#8217;s elements.</p>
+</div>
+<div class="section" id="hours-per-day">
+<h3><a class="toc-backref" href="#id16">Hours per day</a><a class="headerlink" href="#hours-per-day" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/misc/kuniverse.html#kuniverse"><span>KUniverse</span></a> now has a suffix to let you read the
+user setting for whether the clock is using a 24 hour day or a
+Kerbin 6 hour day.</p>
+</div>
+<div class="section" id="archive">
+<h3><a class="toc-backref" href="#id17">Archive</a><a class="headerlink" href="#archive" title="Permalink to this headline">¶</a></h3>
+<p>The reserved word <code class="docutils literal"><span class="pre">Archive</span></code> is now a first class citizen so that
+<code class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">ARCHIVE.</span></code> works like you&#8217;d expect it to.</p>
+</div>
+</div>
 <div class="section" id="changes-in-0-18-2">
-<h2><a class="toc-backref" href="#id1">Changes in 0.18.2</a><a class="headerlink" href="#changes-in-0-18-2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">Changes in 0.18.2</a><a class="headerlink" href="#changes-in-0-18-2" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="queue-and-stack">
-<h3><a class="toc-backref" href="#id2">Queue and Stack</a><a class="headerlink" href="#queue-and-stack" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="structures/misc/queue.html#queue"><em>Queues</em></a> and <a class="reference internal" href="structures/misc/stack.html#stack"><em>Stacks</em></a> are now a feature
+<h3><a class="toc-backref" href="#id19">Queue and Stack</a><a class="headerlink" href="#queue-and-stack" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/collections/queue.html#queue"><span>Queues</span></a> and <a class="reference internal" href="structures/collections/stack.html#stack"><span>Stacks</span></a> are now a feature
 you can use along with lists.</p>
 </div>
 <div class="section" id="run-once">
-<h3><a class="toc-backref" href="#id3">Run Once</a><a class="headerlink" href="#run-once" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="commands/files.html#run-once"><em>New ONCE argment to the run command</em></a></p>
+<h3><a class="toc-backref" href="#id20">Run Once</a><a class="headerlink" href="#run-once" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="commands/files.html#run-once"><span>New ONCE argment to the run command</span></a></p>
 </div>
 <div class="section" id="volumes-and-processors-integration">
-<h3><a class="toc-backref" href="#id4">Volumes and Processors integration</a><a class="headerlink" href="#volumes-and-processors-integration" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="structures/vessels/volume.html#volume"><em>Volumes</em></a> now get a default name equal to the core
+<h3><a class="toc-backref" href="#id21">Volumes and Processors integration</a><a class="headerlink" href="#volumes-and-processors-integration" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/volumes_and_files/volume.html#volume"><span>Volumes</span></a> now get a default name equal to the core
 processor&#8217;s nametag, and have several suffixes that can be queried.</p>
-<p>Get the volume that goes with a <a class="reference internal" href="structures/core.html#core"><em>core</em></a></p>
+<p>Get the volume that goes with a <a class="reference internal" href="structures/core.html#core"><span>core</span></a></p>
 </div>
 <div class="section" id="debuglog">
-<h3><a class="toc-backref" href="#id5">Debuglog</a><a class="headerlink" href="#debuglog" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="structures/misc/kuniverse.html#debuglog"><em>Debuglog</em></a> suffix of KUNIVERSE for writing messages to the
+<h3><a class="toc-backref" href="#id22">Debuglog</a><a class="headerlink" href="#debuglog" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/misc/kuniverse.html#debuglog"><span>Debuglog</span></a> suffix of KUNIVERSE for writing messages to the
 Unity log file.</p>
 </div>
 </div>
 <div class="section" id="changes-in-0-18-1">
-<h2><a class="toc-backref" href="#id6">Changes in 0.18.1</a><a class="headerlink" href="#changes-in-0-18-1" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id23">Changes in 0.18.1</a><a class="headerlink" href="#changes-in-0-18-1" title="Permalink to this headline">¶</a></h2>
 <p>(This update had only bug fixes and nothing that affected these
 user documentation pages.)</p>
 </div>
 <div class="section" id="changes-in-0-18-steering-much-betterer">
-<h2><a class="toc-backref" href="#id7">Changes in 0.18 - Steering Much Betterer</a><a class="headerlink" href="#changes-in-0-18-steering-much-betterer" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id24">Changes in 0.18 - Steering Much Betterer</a><a class="headerlink" href="#changes-in-0-18-steering-much-betterer" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="steering-overhaul">
-<h3><a class="toc-backref" href="#id8">Steering Overhaul</a><a class="headerlink" href="#steering-overhaul" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id25">Steering Overhaul</a><a class="headerlink" href="#steering-overhaul" title="Permalink to this headline">¶</a></h3>
 <p>A major change to Cooked Steering!</p>
 <p>Should help people using torque-less craft like with Realism Overhaul.
 Removed the old steering logic and replaced it with a nice auto-tuning system.</p>
-<p><a class="reference internal" href="structures/misc/steeringmanager.html#steeringmanager"><em>SteeringManager</em></a> structure now lests you acccess and alter parts of the cooked steering system.</p>
-<p><a class="reference internal" href="structures/misc/pidloop.html#pidloop"><em>PIDLoop</em></a> structure now lets you borrow the PID mechanism used by the new cooked steering, for your own purposes.</p>
+<p><a class="reference internal" href="structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> structure now lests you acccess and alter parts of the cooked steering system.</p>
+<p><a class="reference internal" href="structures/misc/pidloop.html#pidloop"><span>PIDLoop</span></a> structure now lets you borrow the PID mechanism used by the new cooked steering, for your own purposes.</p>
 </div>
 <div class="section" id="lexicon">
-<h3><a class="toc-backref" href="#id9">Lexicon</a><a class="headerlink" href="#lexicon" title="Permalink to this headline">¶</a></h3>
-<p>New <a class="reference internal" href="structures/misc/lexicon.html#lexicon"><em>Lexicon</em></a> structure now allows associative arrays.</p>
+<h3><a class="toc-backref" href="#id26">Lexicon</a><a class="headerlink" href="#lexicon" title="Permalink to this headline">¶</a></h3>
+<p>New <a class="reference internal" href="structures/collections/lexicon.html#lexicon"><span>Lexicon</span></a> structure now allows associative arrays.</p>
 </div>
 <div class="section" id="string-methods">
-<h3><a class="toc-backref" href="#id10">String methods</a><a class="headerlink" href="#string-methods" title="Permalink to this headline">¶</a></h3>
-<p>New <a class="reference internal" href="structures/misc/string.html#string"><em>String</em></a> structure now allows string manipulations.</p>
+<h3><a class="toc-backref" href="#id27">String methods</a><a class="headerlink" href="#string-methods" title="Permalink to this headline">¶</a></h3>
+<p>New <a class="reference internal" href="structures/misc/string.html#string"><span>String</span></a> structure now allows string manipulations.</p>
 </div>
 <div class="section" id="science-experiment-control">
-<h3><a class="toc-backref" href="#id11">Science Experiment Control</a><a class="headerlink" href="#science-experiment-control" title="Permalink to this headline">¶</a></h3>
-<p>New <a class="reference internal" href="structures/vessels/scienceexperiment.html#scienceexperimentmodule"><em>ScienceExperimentModule</em></a> allows you to fire off science experiments bypassing the user
+<h3><a class="toc-backref" href="#id28">Science Experiment Control</a><a class="headerlink" href="#science-experiment-control" title="Permalink to this headline">¶</a></h3>
+<p>New <a class="reference internal" href="structures/vessels/scienceexperiment.html#scienceexperimentmodule"><span>ScienceExperimentModule</span></a> allows you to fire off science experiments bypassing the user
 interface dialog.</p>
 </div>
 <div class="section" id="crew-member-api">
-<h3><a class="toc-backref" href="#id12">Crew Member API</a><a class="headerlink" href="#crew-member-api" title="Permalink to this headline">¶</a></h3>
-<p>New <a class="reference internal" href="structures/vessels/crewmember.html#crewmember"><em>CrewMember</em></a> structure allows you to query the registered crew - their class, gender, and skill.</p>
+<h3><a class="toc-backref" href="#id29">Crew Member API</a><a class="headerlink" href="#crew-member-api" title="Permalink to this headline">¶</a></h3>
+<p>New <a class="reference internal" href="structures/vessels/crewmember.html#crewmember"><span>CrewMember</span></a> structure allows you to query the registered crew - their class, gender, and skill.</p>
 </div>
 <div class="section" id="loadistance">
-<h3><a class="toc-backref" href="#id13">LOADISTANCE</a><a class="headerlink" href="#loadistance" title="Permalink to this headline">¶</a></h3>
-<p>New <a class="reference internal" href="structures/misc/loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">LOADDISTANCE</span></tt></a> obsoletes the previous way it worked.</p>
+<h3><a class="toc-backref" href="#id30">LOADISTANCE</a><a class="headerlink" href="#loadistance" title="Permalink to this headline">¶</a></h3>
+<p>New <a class="reference internal" href="structures/misc/loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LOADDISTANCE</span></code></a> obsoletes the previous way it worked.</p>
 </div>
 <div class="section" id="infernal-robotics-part-suffix">
-<h3><a class="toc-backref" href="#id14">Infernal Robotics Part suffix</a><a class="headerlink" href="#infernal-robotics-part-suffix" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id31">Infernal Robotics Part suffix</a><a class="headerlink" href="#infernal-robotics-part-suffix" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="renamed-built-ins">
-<h3><a class="toc-backref" href="#id15">Renamed built-ins</a><a class="headerlink" href="#renamed-built-ins" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id32">Renamed built-ins</a><a class="headerlink" href="#renamed-built-ins" title="Permalink to this headline">¶</a></h3>
 <p>&#8220;AQUIRE&#8221; on docking ports is now &#8220;ACQUIRE&#8221;.
 &#8220;SURFACESPEED&#8221; is now &#8220;GROUNDSPEED&#8221; instead.</p>
 </div>
 <div class="section" id="enforces-control-of-own-vessel-only">
-<h3><a class="toc-backref" href="#id16">Enforces control of own-vessel only</a><a class="headerlink" href="#enforces-control-of-own-vessel-only" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id33">Enforces control of own-vessel only</a><a class="headerlink" href="#enforces-control-of-own-vessel-only" title="Permalink to this headline">¶</a></h3>
 <p>It was previously possible to control vessels that weren&#8217;t attached to the kOS computer
 running the script.  This has been corrected.</p>
 </div>
 <div class="section" id="new-quickstart-tutorial">
-<h3><a class="toc-backref" href="#id17">New quickstart tutorial</a><a class="headerlink" href="#new-quickstart-tutorial" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id34">New quickstart tutorial</a><a class="headerlink" href="#new-quickstart-tutorial" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html">http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html</a></p>
 </div>
 <div class="section" id="a-few-more-constants">
-<h3><a class="toc-backref" href="#id18">A few more constants</a><a class="headerlink" href="#a-few-more-constants" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="math/basic.html#constants"><em>constants</em></a></p>
+<h3><a class="toc-backref" href="#id35">A few more constants</a><a class="headerlink" href="#a-few-more-constants" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="math/basic.html#constants"><span>constants</span></a></p>
 </div>
 <div class="section" id="dynamic-pressure">
-<h3><a class="toc-backref" href="#id19">Dynamic pressure</a><a class="headerlink" href="#dynamic-pressure" title="Permalink to this headline">¶</a></h3>
-<p>DYNAMICPRESSURE, or Q, a new suffix of <a class="reference internal" href="structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>.</p>
+<h3><a class="toc-backref" href="#id36">Dynamic pressure</a><a class="headerlink" href="#dynamic-pressure" title="Permalink to this headline">¶</a></h3>
+<p>DYNAMICPRESSURE, or Q, a new suffix of <a class="reference internal" href="structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>.</p>
 </div>
 <div class="section" id="defined-keyword">
-<h3><a class="toc-backref" href="#id20">DEFINED keyword</a><a class="headerlink" href="#defined-keyword" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="language/variables.html#defined"><em>DEFINED keyword</em></a> that can be used to check if a variable has been declared.</p>
+<h3><a class="toc-backref" href="#id37">DEFINED keyword</a><a class="headerlink" href="#defined-keyword" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="language/variables.html#defined"><span>DEFINED keyword</span></a> that can be used to check if a variable has been declared.</p>
 </div>
 <div class="section" id="kuniverse">
-<h3><a class="toc-backref" href="#id21">KUNIVERSE</a><a class="headerlink" href="#kuniverse" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="structures/misc/kuniverse.html#structure:KUNIVERSE" title="KUNIVERSE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KUniverse</span></tt></a> structure letting you break the 4th wall and revert from a script</p>
+<h3><a class="toc-backref" href="#id38">KUNIVERSE</a><a class="headerlink" href="#kuniverse" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="structures/misc/kuniverse.html#structure:KUNIVERSE" title="KUNIVERSE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KUniverse</span></code></a> structure letting you break the 4th wall and revert from a script</p>
 </div>
 <div class="section" id="solarprimevector">
-<h3><a class="toc-backref" href="#id22">SolarPrimeVector</a><a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="bindings.html#solarprimevector"><em>SolarPrimeVector</em></a>, a bound variable to provide universal longitude direction.</p>
+<h3><a class="toc-backref" href="#id39">SolarPrimeVector</a><a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="bindings.html#solarprimevector"><span>SolarPrimeVector</span></a>, a bound variable to provide universal longitude direction.</p>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="changes-in-0-17-3">
-<h2><a class="toc-backref" href="#id23">Changes in 0.17.3</a><a class="headerlink" href="#changes-in-0-17-3" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id40">Changes in 0.17.3</a><a class="headerlink" href="#changes-in-0-17-3" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="new-looping-control-flow-the-from-loop">
-<h3><a class="toc-backref" href="#id24">New Looping control flow, the FROM loop</a><a class="headerlink" href="#new-looping-control-flow-the-from-loop" title="Permalink to this headline">¶</a></h3>
-<p>There is now a new kind of loop, <a class="reference internal" href="language/flow.html#from"><em>the FROM loop</em></a>,
+<h3><a class="toc-backref" href="#id41">New Looping control flow, the FROM loop</a><a class="headerlink" href="#new-looping-control-flow-the-from-loop" title="Permalink to this headline">¶</a></h3>
+<p>There is now a new kind of loop, <a class="reference internal" href="language/flow.html#from"><span>the FROM loop</span></a>,
 which is a bit like the typical 3-part for-loop seen in a
 lot of other languages with a separate init, check, and increment
 section.</p>
 </div>
 <div class="section" id="short-circuit-booleans">
-<h3><a class="toc-backref" href="#id25">Short-Circuit Booleans</a><a class="headerlink" href="#short-circuit-booleans" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id42">Short-Circuit Booleans</a><a class="headerlink" href="#short-circuit-booleans" title="Permalink to this headline">¶</a></h3>
 <p>Previously, kerboscript&#8217;s AND and OR operators were not
-short-circuiting.  <a class="reference internal" href="language/features.html#short-circuit"><em>Now they are</em></a>.</p>
+short-circuiting.  <a class="reference internal" href="language/features.html#short-circuit"><span>Now they are</span></a>.</p>
 </div>
 <div class="section" id="new-infernal-robotics-interface">
-<h3><a class="toc-backref" href="#id26">New Infernal Robotics interface</a><a class="headerlink" href="#new-infernal-robotics-interface" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id43">New Infernal Robotics interface</a><a class="headerlink" href="#new-infernal-robotics-interface" title="Permalink to this headline">¶</a></h3>
 <p>There are a few new helper addon utilities for the Infernal
-Robotics mod, on the <a class="reference internal" href="addons/IR.html#ir"><em>IR addon page</em></a>.</p>
+Robotics mod, on the <a class="reference internal" href="addons/IR.html#ir"><span>IR addon page</span></a>.</p>
 </div>
 <div class="section" id="new-remotetech-interface">
-<h3><a class="toc-backref" href="#id27">New RemoteTech interface</a><a class="headerlink" href="#new-remotetech-interface" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id44">New RemoteTech interface</a><a class="headerlink" href="#new-remotetech-interface" title="Permalink to this headline">¶</a></h3>
 <p>There are a few new helper addon utilities for the RemoteTech
-mod, on the <a class="reference internal" href="addons/RemoteTech.html#remotetech"><em>RemoteTech addon page</em></a>.</p>
+mod, on the <a class="reference internal" href="addons/RemoteTech.html#remotetech"><span>RemoteTech addon page</span></a>.</p>
 </div>
 <div class="section" id="deprecated-incommrange">
-<h3><a class="toc-backref" href="#id28">Deprecated INCOMMRANGE</a><a class="headerlink" href="#deprecated-incommrange" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id45">Deprecated INCOMMRANGE</a><a class="headerlink" href="#deprecated-incommrange" title="Permalink to this headline">¶</a></h3>
 <p>Reading from the INCOMMRANGE bound variable will now throw a
 deprecation exception with instructions to use the new
-<a class="reference internal" href="addons/RemoteTech.html#structure:RTADDON" title="RTADDON structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">RTAddon</span></tt></a> structure for the RT mod.</p>
+<a class="reference internal" href="addons/RemoteTech.html#structure:RTADDON" title="RTADDON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">RTAddon</span></code></a> structure for the RT mod.</p>
 </div>
 <div class="section" id="updated-thrust-calculations-for-1-0-x">
-<h3><a class="toc-backref" href="#id29">Updated thrust calculations for 1.0.x</a><a class="headerlink" href="#updated-thrust-calculations-for-1-0-x" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id46">Updated thrust calculations for 1.0.x</a><a class="headerlink" href="#updated-thrust-calculations-for-1-0-x" title="Permalink to this headline">¶</a></h3>
 <p>KSP 1.0 caused the thrust calculations to become a LOT more
 complex than they used to be and kOS hadn&#8217;t caught up yet.
 For a lot of scripts, trying to figure out a good throttle
 setting is no longer a matter of just taking a fraction of the
 engine&#8217;s MAXTHRUST.</p>
 <p>We fixed the existing suffixes of MAXTHRUST and AVAILABLETHRUST for
-<a class="reference internal" href="structures/vessels/engine.html#structure:ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">engine</span></tt></a> and <a class="reference internal" href="structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">vessel</span></tt></a> to account for the new changes
+<a class="reference internal" href="structures/vessels/engine.html#structure:ENGINE" title="ENGINE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">engine</span></code></a> and <a class="reference internal" href="structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">vessel</span></code></a> to account for the new changes
 in thrust based on
 ISP at different altitudes.  MAXTHRUST is now the max the engine can
 put out at the CURRENT atmospheric pressure and current velocity.
@@ -394,8 +490,8 @@ suffixes MAXTHRUSTAT (engines and vessels), AVAILABLETHRUSTAT
 read the applicable value at a given atmospheric pressure.</p>
 </div>
 <div class="section" id="new-core-struct">
-<h3><a class="toc-backref" href="#id30">New CORE struct</a><a class="headerlink" href="#new-core-struct" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="structures/core.html#core"><em>core</em></a> bound variable gives you a structure you can use
+<h3><a class="toc-backref" href="#id47">New CORE struct</a><a class="headerlink" href="#new-core-struct" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="structures/core.html#core"><span>core</span></a> bound variable gives you a structure you can use
 to access properties of the current in-game CPU the script is running on,
 including the vessel part it&#8217;s inside of, and the vessel it&#8217;s inside
 of, as well as the currently selected volume.  Moving forward this
@@ -404,22 +500,22 @@ the processor itself, like local configuration or current
 operational status.</p>
 </div>
 <div class="section" id="updated-boot-file-name-handling">
-<h3><a class="toc-backref" href="#id31">Updated boot file name handling</a><a class="headerlink" href="#updated-boot-file-name-handling" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id48">Updated boot file name handling</a><a class="headerlink" href="#updated-boot-file-name-handling" title="Permalink to this headline">¶</a></h3>
 <p>Boot files are now copied to the local hard disk using their original
 file name.  This allows for uniform file name access either on the
 archive or local drive and fixes boot files not working when kOS is
 configured to start on the Archive.  You can also get or set the boot
-file using the BOOTFILENAME suffix of the <a class="reference internal" href="structures/core.html#structure:CORE" title="CORE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">CORE</span></tt></a> bound variable.</p>
+file using the BOOTFILENAME suffix of the <a class="reference internal" href="structures/core.html#structure:CORE" title="CORE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CORE</span></code></a> bound variable.</p>
 </div>
 <div class="section" id="docking-port-element-and-vessel-references">
-<h3><a class="toc-backref" href="#id32">Docking port, element, and vessel references</a><a class="headerlink" href="#docking-port-element-and-vessel-references" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id49">Docking port, element, and vessel references</a><a class="headerlink" href="#docking-port-element-and-vessel-references" title="Permalink to this headline">¶</a></h3>
 <p>You can now get a list of docking ports on any element or vessel using
 the DOCKINGPORTS suffix.  Vessels also expose a list of their elements
 (the ELEMENTS suffix) and an element will refernce it&#8217;s parent vessel
 (the VESSEL suffix).</p>
 </div>
 <div class="section" id="new-sounds-and-terminal-features">
-<h3><a class="toc-backref" href="#id33">New sounds and terminal features</a><a class="headerlink" href="#new-sounds-and-terminal-features" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id50">New sounds and terminal features</a><a class="headerlink" href="#new-sounds-and-terminal-features" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>For purely cosmetic purpopses, there are new sound features and</dt>
 <dd>a few terminal tweaks.</dd>
@@ -433,40 +529,40 @@ file, as kOS has no BEL char, but this will be addressed later.</li>
 </ul>
 </div>
 <div class="section" id="clear-vecdraws-all-at-once">
-<h3><a class="toc-backref" href="#id34">Clear vecdraws all at once</a><a class="headerlink" href="#clear-vecdraws-all-at-once" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id51">Clear vecdraws all at once</a><a class="headerlink" href="#clear-vecdraws-all-at-once" title="Permalink to this headline">¶</a></h3>
 <p>For convenience, you can clear all vecdraws off the screen at once
-now with the <a class="reference internal" href="structures/misc/vecdraw.html#clearvecdraws"><em>clearvecdraws()</em></a> function.</p>
+now with the <a class="reference internal" href="structures/misc/vecdraw.html#clearvecdraws"><span>clearvecdraws()</span></a> function.</p>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="changes-in-0-17-0">
-<h2><a class="toc-backref" href="#id35">Changes in 0.17.0</a><a class="headerlink" href="#changes-in-0-17-0" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id52">Changes in 0.17.0</a><a class="headerlink" href="#changes-in-0-17-0" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="variables-can-now-be-local">
-<h3><a class="toc-backref" href="#id36">Variables can now be local</a><a class="headerlink" href="#variables-can-now-be-local" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id53">Variables can now be local</a><a class="headerlink" href="#variables-can-now-be-local" title="Permalink to this headline">¶</a></h3>
 <p>Previously, the kOS runtime had a serious limitation in which
 it could only support one flat namespace of global-only variables.
 Considerable archetecture re-work has been done to now support
-<a class="reference internal" href="language/variables.html#scope"><em>block-scoping</em></a> in the underlying runtime, which can
-be controlled through the use of <a class="reference internal" href="language/variables.html#declare-syntax"><em>local declarations</em></a>
+<a class="reference internal" href="language/variables.html#scope"><span>block-scoping</span></a> in the underlying runtime, which can
+be controlled through the use of <a class="reference internal" href="language/variables.html#declare-syntax"><span>local declarations</span></a>
 in your kerboscript files.</p>
 </div>
 <div class="section" id="kerboscript-has-user-functions">
-<h3><a class="toc-backref" href="#id37">Kerboscript has User Functions</a><a class="headerlink" href="#kerboscript-has-user-functions" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id54">Kerboscript has User Functions</a><a class="headerlink" href="#kerboscript-has-user-functions" title="Permalink to this headline">¶</a></h3>
 <p>The primary reason for the local scope variables rework was in
-support of the new <a class="reference internal" href="language/user_functions.html#user-functions"><em>user functions feature</em></a>
+support of the new <a class="reference internal" href="language/user_functions.html#user-functions"><span>user functions feature</span></a>
 which has been a long-wished-for feature for kOS to support.</p>
 </div>
 <div class="section" id="community-examples-library">
-<h3><a class="toc-backref" href="#id38">Community Examples Library</a><a class="headerlink" href="#community-examples-library" title="Permalink to this headline">¶</a></h3>
-<p>There is now a <a class="reference internal" href="library.html#library"><em>new fledgling repository of examples and library
-scripts</em></a> that we hope to be something the user community
+<h3><a class="toc-backref" href="#id55">Community Examples Library</a><a class="headerlink" href="#community-examples-library" title="Permalink to this headline">¶</a></h3>
+<p>There is now a <a class="reference internal" href="library.html#library"><span>new fledgling repository of examples and library
+scripts</span></a> that we hope to be something the user community
 contributes to.  Some of the examples shown in the kOS 0.17.0 release
 video are located there.  The addition of the ability to make user
 functions now makes the creation of such a library a viable option.</p>
 </div>
 <div class="section" id="physics-ticks-not-update-ticks">
-<h3><a class="toc-backref" href="#id39">Physics Ticks not Update Ticks</a><a class="headerlink" href="#physics-ticks-not-update-ticks" title="Permalink to this headline">¶</a></h3>
-<p>The updates have been <a class="reference internal" href="general/cpu_hardware.html#physics-tick"><em>moved to the physics update</em></a>
+<h3><a class="toc-backref" href="#id56">Physics Ticks not Update Ticks</a><a class="headerlink" href="#physics-ticks-not-update-ticks" title="Permalink to this headline">¶</a></h3>
+<p>The updates have been <a class="reference internal" href="general/cpu_hardware.html#physics-tick"><span>moved to the physics update</span></a>
 portion of Unity, instead of the animation frame rate updates.
 This may affect your preferred CONFIG:IPU setting.  The new move
 creates a much more uniform performance across all users, without
@@ -475,75 +571,75 @@ if your computer was faster, you&#8217;d be charged more electricity as
 the updates came more often).</p>
 </div>
 <div class="section" id="ability-to-use-sas-modes-from-ksp-0-90">
-<h3><a class="toc-backref" href="#id40">Ability to use SAS modes from KSP 0.90</a><a class="headerlink" href="#ability-to-use-sas-modes-from-ksp-0-90" title="Permalink to this headline">¶</a></h3>
-<p>Added a new <a class="reference internal" href="commands/flight/systems.html#sasmode"><em>third way to control the ship</em></a>,
+<h3><a class="toc-backref" href="#id57">Ability to use SAS modes from KSP 0.90</a><a class="headerlink" href="#ability-to-use-sas-modes-from-ksp-0-90" title="Permalink to this headline">¶</a></h3>
+<p>Added a new <a class="reference internal" href="commands/flight/systems.html#sasmode"><span>third way to control the ship</span></a>,
 by leaving SAS on, and just telling KSP which mode
 (prograde, retrograde, normal, etc) to put the SAS
 into.</p>
 </div>
 <div class="section" id="blizzy-toolbar-support">
-<h3><a class="toc-backref" href="#id41">Blizzy ToolBar Support</a><a class="headerlink" href="#blizzy-toolbar-support" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id58">Blizzy ToolBar Support</a><a class="headerlink" href="#blizzy-toolbar-support" title="Permalink to this headline">¶</a></h3>
 <p>If you have the Blizzy Toolbar mod installed, you should be able
 to put the kOS control panel window under its control.</p>
 </div>
 <div class="section" id="ability-to-define-colors-using-hsv">
-<h3><a class="toc-backref" href="#id42">Ability to define colors using HSV</a><a class="headerlink" href="#ability-to-define-colors-using-hsv" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id59">Ability to define colors using HSV</a><a class="headerlink" href="#ability-to-define-colors-using-hsv" title="Permalink to this headline">¶</a></h3>
 <p>When a color is called for, such as with VECDRAW or HIGHLIGHT, you
-can now use the <a class="reference internal" href="structures/misc/colors.html#hsv"><em>HSV color system (hue, saturation, value)</em></a>
+can now use the <a class="reference internal" href="structures/misc/colors.html#hsv"><span>HSV color system (hue, saturation, value)</span></a>
 instead of RGB, if you prefer.</p>
 </div>
 <div class="section" id="ability-to-highlight-a-part-in-color">
-<h3><a class="toc-backref" href="#id43">Ability to highlight a part in color</a><a class="headerlink" href="#ability-to-highlight-a-part-in-color" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id60">Ability to highlight a part in color</a><a class="headerlink" href="#ability-to-highlight-a-part-in-color" title="Permalink to this headline">¶</a></h3>
 <p>Any time your script needs to communicate something to the user about
-which part or parts it&#8217;s dealing with, it can use KSP&#8217;s <a class="reference internal" href="structures/misc/highlight.html#highlight"><em>part
-highlighting feature</em></a> to show a part.</p>
+which part or parts it&#8217;s dealing with, it can use KSP&#8217;s <a class="reference internal" href="structures/misc/highlight.html#highlight"><span>part
+highlighting feature</span></a> to show a part.</p>
 </div>
 <div class="section" id="better-user-interface-for-selecting-boot-scripts">
-<h3><a class="toc-backref" href="#id44">Better user interface for selecting boot scripts</a><a class="headerlink" href="#better-user-interface-for-selecting-boot-scripts" title="Permalink to this headline">¶</a></h3>
-<p>The selection of <a class="reference internal" href="commands/files.html#boot"><em>boot scripts for your vessel</em></a> has been
+<h3><a class="toc-backref" href="#id61">Better user interface for selecting boot scripts</a><a class="headerlink" href="#better-user-interface-for-selecting-boot-scripts" title="Permalink to this headline">¶</a></h3>
+<p>The selection of <a class="reference internal" href="commands/files.html#boot"><span>boot scripts for your vessel</span></a> has been
 improved.</p>
 </div>
 <div class="section" id="disks-can-be-made-bigger-with-tweakable-slider">
-<h3><a class="toc-backref" href="#id45">Disks can be made bigger with tweakable slider</a><a class="headerlink" href="#disks-can-be-made-bigger-with-tweakable-slider" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id62">Disks can be made bigger with tweakable slider</a><a class="headerlink" href="#disks-can-be-made-bigger-with-tweakable-slider" title="Permalink to this headline">¶</a></h3>
 <p>All parts that have disk space now have a slider you can use in the VAB
 or SPH editors to tweak the disk space to choose whether you want it to
 have 1x, 2x, or 4x as much as its default size.  Increasing the size
 increases its price and its weight cost.</p>
 </div>
 <div class="section" id="you-can-transfer-resources">
-<h3><a class="toc-backref" href="#id46">You Can Transfer Resources</a><a class="headerlink" href="#you-can-transfer-resources" title="Permalink to this headline">¶</a></h3>
-<p>You can now use kOS scripts to <a class="reference internal" href="commands/resource_transfer.html#resource-transfer"><em>transfer resources between
-parts</em></a> for things like fuel, in the same way
+<h3><a class="toc-backref" href="#id63">You Can Transfer Resources</a><a class="headerlink" href="#you-can-transfer-resources" title="Permalink to this headline">¶</a></h3>
+<p>You can now use kOS scripts to <a class="reference internal" href="commands/resource_transfer.html#resource-transfer"><span>transfer resources between
+parts</span></a> for things like fuel, in the same way
 that a manual user can do by using the right-click menus.</p>
 </div>
 <div class="section" id="kerbal-alarm-clock-support">
-<h3><a class="toc-backref" href="#id47">Kerbal Alarm Clock support</a><a class="headerlink" href="#kerbal-alarm-clock-support" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id64">Kerbal Alarm Clock support</a><a class="headerlink" href="#kerbal-alarm-clock-support" title="Permalink to this headline">¶</a></h3>
 <p>If you have the Kerbal Alarm Clock Mod isntalled, you can now
-<a class="reference internal" href="addons/KAC.html#kac"><em>query and manipulate its alarms</em></a> from within your
+<a class="reference internal" href="addons/KAC.html#kac"><span>query and manipulate its alarms</span></a> from within your
 kOS scripts.</p>
 </div>
 <div class="section" id="query-the-docked-elements-of-a-vessel">
-<h3><a class="toc-backref" href="#id48">Query the docked elements of a vessel</a><a class="headerlink" href="#query-the-docked-elements-of-a-vessel" title="Permalink to this headline">¶</a></h3>
-<p>You can get the <a class="reference internal" href="structures/vessels/element.html#element"><em>docked components of a joined-together
-vessel</em></a> as separate collections of parts now.</p>
+<h3><a class="toc-backref" href="#id65">Query the docked elements of a vessel</a><a class="headerlink" href="#query-the-docked-elements-of-a-vessel" title="Permalink to this headline">¶</a></h3>
+<p>You can get the <a class="reference internal" href="structures/vessels/element.html#element"><span>docked components of a joined-together
+vessel</span></a> as separate collections of parts now.</p>
 </div>
 <div class="section" id="support-for-action-groups-extended">
-<h3><a class="toc-backref" href="#id49">Support for Action Groups Extended</a><a class="headerlink" href="#support-for-action-groups-extended" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id66">Support for Action Groups Extended</a><a class="headerlink" href="#support-for-action-groups-extended" title="Permalink to this headline">¶</a></h3>
 <p>While there was some support for the Action Groups Extended
-mod before, it has <a class="reference internal" href="addons/AGX.html#agx"><em>been greatly improved</em></a>.</p>
+mod before, it has <a class="reference internal" href="addons/AGX.html#agx"><span>been greatly improved</span></a>.</p>
 </div>
 <div class="section" id="list-constructor-can-now-initialize-lists">
-<h3><a class="toc-backref" href="#id50">LIST constructor can now initialize lists</a><a class="headerlink" href="#list-constructor-can-now-initialize-lists" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id67">LIST constructor can now initialize lists</a><a class="headerlink" href="#list-constructor-can-now-initialize-lists" title="Permalink to this headline">¶</a></h3>
 <p>You can now do this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">mylist</span> <span class="n">to</span> <span class="n">list</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">21</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">mylist</span> <span class="ow">to</span> <span class="k">list</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">21</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>to initialize a <a class="reference internal" href="structures/misc/list.html#list"><em>list of values</em></a> from the start, so
+<p>to initialize a <a class="reference internal" href="structures/collections/list.html#list"><span>list of values</span></a> from the start, so
 you no longer have to have a long list of list:ADD commands to
 populate it.</p>
 </div>
 <div class="section" id="isdead-suffix-for-vessel">
-<h3><a class="toc-backref" href="#id51">ISDEAD suffix for Vessel</a><a class="headerlink" href="#isdead-suffix-for-vessel" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id68">ISDEAD suffix for Vessel</a><a class="headerlink" href="#isdead-suffix-for-vessel" title="Permalink to this headline">¶</a></h3>
 <p>Vessels now have an :ISDEAD suffix you can use to detect if the
 vessel has gone away since the last time you got the handle to it.
 (for example, you LIST TARGETS IN FOO, then the ship foo[3] blows
@@ -553,15 +649,16 @@ up, then foo[3]:ISDEAD should become true to clue you in to this fact.)</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="about.html" class="btn btn-neutral float-right" title="About kOS and KerboScript">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="about.html" class="btn btn-neutral float-right" title="About kOS and KerboScript" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="contribute.html" class="btn btn-neutral" title="Contribute"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="contribute.html" class="btn btn-neutral" title="Contribute" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -570,13 +667,14 @@ up, then foo[3]:ISDEAD should become true to clue you in to this fact.)</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -591,7 +689,7 @@ up, then foo[3]:ISDEAD should become true to clue you in to this fact.)</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -600,7 +698,7 @@ up, then foo[3]:ISDEAD should become true to clue you in to this fact.)</p>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

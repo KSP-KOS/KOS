@@ -54,38 +54,38 @@ Access structure KACAddon via `ADDONS:KAC`.
 
 .. structure:: KACAlarm
 
-    ===================================== ========================= =============
-     Suffix                                Type                      Description
-    ===================================== ========================= =============
-     :attr:`ID`                            string (readonly)         Unique identifier
-     :attr:`NAME`                          string                    Name of the alarm
-     :attr:`ACTION`                        string                    What should the Alarm Clock do when the alarm fires
-     :attr:`TYPE`                          string (readonly)         What type of Alarm is this - affects icon displayed and some calc options
-     :attr:`NOTES`                         string                    Long description of the alarm (optional)
-     :attr:`REMAINING`                     scalar (s)                Time remaining until alarm is triggered
-     :attr:`REPEAT`                        bool                      Should the alarm be repeated once it fires
-     :attr:`REPEATPERIOD`                  scalar (s)                How long after the alarm fires should the next alarm be set up
-     :attr:`ORIGINBODY`                    string                    Name of the body the vessel is departing from
-     :attr:`TARGETBODY`                    string                    Name of the body the vessel is arriving at
-    ===================================== ========================= =============
+    ===================================== ============================ =============
+     Suffix                                Type                         Description
+    ===================================== ============================ =============
+     :attr:`ID`                            :struct:`string` (readonly)   Unique identifier
+     :attr:`NAME`                          :struct:`string`              Name of the alarm
+     :attr:`ACTION`                        :struct:`string`              What should the Alarm Clock do when the alarm fires
+     :attr:`TYPE`                          :struct:`string` (readonly)   What type of Alarm is this - affects icon displayed and some calc options
+     :attr:`NOTES`                         :struct:`string`              Long description of the alarm (optional)
+     :attr:`REMAINING`                     :struct:`scalar` (s)          Time remaining until alarm is triggered
+     :attr:`REPEAT`                        :struct:`boolean`             Should the alarm be repeated once it fires
+     :attr:`REPEATPERIOD`                  :struct:`scalar` (s)          How long after the alarm fires should the next alarm be set up
+     :attr:`ORIGINBODY`                    :struct:`string`              Name of the body the vessel is departing from
+     :attr:`TARGETBODY`                    :struct:`string`              Name of the body the vessel is arriving at
+    ===================================== ============================ =============
 
 .. attribute:: KACAlarm:ID
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Unique identifier of the alarm.
 
 .. attribute:: KACAlarm:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
     Name of the alarm. Displayed in main KAC window.
 
 .. attribute:: KACAlarm:ACTION
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
     Should be one of the following
@@ -99,7 +99,7 @@ Access structure KACAddon via `ADDONS:KAC`.
 
 .. attribute:: KACAlarm:TYPE
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Can only be set at Alarm creation.
@@ -126,7 +126,7 @@ Access structure KACAddon via `ADDONS:KAC`.
 
 .. attribute:: KACAlarm:NOTES
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
     Long description of the alarm. Can be seen when alarm pops or by double-clicking alarm in UI.
@@ -135,35 +135,35 @@ Access structure KACAddon via `ADDONS:KAC`.
 
 .. attribute:: KACAlarm:REMAINING
 
-    :type: double
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Time remaining until alarm is triggered.
 
 .. attribute:: KACAlarm:REPEAT
 
-	:type: bool
-	:access: Get/Set
+    :type: :ref:`boolean <boolean>`
+    :access: Get/Set
 
-	Should the alarm be repeated once it fires.
+    Should the alarm be repeated once it fires.
 
 .. attribute:: KACAlarm:REPEATPERIOD
 
-	:type: double
-	:access: Get/Set
+    :type: :ref:`scalar <scalar>`
+    :access: Get/Set
 
-	How long after the alarm fires should the next alarm be set up.
+    How long after the alarm fires should the next alarm be set up.
 
 .. attribute:: KACAlarm:ORIGINBODY
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
     Name of the body the vessel is departing from.
 
 .. attribute:: KACAlarm:TARGETBODY
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
     Name of the body the vessel is arriving to.

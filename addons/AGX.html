@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Action Groups Extended &mdash; kOS 0.18.2 documentation</title>
+  <title>Action Groups Extended &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="RemoteTech" href="RemoteTech.html"/>
         <link rel="prev" title="Addon Reference" href="../addons.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,73 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IR.html">Infernal Robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="OrbitalScience.html">DMagic Orbital Science</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +125,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../addons.html">Addon Reference</a> &raquo;</li>
       
     <li>Action Groups Extended</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/addons/AGX.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/addons/AGX.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="action-groups-extended">
 <span id="agx"></span><h1>Action Groups Extended<a class="headerlink" href="#action-groups-extended" title="Permalink to this headline">¶</a></h1>
@@ -188,7 +168,7 @@
 <p>Includes a Script Trigger action that can be used to control a running program and visual feedback if an action group is currently activated.</p>
 <p><strong>Usage:</strong>
 Adds action groups AG11 through AG250 to kOS that are interacted with the same way as the AG1 through AG10 bindings in base kOS are.</p>
-<p>Anywhere you use <tt class="docutils literal"><span class="pre">AG1</span></tt>, you can use <tt class="docutils literal"><span class="pre">AG15</span></tt> in the same way. (AG11 through AG250 explicitly behave the same as the 10 stock groups. Please file a bug report if they do not.)</p>
+<p>Anywhere you use <code class="docutils literal"><span class="pre">AG1</span></code>, you can use <code class="docutils literal"><span class="pre">AG15</span></code> in the same way. (AG11 through AG250 explicitly behave the same as the 10 stock groups. Please file a bug report if they do not.)</p>
 <p><strong>Script Trigger action:</strong>
 Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer parts. This action is a null action that does not activate anything but serves as a placeholder to enhance action groups in kOS.</p>
 <p>When an action group has the Script Trigger action assigned, on that action group you can now:</p>
@@ -222,29 +202,29 @@ Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer 
 </ul>
 <p><strong>Example code:</strong></p>
 <p>Print to the terminal any time you activate action group 15. Use this to change variables within a running kOS script and the &#8220;Script Trigger&#8221; action found on the kOS computer part:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">AG15</span> <span class="n">on</span><span class="p">.</span> <span class="c1">// Activate action group 15.</span>
-<span class="n">print</span> <span class="n">AG15</span><span class="p">.</span> <span class="c1">// Print action group 15&#39;s state to the terminal. (True/False)</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">AG15</span> <span class="nb">on</span><span class="p">.</span> <span class="c1">// Activate action group 15.</span>
+<span class="k">print</span> <span class="nv">AG15</span><span class="p">.</span> <span class="c1">// Print action group 15&#39;s state to the terminal. (True/False)</span>
 
-<span class="n">on</span> <span class="n">AG15</span> <span class="p">{</span> <span class="c1">//Prints &quot;Action group 15 clicked!&quot; to the console when AG15 is toggled, either via &quot;AG15 on.&quot; or in-game with an assigned key.</span>
-  <span class="n">print</span> <span class="s">&quot;Action group 15 clicked!&quot;</span><span class="p">.</span>
-  <span class="n">preserve</span><span class="p">.</span>
+<span class="nb">on</span> <span class="nv">AG15</span> <span class="p">{</span> <span class="c1">//Prints &quot;Action group 15 clicked!&quot; to the console when AG15 is toggled, either via &quot;AG15 on.&quot; or in-game with an assigned key.</span>
+  <span class="k">print</span> <span class="s">&quot;Action group 15 clicked!&quot;</span><span class="p">.</span>
+  <span class="k">preserve</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p><strong>Animation Delay:</strong></p>
 <ul class="simple">
-<li>Using the above code on a stock solar panel&#8217;s Toggle Panels action, the player activates AG15, AG15&#8217;s state goes from false to true and the actions are triggered. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal.</li>
-<li>On it&#8217;s next update pass (100ms to 250ms later), AGX checks AG15&#8217;s state and sees the solar panel is still deploying which means that AG15&#8217;s state is false and so sets it that way. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">True</span> <span class="pre">-&gt;</span> <span class="pre">False</span></tt> and prints to the terminal.</li>
-<li>A few seconds later, the solar panel finishes it&#8217;s deployment animation. On it&#8217;s next update pass AGX checks AG15&#8217;s state and sees the solar panel is now deployed which means that AG15&#8217;s state is now true and so sets it that way. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal a third time.</li>
+<li>Using the above code on a stock solar panel&#8217;s Toggle Panels action, the player activates AG15, AG15&#8217;s state goes from false to true and the actions are triggered. <code class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></code> and prints to the terminal.</li>
+<li>On it&#8217;s next update pass (100ms to 250ms later), AGX checks AG15&#8217;s state and sees the solar panel is still deploying which means that AG15&#8217;s state is false and so sets it that way. <code class="docutils literal"><span class="pre">AG15</span> <span class="pre">True</span> <span class="pre">-&gt;</span> <span class="pre">False</span></code> and prints to the terminal.</li>
+<li>A few seconds later, the solar panel finishes it&#8217;s deployment animation. On it&#8217;s next update pass AGX checks AG15&#8217;s state and sees the solar panel is now deployed which means that AG15&#8217;s state is now true and so sets it that way. <code class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></code> and prints to the terminal a third time.</li>
 </ul>
 <p>As a workaround, you need to add a cooldown:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">cooldownTimeAG15</span> <span class="n">to</span> <span class="mf">0.</span>
-<span class="n">on</span> <span class="n">AG15</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="n">cooldownTimeAG15</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">:</span><span class="n">seconds</span> <span class="p">{</span>
-    <span class="n">print</span> <span class="s">&quot;Solar Panel Toggled!&quot;</span><span class="p">.</span>
-    <span class="n">set</span> <span class="n">cooldownTimeAG15</span> <span class="n">to</span> <span class="n">time</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="nv">cooldownTimeAG15</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<span class="nb">on</span> <span class="nv">AG15</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="nv">cooldownTimeAG15</span> <span class="o">+</span> <span class="mf">10</span> <span class="o">&lt;</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;Solar Panel Toggled!&quot;</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">cooldownTimeAG15</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">.</span>
   <span class="p">}</span>
-  <span class="n">preserve</span><span class="p">.</span>
+  <span class="k">preserve</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -252,15 +232,16 @@ Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer 
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="RemoteTech.html" class="btn btn-neutral float-right" title="RemoteTech">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="RemoteTech.html" class="btn btn-neutral float-right" title="RemoteTech" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../addons.html" class="btn btn-neutral" title="Addon Reference"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../addons.html" class="btn btn-neutral" title="Addon Reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -269,13 +250,14 @@ Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer 
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -290,7 +272,7 @@ Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -299,7 +281,7 @@ Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer 
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -50,8 +50,10 @@ of the RUN command\*\*, follow these rules:
    filename.
 -  A bareword filename may contain file extensions with dots, provided
    it does not end in a dot.
--  If the filename does not contain a file extension, kOS will pad it
-   with a ".ks" extension and use that.
+-  Commands that try to read files will add '.ks' to filenames if
+   the original filename was not found, for example ``RUN abc.``
+   will first look for a file named ``abc``. If such a file is not found
+   it will look for ``abc.ks``.
 
 Putting the above rules together, you can refer to filenames in any of
 the following ways:
@@ -93,8 +95,8 @@ example:
 -  set volNum to 1. copy "myfile" to volNum.
 
 
-``COMPILE program (TO compiledProgram).``
------------------------------------------
+COMPILE program (TO compiledProgram).
+-------------------------------------
 
 **(experimental)**
 
@@ -118,8 +120,8 @@ placed on a separate page.
 Please see :ref:`the details of the Kerboscript ML
 Executable <compiling>`.
 
-``COPY programFile FROM/TO Volume|volumeId|volumeName.``
---------------------------------------------------------
+COPY programFile FROM/TO Volume|volumeId|volumeName.
+----------------------------------------------------
 
 Arguments
 ^^^^^^^^^
@@ -148,8 +150,8 @@ Example::
     COPY file2.ksm TO "other".        // Copies a file called file2.ksm to volume named 'other'
 
 
-``DELETE filename FROM Volume|volumeId|volumeName.``
-----------------------------------------------------
+DELETE filename FROM Volume|volumeId|volumeName.
+------------------------------------------------
 
 Deletes a file. Volumes can be referenced by instances of :struct:`Volume`, their ID numbers or their names
 if they’ve been given one.
@@ -171,8 +173,8 @@ Example::
     DELETE file1 FROM "other".      // Deletes file1.ks from volume name 'other'
 
 
-``EDIT program.``
------------------
+EDIT program.
+-------------
 
 Edits a program on the currently selected volume.
 
@@ -194,8 +196,8 @@ Example::
     EDIT "filename.txt". // edits filename.txt
 
 
-``LOG text TO filename.``
--------------------------
+LOG text TO filename.
+---------------------
 
 Logs the selected text to a file on the local volume. Can print strings, or the result of an expression.
 
@@ -207,19 +209,19 @@ Arguments
 
 Example::
 
-    LOG “Hello” to mylog.txt.    // logs to "mylog.txt".
+    LOG "Hello" to mylog.txt.    // logs to "mylog.txt".
     LOG 4+1 to "mylog" .         // logs to "mylog.ks" because .ks is the default extension.
-    LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
+    LOG "4 times 8 is: " + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
 
 
-``RENAME VOLUME Volume|volumeId|oldVolumeName TO name.``
---------------------------------------------------------
+RENAME VOLUME Volume|volumeId|oldVolumeName TO name.
+----------------------------------------------------
 
-``RENAME FILE oldName TO newName.``
------------------------------------
+RENAME FILE oldName TO newName.
+-------------------------------
 
 Renames a file or volume. Volumes can be referenced by
-instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one.
+instances of :struct:`Volume`, their ID numbers or their names if they've been given one.
 
 Arguments
 ^^^^^^^^^
@@ -234,8 +236,8 @@ Example::
 
 .. _run_once:
 
-``RUN [ONCE] <program>.``
--------------------------
+RUN [ONCE] <program>.
+---------------------
 
 Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.
 
@@ -292,11 +294,11 @@ time. Changing this would require a large re-write of some of the architecture
 of the virtual machine.
 
 
-``SWITCH TO Volume|volumeId|volumeName.``
------------------------------------------
+SWITCH TO Volume|volumeId|volumeName.
+-------------------------------------
 
 Switches to the specified volume. Volumes can be referenced by
-instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how
+instances of :struct:`Volume`, their ID numbers or their names if they've been given one. See LIST and RENAME. Understanding how
 :ref:`volumes work <volumes>` is important to understanding this command.
 
 Example::
@@ -306,10 +308,61 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+EXISTS(FILENAME).
+-----------------
+
+A shortcut for ``CORE:CURRENTVOLUME:EXISTS(FILENAME)``. See :meth:`Volume:EXISTS`.
+
+CREATE(FILENAME).
+-----------------
+
+A shortcut for ``CORE:CURRENTVOLUME:CREATE(FILENAME)``. See :meth:`Volume:CREATE`.
+
+OPEN(FILENAME).
+---------------
+
+A shortcut for ``CORE:CURRENTVOLUME:OPEN(FILENAME)``. See :meth:`Volume:OPEN`.
+
+.. _writejson:
+
+WRITEJSON(OBJECT, FILENAME).
+----------------------------
+
+Serializes the given object to JSON format and saves it under the given filename on the current volume.
+
+**Important:** only certain types of objects can be serialized. If a type is serializable then that fact
+is explicitly mentioned in the type's documentation like so:
+
+.. note::
+
+  This type is serializable.
+
+
+Usage example::
+
+    SET L TO LEXICON().
+    SET NESTED TO QUEUE().
+
+    L:ADD("key1", "value1").
+    L:ADD("key2", NESTED).
+
+    NESTED:ADD("nestedvalue").
+
+    WRITEJSON(l, "output.json").
+
+READJSON(FILENAME).
+-------------------
+
+Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them. Example::
+
+    SET L TO READJSON("output.json").
+    PRINT L["key1"].
+
+
 .. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------------------------
 **(experimental)**
 
 For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.

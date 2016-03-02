@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Systems &mdash; kOS 0.18.2 documentation</title>
+  <title>Ship Systems &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Time Warping" href="warp.html"/>
         <link rel="prev" title="Pilot Input" href="pilot.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,67 +51,63 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../commands.html">Commands</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cooked.html">Cooked Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raw.html">Raw Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pilot.html">Pilot Input</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Ship Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp.html">Time Warping</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../prediction.html">Prediction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
@@ -119,34 +117,17 @@
 <li class="toctree-l2"><a class="reference internal" href="../processors.html">Processors</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,16 +135,22 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">kOS</a>
+        <a href="../../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../../commands.html">Command Reference</a> &raquo;</li>
       
@@ -172,23 +159,26 @@
     <li>Ship Systems</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/commands/flight/systems.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../../_sources/commands/flight/systems.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="ship-systems">
 <span id="systems"></span><h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this headline">¶</a></h1>
 <blockquote id="controlfrom">
 <div><p>e.g.:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">somepart</span> <span class="n">to</span> <span class="n">ship</span><span class="o">:</span><span class="n">partstagged</span><span class="p">(</span><span class="s">&quot;my favorite docking port&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span>
-<span class="nl">somepart:</span><span class="n">CONTROLFROM</span><span class="p">().</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">somepart</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">partstagged</span><span class="p">(</span><span class="s">&quot;my favorite docking port&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
+<span class="nv">somepart</span><span class="p">:</span><span class="nv">CONTROLFROM</span><span class="p">().</span>
 </pre></div>
 </div>
-<p>If you have a handle on a part, from <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></tt>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#attribute:PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></tt></a>.
+<p>If you have a handle on a part, from <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></code>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#attribute:PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></code></a>.
 All vessels must have at least one &#8220;control from&#8221;
 part on them somewhere, which is why there&#8217;s no mechanism for un-setting
 the &#8220;control from&#8221; setting other than to pick another part and set it
@@ -196,7 +186,7 @@ to that part instead.</p>
 </div></blockquote>
 <dl class="global">
 <dt id="global:RCS">
-<tt class="descname">RCS</tt><a class="headerlink" href="#global:RCS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">RCS</code><a class="headerlink" href="#global:RCS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -205,15 +195,15 @@ to that part instead.</p>
 </tr>
 </tbody>
 </table>
-<p>Turns the RCS <strong>on</strong> or <strong>off</strong>, like using <tt class="docutils literal"><span class="pre">R</span></tt> at the keyboard:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>
+<p>Turns the RCS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal"><span class="pre">R</span></code> at the keyboard:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="global">
 <dt id="global:SAS">
-<tt class="descname">SAS</tt><a class="headerlink" href="#global:SAS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SAS</code><a class="headerlink" href="#global:SAS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -222,15 +212,15 @@ to that part instead.</p>
 </tr>
 </tbody>
 </table>
-<p>Turns the SAS <strong>on</strong> or <strong>off</strong>, like using <tt class="docutils literal"><span class="pre">T</span></tt> at the keybaord:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SAS</span> <span class="n">ON</span><span class="p">.</span>
+<p>Turns the SAS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal"><span class="pre">T</span></code> at the keybaord:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <span class="target" id="sasmode"></span><dl class="object">
 <dt>
-<tt class="descname">SET SASMODE TO value.</tt></dt>
+<code class="descname">SET SASMODE TO value.</code></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -241,11 +231,11 @@ to that part instead.</p>
 </tr>
 </tbody>
 </table>
-<p>Getting this variable will return the currently selected mode.  Where <tt class="docutils literal"><span class="pre">value</span></tt> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">SASMODE</span> <span class="n">TO</span> <span class="n">value</span><span class="p">.</span>
+<p>Getting this variable will return the currently selected mode.  Where <code class="docutils literal"><span class="pre">value</span></code> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">SASMODE</span> <span class="ow">TO</span> <span class="nv">value</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for <tt class="docutils literal"><span class="pre">value</span></tt> are <tt class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">MANEUVER</span></tt>, <tt class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></tt>, and <tt class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></tt>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt> are used, but no target is selected.</p>
+<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for <code class="docutils literal"><span class="pre">value</span></code> are <code class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;MANEUVER&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></code>, and <code class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></code>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <code class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></code> are used, but no target is selected.</p>
 </dd></dl>
 
 <div class="admonition warning">
@@ -255,7 +245,7 @@ to that part instead.</p>
 </div>
 <dl class="global">
 <dt id="global:LIGHTS">
-<tt class="descname">LIGHTS</tt><a class="headerlink" href="#global:LIGHTS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LIGHTS</code><a class="headerlink" href="#global:LIGHTS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -264,15 +254,15 @@ to that part instead.</p>
 </tr>
 </tbody>
 </table>
-<p>Turns the lights <strong>on</strong> or <strong>off</strong>, like using the <tt class="docutils literal"><span class="pre">U</span></tt> key at the keyboard:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">LIGHTS</span> <span class="n">ON</span><span class="p">.</span>
+<p>Turns the lights <strong>on</strong> or <strong>off</strong>, like using the <code class="docutils literal"><span class="pre">U</span></code> key at the keyboard:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">LIGHTS</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="global">
 <dt id="global:BRAKES">
-<tt class="descname">BRAKES</tt><a class="headerlink" href="#global:BRAKES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">BRAKES</code><a class="headerlink" href="#global:BRAKES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -281,15 +271,15 @@ to that part instead.</p>
 </tr>
 </tbody>
 </table>
-<p>Turns the brakes <strong>on</strong> or <strong>off</strong>, like clicking the brakes button, though <em>not</em> like using the <tt class="docutils literal"><span class="pre">B</span></tt> key, because they stay on:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">BRAKES</span> <span class="n">ON</span><span class="p">.</span>
+<p>Turns the brakes <strong>on</strong> or <strong>off</strong>, like clicking the brakes button, though <em>not</em> like using the <code class="docutils literal"><span class="pre">B</span></code> key, because they stay on:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">BRAKES</span> <span class="nb">ON</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="global">
 <dt id="global:TARGET">
-<tt class="descname">TARGET</tt><a class="headerlink" href="#global:TARGET" title="Permalink to this definition">¶</a></dt>
+<code class="descname">TARGET</code><a class="headerlink" href="#global:TARGET" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -300,25 +290,26 @@ to that part instead.</p>
 </tr>
 </tbody>
 </table>
-<p>Where <tt class="docutils literal"><span class="pre">name</span></tt> is the name of a target vessel or planet, this will set the current target:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">TARGET</span> <span class="n">TO</span> <span class="n">name</span><span class="p">.</span>
+<p>Where <code class="docutils literal"><span class="pre">name</span></code> is the name of a target vessel or planet, this will set the current target:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">TARGET</span> <span class="ow">TO</span> <span class="nv">name</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<p>Note that the above options also can refer to a different vessel besides the current ship, for example, <tt class="docutils literal"><span class="pre">TARGET:THROTTLE</span></tt> to read the target&#8217;s throttle. But not all &#8220;set&#8221; or &#8220;lock&#8221; options will work with a different vessel other than the current one, because there&#8217;s no authority to control a craft the current program is not attached to.</p>
+<p>Note that the above options also can refer to a different vessel besides the current ship, for example, <code class="docutils literal"><span class="pre">TARGET:THROTTLE</span></code> to read the target&#8217;s throttle. But not all &#8220;set&#8221; or &#8220;lock&#8221; options will work with a different vessel other than the current one, because there&#8217;s no authority to control a craft the current program is not attached to.</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="warp.html" class="btn btn-neutral float-right" title="Time Warping">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="warp.html" class="btn btn-neutral float-right" title="Time Warping" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pilot.html" class="btn btn-neutral" title="Pilot Input"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pilot.html" class="btn btn-neutral" title="Pilot Input" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -327,13 +318,14 @@ to that part instead.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -348,7 +340,7 @@ to that part instead.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -357,7 +349,7 @@ to that part instead.</p>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

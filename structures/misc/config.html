@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 0.18.2 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="File Information" href="fileinfo.html"/>
+        <link rel="next" title="Part Highlighting" href="highlight.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,94 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/processors.html">Processors</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Configuration of kOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,16 +146,22 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">kOS</a>
+        <a href="../../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
       
@@ -172,24 +170,27 @@
     <li>Configuration of kOS</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/structures/misc/config.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../../_sources/structures/misc/config.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="configuration-of-kos">
 <h1>Configuration of kOS<a class="headerlink" href="#configuration-of-kos" title="Permalink to this headline">¶</a></h1>
 <dl class="structure">
 <dt id="structure:CONFIG">
-<em class="property">structure </em><tt class="descname">Config</tt><a class="headerlink" href="#structure:CONFIG" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#structure:CONFIG" title="CONFIG structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Config</span></tt></a> is a special structure that allows your kerboscript programs to set or get the values stored in the kOS plugin&#8217;s config file.</p>
-<p>The options here can also be set by using the user interface panel shown here. This control panel is part of the <a class="reference internal" href="../../general/applauncher_panel.html#applauncher"><em>App Control Panel</em></a></p>
+<em class="property">structure </em><code class="descname">Config</code><a class="headerlink" href="#structure:CONFIG" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#structure:CONFIG" title="CONFIG structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Config</span></code></a> is a special structure that allows your kerboscript programs to set or get the values stored in the kOS plugin&#8217;s config file.</p>
+<p>The options here can also be set by using the user interface panel shown here. This control panel is part of the <a class="reference internal" href="../../general/applauncher_panel.html#applauncher"><span>App Control Panel</span></a></p>
 <p>In either case, whether the setting is changed via the GUI panel, or via script code, these are settings that <strong>affect the kOS mod in all saved games</strong> as soon as the change is made. It&#8217;s identical to editing the config file in the kOS installation directory, and in fact will actually change that file the next time the game saves its state.</p>
-<table border="1" class="docutils">
-<caption>Members (all Gettable and Settable)</caption>
+<table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">Members (all Gettable and Settable)</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="25%" />
 <col width="13%" />
@@ -204,60 +205,65 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">IPU</span></tt></a></td>
-<td>integer</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IPU</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
 <td>150</td>
 <td>Instructions per update</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:UCP" title="CONFIG:UCP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UCP</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:UCP" title="CONFIG:UCP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UCP</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Use compressed persistence</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:STAT" title="CONFIG:STAT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STAT</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:STAT" title="CONFIG:STAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STAT</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Print statistics to screen</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:RT2" title="CONFIG:RT2 attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RT2</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:RT2" title="CONFIG:RT2 attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RT2</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Enable RemoteTech2 integration</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ARCH</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ARCH</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Start on archive (instead of volume 1)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SAFE</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SAFE</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Enable safe mode</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Enable sound effect on kOS error</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>Enable verbose exceptions</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>False</td>
 <td>activate the telnet server</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></tt></a></td>
-<td>integer</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
 <td>5410</td>
 <td>set the port the telnet server will run on</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></tt></a></td>
-<td>boolean</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 <td>True</td>
 <td>Force the telnet server to use loopback (127.0.0.1) address</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="CONFIG:DEBUGEACHOPCODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEBUGEACHOPCODE</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td>false</td>
+<td>Unholy debug spam used by the kOS developers</td>
 </tr>
 </tbody>
 </table>
@@ -265,108 +271,108 @@
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:IPU">
-Config:<tt class="descname">IPU</tt><a class="headerlink" href="#attribute:CONFIG:IPU" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">IPU</code><a class="headerlink" href="#attribute:CONFIG:IPU" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">integer. range = [50,2000]</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> integer. range = [50,2000]</td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">InstructionsPerUpdate</span></tt> setting.</p>
-<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><em>physics update tick</em></a>.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">InstructionsPerUpdate</span></code> setting.</p>
+<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span>physics update tick</span></a>.</p>
 <p>This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:UCP">
-Config:<tt class="descname">UCP</tt><a class="headerlink" href="#attribute:CONFIG:UCP" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">UCP</code><a class="headerlink" href="#attribute:CONFIG:UCP" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">UseCompressedPersistence</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">UseCompressedPersistence</span></code> setting.</p>
 <p>If true, then the contents of the kOS local volume &#8216;files&#8217; stored inside the campaign save&#8217;s persistence file will be stored using a compression algorithm that has the advantage of making them take less space, but at the cost of making the data impossible to decipher with the naked human eye when looking at the persistence file.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:STAT">
-Config:<tt class="descname">STAT</tt><a class="headerlink" href="#attribute:CONFIG:STAT" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">STAT</code><a class="headerlink" href="#attribute:CONFIG:STAT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">ShowStatistics</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">ShowStatistics</span></code> setting.</p>
 <p>If true, then executing a program will log numbers to the screen showing execution speed statistics.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:RT2">
-Config:<tt class="descname">RT2</tt><a class="headerlink" href="#attribute:CONFIG:RT2" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">RT2</code><a class="headerlink" href="#attribute:CONFIG:RT2" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">EnableRT2Integration</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">EnableRT2Integration</span></code> setting.</p>
 <p>If true, then the kOS mod will attempt to interact with the Remote Tech 2 mod, letting RT2 make decisions about whether or not a vessel is within communications range rather than having kOS use its own more primitive algorithm for it.</p>
 <p>Due to a long stall in the development of the RT2 mod, this setting should still be considered experimental at this point.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:ARCH">
-Config:<tt class="descname">ARCH</tt><a class="headerlink" href="#attribute:CONFIG:ARCH" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">ARCH</code><a class="headerlink" href="#attribute:CONFIG:ARCH" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">StartOnArchive</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">StartOnArchive</span></code> setting.</p>
 <p>If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:SAFE">
-Config:<tt class="descname">SAFE</tt><a class="headerlink" href="#attribute:CONFIG:SAFE" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">SAFE</code><a class="headerlink" href="#attribute:CONFIG:SAFE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">EnableSafeMode</span></tt> setting.</p>
-<p>If true, then it enables the following error messages:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">Tried</span> <span class="n">to</span> <span class="n">push</span> <span class="n">NaN</span> <span class="n">into</span> <span class="n">the</span> <span class="n">stack</span><span class="p">.</span>
-<span class="n">Tried</span> <span class="n">to</span> <span class="n">push</span> <span class="n">Infinity</span> <span class="n">into</span> <span class="n">the</span> <span class="n">stack</span><span class="p">.</span>
+<p>Configures the <code class="docutils literal"><span class="pre">EnableSafeMode</span></code> setting.
+If true, then it enables the following error messages:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Tried to push NaN into the stack.
+Tried to push Infinity into the stack.
 </pre></div>
 </div>
 <p>They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.</p>
@@ -375,18 +381,18 @@ Config:<tt class="descname">SAFE</tt><a class="headerlink" href="#attribute:CONF
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:AUDIOERR">
-Config:<tt class="descname">AUDIOERR</tt><a class="headerlink" href="#attribute:CONFIG:AUDIOERR" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">AUDIOERR</code><a class="headerlink" href="#attribute:CONFIG:AUDIOERR" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">AudibleExceptions</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">AudibleExceptions</span></code> setting.</p>
 <p>If true, then it enables a mode in which errors coming from kOS will
 generte a sound effect of a short little warning bleep to remind you that
 an exception occurred.  This can be useful when you are flying
@@ -396,35 +402,35 @@ you can take over.</p>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:VERBOSE">
-Config:<tt class="descname">VERBOSE</tt><a class="headerlink" href="#attribute:CONFIG:VERBOSE" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">VERBOSE</code><a class="headerlink" href="#attribute:CONFIG:VERBOSE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">VerboseExceptions</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">VerboseExceptions</span></code> setting.</p>
 <p>If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:TELNET">
-Config:<tt class="descname">TELNET</tt><a class="headerlink" href="#attribute:CONFIG:TELNET" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">TELNET</code><a class="headerlink" href="#attribute:CONFIG:TELNET" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">EnableTelnet</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">EnableTelnet</span></code> setting.</p>
 <p>When set to true, it activates a
 <a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a> that allows you to
 connect external terminal programs like Putty and Xterm to it.
@@ -432,11 +438,11 @@ Turning the option off or on immediately toggles the server.  (When
 you change it from false to true, it will start the server right then.
 When you change it from true to false, it will stop the server right
 then.)  Therefore <strong>to restart the server</strong> after changing a setting like
-<tt class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></tt>, DO this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Restart telnet server:</span>
-<span class="n">SET</span> <span class="n">CONFIG</span><span class="o">:</span><span class="n">TELNET</span> <span class="n">TO</span> <span class="n">FALSE</span><span class="p">.</span>
-<span class="n">WAIT</span> <span class="mf">0.5</span><span class="p">.</span> <span class="c1">// important to give kOS a moment to notice and kill the old server.</span>
-<span class="n">SET</span> <span class="n">CONFIG</span><span class="o">:</span><span class="n">TELNET</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>
+<code class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></code>, DO this:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Restart telnet server:</span>
+<span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">FALSE</span><span class="p">.</span>
+<span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span> <span class="c1">// important to give kOS a moment to notice and kill the old server.</span>
+<span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">TELNET</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Of course, you can do the equivalent of that by using the GUI config panel and just
@@ -445,18 +451,18 @@ clicking the button off then clicking it on.</p>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:TPORT">
-Config:<tt class="descname">TPORT</tt><a class="headerlink" href="#attribute:CONFIG:TPORT" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">TPORT</code><a class="headerlink" href="#attribute:CONFIG:TPORT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">TelnetPort</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">TelnetPort</span></code> setting.</p>
 <p>Changes the TCP/IP port number that the
 <a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a>
 will listen to.</p>
@@ -466,18 +472,18 @@ stop, then restart the telnet server, as described above.</p>
 
 <dl class="attribute">
 <dt id="attribute:CONFIG:LOOPBACK">
-Config:<tt class="descname">LOOPBACK</tt><a class="headerlink" href="#attribute:CONFIG:LOOPBACK" title="Permalink to this definition">¶</a></dt>
+Config:<code class="descname">LOOPBACK</code><a class="headerlink" href="#attribute:CONFIG:LOOPBACK" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
-<p>Configures the <tt class="docutils literal"><span class="pre">TelnetLoopback</span></tt> setting.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">TelnetLoopback</span></code> setting.</p>
 <p>If true, then it tells the
 <a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a>
 to refuse to use the computer&#8217;s actual IP address, and
@@ -488,18 +494,41 @@ make it impossible get external access to your computer.</p>
 stop, then restart the telnet server, as described above.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:CONFIG:DEBUGEACHOPCODE">
+Config:<code class="descname">DEBUGEACHOPCODE</code><a class="headerlink" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <code class="docutils literal"><span class="pre">DebugEachOpcode</span></code> setting.</p>
+<p>NOTE: This makes the game VERY slow, use with caution.</p>
+<p>If true, each opcode that is executed by the CPU will be accompanied by
+an entry in the KSP log. This is a debugging tool for those who are very
+familiar with the inner workings of kOS and should rarely be used outside
+the kOS dev team.</p>
+<p>This change takes effect immediately.</p>
+</dd></dl>
+
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fileinfo.html" class="btn btn-neutral float-right" title="File Information">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="highlight.html" class="btn btn-neutral float-right" title="Part Highlighting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="colors.html" class="btn btn-neutral" title="Colors"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="colors.html" class="btn btn-neutral" title="Colors" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -508,13 +537,14 @@ stop, then restart the telnet server, as described above.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -529,7 +559,7 @@ stop, then restart the telnet server, as described above.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -538,7 +568,7 @@ stop, then restart the telnet server, as described above.</p>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

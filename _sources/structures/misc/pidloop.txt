@@ -44,126 +44,126 @@ Please see the bottom of this page for information on the derivation of the loop
     ===================================== ========================= =============
      Suffix                                Type                      Description
     ===================================== ========================= =============
-    :attr:`LASTSAMPLETIME`                scalar                    decimal value of the last sample time
-    :attr:`KP`                            scalar                    The proportional gain factor
-    :attr:`KI`                            scalar                    The integral gain factor
-    :attr:`KD`                            scalar                    The derivative gain factor
-    :attr:`INPUT`                         scalar                    The most recent input value
-    :attr:`SETPOINT`                      scalar                    The current setpoint
-    :attr:`ERROR`                         scalar                    The most recent error value
-    :attr:`OUTPUT`                        scalar                    The most recent output value
-    :attr:`MAXOUTPUT`                     scalar                    The maximum output value
-    :attr:`MINOUTPUT`                     scalar                    The maximum output value
-    :attr:`ERRORSUM`                      scalar                    The time weighted sum of error
-    :attr:`PTERM`                         scalar                    The proportional component of output
-    :attr:`ITERM`                         scalar                    The integral component of output
-    :attr:`DTERM`                         scalar                    The derivative component of output
-    :attr:`CHANGERATE`                    scalar (/s)               The most recent input rate of change
+    :attr:`LASTSAMPLETIME`                :struct:`scalar`          decimal value of the last sample time
+    :attr:`KP`                            :struct:`scalar`          The proportional gain factor
+    :attr:`KI`                            :struct:`scalar`          The integral gain factor
+    :attr:`KD`                            :struct:`scalar`          The derivative gain factor
+    :attr:`INPUT`                         :struct:`scalar`          The most recent input value
+    :attr:`SETPOINT`                      :struct:`scalar`          The current setpoint
+    :attr:`ERROR`                         :struct:`scalar`          The most recent error value
+    :attr:`OUTPUT`                        :struct:`scalar`          The most recent output value
+    :attr:`MAXOUTPUT`                     :struct:`scalar`          The maximum output value
+    :attr:`MINOUTPUT`                     :struct:`scalar`          The maximum output value
+    :attr:`ERRORSUM`                      :struct:`scalar`          The time weighted sum of error
+    :attr:`PTERM`                         :struct:`scalar`          The proportional component of output
+    :attr:`ITERM`                         :struct:`scalar`          The integral component of output
+    :attr:`DTERM`                         :struct:`scalar`          The derivative component of output
+    :attr:`CHANGERATE`                    :struct:`scalar` (/s)     The most recent input rate of change
     :meth:`RESET`                         none                      Reset the integral component
-    :meth:`UPDATE(time, input)`           scalar                    Returns output based on time and input
+    :meth:`UPDATE(time, input)`           :struct:`scalar`          Returns output based on time and input
     ===================================== ========================= =============
 
 .. attribute:: PIDLoop:LASTSAMPLETIME
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The value representing the time of the last sample.  This value is equal to the time parameter of the :meth:`UPDATE` method.
 
 .. attribute:: PIDLoop:KP
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get/Set
 
     The proportional gain factor.
 
 .. attribute:: PIDLoop:KI
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get/Set
 
     The integral gain factor.
 
 .. attribute:: PIDLoop:KD
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get/Set
 
     The derivative gain factor
 
 .. attribute:: PIDLoop:INPUT
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The value representing the input of the last sample.  This value is equal to the input parameter of the :meth:`UPDATE` method.
 
 .. attribute:: PIDLoop:SETPOINT
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get/Set
 
     The current setpoint.  This is the value to which input is compared when :meth:`UPDATE` is called.  It may not be synced with the last sample.
 
 .. attribute:: PIDLoop:ERROR
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The calculated error from the last sample (setpoint - input).
 
 .. attribute:: PIDLoop:OUTPUT
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The calculated output from the last sample.
 
 .. attribute:: PIDLoop:MAXOUTPUT
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get/Set
 
     The current maximum output value.  This value also helps with regulating integral wind up mitigation.
 
 .. attribute:: PIDLoop:MINOUTPUT
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get/Set
 
     The current minimum output value.  This value also helps with regulating integral wind up mitigation.
 
 .. attribute:: PIDLoop:ERRORSUM
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The value representing the time weighted sum of all errrors.  It will be equal to :attr:`ITERM` / :attr:`KI`.  This value is adjusted by the integral windup mitigation logic.
 
 .. attribute:: PIDLoop:PTERM
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The value representing the proportional component of :attr:`OUTPUT`.
 
 .. attribute:: PIDLoop:ITERM
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The value representing the integral component of :attr:`OUTPUT`.  This value is adjusted by the integral windup mitigation logic.
 
 .. attribute:: PIDLoop:DTERM
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The value representing the derivative component of :attr:`OUTPUT`.
 
 .. attribute:: PIDLoop:CHANGERATE
 
-    :type: scalar
+    :type: :struct:`scalar`
     :access: Get only
 
     The rate of change of the :attr:`INPUT` during the last sample.  It will be equal to (input - last input) / (change in time).
@@ -176,9 +176,9 @@ Please see the bottom of this page for information on the derivation of the loop
 
 .. method:: PIDLoop:UPDATE(time, input)
 
-    :parameter time: (scalar) the decimal time in seconds
-    :parameter input: (scalar) the input variable to compare to the setpoint
-    :return: scalar representing the calculated output
+    :parameter time: (:struct:`scalar`) the decimal time in seconds
+    :parameter input: (:struct:`scalar`) the input variable to compare to the setpoint
+    :return: :struct:`scalar` representing the calculated output
 
     Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (`TIME:SECONDS`), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on :attr:`MAXOUTPUT` and :attr:`MINOUTPUT`.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.
 
@@ -200,11 +200,11 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
                 // only calculate integral and derivative if the time
                 // difference is less than one second, and their gain is not 0.
                 if Ki <> 0 {
-                    ITerm = (ErrorSum + Error) * dt * Ki.
+                    set ITerm to (ErrorSum + Error) * dt * Ki.
                 }
                 set ChangeRate to (input - LastInput) / dt.
                 if Kd <> 0 {
-                    DTerm = ChangeRate * Kd.
+                    set DTerm to ChangeRate * Kd.
                 }
             }
         }
@@ -214,7 +214,7 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             set Output to MaxOutput.
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
-            if (Ki != 0) and (LastSampleTime < sampleTime) {
+            if (Ki <> 0) and (LastSampleTime < sampleTime) {
                 set ITerm to Output - Pterm - DTerm.
             }
         }
@@ -222,12 +222,12 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             set Output to MinOutput.
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
-            if (Ki != 0) and (LastSampleTime < sampleTime) {
+            if (Ki <> 0) and (LastSampleTime < sampleTime) {
                 set ITerm to Output - Pterm - DTerm.
             }
         }
-        LastSampleTime = sampleTime.
+        set LastSampleTime to sampleTime.
         if Ki <> 0 set ErrorSum to ITerm / Ki.
-        else ErrorSum = 0.
+        else set ErrorSum to 0.
         return Output.
     }

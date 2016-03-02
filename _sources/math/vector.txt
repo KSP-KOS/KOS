@@ -40,19 +40,19 @@ Structure
           - Set
           
         * - :attr:`X`
-          - scalar
+          - :ref:`scalar <scalar>`
           - yes
           - yes
         * - :attr:`Y`
-          - scalar
+          - :ref:`scalar <scalar>`
           - yes
           - yes
-        * - :attr:`Y`
-          - scalar
+        * - :attr:`Z`
+          - :ref:`scalar <scalar>`
           - yes
           - yes
         * - :attr:`MAG`
-          - scalar
+          - :ref:`scalar <scalar>`
           - yes
           - yes
         * - :attr:`NORMALIZED`
@@ -60,7 +60,7 @@ Structure
           - yes
           - no
         * - :attr:`SQRMAGNITUDE`
-          - scalar
+          - :ref:`scalar <scalar>`
           - yes
           - no
         * - :attr:`DIRECTION`
@@ -72,30 +72,34 @@ Structure
           - yes
           - no
 
+.. note::
+
+    This type is serializable.
+
 .. attribute:: Vector:X
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
     The :math:`x` component of the vector.
 
 .. attribute:: Vector:Y
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
     The :math:`y` component of the vector.
 
 .. attribute:: Vector:Z
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
     The :math:`z` component of the vector.
 
 .. attribute:: Vector:MAG
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get/Set
 
     The magnitude of the vector, as a scalar number, by the Pythagorean Theorem.
@@ -109,7 +113,7 @@ Structure
     
 .. attribute:: Vector:SQRMAGNITUDE
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     The magnitude of the vector, squared. Use instead of ``vec:MAG^2`` if you need to square of the magnitude as this skips the step in the Pythagorean formula where you take the square root in the first place. Taking the square root and then squaring that would introduce floating point error needlessly.
@@ -139,13 +143,13 @@ Operations and Methods
 ============================================================= =============
 Method / Operator                                              Return Type    
 ============================================================= =============
- :ref:`* (asterisk) <Vector *>`                               scalar or :struct:`Vector` 
+ :ref:`* (asterisk) <Vector *>`                               :struct:`scalar` or :struct:`Vector` 
  :ref:`+ (plus)     <Vector +->`                              :struct:`Vector`
  :ref:`- (minus)    <Vector +->`                              :struct:`Vector`
  :ref:`- (unary)    <Vector +->`                              :struct:`Vector`
- :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`  scalar
+ :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`  :struct:`scalar`
  :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                     :struct:`Vector`
- :func:`VANG`, :func:`VECTORANGLE`                            scalar (deg)
+ :func:`VANG`, :func:`VECTORANGLE`                            :struct:`scalar` (deg)
  :func:`VXCL`, :func:`VECTOREXCLUDE`                          :struct:`Vector`
 ============================================================= =============
 
@@ -243,7 +247,7 @@ Method / Operator                                              Return Type
     :parameter v1: (:struct:`Vector`)
     :parameter v2: (:struct:`Vector`)
     :return: Angle between two vectors
-    :rtype: scalar
+    :rtype: :ref:`scalar <scalar>`
 
     This returns the angle between v1 and v2. It is the same result as:
 

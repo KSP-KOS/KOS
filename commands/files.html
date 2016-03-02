@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>File I/O &mdash; kOS 0.18.2 documentation</title>
+  <title>File I/O &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Terminal and game environment" href="terminalgui.html"/>
         <link rel="prev" title="Querying a vessel’s parts" href="parts.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,78 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../commands.html">Commands</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="flight.html">Flight Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prediction.html">Prediction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">File I/O</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">File I/O</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,88 +130,100 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../commands.html">Command Reference</a> &raquo;</li>
       
     <li>File I/O</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/commands/files.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/commands/files.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="file-i-o">
 <span id="files"></span><h1>File I/O<a class="headerlink" href="#file-i-o" title="Permalink to this headline">¶</a></h1>
-<p>For information about where files are kept and how to deal with volumes see the <a class="reference internal" href="../general/volumes.html#volumes"><em>Volumes</em></a> page in the general topics section of this documentation.</p>
+<p>For information about where files are kept and how to deal with volumes see the <a class="reference internal" href="../general/volumes.html#volumes"><span>Volumes</span></a> page in the general topics section of this documentation.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#volume-and-filename-arguments" id="id6">Volume and Filename arguments</a></li>
-<li><a class="reference internal" href="#compile-program-to-compiledprogram" id="id7"><tt class="docutils literal"><span class="pre">COMPILE</span> <span class="pre">program</span> <span class="pre">(TO</span> <span class="pre">compiledProgram).</span></tt></a></li>
-<li><a class="reference internal" href="#copy-programfile-from-to-volume-volumeid-volumename" id="id8"><tt class="docutils literal"><span class="pre">COPY</span> <span class="pre">programFile</span> <span class="pre">FROM/TO</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a><ul>
+<li><a class="reference internal" href="#compile-program-to-compiledprogram" id="id7">COMPILE program (TO compiledProgram).</a></li>
+<li><a class="reference internal" href="#copy-programfile-from-to-volume-volumeid-volumename" id="id8">COPY programFile FROM/TO Volume|volumeId|volumeName.</a><ul>
 <li><a class="reference internal" href="#arguments" id="id9">Arguments</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#delete-filename-from-volume-volumeid-volumename" id="id10"><tt class="docutils literal"><span class="pre">DELETE</span> <span class="pre">filename</span> <span class="pre">FROM</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a><ul>
+<li><a class="reference internal" href="#delete-filename-from-volume-volumeid-volumename" id="id10">DELETE filename FROM Volume|volumeId|volumeName.</a><ul>
 <li><a class="reference internal" href="#id1" id="id11">Arguments</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#edit-program" id="id12"><tt class="docutils literal"><span class="pre">EDIT</span> <span class="pre">program.</span></tt></a><ul>
+<li><a class="reference internal" href="#edit-program" id="id12">EDIT program.</a><ul>
 <li><a class="reference internal" href="#id2" id="id13">Arguments</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#log-text-to-filename" id="id14"><tt class="docutils literal"><span class="pre">LOG</span> <span class="pre">text</span> <span class="pre">TO</span> <span class="pre">filename.</span></tt></a><ul>
+<li><a class="reference internal" href="#log-text-to-filename" id="id14">LOG text TO filename.</a><ul>
 <li><a class="reference internal" href="#id3" id="id15">Arguments</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#rename-volume-volume-volumeid-oldvolumename-to-name" id="id16"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">VOLUME</span> <span class="pre">Volume|volumeId|oldVolumeName</span> <span class="pre">TO</span> <span class="pre">name.</span></tt></a></li>
-<li><a class="reference internal" href="#rename-file-oldname-to-newname" id="id17"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">FILE</span> <span class="pre">oldName</span> <span class="pre">TO</span> <span class="pre">newName.</span></tt></a><ul>
+<li><a class="reference internal" href="#rename-volume-volume-volumeid-oldvolumename-to-name" id="id16">RENAME VOLUME Volume|volumeId|oldVolumeName TO name.</a></li>
+<li><a class="reference internal" href="#rename-file-oldname-to-newname" id="id17">RENAME FILE oldName TO newName.</a><ul>
 <li><a class="reference internal" href="#id4" id="id18">Arguments</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#run-once-program" id="id19"><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">[ONCE]</span> <span class="pre">&lt;program&gt;.</span></tt></a><ul>
+<li><a class="reference internal" href="#run-once-program" id="id19">RUN [ONCE] &lt;program&gt;.</a><ul>
 <li><a class="reference internal" href="#id5" id="id20">Arguments</a></li>
 <li><a class="reference internal" href="#important-exceptions-to-the-usual-filename-rules-for-run" id="id21">Important exceptions to the usual filename rules for RUN</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#switch-to-volume-volumeid-volumename" id="id22"><tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a><ul>
-<li><a class="reference internal" href="#special-handling-of-files-starting-with-boot-example-boot-ks" id="id23">Special handling of files starting with &#8220;boot&#8221; (example <tt class="docutils literal"><span class="pre">boot.ks</span></tt>)</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#switch-to-volume-volumeid-volumename" id="id22">SWITCH TO Volume|volumeId|volumeName.</a></li>
+<li><a class="reference internal" href="#exists-filename" id="id23">EXISTS(FILENAME).</a></li>
+<li><a class="reference internal" href="#create-filename" id="id24">CREATE(FILENAME).</a></li>
+<li><a class="reference internal" href="#open-filename" id="id25">OPEN(FILENAME).</a></li>
+<li><a class="reference internal" href="#writejson-object-filename" id="id26">WRITEJSON(OBJECT, FILENAME).</a></li>
+<li><a class="reference internal" href="#readjson-filename" id="id27">READJSON(FILENAME).</a></li>
+<li><a class="reference internal" href="#special-handling-of-files-starting-with-boot-example-boot-ks" id="id28">Special handling of files starting with &#8220;boot&#8221; (example <code class="docutils literal"><span class="pre">boot.ks</span></code>)</a></li>
 </ul>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><em>Limitations on file names used for programs</em></p>
-<p>All file names used as program names with the <tt class="docutils literal"><span class="pre">run</span></tt> command must be
+<p>All file names used as program names with the <code class="docutils literal"><span class="pre">run</span></code> command must be
 valid identifiers.  They can not contain spaces or special characters. For
-example, you can&#8217;t have a program named <tt class="docutils literal"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">my-file.ks</span></tt>.  This rule
+example, you can&#8217;t have a program named <code class="docutils literal"><span class="pre">this</span> <span class="pre">is</span> <span class="pre">my-file.ks</span></code>.  This rule
 does not necessarily apply to other filenames such as log files.  However
 to use a filename that contains spaces, you will have to put quotes around
 it.</p>
 <p class="last">On case-sensitive filesystems typically found on Linux and Mac, you should
-name program files used with the <tt class="docutils literal"><span class="pre">run</span></tt> command entirely with
+name program files used with the <code class="docutils literal"><span class="pre">run</span></code> command entirely with
 lowercase-only filenames or the system may fail to find them when you
-use the <tt class="docutils literal"><span class="pre">run</span></tt> command.</p>
+use the <code class="docutils literal"><span class="pre">run</span></code> command.</p>
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <div class="last versionchanged">
 <p><span class="versionmodified">Changed in version 0.15: </span><strong>Archive location and file extension change</strong></p>
-<p>The Archive where KerboScript files are kept has been changed from <tt class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></tt> to <tt class="docutils literal"><span class="pre">Ships/Script</span></tt>, but still under the top-level <strong>KSP</strong> installation directory. The file name extensions have also changes from <tt class="docutils literal"><span class="pre">.txt</span></tt> to <tt class="docutils literal"><span class="pre">.ks</span></tt>.</p>
+<p>The Archive where KerboScript files are kept has been changed from <code class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></code> to <code class="docutils literal"><span class="pre">Ships/Script</span></code>, but still under the top-level <strong>KSP</strong> installation directory. The file name extensions have also changes from <code class="docutils literal"><span class="pre">.txt</span></code> to <code class="docutils literal"><span class="pre">.ks</span></code>.</p>
 </div>
 </div>
 <div class="section" id="volume-and-filename-arguments">
@@ -254,8 +242,10 @@ an expression and the variable&#8217;s contents will be used as the
 filename.</li>
 <li>A bareword filename may contain file extensions with dots, provided
 it does not end in a dot.</li>
-<li>If the filename does not contain a file extension, kOS will pad it
-with a &#8221;.ks&#8221; extension and use that.</li>
+<li>Commands that try to read files will add &#8216;.ks&#8217; to filenames if
+the original filename was not found, for example <code class="docutils literal"><span class="pre">RUN</span> <span class="pre">abc.</span></code>
+will first look for a file named <code class="docutils literal"><span class="pre">abc</span></code>. If such a file is not found
+it will look for <code class="docutils literal"><span class="pre">abc.ks</span></code>.</li>
 </ul>
 <p>Putting the above rules together, you can refer to filenames in any of
 the following ways:</p>
@@ -296,7 +286,7 @@ example:</p>
 </ul>
 </div>
 <div class="section" id="compile-program-to-compiledprogram">
-<h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">COMPILE</span> <span class="pre">program</span> <span class="pre">(TO</span> <span class="pre">compiledProgram).</span></tt></a><a class="headerlink" href="#compile-program-to-compiledprogram" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">COMPILE program (TO compiledProgram).</a><a class="headerlink" href="#compile-program-to-compiledprogram" title="Permalink to this headline">¶</a></h2>
 <p><strong>(experimental)</strong></p>
 <p>Arguments:</p>
 <blockquote>
@@ -304,21 +294,21 @@ example:</p>
 <dt>argument 1</dt>
 <dd>Name of source file.</dd>
 <dt>argument 2</dt>
-<dd>Name of destination file. If the optional argument 2 is missing, it will assume it&#8217;s the same as argument 1, but with a file extension changed to <tt class="docutils literal"><span class="pre">*.ksm</span></tt>.</dd>
+<dd>Name of destination file. If the optional argument 2 is missing, it will assume it&#8217;s the same as argument 1, but with a file extension changed to <code class="docutils literal"><span class="pre">*.ksm</span></code>.</dd>
 </dl>
 </div></blockquote>
-<p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><em>Kerboscript ML Exceutable
-image</em></a> that can be used
+<p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><span>Kerboscript ML Exceutable
+image</span></a> that can be used
 instead of executing the program script directly.</p>
 <p>The RUN command (elsewhere on this page) can work with either *.ks
 script files or *.ksm compiled files.</p>
 <p>The full details of this process are long and complex enough to be
 placed on a separate page.</p>
-<p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><em>the details of the Kerboscript ML
-Executable</em></a>.</p>
+<p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><span>the details of the Kerboscript ML
+Executable</span></a>.</p>
 </div>
 <div class="section" id="copy-programfile-from-to-volume-volumeid-volumename">
-<h2><a class="toc-backref" href="#id8"><tt class="docutils literal"><span class="pre">COPY</span> <span class="pre">programFile</span> <span class="pre">FROM/TO</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a><a class="headerlink" href="#copy-programfile-from-to-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">COPY programFile FROM/TO Volume|volumeId|volumeName.</a><a class="headerlink" href="#copy-programfile-from-to-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="arguments">
 <h3><a class="toc-backref" href="#id9">Arguments</a><a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -326,28 +316,28 @@ Executable</em></a>.</p>
 <li>argument 2: Target volume.</li>
 </ul>
 <p>Copies a file to or from another volume. Volumes can be referenced by
-instances of <a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a>, their ID numbers or their names if they’ve been given one. See LIST,
+instances of <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>, their ID numbers or their names if they’ve been given one. See LIST,
 SWITCH and RENAME.</p>
-<p>Understanding how <a class="reference internal" href="../general/volumes.html#volumes"><em>volumes
-work</em></a> is important to
+<p>Understanding how <a class="reference internal" href="../general/volumes.html#volumes"><span>volumes
+work</span></a> is important to
 understanding this command.</p>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">1.</span>                      <span class="c1">// Makes volume 1 the active volume</span>
-<span class="n">COPY</span> <span class="n">file1</span> <span class="n">FROM</span> <span class="mf">0.</span>                <span class="c1">// Copies a file called file1.ks from volume 0 to volume 1</span>
-<span class="n">COPY</span> <span class="n">file2</span> <span class="n">TO</span> <span class="mf">0.</span>                  <span class="c1">// Copies a file called file2.ks from volume 1 to volume 0</span>
-<span class="n">COPY</span> <span class="n">file1</span><span class="p">.</span><span class="n">ks</span> <span class="n">FROM</span> <span class="mf">0.</span>             <span class="c1">// Copies a file called file1.ks from volume 0 to volume 1</span>
-<span class="n">COPY</span> <span class="n">file2</span><span class="p">.</span><span class="n">ksm</span> <span class="n">TO</span> <span class="mf">0.</span>              <span class="c1">// Copies a file called file2.ksm from volume 1 to volume 0</span>
-<span class="n">COPY</span> <span class="s">&quot;file1.ksm&quot;</span> <span class="n">FROM</span> <span class="mf">0.</span>          <span class="c1">// Copies a file called file1.ksm from volume 0 to volume 1</span>
-<span class="n">COPY</span> <span class="s">&quot;file1&quot;</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="s">&quot;ks&quot;</span> <span class="n">FROM</span> <span class="mf">0.</span> <span class="c1">// Copies a file called file1.ks from volume 0 to volume 1</span>
-<span class="n">COPY</span> <span class="n">file2</span><span class="p">.</span><span class="n">ksm</span> <span class="n">TO</span> <span class="n">CORE</span><span class="o">:</span><span class="n">VOLUME</span><span class="p">.</span>    <span class="c1">// Copies a file called file2.ksm to active processor&#39;s volume</span>
-<span class="n">COPY</span> <span class="n">file2</span><span class="p">.</span><span class="n">ksm</span> <span class="n">TO</span> <span class="s">&quot;other&quot;</span><span class="p">.</span>        <span class="c1">// Copies a file called file2.ksm to volume named &#39;other&#39;</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>                      <span class="c1">// Makes volume 1 the active volume</span>
+<span class="k">COPY</span> <span class="nv">file1</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span>                <span class="c1">// Copies a file called file1.ks from volume 0 to volume 1</span>
+<span class="k">COPY</span> <span class="nv">file2</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>                  <span class="c1">// Copies a file called file2.ks from volume 1 to volume 0</span>
+<span class="k">COPY</span> <span class="nv">file1</span><span class="p">.</span><span class="nv">ks</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span>             <span class="c1">// Copies a file called file1.ks from volume 0 to volume 1</span>
+<span class="k">COPY</span> <span class="nv">file2</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>              <span class="c1">// Copies a file called file2.ksm from volume 1 to volume 0</span>
+<span class="k">COPY</span> <span class="s">&quot;file1.ksm&quot;</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span>          <span class="c1">// Copies a file called file1.ksm from volume 0 to volume 1</span>
+<span class="k">COPY</span> <span class="s">&quot;file1&quot;</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="s">&quot;ks&quot;</span> <span class="k">FROM</span> <span class="mf">0</span><span class="p">.</span> <span class="c1">// Copies a file called file1.ks from volume 0 to volume 1</span>
+<span class="k">COPY</span> <span class="nv">file2</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">TO</span> <span class="nv">CORE</span><span class="p">:</span><span class="k">VOLUME</span><span class="p">.</span>    <span class="c1">// Copies a file called file2.ksm to active processor&#39;s volume</span>
+<span class="k">COPY</span> <span class="nv">file2</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">TO</span> <span class="s">&quot;other&quot;</span><span class="p">.</span>        <span class="c1">// Copies a file called file2.ksm to volume named &#39;other&#39;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="delete-filename-from-volume-volumeid-volumename">
-<h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">DELETE</span> <span class="pre">filename</span> <span class="pre">FROM</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a><a class="headerlink" href="#delete-filename-from-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h2>
-<p>Deletes a file. Volumes can be referenced by instances of <a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a>, their ID numbers or their names
+<h2><a class="toc-backref" href="#id10">DELETE filename FROM Volume|volumeId|volumeName.</a><a class="headerlink" href="#delete-filename-from-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h2>
+<p>Deletes a file. Volumes can be referenced by instances of <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>, their ID numbers or their names
 if they’ve been given one.</p>
 <div class="section" id="id1">
 <h3><a class="toc-backref" href="#id11">Arguments</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
@@ -356,19 +346,19 @@ if they’ve been given one.</p>
 <li>argument 2: (optional) Target volume.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">DELETE</span> <span class="n">file1</span><span class="p">.</span>                   <span class="c1">// Deletes file1.ks from the active volume.</span>
-<span class="n">DELETE</span> <span class="s">&quot;file1&quot;</span><span class="p">.</span>                 <span class="c1">// Deletes file1.ks from the active volume.</span>
-<span class="n">DELETE</span> <span class="n">file1</span><span class="p">.</span><span class="n">txt</span><span class="p">.</span>               <span class="c1">// Deletes file1.txt from the active volume.</span>
-<span class="n">DELETE</span> <span class="s">&quot;file1.txt&quot;</span><span class="p">.</span>             <span class="c1">// Deletes file1.txt from the active volume.</span>
-<span class="n">DELETE</span> <span class="n">file1</span> <span class="n">FROM</span> <span class="mf">1.</span>            <span class="c1">// Deletes file1.ks from volume 1</span>
-<span class="n">DELETE</span> <span class="n">file1</span> <span class="n">FROM</span> <span class="n">CORE</span><span class="o">:</span><span class="n">VOLUME</span><span class="p">.</span>  <span class="c1">// Deletes file1.ks from active processor&#39;s volume</span>
-<span class="n">DELETE</span> <span class="n">file1</span> <span class="n">FROM</span> <span class="s">&quot;other&quot;</span><span class="p">.</span>      <span class="c1">// Deletes file1.ks from volume name &#39;other&#39;</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DELETE</span> <span class="nv">file1</span><span class="p">.</span>                   <span class="c1">// Deletes file1.ks from the active volume.</span>
+<span class="k">DELETE</span> <span class="s">&quot;file1&quot;</span><span class="p">.</span>                 <span class="c1">// Deletes file1.ks from the active volume.</span>
+<span class="k">DELETE</span> <span class="nv">file1</span><span class="p">.</span><span class="nv">txt</span><span class="p">.</span>               <span class="c1">// Deletes file1.txt from the active volume.</span>
+<span class="k">DELETE</span> <span class="s">&quot;file1.txt&quot;</span><span class="p">.</span>             <span class="c1">// Deletes file1.txt from the active volume.</span>
+<span class="k">DELETE</span> <span class="nv">file1</span> <span class="k">FROM</span> <span class="mf">1</span><span class="p">.</span>            <span class="c1">// Deletes file1.ks from volume 1</span>
+<span class="k">DELETE</span> <span class="nv">file1</span> <span class="k">FROM</span> <span class="nv">CORE</span><span class="p">:</span><span class="k">VOLUME</span><span class="p">.</span>  <span class="c1">// Deletes file1.ks from active processor&#39;s volume</span>
+<span class="k">DELETE</span> <span class="nv">file1</span> <span class="k">FROM</span> <span class="s">&quot;other&quot;</span><span class="p">.</span>      <span class="c1">// Deletes file1.ks from volume name &#39;other&#39;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="edit-program">
-<h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">EDIT</span> <span class="pre">program.</span></tt></a><a class="headerlink" href="#edit-program" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">EDIT program.</a><a class="headerlink" href="#edit-program" title="Permalink to this headline">¶</a></h2>
 <p>Edits a program on the currently selected volume.</p>
 <div class="section" id="id2">
 <h3><a class="toc-backref" href="#id13">Arguments</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
@@ -380,17 +370,17 @@ if they’ve been given one.</p>
 <p class="last">The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proportional width font, which isn&#8217;t ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.</p>
 </div>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">EDIT</span> <span class="n">filename</span><span class="p">.</span>       <span class="c1">// edits filename.ks</span>
-<span class="n">EDIT</span> <span class="n">filename</span><span class="p">.</span><span class="n">ks</span><span class="p">.</span>    <span class="c1">// edits filename.ks</span>
-<span class="n">EDIT</span> <span class="s">&quot;filename.ks&quot;</span><span class="p">.</span>  <span class="c1">// edits filename.ks</span>
-<span class="n">EDIT</span> <span class="s">&quot;filename&quot;</span><span class="p">.</span>     <span class="c1">// edits filename.ks</span>
-<span class="n">EDIT</span> <span class="s">&quot;filename.txt&quot;</span><span class="p">.</span> <span class="c1">// edits filename.txt</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">EDIT</span> <span class="nv">filename</span><span class="p">.</span>       <span class="c1">// edits filename.ks</span>
+<span class="k">EDIT</span> <span class="nv">filename</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span>    <span class="c1">// edits filename.ks</span>
+<span class="k">EDIT</span> <span class="s">&quot;filename.ks&quot;</span><span class="p">.</span>  <span class="c1">// edits filename.ks</span>
+<span class="k">EDIT</span> <span class="s">&quot;filename&quot;</span><span class="p">.</span>     <span class="c1">// edits filename.ks</span>
+<span class="k">EDIT</span> <span class="s">&quot;filename.txt&quot;</span><span class="p">.</span> <span class="c1">// edits filename.txt</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="log-text-to-filename">
-<h2><a class="toc-backref" href="#id14"><tt class="docutils literal"><span class="pre">LOG</span> <span class="pre">text</span> <span class="pre">TO</span> <span class="pre">filename.</span></tt></a><a class="headerlink" href="#log-text-to-filename" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">LOG text TO filename.</a><a class="headerlink" href="#log-text-to-filename" title="Permalink to this headline">¶</a></h2>
 <p>Logs the selected text to a file on the local volume. Can print strings, or the result of an expression.</p>
 <div class="section" id="id3">
 <h3><a class="toc-backref" href="#id15">Arguments</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
@@ -399,20 +389,20 @@ if they’ve been given one.</p>
 <li>argument 2: Name of file to log into.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre>LOG “Hello” to mylog.txt.    // logs to &quot;mylog.txt&quot;.
-LOG 4+1 to &quot;mylog&quot; .         // logs to &quot;mylog.ks&quot; because .ks is the default extension.
-LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOG</span> <span class="s">&quot;Hello&quot;</span> <span class="ow">to</span> <span class="nv">mylog</span><span class="p">.</span><span class="nv">txt</span><span class="p">.</span>    <span class="c1">// logs to &quot;mylog.txt&quot;.</span>
+<span class="k">LOG</span> <span class="mf">4</span><span class="o">+</span><span class="mf">1</span> <span class="ow">to</span> <span class="s">&quot;mylog&quot;</span> <span class="p">.</span>         <span class="c1">// logs to &quot;mylog.ks&quot; because .ks is the default extension.</span>
+<span class="k">LOG</span> <span class="s">&quot;4 times 8 is: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mf">4</span><span class="o">*</span><span class="mf">8</span><span class="p">)</span> <span class="ow">to</span> <span class="nv">mylog</span><span class="p">.</span>   <span class="c1">// logs to mylog.ks because .ks is the default extension.</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="rename-volume-volume-volumeid-oldvolumename-to-name">
-<h2><a class="toc-backref" href="#id16"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">VOLUME</span> <span class="pre">Volume|volumeId|oldVolumeName</span> <span class="pre">TO</span> <span class="pre">name.</span></tt></a><a class="headerlink" href="#rename-volume-volume-volumeid-oldvolumename-to-name" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">RENAME VOLUME Volume|volumeId|oldVolumeName TO name.</a><a class="headerlink" href="#rename-volume-volume-volumeid-oldvolumename-to-name" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="rename-file-oldname-to-newname">
-<h2><a class="toc-backref" href="#id17"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">FILE</span> <span class="pre">oldName</span> <span class="pre">TO</span> <span class="pre">newName.</span></tt></a><a class="headerlink" href="#rename-file-oldname-to-newname" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17">RENAME FILE oldName TO newName.</a><a class="headerlink" href="#rename-file-oldname-to-newname" title="Permalink to this headline">¶</a></h2>
 <p>Renames a file or volume. Volumes can be referenced by
-instances of <a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a>, their ID numbers or their names if they’ve been given one.</p>
+instances of <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>, their ID numbers or their names if they&#8217;ve been given one.</p>
 <div class="section" id="id4">
 <h3><a class="toc-backref" href="#id18">Arguments</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -420,22 +410,22 @@ instances of <a class="reference internal" href="../structures/vessels/volume.ht
 <li>argument 2: New name for $1.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">RENAME</span> <span class="n">VOLUME</span> <span class="mi">1</span> <span class="n">TO</span> <span class="n">AwesomeDisk</span>
-<span class="n">RENAME</span> <span class="kt">FILE</span> <span class="n">MyFile</span> <span class="n">TO</span> <span class="n">AutoLaunch</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RENAME</span> <span class="k">VOLUME</span> <span class="mf">1</span> <span class="ow">TO</span> <span class="nv">AwesomeDisk</span>
+<span class="k">RENAME</span> <span class="k">FILE</span> <span class="nv">MyFile</span> <span class="ow">TO</span> <span class="nv">AutoLaunch</span><span class="p">.</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="run-once-program">
-<span id="run-once"></span><h2><a class="toc-backref" href="#id19"><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">[ONCE]</span> <span class="pre">&lt;program&gt;.</span></tt></a><a class="headerlink" href="#run-once-program" title="Permalink to this headline">¶</a></h2>
+<span id="run-once"></span><h2><a class="toc-backref" href="#id19">RUN [ONCE] &lt;program&gt;.</a><a class="headerlink" href="#run-once-program" title="Permalink to this headline">¶</a></h2>
 <p>Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.</p>
-<p>If the optional <tt class="docutils literal"><span class="pre">ONCE</span></tt> keyword is used after the word <tt class="docutils literal"><span class="pre">RUN</span></tt>, it means
+<p>If the optional <code class="docutils literal"><span class="pre">ONCE</span></code> keyword is used after the word <code class="docutils literal"><span class="pre">RUN</span></code>, it means
 the run will not actually occur if the program has already been run once
 during the current program context.  This is intended mostly for loading library
 program files that may have mainline code in them for initialization purposes
 that you don&#8217;t want to get run a second time just because you use the library
 in two different subprograms.</p>
-<p><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">ONCE</span></tt> means &#8220;Run unless it&#8217;s already been run, in which case skip it.&#8221;</p>
+<p><code class="docutils literal"><span class="pre">RUN</span> <span class="pre">ONCE</span></code> means &#8220;Run unless it&#8217;s already been run, in which case skip it.&#8221;</p>
 <div class="section" id="id5">
 <h3><a class="toc-backref" href="#id20">Arguments</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -443,18 +433,18 @@ in two different subprograms.</p>
 <li>comma-separated-args: a list of values to pass into the program.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">.</span><span class="n">ks</span><span class="p">.</span>
-<span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">.</span><span class="n">ksm</span><span class="p">.</span>
-<span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">.</span>      <span class="c1">// runs AutoLaunch.ksm if available, else runs AutoLaunch.ks.</span>
-<span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">(</span> <span class="mi">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
-<span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">.</span><span class="n">ks</span><span class="p">(</span> <span class="mi">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
-<span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">.</span><span class="n">ksm</span><span class="p">(</span> <span class="mi">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="nv">AutoLaunch</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">AutoLaunch</span><span class="p">.</span><span class="nv">ksm</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">AutoLaunch</span><span class="p">.</span>      <span class="c1">// runs AutoLaunch.ksm if available, else runs AutoLaunch.ks.</span>
+<span class="k">RUN</span> <span class="nv">AutoLaunch</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
+<span class="k">RUN</span> <span class="nv">AutoLaunch</span><span class="p">.</span><span class="nv">ks</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
+<span class="k">RUN</span> <span class="nv">AutoLaunch</span><span class="p">.</span><span class="nv">ksm</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
 
-<span class="n">RUN</span> <span class="n">ONCE</span> <span class="n">myLibrary</span><span class="p">.</span> <span class="c1">// run myLibrary unless it&#39;s been run already.</span>
+<span class="k">RUN</span> <span class="k">ONCE</span> <span class="nv">myLibrary</span><span class="p">.</span> <span class="c1">// run myLibrary unless it&#39;s been run already.</span>
 </pre></div>
 </div>
 <p>The program that is reading the arguments sees them in the variables it
-mentions in <a class="reference internal" href="../language/variables.html#declare-parameter"><em>DECLARE PARAMETER</em></a>.</p>
+mentions in <a class="reference internal" href="../language/variables.html#declare-parameter"><span>DECLARE PARAMETER</span></a>.</p>
 </div>
 <div class="section" id="important-exceptions-to-the-usual-filename-rules-for-run">
 <h3><a class="toc-backref" href="#id21">Important exceptions to the usual filename rules for RUN</a><a class="headerlink" href="#important-exceptions-to-the-usual-filename-rules-for-run" title="Permalink to this headline">¶</a></h3>
@@ -462,9 +452,9 @@ mentions in <a class="reference internal" href="../language/variables.html#decla
 filenames that the other
 file commands allow. This is very important.</p>
 <p>RUN only works when the filename is a bareword filename. It cannot use expression filenames:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">RUN</span> <span class="s">&quot;ProgName&quot;</span>   <span class="c1">// THIS WILL FAIL.  Run needs a bareword filename.</span>
-<span class="n">SET</span> <span class="n">ProgName</span> <span class="n">to</span> <span class="s">&quot;MyProgram&quot;</span><span class="p">.</span>
-<span class="n">RUN</span> <span class="n">ProgName</span>     <span class="c1">// THIS WILL FAIL also.  It will attempt to run a file</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;ProgName&quot;</span>   <span class="c1">// THIS WILL FAIL.  Run needs a bareword filename.</span>
+<span class="k">SET</span> <span class="nv">ProgName</span> <span class="ow">to</span> <span class="s">&quot;MyProgram&quot;</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">ProgName</span>     <span class="c1">// THIS WILL FAIL also.  It will attempt to run a file</span>
                  <span class="c1">// called &quot;ProgName.ksm&quot; or &quot;ProgName.ks&quot;, when it sees this,</span>
                  <span class="c1">// rather than &quot;MyProgram&quot;.</span>
 </pre></div>
@@ -479,23 +469,66 @@ of the virtual machine.</p>
 </div>
 </div>
 <div class="section" id="switch-to-volume-volumeid-volumename">
-<h2><a class="toc-backref" href="#id22"><tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a><a class="headerlink" href="#switch-to-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id22">SWITCH TO Volume|volumeId|volumeName.</a><a class="headerlink" href="#switch-to-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h2>
 <p>Switches to the specified volume. Volumes can be referenced by
-instances of <a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a>, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how
-<a class="reference internal" href="../general/volumes.html#volumes"><em>volumes work</em></a> is important to understanding this command.</p>
+instances of <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>, their ID numbers or their names if they&#8217;ve been given one. See LIST and RENAME. Understanding how
+<a class="reference internal" href="../general/volumes.html#volumes"><span>volumes work</span></a> is important to understanding this command.</p>
 <p>Example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SWITCH</span> <span class="n">TO</span> <span class="mf">0.</span>                        <span class="c1">// Switch to volume 0.</span>
-<span class="n">RENAME</span> <span class="n">VOLUME</span> <span class="mi">1</span> <span class="n">TO</span> <span class="n">AwesomeDisk</span><span class="p">.</span>     <span class="c1">// Name volume 1 as AwesomeDisk.</span>
-<span class="n">SWITCH</span> <span class="n">TO</span> <span class="n">AwesomeDisk</span><span class="p">.</span>              <span class="c1">// Switch to volume 1.</span>
-<span class="n">PRINT</span> <span class="n">VOLUME</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>                  <span class="c1">// Prints &quot;AwesomeDisk&quot;.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>                        <span class="c1">// Switch to volume 0.</span>
+<span class="k">RENAME</span> <span class="k">VOLUME</span> <span class="mf">1</span> <span class="ow">TO</span> <span class="nv">AwesomeDisk</span><span class="p">.</span>     <span class="c1">// Name volume 1 as AwesomeDisk.</span>
+<span class="k">SWITCH</span> <span class="ow">TO</span> <span class="nv">AwesomeDisk</span><span class="p">.</span>              <span class="c1">// Switch to volume 1.</span>
+<span class="k">PRINT</span> <span class="k">VOLUME</span><span class="p">:</span><span class="nv">NAME</span><span class="p">.</span>                  <span class="c1">// Prints &quot;AwesomeDisk&quot;.</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="exists-filename">
+<h2><a class="toc-backref" href="#id23">EXISTS(FILENAME).</a><a class="headerlink" href="#exists-filename" title="Permalink to this headline">¶</a></h2>
+<p>A shortcut for <code class="docutils literal"><span class="pre">CORE:CURRENTVOLUME:EXISTS(FILENAME)</span></code>. See <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:EXISTS" title="VOLUME:EXISTS method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:EXISTS</span></code></a>.</p>
+</div>
+<div class="section" id="create-filename">
+<h2><a class="toc-backref" href="#id24">CREATE(FILENAME).</a><a class="headerlink" href="#create-filename" title="Permalink to this headline">¶</a></h2>
+<p>A shortcut for <code class="docutils literal"><span class="pre">CORE:CURRENTVOLUME:CREATE(FILENAME)</span></code>. See <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:CREATE" title="VOLUME:CREATE method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:CREATE</span></code></a>.</p>
+</div>
+<div class="section" id="open-filename">
+<h2><a class="toc-backref" href="#id25">OPEN(FILENAME).</a><a class="headerlink" href="#open-filename" title="Permalink to this headline">¶</a></h2>
+<p>A shortcut for <code class="docutils literal"><span class="pre">CORE:CURRENTVOLUME:OPEN(FILENAME)</span></code>. See <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:OPEN" title="VOLUME:OPEN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:OPEN</span></code></a>.</p>
+</div>
+<div class="section" id="writejson-object-filename">
+<span id="writejson"></span><h2><a class="toc-backref" href="#id26">WRITEJSON(OBJECT, FILENAME).</a><a class="headerlink" href="#writejson-object-filename" title="Permalink to this headline">¶</a></h2>
+<p>Serializes the given object to JSON format and saves it under the given filename on the current volume.</p>
+<p><strong>Important:</strong> only certain types of objects can be serialized. If a type is serializable then that fact
+is explicitly mentioned in the type&#8217;s documentation like so:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This type is serializable.</p>
+</div>
+<p>Usage example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">L</span> <span class="ow">TO</span> <span class="nv">LEXICON</span><span class="p">().</span>
+<span class="k">SET</span> <span class="nv">NESTED</span> <span class="ow">TO</span> <span class="nv">QUEUE</span><span class="p">().</span>
+
+<span class="nv">L</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="s">&quot;key1&quot;</span><span class="p">,</span> <span class="s">&quot;value1&quot;</span><span class="p">).</span>
+<span class="nv">L</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="s">&quot;key2&quot;</span><span class="p">,</span> <span class="nv">NESTED</span><span class="p">).</span>
+
+<span class="nv">NESTED</span><span class="p">:</span><span class="k">ADD</span><span class="p">(</span><span class="s">&quot;nestedvalue&quot;</span><span class="p">).</span>
+
+<span class="nv">WRITEJSON</span><span class="p">(</span><span class="nv">l</span><span class="p">,</span> <span class="s">&quot;output.json&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="readjson-filename">
+<h2><a class="toc-backref" href="#id27">READJSON(FILENAME).</a><a class="headerlink" href="#readjson-filename" title="Permalink to this headline">¶</a></h2>
+<p>Reads the contents of a file previously created using <code class="docutils literal"><span class="pre">WRITEJSON</span></code> and deserializes them. Example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">L</span> <span class="ow">TO</span> <span class="nv">READJSON</span><span class="p">(</span><span class="s">&quot;output.json&quot;</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">L</span><span class="p">[</span><span class="s">&quot;key1&quot;</span><span class="p">].</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="special-handling-of-files-starting-with-boot-example-boot-ks">
-<span id="boot"></span><h3><a class="toc-backref" href="#id23">Special handling of files starting with &#8220;boot&#8221; (example <tt class="docutils literal"><span class="pre">boot.ks</span></tt>)</a><a class="headerlink" href="#special-handling-of-files-starting-with-boot-example-boot-ks" title="Permalink to this headline">¶</a></h3>
+<span id="boot"></span><h2><a class="toc-backref" href="#id28">Special handling of files starting with &#8220;boot&#8221; (example <code class="docutils literal"><span class="pre">boot.ks</span></code>)</a><a class="headerlink" href="#special-handling-of-files-starting-with-boot-example-boot-ks" title="Permalink to this headline">¶</a></h2>
 <p><strong>(experimental)</strong></p>
 <p>For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with &#8220;boot&#8221; (for example &#8220;boot.ks&#8221;, &#8220;boot2.ks&#8221; or even &#8220;boot_custom_script.ks&#8221;), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.</p>
 <img alt="http://i.imgur.com/05kp7Sy.jpg" src="http://i.imgur.com/05kp7Sy.jpg" />
-<p>As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU&#8217;s local hard disk with the same name.  If kOS is configured to start on the archive, the file will not be copied locally automatically. This script will be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics range or power on your CPU if it was turned off.  You may get or set the name of the boot file using the <a class="reference internal" href="../structures/core.html#core"><em>core:bootfilename</em></a> suffix.</p>
+<p>As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU&#8217;s local hard disk with the same name.  If kOS is configured to start on the archive, the file will not be copied locally automatically. This script will be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics range or power on your CPU if it was turned off.  You may get or set the name of the boot file using the <a class="reference internal" href="../structures/core.html#core"><span>core:bootfilename</span></a> suffix.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <div class="last versionchanged">
@@ -522,18 +555,18 @@ instances of <a class="reference internal" href="../structures/vessels/volume.ht
 </div></blockquote>
 </div>
 </div>
-</div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="terminalgui.html" class="btn btn-neutral float-right" title="Terminal and game environment">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="terminalgui.html" class="btn btn-neutral float-right" title="Terminal and game environment" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="parts.html" class="btn btn-neutral" title="Querying a vessel’s parts"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="parts.html" class="btn btn-neutral" title="Querying a vessel’s parts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -542,13 +575,14 @@ instances of <a class="reference internal" href="../structures/vessels/volume.ht
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -563,7 +597,7 @@ instances of <a class="reference internal" href="../structures/vessels/volume.ht
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -572,7 +606,7 @@ instances of <a class="reference internal" href="../structures/vessels/volume.ht
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

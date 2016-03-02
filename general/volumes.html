@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Files and Volumes &mdash; kOS 0.18.2 documentation</title>
+  <title>Files and Volumes &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="KerboScript Machine Code" href="compiling.html"/>
         <link rel="prev" title="The kOS Telnet Server" href="telnet.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,81 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Files &amp; Volumes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Files &amp; Volumes</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,33 +133,42 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../general.html">General Topics</a> &raquo;</li>
       
     <li>Files and Volumes</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/general/volumes.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/general/volumes.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="files-and-volumes">
 <span id="volumes"></span><h1>Files and Volumes<a class="headerlink" href="#files-and-volumes" title="Permalink to this headline">¶</a></h1>
-<p>Using the COPY, SWITCH, DELETE, and RENAME commands, you can manipulate the archive and the volumes as described in the <a class="reference internal" href="../commands/files.html#files"><em>File I/O page</em></a>. But before you do that, it&#8217;s useful to know how kOS manages the archive and the volumes, and what they mean.</p>
+<p>Using the COPY, SWITCH, DELETE, and RENAME commands, you can manipulate the archive and the volumes as described in the <a class="reference internal" href="../commands/files.html#files"><span>File I/O page</span></a>. But before you do that, it&#8217;s useful to know how kOS manages the archive and the volumes, and what they mean.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#script-files" id="id1">Script Files</a></li>
@@ -195,7 +183,7 @@
 <p class="first admonition-title">Warning</p>
 <div class="last versionchanged">
 <p><span class="versionmodified">Changed in version 0.15: </span><strong>Archive location and file extension change</strong></p>
-<p>The Archive where KerboScript files are kept has been changed from <tt class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></tt> to <tt class="docutils literal"><span class="pre">Ships/Script</span></tt>, but still under the top-level <strong>KSP</strong> installation directory. The file name extensions have also changes from <tt class="docutils literal"><span class="pre">.txt</span></tt> to <tt class="docutils literal"><span class="pre">.ks</span></tt>.</p>
+<p>The Archive where KerboScript files are kept has been changed from <code class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></code> to <code class="docutils literal"><span class="pre">Ships/Script</span></code>, but still under the top-level <strong>KSP</strong> installation directory. The file name extensions have also changes from <code class="docutils literal"><span class="pre">.txt</span></code> to <code class="docutils literal"><span class="pre">.ks</span></code>.</p>
 </div>
 </div>
 <div class="section" id="script-files">
@@ -208,14 +196,14 @@
 <ul class="simple">
 <li>If a file is stored on the volume called &#8220;Archive&#8221; (or volume number
 zero to put it another way), then behind the scenes it&#8217;s really
-stored as an actual file, with the extension <tt class="docutils literal"><span class="pre">.ks</span></tt>, on your
-computer (As of right now it&#8217;s located in <tt class="docutils literal"><span class="pre">Ships/Script</span></tt> but that
+stored as an actual file, with the extension <code class="docutils literal"><span class="pre">.ks</span></code>, on your
+computer (As of right now it&#8217;s located in <code class="docutils literal"><span class="pre">Ships/Script</span></code> but that
 location is likely to change to somewhere in GameData in a future
 version.) Each program is a simple text file you can edit with any
 text editor, and your edits will be seen immediately by KOS the next
 time it tries running that program from the archive volume.</li>
 <li>Historical note: older versions of kOS (0.14 and earlier) used the
-directory <tt class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></tt> for the archive.</li>
+directory <code class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></code> for the archive.</li>
 </ul>
 <p>In any other volume besides Archive:</p>
 <ul class="simple">
@@ -300,12 +288,12 @@ volume but with the following exceptions:</p>
 <li>The archive represents the large bank of disk storage back at mission
 control&#8217;s mainframe, rather than the storage on an indivdual craft.
 While &#8220;Volume 1&#8221; on one vessel might be a different disk than &#8220;Volume
-1&#8221; on another vessel, there is only volume called &#8220;archive&#8221; in the
+1&#8221; on another vessel, there is only one volume called &#8220;archive&#8221; in the
 entire solar system. Also, there&#8217;s only one &#8220;archive&#8221; across all
 saved universes. If you play a new campaign from scratch, your
 archive in that new game will still have all the files in it from
 your previous saved game. This is because behid the scenes it&#8217;s
-stored in the plugin&#8217;s directory, not the save game directory.</li>
+stored in the <code class="docutils literal"><span class="pre">Ships/Script</span></code> directory, not the save game directory.</li>
 <li>It is infinitely large.</li>
 <li>Unlike the other volumes, the archive volume does not have a byte
 limit. This is because the mainframe back at home base can store a
@@ -317,20 +305,10 @@ state of the game, and therefore any disk data on the vessels
 themselves also reverts to what it was at the time of the saved game.
 Because the archive is saved outside the normal game save, changes
 made there are retained even when reverting a flight.</li>
-<li>It&#8217;s not always reachable if you are out in space, unless you have
-antennae.</li>
-<li>Once a vessel is more than 100,000 meters away from mission control,
-by default it cannot access the files on the archive. Commands such
-as SWITCH TO , and COPY FROM will fail to work when trying to access
-the archive volume while out of range. This can be changed by putting
-antennae on the vessel. With enough
-<a class="reference external" href="/KOS_DOC/summary_topics/commrange">antennae</a> it becomes possible
-to reach the archive drive from farther away. Using this method it is
-possible to alter the software stored on a vessel after launch.</li>
 <li>Files in Archive are editable with a text editor directly and they
-will have the <tt class="docutils literal"><span class="pre">.ks</span></tt> extension.</li>
+will have the <code class="docutils literal"><span class="pre">.ks</span></code> extension.</li>
 <li>Files in the Archive are stored on your computer in the subdirectory:
-<tt class="docutils literal"><span class="pre">Ships/Script</span></tt>. You can pull them up in a text editor of your
+<code class="docutils literal"><span class="pre">Ships/Script</span></code>. You can pull them up in a text editor of your
 choice and edit them directly, and the KOS Mod will see those changes
 in its archive immediately. Files stored in other volumes, on the
 other hand, are stored inside the vessel&#8217;s data in the persistence
@@ -345,15 +323,16 @@ persistence file.</li>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="compiling.html" class="btn btn-neutral float-right" title="KerboScript Machine Code">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="compiling.html" class="btn btn-neutral float-right" title="KerboScript Machine Code" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="telnet.html" class="btn btn-neutral" title="The kOS Telnet Server"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="telnet.html" class="btn btn-neutral" title="The kOS Telnet Server" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -362,13 +341,14 @@ persistence file.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -383,7 +363,7 @@ persistence file.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -392,7 +372,7 @@ persistence file.</li>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

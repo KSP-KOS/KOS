@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RemoteTech &mdash; kOS 0.18.2 documentation</title>
+  <title>RemoteTech &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Kerbal Alarm Clock" href="KAC.html"/>
         <link rel="prev" title="Action Groups Extended" href="AGX.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,75 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">RemoteTech</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">RemoteTech</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IR.html">Infernal Robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="OrbitalScience.html">DMagic Orbital Science</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +127,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../addons.html">Addon Reference</a> &raquo;</li>
       
     <li>RemoteTech</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/addons/RemoteTech.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/addons/RemoteTech.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="remotetech">
 <span id="id1"></span><h1>RemoteTech<a class="headerlink" href="#remotetech" title="Permalink to this headline">¶</a></h1>
@@ -191,25 +173,25 @@
 <p>When you have RemoteTech installed you can only interact with the core&#8217;s terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.</p>
 <p>If you launch a manned craft while using RemoteTech, you are still able to input commands from the terminal even if you do not have a connection to the KSC.  The archive will still be inaccessible without a connection to the KSC.  Under the current implementation, there is no delay when accessing the archive with a local terminal.  This implementation may change in the future to account for delays in reading and writing data over the connection.</p>
 <p>It is possible to activate/deactivate RT antennas, as well as set their targets using kOS:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">p</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;mediumDishAntenna&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span>
-<span class="n">SET</span> <span class="n">m</span> <span class="n">to</span> <span class="n">p</span><span class="o">:</span><span class="n">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleRTAntenna&quot;</span><span class="p">).</span>
-<span class="nl">m:</span><span class="n">DOEVENT</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">).</span>
-<span class="nl">m:</span><span class="n">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;mission-control&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">p</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;mediumDishAntenna&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
+<span class="k">SET</span> <span class="nv">m</span> <span class="ow">to</span> <span class="nv">p</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleRTAntenna&quot;</span><span class="p">).</span>
+<span class="nv">m</span><span class="p">:</span><span class="nv">DOEVENT</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">).</span>
+<span class="nv">m</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;mission-control&quot;</span><span class="p">).</span>
 <span class="c1">// or</span>
-<span class="nl">m:</span><span class="n">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="n">mun</span><span class="p">).</span>
-<span class="nl">m:</span><span class="n">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;minmus&quot;</span><span class="p">).</span>
+<span class="nv">m</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="nv">mun</span><span class="p">).</span>
+<span class="nv">m</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;minmus&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Acceptable values for <cite>&#8220;target&#8221;</cite> are: <cite>&#8220;no-target&#8221;</cite>, <cite>&#8220;active-vessel&#8221;</cite>, <cite>&#8220;mission-control&#8221;</cite>, a <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a>, a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>, or a string containing the name of a body or vessel.</p>
+<p>Acceptable values for <cite>&#8220;target&#8221;</cite> are: <cite>&#8220;no-target&#8221;</cite>, <cite>&#8220;active-vessel&#8221;</cite>, <cite>&#8220;mission-control&#8221;</cite>, a <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a>, a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, or a string containing the name of a body or vessel.</p>
 <p>Starting version 0.17 of kOS you can access structure RTAddon via <cite>ADDONS:RT</cite>.</p>
 <dl class="structure">
 <dt id="structure:RTADDON">
-<em class="property">structure </em><tt class="descname">RTAddon</tt><a class="headerlink" href="#structure:RTADDON" title="Permalink to this definition">¶</a></dt>
+<em class="property">structure </em><code class="descname">RTAddon</code><a class="headerlink" href="#structure:RTADDON" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="32%" />
-<col width="22%" />
-<col width="47%" />
+<col width="29%" />
+<col width="29%" />
+<col width="42%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -218,29 +200,29 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RTADDON:AVAILABLE" title="RTADDON:AVAILABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></tt></a></td>
-<td>bool(readonly)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RTADDON:AVAILABLE" title="RTADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a> (readonly)</td>
 <td>True if RT is installed and RT integration enabled.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:DELAY" title="RTADDON:DELAY method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DELAY(vessel)</span></tt></a></td>
-<td>double</td>
-<td>Get shortest possible delay to given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:DELAY" title="RTADDON:DELAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">DELAY(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Get shortest possible delay to given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:KSCDELAY" title="RTADDON:KSCDELAY method"><tt class="xref ks ks-meth docutils literal"><span class="pre">KSCDELAY(vessel)</span></tt></a></td>
-<td>double</td>
-<td>Get delay from KSC to given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:KSCDELAY" title="RTADDON:KSCDELAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">KSCDELAY(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Get delay from KSC to given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASCONNECTION" title="RTADDON:HASCONNECTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASCONNECTION(vessel)</span></tt></a></td>
-<td>bool</td>
-<td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> has any connection</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASCONNECTION" title="RTADDON:HASCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASCONNECTION(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has any connection</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:HASKSCCONNECTION" title="RTADDON:HASKSCCONNECTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASKSCCONNECTION(vessel)</span></tt></a></td>
-<td>bool</td>
-<td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> has connection to KSC</td>
+<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:HASKSCCONNECTION" title="RTADDON:HASKSCCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASKSCCONNECTION(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has connection to KSC</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASLOCALCONTROL" title="RTADDON:HASLOCALCONTROL method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASLOCALCONTROL(vessel)</span></tt></a></td>
-<td>bool</td>
-<td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> has local control</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASLOCALCONTROL" title="RTADDON:HASLOCALCONTROL method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASLOCALCONTROL(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has local control</td>
 </tr>
 </tbody>
 </table>
@@ -248,12 +230,12 @@
 
 <dl class="attribute">
 <dt id="attribute:RTADDON:AVAILABLE">
-RTADDON:<tt class="descname">AVAILABLE</tt><a class="headerlink" href="#attribute:RTADDON:AVAILABLE" title="Permalink to this definition">¶</a></dt>
+RTADDON:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attribute:RTADDON:AVAILABLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -264,17 +246,17 @@ RTADDON:<tt class="descname">AVAILABLE</tt><a class="headerlink" href="#attribut
 
 <dl class="method">
 <dt id="method:RTADDON:DELAY">
-RTAddon:<tt class="descname">DELAY</tt><big>(</big>vessel<big>)</big><a class="headerlink" href="#method:RTADDON:DELAY" title="Permalink to this definition">¶</a></dt>
+RTAddon:<code class="descname">DELAY</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:DELAY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(double) seconds</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a>) seconds</p>
 </td>
 </tr>
 </tbody>
@@ -284,17 +266,17 @@ RTAddon:<tt class="descname">DELAY</tt><big>(</big>vessel<big>)</big><a class="h
 
 <dl class="method">
 <dt id="method:RTADDON:KSCDELAY">
-RTAddon:<tt class="descname">KSCDELAY</tt><big>(</big>vessel<big>)</big><a class="headerlink" href="#method:RTADDON:KSCDELAY" title="Permalink to this definition">¶</a></dt>
+RTAddon:<code class="descname">KSCDELAY</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:KSCDELAY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(double) seconds</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a>) seconds</p>
 </td>
 </tr>
 </tbody>
@@ -304,17 +286,17 @@ RTAddon:<tt class="descname">KSCDELAY</tt><big>(</big>vessel<big>)</big><a class
 
 <dl class="method">
 <dt id="method:RTADDON:HASCONNECTION">
-RTAddon:<tt class="descname">HASCONNECTION</tt><big>(</big>vessel<big>)</big><a class="headerlink" href="#method:RTADDON:HASCONNECTION" title="Permalink to this definition">¶</a></dt>
+RTAddon:<code class="descname">HASCONNECTION</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:HASCONNECTION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">bool</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -324,17 +306,17 @@ RTAddon:<tt class="descname">HASCONNECTION</tt><big>(</big>vessel<big>)</big><a 
 
 <dl class="method">
 <dt id="method:RTADDON:HASKSCCONNECTION">
-RTAddon:<tt class="descname">HASKSCCONNECTION</tt><big>(</big>vessel<big>)</big><a class="headerlink" href="#method:RTADDON:HASKSCCONNECTION" title="Permalink to this definition">¶</a></dt>
+RTAddon:<code class="descname">HASKSCCONNECTION</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:HASKSCCONNECTION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">bool</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -344,17 +326,17 @@ RTAddon:<tt class="descname">HASKSCCONNECTION</tt><big>(</big>vessel<big>)</big>
 
 <dl class="method">
 <dt id="method:RTADDON:HASLOCALCONTROL">
-RTAddon:<tt class="descname">HASLOCALCONTROL</tt><big>(</big>vessel<big>)</big><a class="headerlink" href="#method:RTADDON:HASLOCALCONTROL" title="Permalink to this definition">¶</a></dt>
+RTAddon:<code class="descname">HASLOCALCONTROL</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:HASLOCALCONTROL" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">bool</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -366,15 +348,16 @@ RTAddon:<tt class="descname">HASLOCALCONTROL</tt><big>(</big>vessel<big>)</big><
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="KAC.html" class="btn btn-neutral float-right" title="Kerbal Alarm Clock">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="KAC.html" class="btn btn-neutral float-right" title="Kerbal Alarm Clock" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="AGX.html" class="btn btn-neutral" title="Action Groups Extended"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="AGX.html" class="btn btn-neutral" title="Action Groups Extended" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -383,13 +366,14 @@ RTAddon:<tt class="descname">HASLOCALCONTROL</tt><big>(</big>vessel<big>)</big><
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -404,7 +388,7 @@ RTAddon:<tt class="descname">HASLOCALCONTROL</tt><big>(</big>vessel<big>)</big><
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -413,7 +397,7 @@ RTAddon:<tt class="descname">HASLOCALCONTROL</tt><big>(</big>vessel<big>)</big><
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

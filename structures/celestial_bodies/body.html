@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Body &mdash; kOS 0.18.2 documentation</title>
+  <title>Body &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
-        <link rel="next" title="Vessels and Parts" href="../vessels.html"/>
+        <link rel="next" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,83 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/processors.html">Processors</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Body</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,16 +135,22 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">kOS</a>
+        <a href="../../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
       
@@ -172,34 +159,37 @@
     <li>Body</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/structures/celestial_bodies/body.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../../_sources/structures/celestial_bodies/body.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="body">
 <span id="id1"></span><h1>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h1>
 <p>This is any sort of planet or moon. To get a variable referring to a Body, you can do this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// &quot;name&quot; is the name of the body,</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// &quot;name&quot; is the name of the body,</span>
 <span class="c1">// like &quot;Mun&quot; for example.</span>
-<span class="n">SET</span> <span class="n">MY_VAR</span> <span class="n">TO</span> <span class="n">BODY</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">MY_VAR</span> <span class="ow">TO</span> <span class="nv">BODY</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Also, all bodies have hard-coded variable names as well. You can use the variable <tt class="docutils literal"><span class="pre">Mun</span></tt> to mean the same thing as <tt class="docutils literal"><span class="pre">BODY(&quot;Mun&quot;)</span></tt>.</p>
+<p>Also, all bodies have hard-coded variable names as well. You can use the variable <code class="docutils literal"><span class="pre">Mun</span></code> to mean the same thing as <code class="docutils literal"><span class="pre">BODY(&quot;Mun&quot;)</span></code>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><em>Orbitable</em></a>, and can use all the terms described for these objects too.</p>
+<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>Orbitable</span></a>, and can use all the terms described for these objects too.</p>
 </div>
 </div>
 <div class="section" id="predefined-celestial-bodies">
 <h2>Predefined Celestial Bodies<a class="headerlink" href="#predefined-celestial-bodies" title="Permalink to this headline">¶</a></h2>
 <p>All of the main celestial bodies in the game are reserved variable names. The following two lines do the exactly the same thing:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">the_mun</span> <span class="n">TO</span> <span class="n">Mun</span><span class="p">.</span>
-<span class="n">SET</span> <span class="n">the_mun</span> <span class="n">TO</span> <span class="n">Body</span><span class="p">(</span><span class="s">&quot;Mun&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">the_mun</span> <span class="ow">TO</span> <span class="nv">Mun</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">the_mun</span> <span class="ow">TO</span> <span class="nv">Body</span><span class="p">(</span><span class="s">&quot;Mun&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <ul>
@@ -249,7 +239,7 @@
 </ul>
 <dl class="structure">
 <dt id="structure:BODY">
-<em class="property">structure </em><tt class="descname">Body</tt><a class="headerlink" href="#structure:BODY" title="Permalink to this definition">¶</a></dt>
+<em class="property">structure </em><code class="descname">Body</code><a class="headerlink" href="#structure:BODY" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="37%" />
@@ -261,147 +251,165 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="2">Every Suffix of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></td>
+<tr class="row-even"><td colspan="2">Every Suffix of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:NAME" title="BODY:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
-<td>string</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:NAME" title="BODY:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:DESCRIPTION" title="BODY:DESCRIPTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DESCRIPTION</span></tt></a></td>
-<td>string</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:DESCRIPTION" title="BODY:DESCRIPTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DESCRIPTION</span></code></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MASS" title="BODY:MASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></tt></a></td>
-<td>scalar (kg)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MASS" title="BODY:MASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kg)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
-<td>scalar (m)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></tt></a></td>
-<td>scalar (s)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (s)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:RADIUS" title="BODY:RADIUS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></tt></a></td>
-<td>scalar (m)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:RADIUS" title="BODY:RADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MU" title="BODY:MU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MU</span></tt></a></td>
-<td>scalar (<span class="math">\(m^3 s^{−2}\)</span>)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MU" title="BODY:MU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MU</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (<span class="math">\(m^3 s^{−2}\)</span>)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ATM" title="BODY:ATM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></tt></a></td>
-<td><a class="reference internal" href="atmosphere.html#structure:ATMOSPHERE" title="ATMOSPHERE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></code></a></td>
+<td><a class="reference internal" href="atmosphere.html#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
-<td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP-RAW</span></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:GEOPOSITIONOF" title="BODY:GEOPOSITIONOF attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITIONOF</span></tt></a></td>
-<td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:GEOPOSITIONOF" title="BODY:GEOPOSITIONOF attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITIONOF</span></code></a></td>
+<td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP-RAW</span></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ALTITUDEOF" title="BODY:ALTITUDEOF attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEOF</span></tt></a></td>
-<td>scalar (m)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ALTITUDEOF" title="BODY:ALTITUDEOF attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEOF</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:SOIRADIUS" title="BODY:SOIRADIUS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SOIRADIUS</span></tt></a></td>
-<td>scalar (m)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:SOIRADIUS" title="BODY:SOIRADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SOIRADIUS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONANGLE</span></tt></a></td>
-<td>scalar (deg)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONANGLE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This type is serializable.</p>
+</div>
 <dl class="attribute">
 <dt id="attribute:BODY:NAME">
-Body:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:BODY:NAME" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">NAME</code><a class="headerlink" href="#attribute:BODY:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the body. Example: &#8220;Mun&#8221;.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:DESCRIPTION">
-Body:<tt class="descname">DESCRIPTION</tt><a class="headerlink" href="#attribute:BODY:DESCRIPTION" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">DESCRIPTION</code><a class="headerlink" href="#attribute:BODY:DESCRIPTION" title="Permalink to this definition">¶</a></dt>
 <dd><p>Longer description of the body, often just a duplicate of the name.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:MASS">
-Body:<tt class="descname">MASS</tt><a class="headerlink" href="#attribute:BODY:MASS" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">MASS</code><a class="headerlink" href="#attribute:BODY:MASS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The mass of the body in kilograms.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:ALTITUDE">
-Body:<tt class="descname">ALTITUDE</tt><a class="headerlink" href="#attribute:BODY:ALTITUDE" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">ALTITUDE</code><a class="headerlink" href="#attribute:BODY:ALTITUDE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The altitude of this body above the sea level surface of its parent body. I.e. the altitude of Mun above Kerbin.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:ROTATIONPERIOD">
-Body:<tt class="descname">ROTATIONPERIOD</tt><a class="headerlink" href="#attribute:BODY:ROTATIONPERIOD" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">ROTATIONPERIOD</code><a class="headerlink" href="#attribute:BODY:ROTATIONPERIOD" title="Permalink to this definition">¶</a></dt>
 <dd><p>The length of the body&#8217;s day in seconds. I.e. how long it takes for it to make one rotation.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:RADIUS">
-Body:<tt class="descname">RADIUS</tt><a class="headerlink" href="#attribute:BODY:RADIUS" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">RADIUS</code><a class="headerlink" href="#attribute:BODY:RADIUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The radius from the body&#8217;s center to its sea level.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:MU">
-Body:<tt class="descname">MU</tt><a class="headerlink" href="#attribute:BODY:MU" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">MU</code><a class="headerlink" href="#attribute:BODY:MU" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference external" href="http://en.wikipedia.org/wiki/Standard_gravitational_parameter">Gravitational Parameter</a> of the body.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:ATM">
-Body:<tt class="descname">ATM</tt><a class="headerlink" href="#attribute:BODY:ATM" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">ATM</code><a class="headerlink" href="#attribute:BODY:ATM" title="Permalink to this definition">¶</a></dt>
 <dd><p>A variable that describes the atmosphere of this body.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:ANGULARVEL">
-Body:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#attribute:BODY:ANGULARVEL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.</p>
+Body:<code class="descname">ANGULARVEL</code><a class="headerlink" href="#attribute:BODY:ANGULARVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Angular velocity of the body&#8217;s rotation about its axis (its
+day) expressed as a vector.</p>
+<p>The direction the angular velocity points is in Ship-Raw orientation,
+and represents the axis of rotation.  Remember that everything in
+Kerbal Space Program uses a <em>left-handed coordinate system</em>, which
+affects which way the angular velocity vector will point.  If you
+curl the fingers of your <strong>left</strong> hand in the direction of the rotation,
+and stick out your thumb, the thumb&#8217;s direction is the way the
+angular velocity vector will point.</p>
+<p>The magnitude of the vector is the speed of the rotation.</p>
+<p>Note, unlike many of the other parts of kOS, the rotation speed is
+expressed in radians rather than degrees.  This is to make it
+congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
+backward compatibility with older kOS scripts.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:GEOPOSITIONOF">
-Body:<tt class="descname">GEOPOSITIONOF</tt><a class="headerlink" href="#attribute:BODY:GEOPOSITIONOF" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">GEOPOSITIONOF</code><a class="headerlink" href="#attribute:BODY:GEOPOSITIONOF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no &#8220;OF&#8221; in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn&#8217;t mean the same thing.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:ALTITUDEOF">
-Body:<tt class="descname">ALTITUDEOF</tt><a class="headerlink" href="#attribute:BODY:ALTITUDEOF" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">ALTITUDEOF</code><a class="headerlink" href="#attribute:BODY:ALTITUDEOF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The altitude of the given vector position, above this body&#8217;s &#8216;sea level&#8217;.  SHIP:BODY:ALTITUDEOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:ALTITUDE.  Example: Eve:ALTITUDEOF(GILLY:POSITION) gives the altitude of gilly&#8217;s current position above Eve, even if you&#8217;re not actually anywhere near the SOI of Eve at the time.  Be careful not to confuse this with :ALTITUDE (no &#8220;OF&#8221; in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn&#8217;t mean the same thing.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:SOIRADIUS">
-Body:<tt class="descname">SOIRADIUS</tt><a class="headerlink" href="#attribute:BODY:SOIRADIUS" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">SOIRADIUS</code><a class="headerlink" href="#attribute:BODY:SOIRADIUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The radius of the body&#8217;s sphere of influence. Measured from the body&#8217;s center.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:BODY:ROTATIONANGLE">
-Body:<tt class="descname">ROTATIONANGLE</tt><a class="headerlink" href="#attribute:BODY:ROTATIONANGLE" title="Permalink to this definition">¶</a></dt>
+Body:<code class="descname">ROTATIONANGLE</code><a class="headerlink" href="#attribute:BODY:ROTATIONANGLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The rotation angle is the number of degrees between the
-<a class="reference internal" href="../../bindings.html#solarprimevector"><em>Solar Prime Vector</em></a> and the
+<a class="reference internal" href="../../bindings.html#solarprimevector"><span>Solar Prime Vector</span></a> and the
 current positon of the body&#8217;s prime meridian (body longitude
 of zero).</p>
 <p>The value is in constant motion, and once per body&#8217;s day, its
-<tt class="docutils literal"><span class="pre">:rotationangle</span></tt> will wrap around through a full 360 degrees.</p>
+<code class="docutils literal"><span class="pre">:rotationangle</span></code> will wrap around through a full 360 degrees.</p>
 </dd></dl>
 
 </div>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vessels.html" class="btn btn-neutral float-right" title="Vessels and Parts">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../misc.html" class="btn btn-neutral float-right" title="Configurations and Miscellany" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="atmosphere.html" class="btn btn-neutral" title="Atmosphere"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="atmosphere.html" class="btn btn-neutral" title="Atmosphere" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -410,13 +418,14 @@ of zero).</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -431,7 +440,7 @@ of zero).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -440,7 +449,7 @@ of zero).</p>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

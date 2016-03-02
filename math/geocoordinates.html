@@ -5,9 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Geographic Coordinates &mdash; kOS 0.18.2 documentation</title>
+  <title>Geographic Coordinates &mdash; kOS 0.19.0 documentation</title>
   
 
   
@@ -16,7 +17,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -26,20 +26,22 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
   
 
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Reference Frames" href="ref_frame.html"/>
         <link rel="prev" title="Directions" href="direction.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -49,104 +51,76 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.19.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-        
-            <ul class="current">
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../math.html">Mathematics</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="basic.html">Fundamental Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html">Basic Math Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalar.html">Scalar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Geographic Coordinates</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Geographic Coordinates</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ref_frame.html">Reference Frames</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 
-        
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -154,29 +128,38 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">kOS</a>
+        <a href="../contents.html">kOS</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
       
           <li><a href="../math.html">Mathematics and Basic Geometry</a> &raquo;</li>
       
     <li>Geographic Coordinates</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/math/geocoordinates.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/math/geocoordinates.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="geographic-coordinates">
 <span id="geocoordinates"></span><h1>Geographic Coordinates<a class="headerlink" href="#geographic-coordinates" title="Permalink to this headline">¶</a></h1>
@@ -188,12 +171,12 @@
 <li><a class="reference internal" href="#examples-usage" id="id3">Examples Usage</a></li>
 </ul>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">GeoCoordinates</span></tt> object (also <tt class="docutils literal"><span class="pre">LATLNG</span></tt>) represents a latitude and longitude pair, which is a location on the surface of a <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><em>Body</em></a>.</p>
+<p>The <code class="docutils literal"><span class="pre">GeoCoordinates</span></code> object (also <code class="docutils literal"><span class="pre">LATLNG</span></code>) represents a latitude and longitude pair, which is a location on the surface of a <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span>Body</span></a>.</p>
 <div class="section" id="creation">
 <h2><a class="toc-backref" href="#id1">Creation</a><a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="function:LATLNG">
-<tt class="descname">LATLNG</tt><big>(</big>lat,lng<big>)</big><a class="headerlink" href="#function:LATLNG" title="Permalink to this definition">¶</a></dt>
+<code class="descname">LATLNG</code><span class="sig-paren">(</span>lat,lng<span class="sig-paren">)</span><a class="headerlink" href="#function:LATLNG" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -204,14 +187,14 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a></p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>This function creates a <tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordiantes</span></tt> object with the given latitude and longitude. Once created it can&#8217;t be changed. The <a class="reference internal" href="#attribute:GEOCOORDINATES:LAT" title="GEOCOORDINATES:LAT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:LAT</span></tt></a> and <a class="reference internal" href="#attribute:GEOCOORDINATES:LNG" title="GEOCOORDINATES:LNG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:LNG</span></tt></a> suffixes are get-only and cannot be set. To switch to a new location, make a new call to <a class="reference internal" href="#function:LATLNG" title="LATLNG function"><tt class="xref ks ks-func docutils literal"><span class="pre">LATLNG()</span></tt></a>.</p>
-<p>It is also possible to obtain a <tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordiates</span></tt> from some suffixes of some other structures. For example:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">spot</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">GEOPOSITION</span><span class="p">.</span>
+<p>This function creates a <code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordiantes</span></code> object with the given latitude and longitude. Once created it can&#8217;t be changed. The <a class="reference internal" href="#attribute:GEOCOORDINATES:LAT" title="GEOCOORDINATES:LAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:LAT</span></code></a> and <a class="reference internal" href="#attribute:GEOCOORDINATES:LNG" title="GEOCOORDINATES:LNG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:LNG</span></code></a> suffixes are get-only and cannot be set. To switch to a new location, make a new call to <a class="reference internal" href="#function:LATLNG" title="LATLNG function"><code class="xref ks ks-func docutils literal"><span class="pre">LATLNG()</span></code></a>.</p>
+<p>It is also possible to obtain a <code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordiates</span></code> from some suffixes of some other structures. For example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">spot</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">GEOPOSITION</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -221,7 +204,7 @@
 <h2><a class="toc-backref" href="#id2">Structure</a><a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
 <dt id="structure:GEOCOORDINATES">
-<em class="property">structure </em><tt class="descname">GeoCoordinates</tt><a class="headerlink" href="#structure:GEOCOORDINATES" title="Permalink to this definition">¶</a></dt>
+<em class="property">structure </em><code class="descname">GeoCoordinates</code><a class="headerlink" href="#structure:GEOCOORDINATES" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="22%" />
@@ -237,153 +220,158 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:LAT" title="GEOCOORDINATES:LAT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LAT</span></tt></a></td>
-<td>scalar (deg)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:LAT" title="GEOCOORDINATES:LAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LAT</span></code></a></td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 <td>none</td>
 <td>Latitude</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:LNG" title="GEOCOORDINATES:LNG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LNG</span></tt></a></td>
-<td>scalar (deg)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:LNG" title="GEOCOORDINATES:LNG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LNG</span></code></a></td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 <td>none</td>
 <td>Longitude</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:DISTANCE" title="GEOCOORDINATES:DISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DISTANCE</span></tt></a></td>
-<td>scalar (m)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:DISTANCE" title="GEOCOORDINATES:DISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DISTANCE</span></code></a></td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (m)</td>
 <td>none</td>
-<td>distance from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></td>
+<td>distance from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:TERRAINHEIGHT" title="GEOCOORDINATES:TERRAINHEIGHT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TERRAINHEIGHT</span></tt></a></td>
-<td>scalar (m)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:TERRAINHEIGHT" title="GEOCOORDINATES:TERRAINHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TERRAINHEIGHT</span></code></a></td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (m)</td>
 <td>none</td>
 <td>above or below sea level</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:HEADING" title="GEOCOORDINATES:HEADING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HEADING</span></tt></a></td>
-<td>scalar (deg)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:HEADING" title="GEOCOORDINATES:HEADING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HEADING</span></code></a></td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 <td>none</td>
-<td><em>absolute</em> heading from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></td>
+<td><em>absolute</em> heading from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BEARING</span></tt></a></td>
-<td>scalar (deg)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BEARING</span></code></a></td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 <td>none</td>
-<td><em>relative</em> direction from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></td>
+<td><em>relative</em> direction from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:POSITION" title="GEOCOORDINATES:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:POSITION" title="GEOCOORDINATES:POSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></code></a></td>
 <td><cite>Vector</cite> (3D Ship-Raw coords)</td>
 <td>none</td>
 <td>Position of the surface point.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:ALTITUDEPOSITION" title="GEOCOORDINATES:ALTITUDEPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEPOSITION</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:ALTITUDEPOSITION" title="GEOCOORDINATES:ALTITUDEPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEPOSITION</span></code></a></td>
 <td><cite>Vector</cite> (3D Ship-Raw coords)</td>
-<td>scalar (altitude above sea level)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (altitude above sea level)</td>
 <td>Position of a point above (or below) the surface point, by giving the altitude number.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This type is serializable.</p>
+</div>
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:LAT">
-GeoCoordinates:<tt class="descname">LAT</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:LAT" title="Permalink to this definition">¶</a></dt>
+GeoCoordinates:<code class="descname">LAT</code><a class="headerlink" href="#attribute:GEOCOORDINATES:LAT" title="Permalink to this definition">¶</a></dt>
 <dd><p>The latitude of this position on the surface.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:LNG">
-GeoCoordinates:<tt class="descname">LNG</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:LNG" title="Permalink to this definition">¶</a></dt>
+GeoCoordinates:<code class="descname">LNG</code><a class="headerlink" href="#attribute:GEOCOORDINATES:LNG" title="Permalink to this definition">¶</a></dt>
 <dd><p>The longitude of this position on the surface.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:DISTANCE">
-GeoCoordinates:<tt class="descname">DISTANCE</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:DISTANCE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Distance from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU_Vessel</em></a> to this point on the surface.</p>
+GeoCoordinates:<code class="descname">DISTANCE</code><a class="headerlink" href="#attribute:GEOCOORDINATES:DISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU_Vessel</span></a> to this point on the surface.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:TERRAINHEIGHT">
-GeoCoordinates:<tt class="descname">TERRAINHEIGHT</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:TERRAINHEIGHT" title="Permalink to this definition">¶</a></dt>
+GeoCoordinates:<code class="descname">TERRAINHEIGHT</code><a class="headerlink" href="#attribute:GEOCOORDINATES:TERRAINHEIGHT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distance of the terrain above &#8220;sea level&#8221; at this geographical position. Negative numbers are below &#8220;sea level.&#8221;</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:HEADING">
-GeoCoordinates:<tt class="descname">HEADING</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:HEADING" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <em>absolute</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU_Vessel</em></a> to this point on the surface.</p>
+GeoCoordinates:<code class="descname">HEADING</code><a class="headerlink" href="#attribute:GEOCOORDINATES:HEADING" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>absolute</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU_Vessel</span></a> to this point on the surface.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:BEARING">
-GeoCoordinates:<tt class="descname">BEARING</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:BEARING" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <em>relative</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU_Vessel</em></a> to this point on the surface. For example, if the vessel is heading at compass heading 45, and the geo-coordinates location is at heading 30, then <a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:BEARING</span></tt></a> will return -15.</p>
+GeoCoordinates:<code class="descname">BEARING</code><a class="headerlink" href="#attribute:GEOCOORDINATES:BEARING" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>relative</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU_Vessel</span></a> to this point on the surface. For example, if the vessel is heading at compass heading 45, and the geo-coordinates location is at heading 30, then <a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:BEARING</span></code></a> will return -15.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:POSITION">
-GeoCoordinates:<tt class="descname">POSITION</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:POSITION" title="Permalink to this definition">¶</a></dt>
+GeoCoordinates:<code class="descname">POSITION</code><a class="headerlink" href="#attribute:GEOCOORDINATES:POSITION" title="Permalink to this definition">¶</a></dt>
 <dd><p>The ship-raw 3D position on the surface of the body, relative to the current ship&#8217;s Center of mass.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:ALTITUDEPOSITION">
-GeoCoordinates:<tt class="descname">ALTITUDEPOSITION</tt><a class="headerlink" href="#attribute:GEOCOORDINATES:ALTITUDEPOSITION" title="Permalink to this definition">¶</a></dt>
+GeoCoordinates:<code class="descname">ALTITUDEPOSITION</code><a class="headerlink" href="#attribute:GEOCOORDINATES:ALTITUDEPOSITION" title="Permalink to this definition">¶</a></dt>
 <dd><p>The ship-raw 3D position above or below the surface of the body, relative to the current ship&#8217;s Center of mass.  You pass in an altitude number for the altitude above &#8220;sea&#8221; level of the desired location.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="examples-usage">
 <h2><a class="toc-backref" href="#id3">Examples Usage</a><a class="headerlink" href="#examples-usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">spot</span> <span class="n">TO</span> <span class="n">LATLNG</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">).</span>     <span class="c1">// Initialize point at latitude 10,</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">spot</span> <span class="ow">TO</span> <span class="nv">LATLNG</span><span class="p">(</span><span class="mf">10</span><span class="p">,</span> <span class="mf">20</span><span class="p">).</span>     <span class="c1">// Initialize point at latitude 10,</span>
                                 <span class="c1">// longitude 20</span>
 
-<span class="n">PRINT</span> <span class="n">spot</span><span class="o">:</span><span class="n">LAT</span><span class="p">.</span>                 <span class="c1">// Print 10</span>
-<span class="n">PRINT</span> <span class="n">spot</span><span class="o">:</span><span class="n">LNG</span><span class="p">.</span>                 <span class="c1">// Print 20</span>
+<span class="k">PRINT</span> <span class="nv">spot</span><span class="p">:</span><span class="nv">LAT</span><span class="p">.</span>                 <span class="c1">// Print 10</span>
+<span class="k">PRINT</span> <span class="nv">spot</span><span class="p">:</span><span class="nv">LNG</span><span class="p">.</span>                 <span class="c1">// Print 20</span>
 
-<span class="n">PRINT</span> <span class="n">spot</span><span class="o">:</span><span class="n">DISTANCE</span><span class="p">.</span>            <span class="c1">// Print distance from vessel to x</span>
+<span class="k">PRINT</span> <span class="nv">spot</span><span class="p">:</span><span class="nv">DISTANCE</span><span class="p">.</span>            <span class="c1">// Print distance from vessel to x</span>
                                 <span class="c1">// (same altitude is presumed)</span>
-<span class="n">PRINT</span> <span class="n">spot</span><span class="o">:</span><span class="n">HEADING</span><span class="p">.</span>             <span class="c1">// Print the heading to the point</span>
-<span class="n">PRINT</span> <span class="n">spot</span><span class="o">:</span><span class="n">BEARING</span><span class="p">.</span>             <span class="c1">// Print the heading to the point</span>
+<span class="k">PRINT</span> <span class="nv">spot</span><span class="p">:</span><span class="nv">HEADING</span><span class="p">.</span>             <span class="c1">// Print the heading to the point</span>
+<span class="k">PRINT</span> <span class="nv">spot</span><span class="p">:</span><span class="nv">BEARING</span><span class="p">.</span>             <span class="c1">// Print the heading to the point</span>
                                 <span class="c1">// relative to vessel heading</span>
 
-<span class="n">SET</span> <span class="n">spot</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">GEOPOSITION</span><span class="p">.</span>   <span class="c1">// Make spot into a location on the</span>
+<span class="k">SET</span> <span class="nv">spot</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">GEOPOSITION</span><span class="p">.</span>   <span class="c1">// Make spot into a location on the</span>
                                 <span class="c1">// surface directly underneath the</span>
                                 <span class="c1">// current ship</span>
 
-<span class="n">SET</span> <span class="n">spot</span> <span class="n">TO</span> <span class="n">LATLNG</span><span class="p">(</span><span class="n">spot</span><span class="o">:</span><span class="n">LAT</span><span class="p">,</span><span class="n">spot</span><span class="o">:</span><span class="n">LNG</span><span class="o">+</span><span class="mi">5</span><span class="p">).</span> <span class="c1">// Make spot into a new</span>
+<span class="k">SET</span> <span class="nv">spot</span> <span class="ow">TO</span> <span class="nv">LATLNG</span><span class="p">(</span><span class="nv">spot</span><span class="p">:</span><span class="nv">LAT</span><span class="p">,</span><span class="nv">spot</span><span class="p">:</span><span class="nv">LNG</span><span class="o">+</span><span class="mf">5</span><span class="p">).</span> <span class="c1">// Make spot into a new</span>
                                          <span class="c1">// location 5  degrees east</span>
                                          <span class="c1">// of the old one</span>
 
 <span class="c1">// Point nose of ship at a spot 100,000 meters altitude above a</span>
 <span class="c1">// particular known latitude of 50 east, 20.2 north:</span>
-<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">LATLNG</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mf">20.2</span><span class="p">)</span><span class="o">:</span><span class="n">ALTITUDEPOSITION</span><span class="p">(</span><span class="mi">100000</span><span class="p">).</span>
+<span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">LATLNG</span><span class="p">(</span><span class="mf">50</span><span class="p">,</span><span class="mf">20</span><span class="p">.</span><span class="mf">2</span><span class="p">):</span><span class="nv">ALTITUDEPOSITION</span><span class="p">(</span><span class="mf">100000</span><span class="p">).</span>
 
 <span class="c1">// A nice complex example:</span>
 <span class="c1">// -------------------------</span>
 <span class="c1">// Drawing an debug arrow in 3D space at the spot where the Geocoordinate &#39;spot&#39; is:</span>
 <span class="c1">// It starts at a position 100m above the ground altitude and is aimed down at</span>
 <span class="c1">// the spot on the ground:</span>
-<span class="n">SET</span> <span class="n">VD</span> <span class="n">TO</span> <span class="n">VECDRAWARGS</span><span class="p">(</span>
-              <span class="nl">spot:</span><span class="n">ALTITUDEPOSITION</span><span class="p">(</span><span class="n">spot</span><span class="o">:</span><span class="n">TERRAINHEIGHT</span><span class="o">+</span><span class="mi">100</span><span class="p">),</span>
-              <span class="nl">spot:</span><span class="n">POSITION</span> <span class="o">-</span> <span class="n">spot</span><span class="o">:</span><span class="n">ALTITUDEPOSITION</span><span class="p">(</span><span class="n">TERRAINHEIGHT</span><span class="o">+</span><span class="mi">100</span><span class="p">),</span>
-              <span class="n">red</span><span class="p">,</span> <span class="s">&quot;THIS IS THE SPOT&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">VD</span> <span class="ow">TO</span> <span class="nv">VECDRAWARGS</span><span class="p">(</span>
+              <span class="nv">spot</span><span class="p">:</span><span class="nv">ALTITUDEPOSITION</span><span class="p">(</span><span class="nv">spot</span><span class="p">:</span><span class="nv">TERRAINHEIGHT</span><span class="o">+</span><span class="mf">100</span><span class="p">),</span>
+              <span class="nv">spot</span><span class="p">:</span><span class="nv">POSITION</span> <span class="o">-</span> <span class="nv">spot</span><span class="p">:</span><span class="nv">ALTITUDEPOSITION</span><span class="p">(</span><span class="nv">TERRAINHEIGHT</span><span class="o">+</span><span class="mf">100</span><span class="p">),</span>
+              <span class="nv">red</span><span class="p">,</span> <span class="s">&quot;THIS IS THE SPOT&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">).</span>
 
-<span class="n">PRINT</span> <span class="s">&quot;THESE TWO NUMBERS SHOULD BE THE SAME:&quot;</span><span class="p">.</span>
-<span class="n">PRINT</span> <span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITIUDE</span> <span class="o">-</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">GEOPOSITION</span><span class="o">:</span><span class="n">TERRAINHEIGHT</span><span class="p">).</span>
-<span class="n">PRINT</span> <span class="n">ALT</span><span class="o">:</span><span class="n">RADAR</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;THESE TWO NUMBERS SHOULD BE THE SAME:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="p">(</span><span class="nv">SHIP</span><span class="p">:</span><span class="nv">ALTITIUDE</span> <span class="o">-</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">GEOPOSITION</span><span class="p">:</span><span class="nv">TERRAINHEIGHT</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">ALT</span><span class="p">:</span><span class="nv">RADAR</span><span class="p">.</span>
 </pre></div>
 </div>
 </div>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ref_frame.html" class="btn btn-neutral float-right" title="Reference Frames">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ref_frame.html" class="btn btn-neutral float-right" title="Reference Frames" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="direction.html" class="btn btn-neutral" title="Directions"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="direction.html" class="btn btn-neutral" title="Directions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -392,13 +380,14 @@ GeoCoordinates:<tt class="descname">ALTITUDEPOSITION</tt><a class="headerlink" h
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
@@ -413,7 +402,7 @@ GeoCoordinates:<tt class="descname">ALTITUDEPOSITION</tt><a class="headerlink" h
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.2',
+            VERSION:'0.19.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -422,7 +411,7 @@ GeoCoordinates:<tt class="descname">ALTITUDEPOSITION</tt><a class="headerlink" h
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
