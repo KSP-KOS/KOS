@@ -30,79 +30,79 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
           -
           - Turn engine off
         * - :attr:`THRUSTLIMIT`
-          - scalar (%)
+          - :ref:`scalar <scalar>` (%)
           - Tweaked thrust limit
         * - :attr:`MAXTHRUST`
-          - scalar (kN)
+          - :ref:`scalar <scalar>` (kN)
           - Untweaked thrust limit
         * - :meth:`MAXTHRUSTAT(pressure)`
-          - scalar (kN)
+          - :ref:`scalar <scalar>` (kN)
           - Max thrust at the specified pressure (in standard Kerbin atmospheres).
         * - :attr:`THRUST`
-          - scalar (kN)
+          - :ref:`scalar <scalar>` (kN)
           - Current thrust
         * - :attr:`AVAILABLETHRUST`
-          - scalar (kN)
+          - :ref:`scalar <scalar>` (kN)
           - Available thrust at full throttle accounting for thrust limiter
         * - :meth:`AVAILABLETHRUSTAT(pressure)`
-          - scalar (kN)
+          - :ref:`scalar <scalar>` (kN)
           - Available thrust at the specified pressure (in standard Kerbin atmospheres).
         * - :attr:`FUELFLOW`
-          - scalar (l/s maybe)
+          - :ref:`scalar <scalar>` (l/s maybe)
           - Rate of fuel burn
         * - :attr:`ISP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :meth:`ISPAT(pressure)`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given pressure (in standard Kerbin atmospheres).
         * - :attr:`VACUUMISP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :attr:`VISP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel
         * - :attr:`SLISP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Synonym for SEALEVELISP
         * - :attr:`FLAMEOUT`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if no more fuel
         * - :attr:`IGNITION`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if engine is active
         * - :attr:`ALLOWRESTART`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if engine can be reactivated
         * - :attr:`ALLOWSHUTDOWN`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if engine can be shutdown
         * - :attr:`THROTTLELOCK`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if throttle can not be changed
         * - :attr:`MULTIMODE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if engine has multiple modes
         * - :attr:`MODES`
           - :struct:`List`
           - List (string) of the engine modes
         * - :attr:`MODE`
-          - string
+          - :ref:`string <string>`
           - Name of the current mode (only if multiple)
         * - :attr:`TOGGLEMODE`
           - 
           - Switch to another mode (only if multiple)
         * - :attr:`PRIMARYMODE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Is the engine in primary mode? (only if multiple)
         * - :attr:`AUTOSWITCH`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Can the engine switch modes automatically? (only if multiple)
         * - :attr:`HASGIMBAL`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if engine has gimbal
         * - :attr:`GIMBAL`
           - :struct:`Gimbal`
@@ -126,7 +126,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. attribute:: Engine:THRUSTLIMIT
 
     :access: Get/Set
-    :type: scalar (%)
+    :type: :ref:`scalar <scalar>` (%)
 
     If this an engine with a thrust limiter (tweakable) enabled, what
     percentage is it limited to?  Note that this is expressed as a 
@@ -151,7 +151,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. attribute:: Engine:MAXTHRUST
 
     :access: Get only
-    :type: scalar (kN)
+    :type: :ref:`scalar <scalar>` (kN)
 
     How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air.
 
@@ -160,14 +160,14 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. method:: Engine:MAXTHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: scalar (kN)
+    :type: :ref:`scalar <scalar>` (kN)
 
     How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
 
 .. attribute:: Engine:THRUST
 
     :access: Get only
-    :type: scalar (kN)
+    :type: :ref:`scalar <scalar>` (kN)
 
     How much thrust is this engine giving at this very moment.
 
@@ -176,7 +176,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. attribute:: Engine:AVAILABLETHRUST
 
     :access: Get only
-    :type: scalar (kN)
+    :type: :ref:`scalar <scalar>` (kN)
 
     Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions.
 
@@ -185,98 +185,98 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. method:: Engine:AVAILABLETHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: scalar (kN)
+    :type: :ref:`scalar <scalar>` (kN)
 
     Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.
 
 .. attribute:: Engine:FUELFLOW
 
     :access: Get only
-    :type: scalar (Liters/s? maybe)
+    :type: :ref:`scalar <scalar>` (Liters/s? maybe)
 
     Rate at which fuel is being burned. Not sure what the units are.
 
 .. attribute:: Engine:ISP
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. method:: Engine:ISPAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Engine:VACUUMISP
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. attribute:: Engine:VISP
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     Synonym for :VACUUMISP
 
 .. attribute:: Engine:SEALEVELISP
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel.
 
 .. attribute:: Engine:SLISP
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     Synonym for :SEALEVELISP
 
 .. attribute:: Engine:FLAMEOUT
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Is this engine failed because it is starved of a resource (liquidfuel, oxidizer, oxygen)?
 
 .. attribute:: Engine:IGNITION
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Has this engine been ignited? If both :attr:`Engine:IGNITION` and :attr:`Engine:FLAMEOUT` are true, that means the engine could start up again immediately if more resources were made available to it.
 
 .. attribute:: Engine:ALLOWRESTART
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Is this an engine that can be started again? Usually True, but false for solid boosters.
 
 .. attribute:: Engine:ALLOWSHUTDOWN
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Is this an engine that can be shut off once started? Usually True, but false for solid boosters.
 
 .. attribute:: Engine:THROTTLELOCK
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Is this an engine that is stuck at a fixed throttle? (i.e. solid boosters)
 
 .. attribute:: Engine:MULTIMODE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Does this engine have multiple modes (i.e. RAPIER)? Check this before calling multi-mode specific suffixes.   
     
@@ -290,7 +290,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. attribute:: Engine:MODE
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     Name of the current mode. Only assessible for multi-mode engines.
 
@@ -301,21 +301,21 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 .. attribute:: Engine:PRIMARYMODE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True for primary mode, false for secondary. Setting to other value equals toggling the mode. Only assessible for multi-mode engines. 
 
 .. attribute:: Engine:AUTOSWITCH
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Is automatic switching enabled? Can set to switch between manual and automatic switching. Only assessible for multi-mode engines. 
 
 .. attribute:: Engine:HASGIMBAL
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     Does this engine have a gimbal enabled?
 

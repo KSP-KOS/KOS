@@ -18,6 +18,8 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
         PRINT "Item at position " + MyIter:INDEX + " is [" + MyIter:VALUE + "].".
     }
 
+.. highlight:: none
+
 Which would result in this output::
 
     After reset, position = -1.
@@ -25,8 +27,7 @@ Which would result in this output::
     Item at position 1 is [Aloha].
     Item at position 2 is [Bonjour].
 
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
-
+.. highlight:: kerboscript
 
 .. structure:: Iterator
 
@@ -43,13 +44,13 @@ Which would result in this output::
           -
           - Rewind to the just before the beginning
         * - :meth:`NEXT`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Move iterator to the next item
         * - :attr:`ATEND`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Check if iterator is at the end of the list
         * - :attr:`INDEX`
-          - integer
+          - :ref:`scalar <scalar>`
           - Current index starting from zero
         * - :attr:`VALUE`
           - varies
@@ -62,21 +63,21 @@ Which would result in this output::
 
 .. method:: Iterator:NEXT
 
-    :returns: boolean
+    :returns: :ref:`boolean <boolean>`
 
     Call this to move the iterator to the next item in the list. Returns true if there is such an item, or false if no such item exists because it's already at the end of the list.
 
 .. attribute:: Iterator:ATEND
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Returns true if the iterator is at the end of the list and therefore cannot be "NEXTed", false otherwise.
 
 .. attribute:: Iterator:INDEX
 
     :access: Get only
-    :type: integer
+    :type: :ref:`scalar <scalar>` (integer)
 
     Returns the numerical index of how far you are into the list, starting the counting at 0 for the first item in the list. The last item in the list is numbered N-1, where N is the number of items in the list.
 

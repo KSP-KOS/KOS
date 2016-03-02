@@ -82,6 +82,8 @@ Using it
 3. Launch your telnet client (there is a list of telnet clients that are known
    to work listed below.
 
+.. highlight:: none
+
 4. When you first log in to the server you should see the "Welcome menu", which is a 
    screen looking like this::
 
@@ -125,6 +127,8 @@ Using it
      :width: 75 %
 
      The welcome menu, shown here in a Mac OSX terminal.
+
+.. highlight:: kerboscript
 
 5. **Pick a CPU.**  Pick one of the CPU's listed by typing its number and hitting enter.
 
@@ -270,6 +274,8 @@ HOWTO: Command-line client
 the loopback address 127.0.0.1, and port number 5410.  If you've changed those
 settings then alter the numbers you see here accordingly.)
 
+.. highlight:: none
+
 1.  Run KSP, and get it into a scene where there exists a vessel with
     at least one 
     kOS CPU loaded into it.
@@ -279,6 +285,8 @@ settings then alter the numbers you see here accordingly.)
 3.  At the shell prompt in that window, enter the command::
 
       telnet 127.0.0.1 5410
+
+.. highlight:: kerboscript
 
 HOWTO: Other client
 -------------------

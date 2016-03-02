@@ -27,8 +27,6 @@ into it to pre-populate the list with an initial list of items:
 The contents of a list can be any objects you feel like, and do not
 need to be of a homogeneous type.
 
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
-
 Structure
 ---------
 
@@ -64,7 +62,7 @@ Structure
           - :struct:`List`
           - new list of given length starting with index
         * - :meth:`JOIN(separator)`
-          - string
+          - :ref:`string <string>`
           - joins all list elements into a string
 
 .. note::
@@ -115,7 +113,7 @@ Structure
 .. method:: List:JOIN(separator)
 
     :parameter separator: (string) separator that will be inserted between the list items
-    :return: string
+    :return: :ref:`string <string>`
 
     Returns a string created by converting each element of the array to a string, separated by the given separator.
 

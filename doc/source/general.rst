@@ -13,6 +13,8 @@ These topics discuss the interfacing between **kOS** and **Kerbal Space Program*
     CPU Vessel (SHIP)   <general/cpu_vessel>
     CPU Hardware        <general/cpu_hardware>
 
+    Game Part           <general/kospartmodule>
+
     Launcher Panel      <general/applauncher_panel>
 
     Telnet Server       <general/telnet>

@@ -55,9 +55,6 @@ Code examples
   }
   // will print 4, 9 and 16
 
-
-.. BOGUS_TODO_DIRECTIVE_TO_MAKE_SPHINX_COMPLAIN:: REMEMBER THIS FILE NEEDS TO BE EDITIED FOR REFS TO SCALARS, BOOLEANS, STRINGS
-
 Structure
 ---------
 
@@ -75,13 +72,13 @@ Structure
           -
           - :struct:`Range` objects are a type of :struct:`Enumerable`
         * - :attr:`START`
-          - scalar
+          - :ref:`scalar <scalar>`
           - initial element of the range
         * - :attr:`STOP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - range limit
         * - :attr:`STEP`
-          - scalar
+          - :ref:`scalar <scalar>`
           - step size
 
 .. note::
@@ -91,21 +88,21 @@ Structure
 
 .. attribute:: Range:START
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
-    Returns the initial element of the range.
+    Returns the initial element of the range.  Must be a round number.
 
 .. attribute:: Range:STOP
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
-    Returns the range limit
+    Returns the range limit.  Must be a round number.
 
 .. attribute:: Range:STEP
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
-    Returns the step size
+    Returns the step size.  Must be a round number.

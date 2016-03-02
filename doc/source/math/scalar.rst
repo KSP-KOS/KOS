@@ -28,6 +28,32 @@ kOS tries to be friendly to the new person just playing around with
 simple programming without a lot of expertise, and to that end, the
 difference between these types is abstracted away as much as possible.
 
+Operators
+---------
+
+The following basic arithmetic operators are defined when both `a` and `b`
+are scalars:
+
+- `a ^ b` exponent: `a` to the power `b`
+- `-a` negative of `a`
+- `a * b` `a / b` muiltiply or divide two numbers.
+- `a + b` `a - b` add or subtract two numbers
+
+The order of operations is in the order of the table listing above.
+(for example multiplication and division happen before subtraction
+and addition).
+
+Scientific Notation
+-------------------
+
+You can specify a number using scientific notation using the letter 'e',
+as shown::
+
+    set x to 1.23e5.
+    print x.  // prints 123000
+    set x to 1.23e-5.
+    print x.  // prints 0.0000123
+
 Limitations of Scalars
 ----------------------
 

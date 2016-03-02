@@ -33,22 +33,22 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 
 .. structure:: RTAddon
 
-    ===================================== ========================= =============
-     Suffix                                Type                      Description
-    ===================================== ========================= =============
-     :attr:`AVAILABLE`                     bool(readonly)            True if RT is installed and RT integration enabled.
-     :meth:`DELAY(vessel)`                 double                    Get shortest possible delay to given :struct:`Vessel`
-     :meth:`KSCDELAY(vessel)`              double                    Get delay from KSC to given :struct:`Vessel`
-     :meth:`HASCONNECTION(vessel)`         bool                      True if given :struct:`Vessel` has any connection
-     :meth:`HASKSCCONNECTION(vessel)`      bool                      True if given :struct:`Vessel` has connection to KSC
-     :meth:`HASLOCALCONTROL(vessel)`       bool                      True if given :struct:`Vessel` has local control
-    ===================================== ========================= =============
+    ===================================== ===================================== =============
+     Suffix                                Type                                  Description
+    ===================================== ===================================== =============
+     :attr:`AVAILABLE`                     :ref:`Boolean <boolean>` (readonly)   True if RT is installed and RT integration enabled.
+     :meth:`DELAY(vessel)`                 :ref:`scalar <scalar>`                Get shortest possible delay to given :struct:`Vessel`
+     :meth:`KSCDELAY(vessel)`              :ref:`scalar <scalar>`                Get delay from KSC to given :struct:`Vessel`
+     :meth:`HASCONNECTION(vessel)`         :ref:`Boolean <boolean>`              True if given :struct:`Vessel` has any connection
+     :meth:`HASKSCCONNECTION(vessel)`      :ref:`Boolean <boolean>`              True if given :struct:`Vessel` has connection to KSC
+     :meth:`HASLOCALCONTROL(vessel)`       :ref:`Boolean <boolean>`              True if given :struct:`Vessel` has local control
+    ===================================== ===================================== =============
 
 
 
 .. attribute:: RTADDON:AVAILABLE
 
-    :type: bool
+    :type: :ref:`Boolean <boolean>`
     :access: Get only
 
     True if RT is installed and RT integration enabled.
@@ -56,34 +56,34 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 .. method:: RTAddon:DELAY(vessel)
 
     :parameter vessel: :struct:`Vessel`
-    :return: (double) seconds
+    :return: (:ref:`scalar <scalar>`) seconds
 
     Returns shortest possible delay for `vessel` (Will be less than KSC delay if you have a local command post).
 
 .. method:: RTAddon:KSCDELAY(vessel)
 
     :parameter vessel: :struct:`Vessel`
-    :return: (double) seconds
+    :return: (:ref:`scalar <scalar>`) seconds
 
     Returns delay in seconds from KSC to `vessel`.
 
 .. method:: RTAddon:HASCONNECTION(vessel)
 
     :parameter vessel: :struct:`Vessel`
-    :return: bool
+    :return: :ref:`Boolean <boolean>`
 
     Returns True if `vessel` has any connection (including to local command posts).
 
 .. method:: RTAddon:HASKSCCONNECTION(vessel)
 
     :parameter vessel: :struct:`Vessel`
-    :return: bool
+    :return: :ref:`Boolean <boolean>`
 
     Returns True if `vessel` has connection to KSC.
 
 .. method:: RTAddon:HASLOCALCONTROL(vessel)
 
     :parameter vessel: :struct:`Vessel`
-    :return: bool
+    :return: :ref:`Boolean <boolean>`
 
     Returns True if `vessel` has local control (and thus not requiring a RemoteTech connection).
