@@ -9,7 +9,8 @@ addons:
     - nunit-console
 
 env:
-- KSP_VERSION = 1.0.5
+  global:
+  - KSP_VERSION="1.0.5"
 
 # Pre-shared token for pushing notifications to slack chat
 notifications:
