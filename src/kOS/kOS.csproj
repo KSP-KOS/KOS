@@ -128,9 +128,6 @@
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
     <Compile Include="Function\PrintList.cs" />
-    <Compile Include="InterProcessor\InterProcCommand.cs" />
-    <Compile Include="InterProcessor\ProcessorManager.cs" />
-    <Compile Include="InterProcessor\RunCommand.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />
@@ -188,6 +185,12 @@
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
     <Compile Include="Suffixed\CrewMember.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
+    <Compile Include="Communication\ProcessorManager.cs" />
+    <Compile Include="Communication\InterVesselManager.cs" />
+    <Compile Include="Serialization\ConfigNodeFormatter.cs" />
+    <Compile Include="Communication\ConnectivityManager.cs" />
+    <Compile Include="Communication\StockConnectivityManager.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Serialization\IHasSharedObjects.cs" />
     <Compile Include="Suffixed\ScienceDataValue.cs" />
@@ -198,6 +201,15 @@
     <Compile Include="Suffixed\PartModuleField\StockScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="AddOns\OrbitalScience\DMScienceExperimentFields.cs" />
+    <Compile Include="Communication\MessageQueue.cs" />
+    <Compile Include="Communication\MessageQueueStructure.cs" />
+    <Compile Include="Communication\InterProcCommand.cs" />
+    <Compile Include="Communication\RunCommand.cs" />
+    <Compile Include="Communication\MessageStructure.cs" />
+    <Compile Include="Communication\Message.cs" />
+    <Compile Include="Communication\VesselConnection.cs" />
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\ProcessorConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

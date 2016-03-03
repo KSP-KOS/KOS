@@ -17,7 +17,7 @@ namespace kOS.Safe.Encapsulation
     /// necessary.
     /// </summary>
     [KOSNomenclature("String")]
-    public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue, IEnumerable<string>
+    public class StringValue : PrimitiveStructure, IIndexable, IConvertible, IEnumerable<string>
     {
         private readonly string internalString;
 
@@ -42,6 +42,11 @@ namespace kOS.Safe.Encapsulation
         {
             internalString = new string(new char[] {ch});
             StringInitializeSuffixes();
+        }
+
+        public override object ToPrimitive()
+        {
+            return ToString();
         }
 
         public ScalarValue Length

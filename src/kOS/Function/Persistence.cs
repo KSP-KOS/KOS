@@ -205,7 +205,7 @@ namespace kOS.Function
                 throw new KOSException("This type is not serializable");
             }
 
-            string serializedString = new SerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
+            string serializedString = new SerializationMgr(shared).Serialize(serialized, ConfigNodeFormatter.Instance);
 
             FileContent fileContent = new FileContent(serializedString);
 
@@ -231,8 +231,7 @@ namespace kOS.Function
                 throw new KOSException("File does not exist: " + fileName);
             }
 
-            object read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance);
-
+            Structure read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance);
             ReturnValue = read;
         }
     }

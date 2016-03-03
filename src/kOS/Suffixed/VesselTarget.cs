@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using kOS.Communication;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
 using kOS.Safe;
@@ -453,7 +454,9 @@ namespace kOS.Suffixed
             AddSuffix("LONGITUDE", new Suffix<ScalarValue>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Vessel.altitude));
             AddSuffix("CREW", new NoArgsSuffix<ListValue>(GetCrew));
-            AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue> (GetCrewCapacity));
+            AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue>(GetCrewCapacity));
+            AddSuffix("CONNECTION", new NoArgsSuffix<VesselConnection>(() => new VesselConnection(Vessel, Shared)));
+            AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => GetMessages()));
         }
 
         public ScalarValue GetCrewCapacity() {
@@ -468,6 +471,16 @@ namespace kOS.Suffixed
             }
 
             return crew;
+        }
+
+        public MessageQueueStructure GetMessages()
+        {
+            if (Shared.Vessel.id != Vessel.id)
+            {
+                throw new KOSException("You can only access the message queue of the current vessel");
+            }
+
+            return InterVesselManager.Instance.GetQueue(Shared.Vessel, Shared);
         }
 
         public void ThrowIfNotCPUVessel()

@@ -229,11 +229,11 @@
     <Compile Include="Serialization\Dump.cs" />
     <Compile Include="Serialization\DumpWithHeader.cs" />
     <Compile Include="Serialization\SerializableStructure.cs" />
-    <Compile Include="Encapsulation\ISerializableValue.cs" />
     <Compile Include="Persistence\FileContent.cs" />
     <Compile Include="Encapsulation\VolumeFile.cs" />
     <Compile Include="Encapsulation\ArchiveFile.cs" />
     <Compile Include="Encapsulation\HarddiskFile.cs" />
+    <Compile Include="Encapsulation\PrimitiveStructure.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

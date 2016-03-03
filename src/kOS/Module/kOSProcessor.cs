@@ -3,7 +3,7 @@ using kOS.Binding;
 using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
-using kOS.InterProcessor;
+using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
 using kOS.Safe.Compilation;
@@ -21,6 +21,7 @@ using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
 using KSP.UI;
+using kOS.Suffixed;
 
 namespace kOS.Module
 {
@@ -29,6 +30,8 @@ namespace kOS.Module
         public ProcessorModes ProcessorMode { get; private set; }
 
         public Harddisk HardDisk { get; private set; }
+
+        public MessageQueue Messages { get; private set; }
 
         public string Tag
         {
@@ -325,6 +328,7 @@ namespace kOS.Module
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
+            shared.ConnectivityMgr = shared.Factory.CreateConnectivityManager();
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
@@ -340,6 +344,8 @@ namespace kOS.Module
             // initialize archive
             var archive = shared.Factory.CreateArchive();
             shared.VolumeMgr.Add(archive);
+
+            Messages = new MessageQueue();
 
             // initialize harddisk
             if (HardDisk == null)
@@ -819,6 +825,12 @@ namespace kOS.Module
                 return true;
             }
             return false;
+        }
+
+        public void Send(Structure content)
+        {
+            kOS.Suffixed.TimeSpan sentAt = new kOS.Suffixed.TimeSpan(Planetarium.GetUniversalTime());
+            Messages.Push(content, sentAt, sentAt, new VesselTarget(shared));
         }
     }
 }
