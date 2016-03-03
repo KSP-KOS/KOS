@@ -341,7 +341,7 @@ namespace kOS.Module
                         FileContent content = bootVolumeFile.ReadAll();
                         if (HardDisk.IsRoomFor(bootFile, content))
                         {
-                            HardDisk.Save(bootFile, bootVolumeFile.ReadAll());
+                            HardDisk.Save(bootFile, content);
                         }
                         else
                         {
