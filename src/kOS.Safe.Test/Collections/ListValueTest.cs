@@ -196,22 +196,30 @@ namespace kOS.Safe.Test.Collections
 
             var baseList = new ListValue();
             var baseDelegate = baseList.GetSuffix("LENGTH");
+            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushStack(new KOSArgMarkerType());
             baseDelegate.Invoke(cpu);
             Assert.AreEqual(ScalarIntValue.Zero, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
             var castDelegate = castList.GetSuffix("LENGTH");
-            baseDelegate.Invoke(cpu);
+            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushStack(new KOSArgMarkerType());
+            castDelegate.Invoke(cpu);
             Assert.AreEqual(ScalarIntValue.Zero, castDelegate.Value);
 
             var copyDelegate = baseList.GetSuffix("COPY");
-            baseDelegate.Invoke(cpu);
-            Assert.AreEqual(ScalarIntValue.Zero, castDelegate.Value);
+            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushStack(new KOSArgMarkerType());
+            copyDelegate.Invoke(cpu);
             var copyList = copyDelegate.Value;
+            Assert.AreEqual(baseList, copyList);
 
             var lengthDelegate = copyList.GetSuffix("LENGTH");
-            baseDelegate.Invoke(cpu);
-            Assert.AreEqual(ScalarIntValue.Zero, lengthDelegate);
+            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushStack(new KOSArgMarkerType());
+            lengthDelegate.Invoke(cpu);
+            Assert.AreEqual(ScalarIntValue.Zero, lengthDelegate.Value);
         }
     }
 }
