@@ -116,7 +116,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    There are 3 kinds of value understood by WHEELSTEERING:
 
    - :struct:`GeoCoordinates` - If you lock wheelsteering to a
-     :ref:`latlng`, that will mean the rover will try to steer in
+     :struct:`GetCoordinates`, that will mean the rover will try to steer in
      whichever compass direction will aim at that location.
 
    - :struct:`Vessel` - If you try to lock wheelsteering to a vessel,
@@ -332,6 +332,8 @@ scope of this document, but you can check out :ref:`the PID Loop tutorial. <pidl
 Cooked Steering's use of PID controllers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. highlight:: none
+
 kOS's cooked steering uses two nested PID controllers per axis of rotation::
 
     Seek direction   Current Direction Measurement
@@ -369,6 +371,8 @@ kOS's cooked steering uses two nested PID controllers per axis of rotation::
        \|/
     Feed this control value to KSP.  (This is the value you can see
     on the control indicator meters in the lower-left of the screen).
+
+.. highlight:: kerboscript
 
 .. _cooked_omega_pid:
 

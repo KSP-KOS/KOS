@@ -11,11 +11,12 @@ using System.Text;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("FileContent")]
     public class FileContent : SerializableStructure, IEnumerable<string>
     {
         private static readonly Encoding fileEncoding = Encoding.UTF8;
         private const string DUMP_CONTENT = "content";
-        private const string NEW_LINE = "\n";
+        public const string NEW_LINE = "\n";
 
         public byte[] Bytes { get; private set; }
         public string String { get { return fileEncoding.GetString(Bytes); } }

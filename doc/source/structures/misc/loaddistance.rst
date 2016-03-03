@@ -186,26 +186,26 @@ Each of the above
         - Description
 
       * - :attr:`LOAD`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The load distance
       * - :attr:`UNLOAD`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The unload distance
       * - :attr:`UNPACK`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The unpack distance
       * - :attr:`PACK`
-        - scalar, in meters
+        - :ref:`scalar <scalar>`, in meters
         - Get/Set
         - The pack distance
 
 .. attribute:: SituationLoadDistance:LOAD
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the load distance.  When another vessel is getting closer
     to you, because you are moving toward it or it is moving toward you,
@@ -213,13 +213,13 @@ Each of the above
     vessel, it will transition from being *unloaded* to being *loaded*.
     See the description above for what it means for a vessel to be *loaded*.
 
-    This value must be greater than :attr:`UNLOAD`, and will automatically
+    This value must be less than :attr:`UNLOAD`, and will automatically
     be adjusted accordingly.
 
 .. attribute:: SituationLoadDistance:UNLOAD
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the unload distance.  When another vessel is becoming more
     distant as you move away from it, or it moves away from you,
@@ -227,13 +227,13 @@ Each of the above
     vessel, it will transition from being *loaded* to being *unloaded*.
     See the description above for what it means for a vessel to be *loaded*.
 
-    This value must be less than :attr:`LOAD`, and will automatically
+    This value must be greater than :attr:`LOAD`, and will automatically
     be adjusted accordingly.
 
 .. attribute:: SituationLoadDistance:UNPACK
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the unpack distance.  When another vessel is getting closer
     to you, because you are moving toward it or it is moving toward you,
@@ -246,7 +246,7 @@ Each of the above
 .. attribute:: SituationLoadDistance:PACK
 
     :access: Get/Set
-    :type: scalar, in meters
+    :type: :ref:`scalar <scalar>`, in meters
 
     Get or set the pack distance.  When another vessel is getting farther
     away from you, because you are moving away from it or it is moving
@@ -310,8 +310,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:PACK TO 29999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNPACK TO 29000.
@@ -322,8 +322,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:PACK TO 39999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNPACK TO 29000.
@@ -334,8 +334,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:PACK TO 29999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNPACK TO 29000.
@@ -346,8 +346,8 @@ Kerbal Space Center at a greater distances from each other::
     // and PACK before UNPACK.  Otherwise the protections in
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNLOAD TO 29500.
-    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:LOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNLOAD TO 30000.
+    SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:LOAD TO 29500.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:PACK TO 29999.
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNPACK TO 29000.

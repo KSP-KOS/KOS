@@ -209,6 +209,8 @@
     <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\KOSNomenclature.cs" />
+    <Compile Include="Utilities\KOSNomenclatureAttribute.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
@@ -217,6 +219,8 @@
     <Compile Include="Utilities\TickGen.cs" />
     <Compile Include="Encapsulation\QueueValue.cs" />
     <Compile Include="Encapsulation\StackValue.cs" />
+    <Compile Include="Encapsulation\RangeValue.cs" />
+    <Compile Include="Encapsulation\CollectionValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
     <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />

@@ -10,6 +10,7 @@ using Math = System.Math;
 
 namespace kOS.Binding
 {
+    [kOS.Safe.Utilities.KOSNomenclature("SteeringManager")]
     public class SteeringManager : Structure, IDisposable
     {
         public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)

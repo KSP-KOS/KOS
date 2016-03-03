@@ -1,7 +1,7 @@
 .. _exenode:
 
-Advanced Tutorial
-=================
+Execute Node Script
+===================
 
 Let's try to automate one of the most common tasks in orbital maneuvering - execution of the maneuver node. In this tutorial I'll try to show you how to write a script for somewhat precise maneuver node execution.
 

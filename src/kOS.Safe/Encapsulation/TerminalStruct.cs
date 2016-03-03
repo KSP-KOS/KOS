@@ -2,6 +2,7 @@
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Terminal")]
     public class TerminalStruct : Structure
     {
         private readonly SharedObjects shared;

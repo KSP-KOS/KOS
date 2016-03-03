@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Vecdraw")]
     public class VectorRenderer : Structure, IUpdateObserver, IKOSScopeObserver
     {
         public Vector3d Vector { get; set; }

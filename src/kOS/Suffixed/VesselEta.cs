@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VesselEta")]
     public class VesselEta : Structure
     {
         private readonly SharedObjects shared;

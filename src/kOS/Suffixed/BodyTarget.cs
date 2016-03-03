@@ -11,6 +11,7 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Body")]
     public class BodyTarget : Orbitable, IKOSTargetable
     {
         private static string DumpName = "name";

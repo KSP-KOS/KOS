@@ -6,6 +6,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Node")]
     public class Node : Structure
     {
         private static readonly Dictionary<ManeuverNode, Node> nodeLookup;

@@ -283,7 +283,7 @@ Trigonometric Functions
 
 .. function:: ARCSIN(x)
 
-    :parameter x: (scalar)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose sine is x
 
     ::
@@ -292,7 +292,7 @@ Trigonometric Functions
 
 .. function:: ARCCOS(x)
 
-    :parameter x: (scalar)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose cosine is x
 
     ::
@@ -301,7 +301,7 @@ Trigonometric Functions
 
 .. function:: ARCTAN(x)
 
-    :parameter x: (scalar)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose tangent is x
 
     ::
@@ -310,8 +310,8 @@ Trigonometric Functions
 
 .. function:: ARCTAN2(y,x)
 
-    :parameter y: (scalar)
-    :parameter x: (scalar)
+    :parameter y: (:ref:`scalar <scalar>`)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose tangent is :math:`\frac{y}{x}`
 
     ::

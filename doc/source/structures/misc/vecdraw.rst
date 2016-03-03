@@ -117,16 +117,16 @@ Drawing Vectors on the Screen
           -
           - Same as :attr:`COLOR`
         * - :attr:`LABEL`
-          - string
+          - :ref:`string <string>`
           - Text to show next to vector
         * - :attr:`SCALE`
-          - scalar number
+          - :ref:`scalar <scalar>`
           - Scale :attr:`VEC` and :attr:`WIDTH` but not :attr:`START`
         * - :attr:`SHOW`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True to enable display to screen
         * - :attr:`WIDTH`
-          - scalar number
+          - :ref:`scalar <scalar>`
           - width of vector, default is 0.2
 
 
@@ -163,7 +163,7 @@ Drawing Vectors on the Screen
 .. attribute:: VecDraw:LABEL
 
     :access: Get/Set
-    :type: string
+    :type: :ref:`string <string>`
 
     Optional, defaults to "". Text to show on-screen at the midpoint of the vector.
     Note the font size the label is displayed in gets stretched when you
@@ -172,7 +172,7 @@ Drawing Vectors on the Screen
 .. attribute:: VecDraw:SCALE
 
     :access: Get/Set
-    :type: Scalar number
+    :type: :ref:`scalar <scalar>`
 
     Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
     but not the START.
@@ -186,14 +186,14 @@ Drawing Vectors on the Screen
 .. attribute:: VecDraw:SHOW
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Set to true to make the arrow appear, false to hide it. Defaults to false until you're ready to set it to true.
 
 .. attribute:: VecDraw:WIDTH
 
     :access: Get/Set
-    :type: Scalar number
+    :type: :ref:`scalar <scalar>`
 
     Define the width of the drawn line, in meters.  The deafult is 0.2 if
     left off.  Note, this also causes the font of the label to be enlarged

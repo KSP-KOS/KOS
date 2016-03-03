@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("LocalVolume")]
     public sealed class Harddisk : Volume
     {
         private readonly Dictionary<string, FileContent> files;
