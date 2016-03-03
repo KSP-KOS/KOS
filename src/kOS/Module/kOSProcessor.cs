@@ -338,7 +338,18 @@ namespace kOS.Module
                     var bootVolumeFile = archive.Open(bootFile);
                     if (bootVolumeFile != null)
                     {
-                        HardDisk.Save(bootFile, bootVolumeFile.ReadAll());
+                        FileContent content = bootVolumeFile.ReadAll();
+                        if (HardDisk.IsRoomFor(bootFile, content))
+                        {
+                            HardDisk.Save(bootFile, bootVolumeFile.ReadAll());
+                        }
+                        else
+                        {
+                            // Throwing an exception during InitObjects will break the initialization and won't show
+                            // the error to the user.  So we just log the error instead.  At some point in the future
+                            // it would be nice to queue up these init errors and display them to the user somewhere.
+                            SafeHouse.Logger.LogError("Error copying boot file to local volume: not enough space.");
+                        }
                     }
                 }
             }

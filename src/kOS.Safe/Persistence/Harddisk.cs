@@ -63,8 +63,10 @@ namespace kOS.Safe.Persistence
             VolumeFile file = Open(name);
             if (file != null)
             {
-                Delete(name);
-                Save(new HarddiskFile(this, newName));
+                // Add the original file content under the new name
+                files.Add(newName, files[file.Name]);
+                // Then remove the old file content under the old name
+                files.Remove(file.Name);
                 return true;
             }
             return false;
@@ -105,30 +107,35 @@ namespace kOS.Safe.Persistence
 
         private VolumeFile FileSearch(string name, bool ksmDefault = false)
         {
-            VolumeFile file;
-            if (FileList.TryGetValue(name, out file))
+            if (files.Keys.Contains(name))
             {
-                return file;
+                return new HarddiskFile(this, name);
             }
-
-            var kerboscriptFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
-            var kosMlFilename = PersistenceUtilities.CookedFilename(name, KOS_MACHINELANGUAGE_EXTENSION, true);
-
-            VolumeFile kerboscriptFile;
-            VolumeFile kosMlFile;
-            bool kerboscriptFileExists = FileList.TryGetValue(kerboscriptFilename, out kerboscriptFile);
-            bool kosMlFileExists = FileList.TryGetValue(kosMlFilename, out kosMlFile);
-            if (kerboscriptFileExists && kosMlFileExists)
+            else
             {
-                return ksmDefault ? kosMlFile : kerboscriptFile;
-            }
-            if (kerboscriptFile != null)
-            {
-                return kerboscriptFile;
-            }
-            if (kosMlFile != null)
-            {
-                return kosMlFile;
+                var kerboscriptFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
+                var kosMlFilename = PersistenceUtilities.CookedFilename(name, KOS_MACHINELANGUAGE_EXTENSION, true);
+                bool kerboscriptFileExists = files.ContainsKey(kerboscriptFilename);
+                bool kosMlFileExists = files.ContainsKey(kosMlFilename);
+                if (kerboscriptFileExists && kosMlFileExists)
+                {
+                    if (ksmDefault)
+                    {
+                        return new HarddiskFile(this, kosMlFilename);
+                    }
+                    else
+                    {
+                        return new HarddiskFile(this, kerboscriptFilename);
+                    }
+                }
+                if (kerboscriptFileExists)
+                {
+                    return new HarddiskFile(this, kerboscriptFilename);
+                }
+                if (kosMlFileExists)
+                {
+                    return new HarddiskFile(this, kosMlFilename);
+                }
             }
             return null;
         }
