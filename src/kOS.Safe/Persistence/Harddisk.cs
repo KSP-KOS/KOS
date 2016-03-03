@@ -107,7 +107,7 @@ namespace kOS.Safe.Persistence
 
         private VolumeFile FileSearch(string name, bool ksmDefault = false)
         {
-            if (files.Keys.Contains(name))
+            if (files.ContainsKey(name))
             {
                 return new HarddiskFile(this, name);
             }
