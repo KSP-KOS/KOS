@@ -13,7 +13,8 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
-        private const int CHARSIZE = 8;
+        private const int CHAR_SOURCE_SIZE = 8;
+        private const int CHAR_OUTPUT_SIZE = 20;
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
         
@@ -43,6 +44,7 @@ namespace kOS.Screen
         private CameraManager cameraManager;
         private float cursorBlinkTime;
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D [] fontArray;
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
         private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
@@ -56,6 +58,7 @@ namespace kOS.Screen
         private bool telnetsGotRepainted;
         
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D rasterWipeMask = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private WWW beepURL;
@@ -92,11 +95,14 @@ namespace kOS.Screen
 
         public void Awake()
         {
-            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
+            LoadTexture("GameData/kOS/GFX/raster_wipe_mask.png", ref rasterWipeMask);
             LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
-
+            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
+            
+            LoadFontArray();
+            
             LoadAudio();
             
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
@@ -108,6 +114,34 @@ namespace kOS.Screen
             DontDestroyOnLoad(gObj);
             popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
             popupEditor.SetUniqueId(UniqueId + 5);
+        }
+        
+        private void LoadFontArray()
+        {
+            // Make it hold all possible ASCII values even though many will be blank pictures:
+            fontArray = new Texture2D[128];
+            
+            for (int i = 0 ; i < 128 ; ++i)
+            {
+                // TextureFormat cannot be DXT1 or DXT5 if you want to ever perform a
+                // SetPixel on the texture (which we do).  So we start it off as a ARGB32
+                // first, long enough to perform the SetPixel call, then compress it
+                // afterward into a DXT5:
+                Texture2D charImage = new Texture2D(CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE, TextureFormat.ARGB32, true);
+
+                int tx = i % FONTIMAGE_CHARS_PER_ROW;
+                int ty = i / FONTIMAGE_CHARS_PER_ROW;
+                
+                // While Unity uses the convention of upside down textures common in
+                // 3D (2D images put orgin at upper-left, 3D uses lower-left), it doesn't seem
+                // to apply this rule to textures loaded from files like the fontImage.
+                // Thus the difference requiring the upside-down Y coord below.
+                charImage.SetPixels(fontImage.GetPixels(tx * CHAR_SOURCE_SIZE, fontImage.height - (ty+1) * CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE));
+                charImage.Compress(false);
+                charImage.Apply();
+
+                fontArray[i] = charImage;
+            }
         }
         
         private void LoadAudio()
@@ -593,7 +627,6 @@ namespace kOS.Screen
                            "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
 
                 GUI.Label(closeButtonRect, "Close");
-
                 return;
             }
 
@@ -648,7 +681,7 @@ namespace kOS.Screen
                 currentTextColor = isLocked ? textColorOff : textColorOffAlpha;
             }
 
-            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount*CHARSIZE, screen.RowCount*CHARSIZE));
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * CHAR_OUTPUT_SIZE, screen.RowCount * CHAR_OUTPUT_SIZE));
 
             List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
 
@@ -657,7 +690,7 @@ namespace kOS.Screen
             if (reversingScreen)
             {   // In reverse screen mode, draw a big rectangle in foreground color across the whole active screen area:
                 GUI.color = currentTextColor;
-                GUI.DrawTexture(new Rect(0, 0, screen.ColumnCount * CHARSIZE, screen.RowCount * CHARSIZE), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
+                GUI.DrawTexture(new Rect(0, 0, screen.ColumnCount * CHAR_OUTPUT_SIZE, screen.RowCount * CHAR_OUTPUT_SIZE), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
             }
             
             // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
@@ -671,6 +704,7 @@ namespace kOS.Screen
                     char c = lineBuffer[column];
                     if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, currentTextColor, reversingScreen);
                 }
+                DrawRowMask(screen, row);
             }
 
             bool blinkOn = cursorBlinkTime < 0.5f &&
@@ -735,18 +769,15 @@ namespace kOS.Screen
         
         void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor, bool reversingScreen)
         {
-            int tx = ch % FONTIMAGE_CHARS_PER_ROW;
-            int ty = ch / FONTIMAGE_CHARS_PER_ROW;
-
-            ShowCharacterByXY(x, y, tx, ty, charTextColor, reversingScreen);
-        }
-
-        void ShowCharacterByXY(int x, int y, int tx, int ty, Color charTextColor, bool reversingScreen)
-        {
-            GUI.BeginGroup(new Rect((x * CHARSIZE), (y * CHARSIZE), CHARSIZE, CHARSIZE));
+            GUI.BeginGroup(new Rect((x * CHAR_OUTPUT_SIZE), (y * CHAR_OUTPUT_SIZE), CHAR_OUTPUT_SIZE, CHAR_OUTPUT_SIZE));
             GUI.color = (reversingScreen ? bgColor : charTextColor);
-            GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
+            GUI.DrawTexture(new Rect(0, 0, CHAR_OUTPUT_SIZE, CHAR_OUTPUT_SIZE), fontArray[ch], ScaleMode.StretchToFill, true);
             GUI.EndGroup();
+        }
+        
+        void DrawRowMask(IScreenBuffer screen, int row)
+        {
+            GUI.DrawTexture(new Rect(0, row * CHAR_OUTPUT_SIZE, screen.ColumnCount * CHAR_OUTPUT_SIZE, CHAR_OUTPUT_SIZE), rasterWipeMask, ScaleMode.StretchToFill, true);
         }
 
         public Rect GetRect()
@@ -804,7 +835,7 @@ namespace kOS.Screen
 
         internal int NotifyOfScreenResize(IScreenBuffer sb)
         {
-            WindowRect = new Rect(WindowRect.xMin, WindowRect.yMin, sb.ColumnCount*CHARSIZE + 65, sb.RowCount*CHARSIZE + 100);
+            WindowRect = new Rect(WindowRect.xMin, WindowRect.yMin, sb.ColumnCount*CHAR_OUTPUT_SIZE + 65, sb.RowCount*CHAR_OUTPUT_SIZE + 100);
 
             foreach (TelnetSingletonServer telnet in telnets)
             {
@@ -952,12 +983,12 @@ namespace kOS.Screen
         
         private int HowManyRowsFit()
         {
-            return (int)(WindowRect.height - 100) / CHARSIZE;
+            return (int)(WindowRect.height - 100) / CHAR_OUTPUT_SIZE;
         }
 
         private int HowManyColumnsFit()
         {
-            return (int)(WindowRect.width - 65) / CHARSIZE;
+            return (int)(WindowRect.width - 65) / CHAR_OUTPUT_SIZE;
         }
 
     }
