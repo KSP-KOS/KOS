@@ -2,22 +2,33 @@ language: csharp
 solution: src/kOS.sln
 sudo: false
 
+addons:
+  apt:
+    packages:
+    - python-sphinx
+    - nunit-console
+
+env:
+  global:
+  - KSP_VERSION="1.0.5"
+
 # Pre-shared token for pushing notifications to slack chat
 notifications:
   slack: ksp-kos:51DTQ4ZBP9SlGNnLWJ5D84vp
 
 # Before the install the library dlls need to be downloaded
-before_install:
-- wget --quiet https://github.com/KSP-KOS/KSP_LIB/blob/master/kos-1.0.5.tar.enc?raw=true -O kos-1.0.5.tar.enc
-- openssl aes-256-cbc -K $encrypted_6287ee711a27_key -iv $encrypted_6287ee711a27_iv -in kos-1.0.5.tar.enc -out kos-1.0.5.tar -d
-- mkdir -p Resources
-- tar -xvf kos-1.0.5.tar -C Resources/
+before_script:
+- chmod +x .ci/travis/before_script.sh && ./.ci/travis/before_script.sh
+
+script:
+- xbuild /p:Configuration=Release $TRAVIS_SOLUTION
+# I know framework 4.0 is wrong, just trying it to see if it fixes the test
+- nunit-console -framework=4.0 src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
+# - chmod +x .ci/travis/script-sphinxdocs.sh && ./.ci/travis/script-sphinxdocs.sh
 
 # Cleanup the downloaded resources
 after_script:
-- cd Resources
-- rm *.dll
-- cd ../
+- chmod +x .ci/travis/after_script.sh && ./.ci/travis/after_script.sh
 
 before_deploy:
 - mkdir src/kOS/bin/dist 

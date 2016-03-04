@@ -2,6 +2,7 @@
 using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
+using kOS.Safe.Module;
 
 namespace kOS.Suffixed.PartModuleField
 {
@@ -30,14 +31,14 @@ namespace kOS.Suffixed.PartModuleField
         {
             ThrowIfNotCPUVessel();
 
-            processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.STARVED;
+            processor.SetMode(ProcessorModes.STARVED);
         }
 
         private void Deactivate()
         {
             ThrowIfNotCPUVessel();
 
-            processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.OFF;
+            processor.SetMode(ProcessorModes.OFF);
         }
 
         private StringValue GetBootFilename()

@@ -31,7 +31,7 @@ namespace kOS.Safe.Test.Opcode
             opcode.Execute(cpu);
 
             Assert.AreEqual(1, list.Count());
-            Assert.AreEqual("bar", cpu.PopStack());
+            Assert.AreEqual(new StringValue("bar"), cpu.PopStack());
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace kOS.Safe.Test.Opcode
             opcode.Execute(cpu);
 
             Assert.AreEqual(3, list.Count());
-            Assert.AreEqual("foo", cpu.PopStack());
+            Assert.AreEqual(new StringValue("foo"), cpu.PopStack());
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace kOS.Safe.Test.Opcode
             opcode.Execute(cpu);
 
             Assert.AreEqual(3, list.Count());
-            Assert.AreEqual("fizz", cpu.PopStack());
+            Assert.AreEqual(new StringValue("fizz"), cpu.PopStack());
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace kOS.Safe.Test.Opcode
             opcode.Execute(cpu);
 
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual("bar", cpu.PopStack());
+            Assert.AreEqual(new StringValue("bar"), cpu.PopStack());
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace kOS.Safe.Test.Opcode
             opcode.Execute(cpu);
 
             Assert.AreEqual(2, list.Count);
-            Assert.AreEqual("bang", cpu.PopStack());
+            Assert.AreEqual(new StringValue("bang"), cpu.PopStack());
         }
     }
 }
