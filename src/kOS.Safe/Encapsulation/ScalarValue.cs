@@ -394,7 +394,7 @@ namespace kOS.Safe.Encapsulation
 
         float IConvertible.ToSingle(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(ScalarValue), typeof(float));
+            return Convert.ToSingle(GetDoubleValue());
         }
 
         string IConvertible.ToString(IFormatProvider provider)
