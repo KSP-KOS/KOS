@@ -4,6 +4,10 @@ namespace kOS.Safe.Screen
 {
     public interface IScreenBuffer
     {
+        int CharacterPixelWidth { get; set; }
+        int CharacterPixelHeight { get; set; }
+        float Brightness { get; set; }
+        float Contrast {get; set;}
         int CursorRowShow { get; }
         int CursorColumnShow { get; }
         int RowCount { get; }

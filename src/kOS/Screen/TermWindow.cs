@@ -13,17 +13,21 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
+        /// <summary>
+        /// Pixel size of one square section of the font template image file holding one character:
+        /// </summary>
         private const int CHAR_SOURCE_SIZE = 8;
-        private const int CHAR_OUTPUT_SIZE = 20;
+        
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
         
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
         private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.6f);
-        private static readonly Color bgColor = new Color(0.0f, 0.2f, 0.0f, 0.9f);
-        private static readonly Color textColor = new Color(0.45f, 0.92f, 0.23f, 0.9f);
-        private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
+        private static readonly Color bgColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+        private static readonly Color washoutColor = new Color(0.05f, 0.1f, 0.05f, 0.9f); // the color everything trends toward if contrast is too low.
+        private static readonly Color textColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+        private static readonly Color textColorAlpha = new Color(0.6f, 0.6f, 0.6f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
         private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
@@ -31,9 +35,13 @@ namespace kOS.Screen
         private GUIStyle tinyToggleStyle;
         private Vector2 resizeOldSize;
         private bool resizeMouseDown;
+        private int formerCharPixelHeight;
+        private int formerCharPixelWidth;
         
         private bool consumeEvent;
+        private bool fontGotResized;
         private bool keyClickEnabled;
+        private bool rasterBarsEnabled = true;
         
         private bool collapseFastBeepsToOneBeep = false; // This is a setting we might want to fiddle with depending on opinion.
 
@@ -58,9 +66,14 @@ namespace kOS.Screen
         private bool telnetsGotRepainted;
         
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D rasterWipeMask = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D contrastButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private WWW beepURL;
         private AudioSource beepSource;
         private int guiTerminalBeepsPending;
@@ -96,9 +109,14 @@ namespace kOS.Screen
         public void Awake()
         {
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
+            LoadTexture("GameData/kOS/GFX/monitor_minimal_frame.png", ref terminalFrameImage);
             LoadTexture("GameData/kOS/GFX/raster_wipe_mask.png", ref rasterWipeMask);
             LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
+            LoadTexture("GameData/kOS/GFX/contrast-button.png", ref contrastButtonImage);
+            LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
+            LoadTexture("GameData/kOS/GFX/font-width-button.png", ref fontWidthButtonImage);
+            LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
             LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
             
             LoadFontArray();
@@ -635,7 +653,7 @@ namespace kOS.Screen
                 return;
             }
             IScreenBuffer screen = shared.Screen;
-
+            
             GUI.color = isLocked ? color : colorAlpha;
             GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
 
@@ -646,7 +664,16 @@ namespace kOS.Screen
             Rect reverseButtonRect = new Rect(WindowRect.width-180, WindowRect.height-42, 100, 18);
             Rect visualBeepButtonRect = new Rect(WindowRect.width-180, WindowRect.height-22, 100, 18);
             Rect keyClickButtonRect = new Rect(10, WindowRect.height - 22, 85, 18);
-            
+            Rect rasterBarsButtonRect = new Rect(10, WindowRect.height - 42, 85, 18);
+            Rect brightnessRect = new Rect(5, 5, 10, 40);
+            Rect brightnessButtonRect = new Rect(1, 50, brightnessButtonImage.width, brightnessButtonImage.height);
+            Rect contrastRect = new Rect(5, 70, 10, 40);
+            Rect contrastButtonRect = new Rect(1, 113, contrastButtonImage.width, contrastButtonImage.height);
+            Rect fontWidthRect = new Rect(WindowRect.width - 15, 5, 5, 45);
+            Rect fontWidthButtonRect = new Rect(WindowRect.width - 17, 50, fontWidthButtonImage.width, fontWidthButtonImage.height);
+            Rect fontHeightRect = new Rect(WindowRect.width - 15, 70, 5, 40);
+            Rect fontHeightButtonRect = new Rect(WindowRect.width - 17, 113, fontHeightButtonImage.width, fontHeightButtonImage.height);
+
             resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
                                           WindowRect.height-resizeButtonImage.height,
                                           resizeButtonImage.width,
@@ -666,12 +693,35 @@ namespace kOS.Screen
                 Close();
                 Event.current.Use();
             }
+
             
             screen.ReverseScreen = GUI.Toggle(reverseButtonRect, screen.ReverseScreen, "Reverse Screen", tinyToggleStyle);
             screen.VisualBeep = GUI.Toggle(visualBeepButtonRect, screen.VisualBeep, "Visual Beep", tinyToggleStyle);
             keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
+            rasterBarsEnabled = GUI.Toggle(rasterBarsButtonRect, rasterBarsEnabled, "CRT effect", tinyToggleStyle);
 
+            screen.Brightness = GUI.VerticalSlider(brightnessRect, screen.Brightness, 1f, 0f);
+            screen.Contrast = GUI.VerticalSlider(contrastRect, screen.Contrast, 1f, 0f);
+            GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
+            GUI.DrawTexture(contrastButtonRect, contrastButtonImage);
+            
+            screen.CharacterPixelWidth = (int)GUI.VerticalSlider(fontWidthRect, (float)screen.CharacterPixelWidth, 24f,4f);
+            screen.CharacterPixelHeight = (int)GUI.VerticalSlider(fontHeightRect, (float)screen.CharacterPixelHeight, 24f,4f);
+            GUI.DrawTexture(fontWidthButtonRect, fontWidthButtonImage);
+            GUI.DrawTexture(fontHeightButtonRect, fontHeightButtonImage);
 
+            int charWidth = screen.CharacterPixelWidth;
+            int charHeight = screen.CharacterPixelHeight;
+
+            fontGotResized = false;
+            if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)
+            {
+                formerCharPixelWidth = charWidth;
+                formerCharPixelHeight = charHeight;
+                screen.SetSize(HowManyRowsFit(), HowManyColumnsFit());
+                fontGotResized = true;
+            }
+            
             if (IsPowered)
             {
                 currentTextColor = isLocked ? textColor : textColorAlpha;
@@ -681,18 +731,26 @@ namespace kOS.Screen
                 currentTextColor = isLocked ? textColorOff : textColorOffAlpha;
             }
 
-            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * CHAR_OUTPUT_SIZE, screen.RowCount * CHAR_OUTPUT_SIZE));
 
-            List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
-
+            // Paint the background color glow.
             DateTime nowTime = DateTime.Now;
             bool reversingScreen = (nowTime > blinkEndTime) ? screen.ReverseScreen : (!screen.ReverseScreen);
             if (reversingScreen)
             {   // In reverse screen mode, draw a big rectangle in foreground color across the whole active screen area:
-                GUI.color = currentTextColor;
-                GUI.DrawTexture(new Rect(0, 0, screen.ColumnCount * CHAR_OUTPUT_SIZE, screen.RowCount * CHAR_OUTPUT_SIZE), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
+                GUI.color = AdjustColor(currentTextColor, screen.Brightness, screen.Contrast);
+                GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
+            }
+            else
+            {   // draw a slight faint glow for the dim glow of the 'black' when contrast isn't high.
+                GUI.color = AdjustColor(currentTextColor*0.2f, 1f - screen.Contrast, 1f - screen.Brightness ); 
+                GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );                
             }
             
+
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth, screen.RowCount * charHeight));
+
+            List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
+
             // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
             int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
 
@@ -702,9 +760,12 @@ namespace kOS.Screen
                 for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, currentTextColor, reversingScreen);
+                    if (c != 0 && c != 9 && c != 32)
+                        ShowCharacterByAscii(c, column, row, currentTextColor, reversingScreen,
+                                             charWidth, charHeight, screen.Brightness, screen.Contrast);
                 }
-                DrawRowMask(screen, row);
+                if (rasterBarsEnabled)
+                    DrawRowMask(screen, row, screen.Brightness, screen.Contrast);
             }
 
             bool blinkOn = cursorBlinkTime < 0.5f &&
@@ -714,16 +775,31 @@ namespace kOS.Screen
             
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor, reversingScreen);
+                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor, reversingScreen,
+                                     charWidth, charHeight, screen.Brightness, screen.Contrast);
             }
             
-            GUI.color = currentTextColor; // put it back after all that mucking about we did above.
             GUI.EndGroup();
             
+            GUI.color = color; // screen size label was never supposed to be in green like the terminal is:            
+
+            // Draw the rounded corner frame atop the chars field, so it covers the sqaure corners of the character zone
+            // if they bleed over a bit:
+            GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalFrameImage);            
+
             GUI.Label(new Rect(WindowRect.width/2-40,WindowRect.height-20,100,10),screen.ColumnCount+"x"+screen.RowCount);
 
-            CheckResizeDrag(); // Has to occur before DragWindow or else DragWindow will consume the event and prevent drags from being seen by the resize icon.
+            if (!fontGotResized)
+                CheckResizeDrag(); // Has to occur before DragWindow or else DragWindow will consume the event and prevent drags from being seen by the resize icon.
             GUI.DragWindow();
+        }
+        
+        protected Color AdjustColor(Color baseColor, float brightness, float contrast)
+        {
+            Color newColor = baseColor;
+            newColor.a = brightness; // represent dimness by making it fade into the backround.
+            newColor = Color.Lerp(newColor, washoutColor, (0.5f-(contrast/2f))); // grey-er the less contrast.
+            return newColor;
         }
 
         /// <summary>
@@ -739,7 +815,7 @@ namespace kOS.Screen
         
         protected void CheckResizeDrag()
         {
-            if (Input.GetMouseButton(0)) // mouse button is down
+            if (Input.GetMouseButton(0) && !fontGotResized ) // mouse button is maybe dragging the frame
             {
                 if (resizeMouseDown) // and it's in the midst of a drag.
                 {
@@ -767,17 +843,22 @@ namespace kOS.Screen
             }
         }
         
-        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor, bool reversingScreen)
+        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor, bool reversingScreen, int charWidth, int charHeight, float brightness, float contrast)
         {
-            GUI.BeginGroup(new Rect((x * CHAR_OUTPUT_SIZE), (y * CHAR_OUTPUT_SIZE), CHAR_OUTPUT_SIZE, CHAR_OUTPUT_SIZE));
-            GUI.color = (reversingScreen ? bgColor : charTextColor);
-            GUI.DrawTexture(new Rect(0, 0, CHAR_OUTPUT_SIZE, CHAR_OUTPUT_SIZE), fontArray[ch], ScaleMode.StretchToFill, true);
+            GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
+            
+            GUI.color = AdjustColor((reversingScreen ? bgColor : textColor), brightness, contrast);
+            
+            GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), fontArray[ch], ScaleMode.StretchToFill, true);
             GUI.EndGroup();
         }
         
-        void DrawRowMask(IScreenBuffer screen, int row)
+        void DrawRowMask(IScreenBuffer screen, int row, float brightness, float contrast)
         {
-            GUI.DrawTexture(new Rect(0, row * CHAR_OUTPUT_SIZE, screen.ColumnCount * CHAR_OUTPUT_SIZE, CHAR_OUTPUT_SIZE), rasterWipeMask, ScaleMode.StretchToFill, true);
+            int charWidth = shared.Screen.CharacterPixelWidth;
+            int charHeight = shared.Screen.CharacterPixelHeight;
+            GUI.color = new Color(0f, 0f, 0f, contrast);
+            GUI.DrawTexture(new Rect(0, row * charHeight, screen.ColumnCount * charWidth, charHeight), rasterWipeMask, ScaleMode.StretchToFill, true);
         }
 
         public Rect GetRect()
@@ -794,6 +875,14 @@ namespace kOS.Screen
         {
             shared = sharedObj;
             shared.Window = this;
+            
+            shared.Screen.CharacterPixelWidth = 8;
+            shared.Screen.CharacterPixelHeight = 8;
+            shared.Screen.Brightness = 0.5f;
+            shared.Screen.Contrast = 0.5f;
+            formerCharPixelWidth = shared.Screen.CharacterPixelWidth;
+            formerCharPixelHeight = shared.Screen.CharacterPixelHeight;
+
             NotifyOfScreenResize(shared.Screen);
             shared.Screen.AddResizeNotifier(NotifyOfScreenResize);
             ChangeTitle(CalcualteTitle());
@@ -835,7 +924,7 @@ namespace kOS.Screen
 
         internal int NotifyOfScreenResize(IScreenBuffer sb)
         {
-            WindowRect = new Rect(WindowRect.xMin, WindowRect.yMin, sb.ColumnCount*CHAR_OUTPUT_SIZE + 65, sb.RowCount*CHAR_OUTPUT_SIZE + 100);
+            WindowRect = new Rect(WindowRect.xMin, WindowRect.yMin, sb.ColumnCount*sb.CharacterPixelWidth + 65, sb.RowCount*sb.CharacterPixelHeight + 100);
 
             foreach (TelnetSingletonServer telnet in telnets)
             {
@@ -983,12 +1072,12 @@ namespace kOS.Screen
         
         private int HowManyRowsFit()
         {
-            return (int)(WindowRect.height - 100) / CHAR_OUTPUT_SIZE;
+            return (int)(WindowRect.height - 100) / shared.Screen.CharacterPixelHeight;
         }
 
         private int HowManyColumnsFit()
         {
-            return (int)(WindowRect.width - 65) / CHAR_OUTPUT_SIZE;
+            return (int)(WindowRect.width - 65) / shared.Screen.CharacterPixelWidth;
         }
 
     }
