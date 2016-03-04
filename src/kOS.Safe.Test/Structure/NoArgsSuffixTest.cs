@@ -2,6 +2,8 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
+using kOS.Safe.Test.Opcode;
+using kOS.Safe.Execution;
 
 namespace kOS.Safe.Test.Structure
 {
@@ -13,6 +15,13 @@ namespace kOS.Safe.Test.Structure
     [TestFixture]
     public class NoArgsSuffixTest
     {
+        private ICpu cpu;
+
+        [SetUp]
+        public void Setup()
+        {
+            cpu = new FakeCpu();
+        }
         [Test]
         public void CanCreate()
         {
@@ -37,6 +46,10 @@ namespace kOS.Safe.Test.Structure
             var del = suffix.Get();
             Assert.IsNotNull(del);
 
+            cpu.PushStack(null);  // dummy variable for ReverseStackArgs to pop
+            cpu.PushStack(new KOSArgMarkerType());
+            del.Invoke(cpu);
+
             var value = del.Value;
             Assert.IsNotNull(value);
             Assert.AreSame(obj,value);
@@ -46,14 +59,18 @@ namespace kOS.Safe.Test.Structure
         public void CanGetDelegateValueType()
         {
             const int VALUE = 12345;
-            var suffix = new NoArgsSuffix<Encapsulation.Structure>(() => new ScalarIntValue(VALUE) );
+            var suffix = new NoArgsSuffix<Encapsulation.Structure>(() => ScalarValue.Create(VALUE));
             var del = suffix.Get();
             Assert.IsNotNull(del);
 
+            cpu.PushStack(null);  // dummy variable for ReverseStackArgs to pop
+            cpu.PushStack(new KOSArgMarkerType());
+            del.Invoke(cpu);
+
             var value = del.Value;
             Assert.IsNotNull(value);
-            Assert.IsInstanceOf<int>(value);
-            Assert.AreEqual(VALUE,value);
+            Assert.IsInstanceOf<ScalarValue>(value);
+            Assert.AreEqual(ScalarValue.Create(VALUE), value);
         }
 
     }
