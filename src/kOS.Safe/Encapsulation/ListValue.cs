@@ -4,12 +4,14 @@ using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
+    [kOS.Safe.Utilities.KOSNomenclature("List")]
+    public class ListValue<T> : CollectionValue<T, IList<T>>, IIndexable
+        where T : Structure
     {
-
         public ListValue()
             : this(new List<T>())
         {
@@ -40,11 +42,6 @@ namespace kOS.Safe.Encapsulation
             Collection.Clear();
         }
 
-        public override int Count
-        {
-            get { return Collection.Count; }
-        }
-
         public void RemoveAt(int index)
         {
             Collection.RemoveAt(index);
@@ -56,29 +53,47 @@ namespace kOS.Safe.Encapsulation
             set { Collection[index] = value; }
         }
             
-        public override void LoadDump(IDictionary<object, object> dump)
+        public override Dump Dump()
+        {
+            var result = new DumpWithHeader
+            {
+                Header = "LIST of " + Collection.Count() + " items:"
+            };
+            
+            // This conversion is needed because TerminalFormatter.WriteIndented() demands to only
+            // work with exactly List<object> and bombs out on List<Structure>'s:
+            List<object> list = new List<object>();
+            foreach (object entry in Collection)
+                list.Add(entry);
+            
+            result.Add(kOS.Safe.Dump.Items, list);
+            return result;
+        }
+
+        public override void LoadDump(Dump dump)
         {
             Collection.Clear();
 
-            foreach (object item in dump.Values)
+            List<object> values = (List<object>)dump[kOS.Safe.Dump.Items];
+
+            foreach (object item in values)
             {
-                Collection.Add((T)Structure.FromPrimitive(item));
+                Collection.Add((T)FromPrimitive(item));
             }
         }
 
         private void ListInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => Collection.Count));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => Collection.Clear()));
             AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Collection.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => Collection.Insert(index, toAdd)));
-            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => Collection.RemoveAt(toRemove)));
-            AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
+            AddSuffix("INSERT",   new TwoArgsSuffix<ScalarValue, T>     ((index, toAdd) => Collection.Insert(index, toAdd)));
+            AddSuffix("REMOVE",   new OneArgsSuffix<ScalarValue>        (toRemove => Collection.RemoveAt(toRemove)));
+            AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarValue, ScalarValue>(SubListMethod));
+            AddSuffix("JOIN",     new OneArgsSuffix<StringValue, StringValue>(Join));
        }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
-        private ListValue SubListMethod(int start, int runLength)
+        private ListValue SubListMethod(ScalarValue start, ScalarValue runLength)
         {
             var subList = new ListValue();
             for (int i = start; i < Collection.Count && i < start + runLength; ++i)
@@ -93,19 +108,23 @@ namespace kOS.Safe.Encapsulation
             return new ListValue<T>(list.Cast<T>());
         }
 
-        public object GetIndex(object index)
+        public Structure GetIndex(int index)
         {
-            // TODO: remove double and float reference as it should be obsolete
-            if (index is double || index is float || index is ScalarValue)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(index is int)) throw new Exception("The index must be an integer number");
-
-            return Collection[(int)index];
+            return Collection[index];
         }
 
-        public void SetIndex(object index, object value)
+        public Structure GetIndex(Structure index)
+        {
+            if (index is ScalarValue)
+            {
+                int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                return GetIndex(i);
+            }
+            // Throw cast exception with ScalarIntValue, instead of just any ScalarValue
+            throw new KOSCastException(index.GetType(), typeof(ScalarIntValue));
+        }
+
+        public void SetIndex(Structure index, Structure value)
         {
             int idx;
             try
@@ -119,17 +138,26 @@ namespace kOS.Safe.Encapsulation
             Collection[idx] = (T)value;
         }
 
+        public void SetIndex(int index, Structure value)
+        {
+            Collection[index] = (T)value;
+        }
 
+        private StringValue Join(StringValue separator)
+        {
+            return string.Join(separator, Collection.Select(i => i.ToString()).ToArray());
+        }
     }
 
-    public class ListValue : ListValue<object>
+    [kOS.Safe.Utilities.KOSNomenclature("List", KOSToCSharp = false)] // one-way because the generic templated ListValue<T> is the canonical one.  
+    public class ListValue : ListValue<Structure>
     {
         public ListValue()
         {
             InitializeSuffixes();
         }
 
-        public ListValue(IEnumerable<object> toCopy)
+        public ListValue(IEnumerable<Structure> toCopy)
             : base(toCopy)
         {
             InitializeSuffixes();
@@ -142,7 +170,7 @@ namespace kOS.Safe.Encapsulation
 
         public new static ListValue CreateList<T>(IEnumerable<T> toCopy)
         {
-            return new ListValue(toCopy.Cast<object>());
+            return new ListValue(toCopy.Select(x => FromPrimitiveWithAssert(x)));
         }
     }
 }

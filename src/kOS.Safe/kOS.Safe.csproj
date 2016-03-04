@@ -39,6 +39,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,6 +63,7 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Exceptions\KOSYouShouldNeverSeeThisException.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
@@ -87,9 +91,7 @@
     <Compile Include="Encapsulation\BooleanValue.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\Enumerator.cs" />
-    <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
-    <Compile Include="Encapsulation\IDumper.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
@@ -106,6 +108,8 @@
     <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\ConfigKey.cs" />
+    <Compile Include="Encapsulation\Suffixes\DelegateSuffixResult.cs" />
+    <Compile Include="Encapsulation\Suffixes\ISuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\NoArgsSuffix.cs" />
@@ -115,6 +119,7 @@
     <Compile Include="Encapsulation\Suffixes\SetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
+    <Compile Include="Encapsulation\Suffixes\SuffixResult.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\VarArgsSuffix.cs" />
     <Compile Include="Encapsulation\TerminalStruct.cs" />
@@ -179,7 +184,6 @@
     <Compile Include="Persistence\IVolumeManager.cs" />
     <Compile Include="Persistence\KOSFileException.cs" />
     <Compile Include="Persistence\PersistenceUtilities.cs" />
-    <Compile Include="Persistence\ProgramFile.cs" />
     <Compile Include="Persistence\Volume.cs" />
     <Compile Include="Persistence\VolumeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -202,8 +206,11 @@
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
+    <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\KOSNomenclature.cs" />
+    <Compile Include="Utilities\KOSNomenclatureAttribute.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
@@ -212,15 +219,23 @@
     <Compile Include="Utilities\TickGen.cs" />
     <Compile Include="Encapsulation\QueueValue.cs" />
     <Compile Include="Encapsulation\StackValue.cs" />
+    <Compile Include="Encapsulation\RangeValue.cs" />
+    <Compile Include="Encapsulation\CollectionValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
     <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />
     <Compile Include="Serialization\TerminalFormatter.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Exceptions\KOSSerializationException.cs" />
-    <Compile Include="Serialization\DictionaryWithHeader.cs" />
     <Compile Include="Serialization\SafeSerializationMgr.cs" />
+    <Compile Include="Serialization\Dump.cs" />
+    <Compile Include="Serialization\DumpWithHeader.cs" />
+    <Compile Include="Serialization\SerializableStructure.cs" />
     <Compile Include="Encapsulation\ISerializableValue.cs" />
+    <Compile Include="Persistence\FileContent.cs" />
+    <Compile Include="Encapsulation\VolumeFile.cs" />
+    <Compile Include="Encapsulation\ArchiveFile.cs" />
+    <Compile Include="Encapsulation\HarddiskFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

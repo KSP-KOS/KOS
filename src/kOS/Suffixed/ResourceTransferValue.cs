@@ -10,6 +10,7 @@ using Math = System.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Transfer")]
     public class ResourceTransferValue : Structure
     {
         private const float RESOURCE_SHARE_PER_UPDATE = 0.005f;
@@ -87,12 +88,12 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("GOAL", new Suffix<double>(() => amount ?? -1));
-            AddSuffix("TRANSFERRED", new Suffix<double>(() => transferredAmount));
-            AddSuffix("STATUS", new Suffix<string>(() => Status.ToString()));
-            AddSuffix("MESSAGE", new Suffix<string>(() => StatusMessage));
-            AddSuffix("RESOURCE", new Suffix<string>(() => resourceInfo.name));
-            AddSuffix("ACTIVE", new SetSuffix<bool>(() => Status == TransferManager.TransferStatus.Transferring, 
+            AddSuffix("GOAL", new Suffix<ScalarValue>(() => amount ?? -1));
+            AddSuffix("TRANSFERRED", new Suffix<ScalarValue>(() => transferredAmount));
+            AddSuffix("STATUS", new Suffix<StringValue>(() => Status.ToString()));
+            AddSuffix("MESSAGE", new Suffix<StringValue>(() => StatusMessage));
+            AddSuffix("RESOURCE", new Suffix<StringValue>(() => resourceInfo.name));
+            AddSuffix("ACTIVE", new SetSuffix<BooleanValue>(() => Status == TransferManager.TransferStatus.Transferring, 
             value => {
                 Status = value ? TransferManager.TransferStatus.Transferring : TransferManager.TransferStatus.Inactive;
             }));

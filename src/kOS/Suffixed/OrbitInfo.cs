@@ -3,20 +3,13 @@ using kOS.Safe.Encapsulation.Suffixes;
 using System;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class OrbitInfo : Structure, IDumperWithSharedObjects
+    [kOS.Safe.Utilities.KOSNomenclature("Orbit")]
+    public class OrbitInfo : Structure, IHasSharedObjects
     {
-        public static string DumpInclination = "inclination";
-        public static string DumpEccentricity = "eccentricity";
-        public static string DumpSemiMajorAxis = "semiMajorAxis";
-        public static string DumpLongitudeOfAscendingNode = "longitudeOfAscendingNode";
-        public static string DumpArgumentOfPeriapsis = "argumentOfPeriapsis";
-        public static string DumpMeanAnomalyAtEpoch = "meanAnomalyAtEpoch";
-        public static string DumpEpoch = "epoch";
-        public static string DumpBody = "body";
-
         private Orbit orbit;
         public SharedObjects Shared { get; set; }
         private string name;
@@ -42,24 +35,24 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => name));
-            AddSuffix("APOAPSIS", new Suffix<double>(() => orbit.ApA));
-            AddSuffix("PERIAPSIS", new Suffix<double>(() => orbit.PeA));
+            AddSuffix("NAME", new Suffix<StringValue>(() => name));
+            AddSuffix("APOAPSIS", new Suffix<ScalarValue>(() => orbit.ApA));
+            AddSuffix("PERIAPSIS", new Suffix<ScalarValue>(() => orbit.PeA));
             AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(orbit.referenceBody, Shared)));
-            AddSuffix("PERIOD", new Suffix<double>(() => orbit.period));
-            AddSuffix("INCLINATION", new Suffix<double>(() => orbit.inclination));
-            AddSuffix("ECCENTRICITY", new Suffix<double>(() => orbit.eccentricity));
-            AddSuffix("SEMIMAJORAXIS", new Suffix<double>(() => orbit.semiMajorAxis));
-            AddSuffix("SEMIMINORAXIS", new Suffix<double>(() => orbit.semiMinorAxis));
-            AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<double>(() => orbit.LAN));
-            AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<double>(() => orbit.argumentOfPeriapsis));
-            AddSuffix("TRUEANOMALY", new Suffix<double>(() => Utilities.Utils.DegreeFix(orbit.trueAnomaly,0.0)));
-            AddSuffix("MEANANOMALYATEPOCH", new Suffix<double>(() => Utilities.Utils.DegreeFix(orbit.meanAnomalyAtEpoch * 180.0 / Math.PI, 0.0)));
-            AddSuffix("TRANSITION", new Suffix<string>(() => orbit.patchEndTransition.ToString()));
+            AddSuffix("PERIOD", new Suffix<ScalarValue>(() => orbit.period));
+            AddSuffix("INCLINATION", new Suffix<ScalarValue>(() => orbit.inclination));
+            AddSuffix("ECCENTRICITY", new Suffix<ScalarValue>(() => orbit.eccentricity));
+            AddSuffix("SEMIMAJORAXIS", new Suffix<ScalarValue>(() => orbit.semiMajorAxis));
+            AddSuffix("SEMIMINORAXIS", new Suffix<ScalarValue>(() => orbit.semiMinorAxis));
+            AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<ScalarValue>(() => orbit.LAN));
+            AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<ScalarValue>(() => orbit.argumentOfPeriapsis));
+            AddSuffix("TRUEANOMALY", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(orbit.trueAnomaly,0.0)));
+            AddSuffix("MEANANOMALYATEPOCH", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(orbit.meanAnomalyAtEpoch * 180.0 / Math.PI, 0.0)));
+            AddSuffix("TRANSITION", new Suffix<StringValue>(() => orbit.patchEndTransition.ToString()));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
-            AddSuffix("HASNEXTPATCH", new Suffix<bool>(GetHasNextPatch));
+            AddSuffix("HASNEXTPATCH", new Suffix<BooleanValue>(GetHasNextPatch));
 
             //TODO: Determine if these vectors are different than POSITION and VELOCITY
             AddSuffix("VSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.vel)));
@@ -118,7 +111,7 @@ namespace kOS.Suffixed
         /// Find out whether or not the orbit has a next patch.
         /// </summary>
         /// <returns>true if the :NEXTPATCH suffix will return a real suffix.</returns>
-        private bool GetHasNextPatch()
+        private BooleanValue GetHasNextPatch()
         {
             return orbit.nextPatch != null && (orbit.nextPatch.activePatch);
         }
@@ -126,42 +119,6 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "ORBIT of " + name;
-        }
-
-        public System.Collections.Generic.IDictionary<object, object> Dump()
-        {
-            DictionaryWithHeader dump = new DictionaryWithHeader
-            {
-                Header = "ORBIT of " + name
-            };
-
-            dump.Add(DumpInclination, orbit.inclination);
-            dump.Add(DumpEccentricity, orbit.eccentricity);
-            dump.Add(DumpSemiMajorAxis, orbit.semiMajorAxis);
-            dump.Add(DumpLongitudeOfAscendingNode, orbit.LAN);
-            dump.Add(DumpArgumentOfPeriapsis, orbit.argumentOfPeriapsis);
-            dump.Add(DumpMeanAnomalyAtEpoch, orbit.meanAnomalyAtEpoch);
-            dump.Add(DumpEpoch, orbit.epoch);
-            dump.Add(DumpBody, new BodyTarget(orbit.referenceBody, Shared));
-
-            return dump;
-        }
-
-        public void LoadDump(System.Collections.Generic.IDictionary<object, object> dump)
-        {
-            name = "<unnamed>";
-
-            double inclination = Convert.ToDouble(dump[DumpInclination]);
-            double eccentricity = Convert.ToDouble(dump[DumpEccentricity]);
-            double semiMajorAxis = Convert.ToDouble(dump[DumpSemiMajorAxis]);
-            double longitudeOfAscendingNode = Convert.ToDouble(dump[DumpLongitudeOfAscendingNode]);
-            double argumentOfPeriapsis = Convert.ToDouble(dump[DumpArgumentOfPeriapsis]);
-            double meanAnomalyAtEpoch = Convert.ToDouble(dump[DumpMeanAnomalyAtEpoch]);
-            double epoch = Convert.ToDouble(dump[DumpEpoch]);
-            BodyTarget body = dump[DumpBody] as BodyTarget;
-
-            orbit = new Orbit(inclination, eccentricity, semiMajorAxis, longitudeOfAscendingNode, argumentOfPeriapsis,
-                meanAnomalyAtEpoch, epoch, body.Body);
         }
     }
 }

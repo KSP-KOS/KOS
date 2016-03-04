@@ -1,10 +1,15 @@
 .. _basic math:
 
+Basic Math Functions
+====================
+
+These functions are built-in for performing basic math operations in kOS.
+
 .. _constants:
 .. index:: Fundamental Constants
 
 Fundamental Constants
-=====================
+---------------------
 
 There is a bound variable called CONSTANT which contains some basic fundamental
 constants about the universe that you may find handy in your math operations.
@@ -117,7 +122,7 @@ constants about the universe that you may find handy in your math operations.
 .. index:: Mathematical Functions
 
 Mathematical Functions
-======================
+----------------------
 
 ==================== ===================================================
  Function             Description
@@ -234,7 +239,7 @@ Mathematical Functions
 .. index:: Trigonometric Functions
 
 Trigonometric Functions
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :header-rows: 1
@@ -247,7 +252,7 @@ Trigonometric Functions
     * - :func:`ARCSIN(x)`
     * - :func:`ARCCOS(x)`
     * - :func:`ARCTAN(x)`
-    * - :func:`ARCTAN2(x,y)`
+    * - :func:`ARCTAN2(y,x)`
 
 .. function:: SIN(a)
 
@@ -278,7 +283,7 @@ Trigonometric Functions
 
 .. function:: ARCSIN(x)
 
-    :parameter x: (scalar)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose sine is x
 
     ::
@@ -287,7 +292,7 @@ Trigonometric Functions
 
 .. function:: ARCCOS(x)
 
-    :parameter x: (scalar)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose cosine is x
 
     ::
@@ -296,7 +301,7 @@ Trigonometric Functions
 
 .. function:: ARCTAN(x)
 
-    :parameter x: (scalar)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose tangent is x
 
     ::
@@ -305,8 +310,8 @@ Trigonometric Functions
 
 .. function:: ARCTAN2(y,x)
 
-    :parameter y: (scalar)
-    :parameter x: (scalar)
+    :parameter y: (:ref:`scalar <scalar>`)
+    :parameter x: (:ref:`scalar <scalar>`)
     :return: (deg) angle whose tangent is :math:`\frac{y}{x}`
 
     ::

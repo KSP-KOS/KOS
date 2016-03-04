@@ -8,6 +8,7 @@ using KSP.IO;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Config")]
     public class Config : Structure, IConfig
     {
         private static Config instance;
@@ -133,7 +134,7 @@ namespace kOS.Suffixed
             config.SetValue(key.StringKey, keys[key.StringKey.ToUpper()].Value);
         }
 
-        public override object GetSuffix(string suffixName)
+        public override ISuffixResult GetSuffix(string suffixName)
         {
             ConfigKey key = null;
 
@@ -146,7 +147,7 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            return key != null ? key.Value : base.GetSuffix(suffixName);
+            return key != null ? new SuffixResult(FromPrimitiveWithAssert(key.Value)) : base.GetSuffix(suffixName);
         }
 
         public override bool SetSuffix(string suffixName, object value)

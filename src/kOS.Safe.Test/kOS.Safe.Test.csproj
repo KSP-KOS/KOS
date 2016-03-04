@@ -66,6 +66,8 @@
     <Compile Include="Collections\StackValueTest.cs" />
     <Compile Include="Serialization\JSONFormatterTest.cs" />
     <Compile Include="Serialization\TerminalFormatterTest.cs" />
+    <Compile Include="Collections\CollectionValueTest.cs" />
+    <Compile Include="Collections\RangeValueTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -86,5 +88,9 @@
   -->
   <ItemGroup>
     <Folder Include="Serialization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20160127_233127.sdps" />
+    <Content Include="ProfilingSessions\Session20160127_233506.sdps" />
   </ItemGroup>
 </Project>

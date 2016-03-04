@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Persistence
 {
@@ -59,21 +60,21 @@ namespace kOS.Safe.Persistence
 
         public Volume GetVolume(object volumeId)
         {
-            if (volumeId is string) return GetVolume(volumeId.ToString());
+            if (volumeId is string || volumeId is StringValue) return GetVolume(volumeId.ToString());
             // Convert to int instead of cast in case the identifier is stored
             // as an encapsulated ScalarValue, preventing an unboxing collision.
             try
             {
                 return GetVolume(Convert.ToInt32(volumeId));
             }
-            catch
+            catch (InvalidCastException)
             {
                 int id = GetVolumeId(volumeId.ToString());
                 if (id >= 0)
                 {
                     return GetVolume(id);
                 }
-                throw new kOS.Safe.Exceptions.KOSCastException(volumeId.GetType(), typeof(Volume));
+                throw new kOS.Safe.Exceptions.KOSCastException(volumeId.GetType().Name, "Scalar|String|Volume");
             }
         }
 

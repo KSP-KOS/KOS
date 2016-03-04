@@ -1,12 +1,12 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
-using System;
 using UnityEngine;
 using Math = kOS.Safe.Utilities.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
     public class RgbaColor : Structure
     {
         protected float Red { get; set; }
@@ -43,11 +43,11 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixColor()
         {
-            AddSuffix(new[] { "R", "RED" }, new ClampSetSuffix<float>(() => Red, value => { Red = value; Recalculate(); }, 0, 255));
-            AddSuffix(new[] { "G", "GREEN" }, new ClampSetSuffix<float>(() => Green, value => { Green = value; Recalculate(); }, 0, 255));
-            AddSuffix(new[] { "B", "BLUE" }, new ClampSetSuffix<float>(() => Blue, value => { Blue = value; Recalculate(); }, 0, 255));
-            AddSuffix(new[] { "A", "ALPHA" }, new ClampSetSuffix<float>(() => Alpha, value => { Alpha = value; Recalculate(); }, 0, 1));
-            AddSuffix(new[] { "HTML", "HEX" }, new NoArgsSuffix<string>(ToHexNotation, "Returns a string representing the color in HTML, i.e. \"#ff0000\".  Ignores transparency (alpha) information."));
+            AddSuffix(new[] { "R", "RED" }, new ClampSetSuffix<ScalarValue>(() => Red, value => { Red = value; Recalculate(); }, 0, 255));
+            AddSuffix(new[] { "G", "GREEN" }, new ClampSetSuffix<ScalarValue>(() => Green, value => { Green = value; Recalculate(); }, 0, 255));
+            AddSuffix(new[] { "B", "BLUE" }, new ClampSetSuffix<ScalarValue>(() => Blue, value => { Blue = value; Recalculate(); }, 0, 255));
+            AddSuffix(new[] { "A", "ALPHA" }, new ClampSetSuffix<ScalarValue>(() => Alpha, value => { Alpha = value; Recalculate(); }, 0, 1));
+            AddSuffix(new[] { "HTML", "HEX" }, new NoArgsSuffix<StringValue>(ToHexNotation, "Returns a string representing the color in HTML, i.e. \"#ff0000\".  Ignores transparency (alpha) information."));
         }
 
         protected virtual void Recalculate()
@@ -78,12 +78,12 @@ namespace kOS.Suffixed
         /// got accepted as standard and remain special proprietary extensions.
         /// </summary>
         /// <returns>A color in hexadecimal notation</returns>
-        public string ToHexNotation()
+        public StringValue ToHexNotation()
         {
-            var redByte = (byte)(Mathf.Min(255, (int)(Red * 255f)));
-            var greenByte = (byte)(Mathf.Min(255, (int)(Green * 255f)));
-            var blueByte = (byte)(Mathf.Min(255, (int)(Blue * 255f)));
-            return String.Format("#{0:x2}{1:x2}{2:x2}", redByte, greenByte, blueByte);
+            var redByte = (byte)Mathf.Min(255, (int)(Red * 255f));
+            var greenByte = (byte)Mathf.Min(255, (int)(Green * 255f));
+            var blueByte = (byte)Mathf.Min(255, (int)(Blue * 255f));
+            return string.Format("#{0:x2}{1:x2}{2:x2}", redByte, greenByte, blueByte);
         }
     }
 }

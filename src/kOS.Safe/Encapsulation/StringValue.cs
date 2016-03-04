@@ -3,6 +3,9 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -12,9 +15,9 @@ namespace kOS.Safe.Encapsulation
     /// strings. Currently, strings are only boxed with this
     /// class temporarily when suffix/indexing support is
     /// necessary.
-    /// 
     /// </summary>
-    public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue
+    [KOSNomenclature("String")]
+    public class StringValue : Structure, IIndexable, IConvertible, ISerializableValue, IEnumerable<string>
     {
         private readonly string internalString;
 
@@ -29,12 +32,24 @@ namespace kOS.Safe.Encapsulation
             StringInitializeSuffixes();
         }
 
-        public int Length
+        public StringValue(StringValue stringValue)
+        {
+            internalString = stringValue.ToString();
+            StringInitializeSuffixes();
+        }
+
+        public StringValue(char ch)
+        {
+            internalString = new string(new char[] {ch});
+            StringInitializeSuffixes();
+        }
+
+        public ScalarValue Length
         {
             get { return internalString.Length; }
         }
 
-        public string Substring(int start, int count)
+        public string Substring(ScalarValue start, ScalarValue count)
         {
             return internalString.Substring(start, count);
         }
@@ -49,19 +64,19 @@ namespace kOS.Safe.Encapsulation
             return internalString.EndsWith(s, StringComparison.OrdinalIgnoreCase);
         }
 
-        public int IndexOf(string s)
+        public ScalarValue IndexOf(string s)
         {
             return internalString.IndexOf(s, StringComparison.OrdinalIgnoreCase);
         }
 
         // IndexOf with a start position.
         // This was named FindAt because IndexOfAt made little sense.
-        public int FindAt(string s, int start)
+        public ScalarValue FindAt(string s, ScalarValue start)
         {
             return internalString.IndexOf(s, start, StringComparison.OrdinalIgnoreCase);
         }
 
-        public string Insert(int location, string s)
+        public string Insert(ScalarValue location, string s)
         {
             return internalString.Insert(location, s);
         }
@@ -126,54 +141,80 @@ namespace kOS.Safe.Encapsulation
             return internalString.TrimStart();
         }
 
-        public object GetIndex(object index)
+        public Structure GetIndex(int index)
         {
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(index is int)) throw new Exception("The index must be an integer number");
+            return new StringValue(internalString[index]);
+        }
 
-            return internalString[(int)index].ToString();
+        public Structure GetIndex(Structure index)
+        {
+            if (index is ScalarValue)
+            {
+                int i = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                return new StringValue(internalString[i]);
+            }
+            throw new KOSCastException(index.GetType(), typeof(ScalarValue));
+
         }
 
         // Required by the interface but unimplemented, because strings are immutable.
-        public void SetIndex(object index, object value)
+        public void SetIndex(Structure index, Structure value)
+        {
+            throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
+        }
+        // Required by the interface but unimplemented, because strings are immutable.
+        public void SetIndex(int index, Structure value)
         {
             throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
 
+        public IEnumerator<string> GetEnumerator ()
+        {
+            for (int i = 0; i < internalString.Length; i++) {
+                yield return internalString[i].ToString();
+            }
+
+        }
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         // As the regular Split, except returning a ListValue rather than an array.
-        public ListValue<string> SplitToList(string separator)
+        public ListValue<StringValue> SplitToList(string separator)
         {
             string[] split = Regex.Split(internalString, Regex.Escape(separator), RegexOptions.IgnoreCase);
-            return new ListValue<string>(split);
+            ListValue<StringValue> returnList = new ListValue<StringValue>();
+            foreach (string s in split)
+                returnList.Add(new StringValue(s));
+            return returnList;
         }
 
         private void StringInitializeSuffixes()
         {
-            AddSuffix("LENGTH",     new NoArgsSuffix<int>                           (() => Length));
-            AddSuffix("SUBSTRING",  new TwoArgsSuffix<string, int, int>             (Substring));
-            AddSuffix("CONTAINS",   new OneArgsSuffix<bool, string>                 (Contains));
-            AddSuffix("ENDSWITH",   new OneArgsSuffix<bool, string>                 (EndsWith));
-            AddSuffix("FINDAT",     new TwoArgsSuffix<int, string, int>             (FindAt));
-            AddSuffix("INSERT",     new TwoArgsSuffix<string, int, string>          (Insert));
-            AddSuffix("FINDLASTAT", new TwoArgsSuffix<int, string, int>             (FindLastAt));
-            AddSuffix("PADLEFT",    new OneArgsSuffix<string, int>                  (PadLeft));
-            AddSuffix("PADRIGHT",   new OneArgsSuffix<string, int>                  (PadRight));
-            AddSuffix("REMOVE",     new TwoArgsSuffix<string, int, int>             (Remove));
-            AddSuffix("REPLACE",    new TwoArgsSuffix<string, string, string>       (Replace));
-            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<string>, string>    (SplitToList));
-            AddSuffix("STARTSWITH", new OneArgsSuffix<bool, string>                 (StartsWith));
-            AddSuffix("TOLOWER",    new NoArgsSuffix<string>                        (ToLower));
-            AddSuffix("TOUPPER",    new NoArgsSuffix<string>                        (ToUpper));
-            AddSuffix("TRIM",       new NoArgsSuffix<string>                        (Trim));
-            AddSuffix("TRIMEND",    new NoArgsSuffix<string>                        (TrimEnd));
-            AddSuffix("TRIMSTART",  new NoArgsSuffix<string>                        (TrimStart));
+            AddSuffix("LENGTH",     new NoArgsSuffix<ScalarValue>( () => Length));
+            AddSuffix("SUBSTRING",  new TwoArgsSuffix<StringValue, ScalarValue, ScalarValue>( (one, two) => Substring(one, two)));
+            AddSuffix("CONTAINS",   new OneArgsSuffix<BooleanValue, StringValue>( one => Contains(one)));
+            AddSuffix("ENDSWITH",   new OneArgsSuffix<BooleanValue, StringValue>( one => EndsWith(one)));
+            AddSuffix("FINDAT",     new TwoArgsSuffix<ScalarValue, StringValue, ScalarValue>( (one, two) => FindAt(one, two)));
+            AddSuffix("INSERT",     new TwoArgsSuffix<StringValue, ScalarValue, StringValue>( (one, two) => Insert(one, two)));
+            AddSuffix("FINDLASTAT", new TwoArgsSuffix<ScalarValue, StringValue, ScalarValue>( (one, two) => FindLastAt(one, two)));
+            AddSuffix("PADLEFT",    new OneArgsSuffix<StringValue, ScalarValue>( one => PadLeft(one)));
+            AddSuffix("PADRIGHT",   new OneArgsSuffix<StringValue, ScalarValue>( one => PadRight(one)));
+            AddSuffix("REMOVE",     new TwoArgsSuffix<StringValue, ScalarValue, ScalarValue>( (one, two) => Remove(one, two)));
+            AddSuffix("REPLACE",    new TwoArgsSuffix<StringValue, StringValue, StringValue>( (one, two) => Replace(one, two)));
+            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<StringValue>, StringValue>( one => SplitToList(one)));
+            AddSuffix("STARTSWITH", new OneArgsSuffix<BooleanValue, StringValue>( one => StartsWith(one)));
+            AddSuffix("TOLOWER",    new NoArgsSuffix<StringValue>(() => ToLower()));
+            AddSuffix("TOUPPER",    new NoArgsSuffix<StringValue>(() => ToUpper()));
+            AddSuffix("TRIM",       new NoArgsSuffix<StringValue>(() => Trim()));
+            AddSuffix("TRIMEND",    new NoArgsSuffix<StringValue>(() => TrimEnd()));
+            AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
-            AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<int, string>   (IndexOf));
-            AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<int, string>   (LastIndexOf));
+            AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));
+            AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<ScalarValue, StringValue>   ( s => LastIndexOf(s)));
 
         }
 
@@ -188,32 +229,39 @@ namespace kOS.Safe.Encapsulation
             return !(val1 == val2);
         }
 
-        public static bool operator ==(StringValue val1, string val2)
+        public static bool operator >(StringValue val1, StringValue val2)
         {
-            if (val1 == null) return val2 == null;
-            return val1.Equals(val2);
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum > 0;
         }
 
-        public static bool operator ==(string val1, StringValue val2)
+        public static bool operator <(StringValue val1, StringValue val2)
         {
-            if (val2 == null) return val1 == null;
-            return val2.Equals(val1);
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum < 0;
         }
 
-        public static bool operator !=(StringValue val1, string val2)
+        public static bool operator >=(StringValue val1, StringValue val2)
         {
-            return !(val1 == val2);
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum >= 0;
         }
 
-        public static bool operator !=(string val1, StringValue val2)
+        public static bool operator <=(StringValue val1, StringValue val2)
         {
-            return !(val1 == val2);
+            int compareNum = string.Compare(val1, val2, StringComparison.OrdinalIgnoreCase);
+            return compareNum <= 0;
         }
 
         // Implicitly converts to a string (i.e., unboxes itself automatically)
         public static implicit operator string(StringValue value)
         {
             return value.internalString;
+        }
+
+        public static implicit operator StringValue(string value)
+        {
+            return new StringValue(value);
         }
 
         public static StringValue operator +(StringValue val1, StringValue val2)
@@ -241,7 +289,7 @@ namespace kOS.Safe.Encapsulation
             if (obj == null) return false;
             if (obj is StringValue || obj is string)
             {
-                return String.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
+                return string.Equals(internalString, obj.ToString(), StringComparison.OrdinalIgnoreCase);
             }
             return false;
         }
@@ -319,6 +367,12 @@ namespace kOS.Safe.Encapsulation
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
+            if (conversionType == typeof(StringValue))
+                return this;
+            else if (conversionType == typeof(BooleanValue))
+                return new BooleanValue(string.IsNullOrEmpty(internalString) ? false : true);
+            else if (conversionType.IsSubclassOf(typeof(Structure)))
+                throw new KOSCastException(typeof(StringValue), conversionType);
             return Convert.ChangeType(internalString, conversionType);
         }
 

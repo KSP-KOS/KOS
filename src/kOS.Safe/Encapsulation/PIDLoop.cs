@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("PIDLoop")]
     public class PIDLoop : Structure
     {
         public static PIDLoop DeepCopy(PIDLoop source)
@@ -90,23 +91,23 @@ namespace kOS.Safe.Encapsulation
 
         public void InitializeSuffixes()
         {
-            AddSuffix("LASTSAMPLETIME", new Suffix<double>(() => LastSampleTime));
-            AddSuffix("KP", new SetSuffix<double>(() => Kp, value => Kp = value));
-            AddSuffix("KI", new SetSuffix<double>(() => Ki, value => Ki = value));
-            AddSuffix("KD", new SetSuffix<double>(() => Kd, value => Kd = value));
-            AddSuffix("INPUT", new Suffix<double>(() => Input));
-            AddSuffix("SETPOINT", new SetSuffix<double>(() => Setpoint, value => Setpoint = value));
-            AddSuffix("ERROR", new Suffix<double>(() => Error));
-            AddSuffix("OUTPUT", new Suffix<double>(() => Output));
-            AddSuffix("MAXOUTPUT", new SetSuffix<double>(() => MaxOutput, value => MaxOutput = value));
-            AddSuffix("MINOUTPUT", new SetSuffix<double>(() => MinOutput, value => MinOutput = value));
-            AddSuffix("ERRORSUM", new Suffix<double>(() => ErrorSum));
-            AddSuffix("PTERM", new Suffix<double>(() => PTerm));
-            AddSuffix("ITERM", new Suffix<double>(() => ITerm));
-            AddSuffix("DTERM", new Suffix<double>(() => DTerm));
-            AddSuffix("CHANGERATE", new Suffix<double>(() => ChangeRate));
-            AddSuffix("RESET", new NoArgsSuffix(ResetI));
-            AddSuffix("UPDATE", new TwoArgsSuffix<double, double, double>(Update));
+            AddSuffix("LASTSAMPLETIME", new Suffix<ScalarValue>(() => LastSampleTime));
+            AddSuffix("KP", new SetSuffix<ScalarValue>(() => Kp, value => Kp = value));
+            AddSuffix("KI", new SetSuffix<ScalarValue>(() => Ki, value => Ki = value));
+            AddSuffix("KD", new SetSuffix<ScalarValue>(() => Kd, value => Kd = value));
+            AddSuffix("INPUT", new Suffix<ScalarValue>(() => Input));
+            AddSuffix("SETPOINT", new SetSuffix<ScalarValue>(() => Setpoint, value => Setpoint = value));
+            AddSuffix("ERROR", new Suffix<ScalarValue>(() => Error));
+            AddSuffix("OUTPUT", new Suffix<ScalarValue>(() => Output));
+            AddSuffix("MAXOUTPUT", new SetSuffix<ScalarValue>(() => MaxOutput, value => MaxOutput = value));
+            AddSuffix("MINOUTPUT", new SetSuffix<ScalarValue>(() => MinOutput, value => MinOutput = value));
+            AddSuffix("ERRORSUM", new Suffix<ScalarValue>(() => ErrorSum));
+            AddSuffix("PTERM", new Suffix<ScalarValue>(() => PTerm));
+            AddSuffix("ITERM", new Suffix<ScalarValue>(() => ITerm));
+            AddSuffix("DTERM", new Suffix<ScalarValue>(() => DTerm));
+            AddSuffix("CHANGERATE", new Suffix<ScalarValue>(() => ChangeRate));
+            AddSuffix("RESET", new NoArgsVoidSuffix(ResetI));
+            AddSuffix("UPDATE", new TwoArgsSuffix<ScalarValue, ScalarValue, ScalarValue>(Update));
         }
 
         public double Update(double sampleTime, double input, double setpoint, double minOutput, double maxOutput)
@@ -122,7 +123,7 @@ namespace kOS.Safe.Encapsulation
             return Update(sampleTime, input, setpoint, -maxOutput, maxOutput);
         }
 
-        public double Update(double sampleTime, double input)
+        public ScalarValue Update(ScalarValue sampleTime, ScalarValue input)
         {
             double error = Setpoint - input;
             double pTerm = error * Kp;

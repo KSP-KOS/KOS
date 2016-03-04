@@ -33,7 +33,7 @@
       <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\Resources\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -88,6 +88,7 @@
     <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
+    <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -114,7 +115,6 @@
     <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
     <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
-    <Compile Include="Suffixed\Part\GimbalValue.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
@@ -179,10 +179,17 @@
     <Compile Include="Screen\RectExtensions.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
     <Compile Include="Suffixed\CrewMember.cs" />
-    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
-    <Compile Include="Serialization\IDumperWithSharedObjects.cs" />
+    <Compile Include="Serialization\IHasSharedObjects.cs" />
+    <Compile Include="Suffixed\ScienceDataValue.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFieldsFactory.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMModuleScienceAnimateFields.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMOrbitalScienceFieldsFactory.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMBathymetryFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\StockScienceExperimentFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMScienceExperimentFields.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -217,4 +224,7 @@
   -->
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AddOns\OrbitalScience\" />
+  </ItemGroup>
 </Project>

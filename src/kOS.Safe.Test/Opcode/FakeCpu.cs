@@ -83,9 +83,34 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public int GetStackSize()
+        public Encapsulation.Structure GetStructureEncapsulated(Encapsulation.Structure testValue, bool barewordOkay = false)
         {
             throw new NotImplementedException();
+        }
+
+        public Encapsulation.Structure PopStructureEncapsulated(bool barewordOkay = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Encapsulation.Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public object PopValueEncapsulated(bool barewordOkay = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetStackSize()
+        {
+            return fakeStack.Count;
         }
 
         public void SetValue(string identifier, object value)
@@ -114,6 +139,11 @@ namespace kOS.Safe.Test.Opcode
         }
 
         public string DumpVariables()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string DumpStack()
         {
             throw new NotImplementedException();
         }
@@ -197,6 +227,12 @@ namespace kOS.Safe.Test.Opcode
         public void RunProgram(List<Compilation.Opcode> program)
         {
             throw new NotImplementedException();
+        }
+
+
+        public int InstructionsThisUpdate
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

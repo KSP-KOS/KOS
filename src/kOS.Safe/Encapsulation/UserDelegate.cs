@@ -9,6 +9,7 @@ namespace kOS.Safe.Encapsulation
     /// <br/>
     /// (As opposed to being a C# delegate, implemented in C# code).<br/>
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("UserDelegate")]
     public class UserDelegate : KOSDelegate, IUserDelegate
     {
         public IProgramContext ProgContext {get; private set;}
@@ -67,7 +68,7 @@ namespace kOS.Safe.Encapsulation
             Cpu.PushStack(this);
         }
         
-        public override object Call()
+        public override Structure Call()
         {
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)

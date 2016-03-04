@@ -21,14 +21,14 @@ the better new way to do it:
           - Description
 
         * - :attr:`APOAPSIS`
-          - Number, meters
+          - :ref:`scalar <scalar>`, meters
           - altitude in meters of SHIP's apoapsis.  Same as SHIP:APOAPSIS.
 
         * - :attr:`PERIAPSIS`
-          - Number, meters
+          - :ref:`scalar <scalar>`, meters
           - altitude in meters of SHIP's periapsis.  Same as SHIP:PERIAPSIS.
 
         * - :attr:`RADAR`
-          - Number, meters
+          - :ref:`scalar <scalar>`, meters
           - Altitude of SHIP above the ground terrain, rather than above sea level.
 		  

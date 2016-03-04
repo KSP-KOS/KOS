@@ -22,29 +22,29 @@ elements and what they do.
 .. structure:: Element
 
     ===================================== ========================= =============
-     Suffix                                Type                      Description
+    Suffix                                Type                      Description
     ===================================== ========================= =============
-     :attr:`NAME`                          string                    The name of the docked craft
-     :attr:`UID`                           string                    Unique Identifier 
-     :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
-     :attr:`DOCKINGPORTS`                  :struct:`List`            all :struct:`DockingPorts <DockingPort>`
-     :attr:`VESSEL`                        :struct:`Vessel`          the parent :struct:`Vessel`
-     :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
+    :attr:`NAME`                          :struct:string            The name of the docked craft
+    :attr:`UID`                           :struct:string            Unique Identifier 
+    :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
+    :attr:`DOCKINGPORTS`                  :struct:`List`            all :struct:`DockingPorts <DockingPort>`
+    :attr:`VESSEL`                        :struct:`Vessel`          the parent :struct:`Vessel`
+    :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
     ===================================== ========================= =============
 
 .. attribute:: Element:UID
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only 
 
     A unique id
 
 .. attribute:: Element:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
-    The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty string.
+    The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty :ref:`string <string>`.
 
 .. attribute:: Element:PARTS
 

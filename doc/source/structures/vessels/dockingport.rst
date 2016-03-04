@@ -39,19 +39,19 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
           - scalar
           - distance at which the port is reset
         * - :attr:`DOCKEDSHIPNAME`
-          - string
+          - :ref:`string <string>`
           - name of vessel the port is docked to
         * - :attr:`NODEPOSITION`
           - vector
           - coords of where the docking node attachment point is in SHIP-RAW xyz
         * - :attr:`NODETYPE`
-          - string
+          - :ref:`string <string>`
           - two nodes are only dockable together if their NODETYPE strings match
         * - :attr:`PORTFACING`
           - :struct:`Direction`
           - facing of the port
         * - :attr:`STATE`
-          - string
+          - :ref:`string <string>`
           - current state of the port
         * - :meth:`UNDOCK`
           -
@@ -95,7 +95,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
 
 .. attribute:: DockingPort:DOCKEDSHIPNAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     name of vessel on the other side of the docking port.
@@ -113,7 +113,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
 
 .. attribute:: DockingPort:NODETYPE
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Each docking port has a node type string that specifies its
@@ -143,7 +143,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
 
 .. attribute:: DockingPort:STATE
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     One of the following string values:
@@ -168,7 +168,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
 
 .. attribute:: DockingPort:TARGETABLE
 
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get only
 
     True if this part can be picked with ``SET TARGET TO``.

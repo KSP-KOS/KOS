@@ -3,6 +3,8 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Iterator")]
+    [kOS.Safe.Utilities.KOSNomenclature("Enumerator", CSharpToKOS = false)] // one-way mapping makes it just another alias, not canonical.
     public class Enumerator : Structure
     {
         private readonly IEnumerator enumerator;
@@ -17,21 +19,21 @@ namespace kOS.Safe.Encapsulation
 
         private void EnumeratorInitializeSuffixes()
         {
-            AddSuffix("RESET", new NoArgsSuffix(() =>
+            AddSuffix("RESET", new NoArgsVoidSuffix(() =>
             {
                 index = -1;
                 status = false;
                 enumerator.Reset();
             }));
-            AddSuffix("NEXT", new NoArgsSuffix<bool>(() =>
+            AddSuffix("NEXT", new NoArgsSuffix<BooleanValue>(() =>
             {
                 status = enumerator.MoveNext();
                 index++;
                 return status;
             }));
-            AddSuffix("ATEND", new NoArgsSuffix<bool>(() => !status));
-            AddSuffix("INDEX", new NoArgsSuffix<int>(() => index));
-            AddSuffix("VALUE", new NoArgsSuffix<object>(() => enumerator.Current));
+            AddSuffix("ATEND", new NoArgsSuffix<BooleanValue>(() => !status));
+            AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => index));
+            AddSuffix("VALUE", new NoArgsSuffix<Structure>(() => FromPrimitiveWithAssert(enumerator.Current)));
         }
 
         public override string ToString()

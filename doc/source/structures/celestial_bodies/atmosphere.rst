@@ -16,63 +16,63 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
           - Description
 
         * - :attr:`BODY`
-          - string
+          - :ref:`string <string>`
           - Name of the celestial body
         * - :attr:`EXISTS`
-          - bool
+          - :ref:`boolean <boolean>`
           - True if this body has an atmosphere
         * - :attr:`OXYGEN`
-          - bool
+          - :ref:`boolean <boolean>`
           - True if oxygen is present                           
         * - :attr:`SCALE`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Used to find atmospheric density
         * - :attr:`SEALEVELPRESSURE`
-          - scalar (atm)
+          - :ref:`scalar <scalar>` (atm)
           - pressure at sea level
         * - :attr:`HEIGHT`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - advertised atmospheric height
 
 
 .. attribute:: Atmosphere:BODY
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     The Body that this atmosphere is around - as a STRING NAME, not a Body object.
     
 .. attribute:: Atmosphere:EXISTS
 
-    :type: bool
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     True if this atmosphere is "real" and not just a dummy placeholder.
     
 .. attribute:: Atmosphere:OXYGEN
 
-    :type: bool
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     True if the air has oxygen and could therefore be used by a jet engine's intake.
     
 .. attribute:: Atmosphere:SCALE
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     A math constant plugged into a formula to find atmosphere density.
     
 .. attribute:: Atmosphere:SEALEVELPRESSURE
 
-    :type: scalar (atm)
+    :type: :ref:`scalar <scalar>` (atm)
     :access: Get only
 
     Number of Atm's at planet's sea level 1.0 Atm's = same as Kerbin.
     
 .. attribute:: Atmosphere:HEIGHT
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).   

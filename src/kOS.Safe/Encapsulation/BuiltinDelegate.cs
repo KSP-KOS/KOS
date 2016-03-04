@@ -7,6 +7,7 @@ namespace kOS.Safe.Encapsulation
     /// A callback reference to a built-in function, (one of the kinds derived from kOS.Function.FunctionBase).<br/>
     /// <br/>
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("BuiltinDelegate")]
     public class BuiltinDelegate : KOSDelegate
     {
         public string Name { get; set; }
@@ -38,7 +39,7 @@ namespace kOS.Safe.Encapsulation
             // do nothing.
         }
         
-        public override object Call()
+        public override Structure Call()
         {
             int throwAway = OpcodeCall.StaticExecute(Cpu, true, Name, true);
             // throwAway will be -1 for cases where it's a builtin function.

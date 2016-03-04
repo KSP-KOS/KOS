@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Scalar")]
     abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
         abstract public bool IsInt { get; }
@@ -35,8 +36,8 @@ namespace kOS.Safe.Encapsulation
         public void InitializeSuffixes()
         {
             // TODO: Commented suffixes until the introduction of kOS types to the user.
-            //AddSuffix("ISINTEGER", new Suffix<bool>(() => IsInt));
-            //AddSuffix("ISVALID", new Suffix<bool>(() => IsValid));
+            //AddSuffix("ISINTEGER", new Suffix<BooleanValue>(() => IsInt));
+            //AddSuffix("ISVALID", new Suffix<BooleanValue>(() => IsValid));
         }
 
         public static ScalarValue Create(object value)
@@ -330,6 +331,11 @@ namespace kOS.Safe.Encapsulation
             return val.GetDoubleValue();
         }
 
+        public static implicit operator float(ScalarValue val)
+        {
+            return (float)val.GetDoubleValue();
+        }
+
         TypeCode IConvertible.GetTypeCode()
         {
             return TypeCode.Object;
@@ -398,7 +404,22 @@ namespace kOS.Safe.Encapsulation
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            return Convert.ChangeType(GetDoubleValue(), conversionType);
+            // These can't be handled by ScalarValue.Create() because they MUST coerce into the asked-for type,
+            // ignoring the logic used in Create() to vary the type depending on content.
+            if (conversionType == GetType())
+                return this;  // no conversion needed
+            else if (conversionType == typeof(ScalarValue))
+                return this; // no conversion needed
+            else if (conversionType == typeof(ScalarDoubleValue))
+                return new ScalarDoubleValue(GetDoubleValue());
+            else if (conversionType == typeof(ScalarIntValue))
+                return new ScalarIntValue(GetIntValue());
+            else if (conversionType == typeof(BooleanValue))
+                return new BooleanValue(GetIntValue() == 0 ? false : true);
+            else if (conversionType.IsSubclassOf(typeof(Structure)))
+                throw new KOSCastException(typeof(ScalarValue), conversionType);
+            else
+                return Convert.ChangeType(GetDoubleValue(), conversionType);
         }
 
         ushort IConvertible.ToUInt16(IFormatProvider provider)

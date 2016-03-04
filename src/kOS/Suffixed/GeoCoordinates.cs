@@ -5,10 +5,13 @@ using kOS.Utilities;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
 using System;
+using kOS.Safe;
 
 namespace kOS.Suffixed
 {
-    public class GeoCoordinates : Structure, IDumperWithSharedObjects
+    [kOS.Safe.Utilities.KOSNomenclature("GeoCoordinates")]
+    [kOS.Safe.Utilities.KOSNomenclature("LatLng", CSharpToKOS = false)]
+    public class GeoCoordinates : SerializableStructure
     {
         private static string DumpLat = "lat";
         private static string DumpLng = "lng";
@@ -109,7 +112,7 @@ namespace kOS.Suffixed
         ///   given lat/long coords, relative to the current CPU vessel's heading.
         /// </summary>
         /// <returns> bearing </returns>
-        public double GetBearing()
+        public ScalarValue GetBearing()
         {
             return VesselUtils.AngleDelta(VesselUtils.GetHeading(Shared.Vessel), (float) GetHeadingFrom());
         }
@@ -118,7 +121,7 @@ namespace kOS.Suffixed
         ///  Returns the ground's altitude above sea level at this geo position.
         /// </summary>
         /// <returns></returns>
-        public double GetTerrainAltitude()
+        public ScalarValue GetTerrainAltitude()
         {
             double alt = 0.0;
             PQS bodyPQS = Body.pqsController;
@@ -179,7 +182,7 @@ namespace kOS.Suffixed
         ///   LAT/LANG position on the SOI body's surface.
         /// </summary>
         /// <returns>compass heading in degrees</returns>
-        private double GetHeadingFrom()
+        private ScalarValue GetHeadingFrom()
         {
             var up = Shared.Vessel.upAxis;
             var north = VesselUtils.GetNorthVector(Shared.Vessel);
@@ -199,7 +202,7 @@ namespace kOS.Suffixed
         ///   the current CPU vessel is now.
         /// </summary>
         /// <returns>distance scalar</returns>
-        private double GetDistanceFrom()
+        private ScalarValue GetDistanceFrom()
         {
             return GetPosition().Magnitude();
         }
@@ -220,7 +223,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="altitude">The (sea level) altitude to get a position for</param>>
         /// <returns>position vector</returns>
-        public Vector GetAltitudePosition(double altitude)
+        public Vector GetAltitudePosition(ScalarValue altitude)
         {
             Vector3d latLongCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, altitude);
             Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
@@ -229,17 +232,17 @@ namespace kOS.Suffixed
 
         private void GeoCoordsInitializeSuffixes()
         {
-            AddSuffix("LAT", new Suffix<double>(()=> Latitude));
-            AddSuffix("LNG", new Suffix<double>(()=> Longitude));
+            AddSuffix("LAT", new Suffix<ScalarValue>(()=> Latitude));
+            AddSuffix("LNG", new Suffix<ScalarValue>(()=> Longitude));
             AddSuffix("BODY", new Suffix<BodyTarget>(()=> new BodyTarget(Body, Shared)));
-            AddSuffix("TERRAINHEIGHT", new Suffix<double>(GetTerrainAltitude));
-            AddSuffix("DISTANCE", new Suffix<double>(GetDistanceFrom));
-            AddSuffix("HEADING", new Suffix<double>(GetHeadingFrom));
-            AddSuffix("BEARING", new Suffix<double>(GetBearing));
+            AddSuffix("TERRAINHEIGHT", new Suffix<ScalarValue>(GetTerrainAltitude));
+            AddSuffix("DISTANCE", new Suffix<ScalarValue>(GetDistanceFrom));
+            AddSuffix("HEADING", new Suffix<ScalarValue>(GetHeadingFrom));
+            AddSuffix("BEARING", new Suffix<ScalarValue>(GetBearing));
             AddSuffix("POSITION", new Suffix<Vector>(GetPosition,
                                                      "Get the 3-D space position relative to the ship center, of this lat/long, " +
                                                      "at a point on the terrain surface"));
-            AddSuffix("ALTITUDEPOSITION", new OneArgsSuffix<Vector,double>(GetAltitudePosition,
+            AddSuffix("ALTITUDEPOSITION", new OneArgsSuffix<Vector,ScalarValue>(GetAltitudePosition,
                                                                            "Get the 3-D space position relative to the ship center, " +
                                                                            "of this lat/long, at this (sea level) altitude"));
         }
@@ -254,9 +257,9 @@ namespace kOS.Suffixed
             Shared = sharedObjects;
         }
 
-        public System.Collections.Generic.IDictionary<object, object> Dump()
+        public override Dump Dump()
         {
-            var dictionary = new DictionaryWithHeader
+            var dictionary = new DumpWithHeader
             {
                 {DumpLat, lat},
                 {DumpLng, lng},
@@ -266,7 +269,7 @@ namespace kOS.Suffixed
             return dictionary;
         }
 
-        public void LoadDump (System.Collections.Generic.IDictionary<object, object> dump)
+        public override void LoadDump(Dump dump)
         {
             Body = (dump[DumpBody] as BodyTarget).Body;
             lat = Convert.ToDouble(dump[DumpLat]);

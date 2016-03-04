@@ -8,6 +8,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("LoadDistances")]
     public class LoadDistanceValue : Structure
     {
         private VesselRanges vesselRanges;
@@ -33,6 +34,8 @@ namespace kOS.Suffixed
             AddSuffix("SPLASHED", new Suffix<SituationLoadDistanceValue>(() => new SituationLoadDistanceValue(vesselRanges.splashed)));
             AddSuffix("SUBORBITAL", new Suffix<SituationLoadDistanceValue>(() => new SituationLoadDistanceValue(vesselRanges.subOrbital)));
         }
+        
+        [kOS.Safe.Utilities.KOSNomenclature("LoadDistance")]
         public class SituationLoadDistanceValue : Structure
         {
             private VesselRanges.Situation situationValue;
@@ -45,10 +48,10 @@ namespace kOS.Suffixed
 
             public void InitializeSuffixes()
             {
-                AddSuffix("LOAD", new SetSuffix<float>(() => situationValue.load, value => SetLoad(value)));
-                AddSuffix("UNLOAD", new SetSuffix<float>(() => situationValue.unload, value => SetUnload(value)));
-                AddSuffix("PACK", new SetSuffix<float>(() => situationValue.pack, value => SetPack(value)));
-                AddSuffix("UNPACK", new SetSuffix<float>(() => situationValue.unpack, value => SetUnpack(value)));
+                AddSuffix("LOAD", new SetSuffix<ScalarValue>(() => situationValue.load, value => SetLoad(value)));
+                AddSuffix("UNLOAD", new SetSuffix<ScalarValue>(() => situationValue.unload, value => SetUnload(value)));
+                AddSuffix("PACK", new SetSuffix<ScalarValue>(() => situationValue.pack, value => SetPack(value)));
+                AddSuffix("UNPACK", new SetSuffix<ScalarValue>(() => situationValue.unpack, value => SetUnpack(value)));
             }
 
             public void SetLoad(float val)

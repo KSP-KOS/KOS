@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Part")]
     public class PartValue : Structure, IKOSTargetable
     {
         protected SharedObjects Shared { get; private set; }
@@ -29,30 +30,30 @@ namespace kOS.Suffixed.Part
 
         private void PartInitializeSuffixes()
         {
-            AddSuffix("CONTROLFROM", new NoArgsSuffix(ControlFrom));
-            AddSuffix("NAME", new Suffix<string>(() => Part.name));
-            AddSuffix("FUELCROSSFEED", new Suffix<bool>(() => Part.fuelCrossFeed));
-            AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
-            AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
-            AddSuffix("UID", new Suffix<string>(Part.flightID.ToString));
+            AddSuffix("CONTROLFROM", new NoArgsVoidSuffix(ControlFrom));
+            AddSuffix("NAME", new Suffix<StringValue>(() => Part.name));
+            AddSuffix("FUELCROSSFEED", new Suffix<BooleanValue>(() => Part.fuelCrossFeed));
+            AddSuffix("TITLE", new Suffix<StringValue>(() => Part.partInfo.title));
+            AddSuffix("STAGE", new Suffix<ScalarValue>(() => Part.inverseStage));
+            AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.transform.position - Shared.Vessel.findWorldCenterOfMass())));
-            AddSuffix("TAG", new SetSuffix<string>(GetTagName, SetTagName));
+            AddSuffix("TAG", new SetSuffix<StringValue>(GetTagName, SetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
-            AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
+            AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, Shared)));
-            AddSuffix("HASMODULE", new OneArgsSuffix<bool, string>(HasModule));
-            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, string>(GetModule));
-            AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, int>(GetModuleIndex));
+            AddSuffix("HASMODULE", new OneArgsSuffix<BooleanValue, StringValue>(HasModule));
+            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, StringValue>(GetModule));
+            AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, ScalarValue>(GetModuleIndex));
             AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
             AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent, Shared), "The parent part of this part"));
-            AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
+            AddSuffix("HASPARENT", new Suffix<BooleanValue>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
             AddSuffix("CHILDREN", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(Part.children, Shared), "A LIST() of the children parts of this part"));
-            AddSuffix("DRYMASS", new Suffix<float>(Part.GetDryMass, "The Part's mass when empty"));
-            AddSuffix("MASS", new Suffix<float>(Part.CalculateCurrentMass, "The Part's current mass"));
-            AddSuffix("WETMASS", new Suffix<float>(Part.GetWetMass, "The Part's mass when full"));
-            AddSuffix("HASPHYSICS", new Suffix<bool>(Part.HasPhysics, "Is this a strange 'massless' part"));
+            AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Part.GetDryMass(), "The Part's mass when empty"));
+            AddSuffix("MASS", new Suffix<ScalarValue>(() => Part.CalculateCurrentMass(), "The Part's current mass"));
+            AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Part.GetWetMass(), "The Part's mass when full"));
+            AddSuffix("HASPHYSICS", new Suffix<BooleanValue>(() => Part.HasPhysics(), "Is this a strange 'massless' part"));
         }
 
         public void ThrowIfNotCPUVessel()
@@ -61,7 +62,7 @@ namespace kOS.Suffixed.Part
                 throw new KOSWrongCPUVesselException();
         }
 
-        private PartModuleFields GetModule(string modName)
+        private PartModuleFields GetModule(StringValue modName)
         {
             foreach (PartModule mod in Part.Modules)
             {
@@ -73,7 +74,7 @@ namespace kOS.Suffixed.Part
             throw new KOSLookupFailException("module", modName.ToUpper(), this);
         }
 
-        private bool HasModule(string modName)
+        private BooleanValue HasModule(StringValue modName)
         {
             foreach (PartModule mod in Part.Modules)
             {
@@ -82,7 +83,7 @@ namespace kOS.Suffixed.Part
             return false;
         }
 
-        private PartModuleFields GetModuleIndex(int moduleIndex)
+        private PartModuleFields GetModuleIndex(ScalarValue moduleIndex)
         {
             if (moduleIndex < Part.Modules.Count)
             {
@@ -91,13 +92,13 @@ namespace kOS.Suffixed.Part
             throw new KOSLookupFailException("module", string.Format("MODULEINDEX[{0}]", moduleIndex), this);
         }
 
-        public string GetTagName() // public because I picture this being a useful API method later
+        public StringValue GetTagName() // public because I picture this being a useful API method later
         {
             KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
             return tagModule == null ? string.Empty : tagModule.nameTag;
         }
 
-        private void SetTagName(string value)
+        private void SetTagName(StringValue value)
         {
             ThrowIfNotCPUVessel();
             KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
@@ -163,7 +164,7 @@ namespace kOS.Suffixed.Part
             var returnValue = new ListValue();
             foreach (PartModule mod in Part.Modules)
             {
-                returnValue.Add(mod.moduleName);
+                returnValue.Add(new StringValue(mod.moduleName));
             }
             return returnValue;
         }
