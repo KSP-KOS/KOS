@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Structure: &mdash; kOS 0.19.0 documentation</title>
+  <title>Structure: &mdash; kOS 0.19.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.1 documentation" href="../../index.html"/>
         <link rel="up" title="Reflection" href="../reflection.html"/>
         <link rel="next" title="Collections" href="../collections.html"/>
         <link rel="prev" title="Reflection" href="../reflection.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.0
+                0.19.1
               </div>
             
           
@@ -218,11 +218,11 @@ or <code class="docutils literal"><span class="pre">42</span></code> or <code cl
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:TOSTRING" title="STRUCTURE:TOSTRING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOSTRING</span></code></a></td>
-<td>String</td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>The string that gets shown on-screen when doing the PRINT command.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STRUCTURE:HASSUFFIX" title="STRUCTURE:HASSUFFIX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASSUFFIX(name)</span></code></a></td>
-<td>Boolean</td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Test whether or not this value has a suffix with the given name.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:SUFFIXNAMES" title="STRUCTURE:SUFFIXNAMES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUFFIXNAMES</span></code></a></td>
@@ -230,19 +230,19 @@ or <code class="docutils literal"><span class="pre">42</span></code> or <code cl
 <td>Gives a list of all the names of all the suffixes this thing has.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STRUCTURE:ISSERIALIZABLE" title="STRUCTURE:ISSERIALIZABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISSERIALIZABLE</span></code></a></td>
-<td>Boolean</td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Is true if this type is one that works with <a class="reference internal" href="../../commands/files.html#writejson"><span>WRITEJSON</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:TYPENAME" title="STRUCTURE:TYPENAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TYPENAME</span></code></a></td>
-<td>String</td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Gives a string for the name of the type of this object.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STRUCTURE:ISTYPE" title="STRUCTURE:ISTYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISTYPE(name)</span></code></a></td>
-<td>Boolean</td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>true if this value is of the given type name, or is derived from the given type name</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STRUCTURE:INHERITANCE" title="STRUCTURE:INHERITANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INHERITANCE</span></code></a></td>
-<td>String</td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Gives a string describing the kOS type, and the kOS types it is inherited from.</td>
 </tr>
 </tbody>
@@ -256,7 +256,7 @@ Structure:<code class="descname">TOSTRING</code><a class="headerlink" href="#att
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">String</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -275,9 +275,9 @@ Structure:<code class="descname">HASSUFFIX</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameter name:</th><td class="field-body">string name of the suffix being tested for</td>
+<tr class="field-odd field"><th class="field-name">Parameter name:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> name of the suffix being tested for</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -352,7 +352,7 @@ Structure:<code class="descname">TYPENAME</code><a class="headerlink" href="#att
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">String</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -398,7 +398,7 @@ Structure:<code class="descname">ISTYPE</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameter name:</th><td class="field-body">string name of the type being checked for</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -433,7 +433,7 @@ Structure:<code class="descname">INHERITANCE</code><a class="headerlink" href="#
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">String</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -462,7 +462,7 @@ Structure:<code class="descname">ISSERIALIZABLE</code><a class="headerlink" href
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -517,7 +517,7 @@ type will return <code class="docutils literal"><span class="pre">True</span></c
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.0',
+            VERSION:'0.19.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

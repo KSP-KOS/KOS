@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Terminal &mdash; kOS 0.19.0 documentation</title>
+  <title>Terminal &mdash; kOS 0.19.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.1 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Time Span" href="time.html"/>
         <link rel="prev" title="String" href="string.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.0
+                0.19.1
               </div>
             
           
@@ -187,6 +187,9 @@
 <span id="id1"></span><h1>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h1>
 <p>The TERMINAL identifier refers to a special structure that lets you access
 some of the information about the screen you are running on.</p>
+<p>Warning: Features related to the in-game terminal GUI may change
+when KSP 1.1 comes out, as we may redesign some of the user
+interface.</p>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
@@ -227,6 +230,21 @@ some of the information about the screen you are running on.</p>
 <td><a class="reference internal" href="boolean.html#boolean"><span>Boolean</span></a></td>
 <td>get and set</td>
 <td>Turns beeps into silent visual screen flashes instead.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:BRIGHTNESS" title="TERMINAL:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BRIGHTNESS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
+<td>get and set</td>
+<td>Adjusts brightness slider of the terminal between 0.0 (min) and 1.0 (max).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TERMINAL:CHARWIDTH" title="TERMINAL:CHARWIDTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHARWIDTH</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
+<td>get and set</td>
+<td>Width of a character cell in pixels.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:CHARHEIGHT" title="TERMINAL:CHARHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHARHEIGHT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
+<td>get and set</td>
+<td>Height of a character cell in pixels.</td>
 </tr>
 </tbody>
 </table>
@@ -333,6 +351,71 @@ by the software you are running.</p>
 windows can have different settings for this value.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:TERMINAL:BRIGHTNESS">
+Terminal:<code class="descname">BRIGHTNESS</code><a class="headerlink" href="#attribute:TERMINAL:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>The same thing as the brightness slider on the terminal GUI.
+The values range from 0.0 (minimum) to 1.0 (maximum).  At
+zero, the effect is to entirely hide the letters altogether.</p>
+<p>Warning: Features related to the in-game terminal GUI may change
+when KSP 1.1 comes out, as we may redesign some of the user
+interface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TERMINAL:CHARWIDTH">
+Terminal:<code class="descname">CHARWIDTH</code><a class="headerlink" href="#attribute:TERMINAL:CHARWIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>Width of a character cell in the display terminal, in pixels.
+The value is forced to remain in the range [4..24] and be
+divisible by 2.  If you try to set it to any other value, it
+will snap to the allowed range and increment.</p>
+<p>Warning: Features related to the in-game terminal GUI may change
+when KSP 1.1 comes out, as we may redesign some of the user
+interface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TERMINAL:CHARHEIGHT">
+Terminal:<code class="descname">CHARHEIGHT</code><a class="headerlink" href="#attribute:TERMINAL:CHARHEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>Scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>Height of a character cell in the display terminal, in pixels.
+The value is forced to remain in the range [4..24] and be
+divisible by 2.  If you try to set it to any other value, it
+will snap to the allowed range and increment.</p>
+<p>Warning: Features related to the in-game terminal GUI may change
+when KSP 1.1 comes out, as we may redesign some of the user
+interface.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -377,7 +460,7 @@ windows can have different settings for this value.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.0',
+            VERSION:'0.19.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

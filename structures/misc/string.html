@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>String &mdash; kOS 0.19.0 documentation</title>
+  <title>String &mdash; kOS 0.19.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.19.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.1 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Terminal" href="terminal.html"/>
         <link rel="prev" title="SteeringManager" href="steeringmanager.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.0
+                0.19.1
               </div>
             
           
@@ -292,23 +292,23 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <td>True if this string ends with the given string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:FIND" title="STRING:FIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">FIND(string)</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Returns the index of the first occurrence of the given string in this string (starting from 0)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:FINDAT" title="STRING:FINDAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDAT(string,</span> <span class="pre">startAt)</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Returns the index of the first occurrence of the given string in this string (starting from startAt)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:FINDLAST" title="STRING:FINDLAST method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDLAST(string)</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Returns the index of the last occurrence of the given string in this string (starting from 0)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:FINDLASTAT" title="STRING:FINDLASTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">FINDLASTAT(string,</span> <span class="pre">startAt)</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Returns the index of the last occurrence of the given string in this string (starting from startAt)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:INDEXOF" title="STRING:INDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">INDEXOF(string)</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Alias for FIND(string)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:INSERT" title="STRING:INSERT method"><code class="xref ks ks-meth docutils literal"><span class="pre">INSERT(index,</span> <span class="pre">string)</span></code></a></td>
@@ -316,11 +316,11 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <td>Returns a new string with the given string inserted at the given index into this string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:LASTINDEXOF" title="STRING:LASTINDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">LASTINDEXOF(string)</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Alias for FINDLAST(string)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STRING:LENGTH" title="STRING:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
-<td>integer</td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Number of characters in the string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:PADLEFT" title="STRING:PADLEFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">PADLEFT(width)</span></code></a></td>
@@ -444,7 +444,7 @@ String:<code class="descname">FINDAT</code><span class="sig-paren">(</span>strin
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
-<li><strong>startAt</strong> &#8211; integer index to start searching at</li>
+<li><strong>startAt</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</li>
 </ul>
 </td>
 </tr>
@@ -485,7 +485,7 @@ String:<code class="descname">FINDLASTAT</code><span class="sig-paren">(</span>s
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to look for</li>
-<li><strong>startAt</strong> &#8211; integer index to start searching at</li>
+<li><strong>startAt</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) index to start searching at</li>
 </ul>
 </td>
 </tr>
@@ -511,7 +511,7 @@ String:<code class="descname">INSERT</code><span class="sig-paren">(</span>index
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>index</strong> &#8211; integer index to add the string at</li>
+<li><strong>index</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) index to add the string at</li>
 <li><strong>string</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to insert</li>
 </ul>
 </td>
@@ -537,7 +537,7 @@ String:<code class="descname">LENGTH</code><a class="headerlink" href="#attribut
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -554,7 +554,7 @@ String:<code class="descname">PADLEFT</code><span class="sig-paren">(</span>widt
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>width</strong> &#8211; integer number of characters the resulting string will contain</li>
+<li><strong>width</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</li>
 </ul>
 </td>
 </tr>
@@ -574,7 +574,7 @@ String:<code class="descname">PADRIGHT</code><span class="sig-paren">(</span>wid
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>width</strong> &#8211; integer number of characters the resulting string will contain</li>
+<li><strong>width</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) number of characters the resulting string will contain</li>
 </ul>
 </td>
 </tr>
@@ -594,8 +594,8 @@ String:<code class="descname">REMOVE</code><span class="sig-paren">(</span>index
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>index</strong> &#8211; integer position of the string from which characters will be removed from the resulting string</li>
-<li><strong>count</strong> &#8211; integer number of characters that will be removing from the resulting string</li>
+<li><strong>index</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) position of the string from which characters will be removed from the resulting string</li>
+<li><strong>count</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) number of characters that will be removing from the resulting string</li>
 </ul>
 </td>
 </tr>
@@ -677,8 +677,8 @@ String:<code class="descname">SUBSTRING</code><span class="sig-paren">(</span>st
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start</strong> &#8211; (integer) starting index (from zero)</li>
-<li><strong>count</strong> &#8211; (integer) resulting length of returned <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></li>
+<li><strong>start</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) starting index (from zero)</li>
+<li><strong>count</strong> &#8211; <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer) resulting length of returned <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -871,7 +871,7 @@ String:<code class="descname">TRIMSTART</code><a class="headerlink" href="#attri
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.0',
+            VERSION:'0.19.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
