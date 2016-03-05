@@ -28,17 +28,18 @@ ready yet when 0.19.0 was released.
   (http://ksp-kos.github.io/KOS_DOC/structures/misc/terminal.html)
 
 ### BUG FIXES
-* Fixed two hard disk rename bugs:
-  (https://github.com/KSP-KOS/KOS/issues/1498), and
+* Fixed file rename bug on local hard disks:
+  (https://github.com/KSP-KOS/KOS/issues/1498)
+* Fixed boot files can be larger than the local disk
   (https://github.com/KSP-KOS/KOS/issues/1094)
-* Re-added legacy "KR-2402 b" config files under a different name,
-  to support saved games in which vessels containing them existed
-  prior to v0.19.0.  (https://github.com/KSP-KOS/KOS/pull/1494)
-* Fixed a bug where the Infernal Robotics module hadn't been updated
-  to use the new Scalar encapsulation system, and thus didn't quite
-  work. (https://github.com/KSP-KOS/KOS/issues/1501)
-* Fixes problems with using PartModule's SetField() which had
-  been failing for all cases where the field was a "float".
+* *Source Code ONly, already included in v0.19.0 zip:* Added legacy
+  "KR-2402 b" config files under a different name, to support saved games in
+  which vessels containing them existed prior to v0.19.0.
+  (https://github.com/KSP-KOS/KOS/pull/1494)
+* Fixed a bug where Infernal Robotics would break when switching vessels or
+  reverting. (https://github.com/KSP-KOS/KOS/issues/1501)
+* Fixes problems with using PartModule's SetField(), and infernal Robotics which
+  had been failing for all cases where the field was a "float".
   (https://github.com/KSP-KOS/KOS/issues/1503).
   There may have been other places this bug affected, but this is
   where it was noticed.  Hypothetically, anywhere the stock game's
@@ -46,7 +47,9 @@ ready yet when 0.19.0 was released.
   not a double would have had the problem.
 
 ### KNOWN ISSUES
-* None?
+* Using `lock` variables in compiled scripts with a duplicate identifier (like "throttle") throws an error (https://github.com/KSP-KOS/KOS/issues/1347 and https://github.com/KSP-KOS/KOS/issues/1253).
+* Occasionally staging with a probe core or root part in the ejected stage will break cooked steering (https://github.com/KSP-KOS/KOS/issues/1492).
+* The limitations of RemoteTech integration can be bypassed by storing a volume in a variable before the ship looses a connection to the KSC (https://github.com/KSP-KOS/KOS/issues/1464).
 
 
 # v0.19.0
