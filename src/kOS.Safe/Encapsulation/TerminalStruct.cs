@@ -14,6 +14,9 @@ namespace kOS.Safe.Encapsulation
         protected const int MAXROWS = 160;
         protected const int MINCOLUMNS = 15;
         protected const int MAXCOLUMNS = 255;
+        
+        protected const int MINCHARPIXELS = 4;
+        protected const int MAXCHARPIXELS = 24;
 
         // TODO: To implement IsOpen, we'd have to make a kOS.Safe interface wrapper around TermWindow first.
         // That's more than I want to do in this update, I'm leaving it as a TODO for me or someone else:
@@ -52,6 +55,23 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("VISUALBEEP", new SetSuffix<BooleanValue>(() => Shared.Screen.VisualBeep,
                                                        value => Shared.Screen.VisualBeep = value,
                                                        "Get or set the value of whether or not the terminal shows beeps silently with a visual flash."));
+            AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.Brightness,
+                                                                    value => Shared.Screen.Brightness = (float)value,
+                                                                    0f,
+                                                                    1f,
+                                                                    "Screen Brightness, between 0.0 and 1.0"));
+            AddSuffix("CHARWIDTH", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelWidth,
+                                                                   value => Shared.Screen.CharacterPixelWidth = (int)value,
+                                                                   MINCHARPIXELS,
+                                                                   MAXCHARPIXELS,
+                                                                   2,
+                                                                   "Character width on in-game terminal screen in pixels"));
+            AddSuffix("CHARHEIGHT", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelHeight,
+                                                                    value => Shared.Screen.CharacterPixelHeight = (int)value,
+                                                                    MINCHARPIXELS,
+                                                                    MAXCHARPIXELS,
+                                                                    2,
+                                                                    "Character height on in-game terminal screen in pixels"));
         }
         
         public override string ToString()

@@ -175,7 +175,7 @@ Incorporating the derivative term (D) and derivative gain (Kd) requires an addit
 When tuned properly, the derivative term will cause the PID-loop to act quickly without causing problematic oscillations. Later in this tutorial, we will cover a way to tune a PID-loop using only the proportional term called the Zieger-Nichols method.
 
 Using :struct:`pidloop`
--------------
+-----------------------
 
 As mentioned earlier, kOS 0.18.1 introduced a new structure called :struct:`pidloop` that can take the place of much of the previous code.  Here is the previous script, converted to use :struct:`pidloop`.
 
