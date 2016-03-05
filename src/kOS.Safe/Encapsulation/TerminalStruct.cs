@@ -55,26 +55,23 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("VISUALBEEP", new SetSuffix<BooleanValue>(() => Shared.Screen.VisualBeep,
                                                        value => Shared.Screen.VisualBeep = value,
                                                        "Get or set the value of whether or not the terminal shows beeps silently with a visual flash."));
-            AddSuffix("CHARWIDTH", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelWidth,
-                                                                   value => Shared.Screen.CharacterPixelWidth = (int)value,
-                                                                   MINCHARPIXELS,
-                                                                   MAXCHARPIXELS,
-                                                                   "Character width on in-game terminal screen in pixels"));
-            AddSuffix("CHARHEIGHT", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelHeight,
-                                                                    value => Shared.Screen.CharacterPixelHeight = (int)value,
-                                                                    MINCHARPIXELS,
-                                                                    MAXCHARPIXELS,
-                                                                    "Character height on in-game terminal screen in pixels"));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.Brightness,
                                                                     value => Shared.Screen.Brightness = (float)value,
                                                                     0f,
                                                                     1f,
                                                                     "Screen Brightness, between 0.0 and 1.0"));
-            AddSuffix("CONTRAST", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.Contrast,
-                                                                  value => Shared.Screen.Contrast = (float)value,
-                                                                  0f,
-                                                                  1f,
-                                                                  "Screen Contrast, between 0.0 and 1.0"));
+            AddSuffix("CHARWIDTH", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelWidth,
+                                                                   value => Shared.Screen.CharacterPixelWidth = (int)value,
+                                                                   MINCHARPIXELS,
+                                                                   MAXCHARPIXELS,
+                                                                   2,
+                                                                   "Character width on in-game terminal screen in pixels"));
+            AddSuffix("CHARHEIGHT", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelHeight,
+                                                                    value => Shared.Screen.CharacterPixelHeight = (int)value,
+                                                                    MINCHARPIXELS,
+                                                                    MAXCHARPIXELS,
+                                                                    2,
+                                                                    "Character height on in-game terminal screen in pixels"));
         }
         
         public override string ToString()

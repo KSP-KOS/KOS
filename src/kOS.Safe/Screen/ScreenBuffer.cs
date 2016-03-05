@@ -28,7 +28,6 @@ namespace kOS.Safe.Screen
         public int CharacterPixelWidth { get; set; }
         public int CharacterPixelHeight { get; set; }
         public float Brightness { get; set; }
-        public float Contrast { get; set; }
 
         
         public int ColumnCount { get; private set; }
