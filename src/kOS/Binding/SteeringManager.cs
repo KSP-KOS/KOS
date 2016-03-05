@@ -152,7 +152,7 @@ namespace kOS.Binding
 
         public const double RadToDeg = 180d / Math.PI;
 
-        private const double EPSILON = 0.00001;
+        private const double EPSILON = 1e-16;
 
         private double sessionTime = double.MaxValue;
         private double lastSessionTime = double.MaxValue;
