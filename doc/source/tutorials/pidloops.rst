@@ -174,6 +174,36 @@ Incorporating the derivative term (D) and derivative gain (Kd) requires an addit
 
 When tuned properly, the derivative term will cause the PID-loop to act quickly without causing problematic oscillations. Later in this tutorial, we will cover a way to tune a PID-loop using only the proportional term called the Zieger-Nichols method.
 
+Using :struct:`pidloop`
+-------------
+
+As mentioned earlier, kOS 0.18.1 introduced a new structure called :struct:`pidloop` that can take the place of much of the previous code.  Here is the previous script, converted to use :struct:`pidloop`.
+
+    // pidloop
+    SET g TO KERBIN:MU / KERBIN:RADIUS^2.
+    LOCK accvec TO SHIP:SENSORS:ACC - SHIP:SENSORS:GRAV.
+    LOCK gforce TO accvec:MAG / g.
+    
+    SET Kp TO 0.01.
+    SET Ki TO 0.006.
+    SET Kd TO 0.006.
+    SET PID TO PIDLOOP(Kp, Kp, Kd).
+    SET PID:SETPOINT TO 1.2.
+    
+    SET thrott TO 1.
+    LOCK THROTTLE TO thrott.
+
+    UNTIL SHIP:ALTITUDE > 40000 {
+        SET thrott TO thrott + PID:UPDATE(TIME:SECONDS, gforce). 
+        // pid:update() is given the input time and input and returns the output. gforce is the input.
+        WAIT 0.001.
+    }
+
+The primary advantage to using :struct:`pidloop` is the reduction in the number of instructions per update (see :Config:`IPU`).  For example, this :struct:`pidloop` script requires approximately one-third the number of instructions needed by the script shown in the previous section.  Since the number of instructions executed has a direct bearing on :ref:`electrical drain <electricdrain>` as of 0.19.0, this can be a great help with power conservation.
+
+Note that :struct:`pidloop` offers a great deal more options than were presented here, but nevertheless, this should provide a decent introduction to using :struct:`pidloop`.
+
+
 Final Touches
 -------------
 
