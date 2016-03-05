@@ -24,6 +24,27 @@ release.
 
 ****
 
+Changes in 0.19.1
+-----------------
+
+This change was mostly for small bug fixes and didn't affect the
+documentation much.
+
+Mentioned PIDLoop() function in tutorial
+::::::::::::::::::::::::::::::::::::::::
+
+:ref:`Added section to PID loop tutorial <struct_pidloop_in_tutorial>`
+that explains better that there's a new function for doing PID loops.
+The tutorial had been originall written before that function existed.
+
+
+New Terminal brightness and char size features
+::::::::::::::::::::::::::::::::::::::::::::::
+
+:struct:`terminal` structure now has suffixes, :attr:`TERMINAL:BRIGHTNESS`,
+:attr:`TERMINAL:CHARWIDTH`, and :attr:`TERMINAL:CHARHEIGHT`` to go with
+the new widgets on the terminal GUI.
+
 Changes in 0.19.0
 -----------------
 

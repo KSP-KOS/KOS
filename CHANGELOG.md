@@ -1,6 +1,54 @@
 kOS Mod Changelog
 =================
 
+# v0.19.1
+
+This release is a patch to v0.19.0, fixing some things
+found by the user community in the two days shortly after
+v0.19.0 released.
+
+It also happens to contain a few terminal window features
+that were being worked on before v0.19.0 but were not deemed
+ready yet when 0.19.0 was released.
+
+### BREAKING CHANGES
+* None?
+
+### NEW FEATURES
+* PIDLoop tutorial section in the docs edited to mention new PIDLoop()
+  function that did not exist back when that page was first written.
+  (http://ksp-kos.github.io/KOS_DOC/tutorials/pidloops.html)
+* New Terminal GUI doodads and widgets: A brightness slider,
+  and the ability to zoom the character width and height.  Also
+  made the transparency and dimming of the 'non-active' terminals
+  a bit less severe so you can still read them when un-focused.
+  Also, these new features can be script controlled by new
+  suffixes, however it is unclear if that feature (doing it from
+  a script) will remain in the future so use it with care:
+  (http://ksp-kos.github.io/KOS_DOC/structures/misc/terminal.html)
+
+### BUG FIXES
+* Fixed two hard disk rename bugs:
+  (https://github.com/KSP-KOS/KOS/issues/1498), and
+  (https://github.com/KSP-KOS/KOS/issues/1094)
+* Re-added legacy "KR-2402 b" config files under a different name,
+  to support saved games in which vessels containing them existed
+  prior to v0.19.0.  (https://github.com/KSP-KOS/KOS/pull/1494)
+* Fixed a bug where the Infernal Robotics module hadn't been updated
+  to use the new Scalar encapsulation system, and thus didn't quite
+  work. (https://github.com/KSP-KOS/KOS/issues/1501)
+* Fixes problems with using PartModule's SetField() which had
+  been failing for all cases where the field was a "float".
+  (https://github.com/KSP-KOS/KOS/issues/1503).
+  There may have been other places this bug affected, but this is
+  where it was noticed.  Hypothetically, anywhere the stock game's
+  library insists on only accepting a single-precision float and
+  not a double would have had the problem.
+
+### KNOWN ISSUES
+* None?
+
+
 # v0.19.0
 
 ### BREAKING CHANGES
