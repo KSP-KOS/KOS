@@ -500,7 +500,7 @@ namespace kOS.Binding
 
             Vector3d oldOmega = omega;
             // omega is angular rotation.  need to correct the signs to agree with the facing axis
-            omega = Quaternion.Inverse(vesselRotation) * shared.Vessel.rigidbody.angularVelocity;
+            omega = Quaternion.Inverse(vesselRotation) * shared.Vessel.angularVelocity;
             omega.x *= -1; //positive values pull the nose to the starboard.
             //omega.y *= -1; // positive values pull the nose up.
             omega.z *= -1; // positive values pull the starboard side up.

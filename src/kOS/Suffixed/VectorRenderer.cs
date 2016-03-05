@@ -232,7 +232,7 @@ namespace kOS.Suffixed
 
                     line = lineObj.AddComponent<LineRenderer>();
                     hat = hatObj.AddComponent<LineRenderer>();
-                    label = labelObj.guiText;
+                    label = labelObj.GetComponent<GUIText>();
 
                     line.useWorldSpace = false;
                     hat.useWorldSpace = false;

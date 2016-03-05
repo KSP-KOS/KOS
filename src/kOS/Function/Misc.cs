@@ -121,9 +121,10 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             AssertArgBottomAndConsume(shared);
+            Staging.ActivateNextStage();
+
             if (Staging.separate_ready && shared.Vessel.isActiveVessel)
             {
-                Staging.ActivateNextStage();
             }
             else if (!Staging.separate_ready)
             {

@@ -305,7 +305,7 @@ namespace kOS.Screen
 
             // Seems to be no way to move more than one line at
             // a time - so have to do this:
-            int pos = Math.Min(editor.pos, contents.Length - 1);
+            int pos = Math.Min(editor.cursorIndex, contents.Length - 1);
             int rows = ((int)innerCoords.height) / FONT_HEIGHT;
             while (rows > 0 && pos >= 0)
             {
@@ -322,7 +322,7 @@ namespace kOS.Screen
 
             // Seems to be no way to move more than one line at
             // a time - so have to do this:
-            int pos = Math.Min(editor.pos, contents.Length - 1);
+            int pos = Math.Min(editor.cursorIndex, contents.Length - 1);
             int rows = ((int)innerCoords.height) / FONT_HEIGHT;
             while (rows > 0 && pos < contents.Length)
             {

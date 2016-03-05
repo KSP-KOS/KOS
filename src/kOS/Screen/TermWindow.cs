@@ -7,6 +7,7 @@ using kOS.Safe.Screen;
 using kOS.Module;
 using kOS.UserIO;
 using kOS.Safe.UserIO;
+using KSP.UI.Dialogs;
 
 namespace kOS.Screen
 {
