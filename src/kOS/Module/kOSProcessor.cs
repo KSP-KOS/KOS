@@ -26,7 +26,7 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessor, IPartCostModifier, IPartMassModifier
     {
-        public ProcessorModes ProcessorMode = ProcessorModes.READY;
+        public ProcessorModes ProcessorMode { get; private set; }
 
         public Harddisk HardDisk { get; private set; }
 
@@ -97,6 +97,11 @@ namespace kOS.Module
         // definition for any given part (within the part.cfg file).
         [KSPField(isPersistant = false, guiActive = false)]
         public float ECPerBytePerSecond = 0F;
+
+        public kOSProcessor()
+        {
+            ProcessorMode = ProcessorModes.READY;
+        }
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
@@ -359,6 +364,12 @@ namespace kOS.Module
             if (!SafeHouse.Config.StartOnArchive)
             {
                 shared.VolumeMgr.SwitchTo(HardDisk);
+            }
+
+            // initialize processor mode if different than READY
+            if (ProcessorMode != ProcessorModes.READY)
+            {
+                ProcessorModeChanged();
             }
 
             InitProcessorTracking();
@@ -734,27 +745,33 @@ namespace kOS.Module
         {
             if (newProcessorMode != ProcessorMode)
             {
-                switch (newProcessorMode)
-                {
-                    case ProcessorModes.READY:
-                        shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
-                            ? shared.VolumeMgr.GetVolume(0)
-                            : HardDisk);
-                        if (shared.Cpu != null) shared.Cpu.Boot();
-                        if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
-                        if (shared.Window != null) shared.Window.IsPowered = true;
-                        break;
-
-                    case ProcessorModes.OFF:
-                    case ProcessorModes.STARVED:
-                        if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
-                        if (shared.Window != null) shared.Window.IsPowered = false;
-                        if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
-                        break;
-                }
-
                 ProcessorMode = newProcessorMode;
+
+                ProcessorModeChanged();
             }
+        }
+
+        private void ProcessorModeChanged()
+        {
+            switch (ProcessorMode)
+            {
+            case ProcessorModes.READY:
+                shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
+                    ? shared.VolumeMgr.GetVolume(0)
+                    : HardDisk);
+                if (shared.Cpu != null) shared.Cpu.Boot();
+                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                if (shared.Window != null) shared.Window.IsPowered = true;
+                break;
+
+            case ProcessorModes.OFF:
+            case ProcessorModes.STARVED:
+                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                if (shared.Window != null) shared.Window.IsPowered = false;
+                if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
+                break;
+            }
+
         }
 
         public void ExecuteInterProcCommand(InterProcCommand command)
