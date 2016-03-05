@@ -137,6 +137,12 @@ namespace kOS.Screen
             GameEvents.onHideUI.Add (OnHideUI);
 			GameEvents.onShowUI.Add (OnShowUI);
         }
+
+        public void OnDestroy()
+        {
+            GameEvents.onHideUI.Remove(OnHideUI);
+            GameEvents.onShowUI.Remove(OnShowUI);
+        }
         
         private void LoadFontArray()
         {
