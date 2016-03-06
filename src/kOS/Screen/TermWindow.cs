@@ -13,11 +13,6 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
-        /// <summary>
-        /// Pixel size of one square section of the font template image file holding one character.
-        /// </summary>
-        private int charSourceSize;
-        
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
         
@@ -146,16 +141,19 @@ namespace kOS.Screen
         
         private void LoadFontArray()
         {
-            // For example, if the image is 128 pixels wide, and there are 16 chars per row,
-            // then each character must be 8 pixels in size.  This allows us to use different
-            // sized font image files as drop-in replacements without recompiling the code
-            // because this value is determined by whatever the file happens to be like:
-            charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
+            // Calculate image size from the presumption that it is a hardcoded number of char
+            // pictures wide and that each image is square.
+            // Then calculate everything else dynamically from that so that
+            // you can experiment with swapping in different font image files and the code
+            // will still work without a recompile:
+            int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
+            int numRows = fontImage.width / charSourceSize;
+            int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
             
             // Make it hold all possible ASCII values even though many will be blank pictures:
-            fontArray = new Texture2D[128];
+            fontArray = new Texture2D[numCharImages];
             
-            for (int i = 0 ; i < 128 ; ++i)
+            for (int i = 0 ; i < numCharImages ; ++i)
             {
                 // TextureFormat cannot be DXT1 or DXT5 if you want to ever perform a
                 // SetPixel on the texture (which we do).  So we start it off as a ARGB32
