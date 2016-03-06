@@ -14,9 +14,9 @@ namespace kOS.Screen
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
         /// <summary>
-        /// Pixel size of one square section of the font template image file holding one character:
+        /// Pixel size of one square section of the font template image file holding one character.
         /// </summary>
-        private const int CHAR_SOURCE_SIZE = 8;
+        private int charSourceSize;
         
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
@@ -146,6 +146,12 @@ namespace kOS.Screen
         
         private void LoadFontArray()
         {
+            // For example, if the image is 128 pixels wide, and there are 16 chars per row,
+            // then each character must be 8 pixels in size.  This allows us to use different
+            // sized font image files as drop-in replacements without recompiling the code
+            // because this value is determined by whatever the file happens to be like:
+            charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
+            
             // Make it hold all possible ASCII values even though many will be blank pictures:
             fontArray = new Texture2D[128];
             
@@ -155,7 +161,7 @@ namespace kOS.Screen
                 // SetPixel on the texture (which we do).  So we start it off as a ARGB32
                 // first, long enough to perform the SetPixel call, then compress it
                 // afterward into a DXT5:
-                Texture2D charImage = new Texture2D(CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE, TextureFormat.ARGB32, true);
+                Texture2D charImage = new Texture2D(charSourceSize, charSourceSize, TextureFormat.ARGB32, false);
 
                 int tx = i % FONTIMAGE_CHARS_PER_ROW;
                 int ty = i / FONTIMAGE_CHARS_PER_ROW;
@@ -164,7 +170,7 @@ namespace kOS.Screen
                 // 3D (2D images put orgin at upper-left, 3D uses lower-left), it doesn't seem
                 // to apply this rule to textures loaded from files like the fontImage.
                 // Thus the difference requiring the upside-down Y coord below.
-                charImage.SetPixels(fontImage.GetPixels(tx * CHAR_SOURCE_SIZE, fontImage.height - (ty+1) * CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE));
+                charImage.SetPixels(fontImage.GetPixels(tx * charSourceSize, fontImage.height - (ty+1) * charSourceSize, charSourceSize, charSourceSize));
                 charImage.Compress(false);
                 charImage.Apply();
 
