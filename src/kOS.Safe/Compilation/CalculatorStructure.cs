@@ -282,6 +282,14 @@ namespace kOS.Safe.Compilation
             bool couldCoerce = false;
             object newLeft;
             object newRight;
+            if (pair.LeftType == pair.RightType)
+            {
+                resultPair = null;
+                // Since the types are already the same, we can't coerce them to be the same.
+                // Otherwise, some types will act as if they have been coerced because of 
+                // other implict conversions.
+                return false;
+            }
             MethodInfo convert2 = pair.LeftType.GetMethod("op_Implicit", FLAGS | BindingFlags.ExactBinding, null, new[] { pair.RightType }, null);
             if (convert2 != null)
             {
