@@ -174,6 +174,38 @@ namespace kOS.Suffixed
         {
             return new Direction(a.rotation.Inverse());
         }
+
+        public override bool Equals(object obj)
+        {
+            Direction d = obj as Direction;
+            if (d != null)
+            {
+                // Check the equality of the quaternion components
+                if (d.rotation.x == rotation.x &&
+                    d.rotation.y == rotation.y &&
+                    d.rotation.z == rotation.z)
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool operator ==(Direction a, Direction b)
+        {
+            if ((object)a != null)
+            {
+                if ((object)b != null)
+                    return a.Equals(b);  // a and b are not null, use a's Equals method
+                return false; // a is not null, b is null, therefor not equal
+            }
+            else if ((object)b != null)
+                return false; // a is not null, b is null, therefor not equal
+            return true; // both are null, return true
+        }
+
+        public static bool operator !=(Direction a, Direction b)
+        {
+            return !(a == b);
+        }
         
         public override object TryOperation(string op, object other, bool reverseOrder)
         {

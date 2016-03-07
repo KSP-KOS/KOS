@@ -128,6 +128,36 @@ namespace kOS.Suffixed
         public static bool operator >=(ScalarValue a, TimeSpan b) { return a >= b.ToUnixStyleTime(); }
         public static bool operator <=(ScalarValue a, TimeSpan b) { return a <= b.ToUnixStyleTime(); }
 
+        public override bool Equals(object obj)
+        {
+            TimeSpan t = obj as TimeSpan;
+            if (t != null)
+            {
+                // Check the equality of the span value
+                if (span == t.ToUnixStyleTime())
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool operator ==(TimeSpan a, TimeSpan b)
+        {
+            if ((object)a != null)
+            {
+                if ((object)b != null)
+                    return a.Equals(b);  // a and b are not null, use a's Equals method
+                return false; // a is not null, b is null, therefor not equal
+            }
+            else if ((object)b != null)
+                return false; // a is not null, b is null, therefor not equal
+            return true; // both are null, return true
+        }
+
+        public static bool operator !=(TimeSpan a, TimeSpan b)
+        {
+            return !(a == b);
+        }
+
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             other = ConvertToDoubleIfNeeded(other);
