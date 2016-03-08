@@ -181,10 +181,7 @@ namespace kOS.Suffixed
             if (d != null)
             {
                 // Check the equality of the quaternion components
-                if (d.rotation.x == rotation.x &&
-                    d.rotation.y == rotation.y &&
-                    d.rotation.z == rotation.z)
-                    return true;
+                return rotation.Equals(d.rotation);
             }
             return false;
         }
