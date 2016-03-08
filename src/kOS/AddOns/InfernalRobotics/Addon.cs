@@ -4,6 +4,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.AddOns.InfernalRobotics
 {
+    [kOS.Safe.Utilities.KOSNomenclature("IRAddon")]
     public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("IR", shared)
@@ -36,7 +37,8 @@ namespace kOS.AddOns.InfernalRobotics
 
             foreach (IRWrapper.IControlGroup cg in controlGroups)
             {
-                list.Add(new IRControlGroupWrapper(cg, shared));
+                if (cg.Vessel == null || cg.Vessel == shared.Vessel)
+                    list.Add(new IRControlGroupWrapper(cg, shared));
             }
 
 
@@ -62,7 +64,7 @@ namespace kOS.AddOns.InfernalRobotics
 
             foreach (IRWrapper.IControlGroup cg in controlGroups)
             {
-                if (cg.Servos == null)
+                if (cg.Servos == null || (cg.Vessel!=null && cg.Vessel != shared.Vessel))
                     continue;
                 
                 foreach (IRWrapper.IServo s in cg.Servos)
@@ -75,7 +77,7 @@ namespace kOS.AddOns.InfernalRobotics
             return list;
         }
 
-        public override bool Available()
+        public override BooleanValue Available()
         {
             return IRWrapper.APIReady;
         }

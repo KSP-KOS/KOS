@@ -8,6 +8,7 @@ namespace kOS.Suffixed
     /// A generic addon description class for use in AddonList
     /// Addons must inherit from this one to implement functions
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("Addon")]
     public abstract class Addon : Structure
     {
         protected readonly string addonName;
@@ -22,10 +23,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("AVAILABLE", new Suffix<Boolean>(Available));
+            AddSuffix("AVAILABLE", new Suffix<BooleanValue>(Available));
         }
 
-        public abstract bool Available ();
+        public abstract BooleanValue Available ();
        
         public override string ToString()
         {

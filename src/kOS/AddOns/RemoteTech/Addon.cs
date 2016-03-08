@@ -1,8 +1,10 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
 
 namespace kOS.AddOns.RemoteTech
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RTAddon")]
     public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("RT", shared)
@@ -12,17 +14,19 @@ namespace kOS.AddOns.RemoteTech
 
         private void InitializeSuffixes()
         {
-            AddSuffix("DELAY", new OneArgsSuffix<double, VesselTarget>(RTGetDelay, "Get current Shortest Signal Delay for Vessel"));
+            AddSuffix("DELAY", new OneArgsSuffix<ScalarValue, VesselTarget>(RTGetDelay, "Get current Shortest Signal Delay for Vessel"));
 
-            AddSuffix("KSCDELAY", new OneArgsSuffix<double, VesselTarget>(RTGetKSCDelay, "Get current KSC Signal Delay"));
+            AddSuffix("KSCDELAY", new OneArgsSuffix<ScalarValue, VesselTarget>(RTGetKSCDelay, "Get current KSC Signal Delay"));
 
-            AddSuffix("HASCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasConnection, "True if ship has any connection"));
+            AddSuffix("HASCONNECTION", new OneArgsSuffix<BooleanValue, VesselTarget>(RTHasConnection, "True if ship has any connection"));
 
-            AddSuffix("HASKSCCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasKSCConnection, "True if ship has connection to KSC"));
+            AddSuffix("HASKSCCONNECTION", new OneArgsSuffix<BooleanValue, VesselTarget>(RTHasKSCConnection, "True if ship has connection to KSC"));
+
+            AddSuffix("HASLOCALCONTROL", new OneArgsSuffix<BooleanValue, VesselTarget>(RTHasLocalControl, "True if ship has locacl control (i.e. a pilot in a command module)"));
 
         }
 
-        private static double RTGetDelay(VesselTarget tgtVessel)
+        private static ScalarValue RTGetDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 
@@ -34,7 +38,7 @@ namespace kOS.AddOns.RemoteTech
             return waitTotal;
         }
 
-        private static double RTGetKSCDelay(VesselTarget tgtVessel)
+        private static ScalarValue RTGetKSCDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 
@@ -46,7 +50,7 @@ namespace kOS.AddOns.RemoteTech
             return waitTotal;
         }
 
-        private static bool RTHasConnection(VesselTarget tgtVessel)
+        private static BooleanValue RTHasConnection(VesselTarget tgtVessel)
         {
             bool result = false;
 
@@ -58,7 +62,19 @@ namespace kOS.AddOns.RemoteTech
             return result;
         }
 
-        private static bool RTHasKSCConnection(VesselTarget tgtVessel)
+        private static BooleanValue RTHasLocalControl(VesselTarget tgtVessel)
+        {
+            bool result = false;
+
+            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            {
+                result = RemoteTechHook.Instance.HasLocalControl(tgtVessel.Vessel.id);
+            }
+
+            return result;
+        }
+
+        private static BooleanValue RTHasKSCConnection(VesselTarget tgtVessel)
         {
             bool result = false;
 
@@ -70,7 +86,7 @@ namespace kOS.AddOns.RemoteTech
             return result;
         }
 
-        public override bool Available()
+        public override BooleanValue Available()
         {
             return RemoteTechHook.IsAvailable();
         }

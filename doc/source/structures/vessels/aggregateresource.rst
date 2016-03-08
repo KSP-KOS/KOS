@@ -13,7 +13,7 @@ IN MyList <list command> ::
     LIST RESOURCES IN RESLIST.
     FOR RES IN RESLIST {
         PRINT "Resource " + RES:NAME.
-        PRINT "    value = " + AMOUNT.
+        PRINT "    value = " + RES:AMOUNT.
         PRINT "    which is "
               + ROUND(100*RES:AMOUNT/RES:CAPACITY)
               + "% full.".
@@ -25,7 +25,7 @@ This is also the type returned by STAGE:RESOURCES ::
     SET RESLIST TO STAGE:RESOURCES.
     FOR RES IN RESLIST {
         PRINT "Resource " + RES:NAME.
-        PRINT "    value = " + AMOUNT.
+        PRINT "    value = " + RES:AMOUNT.
         PRINT "    which is "
               + ROUND(100*RES:AMOUNT/RES:CAPACITY)
               + "% full.".
@@ -42,13 +42,13 @@ This is also the type returned by STAGE:RESOURCES ::
           - Description
 
         * - :attr:`NAME`
-          - string
+          - :ref:`string <string>`
           - Resource name
         * - :attr:`AMOUNT`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Total amount remaining
         * - :attr:`CAPACITY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Total amount when full
         * - :attr:`PARTS`
           - List
@@ -58,21 +58,21 @@ This is also the type returned by STAGE:RESOURCES ::
 .. attribute:: AggregateResource:NAME
 
     :access: Get only
-    :type: string
+    :type: :ref:`string <string>`
 
     The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
 
 .. attribute:: AggregateResource:AMOUNT
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     The value of how much resource is left.
 
 .. attribute:: AggregateResource:CAPACITY
 
     :access: Get only
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
 
     What AMOUNT would be if the resource was filled to the top.
 

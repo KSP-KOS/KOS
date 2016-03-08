@@ -1,7 +1,7 @@
 .. _element:
 
 Element
-======
+=======
 
 An element is a *docked component* of a :struct:`Vessel`.  When you dock several
 vessels together to create one larger vessel, you can obtain the "chunks" of the
@@ -22,27 +22,29 @@ elements and what they do.
 .. structure:: Element
 
     ===================================== ========================= =============
-     Suffix                                Type                      Description
+    Suffix                                Type                      Description
     ===================================== ========================= =============
-     :attr:`NAME`                          string                    The name of the docked craft
-     :attr:`UID`                           string                    Unique Identifier 
-     :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
-     :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
+    :attr:`NAME`                          :struct:string            The name of the docked craft
+    :attr:`UID`                           :struct:string            Unique Identifier 
+    :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
+    :attr:`DOCKINGPORTS`                  :struct:`List`            all :struct:`DockingPorts <DockingPort>`
+    :attr:`VESSEL`                        :struct:`Vessel`          the parent :struct:`Vessel`
+    :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
     ===================================== ========================= =============
 
 .. attribute:: Element:UID
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only 
 
     A unique id
 
 .. attribute:: Element:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get/Set
 
-    The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty string.
+    The name of the Element element, is an artifact from the vessel the element belonged to before docking. Cannot be set to an empty :ref:`string <string>`.
 
 .. attribute:: Element:PARTS
 
@@ -50,6 +52,20 @@ elements and what they do.
     :access: Get only
 
     A List of all the :ref:`parts <part>` on the Element. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. attribute:: Element:DOCKINGPORTS
+
+    :type: :struct:`List` of :struct:`DockingPort` objects
+    :access: Get only
+
+    A List of all the :ref:`docking ports <DockingPort>` on the Element. 
+
+.. attribute:: Element:VESSEL
+
+    :type: :struct:`Vessel`
+    :access: Get only
+
+    The parent vessel containing the element.
 
 .. attribute:: Element:RESOURCES
 

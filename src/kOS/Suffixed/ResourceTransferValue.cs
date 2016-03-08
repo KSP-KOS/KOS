@@ -10,6 +10,7 @@ using Math = System.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Transfer")]
     public class ResourceTransferValue : Structure
     {
         private const float RESOURCE_SHARE_PER_UPDATE = 0.005f;
@@ -74,7 +75,7 @@ namespace kOS.Suffixed
             {
                 return;
             }
-            WorkTransfer(fromParts, toParts);
+            WorkTransfer(fromParts, toParts, deltaTime);
         }
 
         public override string ToString()
@@ -87,12 +88,12 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("GOAL", new Suffix<double>(() => amount ?? -1));
-            AddSuffix("TRANSFERRED", new Suffix<double>(() => transferredAmount));
-            AddSuffix("STATUS", new Suffix<string>(() => Status.ToString()));
-            AddSuffix("MESSAGE", new Suffix<string>(() => StatusMessage));
-            AddSuffix("RESOURCE", new Suffix<string>(() => resourceInfo.name));
-            AddSuffix("ACTIVE", new SetSuffix<bool>(() => Status == TransferManager.TransferStatus.Transferring, 
+            AddSuffix("GOAL", new Suffix<ScalarValue>(() => amount ?? -1));
+            AddSuffix("TRANSFERRED", new Suffix<ScalarValue>(() => transferredAmount));
+            AddSuffix("STATUS", new Suffix<StringValue>(() => Status.ToString()));
+            AddSuffix("MESSAGE", new Suffix<StringValue>(() => StatusMessage));
+            AddSuffix("RESOURCE", new Suffix<StringValue>(() => resourceInfo.name));
+            AddSuffix("ACTIVE", new SetSuffix<BooleanValue>(() => Status == TransferManager.TransferStatus.Transferring, 
             value => {
                 Status = value ? TransferManager.TransferStatus.Transferring : TransferManager.TransferStatus.Inactive;
             }));
@@ -126,11 +127,11 @@ namespace kOS.Suffixed
             throw new ArgumentOutOfRangeException("toTest", @"Type: " + toTest.GetType());
         }
 
-        private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
+        private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts, double deltaTime)
         {
             var transferGoal = CalculateTransferGoal(toParts);
 
-            double pulledAmount = PullResources(fromParts, transferGoal);
+            double pulledAmount = PullResources(fromParts, transferGoal, deltaTime);
 
             PutResources(toParts, pulledAmount);
 
@@ -179,7 +180,7 @@ namespace kOS.Suffixed
         /// <param name="parts">All of the donor parts</param>
         /// <param name="transferGoal">the aggregate amount we are seeking to remove from parts</param>
         /// <returns>the amount we were successful at pulling</returns>
-        private double PullResources(IList<global::Part> parts, double transferGoal)
+        private double PullResources(IList<global::Part> parts, double transferGoal, double deltaTime)
         {
             double toReturn = 0.0;
             var availableResources = CalculateAvailableResource(parts);
@@ -192,7 +193,7 @@ namespace kOS.Suffixed
 
                 // Throttle the transfer
                 var thisPartsShare = transferGoal*thisPartsPercentage;
-                var thisPartsRate = resource.maxAmount*RESOURCE_SHARE_PER_UPDATE;
+                var thisPartsRate = resource.maxAmount*RESOURCE_SHARE_PER_UPDATE*deltaTime/0.02;
                 
                 // The amount you pull must be negative 
                 thisPartsShare = -Math.Min(thisPartsShare, thisPartsRate);

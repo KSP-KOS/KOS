@@ -3,6 +3,22 @@
 PID Loops in kOS
 ================
 
+.. versionadded:: 0.18.1
+
+    Note, this is an older tutorial.  As of 
+    kOS version 0.18.1 and up, a new :struct:`pidloop`
+    feature was added to kOS to allow you to use a built-in PID
+    controller that executes very quickly in the kOS "hardware"
+    rather than in your script code.  You can use it to perform
+    the work described in detail on this page.  However, this
+    tutorial is still quite important because it walks you through
+    how a PID controller works and what it's really doing under the
+    hood.  It's probably a good idea to use the built-in
+    :struct:`pidloop` instead of the program shown here, once you
+    understand the topic this page describes.  However, it's also
+    a good idea to have a read through this page to get an 
+    understanding of what that built-in feature is really doing.
+
 This tutorial covers how one can implement a `PID loop`_ using kOS. A P-loop, or "proportional feedback loop" was already introduced in the second section of the :ref:`Design Patterns Tutorial <designpatterns>`, and that will serve as our starting point. After some code rearrangement, the integral and derivative terms will be added and discussed in turn. Next, a couple extra features will be added to the full PID-loop. Lastly, we'll show a case-study in tuning a full PID loop using the Ziegler-Nichols method. We'll use the LOG method to dump telemetry from KSP into a file and our favorite graphing software to visualize the data.
 
 .. _PID loop: http://en.wikipedia.org/wiki/PID_controller
@@ -158,6 +174,40 @@ Incorporating the derivative term (D) and derivative gain (Kd) requires an addit
 
 When tuned properly, the derivative term will cause the PID-loop to act quickly without causing problematic oscillations. Later in this tutorial, we will cover a way to tune a PID-loop using only the proportional term called the Zieger-Nichols method.
 
+.. _struct_pidloop_in_tutorial:
+
+Using :struct:`pidloop`
+-----------------------
+
+As mentioned earlier, kOS 0.18.1 introduced a new structure called :struct:`pidloop` that can take the place of much of the previous code.  Here is the previous script, converted to use :struct:`pidloop`.
+
+::
+
+    // pidloop
+    SET g TO KERBIN:MU / KERBIN:RADIUS^2.
+    LOCK accvec TO SHIP:SENSORS:ACC - SHIP:SENSORS:GRAV.
+    LOCK gforce TO accvec:MAG / g.
+    
+    SET Kp TO 0.01.
+    SET Ki TO 0.006.
+    SET Kd TO 0.006.
+    SET PID TO PIDLOOP(Kp, Kp, Kd).
+    SET PID:SETPOINT TO 1.2.
+    
+    SET thrott TO 1.
+    LOCK THROTTLE TO thrott.
+
+    UNTIL SHIP:ALTITUDE > 40000 {
+        SET thrott TO thrott + PID:UPDATE(TIME:SECONDS, gforce). 
+        // pid:update() is given the input time and input and returns the output. gforce is the input.
+        WAIT 0.001.
+    }
+
+The primary advantage to using :struct:`pidloop` is the reduction in the number of instructions per update (see :attr:`Config:IPU`).  For example, this :struct:`pidloop` script requires approximately one-third the number of instructions needed by the script shown in the previous section.  Since the number of instructions executed has a direct bearing on :ref:`electrical drain <electricdrain>` as of 0.19.0, this can be a great help with power conservation.
+
+Note that :struct:`pidloop` offers a great deal more options than were presented here, but nevertheless, this should provide a decent introduction to using :struct:`pidloop`.
+
+
 Final Touches
 -------------
 
@@ -225,7 +275,7 @@ Tuning a PID-loop
 
 We are going to start with the same rocket design we have been using so far and actually tune the PID-loop using the Ziegler-Nichols method. This is where we turn off the integral and derivative terms in the loop and bring the proportional gain (Kp) up from zero to the point where the loop causes a steady oscillation with a measured period (Tu). At this point, the proportional gain is called the "ultimate gain" (Ku) and the actual gains (Kp, Ki and Kd) are set according to this table `taken from wikipedia`_:
 
-.. _taken from wikipedia: http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
+.. _taken from Wikipedia: http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
 +------------------------+-----------+---------------+--------------+
 | Control Type           | Kp        | Ki            | Kd           |

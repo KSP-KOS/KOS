@@ -44,8 +44,8 @@ Help for the new user - What is a Function?
 
 .. _declare function:
 
-``DECLARE FUNCTION``
---------------------
+DECLARE FUNCTION
+----------------
 
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
@@ -104,16 +104,102 @@ and once its been "parsed" by the compiler, the function can be called
 from anywhere in the program.  
 
 The best design pattern is probably to create your library of function
-calls as one or more separate .ks files that contain ONLY function
-definitions and nothing else in them.  Then when you "run" the file
+calls as one or more separate .ks files that contain just function
+definitions and not much else in them.  Then when you "run" the file
 containing the functions, what you're really doing is just loading
 the function definitions into memory so they can be called by other
 programs.  At the top of your main script you can then "run" the
 other scripts containing the library of functions to get them
 compiled into memory.
 
-``DECLARE PARAMETER``
----------------------
+Using RUN ONCE
+--------------
+
+If you want to load a library of functions that ALSO perform some
+initialization mainline code, but you only want the mainline code
+to execute once when the library is first loaded, rather than 
+every time a subprogram runs your library, then use the 'once'
+keyword with the run command as follows::
+
+    // This will run mylib1 3 times, re-running the mainline code in it:`
+    run mylib1.
+    run mylib1.
+    run mylib1.
+
+    // This will run mylib2 only one time, ignoring the additional
+    // instances:
+    run once mylib2.
+    run once mylib2. // mylib2 was already run, will not be run again.
+    run once mylib2. // mylib2 was already run, will not be run again.
+
+Example:  Let's say you want to have a library that keeps a counter
+and always returns the next number up every time it's called.  You
+want it initialized to start with, but not get re-initialized every time
+another sub-program includes the library in its code.  So you have this:
+
+**prog1, which calls counterlib:** ::
+
+    // prog1
+    run once counterlib.
+
+    // Get some unique IDs:
+    print "prog1:      next counter ID = " + counter_next().
+    print "prog1:      next counter ID = " + counter_next().
+    print "prog1:      next counter ID = " + counter_next().
+
+    run subprogram.
+
+**subprogram, which ALSO calls counterlib:** ::
+
+    // subprogram
+    run once counterlib.
+
+    print "subprogram: next counter ID = " + counter_next().
+    print "subprogram: next counter ID = " + counter_next().
+    print "subprogram: next counter ID = " + counter_next().
+
+    
+**counterlib** ::
+
+    // init code:
+    global current_num is 0.
+
+    // counter_next()
+    function counter_next {
+       set current_num to current_num + 1.
+       return current_num.
+    }
+
+.. highlight:: none
+
+The above example prints this::
+
+    prog1:      next counter ID = 1
+    prog1:      next counter ID = 2
+    prog1:      next counter ID = 3
+    subprogram: next counter ID = 4
+    subprogram: next counter ID = 5
+    subprogram: next counter ID = 6
+    
+whereas, had you used just ``run counterlib.`` instead of
+``run once counterlib.``, then it would have printed this::
+
+    prog1:      next counter ID = 1
+    prog1:      next counter ID = 2
+    prog1:      next counter ID = 3
+    subprogram: next counter ID = 1
+    subprogram: next counter ID = 2
+    subprogram: next counter ID = 3
+
+.. highlight:: kerboscript
+
+because ``subprogram`` would have run the mainline code 
+``global current_num is 0`` again when it was run inside
+``subprogram``.
+
+
+DECLARE PARAMETER
+-----------------
 
 If your function expects to have parameters passed into it, you can
 use the :ref:`DECLARE PARAMETER <declare parameter>` command to do
@@ -147,10 +233,82 @@ in the previous example where it said::
 
     print_corner(4,"That's me in the corner").
 
+.. _default_parameters:
+
+Optional Parameters (parameter defaults)
+----------------------------------------
+
+If you wish, you may make some of the parameters of a user function optional
+by defaulting them to a starting value with the ``IS`` keyword, as follows:
+
+example 1::
+
+    FUNCTION MYFUNC {
+      DECLARE PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+example 2::
+
+    FUNCTION MYFUNC {
+      PARAMETER P1, P2, P3 is 0, P4 is "cheese".
+
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+example 3::
+
+    FUNCTION MYFUNC {
+      PARAMETER P1.
+      PARAMETER P2.
+      PARAMETER P3 is 0.
+      PARAMETER P4 is "cheese".
+
+      print P1 + ", " + P2 + ", " + P3 + ", " + P4.
+    }
+
+In the above examples, all of which are the same, if you call the function
+with parameter 3 or 4 missing, kOS will assign it the default value mentioned
+in the ``PARAMETER`` statement, like in the examples below::
+
+    MYFUNC(1,2).         // prints "1, 2, 0, cheese".
+    MYFUNC(1,2,3).       // prints "1, 2, 3, cheese".
+    MYFUNC(1,2,3,"hi").  // prints "1, 2, 3, hi".
+
+Whenever arguments are missing, the system always makes up the difference by
+using defaults for the lastmost parameters until the correct number have been
+padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's 
+the last argument, P4, that gets defaulted, but P3 does not.  But if you call
+it with 2 arguments, both P4 and P3 get defaulted.)
+
+It is illegal to put mandatory (not defaulted) parameters after defaulted ones.
+
+This will not work::
+
+    DECLARE PARAMETER thisIsOptional is 0,
+                      thisIsOptionalToo is 0.
+                      thisIsMandatory.
+
+Because the optional parameters didn't come at the end.
+
+
+Default parameters follow short-circuit logic
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Remember that if you have an optional parameter with an initializer
+expression, the expression will not get executed if the calling
+function had an argument present in that position.  The expression
+only gets executed if the system needed to pad a missing argument.
+
+.. versionadded:: 0.18.3
+   Optional Parameters were added as a new feature in kOS 0.18.3
+
+
+
 .. _interpreter functions:
 
 Functions and the terminal interpreter
-::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You **cannot** call functions from the interpreter interactive
 command line if they were declared inside of script programs.
@@ -175,7 +333,7 @@ In the future we may find a way to fix this problem,
 but for right now, just don't do it.
     
 Calling a function without parentheses (please don't)
-:::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In some cases it is possible to call a function with the
 parentheses off, as shown below, but this is not recommended::
@@ -201,8 +359,8 @@ function (a function you made for yourself in another file) then it
 does not work, for complex reason involving the compiler and late-time
 binding.
 
-``LOCAL .. TO``
------------------
+LOCAL .. TO
+-----------
 
 (aka: **local variables**)
 
@@ -236,7 +394,7 @@ A more in-depth explanation of kerboscript's scoping rules and how they
 work is found :ref:`on another page <scope>`
 
 Initializers are now mandatory for the DECLARE statement
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is now **illegal** syntax::
 
@@ -262,7 +420,7 @@ initializer clause.
   use - a string, an integer, a floating point number, etc.*
 
 Difference between declare and set
-::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may think that::
 
@@ -280,8 +438,8 @@ be made (and that new ``x`` will be global, not local).
 
 .. _return:
 
-``RETURN``
-----------
+RETURN
+------
 
 ``return`` *expression(optional)* *dot(mandatory)*
 
@@ -336,17 +494,22 @@ value of the parameter, as in this example::
     embiggen(global_val).
     print global_val.
 
+
+.. highlight:: none
+
 The above example will print::
 
     30
     x has been embiggened to 40
     30
 
+.. highlight:: kerboscript
+
 Although the function added 10 to its OWN copy of the parameter, the 
 caller's copy of the parameter remained unchanged.
 
 Important exception to passing by value - structures
-::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
@@ -371,11 +534,15 @@ in the object really WILL change it, as shown here::
     half_vector(global_vec).
     print "afterward, global_vec is now " + global_vec.
 
+.. highlight:: none
+
 This will give the following result::
 
     full vector is v(10,20,30)
     half vector is v(5,10,15)
     afterward, global_vec is now v(5,10,15)
+
+.. highlight:: kerboscript
 
 Because a vector is a suffixed structure, it effectively acts as if 
 it was passed in by reference instead of by value, and so when it
@@ -418,7 +585,7 @@ Example::
       return getSum(aList) / aList:LENGTH.
     }.
 
-    set L to LIST();
+    set L to LIST().
     L:ADD(10).
     L:ADD(9).
     print "mean average is " + getMean(L).
@@ -443,7 +610,7 @@ User Function Gotchas
 ---------------------
 
 Calling program's functions from the interpreter
-::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As :ref:`explained above <interpreter functions>`, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
@@ -451,7 +618,7 @@ and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.
 
 Inconsistent returns
-::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~
 
 Note that if you sometimes do and sometimes don't return a value, from
 the same function, as in the example here::
@@ -483,7 +650,7 @@ a user function, that you *always* do so in every path through your
 function.
 
 Accidentally using globals
-::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is possible to accidentally create global variables
 when you didn't meant to, just because you made a typo.

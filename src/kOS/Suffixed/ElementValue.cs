@@ -6,6 +6,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Element")]
     public class ElementValue : Structure
     {
         private readonly DockedVesselInfo dockedVesselInfo;
@@ -30,13 +31,15 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new SetSuffix<string>(() => dockedVesselInfo.name, SetName ));
-            AddSuffix("UID", new Suffix<string>(() => dockedVesselInfo.rootPartUId.ToString()));
+            AddSuffix("NAME", new SetSuffix<StringValue>(() => dockedVesselInfo.name, SetName ));
+            AddSuffix("UID", new Suffix<StringValue>(() => dockedVesselInfo.rootPartUId.ToString()));
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(parts[0].vessel, shared)));
             AddSuffix("PARTS", new Suffix<ListValue>(() => PartValueFactory.Construct(parts, shared)));
+            AddSuffix("DOCKINGPORTS", new Suffix<ListValue>(() => DockingPortValue.PartsToList(parts, shared)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(GetResourceManifest));
         }
 
-        private void SetName(string value)
+        private void SetName(StringValue value)
         {
             if (!string.IsNullOrEmpty(value))
             {

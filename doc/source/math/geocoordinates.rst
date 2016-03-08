@@ -39,27 +39,27 @@ Structure
           - Description
 
         * - :attr:`LAT`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
 	  - none
           - Latitude
         * - :attr:`LNG`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
 	  - none
           - Longitude
         * - :attr:`DISTANCE`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
 	  - none
           - distance from :ref:`CPU Vessel <cpu vessel>`
         * - :attr:`TERRAINHEIGHT`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
 	  - none
           - above or below sea level
         * - :attr:`HEADING`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
 	  - none
           - *absolute* heading from :ref:`CPU Vessel <cpu vessel>`
         * - :attr:`BEARING`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
 	  - none
           - *relative* direction from :ref:`CPU Vessel <cpu vessel>`
         * - :attr:`POSITION`
@@ -68,8 +68,12 @@ Structure
           - Position of the surface point.
         * - :attr:`ALTITUDEPOSITION`
           - `Vector` (3D Ship-Raw coords)
-	  - scalar (altitude above sea level)
+	  - :ref:`scalar <scalar>` (altitude above sea level)
           - Position of a point above (or below) the surface point, by giving the altitude number.
+
+.. note::
+
+    This type is serializable.
 
 .. attribute:: GeoCoordinates:LAT
 

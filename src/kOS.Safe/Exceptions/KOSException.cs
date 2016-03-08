@@ -7,6 +7,10 @@ namespace kOS.Safe.Exceptions
         public KOSException(string message):base(message)
         {
         }
+        
+        public KOSException() // a default constructor is needed for how KOSCompileException works
+        {
+        }
 
         public virtual string VerboseMessage
         {

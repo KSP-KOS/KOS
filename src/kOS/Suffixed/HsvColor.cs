@@ -1,7 +1,9 @@
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("HSVA")]
     public class HsvColor : RgbaColor
     {
         private float hue;
@@ -32,9 +34,9 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixColor()
         {
-            AddSuffix(new[] { "H", "HUE" }, new ClampSetSuffix<float>(() => hue, value => { hue = value; ReconcileHsvToRgb(); }, 0, 255));
-            AddSuffix(new[] { "S", "SATURATION" }, new ClampSetSuffix<float>(() => saturation, value => { saturation = value; ReconcileHsvToRgb(); }, 0, 255));
-            AddSuffix(new[] { "V", "VALUE" }, new ClampSetSuffix<float>(() => hsvValue, value => { hsvValue = value; ReconcileHsvToRgb(); }, 0, 255));
+            AddSuffix(new[] { "H", "HUE" }, new ClampSetSuffix<ScalarValue>(() => hue, value => { hue = value; ReconcileHsvToRgb(); }, 0, 255));
+            AddSuffix(new[] { "S", "SATURATION" }, new ClampSetSuffix<ScalarValue>(() => saturation, value => { saturation = value; ReconcileHsvToRgb(); }, 0, 255));
+            AddSuffix(new[] { "V", "VALUE" }, new ClampSetSuffix<ScalarValue>(() => hsvValue, value => { hsvValue = value; ReconcileHsvToRgb(); }, 0, 255));
         }
 
         // Converts an RGB color to an HSV color.

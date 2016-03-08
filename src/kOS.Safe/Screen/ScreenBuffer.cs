@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
 {
@@ -12,7 +13,23 @@ namespace kOS.Safe.Screen
         private int topRow;
         private readonly List<IScreenBufferLine> buffer;
         private readonly List<SubBuffer> subBuffers;
+        
+        public int BeepsPending {get; set;}
+        
+        // These next 6 things really belong in TermWindow, but then they can't be reached from
+        // TerminalStruct over in kOS.Safe because TermWindow is just too full of
+        // Unity stuff to move it to kOS.Safe, or even provide all its methods
+        // in an ITermWindow interface:
+        // ---------------------------------------------------------------------------        
+        /// <summary>True means the terminal screen should be shown in reversed colors.</summary>
+        public bool ReverseScreen {get; set;}
+        /// <summary>True means a beep should make the terminal screen flash silently in lieu of an audio beep.</summary>
+        public bool VisualBeep {get; set;}
+        public int CharacterPixelWidth { get; set; }
+        public int CharacterPixelHeight { get; set; }
+        public float Brightness { get; set; }
 
+        
         public int ColumnCount { get; private set; }
 
         public virtual int CursorRowShow { get { return CursorRow; } }
@@ -85,10 +102,13 @@ namespace kOS.Safe.Screen
         /// in need of a diff check.
         /// </summary>
         /// <param name="startRow">Starting with this row number</param>
-        /// <param name="numRows">for this many rows</param>
+        /// <param name="numRows">for this many rows, or up to the max row the buffer has if this number is too large</param>
         public void MarkRowsDirty(int startRow, int numRows)
         {
-            for( int i = 0; i < numRows ; ++i)
+            // Mark fewer rows than asked to if the reqeusted number would have blown past the end of the buffer:
+            int numSafeRows = (numRows + startRow <= buffer.Count) ? numRows : buffer.Count - startRow;
+            
+            for( int i = 0; i < numSafeRows ; ++i)
                 buffer[startRow + i].TouchTime();
         }
 
@@ -319,8 +339,29 @@ namespace kOS.Safe.Screen
         private void PrintLine(string textToPrint)
         {
             IScreenBufferLine lineBuffer = buffer[AbsoluteCursorRow];
+            textToPrint = StripUnprintables(textToPrint);
             lineBuffer.ArrayCopyFrom(textToPrint.ToCharArray(), 0, CursorColumn);
             MoveColumn(textToPrint.Length);
+        }
+        
+        private string StripUnprintables(string textToPrint)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char ch in textToPrint)
+            {
+                switch (ch)
+                {
+                    case (char)0x0007:
+                    case (char)UnicodeCommand.BEEP:
+                        ++BeepsPending;
+                        break;
+                    default:
+                        if (0x0020 <= ch)
+                            sb.Append(ch);
+                        break;
+                }
+            }
+            return sb.ToString();
         }
     }
 }

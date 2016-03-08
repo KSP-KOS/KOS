@@ -8,6 +8,7 @@ using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
 using FinePrint;
+using kOS.Safe;
 
 namespace kOS.Function
 {
@@ -188,12 +189,90 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object[] argArray = new object[CountRemainingArgs(shared)];
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var listValue = new ListValue(argArray.ToList());
             ReturnValue = listValue;
+        }
+    }
+
+    [Function("queue")]
+    public class FunctionQueue : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+            AssertArgBottomAndConsume(shared);
+            var queueValue = new QueueValue(argArray.ToList());
+            ReturnValue = queueValue;
+        }
+    }
+
+    [Function("stack")]
+    public class FunctionStack : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+            AssertArgBottomAndConsume(shared);
+            var stackValue = new StackValue(argArray.ToList());
+            ReturnValue = stackValue;
+        }
+    }
+
+    [Function("range")]
+    public class FunctionRange : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            // Default values for parameters
+            int from = RangeValue.DEFAULT_START;
+            int to = RangeValue.DEFAULT_STOP;
+            int step = RangeValue.DEFAULT_STEP;
+
+            int argCount = CountRemainingArgs(shared);
+            // assign parameter values from the stack, pop them in reverse order
+            switch (argCount)
+            {
+                case 1:
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                case 2:
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                case 3:
+                    step = GetInt(PopStructureAssertEncapsulated(shared));
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new int[] { 1, 2, 3 }, argCount, "Thrown from function RANGE()");
+            }
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new RangeValue(from, to, step);
+        }
+    }
+
+    [Function("lex", "lexicon")]
+    public class FunctionLexicon : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+            AssertArgBottomAndConsume(shared);
+            var lexicon = new Lexicon(argArray.ToList());
+            ReturnValue = lexicon;
         }
     }
 
@@ -265,45 +344,28 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             int argc = CountRemainingArgs(shared);
-            // If I was called with arguments, then run the version of the constructor that takes args
-            if (argc == 6)
-            {
-                bool      show  = Convert.ToBoolean(PopValueAssert(shared));
-                double    scale = GetDouble(PopValueAssert(shared));
-                string    str   = PopValueAssert(shared).ToString();
-                RgbaColor rgba  = GetRgba(PopValueAssert(shared));
-                Vector    vec   = GetVector(PopValueAssert(shared));
-                Vector    start = GetVector(PopValueAssert(shared));
-                AssertArgBottomAndConsume(shared);
-                DoExecuteWork(shared, start, vec, rgba, str, scale, show);
-            }
-            else if (argc == 0)
-            {
-                AssertArgBottomAndConsume(shared); // no args
-                DoExecuteWork(shared);  // default constructor:
-            }
-            else
-            {
-                throw new KOSArgumentMismatchException("Vecdraw() expected either 0 or 6 arguments passed, but got " + argc +" instead.");
-            }
+
+            // Handle the var args that might be passed in, or give defaults if fewer args:
+            double width   = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
+            bool   show    = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
+            double scale   = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
+            string str     = (argc >= 4) ? PopValueAssert(shared).ToString()         : "";
+            RgbaColor rgba = (argc >= 3) ? GetRgba(PopValueAssert(shared))           : new RgbaColor(1.0f, 1.0f, 1.0f);
+            Vector vec     = (argc >= 2) ? GetVector(PopValueAssert(shared))         : new Vector(1.0, 0.0, 0.0);
+            Vector start   = (argc >= 1) ? GetVector(PopValueAssert(shared))         : new Vector(0.0, 0.0, 0.0);
+            AssertArgBottomAndConsume(shared);
+            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width);
         }
         
-        public void DoExecuteWork(SharedObjects shared)
-        {
-            var vRend = new VectorRenderer( shared.UpdateHandler, shared );
-            vRend.SetShow( false );
-            
-            ReturnValue = vRend;            
-        }
-
-        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show)
+        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width)
         {
             var vRend = new VectorRenderer( shared.UpdateHandler, shared )
                 {
                     Vector = vec,
                     Start = start,
                     Color = rgba,
-                    Scale = scale
+                    Scale = scale,
+                    Width = width
                 };
             vRend.SetLabel( str );
             vRend.SetShow( show );
@@ -312,6 +374,16 @@ namespace kOS.Function
         }
     }
 
+    [Function("clearvecdraws")]
+    public class FunctionHideAllVecdraws : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+            VectorRenderer.ClearAll(shared.UpdateHandler);
+        }
+    }
+    
     [Function("positionat")]
     public class FunctionPositionAt : FunctionBase
     {
@@ -423,24 +495,30 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             WaypointManager wpm = WaypointManager.Instance();
-            if (wpm == null) // When zero waypoints exist, there might not even be a waypoint manager.
-            {
-                ReturnValue = null;
-                // I don't like returning null here without the user being able to test for that, but
-                // we don't have another way to communicate "no such waypoint".  We really need to address
-                // that problem once and for all.
-                return;
-            }
+
+            // If no contracts have been generated with waypoints in them,
+            // then sometimes the stock game's waypoint manager doesn't even
+            // exist yet either.  (The base game seems not to instance one until the
+            // first time a contract with a waypoint is created).
+            if (wpm == null)
+                throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints exist");
             
             string baseName;
             int index;
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
+            if (hasGreek)
+                pointName = baseName;
             Waypoint point = wpm.AllWaypoints().FirstOrDefault(
-                p => String.Equals(p.name, baseName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+                p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+            
+            // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
+            // nulls), so bomb out here:
+            if (point ==null)
+                throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no such waypoint");
 
             ReturnValue = new WaypointValue(point, shared);
         }
-    }    
+    }
 
     [Function("transferall")]
     public class FunctionTransferAll : FunctionBase

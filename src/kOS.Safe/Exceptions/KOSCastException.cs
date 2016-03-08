@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Exceptions
 {
@@ -13,15 +14,21 @@ namespace kOS.Safe.Exceptions
         public override string VerboseMessage { get{ return BuildVerboseMessage(); } }
 
         public override string HelpURL { get{ return "";} }
-        
-        private readonly Type typeFrom;
-        private readonly Type typeTo;
+
+        private readonly string typeFrom;
+        private readonly string typeTo;
         
         /// <summary>
         /// Make an exception when an attempt to convert from one type to another failed.
         /// </summary>
-        public KOSCastException(Type typeFrom, Type typeTo) :
-            base(String.Format(TERSE_MSG_FMT, typeFrom.Name, typeTo.Name))
+        public KOSCastException(Type typeFrom, Type typeTo)
+            : this(KOSNomenclature.GetKOSName(typeFrom), KOSNomenclature.GetKOSName(typeTo))
+        {
+
+        }
+
+        public KOSCastException(string typeFrom, string typeTo) :
+            base(String.Format(TERSE_MSG_FMT, typeFrom, typeTo))
         {
             this.typeFrom = typeFrom;
             this.typeTo = typeTo;
@@ -49,7 +56,7 @@ namespace kOS.Safe.Exceptions
                                "in a place where it needed to use some type of:{0}" +
                                "    {2}{0}";
 
-            return String.Format(VERBOSE_TEXT, Environment.NewLine, typeFrom.Name, typeTo.Name);
+            return String.Format(VERBOSE_TEXT, Environment.NewLine, typeFrom, typeTo);
         }
     }
 }

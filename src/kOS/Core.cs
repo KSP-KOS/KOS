@@ -1,43 +1,50 @@
-﻿using UnityEngine;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
+using kOS.Module;
+using kOS.Suffixed;
+using kOS.Suffixed.Part;
+using kOS.Suffixed.PartModuleField;
+using kOS.Utilities;
+using System.Linq;
 
 namespace kOS
 {
-    public class Core : MonoBehaviour
+    [kOS.Safe.Utilities.KOSNomenclature("Core")]
+    public class Core : kOSProcessorFields
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 17, 2);
+        public static VersionInfo VersionInfo;
 
-        public static Core Fetch; 
-        
-        public void Awake()
+        static Core()
         {
-            // This thing gets instantiated 4 times by KSP for some reason
-            if (Fetch != null) return;
-            Fetch = this;
-
+            var ver = typeof(Core).Assembly.GetName().Version;
+            VersionInfo = new VersionInfo(ver.Major, ver.Minor, ver.Build);
         }
 
-        public void SaveSettings()
+        public Core(kOSProcessor processor, SharedObjects shared):base(processor, shared)
         {
-            //var writer = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
+            InitializeSuffixes();
         }
 
-        public static void Debug(string line)
+        private void InitializeSuffixes()
         {
+            AddSuffix("VERSION", new Suffix<VersionInfo>(() => VersionInfo));
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(shared.KSPPart.vessel, shared)));
+            AddSuffix("ELEMENT", new Suffix<ElementValue>(GetEelement));
+            AddSuffix("CURRENTVOLUME", new Suffix<Volume>(GetCurrentVolume, "The currently selected volume"));
         }
 
-        void OnGUI()
+        private ElementValue GetEelement()
         {
+            var elList = shared.KSPPart.vessel.PartList("elements", shared);
+            var part = new PartValue(shared.KSPPart, shared);
+            return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
 
-    }
-
-    public class CoreInitializer : KSP.Testing.UnitTest
-    {
-        public CoreInitializer()
+        private Volume GetCurrentVolume()
         {
-            var gameobject = new GameObject("kOSCore", typeof (Core));
-            Object.DontDestroyOnLoad(gameobject);
+            return shared.VolumeMgr.CurrentVolume;
         }
     }
 }

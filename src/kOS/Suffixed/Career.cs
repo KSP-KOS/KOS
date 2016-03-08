@@ -4,17 +4,18 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Career")]
     public class Career : Structure
     {        
         static Career()
         {
-            AddGlobalSuffix<Career>("CANTRACKOBJECTS", new StaticSuffix<bool>(CanTrackObjects,
+            AddGlobalSuffix<Career>("CANTRACKOBJECTS", new StaticSuffix<BooleanValue>(CanTrackObjects,
                                                                               "Can the Tracking Center track small space objects (asteroids)?"));
-            AddGlobalSuffix<Career>("PATCHLIMIT", new StaticSuffix<int>(PatchLimit,
+            AddGlobalSuffix<Career>("PATCHLIMIT", new StaticSuffix<ScalarValue>(PatchLimit,
                                                                         "The Tracking Center's orbit patch prediction limit (an integer)"));
-            AddGlobalSuffix<Career>("CANMAKENODES", new StaticSuffix<bool>(CanMakeNodes,
+            AddGlobalSuffix<Career>("CANMAKENODES", new StaticSuffix<BooleanValue>(CanMakeNodes,
                                                                            "Can the Mission Control support maneuver nodes yet?"));
-            AddGlobalSuffix<Career>("CANDOACTIONS", new StaticSuffix<bool>(CanDoActions,
+            AddGlobalSuffix<Career>("CANDOACTIONS", new StaticSuffix<BooleanValue>(CanDoActions,
                                                                            "Can either the VAB or SPH allow custom action groups? " +
                                                                            "If either one allows it, then you are allowed to call " +
                                                                            "the :DOACTION suffix of a PartModule." ));
@@ -42,7 +43,7 @@ namespace kOS.Suffixed
         /// only because you can't default out parameters like 'out string reason' to make them optional.)
         /// </summary>
         /// <returns>true if you can. false if you cannot.</returns>
-        public static bool CanTrackObjects()
+        public static BooleanValue CanTrackObjects()
         {
             string dummy;
             return CanTrackObjects(out dummy);
@@ -65,7 +66,7 @@ namespace kOS.Suffixed
         /// only because you can't default out parameters like 'out string reason' to make them optional.)
         /// </summary>
         /// <returns>max number of patches ahead (not including the current one).</returns>
-        public static int PatchLimit()
+        public static ScalarValue PatchLimit()
         {
             string dummy;
             return PatchLimit(out dummy);
@@ -76,7 +77,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="reason">returns a string describing what would need upgrading to change the answer.</param>
         /// <returns>true if it can. false if it cannot.</returns>
-        public static bool CanMakeNodes(out string reason)
+        public static BooleanValue CanMakeNodes(out string reason)
         {
             // This one is a weird check.  It requires TWO building conditions, as far as I can tell:
             reason = "mission control building";
@@ -91,7 +92,7 @@ namespace kOS.Suffixed
         /// only because you can't default out parameters like 'out string reason' to make them optional.)
         /// </summary>
         /// <returns>true if you can. false if you cannot.</returns>
-        public static bool CanMakeNodes()
+        public static BooleanValue CanMakeNodes()
         {
             string dummy;
             return CanMakeNodes(out dummy);
@@ -116,7 +117,7 @@ namespace kOS.Suffixed
         /// only because you can't default out parameters like 'out string reason' to make them optional.)
         /// </summary>
         /// <returns>true if you can. false if you cannot.</returns>
-        public static bool CanDoActions()
+        public static BooleanValue CanDoActions()
         {
             string dummy;
             return CanDoActions(out dummy);

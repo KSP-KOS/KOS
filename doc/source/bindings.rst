@@ -16,19 +16,41 @@ NAMED VESSELS AND BODIES
 
 SHIP:
 
-| **Variable name**: SHIP
-| **Gettable**: yes
-| **Settable**: no
-| **Type**: `Vessel <structures/vessels/vessel.html>`__
-| **Description**: Whichever vessel happens to be the one containing the CPU part that is running this Kerboscript code at the moment. This is the `CPU Vessel <general/cpu_vessel.html>`__.
+- **Variable name**: SHIP
+- **Gettable**: yes
+- **Settable**: no
+- **Type**: `Vessel <structures/vessels/vessel.html>`__
+- **Description**: Whichever vessel happens to be the one containing the
+  CPU part that is running this Kerboscript code at the moment. This is
+  the `CPU Vessel <general/cpu_vessel.html>`__.
  
 TARGET:
 
-| **Variable Name**: TARGET
-| **Gettable**: yes
-| **Settable**: yes
-| **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__ 
-| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targetted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.
+- **Variable Name**: TARGET
+- **Gettable**: yes
+- **Settable**: yes
+- **Type**: `Vessel <structures/vessels/vessel.html>`__ or
+  `Body <structures/celestial_bodies/body.html>`__
+- **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__
+  object happens to be the one selected as the current KSP target. If set
+  to a string, it will assume the string is the name of a vessel being
+  targeted and set it to a vessel by that name. For best results set it
+  to Body("some name") or Vessel("some name") explicitly.  This will
+  throw an exception if called from a vessel other than the active vessel,
+  as limitations in how KSP sets the target vessel limit the
+  implementation to working with only the active vessel.  
+
+.. _hastarget:
+
+HASTARGET:
+
+- **Variable Name**: TARGET
+- **Gettable**: yes
+- **Settable**: no
+- **Type**: boolean
+- **Description**: Will return true if the ship has a target selected.
+  This will always return false when not on the active vessel, due to
+  limitations in how KSP sets the target vessel.
 
 Alias shortcuts for SHIP fields
 -------------------------------
@@ -57,12 +79,11 @@ BODY             Same as SHIP:BODY
 ANGULARMOMENTUM  Same as SHIP:ANGULARMOMENTUM
 ANGULARVEL       Same as SHIP:ANGULARVEL
 ANGULARVELOCITY  Same as SHIP:ANGULARVEL
-COMMRANGE        Same as SHIP:COMMRANGE
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
-SURFACESPEED     Same as SHIP:SURFACESPEED
+GROUNDSPEED      Same as SHIP:GROUNDSPEED 
+SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
-VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
 APOAPSIS         Same as SHIP:APOAPSIS
 PERIAPSIS        Same as SHIP:PERIAPSIS
@@ -71,8 +92,63 @@ SRFPROGRADE      Same as SHIP:SRFPROGRADE
 SRFREROGRADE     Same as SHIP:SRFREROGRADE
 OBT              Same as SHIP:OBT
 STATUS           Same as SHIP:STATUS
-VESSELNAME       Same as SHIP:NAME
+SHIPNAME         Same as SHIP:NAME
 ================ ==============================================================================
+
+Constants (pi, e, etc)
+----------------------
+
+Get-only.
+
+The variable ``constant`` provides a way to access a few
+:ref:`basic math and physics constants <constants>`, such as Pi, Euler's
+number, and so on.
+
+Example::
+
+    print "Kerbin's circumference: " + (2*constant:pi*Kerbin:radius) + "meters.".
+
+The full list is here: :ref:`constants page <constants>`.
+
+Terminal
+--------
+
+Get-only. ``terminal`` returns a :struct:`terminal` structure describing
+the attributes of the current terminal screen associated with the
+CPU this script is running on.
+
+Core
+----
+
+Get-only. ``core`` returns a :struct:`core` structure referring to the CPU you
+are running on.
+
+Archive
+-------
+
+Get-only. ``archive`` returns a :struct:`Volume` structure referring to the archive.
+You can read more about what archive is on the :ref:`File & volumes <volumes>` page.
+
+Stage
+-----
+
+Get-only. ``stage`` returns a :struct:`stage` structure used to count resources
+in the current stage.  Not to be confused with the COMMAND stage
+which triggers the next stage.
+
+NextNode
+--------
+
+Get-only. ``nextnode`` returns the next planned maneuver :struct:`node` in the SHIP's flight plan.  Will throw an exception if
+no node exists, or if called on a ship that is not the active vessel.
+
+.. _hasnode:
+
+HasNode
+--------
+
+Get-only. ``hasnode`` returns true if there is a planned maneuver :struct:`node` in the SHIP's flight plan.  This will always return
+false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.
 
 Resource Types
 --------------
@@ -92,7 +168,7 @@ corner of the screen in the KSP window. |Resources|
 
 All of the above resources can be queried using either the prefix SHIP
 or STAGE, depending on whether you are trying to query how much is left
-in the curent stage or the entire ship:
+in the current stage or the entire ship:
 
 How much liquid fuel is left in the entire ship:
 
@@ -118,45 +194,46 @@ the term exactly as it appears in the resources window.
 
 You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix. 
 
+.. |Resources| image:: /_images/reference/bindings/resources.png
+
 ALT ALIAS
 ---------
 
-The special variable ALT is a unique exception. It behaves like a
-structure with suffixes but it's actually a bit "fake" in that it's not
-really a structure. The following terms are just exceptions that don't
-fit anywhere else:
+The special variable `ALT <structures/vessels/alt.html>`__ gives you
+access to a few altitude predictions:
 
-============== ======== ==========
-Variable       Type      Meaning
-============== ======== ==========
-ALT:APOAPSIS   number   The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.
-ALT:PERIAPSIS  number   The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.
-ALT:RADAR      number   The altitude of the current ship above the terrain.  Does not have an alias anywhere.
-============== ======== ==========
+ALT:APOAPSIS 
+
+ALT:PERIAPSIS
+
+ALT:RADAR
+
+Further details are found on the `ALT page <structures/vessels/alt.html>`__ .
+
 
 ETA ALIAS
 ---------
 
-The special variable ETA is a unique exception. It behaves like a
-structure with suffixes but it's actually a bit "fake" in that it's not
-really a structure. The following terms are just exceptions that don't
-fit anywhere else:
+The special variable `ETA <structures/vessels/eta.html>`__ gives you
+access to a few time predictions:
 
-============== ======== ==========
-Variable       Type      Meaning
-============== ======== ==========
-ETA:APOAPSIS   number   seconds until SHIP will reach its apoapsis.
-ETA:PERIAPSIS  number   seconds until SHIP will reach its periapsis.
-ETA:TRANSITION number   seconds until SHIP will leave its SOI to enter the SOI of another body.
-============== ======== ==========
+ETA:APOAPSIS 
+
+ETA:PERIAPSIS
+
+ETA:TRANSITION
+
+Further details are found on the `ETA page <structures/vessels/eta.html>`__ .
 
 ENCOUNTER
 ---------
 
-The body being encountered next by the current vessel. Returns the
-special string "None" if there is no expected encounter, or an object of
-type `Body <structures/celestial_bodies/body.html>`__ if an encounter is
-expected.
+The orbit patch describing the next encounter with a body the current
+vessel will enter. If there is no such encounter coming, it will return
+the special string "None".  If there is an encounter coming, it will
+return an object :ref:`of type Orbit <orbit>`.  (i.e. to obtain the name
+of the planet the encounter is with, you can do:
+``print ENCOUNTER:BODY:NAME.``, for example.).
 
 BOOLEAN TOGGLE FIELDS:
 ----------------------
@@ -229,54 +306,27 @@ Controls that must be used with LOCK
     WHEELTHROTTLE       // Separate throttle for wheels
     WHEELSTEERING       // Separate steering system for wheels
 
-System Variables
-----------------
+Time
+----
 
-Returns values about kOS and hardware
+MISSIONTIME
+~~~~~~~~~~~~~~~~~~~
 
-::
+You can obtain the number of seconds it has been since the current
+CPU vessel has been launched with the bound global variable
+``MISSIONTIME``.  In real space programs this is referred to usually
+as "MET" - Mission Elapsed Time, and it's what's being measured when
+you hear that familiar voice saying "T minus 10 seconds..."  Point "T"
+is the zero point of the mission elapsed time, and everything before that
+is a negative number and everything after it is a positive number.
+kOS is only capable of returning the "T+" times, not the "T-" times,
+because it doesn't read your mind to know ahead of time when you plan
+to launch.
 
-    PRINT VERSION.            // Returns operating system version number. i.e. 0.8.6
-    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
-    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
-    PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
+Time Structure
+~~~~~~~~~~~~~~
 
-NOTE the following important difference:
-
-SESSIONTIME is the time since the last time this vessel was loaded from
-on-rails into full physics.
-
-TIME is the time since the entire saved game campaign started, in the
-kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
-just started.
-
-WARPING
-~~~~~~~
-
-Time warp can be controlled with WARP, and WARPMODE.  See
-:ref:`WARP <warp>`
-
-Config
-------
-
-CONFIG is a special variable name that refers to the configuration
-settings for
-the kOS mod, and can be used to set or get various options.
-
-`CONFIG has its own page <structures/misc/config.html>`__ for further
-details.
-
-Game State
-----------
-
-Variables that have something to do with the state of the universe.
-
-========= ====================================== ==============
-Variable  Type                                   Meaning
-========= ====================================== ==============
-TIME      `Time <structures/misc/time.html>`__   Simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
-MAPVIEW    boolean                               Both settable and gettable. If you query MAPVIEW, it's true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.
-========= ====================================== ==============
+`Time <structures/misc/time.html>`__ is the simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
 
 TIME is a useful system variable for calculating the passage of time
 between taking
@@ -300,4 +350,113 @@ It's important to be aware of the `frozen update
 nature <general/CPU_hardware.html#FROZEN>`__ of the kOS
 computer when reading TIME.
 
-.. |Resources| image:: /_images/reference/bindings/resources.png
+System Variables
+----------------
+
+This section is about variables that describe the things that are slightly
+outside the simulated universe of the game and are more about
+the game's user interface or the kOS mod itself.  They represent things
+that slightly "break the fourth wall" and let your script access
+something entirely outside the in-character experience.
+
+::
+
+    PRINT VERSION.            // Returns operating system version number. e.g. 0.8.6
+    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
+    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
+    PRINT VERSION:BUILD.      // Returns build version number. e.g. 6
+    PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
+
+NOTE the following important difference:
+
+SESSIONTIME is the time since the last time this vessel was loaded from
+on-rails into full physics.
+
+TIME is the time since the entire saved game campaign started, in the
+kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
+just started.
+
+KUNIVERSE
+~~~~~~~~~
+
+:ref:`Kuniverse <kuniverse>` is a structure that contains many settings that
+break the fourth wall a little bit and control the game simulation directly.
+The eventual goal is probably to move many of the variables you see listed
+below into ``kuniverse``.
+
+Config
+~~~~~~
+
+CONFIG is a special variable name that refers to the configuration
+settings for the kOS mod, and can be used to set or get various
+options.
+
+`CONFIG has its own page <structures/misc/config.html>`__ for further
+details.
+
+WARP and WARPMODE
+~~~~~~~~~~~~~~~~~
+
+Time warp can be controlled with the variables
+WARP and WARPMODE.  See :ref:`WARP <warp>`
+
+MAPVIEW
+~~~~~~~
+
+A boolean that is both gettable and settable.
+
+If you query MAPVIEW, it's true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.
+
+LOADDISTANCE
+~~~~~~~~~~~~
+
+LOADDISTANCE sets the distance from the active vessel at
+which vessels get removed from the full physics engine and put
+on-rails, or visa versa.  Note that as of KSP 1.0 the stock game
+supports multiple different load distance settings for different
+situations such that the value changes depending on where you are.
+But kOS does not support this at the moment so in kOS if you set
+the LOADDISTANCE, you are setting it to the same value
+universally for all situations.
+
+.. _solarprimevector:
+
+SOLARPRIMEVECTOR
+----------------
+
+Gives the Prime Meridian :struct:`Vector` for the Solar System itself, in
+current Ship-Raw XYZ coordinates.
+
+Both the :attr:`Orbit:LONGITUDEOFASCENDINGNODE` orbit suffix and the
+:attr:`Body:ROTATIONANGLE` body suffix are expressed in terms of
+degree offsets from this *Prime Meridian Reference Vector*.
+
+What is the Solar Prime Reference Vector?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The solar prime vector is an arbitrary vector in space used to measure
+some orbital parameters that are supposed to remain fixed to space
+regardless of how the planets underneath the orbit rotate, or where the
+Sun is.  In a sense it can be thought of as the celestial "prime
+meridian" of the entire solar system, rather than the "prime meridian" of
+any one particular rotating planet or moon.
+
+In a hypothetical Earthling's solar system our Kerbal scientists have
+hypothesized may exist in a galaxy far away, Earthbound astronomers use
+a reference they called the
+`First Point of Aries <https://en.wikipedia.org/wiki/First_Point_of_Aries>`__,
+for this purpose.
+
+For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
+point in the firmament, also known as the "skybox".
+
+Addons
+------
+
+Get-only.  ``addons`` is a special variable used to access various extensions
+to kOS that are designed to support the features introduced by some other mods.  More info can be found on the :ref:`addons <addons>` page.
+
+Colors
+------
+
+There are several bound variables associated with :ref:`hardcoded colors <colors>` such as WHITE, BLACK, RED, etc.  See the linked page for the full list.

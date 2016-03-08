@@ -18,12 +18,13 @@ All objects that can move in orbit around other objects share some similar struc
     ======================= ==============
      Suffix                  Type (units)
     ======================= ==============
-     :attr:`NAME`            string
+     :attr:`NAME`            :struct:`String`
      :attr:`BODY`            :struct:`Body`
-     :attr:`HASBODY`         boolean
-     :attr:`HASORBIT`        boolean
-     :attr:`HASOBT`          boolean
+     :attr:`HASBODY`         :struct:`boolean`
+     :attr:`HASORBIT`        :struct:`boolean`
+     :attr:`HASOBT`          :struct:`boolean`
      :attr:`OBT`             :struct:`Orbit`
+     :attr:`ORBIT`           :struct:`Orbit`
      :attr:`UP`              :struct:`Direction`
      :attr:`NORTH`           :struct:`Direction`
      :attr:`PROGRADE`        :struct:`Direction`
@@ -32,45 +33,45 @@ All objects that can move in orbit around other objects share some similar struc
      :attr:`SRFRETROGRADE`   :struct:`Direction`
      :attr:`POSITION`        :struct:`Vector`
      :attr:`VELOCITY`        :struct:`OrbitableVelocity`
-     :attr:`DISTANCE`        scalar (m)
+     :attr:`DISTANCE`        :ref:`scalar <scalar>` (m)
      :attr:`DIRECTION`       :struct:`Direction`
-     :attr:`LATITUDE`        scalar (deg)
-     :attr:`LONGITUDE`       scalar (deg)
-     :attr:`ALTITUDE`        scalar (m)
+     :attr:`LATITUDE`        :ref:`scalar <scalar>` (deg)
+     :attr:`LONGITUDE`       :ref:`scalar <scalar>` (deg)
+     :attr:`ALTITUDE`        :ref:`scalar <scalar>` (m)
      :attr:`GEOPOSITION`     :struct:`GeoCoordinates`
      :attr:`PATCHES`         :struct:`List` of :struct:`Orbits <Orbit>`
     ----------------------- --------------
      The Following are deprecated (use apoapsis and periapsis on :attr:`OBT`)
     --------------------------------------
-     :attr:`APOAPSIS`        scalar (m)
-     :attr:`PERIAPSIS`       scalar (m)
+     :attr:`APOAPSIS`        :ref:`scalar <scalar>` (m)
+     :attr:`PERIAPSIS`       :ref:`scalar <scalar>` (m)
     ======================= ==============
 
 
 .. attribute:: Orbitable:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Name of this vessel or body.
 
 .. attribute:: Orbitable:HASBODY
 
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     True if this object has a body it orbits (false only when this object is the Sun, pretty much).
 
 .. attribute:: Orbitable:HASORBIT
 
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     Alias for HASBODY.
 
 .. attribute:: Orbitable:HASOBT
 
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     :access: Get only
 
     Alias for HASBODY.
@@ -88,6 +89,13 @@ All objects that can move in orbit around other objects share some similar struc
     :access: Get only
 
     The current single orbit "patch" that this object is on (not the future orbits it might be expected to achieve after maneuver nodes or encounter transitions, but what the current orbit would be if nothing changed and no encounters perturbed the orbit.
+
+.. attribute:: Orbitable:ORBIT
+
+    :type: :struct:`Orbit`
+    :access: Get only
+
+    This is an alias for OBT, as described above.
 
 .. attribute:: Orbitable:UP
 
@@ -147,10 +155,10 @@ All objects that can move in orbit around other objects share some similar struc
 
 .. attribute:: Orbitable:DISTANCE
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
-    The scalar distance between this object and the center of :struct:`SHIP`.
+    The :ref:`scalar <scalar>` distance between this object and the center of :struct:`SHIP`.
 
 .. attribute:: Orbitable:DIRECTION
 
@@ -161,21 +169,21 @@ All objects that can move in orbit around other objects share some similar struc
 
 .. attribute:: Orbitable:LATITUDE
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
     The latitude in degrees of the spot on the surface of the SOI body directly under this object.
 
 .. attribute:: Orbitable:LONGITUDE
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
     The longitude in degrees of the spot on the surface of the SOI body directly under this object. Longitude returned will always be normalized to be in the range [-180,180].
 
 .. attribute:: Orbitable:ALTITUDE
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     The altitude in meters above the *sea level* surface of the SOI body (not the center of the SOI body. To get the true radius of the orbit for proper math calculations remember to add altitude to the SOI body's radius.)
@@ -196,7 +204,7 @@ All objects that can move in orbit around other objects share some similar struc
 
 .. attribute:: Orbitable:APOAPSIS
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
     .. deprecated:: 0.15
@@ -205,7 +213,7 @@ All objects that can move in orbit around other objects share some similar struc
 
 .. attribute:: Orbitable:PERIAPSIS
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
     .. deprecated:: 0.15

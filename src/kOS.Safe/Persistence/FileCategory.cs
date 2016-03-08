@@ -15,20 +15,13 @@ namespace kOS.Safe.Persistence
         /// to know for sure it's not one of the supported types.
         /// </summary>
         TOOSHORT = 0,
-            
+
         /// <summary>
         /// The default the type identifier will always assume as long<br/>
         /// as the first few characters are printable ASCII.
         /// </summary>
         ASCII, 
 
-        /// <summary>
-        /// At the moment we won't be able to detect this<br/>
-        /// and it will call scripts just ASCII, but this<br/>
-        /// may change later and be used.
-        /// </summary>
-        KERBOSCRIPT,
-                      
         /// <summary>
         /// The ML compiled and packed file that came from a KerboScript.
         /// </summary>
@@ -37,6 +30,6 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// Is an unsupported type.
         /// </summary>
-        OTHER
+        BINARY
     }
 }

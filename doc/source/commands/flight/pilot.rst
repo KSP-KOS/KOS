@@ -20,66 +20,66 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
       - Equivalent Key
 
     * - :ref:`PILOTMAINTHROTTLE <SHIP CONTROL PILOTMAINTHROTTLE>`
-      - scalar [0,1]
+      - :ref:`scalar <scalar>` [0,1]
       - ``LEFT-CTRL``, ``LEFT-SHIFT``
 
     * - :ref:`PILOTYAW <SHIP CONTROL PILOTYAW>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``D``, ``A``
     * - :ref:`PILOTPITCH <SHIP CONTROL PILOTPITCH>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``W``, ``S``
     * - :ref:`PILOTROLL <SHIP CONTROL PILOTROLL>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``Q``, ``E``
     * - :ref:`PILOTROTATION <SHIP CONTROL PILOTROTATION>`
       - :struct:`Vector`
       - ``(YAW,PITCH,ROLL)``
 
     * - :ref:`PILOTYAWTRIM <SHIP CONTROL PILOTYAWTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+D``, ``ALT+A``
     * - :ref:`PILOTPITCHTRIM <SHIP CONTROL PILOTPITCHTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+W``, ``ALT+S``
     * - :ref:`PILOTROLLTRIM <SHIP CONTROL PILOTROLLTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+Q``, ``ALT+E``
 
     * - :ref:`PILOTFORE <SHIP CONTROL PILOTFORE>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``N``, ``H``
     * - :ref:`PILOTSTARBOARD <SHIP CONTROL PILOTSTARBOARD>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``L``, ``J``
     * - :ref:`PILOTTOP <SHIP CONTROL PILOTTOP>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``I``, ``K``
     * - :ref:`PILOTTRANSLATION <SHIP CONTROL PILOTTRANSLATION>`
       - :struct:`Vector`
       - ``(STARBOARD,TOP,FORE)``
 
     * - :ref:`PILOTWHEELSTEER <SHIP CONTROL PILOTWHEELSTEER>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``A``, ``D``
     * - :ref:`PILOTWHEELTHROTTLE <SHIP CONTROL PILOTWHEELTHROTTLE>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``W``, ``S``
 
     * - :ref:`PILOTWHEELSTEERTRIM <SHIP CONTROL PILOTWHEELSTEERTRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+A``, ``ALT+D``
     * - :ref:`PILOTWHEELTHROTTLETRIM <SHIP CONTROL PILOTWHEELTHROTTLETRIM>`
-      - scalar [-1,1]
+      - :ref:`scalar <scalar>` [-1,1]
       - ``ALT+W``, ``ALT+S``
 
     * - :ref:`PILOTNEUTRAL <SHIP CONTROL PILOTNEUTRAL>`
-      - boolean
+      - :ref:`Boolean <boolean>`
       - Is **kOS** Controlling?
 
 
 .. _SHIP CONTROL PILOTMAINTHROTTLE:
-.. object:: SHIP:CONTROL:MAINTHROTTLE
+.. object:: SHIP:CONTROL:PILOTMAINTHROTTLE
 
     Returns the pilot's input for the throttle. This is the only ``PILOT`` variable that is settable and is used to set the throttle upon termination of the current **kOS** program.
 

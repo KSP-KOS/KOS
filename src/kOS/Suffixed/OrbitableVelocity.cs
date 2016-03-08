@@ -9,6 +9,7 @@ namespace kOS.Suffixed
     /// reference frames.  (Note this may become moot after vector
     /// reference frame transformation is implemented.)
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("OrbitableVelocity")]
     public class OrbitableVelocity : Structure
     {
         public Vector Orbital { get; private set; }
@@ -24,7 +25,7 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("ORBIT", new Suffix<Vector>(() => Orbital));
+            AddSuffix(new[] {"OBT", "ORBIT"}, new Suffix<Vector>(() => Orbital));
             AddSuffix("SURFACE", new Suffix<Vector>(() => Surface));
         }
 

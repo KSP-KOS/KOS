@@ -1,34 +1,33 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VesselSensors")]
     public class VesselSensors : Structure
     {
-        private Vector acceleration = new Vector(0, 0, 0);
-        private Vector geeForce = new Vector(0, 0, 0);
-        private double kerbolExposure;
-        private double temperature;
-        private double pressure;
+        private Vessel vessel;
+
 
         public VesselSensors(Vessel target)
         {
-            FindSensors(target);
+            vessel = target;
             InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
         {
-            AddSuffix("ACC", new Suffix<Vector>(() => acceleration));
-            AddSuffix("PRES", new Suffix<double>(() => pressure));
-            AddSuffix("TEMP", new Suffix<double>(() => temperature));
-            AddSuffix("GRAV", new Suffix<Vector>(() => geeForce));
-            AddSuffix("LIGHT", new Suffix<double>(() => kerbolExposure));
+            AddSuffix("ACC", new Suffix<Vector>(() => GetSensorVectorValue("ACC")));
+            AddSuffix("PRES", new Suffix<ScalarValue>(() => GetSensorDoubleValue("PRES")));
+            AddSuffix("TEMP", new Suffix<ScalarValue>(() => GetSensorDoubleValue("TEMP")));
+            AddSuffix("GRAV", new Suffix<Vector>(() => GetSensorVectorValue("GRAV")));
+            AddSuffix("LIGHT", new Suffix<ScalarValue>(() => GetSunLightValue()));
         }
 
-        private void FindSensors(Vessel target)
+        private Vector GetSensorVectorValue (string sensorType)
         {
-            foreach (var part in target.Parts)
+            foreach (var part in vessel.Parts)
             {
                 if (part.State != PartStates.ACTIVE && part.State != PartStates.IDLE) continue;
 
@@ -36,29 +35,65 @@ namespace kOS.Suffixed
                 {
                     if (module is ModuleEnviroSensor)
                     {
-                        switch (module.Fields.GetValue("sensorType").ToString())
+                        var moduleSensorType = module.Fields.GetValue("sensorType").ToString();
+                            if (moduleSensorType != sensorType) continue;
+                        switch (moduleSensorType)
                         {
                             case "ACC":
-                                acceleration = new Vector(target.acceleration);
-                                break;
-                            case "PRES":
-                                pressure = target.staticPressurekPa;
-                                break;
-                            case "TEMP":
-                                temperature = part.temperature;
-                                break;
+                                return new Vector(vessel.acceleration);
                             case "GRAV":
-                                geeForce = new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position));
-                                break;
+                                return new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position));
+                                
                         }
-                    }
-                    foreach (var c in part.FindModulesImplementing<ModuleDeployableSolarPanel>())
-                    {
-                        kerbolExposure += c.sunAOA;
                     }
                 }
             }
+            throw new KOSException("Cannot find sensor for " + sensorType);
         }
+
+        private double GetSensorDoubleValue(string sensorType)
+        {
+            foreach (var part in vessel.Parts)
+            {
+                if (part.State != PartStates.ACTIVE && part.State != PartStates.IDLE) continue;
+
+                foreach (PartModule module in part.Modules)
+                {
+                    if (module is ModuleEnviroSensor)
+                    {
+                        var moduleSensorType = module.Fields.GetValue("sensorType").ToString();
+                        if (moduleSensorType != sensorType) continue;
+                        switch (moduleSensorType)
+                        {
+                           
+                            case "PRES":
+                                return vessel.staticPressurekPa;
+                            case "TEMP":
+                                return part.temperature;
+                                
+                            
+                        }
+                    }
+                    
+                }
+            }
+            throw new KOSException("Cannot find sensor for " + sensorType);
+        }
+        private double GetSunLightValue()
+        {
+            double kerbolExposure = 0;
+            foreach (var part in vessel.Parts)
+            {
+                foreach (var c in part.FindModulesImplementing<ModuleDeployableSolarPanel>())
+                {
+                    kerbolExposure += c.sunAOA;
+                
+                }
+            }
+            return kerbolExposure;
+        }
+        
+
 
         public override string ToString()
         {

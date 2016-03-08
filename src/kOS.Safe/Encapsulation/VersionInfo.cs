@@ -2,6 +2,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Version")]
     public class VersionInfo : Structure
     {
         private readonly int major;
@@ -18,9 +19,9 @@ namespace kOS.Safe.Encapsulation
 
         private void VersionInitializeSuffixes()
         {
-            AddSuffix("MAJOR", new StaticSuffix<int>(() => major));
-            AddSuffix("MINOR", new StaticSuffix<int>(() => minor));
-            AddSuffix("BUILD", new StaticSuffix<int>(() => build));
+            AddSuffix("MAJOR", new StaticSuffix<ScalarValue>(() => major));
+            AddSuffix("MINOR", new StaticSuffix<ScalarValue>(() => minor));
+            AddSuffix("BUILD", new StaticSuffix<ScalarValue>(() => build));
         }
 
         public override string ToString()

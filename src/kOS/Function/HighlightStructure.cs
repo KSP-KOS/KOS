@@ -9,6 +9,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Function
 {
+    [kOS.Safe.Utilities.KOSNomenclature("HIGHLIGHT")]
     public class HighlightStructure : Structure, IUpdateObserver, IDisposable
     {
         private enum HighlightType
@@ -43,7 +44,7 @@ namespace kOS.Function
                 color = value;
                 stale = true;
             }));
-            AddSuffix("ENABLED", new SetSuffix<bool>(() => enabled, value =>
+            AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => enabled, value =>
             {
                 enabled = value;
                 stale = true;

@@ -1,11 +1,11 @@
 .. _exenode:
 
-Advanced Tutorial
-=================
+Execute Node Script
+===================
 
-Let's try to automate one of the most common tasks in orbital maneuvering - execution of the maneuver node. In this tutorial I'll try to show you how to write a script for precise maneuver node execution.
+Let's try to automate one of the most common tasks in orbital maneuvering - execution of the maneuver node. In this tutorial I'll try to show you how to write a script for somewhat precise maneuver node execution.
 
-So to start our script we need to get the next available :ref:`maneuver node <_maneuver node>`::
+So to start our script we need to get the next available :ref:`maneuver node <maneuver node>`::
 
     set nd to nextnode().
 
@@ -17,9 +17,23 @@ Our next step is to calculate how much time our vessel needs to burn at full thr
     //calculate ship's max acceleration
     set max_acc to ship:maxthrust/ship:mass.
 
-    //now we just need to divide deltav:mag by our ship's max acceleration
+    // Now we just need to divide deltav:mag by our ship's max acceleration
+    // to get the estimated time of the burn.
+    //
+    // Please note, this is not exactly correct.  The real calculation
+    // needs to take into account the fact that the mass will decrease
+    // as you lose fuel during the burn.  In fact throwing the fuel out
+    // the back of the engine very fast is the entire reason you're able
+    // to thrust at all in space.  The proper calculation for this
+    // can be found easily enough online by searching for the phrase
+    //   "Tsiolkovsky rocket equation".
+    // This example here will keep it simple for demonstration purposes,
+    // but if you're going to build a serious node execution script, you
+    // need to look into the Tsiolkovsky rocket equation to account for
+    // the change in mass over time as you burn.
+    //
     set burn_duration to nd:deltav:mag/max_acc.
-    print "Estimated burn duration: " + round(burn_duration) + "s".
+    print "Crude Estimated burn duration: " + round(burn_duration) + "s".
 
 So now we have our node's deltav vector, ETA to the node and we calculated our burn duration. All that is left for us to do is wait until we are close to node's ETA less half of our burn duration. But we want to write a universal script, and some of our current and/or future ships can be quite slow to turn, so let's give us some time, 60 seconds, to prepare for the maneuver burn::
 
@@ -29,7 +43,7 @@ This wait can be tedious and you'll most likely end up warping some time, but we
 
 The wait has finished, and now we need to start turning our ship in the direction of the burn::
 
-    set np to lookdirup(nd:deltav, ship:facing:topvector). //points to node, keeping roll the same.
+    set np to nd:deltav. //points to node, don't care about the roll direction.
     lock steering to np.
 
     //now we need to wait until the burn vector and ship's facing are aligned
@@ -54,7 +68,7 @@ Now we are ready to burn. It is usually done in the `until` loop, checking main 
 
         //throttle is 100% until there is less than 1 second of time left to burn
         //when there is less than 1 second - decrease the throttle linearly
-        set tset to min(nd:deltav:mag/maxa_acc, 1).
+        set tset to min(nd:deltav:mag/max_acc, 1).
 
         //here's the tricky part, we need to cut the throttle as soon as our nd:deltav and initial deltav start facing opposite directions
         //this check is done via checking the dot product of those 2 vectors

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Persistence
 {
-    public class VolumeManager
+    public class VolumeManager : IVolumeManager
     {
         private readonly Dictionary<int, Volume> volumes;
         private Volume currentVolume;
@@ -31,7 +32,7 @@ namespace kOS.Safe.Persistence
             
             foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
-                if (String.Equals(kvp.Value.Name, name, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(kvp.Value.Name, name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     volumeId = kvp.Key;
                     break;
@@ -41,7 +42,7 @@ namespace kOS.Safe.Persistence
             return volumeId;
         }
 
-        private int GetVolumeId(Volume volume)
+        public int GetVolumeId(Volume volume)
         {
             int volumeId = -1;
 
@@ -59,11 +60,22 @@ namespace kOS.Safe.Persistence
 
         public Volume GetVolume(object volumeId)
         {
-            if (volumeId is int)
+            if (volumeId is string || volumeId is StringValue) return GetVolume(volumeId.ToString());
+            // Convert to int instead of cast in case the identifier is stored
+            // as an encapsulated ScalarValue, preventing an unboxing collision.
+            try
             {
-                return GetVolume((int)volumeId);
+                return GetVolume(Convert.ToInt32(volumeId));
             }
-            return GetVolume(volumeId.ToString());
+            catch (InvalidCastException)
+            {
+                int id = GetVolumeId(volumeId.ToString());
+                if (id >= 0)
+                {
+                    return GetVolume(id);
+                }
+                throw new kOS.Safe.Exceptions.KOSCastException(volumeId.GetType().Name, "Scalar|String|Volume");
+            }
         }
 
         public Volume GetVolume(string name)
@@ -135,7 +147,7 @@ namespace kOS.Safe.Persistence
         {
             // Remove volumes that are no longer attached
             var removals = new List<int>();
-            foreach (KeyValuePair<int, Volume> kvp in volumes)
+            foreach (var kvp in volumes)
             {
                 if (!(kvp.Value is Archive) && !attachedVolumes.Contains(kvp.Value))
                 {

@@ -21,6 +21,8 @@ General Rules
 The following are **reserved command keywords** and special
 operator symbols:
 
+.. highlight:: none
+
 **Arithmetic Operators**::
 
     +  -  *  /  ^  e  (  )
@@ -31,27 +33,33 @@ operator symbols:
 
 **Instructions and keywords**::
 
-    set  to  if  else  until  lock  unlock  print  at  on  toggle
-    wait  when  then  off  stage  clearscreen  add  remove  log
-    break  preserve  declare  parameter  switch  copy  from  rename
-    volume  file  delete  edit  run  compile  list  reboot  shutdown
-    for  unset  batch  deploy  in  all
+    add all at batch break clearscreen compile copy declare delete
+    deploy do do edit else file for from from function global if
+    in list local lock log off on once parameter preserve print reboot
+    remove rename run set shutdown stage step switch then to toggle
+    unlock unset until volume wait when
 
 **Other symbols**::
 
     {  }  [  ]  ,  :  //
 
+.. highlight:: kerboscript
+
 *Comments* consist of everything from a "//" symbol to the end of the line::
 
     set x to 1. // this is a comment.
+
+.. highlight:: none
 
 **Identifiers**: Identifiers consist of: a string of (letter, digit, or
 underscore). The first character must be a letter. The rest may be letters, digits or underscores. **Identifiers are case-insensitive**. The following are identical identifiers::
 
     My_Variable  my_varible  MY_VARAIBLE
 
+.. highlight:: kerboscript
+
 **case-insensitivity**
-    The same case-insensitivity applies throughout the entire language, with all keywords except when comparing literal strings. The values inside the strings are still case-sensitive, for example, the following will print "unequal"::
+    The same case-insensitivity applies throughout the entire language, with all keywords and when comparing literal strings. The values inside the strings are also case-insensitive, for example, the following will print "equal"::
 
         if "hello" = "HELLO" {
             print "equal".

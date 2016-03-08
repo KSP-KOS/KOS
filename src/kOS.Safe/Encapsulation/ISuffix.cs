@@ -1,8 +1,10 @@
-﻿namespace kOS.Safe.Encapsulation
+﻿using kOS.Safe.Encapsulation.Suffixes;
+
+namespace kOS.Safe.Encapsulation
 {
     public interface ISuffix
     {
-        object Get();
+        ISuffixResult Get();
         string Description { get; }
     }
 }

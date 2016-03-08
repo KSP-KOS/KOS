@@ -31,49 +31,49 @@ Structure
           - Description
 
         * - :attr:`NAME`
-          - string
+          - :ref:`string <string>`
           - name of this orbit
         * - :attr:`APOAPSIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - Maximum altitude
         * - :attr:`PERIAPSIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - Minimum altitude
         * - :attr:`BODY`
           - :struct:`Body`
           - Focal body of orbit
         * - :attr:`PERIOD`
-          - scalar (s)
+          - :ref:`scalar <scalar>` (s)
           - `orbital period`_
         * - :attr:`INCLINATION`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
           - `orbital inclination`_
         * - :attr:`ECCENTRICITY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `orbital eccentricity`_
         * - :attr:`SEMIMAJORAXIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - `semi-major axis`_
         * - :attr:`SEMIMINORAXIS`
-          - scalar (m)
+          - :ref:`scalar <scalar>` (m)
           - `semi-minor axis`_
         * - :attr:`LAN`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
           - Same as :attr:`LONGITUDEOFASCENDINGNODE`
         * - :attr:`LONGITUDEOFASCENDINGNODE`
-          - scalar (deg)
+          - :ref:`scalar <scalar>` (deg)
           - Longitude of the ascending node
         * - :attr:`ARGUMENTOFPERIAPSIS`
-          - scalar
+          - :ref:`scalar <scalar>`
           - `argument of periapsis`_
         * - :attr:`TRUEANOMALY`
-          - scalar
-          - `true anomaly`_
+          - :ref:`scalar <scalar>`
+          - `true anomaly`_ in degrees (not radians)
         * - :attr:`MEANANOMALYATEPOCH`
-          - scalar
-          - `mean anomaly`_
+          - :ref:`scalar <scalar>`
+          - `mean anomaly`_ in degrees (not radians)
         * - :attr:`TRANSITION`
-          - string
+          - :ref:`string <string>`
           - :ref:`Transition from this orbit <transitions>`
         * - :attr:`POSITION`
           - :struct:`Vector`
@@ -85,29 +85,26 @@ Structure
           - :struct:`Orbit`
           - Next :struct:`Orbit`
         * - :attr:`HASNEXTPATCH`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Has a next :struct:`Orbit`
-
-
-
 
 .. attribute:: Orbit:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     a name for this orbit.
 
 .. attribute:: Orbit:APOAPSIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     The max altitude expected to be reached.
 
 .. attribute:: Orbit:PERIAPSIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     The min altitude expected to be reached.
@@ -121,35 +118,35 @@ Structure
 
 .. attribute:: Orbit:PERIOD
 
-    :type: scalar (seconds)
+    :type: :ref:`scalar <scalar>` (seconds)
     :access: Get only
 
     `orbital period`_
 
 .. attribute:: Orbit:INCLINATION
 
-    :type: scalar (degree)
+    :type: :ref:`scalar <scalar>` (degree)
     :access: Get only
 
     `orbital inclination`_
 
 .. attribute:: Orbit:ECCENTRICITY
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     `orbital eccentricity`_
 
 .. attribute:: Orbit:SEMIMAJORAXIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     `semi-major axis`_
 
 .. attribute:: Orbit:SEMIMINORAXIS
 
-    :type: scalar (m)
+    :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
     `semi-minor axis`_
@@ -160,38 +157,55 @@ Structure
 
 .. attribute:: Orbit:LONGITUDEOFASCENDINGNODE
 
-    :type: scalar (deg)
+    :type: :ref:`scalar <scalar>` (deg)
     :access: Get only
 
-    Longitude of the ascending node. It's unclear what the basis line the game uses for this is, though. The real-world basis is the constellation Ares, which of course doesn't exist in the Kerbal universe.
+    The Longitude of the ascening node is the "celestial longitude" where
+    the orbit crosses the body's equator from its southern hemisphere to
+    its northern hemisphere
+
+    Note that the "celestial longitude" in this case is NOT the planetary
+    longitude of the orbit body.  "Celestial longitudes" are expressed
+    as the angle from the :ref:`Solar Prime Vector <solarprimevector>`,
+    not from the body's longitude.  In order to find out where it is
+    relative to the body's longitude, you will have to take into account
+    ``body:rotationangle``, and take into account that the body will
+    rotate by the time you get there.
 
 .. attribute:: Orbit:ARGUMENTOFPERIAPSIS
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     `argument of periapsis`_
 
 .. attribute:: Orbit:TRUEANOMALY
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
-    `true anomaly`_
+    `true anomaly`_ in degrees.  Even though orbital parameters are
+    traditionally done in radians, in keeping with the kOS standard
+    of making everything into degrees, they are given as degrees by
+    kOS.
 
 .. attribute:: Orbit:MEANANOMALYATEPOCH
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
-    `mean anomaly`_
+    `mean anomaly`_  in degrees. Even though orbital parameters are
+    traditionally done in radians, in keeping with the kOS standard
+    of making everything into degrees, they are given as degrees by
+    kOS.
+
 
 .. attribute:: Orbit:TRANSITION
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
-    Describes the way in which this orbit will end and become a different orbit, with a value taken `from this list <transitions>`_.
+    Describes the way in which this orbit will end and become a different orbit, with a value taken :ref:`from this list <transitions>`.
 
 .. attribute:: Orbit:POSITION
 
@@ -216,7 +230,7 @@ Structure
 
 .. attribute:: Orbit:HASNEXTPATCH
 
-    boolean
+    :ref:`boolean <boolean>`
     :access: Get only
 
     If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then ``HASNEXTPATCH`` will be false.

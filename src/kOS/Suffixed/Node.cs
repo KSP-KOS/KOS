@@ -6,6 +6,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Node")]
     public class Node : Structure
     {
         private static readonly Dictionary<ManeuverNode, Node> nodeLookup;
@@ -53,7 +54,7 @@ namespace kOS.Suffixed
         {
             AddSuffix(new[] {"DELTAV", "BURNVECTOR"}, new Suffix<Vector>(GetBurnVector));
 
-            AddSuffix("ETA", new SetSuffix<double>(
+            AddSuffix("ETA", new SetSuffix<ScalarValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -66,7 +67,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("PROGRADE", new SetSuffix<double>(
+            AddSuffix("PROGRADE", new SetSuffix<ScalarValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -79,7 +80,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("RADIALOUT", new SetSuffix<double>(
+            AddSuffix("RADIALOUT", new SetSuffix<ScalarValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -91,7 +92,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("NORMAL", new SetSuffix<double>(
+            AddSuffix("NORMAL", new SetSuffix<ScalarValue>(
                 () =>
                 {
                     FromNodeRef();
@@ -103,7 +104,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("ORBIT", new Suffix<OrbitInfo>(() =>
+            AddSuffix(new[] {"OBT", "ORBIT"}, new Suffix<OrbitInfo>(() =>
             {
                 if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
                 return new OrbitInfo(nodeRef.nextPatch, shared);
@@ -125,6 +126,12 @@ namespace kOS.Suffixed
                 throw new KOSLowTechException("use maneuver nodes", careerReason);
 
             vesselRef = v;
+
+            if (v.patchedConicSolver == null)
+                throw new KOSSituationallyInvalidException(
+                    "A KSP limitation makes it impossible to access the manuever nodes of this vessel at this time. " +
+                    "(perhaps it's not the active vessel?)");
+
             nodeRef = v.patchedConicSolver.AddManeuverNode(time);
 
             UpdateNodeDeltaV();
@@ -152,6 +159,11 @@ namespace kOS.Suffixed
 
             nodeLookup.Remove(nodeRef);
 
+            if (vesselRef.patchedConicSolver == null)
+                throw new KOSSituationallyInvalidException(
+                    "A KSP limitation makes it impossible to access the manuever nodes of this vessel at this time. " +
+                    "(perhaps it's not the active vessel?)");
+
             vesselRef.patchedConicSolver.RemoveManeuverNode(nodeRef);
 
             nodeRef = null;
@@ -166,6 +178,8 @@ namespace kOS.Suffixed
 
         private void ToNodeRef()
         {
+            if (nodeRef == null) return;
+
             nodeRef.OnGizmoUpdated(new Vector3d(radialOut, normal, prograde), time);
         }
 

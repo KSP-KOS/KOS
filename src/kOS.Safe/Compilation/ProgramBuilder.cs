@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Compilation
 {
@@ -79,8 +80,11 @@ namespace kOS.Safe.Compilation
         {
             if (linkedObject.MainCode.Count <= 0) return;
 
-            var jumpOpcode = new OpcodeBranchJump();
-            jumpOpcode.DestinationLabel = GetEntryPointLabel(linkedObject);
+            var jumpOpcode = new OpcodeBranchJump
+            {
+                DestinationLabel = GetEntryPointLabel(linkedObject)
+            };
+
             linkedObject.FunctionsCode.Insert(0, jumpOpcode);
         }
 
@@ -92,19 +96,27 @@ namespace kOS.Safe.Compilation
 
         protected virtual void AddEndOfProgram(CodePart linkedObject, bool isMainProgram)
         {
+            // possible refactor: this logic needs to be moved into the compiler
+            // itself eventually, so that we can make an "exit" statement.  As it stands,
+            // the fact that the final exit code is only dealt with here outside the
+            // compiler, and the fact that it changes depending on if it's called from
+            // the interpreter or from another program (the interpreter doesn't expect an exit
+            // code, and won't pop it, which is the reason for this if/else below), is
+            // what makes that non-trivial.
             if (isMainProgram)
             {
+                linkedObject.MainCode.Add(new OpcodePop()); // to consume the argbottom mark.
                 linkedObject.MainCode.Add(new OpcodeEOP());
             }
             else
             {
                 linkedObject.MainCode.Add(new OpcodePush(0)); // all Returns now need a dummy return value on them.
-                linkedObject.MainCode.Add(new OpcodeReturn());
+                linkedObject.MainCode.Add(new OpcodeReturn(0));
             }
         }
 
         private void ReplaceLabels(List<Opcode> program)
-        {
+        {            
             var labels = new Dictionary<string, int>();
 
             // get the index of every label
@@ -112,6 +124,18 @@ namespace kOS.Safe.Compilation
             {
                 if (program[index].Label != string.Empty)
                 {
+                    if (labels.ContainsKey(program[index].Label))
+                    {
+                        // This is one of those "should never happen" errors that if it happens
+                        // it means kOS devs screwed up - so dump the partially relabeled program
+                        // to the log just to help in diagnosing the bug report that may happen:
+                        //
+                        Utilities.SafeHouse.Logger.LogError("=====Relabeled Program so far is: =========");
+                        Utilities.SafeHouse.Logger.LogError(Utilities.Debug.GetCodeFragment(program));
+
+                        throw new Exceptions.KOSCompileException(LineCol.Unknown(), string.Format(
+                            "ProgramBuilder.ReplaceLabels: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
+                    }
                     labels.Add(program[index].Label, index);
                 }
             }

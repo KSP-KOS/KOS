@@ -34,10 +34,10 @@ structure is defined as follows:
           - :ref:`color <color>`
           - the color that will be used by the highlight
         * - :ENABLED
-          - bool
+          - :ref:`boolean <boolean>`
           - controls the visibility of the highlight
 		
-Example:
+Example::
     
 	list elements in elist.
 	

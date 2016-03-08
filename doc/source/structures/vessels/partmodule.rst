@@ -29,12 +29,21 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
         * - :attr:`ALLFIELDS`
           - :struct:`List` of strings
           - Accessible fields
+        * - :attr:`ALLFIELDNAMES`
+          - :struct:`List` of strings
+          - Accessible fields (name only)
         * - :attr:`ALLEVENTS`
           - :struct:`List` of strings
           - Triggerable events
+        * - :attr:`ALLEVENTNAMES`
+          - :struct:`List` of strings
+          - Triggerable event names
         * - :attr:`ALLACTIONS`
           - :struct:`List` of strings
           - Triggerable actions
+        * - :attr:`ALLACTIONNAMES`
+          - :struct:`List` of strings
+          - Triggerable event names
         * - :meth:`GETFIELD(name)`
           -
           - Get value of a field by name
@@ -48,13 +57,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
           -
           - Activate action by name with True or False
         * - :meth:`HASFIELD(name)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if field exists
         * - :meth:`HASEVENT(name)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if event exists
         * - :meth:`HASACTION(name)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if action exists
 
 
@@ -81,6 +90,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPFields on this PartModule that the kos script is CURRENTLY allowed to get or set with :GETFIELD or :SETFIELD. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
 
+.. attribute:: PartModule:ALLFIELDNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+     
 .. attribute:: PartModule:ALLEVENTS
 
     :access: Get only
@@ -88,6 +104,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPEvents on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOEVENT. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
 
+.. attribute:: PartModule:ALLEVENTNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLEVENTS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+     
 .. attribute:: PartModule:ALLACTIONS
 
     :access: Get only
@@ -95,6 +118,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPActions on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOACTION. Note the Security access comments below.
 
+.. attribute:: PartModule:ALLACTIONNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLACTIONS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+     
 .. method:: PartModule:GETFIELD(name)
 
     :parameter name: (string) Name of the field
@@ -108,37 +138,43 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
 
+    WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+
 .. method:: PartModule:DOEVENT(name)
 
     :parameter name: (string) Name of the event
 
     Trigger an "event button" that is on the rightclick part menu at the moment. Note the Security comments below.
 
+    WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+
 .. method:: PartModule:DOACTION(name,bool)
 
     :parameter name: (string) Name of the action
-    :parameter bool: (boolean) Value to set: True or False
+    :parameter bool: (:ref:`Boolean <boolean>`) Value to set: True or False
 
-    Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The boolean value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
+    Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The :ref:`Boolean <boolean>` value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
+
+    WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. method:: PartModule:HASFIELD(name)
 
     :parameter name: (string) Name of the field
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Return true if the given field name is currently available for use with :GETFIELD or :SETFIELD on this PartModule, false otherwise.
 
 .. method:: PartModule:HASEVENT(name)
 
     :parameter name: (string) Name of the event
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Return true if the given event name is currently available for use with :DOEVENT on this PartModule, false otherwise.
 
 .. method:: PartModule:HASACTION(name)
 
     :parameter name: (string) Name of the action
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Return true if the given action name is currently available for use with :DOACTION on this PartModule, false otherwise.
 

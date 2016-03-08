@@ -54,23 +54,23 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.POWER, regex);
             Tokens.Add(TokenType.POWER);
 
-            regex = new Regex(@"\be\b");
+            regex = new Regex(@"(?i)\be\b");
             Patterns.Add(TokenType.E, regex);
             Tokens.Add(TokenType.E);
 
-            regex = new Regex(@"\bnot\b");
+            regex = new Regex(@"(?i)\bnot\b");
             Patterns.Add(TokenType.NOT, regex);
             Tokens.Add(TokenType.NOT);
 
-            regex = new Regex(@"\band\b");
+            regex = new Regex(@"(?i)\band\b");
             Patterns.Add(TokenType.AND, regex);
             Tokens.Add(TokenType.AND);
 
-            regex = new Regex(@"\bor\b");
+            regex = new Regex(@"(?i)\bor\b");
             Patterns.Add(TokenType.OR, regex);
             Tokens.Add(TokenType.OR);
 
-            regex = new Regex(@"\btrue\b|\bfalse\b");
+            regex = new Regex(@"(?i)\btrue\b|\bfalse\b");
             Patterns.Add(TokenType.TRUEFALSE, regex);
             Tokens.Add(TokenType.TRUEFALSE);
 
@@ -78,179 +78,195 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COMPARATOR, regex);
             Tokens.Add(TokenType.COMPARATOR);
 
-            regex = new Regex(@"\bset\b");
+            regex = new Regex(@"(?i)\bset\b");
             Patterns.Add(TokenType.SET, regex);
             Tokens.Add(TokenType.SET);
 
-            regex = new Regex(@"\bto\b");
+            regex = new Regex(@"(?i)\bto\b");
             Patterns.Add(TokenType.TO, regex);
             Tokens.Add(TokenType.TO);
 
-            regex = new Regex(@"\bis\b");
+            regex = new Regex(@"(?i)\bis\b");
             Patterns.Add(TokenType.IS, regex);
             Tokens.Add(TokenType.IS);
 
-            regex = new Regex(@"\bif\b");
+            regex = new Regex(@"(?i)\bif\b");
             Patterns.Add(TokenType.IF, regex);
             Tokens.Add(TokenType.IF);
 
-            regex = new Regex(@"\belse\b");
+            regex = new Regex(@"(?i)\belse\b");
             Patterns.Add(TokenType.ELSE, regex);
             Tokens.Add(TokenType.ELSE);
 
-            regex = new Regex(@"\buntil\b");
+            regex = new Regex(@"(?i)\buntil\b");
             Patterns.Add(TokenType.UNTIL, regex);
             Tokens.Add(TokenType.UNTIL);
 
-            regex = new Regex(@"\block\b");
+            regex = new Regex(@"(?i)\bstep\b");
+            Patterns.Add(TokenType.STEP, regex);
+            Tokens.Add(TokenType.STEP);
+
+            regex = new Regex(@"(?i)\bdo\b");
+            Patterns.Add(TokenType.DO, regex);
+            Tokens.Add(TokenType.DO);
+
+            regex = new Regex(@"(?i)\block\b");
             Patterns.Add(TokenType.LOCK, regex);
             Tokens.Add(TokenType.LOCK);
 
-            regex = new Regex(@"\bunlock\b");
+            regex = new Regex(@"(?i)\bunlock\b");
             Patterns.Add(TokenType.UNLOCK, regex);
             Tokens.Add(TokenType.UNLOCK);
 
-            regex = new Regex(@"\bprint\b");
+            regex = new Regex(@"(?i)\bprint\b");
             Patterns.Add(TokenType.PRINT, regex);
             Tokens.Add(TokenType.PRINT);
 
-            regex = new Regex(@"\bat\b");
+            regex = new Regex(@"(?i)\bat\b");
             Patterns.Add(TokenType.AT, regex);
             Tokens.Add(TokenType.AT);
 
-            regex = new Regex(@"\bon\b");
+            regex = new Regex(@"(?i)\bon\b");
             Patterns.Add(TokenType.ON, regex);
             Tokens.Add(TokenType.ON);
 
-            regex = new Regex(@"\btoggle\b");
+            regex = new Regex(@"(?i)\btoggle\b");
             Patterns.Add(TokenType.TOGGLE, regex);
             Tokens.Add(TokenType.TOGGLE);
 
-            regex = new Regex(@"\bwait\b");
+            regex = new Regex(@"(?i)\bwait\b");
             Patterns.Add(TokenType.WAIT, regex);
             Tokens.Add(TokenType.WAIT);
 
-            regex = new Regex(@"\bwhen\b");
+            regex = new Regex(@"(?i)\bwhen\b");
             Patterns.Add(TokenType.WHEN, regex);
             Tokens.Add(TokenType.WHEN);
 
-            regex = new Regex(@"\bthen\b");
+            regex = new Regex(@"(?i)\bthen\b");
             Patterns.Add(TokenType.THEN, regex);
             Tokens.Add(TokenType.THEN);
 
-            regex = new Regex(@"\boff\b");
+            regex = new Regex(@"(?i)\boff\b");
             Patterns.Add(TokenType.OFF, regex);
             Tokens.Add(TokenType.OFF);
 
-            regex = new Regex(@"\bstage\b");
+            regex = new Regex(@"(?i)\bstage\b");
             Patterns.Add(TokenType.STAGE, regex);
             Tokens.Add(TokenType.STAGE);
 
-            regex = new Regex(@"\bclearscreen\b");
+            regex = new Regex(@"(?i)\bclearscreen\b");
             Patterns.Add(TokenType.CLEARSCREEN, regex);
             Tokens.Add(TokenType.CLEARSCREEN);
 
-            regex = new Regex(@"\badd\b");
+            regex = new Regex(@"(?i)\badd\b");
             Patterns.Add(TokenType.ADD, regex);
             Tokens.Add(TokenType.ADD);
 
-            regex = new Regex(@"\bremove\b");
+            regex = new Regex(@"(?i)\bremove\b");
             Patterns.Add(TokenType.REMOVE, regex);
             Tokens.Add(TokenType.REMOVE);
 
-            regex = new Regex(@"\blog\b");
+            regex = new Regex(@"(?i)\blog\b");
             Patterns.Add(TokenType.LOG, regex);
             Tokens.Add(TokenType.LOG);
 
-            regex = new Regex(@"\bbreak\b");
+            regex = new Regex(@"(?i)\bbreak\b");
             Patterns.Add(TokenType.BREAK, regex);
             Tokens.Add(TokenType.BREAK);
 
-            regex = new Regex(@"\bpreserve\b");
+            regex = new Regex(@"(?i)\bpreserve\b");
             Patterns.Add(TokenType.PRESERVE, regex);
             Tokens.Add(TokenType.PRESERVE);
 
-            regex = new Regex(@"\bdeclare\b");
+            regex = new Regex(@"(?i)\bdeclare\b");
             Patterns.Add(TokenType.DECLARE, regex);
             Tokens.Add(TokenType.DECLARE);
 
-            regex = new Regex(@"\blocal\b");
+            regex = new Regex(@"(?i)\bdefined\b");
+            Patterns.Add(TokenType.DEFINED, regex);
+            Tokens.Add(TokenType.DEFINED);
+
+            regex = new Regex(@"(?i)\blocal\b");
             Patterns.Add(TokenType.LOCAL, regex);
             Tokens.Add(TokenType.LOCAL);
 
-            regex = new Regex(@"\bglobal\b");
+            regex = new Regex(@"(?i)\bglobal\b");
             Patterns.Add(TokenType.GLOBAL, regex);
             Tokens.Add(TokenType.GLOBAL);
 
-            regex = new Regex(@"\bparameter\b");
+            regex = new Regex(@"(?i)\bparameter\b");
             Patterns.Add(TokenType.PARAMETER, regex);
             Tokens.Add(TokenType.PARAMETER);
 
-            regex = new Regex(@"\bfunction\b");
+            regex = new Regex(@"(?i)\bfunction\b");
             Patterns.Add(TokenType.FUNCTION, regex);
             Tokens.Add(TokenType.FUNCTION);
 
-            regex = new Regex(@"\breturn\b");
+            regex = new Regex(@"(?i)\breturn\b");
             Patterns.Add(TokenType.RETURN, regex);
             Tokens.Add(TokenType.RETURN);
 
-            regex = new Regex(@"\bswitch\b");
+            regex = new Regex(@"(?i)\bswitch\b");
             Patterns.Add(TokenType.SWITCH, regex);
             Tokens.Add(TokenType.SWITCH);
 
-            regex = new Regex(@"\bcopy\b");
+            regex = new Regex(@"(?i)\bcopy\b");
             Patterns.Add(TokenType.COPY, regex);
             Tokens.Add(TokenType.COPY);
 
-            regex = new Regex(@"\bfrom\b");
+            regex = new Regex(@"(?i)\bfrom\b");
             Patterns.Add(TokenType.FROM, regex);
             Tokens.Add(TokenType.FROM);
 
-            regex = new Regex(@"\brename\b");
+            regex = new Regex(@"(?i)\brename\b");
             Patterns.Add(TokenType.RENAME, regex);
             Tokens.Add(TokenType.RENAME);
 
-            regex = new Regex(@"\bvolume\b");
+            regex = new Regex(@"(?i)\bvolume\b");
             Patterns.Add(TokenType.VOLUME, regex);
             Tokens.Add(TokenType.VOLUME);
 
-            regex = new Regex(@"\bfile\b");
+            regex = new Regex(@"(?i)\bfile\b");
             Patterns.Add(TokenType.FILE, regex);
             Tokens.Add(TokenType.FILE);
 
-            regex = new Regex(@"\bdelete\b");
+            regex = new Regex(@"(?i)\bdelete\b");
             Patterns.Add(TokenType.DELETE, regex);
             Tokens.Add(TokenType.DELETE);
 
-            regex = new Regex(@"\bedit\b");
+            regex = new Regex(@"(?i)\bedit\b");
             Patterns.Add(TokenType.EDIT, regex);
             Tokens.Add(TokenType.EDIT);
 
-            regex = new Regex(@"\brun\b");
+            regex = new Regex(@"(?i)\brun\b");
             Patterns.Add(TokenType.RUN, regex);
             Tokens.Add(TokenType.RUN);
 
-            regex = new Regex(@"\bcompile\b");
+            regex = new Regex(@"(?i)\bonce\b");
+            Patterns.Add(TokenType.ONCE, regex);
+            Tokens.Add(TokenType.ONCE);
+
+            regex = new Regex(@"(?i)\bcompile\b");
             Patterns.Add(TokenType.COMPILE, regex);
             Tokens.Add(TokenType.COMPILE);
 
-            regex = new Regex(@"\blist\b");
+            regex = new Regex(@"(?i)\blist\b");
             Patterns.Add(TokenType.LIST, regex);
             Tokens.Add(TokenType.LIST);
 
-            regex = new Regex(@"\breboot\b");
+            regex = new Regex(@"(?i)\breboot\b");
             Patterns.Add(TokenType.REBOOT, regex);
             Tokens.Add(TokenType.REBOOT);
 
-            regex = new Regex(@"\bshutdown\b");
+            regex = new Regex(@"(?i)\bshutdown\b");
             Patterns.Add(TokenType.SHUTDOWN, regex);
             Tokens.Add(TokenType.SHUTDOWN);
 
-            regex = new Regex(@"\bfor\b");
+            regex = new Regex(@"(?i)\bfor\b");
             Patterns.Add(TokenType.FOR, regex);
             Tokens.Add(TokenType.FOR);
 
-            regex = new Regex(@"\bunset\b");
+            regex = new Regex(@"(?i)\bunset\b");
             Patterns.Add(TokenType.UNSET, regex);
             Tokens.Add(TokenType.UNSET);
 
@@ -286,7 +302,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COLON, regex);
             Tokens.Add(TokenType.COLON);
 
-            regex = new Regex(@"\bin\b");
+            regex = new Regex(@"(?i)\bin\b");
             Patterns.Add(TokenType.IN, regex);
             Tokens.Add(TokenType.IN);
 
@@ -294,15 +310,15 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ARRAYINDEX, regex);
             Tokens.Add(TokenType.ARRAYINDEX);
 
-            regex = new Regex(@"\ball\b");
+            regex = new Regex(@"(?i)\ball\b");
             Patterns.Add(TokenType.ALL, regex);
             Tokens.Add(TokenType.ALL);
 
-            regex = new Regex(@"[a-z_][a-z0-9_]*");
+            regex = new Regex(@"(?i)[a-z_][a-z0-9_]*");
             Patterns.Add(TokenType.IDENTIFIER, regex);
             Tokens.Add(TokenType.IDENTIFIER);
 
-            regex = new Regex(@"[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*");
+            regex = new Regex(@"(?i)[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*");
             Patterns.Add(TokenType.FILEIDENT, regex);
             Tokens.Add(TokenType.FILEIDENT);
 
@@ -326,7 +342,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ATSIGN, regex);
             Tokens.Add(TokenType.ATSIGN);
 
-            regex = new Regex(@"\blazyglobal\b");
+            regex = new Regex(@"(?i)\blazyglobal\b");
             Patterns.Add(TokenType.LAZYGLOBAL, regex);
             Tokens.Add(TokenType.LAZYGLOBAL);
 
@@ -510,137 +526,142 @@ namespace kOS.Safe.Compilation.KS
             set_stmt= 7,
             if_stmt = 8,
             until_stmt= 9,
-            unlock_stmt= 10,
-            print_stmt= 11,
-            on_stmt = 12,
-            toggle_stmt= 13,
-            wait_stmt= 14,
-            when_stmt= 15,
-            onoff_stmt= 16,
-            onoff_trailer= 17,
-            stage_stmt= 18,
-            clear_stmt= 19,
-            add_stmt= 20,
-            remove_stmt= 21,
-            log_stmt= 22,
-            break_stmt= 23,
-            preserve_stmt= 24,
-            declare_identifier_clause= 25,
-            declare_parameter_clause= 26,
-            declare_function_clause= 27,
-            declare_lock_clause= 28,
-            declare_stmt= 29,
-            return_stmt= 30,
-            switch_stmt= 31,
-            copy_stmt= 32,
-            rename_stmt= 33,
-            delete_stmt= 34,
-            edit_stmt= 35,
-            run_stmt= 36,
-            compile_stmt= 37,
-            list_stmt= 38,
-            reboot_stmt= 39,
-            shutdown_stmt= 40,
-            for_stmt= 41,
-            unset_stmt= 42,
-            arglist = 43,
-            expr    = 44,
-            and_expr= 45,
-            compare_expr= 46,
-            arith_expr= 47,
-            multdiv_expr= 48,
-            unary_expr= 49,
-            factor  = 50,
-            suffix  = 51,
-            suffix_trailer= 52,
-            suffixterm= 53,
-            suffixterm_trailer= 54,
-            function_trailer= 55,
-            array_trailer= 56,
-            atom    = 57,
-            sci_number= 58,
-            number  = 59,
-            varidentifier= 60,
-            identifier_led_stmt= 61,
-            identifier_led_expr= 62,
+            fromloop_stmt= 10,
+            unlock_stmt= 11,
+            print_stmt= 12,
+            on_stmt = 13,
+            toggle_stmt= 14,
+            wait_stmt= 15,
+            when_stmt= 16,
+            onoff_stmt= 17,
+            onoff_trailer= 18,
+            stage_stmt= 19,
+            clear_stmt= 20,
+            add_stmt= 21,
+            remove_stmt= 22,
+            log_stmt= 23,
+            break_stmt= 24,
+            preserve_stmt= 25,
+            declare_identifier_clause= 26,
+            declare_parameter_clause= 27,
+            declare_function_clause= 28,
+            declare_lock_clause= 29,
+            declare_stmt= 30,
+            return_stmt= 31,
+            switch_stmt= 32,
+            copy_stmt= 33,
+            rename_stmt= 34,
+            delete_stmt= 35,
+            edit_stmt= 36,
+            run_stmt= 37,
+            compile_stmt= 38,
+            list_stmt= 39,
+            reboot_stmt= 40,
+            shutdown_stmt= 41,
+            for_stmt= 42,
+            unset_stmt= 43,
+            arglist = 44,
+            expr    = 45,
+            and_expr= 46,
+            compare_expr= 47,
+            arith_expr= 48,
+            multdiv_expr= 49,
+            unary_expr= 50,
+            factor  = 51,
+            suffix  = 52,
+            suffix_trailer= 53,
+            suffixterm= 54,
+            suffixterm_trailer= 55,
+            function_trailer= 56,
+            array_trailer= 57,
+            atom    = 58,
+            sci_number= 59,
+            number  = 60,
+            varidentifier= 61,
+            identifier_led_stmt= 62,
+            identifier_led_expr= 63,
 
             //Terminal tokens:
-            PLUSMINUS= 63,
-            MULT    = 64,
-            DIV     = 65,
-            POWER   = 66,
-            E       = 67,
-            NOT     = 68,
-            AND     = 69,
-            OR      = 70,
-            TRUEFALSE= 71,
-            COMPARATOR= 72,
-            SET     = 73,
-            TO      = 74,
-            IS      = 75,
-            IF      = 76,
-            ELSE    = 77,
-            UNTIL   = 78,
-            LOCK    = 79,
-            UNLOCK  = 80,
-            PRINT   = 81,
-            AT      = 82,
-            ON      = 83,
-            TOGGLE  = 84,
-            WAIT    = 85,
-            WHEN    = 86,
-            THEN    = 87,
-            OFF     = 88,
-            STAGE   = 89,
-            CLEARSCREEN= 90,
-            ADD     = 91,
-            REMOVE  = 92,
-            LOG     = 93,
-            BREAK   = 94,
-            PRESERVE= 95,
-            DECLARE = 96,
-            LOCAL   = 97,
-            GLOBAL  = 98,
-            PARAMETER= 99,
-            FUNCTION= 100,
-            RETURN  = 101,
-            SWITCH  = 102,
-            COPY    = 103,
-            FROM    = 104,
-            RENAME  = 105,
-            VOLUME  = 106,
-            FILE    = 107,
-            DELETE  = 108,
-            EDIT    = 109,
-            RUN     = 110,
-            COMPILE = 111,
-            LIST    = 112,
-            REBOOT  = 113,
-            SHUTDOWN= 114,
-            FOR     = 115,
-            UNSET   = 116,
-            BRACKETOPEN= 117,
-            BRACKETCLOSE= 118,
-            CURLYOPEN= 119,
-            CURLYCLOSE= 120,
-            SQUAREOPEN= 121,
-            SQUARECLOSE= 122,
-            COMMA   = 123,
-            COLON   = 124,
-            IN      = 125,
-            ARRAYINDEX= 126,
-            ALL     = 127,
-            IDENTIFIER= 128,
-            FILEIDENT= 129,
-            INTEGER = 130,
-            DOUBLE  = 131,
-            STRING  = 132,
-            EOI     = 133,
-            ATSIGN  = 134,
-            LAZYGLOBAL= 135,
-            EOF     = 136,
-            WHITESPACE= 137,
-            COMMENTLINE= 138
+            PLUSMINUS= 64,
+            MULT    = 65,
+            DIV     = 66,
+            POWER   = 67,
+            E       = 68,
+            NOT     = 69,
+            AND     = 70,
+            OR      = 71,
+            TRUEFALSE= 72,
+            COMPARATOR= 73,
+            SET     = 74,
+            TO      = 75,
+            IS      = 76,
+            IF      = 77,
+            ELSE    = 78,
+            UNTIL   = 79,
+            STEP    = 80,
+            DO      = 81,
+            LOCK    = 82,
+            UNLOCK  = 83,
+            PRINT   = 84,
+            AT      = 85,
+            ON      = 86,
+            TOGGLE  = 87,
+            WAIT    = 88,
+            WHEN    = 89,
+            THEN    = 90,
+            OFF     = 91,
+            STAGE   = 92,
+            CLEARSCREEN= 93,
+            ADD     = 94,
+            REMOVE  = 95,
+            LOG     = 96,
+            BREAK   = 97,
+            PRESERVE= 98,
+            DECLARE = 99,
+            DEFINED = 100,
+            LOCAL   = 101,
+            GLOBAL  = 102,
+            PARAMETER= 103,
+            FUNCTION= 104,
+            RETURN  = 105,
+            SWITCH  = 106,
+            COPY    = 107,
+            FROM    = 108,
+            RENAME  = 109,
+            VOLUME  = 110,
+            FILE    = 111,
+            DELETE  = 112,
+            EDIT    = 113,
+            RUN     = 114,
+            ONCE    = 115,
+            COMPILE = 116,
+            LIST    = 117,
+            REBOOT  = 118,
+            SHUTDOWN= 119,
+            FOR     = 120,
+            UNSET   = 121,
+            BRACKETOPEN= 122,
+            BRACKETCLOSE= 123,
+            CURLYOPEN= 124,
+            CURLYCLOSE= 125,
+            SQUAREOPEN= 126,
+            SQUARECLOSE= 127,
+            COMMA   = 128,
+            COLON   = 129,
+            IN      = 130,
+            ARRAYINDEX= 131,
+            ALL     = 132,
+            IDENTIFIER= 133,
+            FILEIDENT= 134,
+            INTEGER = 135,
+            DOUBLE  = 136,
+            STRING  = 137,
+            EOI     = 138,
+            ATSIGN  = 139,
+            LAZYGLOBAL= 140,
+            EOF     = 141,
+            WHITESPACE= 142,
+            COMMENTLINE= 143
     }
 
     public class Token

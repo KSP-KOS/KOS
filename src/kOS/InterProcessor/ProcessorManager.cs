@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using kOS.Module;
 using kOS.Safe.Compilation;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 
 namespace kOS.InterProcessor
 {
     public class ProcessorManager
     {
         // Use the attached volume as processor identifier
-        private readonly Dictionary<Volume, kOSProcessor> processors;
+        public Dictionary<Volume, kOSProcessor> processors { get; private set; }
 
         public ProcessorManager()
         {
@@ -25,7 +27,20 @@ namespace kOS.InterProcessor
             }
         }
 
-        private kOSProcessor GetProcessor(Volume volume)
+        public kOSProcessor GetProcessor(string name)
+        {
+            foreach (KeyValuePair<Volume, kOSProcessor> pair in processors)
+            {
+                if (pair.Value.Tag != null && String.Equals(pair.Value.Tag, name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return pair.Value;
+                }
+            }
+
+            return null;
+        }
+
+        public kOSProcessor GetProcessor(Volume volume)
         {
             if (processors.ContainsKey(volume))
             {

@@ -7,6 +7,7 @@ using FinePrint; // This is part of KSP's own DLL now.  The Waypoint info is in 
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Waypoint")]
     public class WaypointValue : Structure
     {
         protected Waypoint WrappedWaypoint { get; set; }
@@ -19,27 +20,21 @@ namespace kOS.Suffixed
             WrappedWaypoint = wayPoint;
             Shared = shared;
             InitializeSuffixes();
-
-            // greekMap is static, so whichever waypoint instance's constructor happens to
-            // get called first will make it, and from then on other waypoints don't need to
-            // keep re-initializing it:
-            if (greekMap == null)
-                InitializeGreekMap();
         }
 
         private void InitializeSuffixes()
         {
-            AddSuffix("DUMP", new NoArgsSuffix<string>(ToVerboseString)); // for debugging
-            AddSuffix("NAME", new NoArgsSuffix<string>(CookedName, "Name of waypoint as it appears on the map and contract"));
+            AddSuffix("DUMP", new NoArgsSuffix<StringValue>(ToVerboseString)); // for debugging
+            AddSuffix("NAME", new NoArgsSuffix<StringValue>(CookedName, "Name of waypoint as it appears on the map and contract"));
             AddSuffix("BODY", new NoArgsSuffix<BodyTarget>(() => new BodyTarget(GetBody(), Shared), "Celestial body the waypoint is attached to"));
             AddSuffix("GEOPOSITION", new NoArgsSuffix<GeoCoordinates>(BuildGeoCoordinates, "the LATLNG of this waypoint"));
             AddSuffix("POSITION", new NoArgsSuffix<Vector>(() => GetPosition() - new Vector(Shared.Vessel.findWorldCenterOfMass())));
-            AddSuffix("ALTITUDE", new NoArgsSuffix<double>(BuildSeaLevelAltitude, "Altitude of waypoint above sea level.  Warning, this a point somewhere in the " + "midst of the contract altitude range, not the edge of the altitude range."));
-            AddSuffix("AGL", new NoArgsSuffix<double>(() => WrappedWaypoint.altitude, "Altitude of waypoint above ground.  Warning, this a point somewhere" + "in the midst of the contract altitude range, not the edge of the altitude range."));
-            AddSuffix("NEARSURFACE", new NoArgsSuffix<bool>(() => WrappedWaypoint.isOnSurface, "True if waypoint is a point near or on the body rather than high in orbit."));
-            AddSuffix("GROUNDED", new NoArgsSuffix<bool>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground.")); 
-            AddSuffix("INDEX", new NoArgsSuffix<int>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
-            AddSuffix("CLUSTERED", new NoArgsSuffix<bool>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
+            AddSuffix("ALTITUDE", new NoArgsSuffix<ScalarValue>(BuildSeaLevelAltitude, "Altitude of waypoint above sea level.  Warning, this a point somewhere in the " + "midst of the contract altitude range, not the edge of the altitude range."));
+            AddSuffix("AGL", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.altitude, "Altitude of waypoint above ground.  Warning, this a point somewhere" + "in the midst of the contract altitude range, not the edge of the altitude range."));
+            AddSuffix("NEARSURFACE", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isOnSurface, "True if waypoint is a point near or on the body rather than high in orbit."));
+            AddSuffix("GROUNDED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground.")); 
+            AddSuffix("INDEX", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
+            AddSuffix("CLUSTERED", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
         }
 
         private static void InitializeGreekMap()
@@ -64,7 +59,7 @@ namespace kOS.Suffixed
             return new Vector(GetBody().GetWorldSurfacePosition(WrappedWaypoint.latitude, WrappedWaypoint.longitude, BuildSeaLevelAltitude()));
         }
         
-        public double BuildSeaLevelAltitude()
+        public ScalarValue BuildSeaLevelAltitude()
         {
             GeoCoordinates gCoord = BuildGeoCoordinates();
             return gCoord.GetTerrainAltitude() + WrappedWaypoint.altitude;
@@ -72,25 +67,23 @@ namespace kOS.Suffixed
         
         public override string ToString()
         {
-            return String.Format("Waypoint \"{0}\"", CookedName() );
+            return string.Format("Waypoint \"{0}\"", CookedName() );
         }
         
-        public string CookedName()
+        public StringValue CookedName()
         {
-            return String.Format("{0}{1}",
+            return string.Format("{0}{1}",
                                  WrappedWaypoint.name,
-                                 (
-                                     WrappedWaypoint.isClustered ?
-                                     (" " + FinePrint.Utilities.StringUtilities.IntegerToGreek(WrappedWaypoint.index)) :
-                                      ""
-                                 )
+                                 WrappedWaypoint.isClustered ?
+                                     " " + FinePrint.Utilities.StringUtilities.IntegerToGreek(WrappedWaypoint.index) :
+                                     ""
                                 );
         }
         
-        public string ToVerboseString()
+        public StringValue ToVerboseString()
         {
             // Remember to change this if you alter the suffix names:
-            return String.Format("A Waypoint consisting of\n" +
+            return string.Format("A Waypoint consisting of\n" +
                                  "  name= {0}\n" +
                                  "  body= {1}\n" +
                                  "  geoposition= {2}\n" +
@@ -128,10 +121,18 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="greekLetterName">string name to check.  Case insensitively.</param>
         /// <param name="index">integer position in alphabet.  -1 if no match.</param>
-        /// <param name="baseName">the name after the greek suffix has been stripped off, if there is one.</param>
+        /// <param name="baseName">the name after the last term has been stripped off, if there are
+        /// space separated terms. Note that if the return value of this method is false, this
+        /// shouldn't be used and you should stick with the original full name.</param>
         /// <returns>true if there was a greek letter suffix</returns>
         public static bool GreekToInteger(string greekLetterName, out int index, out string baseName )
         {
+            // greekMap is static, and we only need to populate it once in
+            // the lifetime of the KSP process.  We'll do so the first time
+            // this method (the only one that uses it) gets called:
+            if (greekMap == null)
+                InitializeGreekMap();
+
             // Get lastmost word (or whole string if there's no spaces):
             int lastSpace = greekLetterName.LastIndexOf(' ');
             string lastTerm;

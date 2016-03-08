@@ -1,8 +1,11 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
+using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
-using KSP.IO;
+using kOS.Serialization;
+using System;
 
 namespace kOS.Function
 {
@@ -16,7 +19,7 @@ namespace kOS.Function
 
             if (shared.VolumeMgr != null)
             {
-                Volume volume = shared.VolumeMgr.GetVolume(volumeId);
+                Volume volume = volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId);
                 if (volume != null)
                 {
                     shared.VolumeMgr.SwitchTo(volume);
@@ -28,7 +31,7 @@ namespace kOS.Function
             }
         }
     }
-    
+
     [Function("edit")]
     public class FunctionEdit : FunctionBase
     {
@@ -37,13 +40,11 @@ namespace kOS.Function
             string fileName = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            // If no filename extension, then give it one:
-            fileName = PersistenceUtilities.CookedFilename(fileName, Volume.KERBOSCRIPT_EXTENSION);
-            
             if (shared.VolumeMgr != null)
             {
                 Volume vol = shared.VolumeMgr.CurrentVolume;
-                shared.Window.OpenPopupEditor( vol, fileName );
+                var volumeFile = vol.OpenOrCreate(fileName);
+                shared.Window.OpenPopupEditor(vol, volumeFile.Name);
             }
         }
     }
@@ -67,13 +68,13 @@ namespace kOS.Function
 
                 if (direction == "from")
                 {
-                    origin = shared.VolumeMgr.GetVolume(volumeId);
+                    origin = volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId);
                     destination = shared.VolumeMgr.CurrentVolume;
                 }
                 else
                 {
                     origin = shared.VolumeMgr.CurrentVolume;
-                    destination = shared.VolumeMgr.GetVolume(volumeId);
+                    destination = volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId);
                 }
 
                 if (origin != null && destination != null)
@@ -83,10 +84,10 @@ namespace kOS.Function
                         throw new Exception("Cannot copy from a volume to the same volume.");
                     }
 
-                    ProgramFile file = origin.GetByName(fileName);
+                    VolumeFile file = origin.Open(fileName);
                     if (file != null)
                     {
-                        if (!destination.SaveFile(new ProgramFile(file)))
+                        if (destination.Save(file.Name, file.ReadAll()) == null)
                         {
                             throw new Exception("File copy failed");
                         }
@@ -110,7 +111,8 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string newName = PopValueAssert(shared, true).ToString();
-            object oldName = PopValueAssert(shared, true);
+            // old file name or, when we're renaming a volume, the old volume name or Volume instance
+            object volumeIdOrOldName = PopValueAssert(shared, true);
             string objectToRename = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
 
@@ -121,11 +123,11 @@ namespace kOS.Function
                     Volume volume = shared.VolumeMgr.CurrentVolume;
                     if (volume != null)
                     {
-                        if (volume.GetByName(newName) == null)
+                        if (volume.Open(newName) == null)
                         {
-                            if (!volume.RenameFile(oldName.ToString(), newName))
+                            if (!volume.RenameFile(volumeIdOrOldName.ToString(), newName))
                             {
-                                throw new Exception(string.Format("File '{0}' not found", oldName));
+                                throw new Exception(string.Format("File '{0}' not found", volumeIdOrOldName));
                             }
                         }
                         else
@@ -140,7 +142,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    Volume volume = shared.VolumeMgr.GetVolume(oldName);
+                    Volume volume = volumeIdOrOldName is Volume ? volumeIdOrOldName as Volume : shared.VolumeMgr.GetVolume(volumeIdOrOldName);
                     if (volume != null)
                     {
                         if (volume.Renameable)
@@ -172,11 +174,11 @@ namespace kOS.Function
 
             if (shared.VolumeMgr != null)
             {
-                Volume volume = volumeId != null ? shared.VolumeMgr.GetVolume(volumeId) : shared.VolumeMgr.CurrentVolume;
+                Volume volume = volumeId != null ? (volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId)) : shared.VolumeMgr.CurrentVolume;
 
                 if (volume != null)
                 {
-                    if (!volume.DeleteByName(fileName))
+                    if (!volume.Delete(fileName))
                     {
                         throw new Exception(string.Format("File '{0}' not found", fileName));
                     }
@@ -186,6 +188,97 @@ namespace kOS.Function
                     throw new Exception("Volume not found");
                 }
             }
+        }
+    }
+
+    [Function("writejson")]
+    public class FunctionWriteJson : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            SerializableStructure serialized = PopValueAssert(shared, true) as SerializableStructure;
+            AssertArgBottomAndConsume(shared);
+
+            if (serialized == null)
+            {
+                throw new KOSException("This type is not serializable");
+            }
+
+            string serializedString = new SerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
+
+            FileContent fileContent = new FileContent(serializedString);
+
+            if (shared.VolumeMgr != null)
+            {
+                shared.VolumeMgr.CurrentVolume.Save(fileName, fileContent);
+            }
+        }
+    }
+
+    [Function("readjson")]
+    public class FunctionReadJson : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Open(fileName);
+
+            if (volumeFile == null)
+            {
+                throw new KOSException("File does not exist: " + fileName);
+            }
+
+            object read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance);
+
+            ReturnValue = read;
+        }
+    }
+
+    [Function("exists")]
+    public class FunctionExists : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = shared.VolumeMgr.CurrentVolume.Exists(fileName);
+        }
+    }
+
+    [Function("open")]
+    public class FunctionOpen : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Open(fileName);
+
+            if (volumeFile == null)
+            {
+                throw new KOSException("File does not exist: " + fileName);
+            }
+
+            ReturnValue = volumeFile;
+        }
+    }
+
+    [Function("create")]
+    public class FunctionCreate : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Create(fileName);
+
+            ReturnValue = volumeFile;
         }
     }
 }

@@ -1,4 +1,4 @@
-.. _terminal:
+.. _terminalgui:
 
 Terminal and game environment
 =============================
@@ -14,17 +14,19 @@ Terminal and game environment
 
     Prints the selected text to the screen. Can print strings, or the result of an expression::
 
-        PRINT “Hello”.
+        PRINT "Hello".
         PRINT 4+1.
-        PRINT “4 times 8 is: “ + (4*8).
+        PRINT "4 times 8 is: " + (4*8).
 
 .. global:: SET TERMINAL:WIDTH. GET TERMINAL:WIDTH
 
      Gets or sets the terminal's width in characters.
+     For more information see :ref:`terminal struct <terminal>`.
 
 .. global:: SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT
 
      Gets or sets the terminal's height in characters.
+     For more information see :ref:`terminal struct <terminal>`.
 
 .. function:: AT(col,line)
 
@@ -33,9 +35,9 @@ Terminal and game environment
 
     Used in combination with :global:`PRINT`. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression::
 
-        PRINT “Hello” AT(0,10).
+        PRINT "Hello" AT(0,10).
         PRINT 4+1 AT(0,10).
-        PRINT “4 times 8 is: “ + (4*8) AT(0,10).
+        PRINT "4 times 8 is: " + (4*8) AT(0,10).
 
 .. global:: MAPVIEW
 

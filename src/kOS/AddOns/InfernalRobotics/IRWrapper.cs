@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-// TODO: Change this namespace to something specific to your plugin here.
 namespace kOS.AddOns.InfernalRobotics
 {
     public class IRWrapper
@@ -43,9 +42,9 @@ namespace kOS.AddOns.InfernalRobotics
             LogFormatted("IR Version:{0}", IRServoControllerType.Assembly.GetName().Version.ToString());
 
             IRServoMechanismType = AssemblyLoader.loadedAssemblies
-               .Select(a => a.assembly.GetExportedTypes())
-               .SelectMany(t => t)
-               .FirstOrDefault(t => t.FullName == "InfernalRobotics.Control.IMechanism");
+                .Select(a => a.assembly.GetExportedTypes())
+                .SelectMany(t => t)
+                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Control.IMechanism");
 
             if (IRServoMechanismType == null)
             {
@@ -120,7 +119,7 @@ namespace kOS.AddOns.InfernalRobotics
             }
 
             LogFormatted("Got Instance, Creating Wrapper Objects");
-            IRController = new InfernalRoboticsAPI(ActualServoController);
+            IRController = new InfernalRoboticsAPI();
             isWrapped = true;
             return true;
         }
@@ -132,22 +131,24 @@ namespace kOS.AddOns.InfernalRobotics
             private PropertyInfo apiReady;
             private object actualServoGroups;
 
-            public InfernalRoboticsAPI(object irServoController)
+            public InfernalRoboticsAPI()
             {
                 DetermineReady();
-                BuildServoGroups(irServoController);
+                BuildServoGroups();
             }
 
-            private void BuildServoGroups(object irServoController)
+            private void BuildServoGroups()
             {
-                LogFormatted("Getting ServoGroups Object");
                 var servoGroupsField = IRServoControllerType.GetField("ServoGroups");
                 if (servoGroupsField == null)
                     LogFormatted("Failed Getting ServoGroups fieldinfo");
+                else if (IRWrapper.ActualServoController == null)
+                {
+                    LogFormatted("ServoController Instance not found");
+                }
                 else
                 {
-                    actualServoGroups = servoGroupsField.GetValue(irServoController);
-                    LogFormatted("Success: " + (actualServoGroups != null));
+                    actualServoGroups = servoGroupsField.GetValue(IRWrapper.ActualServoController);
                 }
             }
 
@@ -162,7 +163,7 @@ namespace kOS.AddOns.InfernalRobotics
             {
                 get
                 {
-                    if (apiReady == null)
+                    if (apiReady == null || actualServoGroups == null)
                         return false;
 
                     return (bool)apiReady.GetValue(null, null);
@@ -173,6 +174,7 @@ namespace kOS.AddOns.InfernalRobotics
             {
                 get
                 {
+                    BuildServoGroups ();
                     return ExtractServoGroups(actualServoGroups);
                 }
             }
@@ -205,6 +207,7 @@ namespace kOS.AddOns.InfernalRobotics
             private readonly object actualControlGroup;
 
             private PropertyInfo nameProperty;
+            private PropertyInfo vesselProperty;
             private PropertyInfo forwardKeyProperty;
             private PropertyInfo expandedProperty;
             private PropertyInfo speedProperty;
@@ -227,6 +230,7 @@ namespace kOS.AddOns.InfernalRobotics
             private void FindProperties()
             {
                 nameProperty = IRControlGroupType.GetProperty("Name");
+                vesselProperty = IRControlGroupType.GetProperty("Vessel");
                 forwardKeyProperty = IRControlGroupType.GetProperty("ForwardKey");
                 reverseKeyProperty = IRControlGroupType.GetProperty("ReverseKey");
                 speedProperty = IRControlGroupType.GetProperty("Speed");
@@ -250,6 +254,11 @@ namespace kOS.AddOns.InfernalRobotics
             {
                 get { return (string)nameProperty.GetValue(actualControlGroup, null); }
                 set { nameProperty.SetValue(actualControlGroup, value, null); }
+            }
+
+            public Vessel Vessel
+            {
+                get { return vesselProperty != null ? (Vessel)vesselProperty.GetValue(actualControlGroup, null) : null; }
             }
 
             public string ForwardKey
@@ -319,8 +328,8 @@ namespace kOS.AddOns.InfernalRobotics
             private IList<IServo> ExtractServos(object actualServos)
             {
                 var listToReturn = new List<IServo>();
-                
-                if (actualServos == null)
+
+                if(actualServos == null)
                     return listToReturn;
 
                 try
@@ -422,15 +431,16 @@ namespace kOS.AddOns.InfernalRobotics
 
             private readonly object actualServo;
 
-            public uint UID
-            {
-                get { return (uint)UIDProperty.GetValue(actualServo, null); }
-            }
 
             public string Name
             {
                 get { return (string)nameProperty.GetValue(actualServo, null); }
                 set { nameProperty.SetValue(actualServo, value, null); }
+            }
+
+            public uint UID
+            {
+                get { return (uint)UIDProperty.GetValue(actualServo, null); }
             }
 
             public bool Highlight
@@ -594,6 +604,9 @@ namespace kOS.AddOns.InfernalRobotics
         {
             string Name { get; set; }
 
+            //can only be used in Flight, null checking is mandatory
+            Vessel Vessel { get; }
+
             string ForwardKey { get; set; }
 
             string ReverseKey { get; set; }
@@ -619,9 +632,9 @@ namespace kOS.AddOns.InfernalRobotics
 
         public interface IServo : IEquatable<IServo>
         {
-            uint UID { get; }
-
             string Name { get; set; }
+
+            uint UID { get; }
 
             bool Highlight { set; }
 

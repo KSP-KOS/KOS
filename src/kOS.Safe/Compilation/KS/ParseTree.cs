@@ -202,6 +202,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.until_stmt:
                     Value = Evaluntil_stmt(tree, paramlist);
                     break;
+                case TokenType.fromloop_stmt:
+                    Value = Evalfromloop_stmt(tree, paramlist);
+                    break;
                 case TokenType.unlock_stmt:
                     Value = Evalunlock_stmt(tree, paramlist);
                     break;
@@ -417,6 +420,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evaluntil_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalfromloop_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

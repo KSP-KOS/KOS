@@ -1,8 +1,8 @@
 using kOS.Safe.Binding;
-using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
+using kOS.Module;
 
 namespace kOS.Binding
 {
@@ -11,8 +11,14 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
+            shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
+
             shared.BindingMgr.AddSetter("TARGET", val =>
             {
+                if (shared.Vessel != FlightGlobals.ActiveVessel)
+                {
+                    throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("TARGET can only be set for the Active Vessel");
+                }
                 var targetable = val as IKOSTargetable;
                 if (targetable != null)
                 {
@@ -20,18 +26,21 @@ namespace kOS.Binding
                     return;
                 }
 
-                var body = VesselUtils.GetBodyByName(val.ToString());
-                if (body != null)
+                if (!string.IsNullOrEmpty(val.ToString().Trim()))
                 {
-                    VesselUtils.SetTarget(body);
-                    return;
-                }
+                    var body = VesselUtils.GetBodyByName(val.ToString());
+                    if (body != null)
+                    {
+                        VesselUtils.SetTarget(body);
+                        return;
+                    }
 
-                var vessel = VesselUtils.GetVesselByName(val.ToString(), shared.Vessel);
-                if (vessel != null)
-                {
-                    VesselUtils.SetTarget(vessel);
-                    return;
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), shared.Vessel);
+                    if (vessel != null)
+                    {
+                        VesselUtils.SetTarget(vessel);
+                        return;
+                    }
                 }
                 //Target not found, if we have a target we clear it
                 VesselUtils.UnsetTarget();
@@ -39,6 +48,10 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddGetter("TARGET", () =>
             {
+                if (shared.Vessel != FlightGlobals.ActiveVessel)
+                {
+                    throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("TARGET can only be returned for the Active Vessel");
+                }
                 var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                 var vessel = currentTarget as Vessel;
@@ -57,8 +70,16 @@ namespace kOS.Binding
                     return new DockingPortValue(dockingNode, shared);
                 }
 
-                return null;
+                throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("No TARGET is selected");
             });
+
+            shared.BindingMgr.AddGetter("HASTARGET", () =>
+            {
+                if (shared.Vessel != FlightGlobals.ActiveVessel) return false;
+                // the ship has a target if the object does not equal null.
+                return FlightGlobals.fetch.VesselTarget != null;
+            });
+
         }
     }
 }

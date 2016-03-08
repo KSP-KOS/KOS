@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Direction")]
+    [kOS.Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
     public class Direction : Structure
     {
         private Vector3d euler;
@@ -121,13 +123,13 @@ namespace kOS.Suffixed
         private void DirectionInitializeSuffixes()
         {
             AddSuffix("PITCH",
-                      new Suffix<double>(() => euler.x,
+                      new Suffix<ScalarValue>(() => euler.x,
                                          "The rotation around the universe's X axis.  The word 'PITCH' is a misnomer."));
             AddSuffix("YAW",
-                      new Suffix<double>(() => euler.y,
+                      new Suffix<ScalarValue>(() => euler.y,
                                          "The rotation around the universe's Y axis.  The word 'YAW' is a misnomer."));
             AddSuffix("ROLL",
-                      new Suffix<double>(() => euler.z,
+                      new Suffix<ScalarValue>(() => euler.z,
                                          "The rotation around the universe's Z axis.  The word 'ROLL' is a misnomer."));
             AddSuffix(new[] { "FOREVECTOR", "VECTOR" },
                       new Suffix<Vector>(() => new Vector(vector),
@@ -146,6 +148,16 @@ namespace kOS.Suffixed
         public static Direction operator *(Direction a, Direction b)
         {
             return new Direction(a.Rotation * b.Rotation);
+        }
+
+        public static Vector operator *(Direction a, Vector b)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
+        public static Vector operator *(Vector b, Direction a)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
         }
 
         public static Direction operator +(Direction a, Direction b)

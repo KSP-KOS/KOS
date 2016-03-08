@@ -1,49 +1,61 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("AggregateResource")]
     public class AggregateResourceValue : Structure
     {
         private readonly string name;
         private readonly SharedObjects shared;
-        private double amount;
-        private double capacity;
-        private readonly ListValue<PartValue> parts;
         private readonly float density;
+        private readonly List<PartResource> resources;
 
         public AggregateResourceValue(PartResourceDefinition definition, SharedObjects shared)
         {
             name = definition.name;
             density = definition.density;
             this.shared = shared;
-            amount = 0;
-            capacity = 0;
-            parts = new ListValue<PartValue>();
+            resources = new List<PartResource>();
             InitializeAggregateResourceSuffixes();
         }
 
         private void InitializeAggregateResourceSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("DENSITY", new Suffix<float>(() => density, "The density of the resource"));
-            AddSuffix("AMOUNT", new Suffix<double>(() => amount, "The resources currently available"));
-            AddSuffix("CAPACITY", new Suffix<double>(() => capacity, "The total storage capacity currently available"));
-            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => parts, "The containers for this resource"));
+            AddSuffix("NAME", new Suffix<StringValue>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("DENSITY", new Suffix<ScalarValue>(() => density, "The density of the resource"));
+            AddSuffix("AMOUNT", new Suffix<ScalarValue>(GetAmount, "The resources currently available"));
+            AddSuffix("CAPACITY", new Suffix<ScalarValue>(GetCapacity, "The total storage capacity currently available"));
+            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(GetParts, "The containers for this resource"));
+        }
+
+        private ListValue<PartValue> GetParts()
+        {
+            var parts = PartValueFactory.Construct(resources.Select(r => r.part), shared);
+            return ListValue<PartValue>.CreateList(parts);
+        }
+
+        private ScalarValue GetCapacity()
+        {
+            return resources.Sum(r => r.maxAmount);
+        }
+
+        private ScalarValue GetAmount()
+        {
+            return resources.Sum(r => r.amount);
         }
 
         public void AddResource(PartResource resource)
         {
-            amount += resource.amount;
-            capacity += resource.maxAmount;
-            parts.Add(new PartValue(resource.part, shared));
+            resources.Add(resource);
         }
 
         public override string ToString()
         {
-            return string.Format("SHIPRESOURCE({0},{1},{2})", name, amount, capacity);
+            return string.Format("SHIPRESOURCE({0},{1},{2})", name, GetAmount(), GetCapacity());
         }
 
         private static Dictionary<string, AggregateResourceValue> ProspectResources(IEnumerable<global::Part> parts, SharedObjects shared)

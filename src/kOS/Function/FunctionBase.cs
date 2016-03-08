@@ -4,6 +4,8 @@ using kOS.Suffixed;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
+using TimeSpan = kOS.Suffixed.TimeSpan;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
@@ -20,7 +22,20 @@ namespace kOS.Function
         /// it onto the stack manually, as that would result in a double-push.
         /// If you decline to set ReturnValue, it will get a default value of zero anyway.
         /// </summary>
-        public object ReturnValue {get; set;}
+        public object ReturnValue
+        {
+            get
+            {
+                // Convert from primitive types to encapsulated types so that functions
+                // do not explicitly need to return the encapsulated type.
+                return Structure.FromPrimitive(internalReturn);
+            }
+            set
+            {
+                internalReturn = value;
+            }
+        }
+        private object internalReturn = 0; // really should be 'null', but kerboscript can't deal with that.
         
         /// <summary>
         /// In the *extremely* rare case where a built-in function is NOT supposed to
@@ -53,7 +68,7 @@ namespace kOS.Function
             }
             catch(Exception)
             {
-                throw new KOSCastException(argument.GetType(),typeof(Double));
+                throw new KOSCastException(argument.GetType(),typeof(ScalarValue));
             }    
         }
 
@@ -65,7 +80,7 @@ namespace kOS.Function
             }
             catch (Exception)
             {
-                throw new KOSCastException(argument.GetType(),typeof(Int32));
+                throw new KOSCastException(argument.GetType(),typeof(ScalarValue));
             }
         }
 
@@ -89,24 +104,31 @@ namespace kOS.Function
             throw new KOSCastException(argument.GetType(),typeof(RgbaColor));
         }
 
-        protected Suffixed.TimeSpan GetTimeSpan(object argument)
+        protected TimeSpan GetTimeSpan(object argument)
         {
-            if (argument is Suffixed.TimeSpan)
+            var span = argument as TimeSpan;
+            if (span != null)
             {
-                return argument as Suffixed.TimeSpan;
+                return span;
             }
-            if (argument is Double || argument is int || argument is long || argument is float)
+            try
             {
-                return new Suffixed.TimeSpan( Convert.ToDouble(argument) );
+                // Convert to double instead of cast in case the identifier is stored
+                // as an encapsulated ScalarValue, preventing an unboxing collision.
+                return new TimeSpan(Convert.ToDouble(argument));
             }
-            throw new KOSCastException(argument.GetType(),typeof(Suffixed.TimeSpan));
+            catch
+            {
+                throw new KOSCastException(argument.GetType(), typeof(TimeSpan));
+            }
         }
 
         protected Orbitable GetOrbitable(object argument)
         {
-            if (argument is Orbitable)
+            var orbitable = argument as Orbitable;
+            if (orbitable != null)
             {
-                return argument as Orbitable;
+                return orbitable;
             }
             throw new KOSCastException(argument.GetType(),typeof(Orbitable));
         }
@@ -133,7 +155,7 @@ namespace kOS.Function
         protected void AssertArgBottomAndConsume(SharedObjects shared)
         {
             object shouldBeBottom = shared.Cpu.PopStack();
-            if (shouldBeBottom is string && ((string)shouldBeBottom).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (shouldBeBottom != null && shouldBeBottom.GetType() == OpcodeCall.ArgMarkerType)
                 return; // Assert passed.
             
             throw new KOSArgumentMismatchException("Too many arguments were passed to " + GetFuncName());
@@ -153,7 +175,7 @@ namespace kOS.Function
             while (stillInStack && !found)
             {
                 object peekItem = shared.Cpu.PeekRaw(depth, out stillInStack);
-                if (stillInStack && peekItem is string && ((string)peekItem).Equals(OpcodeCall.ARG_MARKER_STRING))
+                if (stillInStack && peekItem != null && peekItem.GetType() == OpcodeCall.ArgMarkerType)
                     found = true;
                 else
                     ++depth;
@@ -173,7 +195,7 @@ namespace kOS.Function
         protected object PopValueAssert(SharedObjects shared, bool barewordOkay = false)
         {
             object returnValue = shared.Cpu.PopValue(barewordOkay);
-            if (returnValue is string && ((string)returnValue).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
         }
@@ -187,9 +209,20 @@ namespace kOS.Function
         protected object PopStackAssert(SharedObjects shared)
         {
             object returnValue = shared.Cpu.PopStack();
-            if (returnValue is string && ((string)returnValue).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
+        }
+
+        /// <summary>
+        /// Identical to PopValueAssert, but with the additional step of coercing the result
+        /// into a Structure to be sure, so it won't return primitives.
+        /// </summary>
+        /// <returns>value after coercion into a kOS Structure</returns>
+        protected Structure PopStructureAssertEncapsulated(SharedObjects shared, bool barewordOkay = false)
+        {
+            object returnValue = PopValueAssert(shared, barewordOkay);
+            return Structure.FromPrimitiveWithAssert(returnValue);
         }
         
         protected string GetFuncName()

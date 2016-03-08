@@ -24,12 +24,14 @@ namespace kOS.Module
 
             CheckForLegacyArchive();
 
+            KOSNomenclature.PopulateMapping(typeof(kOS.Safe.Encapsulation.Structure).Assembly, this.GetType().Assembly);
         }
 
         private void BuildEnvironment()
         {
-            Safe.Utilities.SafeHouse.Init(
+            SafeHouse.Init(
                 Config.Instance, 
+                Core.VersionInfo,
                 Application.platform == RuntimePlatform.WindowsPlayer,
                 GameDatabase.Instance.PluginDataFolder + "/Ships/Script/"
                 );
@@ -49,7 +51,7 @@ namespace kOS.Module
                 return;
             }
 
-            if (Directory.Exists(Safe.Utilities.SafeHouse.ArchiveFolder))
+            if (Directory.Exists(SafeHouse.ArchiveFolder))
             {
                 return;
             }
@@ -76,7 +78,7 @@ namespace kOS.Module
             }
 
             SafeHouse.Logger.Log("ScriptMigrate START");
-            Directory.CreateDirectory(Safe.Utilities.SafeHouse.ArchiveFolder);
+            Directory.CreateDirectory(SafeHouse.ArchiveFolder);
 
             var files = Directory.GetFiles(legacyArchiveFolder);
 

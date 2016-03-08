@@ -62,16 +62,16 @@ Method 1: Use one of these pre-arranged named colors:
           - Description
 
         * - :R or :RED
-          - scalar
+          - :ref:`scalar <scalar>`
           - the red component of the color
         * - :G or :GREEN
-          - scalar
+          - :ref:`scalar <scalar>`
           - the green component of the color
         * - :B or :BLUE
-          - scalar
+          - :ref:`scalar <scalar>`
           - the blue component of the color
         * - :A or :ALPHA
-          - scalar
+          - :ref:`scalar <scalar>`
           - the alpha (how opaque: 1 = opaque, 0 = transparent) component of the color
         * - :HTML or :HEX
           - string
@@ -101,8 +101,8 @@ Examples::
     This global function creates a color from hue, saturation and value::
 
         SET myColor TO HSV(h,s,v).
-		
-	`More Information about HSV <http://en.wikipedia.org/wiki/HSL_and_HSV>`_,
+                
+        `More Information about HSV <http://en.wikipedia.org/wiki/HSL_and_HSV>`_,
 
     where:
 
@@ -126,7 +126,8 @@ Examples::
 
 .. structure:: HSVA
 
-	The HSVA structure contains all of the suffixes from the RGBA structure in addition to these
+    The HSVA structure contains all of the suffixes from the RGBA structure in addition to these
+
     .. list-table:: Members
         :header-rows: 1
         :widths: 2 1 4
@@ -136,15 +137,15 @@ Examples::
           - Description
 
         * - :H or :HUE
-          - scalar
+          - :ref:`scalar <scalar>`
           - the hue component of the color. It is a value from 0.0 to 360.0
         * - :S or :SATURATION
-          - scalar
+          - :ref:`scalar <scalar>`
           - the saturation component of the color. It has a value from 0.0 to 1.0
         * - :V or :VALUE
-          - scalar
+          - :ref:`scalar <scalar>`
           - the value component of the color. It has a value from 0.0 to 1.0
-		  
+                  
 
 Examples::
 

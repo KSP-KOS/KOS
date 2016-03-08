@@ -3,6 +3,7 @@ using kOS.Safe;
 using System.Collections.Generic;
 using kOS.Suffixed;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 
 namespace kOS
 {
@@ -35,7 +36,7 @@ namespace kOS
 
             string message = e.Message;
             
-            if (Config.Instance.VerboseExceptions && e is KOSException )
+            if (SafeHouse.Config.VerboseExceptions && e is KOSException )
             {
                 // As a first primitive attempt at excercising the verbose exceptions,
                 // Just use a CONFIG setting for how verbose to be.  This will need
@@ -56,6 +57,10 @@ namespace kOS
                     message += "\n\nMore Information at:\n" + url + "\n";
                 message += LINE_RULE;
             }
+
+            if (SafeHouse.Config.AudibleExceptions)
+                Shared.SoundMaker.BeginSound("error");
+
             LogToScreen(message);
             
             ExceptionHistory.Add(e);

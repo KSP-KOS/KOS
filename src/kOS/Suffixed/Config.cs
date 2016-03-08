@@ -1,32 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Utilities;
-using KSP.IO;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Screen;
+using KSP.IO;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Config")]
     public class Config : Structure, IConfig
     {
         private static Config instance;
         private readonly Dictionary<string, ConfigKey> keys;
         private readonly Dictionary<string, ConfigKey> alias;
         private readonly Dictionary<PropId, ConfigKey> properties;
-        private DateTime lastChangeTime;
 
         public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
         public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
         public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
         public bool EnableRTIntegration { get { return GetPropValue<bool>(PropId.EnableRTIntegration); } set { SetPropValue(PropId.EnableRTIntegration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
+        public bool ObeyHideUI { get { return GetPropValue<bool>(PropId.ObeyHideUI); } set { SetPropValue(PropId.ObeyHideUI, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
+        public bool AudibleExceptions { get { return GetPropValue<bool>(PropId.AudibleExceptions); } set { SetPropValue(PropId.AudibleExceptions, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
         public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
         public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
         public bool TelnetLoopback { get { return GetPropValue<bool>(PropId.TelnetLoopback); } set { SetPropValue(PropId.TelnetLoopback, value); } }        
         public bool UseBlizzyToolbarOnly { get { return GetPropValue<bool>(PropId.UseBlizzyToolbarOnly); } set { SetPropValue(PropId.UseBlizzyToolbarOnly, value); } }
+        public bool DebugEachOpcode { get { return GetPropValue<bool>(PropId.DebugEachOpcode); } set { SetPropValue(PropId.DebugEachOpcode, value); } }
 
         private Config()
         {
@@ -35,7 +38,7 @@ namespace kOS.Suffixed
             properties = new Dictionary<PropId, ConfigKey>();
             BuildValuesDictionary();
             LoadConfig();
-            lastChangeTime = DateTime.Now;
+            TimeStamp = DateTime.Now;
         }
 
         private void BuildValuesDictionary()
@@ -45,11 +48,14 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", true, false, true, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.ObeyHideUI , new ConfigKey("ObeyHideUI", "OBEYHIDEUI", "Obey UI hide (F2 key)", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
+            AddConfigKey(PropId.AudibleExceptions, new ConfigKey("AudibleExceptions", "AUDIOERR", "Sound effect when KOS gives an error", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
             AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
+            AddConfigKey(PropId.DebugEachOpcode , new ConfigKey("DebugEachOpcode", "DEBUGEACHOPCODE", "Unholy debug spam used by the kOS developers", false, false, true, typeof(bool)));
             if(ToolbarManager.ToolbarAvailable)
                 AddConfigKey(PropId.UseBlizzyToolbarOnly, new ConfigKey("UseBlizzyToolbarOnly", "BLIZZY", "Use Blizzy toolbar only. Takes effect on new scene.", false, false, true, typeof(bool)));
         }
@@ -65,12 +71,12 @@ namespace kOS.Suffixed
         {
             try
             {
-                var config = PluginConfiguration.CreateForType<Config>();
+                PluginConfiguration config = PluginConfiguration.CreateForType<Config>();
                 config.load();
 
-                foreach (var key in keys.Values)
+                foreach (ConfigKey key in keys.Values)
                 {
-                    var value = config[key.StringKey];
+                    object value = config[key.StringKey];
                     if (value != null)
                     {
                         key.Value = value;
@@ -100,16 +106,16 @@ namespace kOS.Suffixed
         private void SetPropValue(PropId id, object value)
         {
             if (! value.Equals(properties[id].Value))
-                lastChangeTime = DateTime.Now;
+                TimeStamp = DateTime.Now;
             properties[id].Value = value;
         }
         
         public void SaveConfig()
         {
-            var config = PluginConfiguration.CreateForType<Config>();
+            PluginConfiguration config = PluginConfiguration.CreateForType<Config>();
             config.load();
 
-            foreach (var key in keys.Values)
+            foreach (ConfigKey key in keys.Values)
             {
                 SaveConfigKey(key, config);
             }
@@ -119,7 +125,7 @@ namespace kOS.Suffixed
 
         private void SaveConfigKey(ConfigKey key)
         {
-            var config = PluginConfiguration.CreateForType<Config>();
+            PluginConfiguration config = PluginConfiguration.CreateForType<Config>();
             config.load();
             SaveConfigKey(key, config);
             config.save();
@@ -130,7 +136,7 @@ namespace kOS.Suffixed
             config.SetValue(key.StringKey, keys[key.StringKey.ToUpper()].Value);
         }
 
-        public override object GetSuffix(String suffixName)
+        public override ISuffixResult GetSuffix(string suffixName)
         {
             ConfigKey key = null;
 
@@ -143,10 +149,10 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            return key != null ? key.Value : base.GetSuffix(suffixName);
+            return key != null ? new SuffixResult(FromPrimitiveWithAssert(key.Value)) : base.GetSuffix(suffixName);
         }
 
-        public override bool SetSuffix(String suffixName, object value)
+        public override bool SetSuffix(string suffixName, object value)
         {
             ConfigKey key = null;
 
@@ -175,12 +181,9 @@ namespace kOS.Suffixed
         /// config values happened.  Used by KOSTollBarWindow to decide whether or not
         /// it needs to assume its cached values are stale and need re-loading.         
         /// </summary>
-        public DateTime TimeStamp()
-        {
-            return lastChangeTime;
-        }
+        public DateTime TimeStamp { get; private set; }
 
-        public List<ConfigKey> GetConfigKeys()
+        public IList<ConfigKey> GetConfigKeys()
         {
             return keys.Values.ToList();
         }
@@ -197,70 +200,15 @@ namespace kOS.Suffixed
             ShowStatistics = 3,
             EnableRTIntegration = 4,
             StartOnArchive = 5,
-            EnableSafeMode = 6,
-            VerboseExceptions = 7,
-            EnableTelnet = 8,
-            TelnetPort = 9,
-            TelnetLoopback = 10,
-            UseBlizzyToolbarOnly = 11
-        }
-    }
-
-    public class ConfigKey
-    {
-        private object val;
-        public string StringKey {get;private set;}
-        public string Alias {get;set;}
-        public string Name {get;set;}
-        public Type ValType {get;set;}
-        public object Value {get{return val;} set{ val = SafeSetValue(value); } }
-        public object MinValue {get;set;}
-        public object MaxValue {get;set;}
-
-        public ConfigKey(string stringKey, string alias, string name, object defaultValue, object min, object max, Type type)
-        {
-            StringKey = stringKey;
-            Alias = alias;
-            Name = name;
-            val = defaultValue;
-            MinValue = min;
-            MaxValue = max;
-            ValType = type;
-        }
-        
-        /// <summary>
-        /// Return the new value after it's been altered or the change was denied.
-        /// </summary>
-        /// <param name="newValue">attempted new value</param>
-        /// <returns>new value to actually use, maybe constrained or even unchanged if the attempted value is disallowed</returns>
-        private object SafeSetValue(object newValue)
-        {
-            object returnValue = Value;
-            if (newValue==null || (! ValType.IsInstanceOfType(newValue)))
-                return returnValue;
-
-            if (Value is int)
-            {
-                if ((int)newValue < (int)MinValue)
-                    returnValue = MinValue;
-                else if ((int)newValue > (int)MaxValue)
-                    returnValue = MaxValue;
-                else
-                    returnValue = newValue;
-                
-                // TODO: If and when we end up making warning-level exceptions that don't break
-                // the execution but still get logged, then log such a warning here mentioning
-                // if the value attempted was denied and changed if it was.
-            }
-            else if (Value is bool)
-            {
-                returnValue = newValue;
-            }
-            else
-            {
-                throw new Exception( "kOS CONFIG has new type that wasn't supported yet:  contact kOS developers" );
-            }
-            return returnValue;
+            ObeyHideUI = 6,
+            EnableSafeMode = 7,
+            AudibleExceptions = 8,
+            VerboseExceptions = 9,
+            EnableTelnet = 10,
+            TelnetPort = 11,
+            TelnetLoopback = 12,
+            UseBlizzyToolbarOnly = 13,
+            DebugEachOpcode = 14
         }
     }
 }
