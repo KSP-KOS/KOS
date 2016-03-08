@@ -15,6 +15,7 @@
 * Build the documentation in \docs\
 
 ### Post-Build
+* Update master branch from develop branch.
 * Build Github release with changelog and title
 * Copy Github release to Curseforge
 * Copy Github release to Kerbalstuff
