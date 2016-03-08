@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KUniverse 4th wall methods &mdash; kOS 0.19.1 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 0.19.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.19.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Vessel Load Distance" href="loaddistance.html"/>
         <link rel="prev" title="KOSDelegate" href="kosdelegate.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.1
+                0.19.2
               </div>
             
           
@@ -189,8 +189,7 @@
 <dt id="structure:KUNIVERSE">
 <em class="property">structure </em><code class="descname">KUniverse</code><a class="headerlink" href="#structure:KUNIVERSE" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#structure:KUNIVERSE" title="KUNIVERSE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KUniverse</span></code></a> is a special structure that allows your Kerboscript programs to access some of the functions that break the &#8220;4th Wall&#8221;.  It serves as a place to access object directly connected to the KSP game itself, rather than the interaction with the KSP world (vessels, planets, orbits, etc.).</p>
-<table border="1" class="docutils" id="id1">
-<caption><span class="caption-text">Members and Methods</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<table border="1" class="docutils">
 <colgroup>
 <col width="33%" />
 <col width="11%" />
@@ -220,17 +219,17 @@
 <td>Get</td>
 <td>Is revert to editor possible?</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:REVERTTOLAUNCH" title="KUNIVERSE:REVERTTOLAUNCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REVERTTOLAUNCH</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:REVERTTOLAUNCH" title="KUNIVERSE:REVERTTOLAUNCH method"><code class="xref ks ks-meth docutils literal"><span class="pre">REVERTTOLAUNCH</span></code></a></td>
 <td>none</td>
 <td>Method</td>
 <td>Invoke revert to launch</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:REVERTTOEDITOR" title="KUNIVERSE:REVERTTOEDITOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REVERTTOEDITOR</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:REVERTTOEDITOR" title="KUNIVERSE:REVERTTOEDITOR method"><code class="xref ks ks-meth docutils literal"><span class="pre">REVERTTOEDITOR</span></code></a></td>
 <td>none</td>
 <td>Method</td>
 <td>Invoke revert to editor</td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">REVERTTO(name)</span></code></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:REVERTTO" title="KUNIVERSE:REVERTTO method"><code class="xref ks ks-meth docutils literal"><span class="pre">REVERTTO(name)</span></code></a></td>
 <td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
 <td>Method</td>
 <td>Invoke revert to the named editor</td>
@@ -245,7 +244,7 @@
 <td>Get</td>
 <td>Number of hours per day (6 or 24) according to your game settings.</td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">DEBUGLOG(message)</span></code></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:DEBUGLOG" title="KUNIVERSE:DEBUGLOG method"><code class="xref ks ks-meth docutils literal"><span class="pre">DEBUGLOG(message)</span></code></a></td>
 <td>none</td>
 <td>Method</td>
 <td>Causes a <a class="reference internal" href="string.html#string"><span>string</span></a> to append to the Unity debug log file.</td>
@@ -255,15 +254,20 @@
 <td>Get</td>
 <td>Returns the set of default load and pack distances for the game.</td>
 </tr>
-<tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESEL</span></code></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="KUNIVERSE:ACTIVEVESSEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESSEL</span></code></a></td>
 <td><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 <td>Get/Set</td>
 <td>Returns the active vessel, or lets you set the active vessel.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-attr docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL(vessel)</span></code></a></td>
 <td>n/a</td>
-<td>Set</td>
+<td>Method</td>
 <td>Lets you switch active vessels even when the game refuses to allow it.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:FORCEACTIVE" title="KUNIVERSE:FORCEACTIVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></a></td>
+<td>n/a</td>
+<td>Method</td>
+<td>Same as <a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -319,32 +323,32 @@ to be false after reloading from a saved game where the vessel was
 already in existence in the saved file when you loaded the game.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:KUNIVERSE:REVERTTOLAUNCH">
-KUniverse:<code class="descname">REVERTTOLAUNCH</code><a class="headerlink" href="#attribute:KUNIVERSE:REVERTTOLAUNCH" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="method:KUNIVERSE:REVERTTOLAUNCH">
+KUniverse:<code class="descname">REVERTTOLAUNCH</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:REVERTTOLAUNCH" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">None.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None.</td>
 </tr>
 </tbody>
 </table>
 <p>Initiate the KSP game&#8217;s revert to launch function.  All progress so far will be lost, and the vessel will be returned to the launch pad or runway at the time it was initially launched.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:KUNIVERSE:REVERTTOEDITOR">
-KUniverse:<code class="descname">REVERTTOEDITOR</code><a class="headerlink" href="#attribute:KUNIVERSE:REVERTTOEDITOR" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="method:KUNIVERSE:REVERTTOEDITOR">
+KUniverse:<code class="descname">REVERTTOEDITOR</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:REVERTTOEDITOR" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">None.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None.</td>
 </tr>
 </tbody>
 </table>
@@ -434,6 +438,26 @@ KUniverse:<code class="descname">ACTIVEVESSEL</code><a class="headerlink" href="
 </dd></dl>
 
 <dl class="method">
+<dt id="method:KUNIVERSE:FORCESETACTIVEVESSEL">
+KUniverse:<code class="descname">FORCESETACTIVEVESSEL</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> to switch to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="method:KUNIVERSE:FORCEACTIVE">
 KUniverse:<code class="descname">FORCEACTIVE</code><span class="sig-paren">(</span>vessel<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:FORCEACTIVE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -450,7 +474,7 @@ KUniverse:<code class="descname">FORCEACTIVE</code><span class="sig-paren">(</sp
 </tr>
 </tbody>
 </table>
-<p>Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.</p>
+<p>Same as <code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -617,7 +641,7 @@ each OS.  Consult the list below to see where it is on your platform.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.1',
+            VERSION:'0.19.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
