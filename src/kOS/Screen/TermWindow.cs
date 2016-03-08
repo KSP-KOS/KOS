@@ -52,6 +52,7 @@ namespace kOS.Screen
         private readonly TimeSpan blinkCoolDownDuration = TimeSpan.FromMilliseconds(50);
         /// <summary>At what milliseconds-from-epoch timestamp will the current blink be over.</summary>
         private DateTime blinkEndTime;
+        /// <summary>text color that changes depending on if the computer is on</summary>
         private Color currentTextColor;
 
         /// <summary>Telnet repaints happen less often than Update()s.  Not every Update() has a telnet repaint happening.
@@ -780,7 +781,7 @@ namespace kOS.Screen
                 {
                     char c = lineBuffer[column];
                     if (c != 0 && c != 9 && c != 32)
-                        ShowCharacterByAscii(c, column, row, currentTextColor, reversingScreen,
+                        ShowCharacterByAscii(c, column, row, reversingScreen,
                                              charWidth, charHeight, screen.Brightness);
                 }
             }
@@ -792,7 +793,7 @@ namespace kOS.Screen
             
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor, reversingScreen,
+                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
                                      charWidth, charHeight, screen.Brightness);
             }
             
@@ -862,10 +863,10 @@ namespace kOS.Screen
             }
         }
         
-        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor, bool reversingScreen, int charWidth, int charHeight, float brightness)
+        void ShowCharacterByAscii(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, float brightness)
         {
             GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
-            GUI.color = AdjustColor(reversingScreen ? bgColor : textColor, brightness);            
+            GUI.color = AdjustColor(reversingScreen ? bgColor : currentTextColor, brightness);            
             GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), fontArray[ch], ScaleMode.StretchToFill, true);
             GUI.EndGroup();
         }
