@@ -13,11 +13,6 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
-        /// <summary>
-        /// Pixel size of one square section of the font template image file holding one character:
-        /// </summary>
-        private const int CHAR_SOURCE_SIZE = 8;
-        
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
         
@@ -57,6 +52,7 @@ namespace kOS.Screen
         private readonly TimeSpan blinkCoolDownDuration = TimeSpan.FromMilliseconds(50);
         /// <summary>At what milliseconds-from-epoch timestamp will the current blink be over.</summary>
         private DateTime blinkEndTime;
+        /// <summary>text color that changes depending on if the computer is on</summary>
         private Color currentTextColor;
 
         /// <summary>Telnet repaints happen less often than Update()s.  Not every Update() has a telnet repaint happening.
@@ -146,16 +142,25 @@ namespace kOS.Screen
         
         private void LoadFontArray()
         {
-            // Make it hold all possible ASCII values even though many will be blank pictures:
-            fontArray = new Texture2D[128];
+            // Calculate image size from the presumption that it is a hardcoded number of char
+            // pictures wide and that each image is square.
+            // Then calculate everything else dynamically from that so that
+            // you can experiment with swapping in different font image files and the code
+            // will still work without a recompile:
+            int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
+            int numRows = fontImage.width / charSourceSize;
+            int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
             
-            for (int i = 0 ; i < 128 ; ++i)
+            // Make it hold all possible ASCII values even though many will be blank pictures:
+            fontArray = new Texture2D[numCharImages];
+            
+            for (int i = 0 ; i < numCharImages ; ++i)
             {
                 // TextureFormat cannot be DXT1 or DXT5 if you want to ever perform a
                 // SetPixel on the texture (which we do).  So we start it off as a ARGB32
                 // first, long enough to perform the SetPixel call, then compress it
                 // afterward into a DXT5:
-                Texture2D charImage = new Texture2D(CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE, TextureFormat.ARGB32, true);
+                Texture2D charImage = new Texture2D(charSourceSize, charSourceSize, TextureFormat.ARGB32, false);
 
                 int tx = i % FONTIMAGE_CHARS_PER_ROW;
                 int ty = i / FONTIMAGE_CHARS_PER_ROW;
@@ -164,7 +169,7 @@ namespace kOS.Screen
                 // 3D (2D images put orgin at upper-left, 3D uses lower-left), it doesn't seem
                 // to apply this rule to textures loaded from files like the fontImage.
                 // Thus the difference requiring the upside-down Y coord below.
-                charImage.SetPixels(fontImage.GetPixels(tx * CHAR_SOURCE_SIZE, fontImage.height - (ty+1) * CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE, CHAR_SOURCE_SIZE));
+                charImage.SetPixels(fontImage.GetPixels(tx * charSourceSize, fontImage.height - (ty+1) * charSourceSize, charSourceSize, charSourceSize));
                 charImage.Compress(false);
                 charImage.Apply();
 
@@ -776,7 +781,7 @@ namespace kOS.Screen
                 {
                     char c = lineBuffer[column];
                     if (c != 0 && c != 9 && c != 32)
-                        ShowCharacterByAscii(c, column, row, currentTextColor, reversingScreen,
+                        ShowCharacterByAscii(c, column, row, reversingScreen,
                                              charWidth, charHeight, screen.Brightness);
                 }
             }
@@ -788,7 +793,7 @@ namespace kOS.Screen
             
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor, reversingScreen,
+                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
                                      charWidth, charHeight, screen.Brightness);
             }
             
@@ -858,10 +863,10 @@ namespace kOS.Screen
             }
         }
         
-        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor, bool reversingScreen, int charWidth, int charHeight, float brightness)
+        void ShowCharacterByAscii(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, float brightness)
         {
             GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
-            GUI.color = AdjustColor(reversingScreen ? bgColor : textColor, brightness);            
+            GUI.color = AdjustColor(reversingScreen ? bgColor : currentTextColor, brightness);            
             GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), fontArray[ch], ScaleMode.StretchToFill, true);
             GUI.EndGroup();
         }

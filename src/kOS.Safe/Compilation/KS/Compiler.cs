@@ -1192,9 +1192,13 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
-                case TokenType.suffixterm:   // TODO: If the exception in VisitSuffixTerm never gets
-                    VisitSuffixTerm(node);   // thrown during our testing, we can then safely remove
-                    break;                   // this clause from the switch.
+                // This never gets called anymore, but it's left here as
+                // a comment so future programmers who search for it will
+                // find this comment and realized that it's not an error
+                // for it to be missing.  It's missing-ness is deliberate:
+                // case TokenType.suffixterm:
+                //    VisitSuffixTerm(node);
+                //    break;
                 case TokenType.IDENTIFIER:
                     VisitIdentifier(node);
                     break;
@@ -1846,40 +1850,15 @@ namespace kOS.Safe.Compilation.KS
 
             return string.Empty;
         }
-
         
-        private void VisitSuffixTerm(ParseNode node)
-        {
-            // TODO: DELETE THIS METHOD BEFORE RELEASE OF 0.19.0
-            //
-            // NOTE: I suspect this method never ever gets called anymore, 
-            // having been superceeded by the work in VisitSuffix() quite a few
-            // months ago.  But with the tree walk of the compiler and its frequent
-            // use of the open-ended VisitNode(), it's quite hard to prove by
-            // eyeball that this is never called.
-            //
-            // Therefore I added this exception to complain loudly if any test
-            // program happens to make the compiler walk a path that uses this
-            // method.
-            
-            throw new KOSCompileException(node.Token, 
-                "TESTING TESTING TESTING.  TELL @dunbaratu IMMEDIATELY IF YOU SEE THIS ERROR. " +
-                "THIS MESSAGE IS A CHECK TO ENSURE THAT VisitSuffixTerm IS NEVER REALLY GETTING CALLED. " +
-                "IF NONE OF THE KOS DEVS EVER SEE THIS DURING OUR TESTS OF 0.19.0, THEN VisitSuffixTerm " +
-                "SHOULD BE DELETED BEFORE RELEASING 0.19.0" );
-            NodeStartHousekeeping(node);
-            
-            if (node.Nodes.Count > 1 &&
-                node.Nodes[1].Token.Type == TokenType.function_trailer)
-            {
-                // if a bracket follows an identifier then its a function call
-                VisitActualFunction(node.Nodes[1], true, GetIdentifierText(node));
-            }
-            else
-            {
-                VisitNode(node.Nodes[0]); // I'm not really a function call after all - just a wrapper around another node type.
-            }
-        }
+        // The fact that there is no VisitSuffixTerm method is not an omission or mistake.
+        // All the logic of this node of the parse tree is now handled by the parent nodes
+        // that come above this one instead.  I'm leaving this comment here so that future programmers
+        // searching this code don't attempt to fix this "mistake" by adding this method back in:
+        // private void VisitSuffixTerm(ParseNode node)
+        // {
+        //     // nothing here anymore.
+        // }
         
         private void VisitIdentifier(ParseNode node)
         {
