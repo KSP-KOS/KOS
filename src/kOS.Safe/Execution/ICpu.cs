@@ -34,6 +34,7 @@ namespace kOS.Safe.Execution
         void RemoveVariable(string identifier);
         int InstructionPointer { get; set; }
         double SessionTime { get; }
+        List<string> ProfileResult { get; }
         void AddTrigger(int triggerFunctionPointer);
         void RemoveTrigger(int triggerFunctionPointer);
         void StartWait(double waitTime);

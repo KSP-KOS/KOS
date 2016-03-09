@@ -106,17 +106,24 @@ namespace kOS.Safe.Execution
             return GetCodeFragment(InstructionPointer - contextLines, InstructionPointer + contextLines);
         }
 
-        public List<string> GetCodeFragment(int start, int stop)
+        public List<string> GetCodeFragment(int start, int stop, bool doProfile = false)
         {
             var codeFragment = new List<string>();
+            var profileFragment = new List<string>();
 
             const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6}";
-            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "label", "opcode", "operand"));
-            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "-------------------------------", "", ""));
+            string header1 = string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "label", "opcode", "operand");
+            string header2 = string.Format(FORMAT_STR, "====", "====", "===", "====", "================================", "", "");
+            codeFragment.Add(header1);
+            codeFragment.Add(header2);
+            
+            int longestLength = header1.Length;
 
-            for (int index = start; index <= stop; index++) {
-                if (index >= 0 && index < Program.Count) {
-                    codeFragment.Add(string.Format(
+            for (int index = start; index <= stop; index++)
+            {
+                if (index >= 0 && index < Program.Count)
+                {
+                    string thisLine = string.Format(
                         FORMAT_STR,
                         Program[index].SourceName,
                         Program[index].SourceLine,
@@ -124,11 +131,38 @@ namespace kOS.Safe.Execution
                         index,
                         Program[index].Label,
                         Program[index],
-                        (index == InstructionPointer ? "<<--INSTRUCTION POINTER--" : "")));
+                        (index == InstructionPointer ? "<<--INSTRUCTION POINTER--" : ""));
+                    codeFragment.Add(thisLine);
+                    if (longestLength < thisLine.Length)
+                        longestLength = thisLine.Length;
                 }
             }
+            
+            if (!doProfile)
+                return codeFragment;
+            
+            // Append the profile data columns to the right of the codeFragment lines:
 
-            return codeFragment;
+            const string PROFILE_FORMAT_STR = "{0} {1,12:0.0000} {2,6} {3,12:0.0000}";
+            profileFragment.Add(string.Format(PROFILE_FORMAT_STR, codeFragment[0].PadRight(longestLength), "Total ms", "Count", "Average ms"));
+            profileFragment.Add(string.Format(PROFILE_FORMAT_STR, codeFragment[1].PadRight(longestLength), "========", "=====", "=========="));
+            for (int index = start; index <= stop; index++)
+            {
+                if (index >= 0 && index < Program.Count)
+                {
+                    long totalTicks = Program[index].ProfileTicksElapsed;
+                    int  count = Program[index].ProfileExecutionCount;
+                    string thisLine = string.Format(
+                        PROFILE_FORMAT_STR,
+                        codeFragment[2 + (index-start)].PadRight(longestLength),
+                        (totalTicks*1000D) / System.Diagnostics.Stopwatch.Frequency,
+                        count,
+                        ((totalTicks*1000D) / count) / System.Diagnostics.Stopwatch.Frequency
+                       );
+                    profileFragment.Add(thisLine);
+                }
+            }
+            return profileFragment;
         }
 
     }

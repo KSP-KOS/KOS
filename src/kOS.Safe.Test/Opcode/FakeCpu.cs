@@ -164,6 +164,11 @@ namespace kOS.Safe.Test.Opcode
             get { throw new NotImplementedException(); }
         }
 
+        public List<string> ProfileResult
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public void AddTrigger(int triggerFunctionPointer)
         {
             throw new NotImplementedException();

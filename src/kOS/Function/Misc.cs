@@ -8,6 +8,7 @@ using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using kOS.Suffixed.PartModuleField;
 using kOS.Module;
@@ -397,6 +398,28 @@ namespace kOS.Function
         }
     }
 
+    [Function("profileresult")]
+    public class ProfileResult : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+            if (shared.Cpu.ProfileResult == null || shared.Cpu.ProfileResult.Count == 0)
+            {
+                ReturnValue = "<no profile data available>";
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            foreach (string textLine in shared.Cpu.ProfileResult)
+            {
+                if (sb.Length > 0 )
+                    sb.Append("\n");
+                sb.Append(textLine);
+            }
+            ReturnValue = sb.ToString();
+        }
+    }
+    
     [Function("warpto")]
     public class WarpTo : FunctionBase
     {

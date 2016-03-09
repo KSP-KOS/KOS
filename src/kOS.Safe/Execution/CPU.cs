@@ -54,6 +54,8 @@ namespace kOS.Safe.Execution
         }
 
         public double SessionTime { get { return currentTime; } }
+        
+        public List<string> ProfileResult { get; private set; }
 
         public CPU(SharedObjects shared)
         {
@@ -355,6 +357,9 @@ namespace kOS.Safe.Execution
             if (contexts.Count > 1)
             {
                 EndWait();
+
+                if (SafeHouse.Config.ShowStatistics)
+                    CalculateProfileResult();
 
                 if (manual)
                 {
@@ -1006,7 +1011,7 @@ namespace kOS.Safe.Execution
             var numTriggerInstructions = 0;
             var numMainlineInstructions = 0;
 
-            if (showStatistics) updateWatch = Stopwatch.StartNew();
+            if (showStatistics) { updateWatch = Stopwatch.StartNew(); }
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
@@ -1017,7 +1022,7 @@ namespace kOS.Safe.Execution
                 if (currentContext != null && currentContext.Program != null)
                 {
                     if (showStatistics) triggerWatch = Stopwatch.StartNew();
-                    ProcessTriggers();
+                    ProcessTriggers(showStatistics);
                     numTriggerInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
@@ -1031,7 +1036,7 @@ namespace kOS.Safe.Execution
                     if (currentStatus == Status.Running)
                     {
                         if (showStatistics) executionWatch = Stopwatch.StartNew();
-                        ContinueExecution();
+                        ContinueExecution(showStatistics);
                         numMainlineInstructions = instructionsSoFarInUpdate - numTriggerInstructions;
                         if (showStatistics)
                         {
@@ -1114,7 +1119,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void ProcessTriggers()
+        private void ProcessTriggers(bool doProfiling)
         {
             if (currentContext.Triggers.Count <= 0) return;
             int oldCount = currentContext.Program.Count;
@@ -1136,7 +1141,7 @@ namespace kOS.Safe.Execution
                         executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
                         while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                         {
-                            executeNext = ExecuteInstruction(currentContext);
+                            executeNext = ExecuteInstruction(currentContext, doProfiling);
                             instructionsSoFarInUpdate++;
                         }
                         if (executeLog.Length > 0)
@@ -1162,7 +1167,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void ContinueExecution()
+        private void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
             executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
@@ -1171,15 +1176,15 @@ namespace kOS.Safe.Execution
                    executeNext &&
                    currentContext != null)
             {
-                executeNext = ExecuteInstruction(currentContext);
+                executeNext = ExecuteInstruction(currentContext, doProfiling);
                 instructionsSoFarInUpdate++;
             }
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(IProgramContext context)
-        {
+        private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
+        {            
             Opcode opcode = context.Program[context.InstructionPointer];
 
             if (SafeHouse.Config.DebugEachOpcode)
@@ -1191,7 +1196,18 @@ namespace kOS.Safe.Execution
             {
                 opcode.AbortContext = false;
                 opcode.AbortProgram = false;
+
+                Stopwatch watch = (doProfiling ? Stopwatch.StartNew() : null);
+                
                 opcode.Execute(this);
+
+                if (doProfiling)
+                {
+                    watch.Stop();
+                    opcode.ProfileTicksElapsed += watch.ElapsedTicks;
+                    opcode.ProfileExecutionCount++;
+                }
+
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1277,8 +1293,9 @@ namespace kOS.Safe.Execution
             shared.Screen.Print(string.Format("Maximum execution time: {0:F3}ms", maxExecutionTime));
             shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", maxTriggerInstructionsSoFar));
             shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", maxMainlineInstructionsSoFar));
+            shared.Screen.Print("(Print ProfileResult() for more information.)");
             shared.Screen.Print(" ");
-
+            
             totalCompileTime = 0D;
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
@@ -1288,6 +1305,11 @@ namespace kOS.Safe.Execution
             maxExecutionTime = 0.0;
             maxMainlineInstructionsSoFar = 0;
             maxTriggerInstructionsSoFar = 0;
+        }
+        
+        private void CalculateProfileResult()
+        {
+            ProfileResult = currentContext.GetCodeFragment(0, currentContext.Program.Count - 1, true);
         }
 
         public void Dispose()

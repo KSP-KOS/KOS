@@ -208,7 +208,7 @@ namespace kOS.Safe.Compilation
             "|  constructor with no parameters.  The default constructor need not lead |\n" +
             "|  to a useful Opcode that works, and it can be protected if you like.    |\n" +
             "|                                                                         |\n" +
-            "|  THE FOLLOWING DOeS NOT HAVE A DEFAULT CONSTRUCTOR:                     |\n" +
+            "|  THE FOLLOWING DOES NOT HAVE A DEFAULT CONSTRUCTOR:                     |\n" +
             "|  {0,30}                                         |\n" +
             "|                                                                         |\n" +
             "+-------------------------------------------------------------------------+\n";
@@ -216,6 +216,19 @@ namespace kOS.Safe.Compilation
         public int Id { get { return id; } }
         public int DeltaInstructionPointer { get; protected set; }
         public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
+        
+        /// <summary>
+        /// Used when profiling: Number of times this one instruction got executed in the life of a program run.
+        /// </summary>
+        public int ProfileExecutionCount { get; set; }
+        /// <summary>
+        /// Used when profiling: Total stopwatch ticks (not Unity update ticks) spent on this instruction during the
+        /// program run.  If this instruction occurs in a loop and thus gets executed more than once, this will be the sum
+        /// of all its executions that took place.  Divide by ProfileExecutionCount to get what the
+        /// average for a single execution of it was.
+        /// </summary>
+        public long ProfileTicksElapsed { get; set; }
+
         public string Label {get{return label;} set {label = value;} }
         public virtual string DestinationLabel {get;set;}
         public string SourceName;
