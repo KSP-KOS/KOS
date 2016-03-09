@@ -111,9 +111,11 @@ namespace kOS.Safe.Execution
             var codeFragment = new List<string>();
             var profileFragment = new List<string>();
 
-            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6}";
-            string header1 = string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "label", "opcode", "operand");
-            string header2 = string.Format(FORMAT_STR, "====", "====", "===", "====", "================================", "", "");
+            string formatStr = "{0,-20} {1,4}:{2,-3} {3:0000} {4,-7} {5} {6}";
+            if (doProfile)
+                formatStr = formatStr.Replace(' ',','); // make profile output be suitable for CSV files.
+            string header1 = string.Format(formatStr, "File", "Line", "Col", "IP  ", "label", "opcode", "operand");
+            string header2 = string.Format(formatStr, "====", "====", "===", "====", "================================", "", "");
             codeFragment.Add(header1);
             codeFragment.Add(header2);
             
@@ -124,13 +126,13 @@ namespace kOS.Safe.Execution
                 if (index >= 0 && index < Program.Count)
                 {
                     string thisLine = string.Format(
-                        FORMAT_STR,
+                        formatStr,
                         Program[index].SourceName,
                         Program[index].SourceLine,
                         Program[index].SourceColumn,
                         index,
-                        Program[index].Label,
-                        Program[index],
+                        (doProfile ? ProtectCSVField(Program[index].Label) : Program[index].Label),
+                        (doProfile ? ProtectCSVField(Program[index].ToString()) : Program[index].ToString()),
                         (index == InstructionPointer ? "<<--INSTRUCTION POINTER--" : ""));
                     codeFragment.Add(thisLine);
                     if (longestLength < thisLine.Length)
@@ -143,7 +145,7 @@ namespace kOS.Safe.Execution
             
             // Append the profile data columns to the right of the codeFragment lines:
 
-            const string PROFILE_FORMAT_STR = "{0} {1,12:0.0000} {2,6} {3,12:0.0000}";
+            const string PROFILE_FORMAT_STR = "{0},{1,12:0.0000},{2,6},{3,12:0.0000}";
             profileFragment.Add(string.Format(PROFILE_FORMAT_STR, codeFragment[0].PadRight(longestLength), "Total ms", "Count", "Average ms"));
             profileFragment.Add(string.Format(PROFILE_FORMAT_STR, codeFragment[1].PadRight(longestLength), "========", "=====", "=========="));
             for (int index = start; index <= stop; index++)
@@ -163,6 +165,22 @@ namespace kOS.Safe.Execution
                 }
             }
             return profileFragment;
+        }
+        
+        /// <summary>
+        /// Return a version of the string that has been protected for use in a comma-separated
+        /// file field by quoting and escaping as necessary any special characters inside it.
+        /// </summary>
+        /// <param name="in"></param>
+        /// <returns></returns>
+        private string ProtectCSVField(string s)
+        {
+            bool needQuotes = s.IndexOfAny(new char[] {'"', ',', '\n', '\r'}) >= 0 ;
+            
+            if (!needQuotes)
+                return s;
+            
+            return "\"" + s.Replace("\"","\"\"") + "\"";
         }
 
     }

@@ -43,6 +43,7 @@ namespace kOS.Safe.Execution
         private double maxUpdateTime;
         private double maxTriggersTime;
         private double maxExecutionTime;
+        private Stopwatch instructionWatch;
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
@@ -1018,6 +1019,7 @@ namespace kOS.Safe.Execution
             try
             {
                 PreUpdateBindings();
+                instructionWatch = Stopwatch.StartNew();
 
                 if (currentContext != null && currentContext.Program != null)
                 {
@@ -1027,7 +1029,7 @@ namespace kOS.Safe.Execution
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
-                        triggerElapsed = triggerWatch.ElapsedMilliseconds;
+                        triggerElapsed = triggerWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                         totalTriggersTime += triggerElapsed;
                     }
 
@@ -1041,7 +1043,7 @@ namespace kOS.Safe.Execution
                         if (showStatistics)
                         {
                             executionWatch.Stop();
-                            executionElapsed = executionWatch.ElapsedMilliseconds;
+                            executionElapsed = executionWatch.ElapsedTicks*1000D / Stopwatch.Frequency;
                             totalExecutionTime += executionElapsed;
                         }
                     }
@@ -1077,7 +1079,7 @@ namespace kOS.Safe.Execution
             if (showStatistics)
             {
                 updateWatch.Stop();
-                double updateElapsed = updateWatch.ElapsedMilliseconds;
+                double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 totalUpdateTime += updateElapsed;
                 if (maxTriggerInstructionsSoFar < numTriggerInstructions)
                     maxTriggerInstructionsSoFar = numTriggerInstructions;
@@ -1197,17 +1199,20 @@ namespace kOS.Safe.Execution
                 opcode.AbortContext = false;
                 opcode.AbortProgram = false;
 
-                Stopwatch watch = (doProfiling ? Stopwatch.StartNew() : null);
-                
                 opcode.Execute(this);
 
                 if (doProfiling)
                 {
-                    watch.Stop();
-                    opcode.ProfileTicksElapsed += watch.ElapsedTicks;
+                    // This will count *all* the time between the end of the prev instruction and now:
+                    instructionWatch.Stop();
+                    opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
+                    
+                    // start the *next* instruction's timer right after this instruction ended
+                    instructionWatch.Reset();
+                    instructionWatch.Start();
                 }
-
+                
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1280,22 +1285,33 @@ namespace kOS.Safe.Execution
             return currentContext.GetCodeFragment(contextLines);
         }
 
-        public void PrintStatistics()
+        public string StatisticsDump(bool doProfiling)
         {
-            if (!SafeHouse.Config.ShowStatistics) return;
-
-            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", totalCompileTime));
-            shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
-            shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
-            shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
-            shared.Screen.Print(string.Format("Maximum update time: {0:F3}ms", maxUpdateTime));
-            shared.Screen.Print(string.Format("Maximum triggers time: {0:F3}ms", maxTriggersTime));
-            shared.Screen.Print(string.Format("Maximum execution time: {0:F3}ms", maxExecutionTime));
-            shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", maxTriggerInstructionsSoFar));
-            shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", maxMainlineInstructionsSoFar));
-            shared.Screen.Print("(Print ProfileResult() for more information.)");
-            shared.Screen.Print(" ");
+            if (!SafeHouse.Config.ShowStatistics) return "";
             
+            string delimiter = "";
+            if (doProfiling)
+                delimiter = ",";
+            
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(string.Format("{0}{0}{0}{0}Total compile time: {0}{1:F3}ms\n", delimiter, totalCompileTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Total update time: {0}{1:F3}ms\n", delimiter, totalUpdateTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Total triggers time: {0}{1:F3}ms\n", delimiter, totalTriggersTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Total execution time: {0}{1:F3}ms\n", delimiter, totalExecutionTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Maximum update time: {0}{1:F3}ms\n", delimiter, maxUpdateTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Maximum triggers time: {0}{1:F3}ms\n", delimiter, maxTriggersTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Maximum execution time: {0}{1:F3}ms\n", delimiter, maxExecutionTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Most Trigger instructions in one update: {0}{1}\n", delimiter, maxTriggerInstructionsSoFar));
+            sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
+            if (!doProfiling)
+                sb.Append("(Print ProfileResult() for more information.)\n");
+            sb.Append(" \n");
+            return sb.ToString();
+        }
+        
+        public void ResetStatistics()
+        {
             totalCompileTime = 0D;
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
@@ -1307,9 +1323,17 @@ namespace kOS.Safe.Execution
             maxTriggerInstructionsSoFar = 0;
         }
         
+        private void PrintStatistics()
+        {
+            shared.Screen.Print(StatisticsDump(false));
+            ResetStatistics();
+        }
+        
         private void CalculateProfileResult()
         {
             ProfileResult = currentContext.GetCodeFragment(0, currentContext.Program.Count - 1, true);
+            // Prepend a header string consisting of the block of summary text:
+            ProfileResult.Insert(0, StatisticsDump(true));
         }
 
         public void Dispose()
