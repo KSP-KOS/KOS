@@ -1,79 +1,66 @@
 ﻿using System;
-using kOS.Safe.Encapsulation;
+using kOS.Safe.Communication;
 using kOS.Suffixed;
+using kOS.Safe;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Serialization;
 using kOS.Safe.Exceptions;
-using kOS.Safe;
 
 namespace kOS.Communication
 {
-    public class Message : SerializableStructure, IComparable<Message>
+    public class Message : BaseMessage
     {
-        public const string DumpSentAt = "sentAt";
-        public const string DumpReceivedAt = "receivedAt";
-        public const string DumpSender = "sender";
-        public const string DumpContent = "content";
+        public const string DumpVessel = "vessel";
+        public const string DumpProcessor = "processor";
 
-        public kOS.Suffixed.TimeSpan SentAt { get; set; }
-        public kOS.Suffixed.TimeSpan ReceivedAt { get; set; }
-        public VesselTarget Sender { get; set; }
+        public VesselTarget Vessel { get; set; }
+        public string Processor { get; set; }
 
-        /// <summary>
-        /// Message content can be either a simple encapsulated type (something that implements ISerializableValue) or a Dump.
-        /// 
-        /// Currently kOS serialization doesn't allow primitives as top level objects, but Messages do allow them.
-        /// </summary>
-        private object content;
-
-        public object Content {
-            get {
-                return content;
-            }
-            set {
-                if (value is PrimitiveStructure || value is Dump)
-                {
-                    content = value;
-                } else
-                {
-                    throw new KOSException("Message can only contain primitives and serializable types");
-                }
+        public static Message Create(object content, double sentAt, double receivedAt, VesselTarget sender, string processor)
+        {
+            if (content is SerializableStructure)
+            {
+                return new Message(new SafeSerializationMgr().Dump(content as SerializableStructure), sentAt, receivedAt, sender);
+            } else if (content is PrimitiveStructure)
+            {
+                return new Message(content as PrimitiveStructure, sentAt, receivedAt, sender);
+            } else
+            {
+                throw new KOSException("Only serializable types and primitives can be sent in a message");
             }
         }
 
         public Message()
+            : base()
         {
+        }
+
+        public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
+            : base(content, sentAt, receivedAt)
+        {
+            Vessel = sender;
+        }
+
+        public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
+            : base(content, sentAt, receivedAt)
+        {
+            Vessel = sender;
         }
 
         public override Dump Dump()
         {
-            DumpWithHeader dump = new DumpWithHeader();
+            Dump dump = base.Dump();
 
-            dump.Header = "MESSAGE";
-
-            dump.Add(DumpSentAt, SentAt);
-            dump.Add(DumpReceivedAt, ReceivedAt);
-            dump.Add(DumpSender, Sender);
-            dump.Add(DumpContent, content);
+            dump.Add(DumpVessel, Vessel);
 
             return dump;
         }
 
         public override void LoadDump(Dump dump)
         {
-            SentAt = dump[DumpSentAt] as kOS.Suffixed.TimeSpan;
-            ReceivedAt = dump[DumpReceivedAt] as kOS.Suffixed.TimeSpan;
-            Sender = dump[DumpSender] as VesselTarget;
-            content = dump[DumpContent];
-        }
+            base.LoadDump(dump);
 
-        public override string ToString()
-        {
-            return "MESSAGE FROM " + Sender.GetName();
-        }
-
-        public int CompareTo(Message other)
-        {
-            return ReceivedAt.CompareTo(other.ReceivedAt);
+            Vessel = dump[DumpVessel] as VesselTarget;
         }
     }
 }

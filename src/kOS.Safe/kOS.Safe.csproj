@@ -234,6 +234,11 @@
     <Compile Include="Encapsulation\ArchiveFile.cs" />
     <Compile Include="Encapsulation\HarddiskFile.cs" />
     <Compile Include="Encapsulation\PrimitiveStructure.cs" />
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\CurrentTimeProvider.cs" />
+    <Compile Include="Communication\BaseMessage.cs" />
+    <Compile Include="Serialization\IDumper.cs" />
+    <Compile Include="Communication\GenericMessageQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -266,4 +271,7 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Communication\" />
+  </ItemGroup>
 </Project>

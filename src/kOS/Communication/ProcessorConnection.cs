@@ -3,11 +3,12 @@ using kOS.Safe.Encapsulation;
 using kOS.Module;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed.PartModuleField;
+using kOS.Safe.Communication;
 
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Connection", KOSToCSharp = false)]
-    public class ProcessorConnection : Connection
+    public class ProcessorConnection : Connection<kOS.SharedObjects>
     {
         private kOSProcessor processor;
 
@@ -19,7 +20,7 @@ namespace kOS.Communication
 
         public override double Delay {
             get {
-                return IsCpuVessel() ? 0 : Connection.Infinity;
+                return IsCpuVessel() ? 0 : -1;
             }
         }
 
@@ -44,13 +45,13 @@ namespace kOS.Communication
 
         public void ThrowIfNotCPUVessel()
         {
-            if (IsCpuVessel())
+            if (!IsCpuVessel())
                 throw new KOSWrongCPUVesselException();
         }
 
         public bool IsCpuVessel()
         {
-            return processor.vessel.id != shared.Vessel.id;
+            return processor.vessel.id == shared.Vessel.id;
         }
 
         protected override Structure Destination()

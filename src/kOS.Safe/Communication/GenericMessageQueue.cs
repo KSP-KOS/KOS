@@ -1,0 +1,149 @@
+﻿using System;
+using System.Collections.Generic;
+using kOS.Safe.Serialization;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
+using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe;
+
+namespace kOS.Safe.Communication
+{
+    public class GenericMessageQueue<M> : IDumper where M : BaseMessage
+    {
+        /// <summary>
+        /// This stores a mapping: moment in time -> list of messages that arrive at that time.
+        /// We need the queue to be constructed this way because SortedList doesn't allow for duplicate keys.
+        /// </summary>
+        private SortedList<double, List<M>> queue = new SortedList<double, List<M>>();
+        private CurrentTimeProvider timeProvider;
+
+        private List<M> Messages {
+            get {
+                return queue.Aggregate(new List<M>(), (acc, l) => { acc.AddRange(l.Value); return acc; } );
+            }
+        }
+
+        private List<M> ReceivedMessages {
+            get {
+                return Messages.Where(IsReceived).ToList();
+            }
+        }
+
+        private bool IsReceived(double time)
+        {
+            return time <= timeProvider.CurrentTime();
+        }
+
+        private bool IsReceived(M message)
+        {
+            return IsReceived(message.ReceivedAt);
+        }
+
+        public GenericMessageQueue(CurrentTimeProvider timeProvider)
+        {
+            this.timeProvider = timeProvider;
+        }
+
+        private void RemoveMessage(KeyValuePair<double, List<M>> queueItem, M message) {
+            queueItem.Value.Remove(message);
+            if (queueItem.Value.Count() == 0)
+            {
+                queue.Remove(queueItem.Key);
+            }
+        }
+
+        public void Clear()
+        {
+            foreach (KeyValuePair<double, List<M>> queueItem in queue)
+            {
+                queueItem.Value.RemoveAll((m) => IsReceived(m));
+            }
+
+            queue.Where((k) => k.Value.Count() == 0).ForEach((k) => queue.Remove(k.Key));
+        }
+
+        public M Peek()
+        {
+            if (queue.Count > 0 && IsReceived(queue.First().Key))
+            {
+                return queue.First().Value.First();
+            }
+
+            throw new KOSException("Message queue is empty");
+        }
+
+        public M Pop()
+        {
+            if (queue.Count > 0 && IsReceived(queue.First().Key))
+            {
+                M message = queue.First().Value.First();
+                RemoveMessage(queue.First(), message);
+
+                return message;
+            }
+
+            throw new KOSException("Message queue is empty");
+        }
+
+        public int Count()
+        {
+            return Messages.Count;
+        }
+
+        public int ReceivedCount()
+        {
+            return ReceivedMessages.Count();
+        }
+
+        public void Push(M message)
+        {
+            if (!queue.ContainsKey(message.ReceivedAt))
+            {
+                queue.Add(message.ReceivedAt, new List<M>());
+            }
+
+            List<M> list = queue[message.ReceivedAt];
+
+            list.Add(message);
+        }
+
+        public override string ToString()
+        {
+            return "MESSAGE QUEUE";
+        }
+
+        public Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader();
+            dump.Header = "MESSAGE QUEUE";
+
+            int i = 0;
+
+            foreach (M message in Messages)
+            {
+                dump.Add(i, message);
+
+                i++;
+            }
+
+            return dump;
+        }
+
+        public void LoadDump(Dump dump)
+        {
+            queue.Clear();
+
+            foreach (KeyValuePair<object, object> entry in dump)
+            {
+                M message = entry.Value as M;
+
+                if (message != null)
+                {
+                    Push(message);
+                }
+            }
+        }
+
+    }
+}

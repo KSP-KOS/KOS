@@ -7,4 +7,3 @@ namespace kOS.Communication
         double GetDelay(Vessel vessel1, Vessel vessel2);
     }
 }
-

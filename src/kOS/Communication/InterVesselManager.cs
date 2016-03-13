@@ -56,9 +56,9 @@ namespace kOS.Communication
         {
             foreach (Vessel vessel in FlightGlobals.Vessels)
             {
-                if (vesselQueues.ContainsKey(vessel.id.ToString()))
+                string id = vessel.id.ToString();
+                if (vesselQueues.ContainsKey(id) && vesselQueues[id].Count() > 0)
                 {
-                    string id = vessel.id.ToString();
                     ConfigNode vesselEntry = new ConfigNode(VesselQueue);
                     vesselEntry.AddValue(Id, id);
 

@@ -4,14 +4,28 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
 using kOS.Safe;
 using kOS.Serialization;
+using kOS.Safe.Serialization;
 
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Message")]
-    public class MessageStructure : Structure
+    public class MessageStructure : SerializableStructure, IHasSharedObjects
     {
+        private static string DumpMessage = "message";
+
         public Message Message { get; private set; }
         private SharedObjects shared;
+
+        public SharedObjects Shared {
+            set {
+                shared = value;
+            }
+        }
+
+        public MessageStructure()
+        {
+            InitializeSuffixes();
+        }
 
         public MessageStructure(Message message, SharedObjects shared)
         {
@@ -23,9 +37,9 @@ namespace kOS.Communication
 
         private void InitializeSuffixes()
         {
-            AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeSpan>(() => Message.SentAt));
-            AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeSpan>(() => Message.ReceivedAt));
-            AddSuffix("SENDER", new Suffix<VesselTarget>(() => Message.Sender));
+            AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.SentAt)));
+            AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.ReceivedAt)));
+            AddSuffix("SENDER", new Suffix<VesselTarget>(() => Message.Vessel));
             AddSuffix("CONTENT", new Suffix<Structure>(DeserializeContent));
         }
 
@@ -33,7 +47,7 @@ namespace kOS.Communication
         {
             if (Message.Content is Dump)
             {
-                return new SerializationMgr(shared).CreateFromDump(Message.Content as Dump);
+                return new SerializationMgr(shared).CreateFromDump(Message.Content as Dump) as SerializableStructure;
             }
 
             return Structure.FromPrimitiveWithAssert(Message.Content);
@@ -41,7 +55,23 @@ namespace kOS.Communication
 
         public override string ToString()
         {
-            return Message.ToString();
+            return "Message(" + Message.Vessel.ToString() + ")";
+        }
+
+        public override Dump Dump()
+        {
+            Dump dump = new DumpWithHeader {
+                Header = "Message"
+            };
+
+            dump.Add(DumpMessage, Message);
+
+            return dump;
+        }
+
+        public override void LoadDump(Dump dump)
+        {
+            Message = dump[DumpMessage] as Message;
         }
     }
 }

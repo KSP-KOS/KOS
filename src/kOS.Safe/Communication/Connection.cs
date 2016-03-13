@@ -2,19 +2,17 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 
-namespace kOS.Communication
+namespace kOS.Safe.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Connection")]
-    public abstract class Connection : Structure
+    public abstract class Connection<S> : Structure where S : SharedObjects
     {
-        public static int Infinity = -1;
-
-        protected SharedObjects shared;
+        protected S shared;
 
         public abstract bool Connected { get; }
         public abstract double Delay { get; }
 
-        public Connection(SharedObjects shared)
+        public Connection(S shared)
         {
             this.shared = shared;
 

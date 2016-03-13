@@ -70,11 +70,18 @@
     <Compile Include="Serialization\TerminalFormatterTest.cs" />
     <Compile Include="Collections\CollectionValueTest.cs" />
     <Compile Include="Collections\RangeValueTest.cs" />
+    <Compile Include="Communiction\MessageQueueTest.cs" />
+    <Compile Include="Communiction\FakeCurrentTimeProvider.cs" />
+    <Compile Include="Serialization\FormatterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
       <Project>{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}</Project>
       <Name>kOS.Safe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\kOS\kOS.csproj">
+      <Project>{465EC87D-723D-4A6C-B116-9777AC641DE3}</Project>
+      <Name>kOS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +97,7 @@
   -->
   <ItemGroup>
     <Folder Include="Serialization\" />
+    <Folder Include="Communiction\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProfilingSessions\Session20160127_233127.sdps" />

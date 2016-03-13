@@ -22,6 +22,7 @@ using UnityEngine;
 using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
+using kOS.Safe.Communication;
 
 namespace kOS.Module
 {
@@ -829,8 +830,8 @@ namespace kOS.Module
 
         public void Send(Structure content)
         {
-            kOS.Suffixed.TimeSpan sentAt = new kOS.Suffixed.TimeSpan(Planetarium.GetUniversalTime());
-            Messages.Push(content, sentAt, sentAt, new VesselTarget(shared));
+            double sentAt = Planetarium.GetUniversalTime();
+            Messages.Push(Message.Create(content, sentAt, sentAt, new VesselTarget(shared), Tag));
         }
     }
 }

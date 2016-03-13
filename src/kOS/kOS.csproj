@@ -201,15 +201,15 @@
     <Compile Include="Suffixed\PartModuleField\StockScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="AddOns\OrbitalScience\DMScienceExperimentFields.cs" />
-    <Compile Include="Communication\MessageQueue.cs" />
     <Compile Include="Communication\MessageQueueStructure.cs" />
     <Compile Include="Communication\InterProcCommand.cs" />
     <Compile Include="Communication\RunCommand.cs" />
     <Compile Include="Communication\MessageStructure.cs" />
-    <Compile Include="Communication\Message.cs" />
     <Compile Include="Communication\VesselConnection.cs" />
-    <Compile Include="Communication\Connection.cs" />
     <Compile Include="Communication\ProcessorConnection.cs" />
+    <Compile Include="Communication\PlanetariumTimeProvider.cs" />
+    <Compile Include="Communication\Message.cs" />
+    <Compile Include="Communication\MessageQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

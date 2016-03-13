@@ -16,16 +16,15 @@ namespace kOS.Serialization
             SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
         }
 
-
         public SerializationMgr(SharedObjects sharedObjects)
         {
             this.sharedObjects = sharedObjects;
         }
 
 
-        public override SerializableStructure CreateAndLoad(string typeFullName, Dump data)
+        public override IDumper CreateAndLoad(string typeFullName, Dump data)
         {
-            SerializableStructure instance = base.CreateInstance(typeFullName);
+            IDumper instance = base.CreateInstance(typeFullName);
 
             if (instance is IHasSharedObjects)
             {

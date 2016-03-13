@@ -27,7 +27,7 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("VOLUME", new NoArgsSuffix<Volume>(() => processor.HardDisk, "This processor's hard disk"));
             AddSuffix("TAG", new NoArgsSuffix<StringValue>(() => processor.Tag, "This processor's tag"));
             AddSuffix("BOOTFILENAME", new SetSuffix<StringValue>(GetBootFilename, SetBootFilename, "The name of the processor's boot file."));
-            AddSuffix("CONNECTION", new NoArgsSuffix<Connection>(() => new ProcessorConnection(processor, shared), "Get a connection to this processor"));
+            AddSuffix("CONNECTION", new NoArgsSuffix<ProcessorConnection>(() => new ProcessorConnection(processor, shared), "Get a connection to this processor"));
         }
 
         private void Activate()

@@ -2,6 +2,7 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
+using kOS.Safe.Communication;
 
 namespace kOS.Communication
 {
@@ -24,9 +25,9 @@ namespace kOS.Communication
             InitializeSuffixes();
         }
 
-        public void Push(Structure content, kOS.Suffixed.TimeSpan sentAt, kOS.Suffixed.TimeSpan receivedAt, VesselTarget sender)
+        public void Push(Message message)
         {
-            messageQueue.Push(content, sentAt, receivedAt, sender);
+            messageQueue.Push(message);
         }
 
         public void InitializeSuffixes()
@@ -44,11 +45,12 @@ namespace kOS.Communication
             if (content is MessageStructure)
             {
                 MessageStructure m = content as MessageStructure;
-                messageQueue.Push(m.Message.Content, m.Message.SentAt, m.Message.ReceivedAt, m.Message.Sender);
+                messageQueue.Push(m.Message);
             } else
             {
-                kOS.Suffixed.TimeSpan sentAt = new kOS.Suffixed.TimeSpan(Planetarium.GetUniversalTime());
-                messageQueue.Push(content, sentAt, sentAt, new VesselTarget(sharedObjects.Vessel, sharedObjects));
+                double sentAt = Planetarium.GetUniversalTime();
+                messageQueue.Push(Message.Create(content, sentAt, sentAt, new VesselTarget(sharedObjects.Vessel, sharedObjects),
+                    sharedObjects.Processor.Tag));
             }
         }
 

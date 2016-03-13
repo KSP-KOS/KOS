@@ -7,17 +7,18 @@ using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
 using kOS.Suffixed;
 using TimeSpan = kOS.Suffixed.TimeSpan;
+using kOS.Safe.Communication;
 
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Connection", KOSToCSharp = false)]
-    public class VesselConnection : Connection
+    public class VesselConnection : Connection<kOS.SharedObjects>
     {
         private Vessel vessel;
 
         public override bool Connected {
             get {
-                return shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel) != Connection.Infinity;
+                return shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel) != -1;
             }
         }
 
@@ -34,12 +35,11 @@ namespace kOS.Communication
 
         public override string ToString()
         {
-            return "VESSEL CONNECTION(" + shared.Vessel.vesselName + ")";
+            return "VESSEL CONNECTION(" + vessel.vesselName + ")";
         }
 
         protected override BooleanValue SendMessage(Structure content)
         {
-            MessageQueueStructure queue = InterVesselManager.Instance.GetQueue(vessel, shared);
             double delay = shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel);
 
             if (delay == -1)
@@ -47,9 +47,11 @@ namespace kOS.Communication
                 return false;
             }
 
-            TimeSpan sentAt = new TimeSpan(Planetarium.GetUniversalTime());
-            TimeSpan receivedAt = new TimeSpan(sentAt.ToUnixStyleTime() + delay);
-            queue.Push(content, sentAt, receivedAt, new VesselTarget(shared));
+            MessageQueueStructure queue = InterVesselManager.Instance.GetQueue(vessel, shared);
+
+            double sentAt = Planetarium.GetUniversalTime();
+            double receivedAt = sentAt + delay;
+            queue.Push(Message.Create(content, sentAt, receivedAt, new VesselTarget(shared), shared.Processor.Tag));
 
             return true;
         }
