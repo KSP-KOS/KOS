@@ -25,10 +25,10 @@ namespace kOS.Safe.Test.Structure
         {
             const int MIN_VALUE = 0;
             const int MAX_VALUE = 1;
-            ScalarDoubleValue SET_VALUE = 0.5f;
+            ScalarValue SET_VALUE = 0.5f;
 
-            ScalarDoubleValue value = 0;
-            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
+            ScalarValue value = 0;
+            var suffix = new ClampSetSuffix<ScalarValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
             suffix.Set(SET_VALUE);
 
@@ -45,11 +45,11 @@ namespace kOS.Safe.Test.Structure
             const float SET_VALUE = 1.5f;
 
             float value = 0;
-            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
+            var suffix = new ClampSetSuffix<ScalarValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
             suffix.Set(SET_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(ScalarValue.Create(value), suffix.Get().Value);
             Assert.AreNotEqual(SET_VALUE, value);
             Assert.AreEqual(MAX_VALUE, value);
 
@@ -65,11 +65,11 @@ namespace kOS.Safe.Test.Structure
             const float STEP_VALUE = 0.5f;
 
             float value = 0;
-            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
+            var suffix = new ClampSetSuffix<ScalarValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
 
             suffix.Set(SET_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(ScalarValue.Create(value), suffix.Get().Value);
             Assert.AreNotEqual(SET_VALUE, value);
             Assert.AreEqual(EXPECTED_VALUE, value);
         }
@@ -84,11 +84,11 @@ namespace kOS.Safe.Test.Structure
             const float STEP_VALUE = 0.5f;
 
             float value = 0;
-            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
+            var suffix = new ClampSetSuffix<ScalarValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
 
             suffix.Set(SET_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(ScalarValue.Create(value), suffix.Get().Value);
             Assert.AreNotEqual(SET_VALUE, value);
             Assert.AreEqual(EXPECTED_VALUE, value);
         }

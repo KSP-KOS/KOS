@@ -1,60 +1,86 @@
 .. _index:
 
-Welcome to the **kOS** Documentation Website!
-=============================================
+kOS: Kerbal Operating System
+============================
 
-**kOS** is a scriptable autopilot modification for **Kerbal Space Program**. It allows you write small programs that automate specific tasks.
+==================================== ======================== ===================================
+:ref:`Full Documentation <contents>` :ref:`Download <obtain>` :ref:`Getting started <quickstart>`
+==================================== ======================== ===================================
 
-.. toctree::
-    :includehidden:
-    :titlesonly:
-    :maxdepth: 5
+::
 
-    Home <self>
-    Downloads and Links <downloads_links>
-    Tutorials <tutorials>
-    Community Example Library <library>
-    General <general>
-    Language <language>
-    Mathematics <math>
-    Commands <commands>
-    Structures <structures>
-    Addons <addons>
-    Contribute <contribute>
-    Changes <changes>
-    About <about>
+    PRINT "Hello World.".
+    PRINT "These are the documents for Kerbal Operating System.".
 
-Introduction to **kOS** and **KerboScript**
-===========================================
 
-**KerboScript** is the language used to program the CPU device attached to your vessel and **kOS** is the operating system that interprets the code you write. The program can be as simple as printing the current altitude of the vessel and as complicated as a six-axis autopilot controller taking your vessel from the launchpad to Duna and back! With **kOS**, the sky is *not* the limit.
+The do-it-yourself autopilot
+----------------------------
 
-This mod *is* compatible with `RemoteTech`_, you just have to make sure you copy the program onto the local CPU before it goes out of range of KSC.
+**kOS**, or Kerbal Operating System, is a community-supported
+mod for the popular game
+`Kerbal Space Program <https://kerbalspaceprogram.com/>`__
+
+**kOS** is an autopilot you script yourself.  **kOS** is to
+programming, what Kerbal Space Program itself is to rocket science.
+You don't have to know what you're doing to get started, but
+you may find yourself learning a lot by accident as you play
+with it.  And if you already know a lot about the topic, it will
+still be able to hold your interest.  **kOS** is meant to scale
+with the skill level of the user.  You can start off doing very
+small simple things with it, and get more and more into using its
+features as you go.
+
+What it does
+------------
+
+**kOS** introduces a few new parts that each contain a simulated
+computer capable of running programs written in its own scripting
+langauge called **kerboscript**.  The computer has powerful
+smarts built in to the hardware that allow it to do complex 
+spacecraft operations in one command, thus making it possible to
+make complex programs with only a few lines of script text.
+
+The intent of **kOS** is to be a fully in-game item that lives
+inside the Kerbal's universe.  The program isn't running on
+your own gaming computer, but rather it's being run in a
+virtual machine that is simulated in the underlying Unity engine.
+
+Get me Started!
+---------------
+
+There is a quickstart tutorial for people new to **kOS** that
+gets you off the ground with a very simple launching script,
+sufficient to be an introduction for people new to the mod.
+:ref:`Go ahead and give it a try <quickstart>`.
+
 
 Installation
 ------------
 
-Like other mods, simply merge the contents of the zip file into your
-Kerbal Space Program folder.
+Like other Kerbal Space Program mods, simply copy the contents
+of the zip file into your Kerbal Space Program folder, where it
+will install into your ``GameData`` folder.
 
-KerboScript
------------
+:ref:`The mod is downloadable from a number of locations <obtain>`.
 
-**KerboScript** is a programming language that is derived from the language of planet Kerbin, which *sounds* like gibberish to non-native speakers but for some reason is *written* exactly like English. As a result, **KerboScript** is very English-like in its syntax. For example, it uses periods as statement terminators.
+Documentation
+-------------
 
-The language is designed to be easily accessible to novice programmers, therefore it is case-insensitive, and types are cast automatically whenever possible.
+The page you are looking at right now is the entry point
+into the full documentation of kOS.  See the full table of
+contents here: :ref:`Full Documentation <contents>`.
 
-A typical command in **KerboScript** might look like this:
+Online Community
+----------------
 
-::
+:ref:`kOS has an active community <koscommunity>` of users willing
+to help each other with ideas and algorithms.
 
-    PRINT "Hello World".
+History
+-------
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-.. _RemoteTech: https://kerbalstuff.com/mod/134/RemoteTech
+kOS was originally begun as a mod by a single author, Kevin Laity aka Nivekk.
+Although the project has undergone massive changes since then and now has
+a very different underlying archetecture and is under active development
+by a `different set of people <https://github.com/orgs/KSP-KOS/people>`_, none
+of that would have been possible without his original vision and work.

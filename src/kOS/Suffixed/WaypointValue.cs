@@ -7,6 +7,7 @@ using FinePrint; // This is part of KSP's own DLL now.  The Waypoint info is in 
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Waypoint")]
     public class WaypointValue : Structure
     {
         protected Waypoint WrappedWaypoint { get; set; }

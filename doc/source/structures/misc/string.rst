@@ -30,16 +30,65 @@ Strings are iterable. This scripts prints the string's characters one per line::
     PRINT c.
   }
 
+Boolean Operators
+-----------------
 
+Equality
+~~~~~~~~
+
+Using the ``=`` and ``<>`` operators, two strings are equal
+if and only if they are the same length and have letters that differ
+only in capitalization (``a`` and ``A`` are considered the same letter
+for this test).
+
+Ordering
+~~~~~~~~
+
+Using the ``<``, ``>``, ``<=``, and ``>=`` operators, one
+string is considered to be less than the other if it is alphabetically
+sooner according to the ordering of its Unicode mapping, with the
+exception that capitalization is ingored (``a`` and ``A`` are
+considered the same letter).  Starting from the lefthand side of the
+two strings, the characters are compered one at a time until the first
+difference is found, and that first difference decides the ordering.
+If one of the strings is shorter length than the other, and the characters
+are all equal up until one of the two strings runs out of characters,
+then the shorter string will be considered "less than" the longer one.
+
+Mixtures of strings and non-strings
+:::::::::::::::::::::::::::::::::::
+
+If you attempt to compare two things only one of which is a string
+and the other is not, then the non-string will be converted into a
+string first, (Giving the same string as its :TOSTRING suffix would
+give), and the two will be compared as strings.  Example::
+
+    print (1234 < 99).    // prints "False"
+    print ("1234" < 99).  // prints "True"
+
+In the first example, both sides of the ``<`` operator are
+:ref:`scalars <scalar>`, so the comparison is done numerically,
+and 1234 is much bigger than 99.
+
+In the second example, one side of the ``<`` operator is a 
+string, so the other side is converted from the :ref:`scalar <scalar>`
+``99`` into the :ref:`string <string>` ``"99"`` to perform the
+comparison, and then the string comparison looks one character at
+a time and notices that "1" is less than "9" and calls "1234" the
+lesser value.
 
 CASE SENSITIVIY
 ~~~~~~~~~~~~~~~
 
-NOTE: All string comparisons, substring matches, and searches, are
-currently case **in** sensive, meaning that for example the letter
-"A" and the letter "a" are indistinguishable.  There are future
-plans to add mechanisms that will let you choose case-sensitivity
-when you prefer.
+NOTE: All string comparisons for equality and ordering, all substring
+matches, and all string searches, are currently case **in** sensive,
+meaning that for example the letter "A" and the letter "a" are
+indistinguishable.  There are future plans to add mechanisms that
+will let you choose case-sensitivity when you prefer.
+
+At the moment the only way to force a case-sensitive comparison is
+to look at the characters one at a time and obtain their numerical
+ordinal Unicode value with the :func:`unchar(a)` function.
 	
 Structure
 ---------
@@ -55,34 +104,34 @@ Structure
           - Description
 
         * - :meth:`CONTAINS(string)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True if the given string is contained within this string  
         * - :meth:`ENDSWITH(string)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True if this string ends with the given string 
         * - :meth:`FIND(string)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the first occurrence of the given string in this string (starting from 0)
         * - :meth:`FINDAT(string, startAt)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the first occurrence of the given string in this string (starting from startAt)
         * - :meth:`FINDLAST(string)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the last occurrence of the given string in this string (starting from 0)
         * - :meth:`FINDLASTAT(string, startAt)`
-          - integer
+          - :struct:`Scalar`
           - Returns the index of the last occurrence of the given string in this string (starting from startAt)
         * - :meth:`INDEXOF(string)`
-          - integer
+          - :struct:`Scalar`
           - Alias for FIND(string)
         * - :meth:`INSERT(index, string)`
           - :struct:`String`
           - Returns a new string with the given string inserted at the given index into this string
         * - :meth:`LASTINDEXOF(string)`
-          - integer
+          - :struct:`Scalar`
           - Alias for FINDLAST(string)
         * - :attr:`LENGTH`
-          - integer
+          - :struct:`Scalar`
           - Number of characters in the string
         * - :meth:`PADLEFT(width)`
           - :struct:`String`
@@ -100,7 +149,7 @@ Structure
           - :struct:`String`
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True if this string starts with the given string 
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
@@ -125,14 +174,14 @@ Structure
 .. method:: String:CONTAINS(string)
 
     :parameter string: :struct:`String` to look for
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
     
     True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     True if this string ends with the given string.
 
@@ -146,7 +195,7 @@ Structure
 .. method:: String:FINDAT(string, startAt)
 
     :parameter string: :struct:`String` to look for
-    :parameter startAt: integer index to start searching at
+    :parameter startAt: :struct:`Scalar` (integer) index to start searching at
     :type: :struct:`String`
     
     Returns the index of the first occurrence of the given string in this string (starting from startAt).
@@ -161,7 +210,7 @@ Structure
 .. method:: String:FINDLASTAT(string, startAt)
 
     :parameter string: :struct:`String` to look for
-    :parameter startAt: integer index to start searching at
+    :parameter startAt: :struct:`Scalar` (integer) index to start searching at
     :type: :struct:`String`
 
     Returns the index of the last occurrence of the given string in this string (starting from startAt)
@@ -172,7 +221,7 @@ Structure
 
 .. method:: String:INSERT(index, string)
 
-    :parameter index: integer index to add the string at
+    :parameter index: :struct:`Scalar` (integer) index to add the string at
     :parameter string: :struct:`String` to insert
     :type: :struct:`String`
 
@@ -184,29 +233,29 @@ Structure
 
 .. attribute:: String:LENGTH
 
-    :type: integer
+    :type: :struct:`Scalar` (integer)
     :access: Get only
 
     Number of characters in the string
 
 .. method:: String:PADLEFT(width)
 
-    :parameter width: integer number of characters the resulting string will contain
+    :parameter width: :struct:`Scalar` (integer) number of characters the resulting string will contain
     :type: :struct:`String`
 
     Returns a new right-aligned version of this string padded to the given width by spaces.
 
 .. method:: String:PADRIGHT(width)
 
-    :parameter width: integer number of characters the resulting string will contain
+    :parameter width: :struct:`Scalar` (integer) number of characters the resulting string will contain
     :type: :struct:`String`
 
     Returns a new left-aligned version of this string padded to the given width by spaces.
 
 .. method:: String:REMOVE(index,count)
 
-    :parameter index: integer position of the string from which characters will be removed from the resulting string
-    :parameter count: integer number of characters that will be removing from the resulting string
+    :parameter index: :struct:`Scalar` (integer) position of the string from which characters will be removed from the resulting string
+    :parameter count: :struct:`Scalar` (integer) number of characters that will be removing from the resulting string
     :type: :struct:`String`
 
     Returns a new string out of this string with the given count of characters removed starting at the given index.
@@ -230,14 +279,14 @@ Structure
 .. method:: String:STARTSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     True if this string starts with the given string .
 
 .. method:: String:SUBSTRING(start,count)
 
-    :parameter start: (integer) starting index (from zero)
-    :parameter count: (integer) resulting length of returned :struct:`String`
+    :parameter start: :struct:`Scalar` (integer) starting index (from zero)
+    :parameter count: :struct:`Scalar` (integer) resulting length of returned :struct:`String`
     :return: :struct:`String`
 
     Returns a new string with the given count of characters from this string starting from the given start position.
@@ -284,9 +333,12 @@ Access to Individual Characters
 All string indexes start counting at zero. (The characters are numbered from 0 to N-1 rather than from 1 to N.)
 
 ``string[expression]``
-    operator: access the character at position 'expression'. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.
+
+  - operator: access the character at position 'expression'. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.
+    
 ``FOR VAR IN STRING { ... }.``
-    :ref:`A type of loop <flow>` in which var iterates over all the characters of the string from 0 to LENGTH-1.
+
+  - :ref:`A type of loop <flow>` in which var iterates over all the characters of the string from 0 to LENGTH-1.
 
 Examples::
 

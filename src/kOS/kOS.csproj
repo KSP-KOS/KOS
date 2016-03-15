@@ -179,10 +179,17 @@
     <Compile Include="Screen\RectExtensions.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
     <Compile Include="Suffixed\CrewMember.cs" />
-    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Serialization\IHasSharedObjects.cs" />
+    <Compile Include="Suffixed\ScienceDataValue.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFieldsFactory.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMModuleScienceAnimateFields.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMOrbitalScienceFieldsFactory.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMBathymetryFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\StockScienceExperimentFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
+    <Compile Include="AddOns\OrbitalScience\DMScienceExperimentFields.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -217,4 +224,7 @@
   -->
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AddOns\OrbitalScience\" />
+  </ItemGroup>
 </Project>

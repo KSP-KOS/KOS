@@ -6,6 +6,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Element")]
     public class ElementValue : Structure
     {
         private readonly DockedVesselInfo dockedVesselInfo;

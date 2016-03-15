@@ -46,7 +46,7 @@ Constructing a lexicon
 ----------------------
 
 If you wish to make your own lexicon from scratch you can do so with the
-LEXICON() built-in function::
+LEXICON() or LEX() built-in function::
 
     // Make an empty lexicon with zero items in it:
     set mylexicon to lexicon().
@@ -74,7 +74,6 @@ the same effect as the previous code fragment::
 The keys and the values of a lexicon can be any type you feel like, and do not
 need to be of a homogeneous type.
 
-
 Structure
 ---------
 
@@ -92,10 +91,10 @@ Structure
           - None
           - append an item to the lexicon
         * - :attr:`CASESENSITIVE`
-          - bool
+          - :ref:`boolean <boolean>`
           - changes the behaviour of string based keys. Which are by default case insensitive. Setting this will clear the lexicon.
         * - :attr:`CASE`
-          - bool
+          - :ref:`boolean <boolean>`
           - A synonym for `CASESENSITIVE`
         * - :meth:`CLEAR`
           - None
@@ -104,13 +103,13 @@ Structure
           - :struct:`Lexicon`
           - returns a (shallow) copy of the contents of the lexicon
         * - :meth:`DUMP`
-          - string
+          - :ref:`string <string>`
           - verbose dump of all contained elements
         * - :meth:`HASKEY(keyvalue)`
-          - bool
+          - :ref:`boolean <boolean>`
           - does the lexicon have a key of the given value?
         * - :meth:`HASVALUE(value)`
-          - bool
+          - :ref:`boolean <boolean>`
           - does the lexicon have a value of the given value?
         * - :attr:`KEYS`
           - :struct:`List`
@@ -119,7 +118,7 @@ Structure
           - :struct:`List`
           - gives a flat :struct:`List` of the values in the lexicon
         * - :attr:`LENGTH`
-          - integer
+          - :ref:`scalar <scalar>`
           - number of pairs in the lexicon
         * - :meth:`REMOVE(keyvalue)`
           - None
@@ -137,7 +136,7 @@ Structure
 
 .. attribute:: Lexicon:CASESENSITIVE
 
-    :type: Boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get or Set
     
     The case sensitivity behaviour of the lexicon when the keys are strings.
@@ -156,7 +155,7 @@ Structure
 
 .. attribute:: Lexicon:CASE
 
-    :type: Boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get or Set
      
     Synonym for CASESENSITIVE (see above).
@@ -173,7 +172,7 @@ Structure
     
 .. attribute:: Lexicon:LENGTH
 
-    :type: integer
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     Returns the number of pairs in the lexicon.
@@ -192,20 +191,20 @@ Structure
 .. method:: Lexicon:HASKEY(key)
 
     :parameter key: (any type) 
-    :return: boolean
+    :return: :ref:`boolean <boolean>`
 
     Returns true if the lexicon contains the provided key
     
 .. method:: Lexicon:HASVALUE(key)
 
     :parameter key: (any type) 
-    :return: boolean
+    :return: :ref:`boolean <boolean>`
 
     Returns true if the lexicon contains the provided value
     
 .. attribute:: Lexicon:DUMP
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     Returns a string containing a verbose dump of the lexicon's contents.

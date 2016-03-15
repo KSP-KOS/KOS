@@ -1,4 +1,4 @@
-.. kuniverse:
+.. _kuniverse:
 
 KUniverse 4th wall methods
 ==========================
@@ -8,7 +8,7 @@ KUniverse 4th wall methods
 
     :struct:`KUniverse` is a special structure that allows your Kerboscript programs to access some of the functions that break the "4th Wall".  It serves as a place to access object directly connected to the KSP game itself, rather than the interaction with the KSP world (vessels, planets, orbits, etc.).
 
-    .. list-table:: Members and Methods
+    .. list-table::
         :header-rows: 1
         :widths: 3 1 1 4
 
@@ -18,86 +18,90 @@ KUniverse 4th wall methods
           - Description
 
         * - :attr:`CANREVERT`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Get
           - Is any revert possible?
         * - :attr:`CANREVERTTOLAUNCH`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Get
           - Is revert to launch possible?
         * - :attr:`CANREVERTTOEDITOR`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Get
           - Is revert to editor possible?
-        * - :attr:`REVERTTOLAUNCH`
+        * - :meth:`REVERTTOLAUNCH`
           - none
           - Method
           - Invoke revert to launch
-        * - :attr:`REVERTTOEDITOR`
+        * - :meth:`REVERTTOEDITOR`
           - none
           - Method
           - Invoke revert to editor
-        * - :attr:`REVERTTO(name)`
-          - string
+        * - :meth:`REVERTTO(name)`
+          - :ref:`string <string>`
           - Method
           - Invoke revert to the named editor
         * - :attr:`ORIGINEDITOR`
-          - string
+          - :ref:`string <string>`
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
         * - :attr:`HOURSPERDAY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Get
           - Number of hours per day (6 or 24) according to your game settings.
-        * - :attr:`DEBUGLOG(message)`
+        * - :meth:`DEBUGLOG(message)`
           - none
           - Method
-          - Causes a string to append to the Unity debug log file.
+          - Causes a :ref:`string <string>` to append to the Unity debug log file.
         * - :attr:`DEFAULTLOADDISTANCE`
           - :struct:`LoadDistance`
           - Get
           - Returns the set of default load and pack distances for the game.
-        * - :attr:`ACTIVEVESEL`
+        * - :attr:`ACTIVEVESSEL`
           - :struct:`Vessel`
           - Get/Set
           - Returns the active vessel, or lets you set the active vessel.
-        * - :attr:`FORCEACTIVE(vessel)`
+        * - :meth:`FORCESETACTIVEVESSEL(vessel)`
           - n/a
-          - Set
+          - Method
           - Lets you switch active vessels even when the game refuses to allow it.
+        * - :meth:`FORCEACTIVE(vessel)`
+          - n/a
+          - Method
+          - Same as :meth:`FORCESETACTIVEVESSEL`
 
 
 .. attribute:: KUniverse:CANREVERT
 
     :access: Get
-    :type: boolean.
+    :type: :ref:`boolean <boolean>`.
 
     Returns true if either revert to launch or revert to editor is available.  Note: either option may still be unavailable, use the specific methods below to check the exact option you are looking for.
 
 .. attribute:: KUniverse:CANREVERTTOLAUNCH
 
     :access: Get
-    :type: boolean.
+    :type: :ref:`boolean <boolean>`.
 
     Returns true if either revert to launch is available.
 
 .. attribute:: KUniverse:CANREVERTTOEDITOR
 
     :access: Get
-    :type: boolean.
+    :type: :ref:`boolean <boolean>`.
 
     Returns true if either revert to the editor is available.  This tends
     to be false after reloading from a saved game where the vessel was
     already in existence in the saved file when you loaded the game.
 
-.. attribute:: KUniverse:REVERTTOLAUNCH
+.. method:: KUniverse:REVERTTOLAUNCH()
 
     :access: Method
     :type: None.
 
     Initiate the KSP game's revert to launch function.  All progress so far will be lost, and the vessel will be returned to the launch pad or runway at the time it was initially launched.
 
-.. attribute:: KUniverse:REVERTTOEDITOR
+.. method:: KUniverse:REVERTTOEDITOR()
 
     :access: Method
     :type: None.
@@ -114,14 +118,14 @@ KUniverse 4th wall methods
 .. attribute:: KUniverse:ORIGINEDITOR
 
     :access: Get
-    :type: string.
+    :type: :ref:`string <string>`.
 
     Returns the name of the originating editor based on the vessel type.
     The value is one of:
 
     - "SPH" for things built in the space plane hangar,
     - "VAB" for things built in the vehicle assembly building.
-    - "" (empty string) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+    - "" (empty :ref:`string <string>`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
 
 .. attribute:: KUniverse:DEFAULTLOADDISTANCE
 
@@ -146,17 +150,24 @@ KUniverse 4th wall methods
 
     Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when the current active vessel is in the atmosphere or under acceleration.  Use :meth:`FORCEACTIVE` under those circumstances.
 
-.. method:: KUniverse:FORCEACTIVE(vessel)
+.. method:: KUniverse:FORCESETACTIVEVESSEL(vessel)
 
     :parameter vessel: :struct:`Vessel` to switch to.
     :return: none
 
     Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
 
+.. method:: KUniverse:FORCEACTIVE(vessel)
+
+    :parameter vessel: :struct:`Vessel` to switch to.
+    :return: none
+
+    Same as :meth:`FORCESETACTIVEVESSEL`.
+
 .. attribute:: KUniverse:HOURSPERDAY
 
     :access: Get
-    :type: Scalar (integer)
+    :type: :ref:`scalar <scalar>` (integer)
 
     Has the value of either 6 or 24, depending on what setting you used
     on Kerbal Space Program's main settings screen for whether you wanted
@@ -185,7 +196,7 @@ KUniverse 4th wall methods
 
 .. method:: KUniverse:DEBUGLOG(message)
 
-    :parameter message: string message to append to the log.
+    :parameter message: :ref:`string <string>` message to append to the log.
     :return: none
 
     All Unity games (Kerbal Space Program included) have a standard
@@ -225,7 +236,7 @@ KUniverse 4th wall methods
 
     - Windows 32-bit: [install_dir]\KSP_Data\output_log.txt
     - Windows 64-bit: [install_dir]\KSP_x64_Data\output_log.txt (not officially supported)
-    - Mac OS X: ~/Library/Logs/Unity/Player.log 
+    - Mac OS X: ~/Library/Logs/Unity/Player.log
     - Linux: ~/.config/unity3d/Squad/"Kerbal Space Program"/Player.log
 
     For an example of what it looks like in the log, this::

@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
+    [kOS.Safe.Utilities.KOSNomenclature("KACAlarm")]
     public class KACAlarmWrapper : Structure
     {
         private readonly KACWrapper.KACAPI.KACAlarm alarm;

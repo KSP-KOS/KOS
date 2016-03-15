@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Engine")]
     public class EngineValue : PartValue
     {
         private IModuleEngine engine

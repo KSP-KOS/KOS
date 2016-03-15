@@ -4,6 +4,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VesselSensors")]
     public class VesselSensors : Structure
     {
         private Vessel vessel;

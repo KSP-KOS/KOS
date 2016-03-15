@@ -11,6 +11,7 @@ namespace kOS.Safe.Encapsulation
         bool ShowStatistics { get; set; }
         bool EnableRTIntegration { get; set; }
         bool StartOnArchive { get; set; }
+        bool ObeyHideUI { get; set; }
         bool EnableSafeMode { get; set; }
         bool VerboseExceptions { get; set; }
         bool EnableTelnet { get; set; }

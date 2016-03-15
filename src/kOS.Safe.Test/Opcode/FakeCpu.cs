@@ -90,22 +90,22 @@ namespace kOS.Safe.Test.Opcode
 
         public Encapsulation.Structure PopStructureEncapsulated(bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PopValue(barewordOkay));
         }
 
         public Encapsulation.Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
         }
         
         public object PopValueEncapsulated(bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PopValue(barewordOkay));
         }
 
         public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
         }
 
         public int GetStackSize()

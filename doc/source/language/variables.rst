@@ -157,9 +157,13 @@ Program 2::
     SET A TO 7.
     RUN PROGRAM1( A, A+1 ).
 
+.. highlight:: none
+
 The above example would give the output::
 
     X times Y is 56.
+
+.. highlight:: kerboscript
 
 It is also possible to put more than one parameter into a single ``DECLARE PARAMETER`` statement, separated by commas, as shown below::
 
@@ -622,12 +626,17 @@ Examples::
     print "average is " + calcAverage(testList).
     print "but out here where it's global, sum is still " + sum.
 
+.. highlight:: none
+
 This example will print::
+
 
     Inside calcAverage, sum is 30
     average is 10
     but out here where it's global, sum is still -1
     
+.. highlight:: kerboscript
+
 Thus proving that the variable called SUM inside the function is NOT the
 same variable as the one called SUM out in the global main code.
 

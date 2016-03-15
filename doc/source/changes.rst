@@ -9,11 +9,164 @@ users familiar with older versions of the documentation who want
 only a quick update to the docs without reading the entire set
 of documentation again from scratch.
 
+This list is NOT a comprehensive list of everything.  Specifically,
+minor one-line changes, or bug fixes, are not mentioned here.
+
+Most importantly, changes that might have broken previously working
+scripts are not always signposted here.  To be sure, you should read
+the change log in the main github repository, which is repeated in the
+release announcements that are made in various places with each
+release.
+
 .. contents::
     :local:
     :depth: 3
 
 ****
+
+Changes in 0.19.2
+-----------------
+
+This was mostly a bug fix release.  Not much changed in the documentation.
+
+FORCEACTIVE
+:::::::::::
+
+New alias ``KUNIVERSE:FORCEACTIVE()`` can be used instead of the
+longer name ``KUNIVERSE:FORCESETACTIVEVESSEL()``.
+
+Changes in 0.19.1
+-----------------
+
+This change was mostly for small bug fixes and didn't affect the
+documentation much.
+
+Mentioned PIDLoop() function in tutorial
+::::::::::::::::::::::::::::::::::::::::
+
+:ref:`Added section to PID loop tutorial <struct_pidloop_in_tutorial>`
+that explains better that there's a new function for doing PID loops.
+The tutorial had been originally written before that function existed.
+
+
+New Terminal brightness and char size features
+::::::::::::::::::::::::::::::::::::::::::::::
+
+:struct:`Terminal` structure now has suffixes, :attr:`TERMINAL:BRIGHTNESS`,
+:attr:`TERMINAL:CHARWIDTH`, and :attr:`TERMINAL:CHARHEIGHT` to go with
+the new widgets on the terminal GUI.
+
+Changes in 0.19.0
+-----------------
+
+Art asset changes
+:::::::::::::::::
+
+Though not represented in these documents, numerous changes to the
+part models and artwork are included as part of this update, including
+the new KAL9000 high-end computer part.
+
+Varying Power Consumption
+:::::::::::::::::::::::::
+
+:ref:`Electrical drain <electricdrain>` is now handled in a dynamically
+changing way that actually notices how much you are using the CPU and
+uses less power if the CPU is mostly idling (if it spends most of its
+time on WAIT statements).
+
+For mods that want to re-balance the meaning of electric charge units,
+the drain factor is also editable in
+:ref:`module config fields <kospartmodule>` in the various ``part.cfg``
+files the mod ships with.  This opens them up to being changed by
+ModuleManager rules.
+
+Delegates (function pointers)
+:::::::::::::::::::::::::::::
+
+User functions and built-in functions (but not suffixes yet) can
+now be referred to with function pointers called :ref:`delegates <delegates>`
+along with "currying" of pre-loaded arguments.
+
+Optional Defaulted Parameters
+:::::::::::::::::::::::::::::
+
+User functions and user programs can now be configured to have
+:ref:`optional trailing parameters <default_parameters>` that receive
+unmentioned when calling them.
+
+File I/O
+::::::::
+
+:ref:`VolumeFile <volumefile>` now lets you read and write arbitrary
+strings in files in a more natural way than using the LOG command,
+and allows you to read the whole file into one big string in one go.
+
+Serialization in JSON
+:::::::::::::::::::::
+
+Automatic serialization system added to the :ref:`file operations <files>`
+to save/load some kinds of data values to
+`JSON-format files. <https://en.wikipedia.org/wiki/JSON#Example>`__
+
+Universal Object Suffixes
+:::::::::::::::::::::::::
+
+All user values now are a kind of :ref:`structure <structure>` and thus
+there are a few universal suffixes that can be used to query what
+type of data a thing is (``:ISTYPE`` and ``:TYPENAME``).
+
+Multimode Engine and Gimbal Support
+:::::::::::::::::::::::::::::::::::
+
+:ref:`Engines <engine>` can now support multiple-mode information, and can
+acces thei gimbal information in the ``:GIMBAL`` suffix.
+
+DMagic Orbital Science
+::::::::::::::::::::::
+
+Better support for :ref:`DMagic's Orbital Science mod <orbitalscience>`
+
+Range
+:::::
+
+New :ref:`Range <range>` type for getting arbitrary iterable collections
+of ranges of integers.
+
+Char and Unchar
+:::::::::::::::
+
+:func:`CHAR(a)` and :func:`UNCHAR(a)` functions for getting the Unicode
+value of a character or making a character from its Unicode value.
+
+For loop on string chars
+::::::::::::::::::::::::
+
+The for loop can now iterate over the characters of a :ref:`string <string>`.
+
+HASTARGET, HASNODE
+::::::::::::::::::
+
+:ref:`HASTARGET <hastarget>`.
+:ref:`HASNODE <hasnode>`.
+
+JOIN
+::::
+
+Join suffix on :ref:`lists <list>` now lets you make a string with a
+delimeter of the list's elements.
+
+Hours per day
+:::::::::::::
+
+:ref:`KUniverse <kuniverse>` now has a suffix to let you read the
+user setting for whether the clock is using a 24 hour day or a
+Kerbin 6 hour day.
+
+Archive
+:::::::
+
+The reserved word ``Archive`` is now a first class citizen so that
+``SET FOO TO ARCHIVE.`` works like you'd expect it to.
 
 Changes in 0.18.2
 -----------------
@@ -21,7 +174,7 @@ Changes in 0.18.2
 Queue and Stack
 :::::::::::::::
 
-:ref:`Queues <queue>` and :ref:`Stacks <stack>` are now a feature 
+:ref:`Queues <queue>` and :ref:`Stacks <stack>` are now a feature
 you can use along with lists.
 
 Run Once
@@ -78,7 +231,7 @@ New :ref:`String <string>` structure now allows string manipulations.
 Science Experiment Control
 ::::::::::::::::::::::::::
 
-New :ref:`ScienceExperimentModule <scienceexperimentmodule>` allows you to fire off science experiments bypassing the user 
+New :ref:`ScienceExperimentModule <scienceexperimentmodule>` allows you to fire off science experiments bypassing the user
 interface dialog.
 
 Crew Member API
@@ -109,7 +262,7 @@ running the script.  This has been corrected.
 New quickstart tutorial
 :::::::::::::::::::::::
 
-`http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html <http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html>`_ 
+`http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html <http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html>`_
 
 A few more constants
 ::::::::::::::::::::
@@ -153,7 +306,7 @@ section.
 Short-Circuit Booleans
 ::::::::::::::::::::::
 
-Previously, kerboscript's AND and OR operators were not 
+Previously, kerboscript's AND and OR operators were not
 short-circuiting.  :ref:`Now they are <short_circuit>`.
 
 New Infernal Robotics interface
@@ -370,4 +523,3 @@ Vessels now have an :ISDEAD suffix you can use to detect if the
 vessel has gone away since the last time you got the handle to it.
 (for example, you LIST TARGETS IN FOO, then the ship foo[3] blows
 up, then foo[3]:ISDEAD should become true to clue you in to this fact.)
-

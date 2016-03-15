@@ -16,19 +16,19 @@ Represents a single crew member of a vessel.
           - Description
 
         * - :attr:`NAME`
-          - string
+          - :ref:`string <string>`
           - crew member's name
         * - :attr:`GENDER`
-          - string
+          - :ref:`string <string>`
           - "Male" or "Female"
         * - :attr:`EXPERIENCE`
-          - scalar
+          - :ref:`scalar <scalar>`
           - experience level (number of stars)
         * - :attr:`TRAIT`
-          - string
+          - :ref:`string <string>`
           - "Pilot", "Engineer" or "Scientist"
         * - :attr:`TOURIST`
-          - Boolean
+          - :ref:`Boolean <boolean>`
           - true if this crew member is a tourist
         * - :attr:`PART`
           - :struct:`Part`
@@ -37,35 +37,35 @@ Represents a single crew member of a vessel.
 
 .. attribute:: CrewMember:NAME
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     crew member's name
 
 .. attribute:: CrewMember:GENDER
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     "Male" or "Female"
 
 .. attribute:: CrewMember:EXPERIENCE
 
-    :type: scalar
+    :type: :ref:`scalar <scalar>`
     :access: Get only
 
     experience level (number of stars)
 
 .. attribute:: CrewMember:TRAIT
 
-    :type: string
+    :type: :ref:`string <string>`
     :access: Get only
 
     crew member's trait (specialization), for example "Pilot"
 
 .. attribute:: CrewMember:TOURIST
 
-    :type: Boolean
+    :type: :ref:`Boolean <boolean>`
     :access: Get only
 
     true if this crew member is a tourist

@@ -91,6 +91,8 @@ namespace kOS.Screen
 
         private List<int> backingConfigInts;
 
+        private bool uiGloballyHidden = false;
+
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
@@ -112,6 +114,9 @@ namespace kOS.Screen
         public void Awake()
         {
             GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
+
+            GameEvents.onHideUI.Add(OnHideUI);
+            GameEvents.onShowUI.Add(OnShowUI);
 
             RunWhenReady();
         }
@@ -229,6 +234,10 @@ namespace kOS.Screen
         public void OnDestroy()
         {
             GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
+
+            GameEvents.onHideUI.Remove(OnHideUI);
+            GameEvents.onShowUI.Remove(OnShowUI);
+
             GoAway();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
         }
@@ -329,12 +338,24 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
 
+        void OnHideUI()
+        {
+            uiGloballyHidden = true;
+        }
+
+        void OnShowUI()
+        {
+            uiGloballyHidden = false;
+        }
+
         public void OnGUI()
         {
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
 
             if (!isOpen) return;
+
+            if (uiGloballyHidden && kOS.Safe.Utilities.SafeHouse.Config.ObeyHideUI) return;
 
             GUI.skin = HighLogic.Skin;
 
@@ -392,6 +413,7 @@ namespace kOS.Screen
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             string whichMessage = (GUI.tooltip.Length > 0 ? GUI.tooltip : TelnetStatusMessage()); // when tooltip isn't showing, show telnet status instead.
             GUILayout.Label(whichMessage, tooltipLabelStyle);
+
             CountEndVertical();
 
             EndHoverHousekeeping();

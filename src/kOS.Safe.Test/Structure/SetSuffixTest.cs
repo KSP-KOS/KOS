@@ -15,14 +15,8 @@ namespace kOS.Safe.Test.Structure
             SafeHouse.Logger = new TestLogger();
         }
 
-        [Test]
-        public void CanGetDefaultValue()
-        {
-            var suffix = BuildBasicSetSuffix<ScalarIntValue>();
-
-            Assert.IsNotNull(suffix);
-            Assert.AreEqual(default(int), suffix.Get());
-        }
+        // Deleted the CanGetDefaultValue test because all structures
+        // are now reference types with a default value of null.
 
         [Test]
         public void CanSetAndGet()
@@ -31,7 +25,7 @@ namespace kOS.Safe.Test.Structure
 
             Assert.IsNotNull(suffix);
             suffix.Set(15);
-            Assert.AreEqual(15,suffix.Get());
+            Assert.AreEqual(ScalarValue.Create(15),suffix.Get().Value);
         }
 
         private static SetSuffix<TParam> BuildBasicSetSuffix<TParam>() where TParam : Encapsulation.Structure
@@ -52,8 +46,8 @@ namespace kOS.Safe.Test.Structure
             const double TEST_VALUE = 15.0d;
             Assert.IsNotNull(suffix);
             suffix.Set(TEST_VALUE);
-            var finalValue = suffix.Get();
-            Assert.AreEqual(TEST_VALUE,finalValue);
+            var finalValue = suffix.Get().Value;
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE), finalValue);
         }
 
         [Test]
@@ -65,8 +59,8 @@ namespace kOS.Safe.Test.Structure
             const double TEST_VALUE_TRUNCATED = 15;
             Assert.IsNotNull(suffix);
             suffix.Set(TEST_VALUE);
-            var finalValue = suffix.Get();
-            Assert.AreEqual(TEST_VALUE_TRUNCATED,finalValue);
+            var finalValue = suffix.Get().Value;
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE_TRUNCATED), finalValue);
         }
 
         [Test]
@@ -77,8 +71,8 @@ namespace kOS.Safe.Test.Structure
             const int TEST_VALUE = 15;
             Assert.IsNotNull(suffix);
             suffix.Set(TEST_VALUE);
-            var finalValue = suffix.Get();
-            Assert.AreEqual(TEST_VALUE,finalValue);
+            var finalValue = suffix.Get().Value;
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE), finalValue);
         }
     }
 }

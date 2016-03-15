@@ -9,12 +9,13 @@
 
 ### Build
 * Build kOS solution in release mode
-* Ensure that all required resources are in place (ie KSPAPIE)
+* Ensure that all required resources are in place (ie KSP API Extensions DLL, ModuleManager DLL)
 * Create zip file with a root starting in the \Resources\ directory
 * Name the zip file with the following pattern kOS.v<major>.<minor>.<patch>.zip (eg kOS.v0.14.2.zip )
 * Build the documentation in \docs\
 
 ### Post-Build
+* Update master branch from develop branch.
 * Build Github release with changelog and title
 * Copy Github release to Curseforge
 * Copy Github release to Kerbalstuff

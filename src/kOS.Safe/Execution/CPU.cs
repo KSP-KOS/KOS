@@ -91,7 +91,8 @@ namespace kOS.Safe.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", SafeHouse.Version);
+                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n(manual at {1})\n \n" + "Proceed.\n",
+                                                   SafeHouse.Version, SafeHouse.DocumentationURL);
                 List<string> nags = Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
@@ -106,6 +107,7 @@ namespace kOS.Safe.Execution
 
                     bootMessage = nags.Aggregate(bootMessage, (current, msg) => current + (msg + "\n"));
                     bootMessage += "##################################################\n";
+                    shared.Processor.SetMode(Module.ProcessorModes.OFF);
                 }
                 shared.Screen.Print(bootMessage);
             }

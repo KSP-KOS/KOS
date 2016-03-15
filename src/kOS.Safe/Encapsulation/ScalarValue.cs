@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Scalar")]
     abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
     {
         abstract public bool IsInt { get; }
@@ -393,7 +394,7 @@ namespace kOS.Safe.Encapsulation
 
         float IConvertible.ToSingle(IFormatProvider provider)
         {
-            throw new KOSCastException(typeof(ScalarValue), typeof(float));
+            return Convert.ToSingle(GetDoubleValue());
         }
 
         string IConvertible.ToString(IFormatProvider provider)
