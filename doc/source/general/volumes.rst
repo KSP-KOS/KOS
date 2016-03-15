@@ -133,12 +133,12 @@ volume but with the following exceptions:
 -  The archive represents the large bank of disk storage back at mission
    control's mainframe, rather than the storage on an indivdual craft.
    While "Volume 1" on one vessel might be a different disk than "Volume
-   1" on another vessel, there is only volume called "archive" in the
+   1" on another vessel, there is only one volume called "archive" in the
    entire solar system. Also, there's only one "archive" across all
    saved universes. If you play a new campaign from scratch, your
    archive in that new game will still have all the files in it from
    your previous saved game. This is because behid the scenes it's
-   stored in the plugin's directory, not the save game directory.
+   stored in the ``Ships/Script`` directory, not the save game directory.
 -  It is infinitely large.
 -  Unlike the other volumes, the archive volume does not have a byte
    limit. This is because the mainframe back at home base can store a
@@ -150,16 +150,6 @@ volume but with the following exceptions:
    themselves also reverts to what it was at the time of the saved game.
    Because the archive is saved outside the normal game save, changes
    made there are retained even when reverting a flight.
--  It's not always reachable if you are out in space, unless you have
-   antennae.
--  Once a vessel is more than 100,000 meters away from mission control,
-   by default it cannot access the files on the archive. Commands such
-   as SWITCH TO , and COPY FROM will fail to work when trying to access
-   the archive volume while out of range. This can be changed by putting
-   antennae on the vessel. With enough
-   `antennae </KOS_DOC/summary_topics/commrange>`__ it becomes possible
-   to reach the archive drive from farther away. Using this method it is
-   possible to alter the software stored on a vessel after launch.
 -  Files in Archive are editable with a text editor directly and they
    will have the ``.ks`` extension.
 -  Files in the Archive are stored on your computer in the subdirectory:

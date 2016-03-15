@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Stage")]
     public class StageValues : Structure
     {
         private readonly SharedObjects shared;

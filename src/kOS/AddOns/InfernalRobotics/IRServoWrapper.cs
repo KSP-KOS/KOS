@@ -5,6 +5,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.AddOns.InfernalRobotics
 {
+    [kOS.Safe.Utilities.KOSNomenclature("IRServo")]
     public class IRServoWrapper : Structure
     {
         private readonly IRWrapper.IServo servo;
@@ -47,7 +48,7 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("MOVEPREVPRESET", new NoArgsVoidSuffix(MovePrevPreset));
             AddSuffix("STOP", new NoArgsVoidSuffix(Stop));
 
-            AddSuffix("MOVETO", new TwoArgsSuffix<ScalarDoubleValue, ScalarDoubleValue>(MoveTo));
+            AddSuffix("MOVETO", new TwoArgsSuffix<ScalarValue, ScalarValue>(MoveTo));
 
             AddSuffix("PART", new Suffix<PartValue>(() => this.partValue));
         }
@@ -89,7 +90,7 @@ namespace kOS.AddOns.InfernalRobotics
             servo.Stop();
         }
 
-        public void MoveTo(ScalarDoubleValue position, ScalarDoubleValue speed)
+        public void MoveTo(ScalarValue position, ScalarValue speed)
         {
             partValue.ThrowIfNotCPUVessel();
             servo.MoveTo(position, speed);

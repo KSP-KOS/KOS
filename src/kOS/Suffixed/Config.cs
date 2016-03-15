@@ -8,6 +8,7 @@ using KSP.IO;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Config")]
     public class Config : Structure, IConfig
     {
         private static Config instance;

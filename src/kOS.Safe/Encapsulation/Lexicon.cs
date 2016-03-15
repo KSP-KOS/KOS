@@ -9,6 +9,8 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Lexicon")]
+    [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false) ]
     public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>

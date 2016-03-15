@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace kOS.AddOns.InfernalRobotics
 {
+    [kOS.Safe.Utilities.KOSNomenclature("IRControlGroup")]
     public class IRControlGroupWrapper : Structure
     {
         private readonly IRWrapper.IControlGroup cg;

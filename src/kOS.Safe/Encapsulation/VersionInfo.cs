@@ -2,6 +2,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Version")]
     public class VersionInfo : Structure
     {
         private readonly int major;

@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace kOS.AddOns.OrbitalScience
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule", KOSToCSharp = false)]
     public class DMBathymetryFields : DMModuleScienceAnimateFields
     {
         public DMBathymetryFields(ModuleScienceExperiment mod, SharedObjects shared)

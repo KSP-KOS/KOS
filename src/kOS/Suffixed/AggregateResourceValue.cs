@@ -6,6 +6,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("AggregateResource")]
     public class AggregateResourceValue : Structure
     {
         private readonly string name;

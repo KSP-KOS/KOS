@@ -1,4 +1,4 @@
-.. kuniverse:
+.. _kuniverse:
 
 KUniverse 4th wall methods
 ==========================
@@ -18,15 +18,15 @@ KUniverse 4th wall methods
           - Description
 
         * - :attr:`CANREVERT`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Get
           - Is any revert possible?
         * - :attr:`CANREVERTTOLAUNCH`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Get
           - Is revert to launch possible?
         * - :attr:`CANREVERTTOEDITOR`
-          - boolean
+          - :ref:`boolean <boolean>`
           - Get
           - Is revert to editor possible?
         * - :attr:`REVERTTOLAUNCH`
@@ -38,21 +38,21 @@ KUniverse 4th wall methods
           - Method
           - Invoke revert to editor
         * - :attr:`REVERTTO(name)`
-          - string
+          - :ref:`string <string>`
           - Method
           - Invoke revert to the named editor
         * - :attr:`ORIGINEDITOR`
-          - string
+          - :ref:`string <string>`
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
         * - :attr:`HOURSPERDAY`
-          - scalar
+          - :ref:`scalar <scalar>`
           - Get
           - Number of hours per day (6 or 24) according to your game settings.
         * - :attr:`DEBUGLOG(message)`
           - none
           - Method
-          - Causes a string to append to the Unity debug log file.
+          - Causes a :ref:`string <string>` to append to the Unity debug log file.
         * - :attr:`DEFAULTLOADDISTANCE`
           - :struct:`LoadDistance`
           - Get
@@ -70,21 +70,21 @@ KUniverse 4th wall methods
 .. attribute:: KUniverse:CANREVERT
 
     :access: Get
-    :type: boolean.
+    :type: :ref:`boolean <boolean>`.
 
     Returns true if either revert to launch or revert to editor is available.  Note: either option may still be unavailable, use the specific methods below to check the exact option you are looking for.
 
 .. attribute:: KUniverse:CANREVERTTOLAUNCH
 
     :access: Get
-    :type: boolean.
+    :type: :ref:`boolean <boolean>`.
 
     Returns true if either revert to launch is available.
 
 .. attribute:: KUniverse:CANREVERTTOEDITOR
 
     :access: Get
-    :type: boolean.
+    :type: :ref:`boolean <boolean>`.
 
     Returns true if either revert to the editor is available.  This tends
     to be false after reloading from a saved game where the vessel was
@@ -114,14 +114,14 @@ KUniverse 4th wall methods
 .. attribute:: KUniverse:ORIGINEDITOR
 
     :access: Get
-    :type: string.
+    :type: :ref:`string <string>`.
 
     Returns the name of the originating editor based on the vessel type.
     The value is one of:
 
     - "SPH" for things built in the space plane hangar,
     - "VAB" for things built in the vehicle assembly building.
-    - "" (empty string) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+    - "" (empty :ref:`string <string>`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
 
 .. attribute:: KUniverse:DEFAULTLOADDISTANCE
 
@@ -156,7 +156,7 @@ KUniverse 4th wall methods
 .. attribute:: KUniverse:HOURSPERDAY
 
     :access: Get
-    :type: Scalar (integer)
+    :type: :ref:`scalar <scalar>` (integer)
 
     Has the value of either 6 or 24, depending on what setting you used
     on Kerbal Space Program's main settings screen for whether you wanted
@@ -185,7 +185,7 @@ KUniverse 4th wall methods
 
 .. method:: KUniverse:DEBUGLOG(message)
 
-    :parameter message: string message to append to the log.
+    :parameter message: :ref:`string <string>` message to append to the log.
     :return: none
 
     All Unity games (Kerbal Space Program included) have a standard

@@ -6,6 +6,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.InfernalRobotics
 {
+    [kOS.Safe.Utilities.KOSNomenclature("IRAddon")]
     public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("IR", shared)

@@ -86,6 +86,50 @@ On each physics tick, each kOS CPU that's within physics range (i.e. 2.5 km), wa
 
 Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.
 
+
+.. _electricdrain:
+
+Electric Drain
+--------------
+
+.. versionadded:: 0.19.0
+
+    As of version 0.19.0, the electric charge drain varies depending
+    on CPU % usage.  Prior to version 0.19.0, the CPU load made no
+    difference and the electric drain was constant regardless of
+    utilization.
+
+Real world CPUs often have low power modes, and sleep modes, and these are
+vital to long distance probes.  In these modes the computer deliberately
+runs slowly in order to use less power, and then the program can tell it to
+speed up to normal speed again when it needs to wake up and do something.
+
+In kOS, this concept is simplified by just draining electric charge by
+"micropayments" of charge per instruction executed.
+
+To change this setting if you want to re-balance the system, see the
+page about :ref:`kOSProcessor part config values <EcPerInstruction>`.
+
+The shorthand version is this:  The more instructions per update
+actually get executed, the more power is drained.  This can be reduced
+by either lowering ``CONFIG:IPU`` or by making sure your main loop
+has a ``WAIT`` statement in it.  (When encountering a ``WAIT`` statement,
+the remainder of the instructions for that update are not used and end
+up not counting against electric charge).
+
+The system always costs at least 1 instruction of electric charge per
+update no matter what the CPU is doing, unless it's powered down entirely,
+because there's always at least 1 instruction just to check if it's time
+to resume yet in a ``WAIT``.  The electric cost is never entirely zero
+as long as it's turned on, but it can be very close to zero while it is
+stuck on a wait.
+
+If your program spins in a busy loop, never waiting, it can consume
+quite a bit more power than it would if you explicitly throw in a
+``WAIT 0.001.`` in the loop.  Even if the wait is very small, the 
+mere fact that it yields the remaining instructions still allowed
+that update can make a big difference.
+
 Triggers
 --------
 

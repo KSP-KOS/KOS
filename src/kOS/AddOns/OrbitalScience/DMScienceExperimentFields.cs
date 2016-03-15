@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace kOS
+namespace kOS.AddOns.OrbitalScience
 {
+    [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule", KOSToCSharp = false)]
     public class DMScienceExperimentFields : ScienceExperimentFields
     {
         public DMScienceExperimentFields(PartModule mod, SharedObjects shared)

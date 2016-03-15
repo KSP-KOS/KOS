@@ -57,13 +57,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
           -
           - Activate action by name with True or False
         * - :meth:`HASFIELD(name)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if field exists
         * - :meth:`HASEVENT(name)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if event exists
         * - :meth:`HASACTION(name)`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Check if action exists
 
 
@@ -151,30 +151,30 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 .. method:: PartModule:DOACTION(name,bool)
 
     :parameter name: (string) Name of the action
-    :parameter bool: (boolean) Value to set: True or False
+    :parameter bool: (:ref:`Boolean <boolean>`) Value to set: True or False
 
-    Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The boolean value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
+    Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The :ref:`Boolean <boolean>` value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
 
     WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. method:: PartModule:HASFIELD(name)
 
     :parameter name: (string) Name of the field
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Return true if the given field name is currently available for use with :GETFIELD or :SETFIELD on this PartModule, false otherwise.
 
 .. method:: PartModule:HASEVENT(name)
 
     :parameter name: (string) Name of the event
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Return true if the given event name is currently available for use with :DOEVENT on this PartModule, false otherwise.
 
 .. method:: PartModule:HASACTION(name)
 
     :parameter name: (string) Name of the action
-    :return: boolean
+    :return: :ref:`Boolean <boolean>`
 
     Return true if the given action name is currently available for use with :DOACTION on this PartModule, false otherwise.
 

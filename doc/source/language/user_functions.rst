@@ -44,8 +44,8 @@ Help for the new user - What is a Function?
 
 .. _declare function:
 
-``DECLARE FUNCTION``
---------------------
+DECLARE FUNCTION
+----------------
 
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
@@ -112,8 +112,8 @@ programs.  At the top of your main script you can then "run" the
 other scripts containing the library of functions to get them
 compiled into memory.
 
-``Using RUN ONCE``
-------------------
+Using RUN ONCE
+--------------
 
 If you want to load a library of functions that ALSO perform some
 initialization mainline code, but you only want the mainline code
@@ -170,6 +170,8 @@ another sub-program includes the library in its code.  So you have this:
        return current_num.
     }
 
+.. highlight:: none
+
 The above example prints this::
 
     prog1:      next counter ID = 1
@@ -189,13 +191,15 @@ whereas, had you used just ``run counterlib.`` instead of
     subprogram: next counter ID = 2
     subprogram: next counter ID = 3
 
+.. highlight:: kerboscript
+
 because ``subprogram`` would have run the mainline code 
 ``global current_num is 0`` again when it was run inside
 ``subprogram``.
 
 
-``DECLARE PARAMETER``
----------------------
+DECLARE PARAMETER
+-----------------
 
 If your function expects to have parameters passed into it, you can
 use the :ref:`DECLARE PARAMETER <declare parameter>` command to do
@@ -229,6 +233,8 @@ in the previous example where it said::
 
     print_corner(4,"That's me in the corner").
 
+.. _default_parameters:
+
 Optional Parameters (parameter defaults)
 ----------------------------------------
 
@@ -255,7 +261,7 @@ example 3::
     FUNCTION MYFUNC {
       PARAMETER P1.
       PARAMETER P2.
-      PAREMETER P3 is 0.
+      PARAMETER P3 is 0.
       PARAMETER P4 is "cheese".
 
       print P1 + ", " + P2 + ", " + P3 + ", " + P4.
@@ -302,7 +308,7 @@ only gets executed if the system needed to pad a missing argument.
 .. _interpreter functions:
 
 Functions and the terminal interpreter
-::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You **cannot** call functions from the interpreter interactive
 command line if they were declared inside of script programs.
@@ -327,7 +333,7 @@ In the future we may find a way to fix this problem,
 but for right now, just don't do it.
     
 Calling a function without parentheses (please don't)
-:::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In some cases it is possible to call a function with the
 parentheses off, as shown below, but this is not recommended::
@@ -353,8 +359,8 @@ function (a function you made for yourself in another file) then it
 does not work, for complex reason involving the compiler and late-time
 binding.
 
-``LOCAL .. TO``
------------------
+LOCAL .. TO
+-----------
 
 (aka: **local variables**)
 
@@ -388,7 +394,7 @@ A more in-depth explanation of kerboscript's scoping rules and how they
 work is found :ref:`on another page <scope>`
 
 Initializers are now mandatory for the DECLARE statement
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is now **illegal** syntax::
 
@@ -414,7 +420,7 @@ initializer clause.
   use - a string, an integer, a floating point number, etc.*
 
 Difference between declare and set
-::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may think that::
 
@@ -432,8 +438,8 @@ be made (and that new ``x`` will be global, not local).
 
 .. _return:
 
-``RETURN``
-----------
+RETURN
+------
 
 ``return`` *expression(optional)* *dot(mandatory)*
 
@@ -488,17 +494,22 @@ value of the parameter, as in this example::
     embiggen(global_val).
     print global_val.
 
+
+.. highlight:: none
+
 The above example will print::
 
     30
     x has been embiggened to 40
     30
 
+.. highlight:: kerboscript
+
 Although the function added 10 to its OWN copy of the parameter, the 
 caller's copy of the parameter remained unchanged.
 
 Important exception to passing by value - structures
-::::::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
@@ -523,11 +534,15 @@ in the object really WILL change it, as shown here::
     half_vector(global_vec).
     print "afterward, global_vec is now " + global_vec.
 
+.. highlight:: none
+
 This will give the following result::
 
     full vector is v(10,20,30)
     half vector is v(5,10,15)
     afterward, global_vec is now v(5,10,15)
+
+.. highlight:: kerboscript
 
 Because a vector is a suffixed structure, it effectively acts as if 
 it was passed in by reference instead of by value, and so when it
@@ -570,7 +585,7 @@ Example::
       return getSum(aList) / aList:LENGTH.
     }.
 
-    set L to LIST();
+    set L to LIST().
     L:ADD(10).
     L:ADD(9).
     print "mean average is " + getMean(L).
@@ -595,7 +610,7 @@ User Function Gotchas
 ---------------------
 
 Calling program's functions from the interpreter
-::::::::::::::::::::::::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As :ref:`explained above <interpreter functions>`, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
@@ -603,7 +618,7 @@ and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.
 
 Inconsistent returns
-::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~
 
 Note that if you sometimes do and sometimes don't return a value, from
 the same function, as in the example here::
@@ -635,7 +650,7 @@ a user function, that you *always* do so in every path through your
 function.
 
 Accidentally using globals
-::::::::::::::::::::::::::
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is possible to accidentally create global variables
 when you didn't meant to, just because you made a typo.

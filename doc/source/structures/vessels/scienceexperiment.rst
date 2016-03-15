@@ -59,16 +59,16 @@ properly.
           -
           - Discard the data
         * - :attr:`INOPERABLE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Is this experiment inoperable
         * - :attr:`RERUNNABLE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Can this experiment be run multiple times
         * - :attr:`DEPLOYED`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Is this experiment deployed
         * - :attr:`HASDATA`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Does the experiment have scientific data
         * - :attr:`DATA`
           - :struct:`List` of :struct:`ScienceData`
@@ -99,28 +99,28 @@ properly.
 .. attribute:: ScienceExperimentModule:INOPERABLE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment is no longer operable.
 
 .. attribute:: ScienceExperimentModule:RERUNNABLE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment can be run multiple times.
 
 .. attribute:: ScienceExperimentModule:DEPLOYED
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment is deployed.
 
 .. attribute:: ScienceExperimentModule:HASDATA
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment has scientific data stored.
 

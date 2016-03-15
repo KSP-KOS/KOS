@@ -9,6 +9,7 @@ using Math = System.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Control")]
     public class FlightControl : Structure , IDisposable
     {
         private const float SETTING_EPILSON = 0.00001f;
