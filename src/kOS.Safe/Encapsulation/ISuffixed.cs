@@ -1,8 +1,10 @@
-﻿namespace kOS.Safe.Encapsulation
+﻿using kOS.Safe.Encapsulation.Suffixes;
+
+namespace kOS.Safe.Encapsulation
 {
     public interface ISuffixed
     {
         bool SetSuffix(string suffixName, object value);
-        object GetSuffix(string suffixName);
+        ISuffixResult GetSuffix(string suffixName);
     }
 }

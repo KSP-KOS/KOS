@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Structure
@@ -13,9 +14,9 @@ namespace kOS.Safe.Test.Structure
             const int MAX_VALUE = 1;
 
             float value = 0.5f;
-            var suffix = new ClampSetSuffix<float>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
+            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(new ScalarDoubleValue(value), suffix.Get().Value);
 
         }
 
@@ -24,14 +25,14 @@ namespace kOS.Safe.Test.Structure
         {
             const int MIN_VALUE = 0;
             const int MAX_VALUE = 1;
-            const float SET_VALUE = 0.5f;
+            ScalarDoubleValue SET_VALUE = 0.5f;
 
-            float value = 0;
-            var suffix = new ClampSetSuffix<float>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
+            ScalarDoubleValue value = 0;
+            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
             suffix.Set(SET_VALUE);
 
-            Assert.AreEqual(value, suffix.Get());
+            Assert.AreEqual(value, suffix.Get().Value);
             Assert.AreEqual(value, SET_VALUE);
 
         }
@@ -44,7 +45,7 @@ namespace kOS.Safe.Test.Structure
             const float SET_VALUE = 1.5f;
 
             float value = 0;
-            var suffix = new ClampSetSuffix<float>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
+            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE);
 
             suffix.Set(SET_VALUE);
 
@@ -64,7 +65,7 @@ namespace kOS.Safe.Test.Structure
             const float STEP_VALUE = 0.5f;
 
             float value = 0;
-            var suffix = new ClampSetSuffix<float>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
+            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
 
             suffix.Set(SET_VALUE);
 
@@ -83,7 +84,7 @@ namespace kOS.Safe.Test.Structure
             const float STEP_VALUE = 0.5f;
 
             float value = 0;
-            var suffix = new ClampSetSuffix<float>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
+            var suffix = new ClampSetSuffix<ScalarDoubleValue>(() => value, i => value = i, MIN_VALUE, MAX_VALUE, STEP_VALUE);
 
             suffix.Set(SET_VALUE);
 

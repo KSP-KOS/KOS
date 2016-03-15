@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Exceptions
+﻿using kOS.Safe.Compilation.KS;
+
+namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// A version of KOSCommandInvalidHere describing an attempt to use
@@ -20,8 +22,8 @@
             "recompiles and re-runs the program\n" +
             "each run.\n";
 
-        public KOSOnceInvalidHereException() :
-            base( "ONCE", "from the terminal interpreter", "inside a program" )
+        public KOSOnceInvalidHereException(LineCol location) :
+            base(location, "ONCE", "from the terminal interpreter", "inside a program" )
         {
         }
     }

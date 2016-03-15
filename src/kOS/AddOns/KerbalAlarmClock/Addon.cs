@@ -34,7 +34,7 @@ namespace kOS.AddOns.KerbalAlarmClock
             return list;
         }
 
-        public override bool Available()
+        public override BooleanValue Available()
         {
             return KACWrapper.APIReady;
         }

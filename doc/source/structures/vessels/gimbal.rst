@@ -3,7 +3,7 @@
 Gimbal
 ======
 
-Many engines in KSP have thrust vectoring gimbals and in ksp they are their own module
+Many engines in KSP have thrust vectoring gimbals which are handled by their own module
 
 
 .. structure:: Gimbal
@@ -13,11 +13,23 @@ Many engines in KSP have thrust vectoring gimbals and in ksp they are their own 
         :widths: 2 1 4
 
         * - Suffix
-          - Type
+          - Type (units)
           - Description
 
+        * - All suffixes of :struct:`PartModule`
+          -
+          -
+
+        * - :attr:`LOCK`
+          - boolean
+          - Is the Gimbal locked in neutral position? 
+          
+        * - :attr:`LIMIT`
+          - scalar (%)
+          - Percentage of the maximum range the Gimbal is allowed to travel 
+
         * - :attr:`RANGE`
-          - scalar
+          - scalar (deg)
           - The Gimbal's Possible Range of movement
 
         * - :attr:`RESPONSESPEED`
@@ -35,14 +47,30 @@ Many engines in KSP have thrust vectoring gimbals and in ksp they are their own 
         * - :attr:`ROLLANGLE`
           - scalar
           - Current Gimbal Roll 
-		  
-        * - :attr:`LOCK`
-          - boolean
-          - Is the gimbal free to travel? 
-		  
+
+
+.. note::
+
+    :struct:`Gimbal` is a type of :struct:`PartModule`, and therefore can use all the suffixes of :struct:`PartModule`. Shown below are only the suffixes that are unique to :struct:`Gimbal`.
+    :struct:`Gimbal` can be accessed as :attr:`Engine:GIMBAL` atribute of  :struct:`Engine`.
+
+.. attribute:: Gimbal:LOCK
+
+    :type: boolean
+    :access: Get/Set
+        
+    Is this gimbal locked to neutral position and not responding to steering controls right now? When you set it to true it will snap the engine back to 0s for pitch, yaw and roll
+
+.. attribute:: Gimbal:LIMIT
+
+    :type: scalar (%)
+    :access: Get/Set
+        
+    Percentage of maximum range this gimbal is allowed to travel
+
 .. attribute:: Gimbal:RANGE
 
-    :type: scalar
+    :type: scalar (deg)
     :access: Get only
 
     The maximum extent of travel possible for the gimbal along all 3 axis (Pitch, Yaw, Roll) 
@@ -74,11 +102,4 @@ Many engines in KSP have thrust vectoring gimbals and in ksp they are their own 
     :access: Get only
 
     The gimbals current roll, has a range of -1 to 1. Will always be 0 when LOCK is true
-
-.. attribute:: Gimbal:LOCK
-
-    :type: string
-    :access: Get/Set
-        
-    Can this Gimbal produce torque right now, when you set it to false it will snap the engine back to 0s for pitch,yaw and roll
 

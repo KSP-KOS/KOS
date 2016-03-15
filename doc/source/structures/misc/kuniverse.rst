@@ -6,7 +6,7 @@ KUniverse 4th wall methods
 
 .. structure:: KUniverse
 
-    :struct:`KUniverse` is a special structure that allows your kerboscript programs to access some of the functions that break the "4th Wall".  It serves as a place to access object directly connected to the KSP game itself, rather than the interaction with the KSP world (vessels, planets, orbits, etc.).
+    :struct:`KUniverse` is a special structure that allows your Kerboscript programs to access some of the functions that break the "4th Wall".  It serves as a place to access object directly connected to the KSP game itself, rather than the interaction with the KSP world (vessels, planets, orbits, etc.).
 
     .. list-table:: Members and Methods
         :header-rows: 1
@@ -60,7 +60,7 @@ KUniverse 4th wall methods
         * - :attr:`ACTIVEVESEL`
           - :struct:`Vessel`
           - Get/Set
-          - Returns the active vessel, or lets you set the active vesssel.
+          - Returns the active vessel, or lets you set the active vessel.
         * - :attr:`FORCEACTIVE(vessel)`
           - n/a
           - Set
@@ -116,7 +116,7 @@ KUniverse 4th wall methods
     :access: Get
     :type: string.
 
-    Returns the name of the orginating editor based on the vessel type.
+    Returns the name of the originating editor based on the vessel type.
     The value is one of:
 
     - "SPH" for things built in the space plane hangar,
@@ -240,7 +240,7 @@ KUniverse 4th wall methods
 ****
 
 Examples
-========
+--------
 
 Switch to an active vessel called "vessel 2"::
 

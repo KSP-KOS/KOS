@@ -188,9 +188,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object[] argArray = new object[CountRemainingArgs(shared)];
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var listValue = new ListValue(argArray.ToList());
             ReturnValue = listValue;
@@ -202,9 +202,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object[] argArray = new object[CountRemainingArgs(shared)];
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var queueValue = new QueueValue(argArray.ToList());
             ReturnValue = queueValue;
@@ -216,9 +216,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object[] argArray = new object[CountRemainingArgs(shared)];
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
-                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
             var stackValue = new StackValue(argArray.ToList());
             ReturnValue = stackValue;
@@ -230,9 +230,13 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
-            var listValue = new Lexicon();
-            ReturnValue = listValue;
+            var lexicon = new Lexicon(argArray.ToList());
+            ReturnValue = lexicon;
         }
     }
 

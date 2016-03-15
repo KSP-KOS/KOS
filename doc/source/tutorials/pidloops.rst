@@ -3,6 +3,22 @@
 PID Loops in kOS
 ================
 
+.. versionadded:: 0.18.1
+
+    Note, this is an older tutorial.  As of 
+    kOS version 0.18.1 and up, a new :struct:`pidloop`
+    feature was added to kOS to allow you to use a built-in PID
+    controller that executes very quickly in the kOS "hardware"
+    rather than in your script code.  You can use it to perform
+    the work described in detail on this page.  However, this
+    tutorial is still quite important because it walks you through
+    how a PID controller works and what it's really doing under the
+    hood.  It's probably a good idea to use the built-in
+    :struct:`pidloop` instead of the program shown here, once you
+    understand the topic this page describes.  However, it's also
+    a good idea to have a read through this page to get an 
+    understanding of what that built-in feature is really doing.
+
 This tutorial covers how one can implement a `PID loop`_ using kOS. A P-loop, or "proportional feedback loop" was already introduced in the second section of the :ref:`Design Patterns Tutorial <designpatterns>`, and that will serve as our starting point. After some code rearrangement, the integral and derivative terms will be added and discussed in turn. Next, a couple extra features will be added to the full PID-loop. Lastly, we'll show a case-study in tuning a full PID loop using the Ziegler-Nichols method. We'll use the LOG method to dump telemetry from KSP into a file and our favorite graphing software to visualize the data.
 
 .. _PID loop: http://en.wikipedia.org/wiki/PID_controller
@@ -225,7 +241,7 @@ Tuning a PID-loop
 
 We are going to start with the same rocket design we have been using so far and actually tune the PID-loop using the Ziegler-Nichols method. This is where we turn off the integral and derivative terms in the loop and bring the proportional gain (Kp) up from zero to the point where the loop causes a steady oscillation with a measured period (Tu). At this point, the proportional gain is called the "ultimate gain" (Ku) and the actual gains (Kp, Ki and Kd) are set according to this table `taken from wikipedia`_:
 
-.. _taken from wikipedia: http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
+.. _taken from Wikipedia: http://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
 +------------------------+-----------+---------------+--------------+
 | Control Type           | Kp        | Ki            | Kd           |

@@ -22,10 +22,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("AVAILABLE", new Suffix<Boolean>(Available));
+            AddSuffix("AVAILABLE", new Suffix<BooleanValue>(Available));
         }
 
-        public abstract bool Available ();
+        public abstract BooleanValue Available ();
        
         public override string ToString()
         {

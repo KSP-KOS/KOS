@@ -23,6 +23,15 @@ to perform all science-related tasks without any manual intervention::
     WAIT UNTIL M:HASDATA.
     M:TRANSMIT.
 
+Please note the use of :code:`WAIT UNTIL M:HASDATA`.
+
+This structure should work well with stock science experiments. Mods that introduce their own
+science parts might not be compatible with it. One notable example is SCANsat. Even though
+SCANsat parts look and behave very similarly to stock science experiments under the hood
+they work very differently. Other mods can cause problems as well, please test them before use.
+
+:ref:`DMagic Orbital Science <orbitalscience>` has dedicated support in kOS and should work
+properly.
 
 .. structure:: ScienceExperimentModule
 
@@ -61,6 +70,9 @@ to perform all science-related tasks without any manual intervention::
         * - :attr:`HASDATA`
           - boolean
           - Does the experiment have scientific data
+        * - :attr:`DATA`
+          - :struct:`List` of :struct:`ScienceData`
+          - List of scientific data obtained by this experiment
 
 .. note::
 
@@ -82,8 +94,7 @@ to perform all science-related tasks without any manual intervention::
 
 .. method:: ScienceExperimentModule:DUMP()
 
-    Call this method to discard the data obtained as a result of running this experiment. This will render the experiment
-    inoperable if it is not rerunnable.
+    Call this method to discard the data obtained as a result of running this experiment.
 
 .. attribute:: ScienceExperimentModule:INOPERABLE
 
@@ -112,3 +123,10 @@ to perform all science-related tasks without any manual intervention::
     :type: boolean
 
     True if this experiment has scientific data stored.
+
+.. attribute:: ScienceExperimentModule:DATA
+
+    :access: Get only
+    :type: :struct:`List` of :struct:`ScienceData`
+
+    List of scientific data obtained by this experiment

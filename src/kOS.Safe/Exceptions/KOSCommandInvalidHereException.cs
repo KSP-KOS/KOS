@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Compilation.KS;
 
 namespace kOS.Safe.Exceptions
 {
@@ -26,13 +27,14 @@ namespace kOS.Safe.Exceptions
         /// <summary>
         /// Describe the condition under which the invalidity is happening.
         /// </summary>
+        /// <param name="location">current line and column position of the problem</param>
         /// <param name="command">string name of the invalid command</param>
         /// <param name="badPlace">describing where in code the it's not being allowed.
         /// Use a phrasing that starts with a preposition, i.e. "in a loop", "outside a loop"</param>
         /// <param name="goodPlace">describing what sort of code the it is meant to be used in instead.
         /// Use a phrasing that starts with a preposition, i.e. "in a loop", "outside a loop"</param>
-        public KOSCommandInvalidHereException(string command, string badPlace, string goodPlace) :
-            base(string.Format(TERSE_MSG_FMT, command, badPlace, goodPlace))
+        public KOSCommandInvalidHereException(LineCol location, string command, string badPlace, string goodPlace) :
+            base(location, string.Format(TERSE_MSG_FMT, command, badPlace, goodPlace))
         {
         }
     }

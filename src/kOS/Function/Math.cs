@@ -3,6 +3,7 @@ using kOS.Safe.Compilation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
@@ -94,6 +95,7 @@ namespace kOS.Function
         }
     }
 
+
     [Function("ln")]
     public class FunctionLn : FunctionBase
     {
@@ -158,7 +160,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             AssertArgBottomAndConsume(shared);
-            ReturnValue = random.NextDouble();
+            ReturnValue = Structure.FromPrimitive(random.NextDouble());
         }
     }
 
@@ -235,6 +237,31 @@ namespace kOS.Function
             }
             else
                 throw new KOSException("vector angle calculation attempted with a non-vector value");
+        }
+    }
+
+
+    [Function("char")]
+    public class FunctionChar : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            string result = new string((char) argument, 1);
+            ReturnValue = new StringValue(result);
+        }
+    }
+
+    [Function("unchar")]
+    public class FunctionUnchar : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string argument = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
+            char result = argument.ToCharArray()[0];
+            ReturnValue = ScalarValue.Create(result);
         }
     }
 }

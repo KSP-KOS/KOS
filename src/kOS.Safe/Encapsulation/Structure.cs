@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
-    public abstract class Structure : ISuffixed, IOperable 
+    public abstract class Structure : ISuffixed, IOperable
     {
         private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
         private readonly IDictionary<string, ISuffix> instanceSuffixes;
@@ -20,7 +21,7 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
-            AddSuffix("TYPE", new Suffixes.Suffix<string>(() => GetType().ToString()));
+            AddSuffix("TYPE", new Suffix<StringValue>(() => GetType().ToString()));
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -110,7 +111,7 @@ namespace kOS.Safe.Encapsulation
             return false;
         }
 
-        public virtual object GetSuffix(string suffixName)
+        public virtual ISuffixResult GetSuffix(string suffixName)
         {
             ISuffix suffix;
             if (instanceSuffixes.TryGetValue(suffixName, out suffix))
@@ -168,10 +169,29 @@ namespace kOS.Safe.Encapsulation
             return new StringValue(string.Concat(val1, val2));
         }
 
+        /// <summary>
+        /// Attempt to convert the given object into a kOS encapsulation type (something
+        /// derived from kOS.Safe.Encapsulation.Structure), returning that instead.
+        /// This never throws exception or complains in any way if the conversion cannot happen.
+        /// Insted in that case it just silently ignores the request and returns the original object
+        /// reference unchanged.  Thus it is safe to call it "just in case", even in places where it won't
+        /// always be necessary, or have an effect at all.  You should use in anywhere you need to
+        /// ensure that a value a user's script might see on the stack or in a script variable is properly
+        /// wrapped in a kOS Structure, and not just a raw primitive like int or double.
+        /// </summary>
+        /// <param name="value">value to convert</param>
+        /// <returns>new converted value, or original value if conversion couldn't happen or was unnecesary</returns>
         public static object FromPrimitive(object value)
         {
+            if (value == null)
+                return value; // If a null exists, let it pass through so it will bomb elsewhere, not here in FromPrimitive() where the exception message would be obtuse.
+
+            if (value is Structure)
+                return value; // Conversion is unnecessary - it's already a Structure.
+
             var convert = value as IConvertible;
-            if (convert == null) return value;
+            if (convert == null)
+                return value; // Conversion isn't even theoretically possible.
 
             TypeCode code = convert.GetTypeCode();
             switch (code)
@@ -196,7 +216,24 @@ namespace kOS.Safe.Encapsulation
                 default:
                     break;
             }
-            return value;
+            return value; // Conversion is one this method didn't implement.
+        }
+
+        /// <summary>
+        /// This is identical to FromPrimitive, except that it WILL throw an exception
+        /// if it was unable to guarantee that the result became (or already was) a kOS Structure.
+        /// </summary>
+        /// <param name="value">value to convert</param>
+        /// <returns>value after conversion, or original value if conversion unnecessary</returns>
+        public static Structure FromPrimitiveWithAssert(object value)
+        {
+            object convertedVal = FromPrimitive(value);
+            Structure returnValue = convertedVal as Structure;
+            if (returnValue == null)
+                throw new KOSException(
+                    string.Format("Internal Error.  Contact the kOS developers with the phrase 'impossible FromPrimitiveWithAssert({0}) was attempted'.\nAlso include the output log if you can.",
+                                  value == null ? "<null>" : value.GetType().ToString()));
+            return returnValue;
         }
 
         public static object ToPrimitive(object value)

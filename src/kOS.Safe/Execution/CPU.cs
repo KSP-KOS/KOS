@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using System;
@@ -30,6 +31,8 @@ namespace kOS.Safe.Execution
         private VariableScope savedPointers;
         private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
+
+        public int InstructionsThisUpdate { get { return instructionsSoFarInUpdate; } }
 
         // statistics
         private double totalCompileTime;
@@ -113,7 +116,7 @@ namespace kOS.Safe.Execution
             // Check to make sure the boot file name is valid, and then that the boot file exists.
             if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
             else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-            else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
+            else if (shared.VolumeMgr.CurrentVolume.Open(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
             else
             {
                 var bootContext = "program";
@@ -565,7 +568,7 @@ namespace kOS.Safe.Execution
         {
             var msg = new StringBuilder();
             msg.AppendLine("============== STACK VARIABLES ===============");
-            msg.AppendLine(stack.Dump());
+            DumpStack();
             msg.AppendLine("============== GLOBAL VARIABLES ==============");
             foreach (string ident in globalVariables.Variables.Keys)
             {
@@ -575,7 +578,7 @@ namespace kOS.Safe.Execution
                     Variable v = globalVariables.Variables[ident];
                     line = ident;
                     if (v == null || v.Value == null)
-                        line += "is <null>";
+                        line += " is <null>";
                     else
                         line += " is a " + v.Value.GetType().FullName + " with value = " + v.Value;
                 }
@@ -583,12 +586,17 @@ namespace kOS.Safe.Execution
                 {
                     // This is necessary because of the deprecation exceptions that
                     // get raised by FlightStats when you try to print all of them out:
-                    line = ident + "= <value caused exception>\n    " + e.Message;
+                    line = ident + " is <value caused exception>\n    " + e.Message;
                 }
                 msg.AppendLine(line);
             }
             SafeHouse.Logger.Log(msg.ToString());
             return "Variable dump is in the output log";
+        }
+
+        public string DumpStack()
+        {
+            return stack.Dump();
         }
 
         /// <summary>
@@ -614,8 +622,19 @@ namespace kOS.Safe.Execution
             }
             if (failOkay)
                 return null;
-            else
-                throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'), "");
+            // In the case where we were looking for a function pointer but didn't find one, and would
+            // have failed with exception, then it's still acceptable to find a hit that isn't a function
+            // pointer (has no trailing asterisk '*') but only if it's a delegate of some sort:
+            if (identifier.EndsWith("*"))
+            {
+                string trimmedTail = identifier.TrimEnd('*');
+                Variable retryVal = GetVariable(trimmedTail, barewordOkay, failOkay);
+                string trimmedLeader = trimmedTail.TrimStart('$');
+                if (retryVal.Value is KOSDelegate)
+                    return retryVal;
+                throw new KOSNotInvokableException(trimmedLeader);
+            }
+            throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'), "");
         }
 
         /// <summary>
@@ -824,6 +843,102 @@ namespace kOS.Safe.Execution
         public object PeekValue(int digDepth, bool barewordOkay = false)
         {
             return GetValue(stack.Peek(digDepth), barewordOkay);
+        }
+
+        /// <summary>
+        /// Identical to PopValue(), except that it guarantees the return value is either already a Structure,
+        /// or it converts it into a Structure if it's a primitive.
+        /// It bombs out with an exception if it can't be converted thusly.
+        /// <br/>
+        /// Use this in places where the stack value *must* come out as an encapsulated value and something
+        /// has gone seriously wrong if it can't.  This applies to cases where you are attempting to store
+        /// its value inside a user's variable, mostly.
+        /// </summary>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public Structure PopStructureEncapsulated(bool barewordOkay = false)
+        {
+            return Structure.FromPrimitiveWithAssert( PopValue(barewordOkay) );
+        }
+
+        /// <summary>
+        /// Identical to PeekValue(), except that it guarantees the return value is either already a Structure,
+        /// or it converts it into a Structure if it's a primitive.
+        /// It bombs out with an exception if it can't be converted thusly.
+        /// <br/>
+        /// Use this in places where the stack value *must* come out as an encapsulated value and something
+        /// has gone seriously wrong if it can't.  This applies to cases where you are attempting to store
+        /// its value inside a user's variable, mostly.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
+        }
+
+        /// <summary>
+        /// Identical to GetValue(), except that it guarantees the return value is either already a Structure,
+        /// or it converts it into a Structure if it's a primitive.
+        /// It bombs out with an exception if it can't be converted thusly.
+        /// <br/>
+        /// Use this in places where the stack value *must* come out as an encapsulated value and something
+        /// has gone seriously wrong if it can't.  This applies to cases where you are attempting to store
+        /// its value inside another user's variable, mostly.
+        /// <br/>
+        /// Hypothetically this should never really be required, as the value is coming FROM a user varible
+        /// in the first place.
+        /// </summary>
+        /// <param name="testValue">the object which might be a variable name</param>
+        /// <param name="barewordOkay">
+        ///   Is this a case in which it's acceptable for the
+        ///   variable not to exist, and if it doesn't exist then the variable name itself
+        ///   is the value?
+        /// </param>
+        /// <returns>The value after the steps described have been performed.</returns>
+        public Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitiveWithAssert(GetValue(testValue, barewordOkay));
+        }
+
+        /// <summary>
+        /// Identical to PopStructureEncapsulated(), except that it doesn't complain if the
+        /// result can't be converted to a Structure.  It's acceptable for it to not be
+        /// a Structure, in which case the original object is returned as-is.
+        /// <br/>
+        /// Use this in places where the stack value *should* come out as an encapsulated value if it can,
+        /// but there are some valid cases where it might not be.
+        /// </summary>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public object PopValueEncapsulated(bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive( PopValue(barewordOkay) );
+        }
+
+        /// <summary>
+        /// Identical to PeekStructureEncapsulated(), except that it doesn't complain if the
+        /// result can't be converted to a Structure.  It's acceptable for it to not be
+        /// a Structure, in which case the original object is returned as-is.
+        /// <br/>
+        /// Use this in places where the stack value *should* come out as an encapsulated value if it can,
+        /// but there are some valid cases where it might not be.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        {
+            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
         }
 
         /// <summary>
@@ -1068,6 +1183,7 @@ namespace kOS.Safe.Execution
             if (SafeHouse.Config.DebugEachOpcode)
             {
                 executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
+                executeLog.Append(string.Format("Prior to exeucting, stack looks like this:\n{0}\n", DumpStack()));
             }
             try
             {
