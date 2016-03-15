@@ -880,7 +880,7 @@ namespace kOS.Safe.Compilation
         }
         
         public int Distance { get; set; }
-
+        
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
@@ -1627,6 +1627,18 @@ namespace kOS.Safe.Compilation
             }
             
             var contextRecord = shouldBeContextRecord as SubroutineContext;
+            
+            // Special case for when the subroutine was really being called as an interrupt
+            // trigger from the kOS CPU itself.  In that case we don't want to leave the
+            // return value atop the stack, and instead want to pop it and use it to decide
+            // whether or not the re-insert the trigger for next time:
+            if (contextRecord.IsTrigger)
+            {
+                cpu.PopStack(); // already got the return value up above, just ignore it.
+                if (returnVal is bool || returnVal is BooleanValue )
+                    if (Convert.ToBoolean(returnVal))
+                        cpu.AddTrigger(contextRecord.TriggerPointer);
+            }
             
             int destinationPointer = contextRecord.CameFromInstPtr;
             int currentPointer = cpu.InstructionPointer;
