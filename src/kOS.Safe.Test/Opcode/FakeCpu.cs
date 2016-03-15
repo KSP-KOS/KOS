@@ -239,5 +239,15 @@ namespace kOS.Safe.Test.Opcode
         {
             get { throw new NotImplementedException(); }
         }
+
+        public void StartCompileStopwatch()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StopCompileStopwatch()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

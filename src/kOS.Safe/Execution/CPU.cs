@@ -43,7 +43,11 @@ namespace kOS.Safe.Execution
         private double maxUpdateTime;
         private double maxTriggersTime;
         private double maxExecutionTime;
-        private Stopwatch instructionWatch;
+        private Stopwatch instructionWatch = new Stopwatch();
+        private Stopwatch updateWatch = new Stopwatch();
+        private Stopwatch triggerWatch = new Stopwatch();
+        private Stopwatch executionWatch = new Stopwatch();
+        private Stopwatch compileWatch = new Stopwatch();
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
@@ -1000,9 +1004,6 @@ namespace kOS.Safe.Execution
         public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
-            Stopwatch updateWatch = null;
-            Stopwatch triggerWatch = null;
-            Stopwatch executionWatch = null;
             var triggerElapsed = 0.0;
             var executionElapsed = 0.0;
 
@@ -1012,39 +1013,44 @@ namespace kOS.Safe.Execution
             var numTriggerInstructions = 0;
             var numMainlineInstructions = 0;
 
-            if (showStatistics) { updateWatch = Stopwatch.StartNew(); }
+            if (showStatistics)
+            {
+                updateWatch.Reset();
+                triggerWatch.Reset();
+                executionWatch.Reset();
+                instructionWatch.Reset();
+                compileWatch.Stop();
+                compileWatch.Reset();
+                updateWatch.Start();
+            }
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
             try
             {
                 PreUpdateBindings();
-                instructionWatch = Stopwatch.StartNew();
+                if (showStatistics) instructionWatch.Start();
 
                 if (currentContext != null && currentContext.Program != null)
                 {
-                    if (showStatistics) triggerWatch = Stopwatch.StartNew();
+                    if (showStatistics) triggerWatch.Start();
                     ProcessTriggers(showStatistics);
                     numTriggerInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
-                        triggerElapsed = triggerWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                        totalTriggersTime += triggerElapsed;
                     }
 
                     ProcessWait();
 
                     if (currentStatus == Status.Running)
                     {
-                        if (showStatistics) executionWatch = Stopwatch.StartNew();
+                        if (showStatistics) executionWatch.Start();
                         ContinueExecution(showStatistics);
                         numMainlineInstructions = instructionsSoFarInUpdate - numTriggerInstructions;
                         if (showStatistics)
                         {
                             executionWatch.Stop();
-                            executionElapsed = executionWatch.ElapsedTicks*1000D / Stopwatch.Frequency;
-                            totalExecutionTime += executionElapsed;
                         }
                     }
                 }
@@ -1081,6 +1087,11 @@ namespace kOS.Safe.Execution
                 updateWatch.Stop();
                 double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 totalUpdateTime += updateElapsed;
+                triggerElapsed = triggerWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                totalTriggersTime += triggerElapsed;
+                executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                totalExecutionTime += executionElapsed;
+                totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 if (maxTriggerInstructionsSoFar < numTriggerInstructions)
                     maxTriggerInstructionsSoFar = numTriggerInstructions;
                 if (maxMainlineInstructionsSoFar < numMainlineInstructions)
@@ -1305,7 +1316,7 @@ namespace kOS.Safe.Execution
             sb.Append(string.Format("{0}{0}{0}{0}Most Trigger instructions in one update: {0}{1}\n", delimiter, maxTriggerInstructionsSoFar));
             sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
             if (!doProfiling)
-                sb.Append("(Print ProfileResult() for more information.)\n");
+                sb.Append("(`log ProfileResult() to file.csv` for more information.)\n");
             sb.Append(" \n");
             return sb.ToString();
         }
@@ -1339,6 +1350,17 @@ namespace kOS.Safe.Execution
         public void Dispose()
         {
             shared.UpdateHandler.RemoveFixedObserver(this);
+        }
+
+
+        public void StartCompileStopwatch()
+        {
+            compileWatch.Start();
+        }
+
+        public void StopCompileStopwatch()
+        {
+            compileWatch.Stop();
         }
     }
 }
