@@ -186,6 +186,7 @@ namespace kOS.Function
             else
             {
                 // clear the "program" compilation context
+                shared.Cpu.StartCompileStopwatch();
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
@@ -215,6 +216,7 @@ namespace kOS.Function
                     }
                 }
                 programContext.AddParts(codeParts);
+                shared.Cpu.StopCompileStopwatch();
             }
 
             // Because run() returns FIRST, and THEN the CPU jumps to the new program's first instruction that it set up,
@@ -277,6 +279,7 @@ namespace kOS.Function
 
             if (shared.ScriptHandler != null)
             {
+                shared.Cpu.StartCompileStopwatch();
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 // add this program to the address space of the parent program,
@@ -307,6 +310,7 @@ namespace kOS.Function
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);
                 }
+                shared.Cpu.StopCompileStopwatch();
             }
         }
     }

@@ -46,6 +46,8 @@ namespace kOS.Safe.Execution
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
         int InstructionsThisUpdate { get; }
+        void StartCompileStopwatch();
+        void StopCompileStopwatch();
 
         /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.

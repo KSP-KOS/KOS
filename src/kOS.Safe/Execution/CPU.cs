@@ -41,7 +41,10 @@ namespace kOS.Safe.Execution
         private double totalExecutionTime;
         private double maxUpdateTime;
         private double maxExecutionTime;
-        private Stopwatch instructionWatch;
+        private Stopwatch instructionWatch = new Stopwatch();
+        private Stopwatch updateWatch = new Stopwatch();
+        private Stopwatch executionWatch = new Stopwatch();
+        private Stopwatch compileWatch = new Stopwatch();
         private int maxMainlineInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
 
@@ -996,9 +999,6 @@ namespace kOS.Safe.Execution
         public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
-            Stopwatch updateWatch = null;
-            Stopwatch executionWatch = null;
-            var triggerElapsed = 0.0;
             var executionElapsed = 0.0;
 
             // If the script changes config value, it doesn't take effect until next update:
@@ -1006,14 +1006,21 @@ namespace kOS.Safe.Execution
             instructionsSoFarInUpdate = 0;
             var numMainlineInstructions = 0;
 
-            if (showStatistics) { updateWatch = Stopwatch.StartNew(); }
+            if (showStatistics)
+            {
+                updateWatch.Reset();
+                executionWatch.Reset();
+                instructionWatch.Reset();
+                compileWatch.Stop();
+                compileWatch.Reset();
+                updateWatch.Start();
+            }
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
             try
             {
                 PreUpdateBindings();
-                instructionWatch = Stopwatch.StartNew();
 
                 if (currentContext != null && currentContext.Program != null)
                 {
@@ -1023,14 +1030,16 @@ namespace kOS.Safe.Execution
 
                     if (currentStatus == Status.Running)
                     {
-                        if (showStatistics) executionWatch = Stopwatch.StartNew();
+                        if (showStatistics)
+                        {
+                            executionWatch.Start();
+                            instructionWatch.Start();
+                        }
                         ContinueExecution(showStatistics);
                         numMainlineInstructions = instructionsSoFarInUpdate;
                         if (showStatistics)
                         {
                             executionWatch.Stop();
-                            executionElapsed = executionWatch.ElapsedTicks*1000D / Stopwatch.Frequency;
-                            totalExecutionTime += executionElapsed;
                         }
                     }
                 }
@@ -1067,6 +1076,9 @@ namespace kOS.Safe.Execution
                 updateWatch.Stop();
                 double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 totalUpdateTime += updateElapsed;
+                executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                totalExecutionTime += executionElapsed;
+                totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 if (maxMainlineInstructionsSoFar < numMainlineInstructions)
                     maxMainlineInstructionsSoFar = numMainlineInstructions;
                 if (maxUpdateTime < updateElapsed)
@@ -1285,7 +1297,7 @@ namespace kOS.Safe.Execution
             sb.Append(string.Format("{0}{0}{0}{0}Maximum execution time: {0}{1:F3}ms\n", delimiter, maxExecutionTime));
             sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
             if (!doProfiling)
-                sb.Append("(Print ProfileResult() for more information.)\n");
+                sb.Append("(`log ProfileResult() to file.csv` for more information.)\n");
             sb.Append(" \n");
             return sb.ToString();
         }
@@ -1316,6 +1328,17 @@ namespace kOS.Safe.Execution
         public void Dispose()
         {
             shared.UpdateHandler.RemoveFixedObserver(this);
+        }
+
+
+        public void StartCompileStopwatch()
+        {
+            compileWatch.Start();
+        }
+
+        public void StopCompileStopwatch()
+        {
+            compileWatch.Stop();
         }
     }
 }
