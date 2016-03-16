@@ -161,6 +161,17 @@ namespace kOS.Suffixed
             return "V(" + X + ", " + Y + ", " + Z + ")";
         }
 
+        public override bool Equals(object obj)
+        {
+            Vector b = obj as Vector;
+            if (b != null)
+            {
+                if (X == b.X && Y == b.Y && Z == b.Z)
+                    return true;
+            }
+            return false;
+        }
+
         public static implicit operator Vector3d(Vector d)
         {
             return d.ToVector3D();
@@ -224,6 +235,24 @@ namespace kOS.Suffixed
         public static Vector operator -(Vector a)
         {
             return a * (-1d);
+        }
+
+        public static bool operator ==(Vector a, Vector b)
+        {
+            if ((object)a != null)
+            {
+                if ((object)b != null)
+                    return a.Equals(b);  // a and b are not null, use a's Equals method
+                return false; // a is not null, b is null, therefor not equal
+            }
+            else if ((object)b != null)
+                return false; // a is not null, b is null, therefor not equal
+            return true; // both are null, return true
+        }
+
+        public static bool operator !=(Vector a, Vector b)
+        {
+            return !(a == b);
         }
 
         public override Dump Dump()

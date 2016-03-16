@@ -1,6 +1,8 @@
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 using System;
 using System.Reflection;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation
 {
@@ -24,7 +26,7 @@ namespace kOS.Safe.Compilation
                 return Add(resultPair);
             }
 
-            return Calculate("+", pair);
+            throw new KOSException(GetMessage("+", pair));
         }
 
         public override object Subtract(OperandPair pair)
@@ -43,7 +45,7 @@ namespace kOS.Safe.Compilation
                 return Subtract(resultPair);
             }
 
-            return Calculate("-", pair);
+            throw new KOSException(GetMessage("-", pair));
         }
 
         public override object Multiply(OperandPair pair)
@@ -62,7 +64,7 @@ namespace kOS.Safe.Compilation
                 return Multiply(resultPair);
             }
 
-            return Calculate("*", pair);
+            throw new KOSException(GetMessage("*", pair));
         }
 
         public override object Divide(OperandPair pair)
@@ -81,7 +83,7 @@ namespace kOS.Safe.Compilation
                 return Divide(resultPair);
             }
 
-            return Calculate("/", pair);
+            throw new KOSException(GetMessage("/", pair));
         }
 
         public override object Power(OperandPair pair)
@@ -100,7 +102,7 @@ namespace kOS.Safe.Compilation
                 return Power(resultPair);
             }
 
-            return Calculate("^", pair);
+            throw new KOSException(GetMessage("^", pair));
         }
 
         public override object GreaterThan(OperandPair pair)
@@ -119,7 +121,7 @@ namespace kOS.Safe.Compilation
                 return GreaterThan(resultPair);
             }
 
-            return Calculate(">", pair);
+            throw new KOSException(GetMessage(">", pair));
         }
 
         public override object LessThan(OperandPair pair)
@@ -138,7 +140,7 @@ namespace kOS.Safe.Compilation
                 return LessThan(resultPair);
             }
 
-            return Calculate("<", pair);
+            throw new KOSException(GetMessage("<", pair));
         }
 
         public override object GreaterThanEqual(OperandPair pair)
@@ -157,7 +159,7 @@ namespace kOS.Safe.Compilation
                 return GreaterThanEqual(resultPair);
             }
 
-            return Calculate(">=", pair);
+            throw new KOSException(GetMessage(">=", pair));
         }
 
         public override object LessThanEqual(OperandPair pair)
@@ -176,7 +178,7 @@ namespace kOS.Safe.Compilation
                 return LessThanEqual(resultPair);
             }
 
-            return Calculate("<=", pair);
+            throw new KOSException(GetMessage("<=", pair));
         }
 
         public override object NotEqual(OperandPair pair)
@@ -195,7 +197,7 @@ namespace kOS.Safe.Compilation
                 return NotEqual(resultPair);
             }
 
-            return Calculate("<>", pair);
+            throw new KOSException(GetMessage("<>", pair));
         }
 
         public override object Equal(OperandPair pair)
@@ -214,7 +216,7 @@ namespace kOS.Safe.Compilation
                 return Equal(pair);
             }
 
-            return Calculate("==", pair);
+            throw new KOSException(GetMessage("=", pair));
         }
 
         public override object Min(OperandPair pair)
@@ -242,8 +244,8 @@ namespace kOS.Safe.Compilation
 
         private static string GetMessage(string op, OperandPair pair)
         {
-            string t1 = pair.Left == null ? "<null>" : pair.Left.GetType().ToString();
-            string t2 = pair.Right == null ? "<null>" : pair.Right.GetType().ToString();
+            string t1 = pair.Left == null ? "<null>" : KOSNomenclature.GetKOSName(pair.Left.GetType());
+            string t2 = pair.Right == null ? "<null>" : KOSNomenclature.GetKOSName(pair.Right.GetType());
             return string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, t1, t2);
         }
 
