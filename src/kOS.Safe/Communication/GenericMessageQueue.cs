@@ -60,7 +60,9 @@ namespace kOS.Safe.Communication
                 queueItem.Value.RemoveAll((m) => IsReceived(m));
             }
 
-            queue.Where((k) => k.Value.Count() == 0).ForEach((k) => queue.Remove(k.Key));
+            var toRemove = queue.Where((k) => k.Value.Count() == 0).ToList();
+
+            toRemove.ForEach(item => queue.Remove(item.Key));
         }
 
         public M Peek()
