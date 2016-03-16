@@ -416,11 +416,21 @@ namespace kOS.Safe.Compilation.KS
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-            triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
             currentCodeSection = triggerObject.Code;
-            AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
-            AddOpcode(new OpcodePush(triggerObject.VariableName));
+            // Put the old value on top of the stack for equals comparison later:
+            AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
+            AddOpcode(new OpcodeEval());
+            // eval the expression for the new value, and leave it on the stack twice.
+            VisitNode(node.Nodes[1]);
+            AddOpcode(new OpcodeEval());
+            AddOpcode(new OpcodeDup());
+            // Put one of those two copies of the new value into the old value identifier for next time:
+            AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(new OpcodeStoreGlobal());
+            // Use the other dup'ed copy of the new value to actually do the equals
+            // comparison with the old value that's still under it on the stack:
             AddOpcode(new OpcodeCompareEqual());
             OpcodeBranchIfFalse branchToBody = new OpcodeBranchIfFalse();
             branchToBody.Distance = 3;
@@ -437,11 +447,6 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeStoreGlobal());
 
             VisitNode(node.Nodes[2]);
-
-            // Reset the "old value" so the boolean has to change *again* to re-trigger
-            AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
-            AddOpcode(new OpcodePush(triggerObject.VariableName));
-            AddOpcode(new OpcodeStore());
 
             // PRESERVE will determine whether or not the trigger returns true (true means
             // re-enable the trigger upon exit.)
@@ -2485,8 +2490,9 @@ namespace kOS.Safe.Compilation.KS
 
             if (triggerObject.IsInitialized())
             {
-                AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
-                AddOpcode(new OpcodePush(triggerObject.VariableName));
+                // Store the current value into the old value to prep for the first use of the ON trigger:
+                AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
+                VisitNode(node.Nodes[1]); // the expression in the on statement.
                 AddOpcode(new OpcodeStore());
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger());

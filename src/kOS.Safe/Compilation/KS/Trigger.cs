@@ -7,9 +7,8 @@ namespace kOS.Safe.Compilation.KS
         private readonly CodePart codePart;
         private string Identifier { get; set; }
 
-        public string VariableName { get; private set; }
-        public string VariableNameOldValue;
-                
+        public string OldValueIdentifier { get; private set; }
+
         public List<Opcode> Code
         {
             get { return codePart.FunctionsCode; }
@@ -24,17 +23,12 @@ namespace kOS.Safe.Compilation.KS
             : this()
         {
             Identifier = triggerIdentifier;
+            OldValueIdentifier = "$old-"+Identifier;
         }
 
         public bool IsInitialized()
         {
             return (codePart.FunctionsCode.Count > 0);
-        }
-
-        public void SetTriggerVariable(string triggerVariable)
-        {
-            VariableName = "$" + triggerVariable;
-            VariableNameOldValue = "$old-" + triggerVariable.ToLower();
         }
 
         public string GetFunctionLabel()

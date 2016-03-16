@@ -1827,6 +1827,9 @@ namespace kOS.Safe.Compilation
         }
     }
     
+    /// <summary>
+    /// Push the thing atop the stack onto the stack again so there are now two of it atop the stack.
+    /// </summary>
     public class OpcodeDup : Opcode
     {
         protected override string Name { get { return "dup"; } }
