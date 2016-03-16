@@ -1,6 +1,6 @@
-.. _processors:
+.. _communication:
 
-Processors
+Communication
 =============================
 
 A vessel can potentially have more than one :struct:`processor <kOSProcessor>` on board. It is possible for them to query information about each other and interact.
@@ -24,3 +24,9 @@ A list of all processors can be obtained using the :ref:`List <list>` command::
 Finally, processors can be accessed directly, like other :ref:`parts and modules <part>`::
 
   PRINT SHIP:MODULESNAMED("kOSProcessor")[0]:VOLUME:NAME.
+
+Inter-processor communication
+-----------------------------
+
+Inter-vessel communication
+--------------------------

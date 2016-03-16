@@ -74,6 +74,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :meth:`ALLPARTSTAGGED()`              :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
     :attr:`CREWCAPACITY`                  :struct:`scalar`                Crew capacity of this vessel
     :meth:`CREW()`                        :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
+    :attr:`CONNECTION`                    :struct:`Connection`            Returns your connection to this vessel
+    :attr:`MESSAGES`                      :struct:`MessageQueue`          This vessel's message queue
     ===================================== =============================== =============
 
 .. note::
@@ -450,3 +452,15 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`List` of :struct:`CrewMember` objects
 
     list of all :struct:`kerbonauts <CrewMember>` aboard this vessel
+
+.. attribute:: Vessel:CONNECTION
+
+    :return: :struct:`Connection`
+
+    Returns your connection to this vessel.
+
+.. attribute:: Vessel:MESSAGES
+
+    :return: :struct:`MessageQueue`
+
+    Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
