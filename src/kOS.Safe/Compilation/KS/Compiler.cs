@@ -413,6 +413,8 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcessOnStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
+            nextBraceIsFunction = true; // triggers aren't really functions but act like it a lot.
+
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
@@ -453,11 +455,15 @@ namespace kOS.Safe.Compilation.KS
             PopTriggerKeepName();
             AddOpcode(new OpcodePush(triggerKeepName));
             AddOpcode(new OpcodeReturn((short)0));
+            
+            nextBraceIsFunction = false;
         }
 
         private void PreProcessWhenStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
+            nextBraceIsFunction = true; // triggers aren't really functions but act like it a lot.
+            
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
@@ -485,6 +491,7 @@ namespace kOS.Safe.Compilation.KS
             PopTriggerKeepName();
             AddOpcode(new OpcodePush(triggerKeepName));
             AddOpcode(new OpcodeReturn((short)0));
+            nextBraceIsFunction = false;
         }
 
         /// <summary>
