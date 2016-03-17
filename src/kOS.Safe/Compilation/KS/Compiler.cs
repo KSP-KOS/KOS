@@ -1150,9 +1150,10 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.factor:
                     VisitExpressionChain(node);
                     break;
-                case TokenType.expr: // expr is really the rule for doing an expression with optional trailing or-expression.
-                                     // 'or' just happens to have the lowest operator precedence level so it ends up being
-                                     // the outermost expression rule, thus getting the generic name 'expr'.
+                case TokenType.expr:
+                    VisitExpr(node);
+                    break;
+                case TokenType.or_expr:
                 case TokenType.and_expr:
                     VisitShortCircuitBoolean(node);
                     break;
@@ -1307,6 +1308,37 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of binary operators, because
                                           // the regex chain of "zero or more" righthand terms.. had zero such terms.
                                           // So just delve in deeper to compile whatever part of speech it is further down.
+            }
+        }
+
+        /// <summary>
+        /// The outermost expression level, which may be a normal expression,
+        /// or may be an anonymous function, depending of if it's got braces.
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitExpr(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            
+            // If it's an instruction block then it's an anonymous function, so
+            // compile the function body right here, while branching around it so
+            // it won't execute just yet, and instead just push a UserDelegate of it
+            // onto the stack as the value of this expression:
+            if (node.Nodes[0].Token.Type == TokenType.instruction_block)
+            {
+                Opcode skipPastFunctionBody = AddOpcode(new OpcodeBranchJump());
+                string functionStartLabel = GetNextLabel(false);
+                
+                nextBraceIsFunction = true;
+                VisitNode(node.Nodes[0]); // the braces of the anonymous function and its contents get compiled in-line here.
+                nextBraceIsFunction = false;
+
+                Opcode afterFunctionBody = AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionStartLabel);
+                skipPastFunctionBody.DestinationLabel = afterFunctionBody.Label;
+            }
+            else // ordinary expression - just descend to the next level of the tree and eval the expression as normal:
+            {
+                VisitNode(node.Nodes[0]);
             }
         }
 
@@ -2090,7 +2122,7 @@ namespace kOS.Safe.Compilation.KS
             Opcode branchToFalse = AddOpcode(new OpcodeBranchIfFalse());
             // The IF BODY:
             VisitNode(node.Nodes[2]);
-            if (node.Nodes.Count < 4)
+            if (node.Nodes.Count < 5)
             {
                 // No ELSE exists.
                 // Jump to after the IF BODY if false:
@@ -2105,8 +2137,9 @@ namespace kOS.Safe.Compilation.KS
                 Opcode branchPastElse = AddOpcode(new OpcodeBranchJump());
                 // This is where the ELSE clause starts:
                 branchToFalse.DestinationLabel = GetNextLabel(false);
-                // The else body:
-                VisitNode(node.Nodes[4]);
+                // The else body might be at index 4 or 5 depending on if there was an optional EOI.
+                int elseBodyIndex = node.Nodes[4].Token.Type == TokenType.ELSE ? 5 : 4;
+                VisitNode(node.Nodes[elseBodyIndex]);
                 // End of Else body label:
                 branchPastElse.DestinationLabel = GetNextLabel(false);
                 addBranchDestination = true;
