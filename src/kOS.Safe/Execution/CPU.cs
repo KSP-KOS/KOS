@@ -59,7 +59,7 @@ namespace kOS.Safe.Execution
         }
 
         public double SessionTime { get { return currentTime; } }
-        
+
         public List<string> ProfileResult { get; private set; }
 
         public CPU(SharedObjects shared)
@@ -158,14 +158,17 @@ namespace kOS.Safe.Execution
 
         private void PushContext(ProgramContext context)
         {
-            SafeHouse.Logger.Log("Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
+            var sb = new StringBuilder();
+            sb.AppendLine("Pushing context staring with:");
+            sb.AppendLine(context.GetCodeFragment(0).FirstOrDefault());
+            SafeHouse.Logger.Log(sb.ToString());
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
 
             if (contexts.Count > 1)
             {
-                shared.Interpreter.SetInputLock(true);
+                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
             }
         }
 
@@ -194,7 +197,7 @@ namespace kOS.Safe.Execution
 
                 if (contexts.Count == 1)
                 {
-                    shared.Interpreter.SetInputLock(false);
+                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                 }
             }
         }
@@ -379,8 +382,8 @@ namespace kOS.Safe.Execution
                     PopContext();
                     if (contexts.Count == 1 && !silent)
                     {
-                        shared.Screen.Print("Program ended.");
-                        shared.BindingMgr.UnBindAll();
+                        if (shared.Screen != null) shared.Screen.Print("Program ended.");
+                        if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
                         PrintStatistics();
                     }
                 }
@@ -1197,13 +1200,13 @@ namespace kOS.Safe.Execution
         }
 
         private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
-        {            
+        {
             Opcode opcode = context.Program[context.InstructionPointer];
 
             if (SafeHouse.Config.DebugEachOpcode)
             {
-                executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
-                executeLog.Append(string.Format("Prior to exeucting, stack looks like this:\n{0}\n", DumpStack()));
+                executeLog.AppendLine(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
+                executeLog.AppendLine(string.Format("Prior to exeucting, stack looks like this:\n{0}", DumpStack()));
             }
             try
             {
@@ -1218,12 +1221,12 @@ namespace kOS.Safe.Execution
                     instructionWatch.Stop();
                     opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
-                    
+
                     // start the *next* instruction's timer right after this instruction ended
                     instructionWatch.Reset();
                     instructionWatch.Start();
                 }
-                
+
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1299,11 +1302,11 @@ namespace kOS.Safe.Execution
         public string StatisticsDump(bool doProfiling)
         {
             if (!SafeHouse.Config.ShowStatistics) return "";
-            
+
             string delimiter = "";
             if (doProfiling)
                 delimiter = ",";
-            
+
             StringBuilder sb = new StringBuilder();
 
             sb.Append(string.Format("{0}{0}{0}{0}Total compile time: {0}{1:F3}ms\n", delimiter, totalCompileTime));
@@ -1320,7 +1323,7 @@ namespace kOS.Safe.Execution
             sb.Append(" \n");
             return sb.ToString();
         }
-        
+
         public void ResetStatistics()
         {
             totalCompileTime = 0D;
@@ -1333,13 +1336,14 @@ namespace kOS.Safe.Execution
             maxMainlineInstructionsSoFar = 0;
             maxTriggerInstructionsSoFar = 0;
         }
-        
+
         private void PrintStatistics()
         {
-            shared.Screen.Print(StatisticsDump(false));
+            if (shared.Screen != null) shared.Screen.Print(StatisticsDump(false));
+            else if (shared.Logger != null) shared.Logger.Log(StatisticsDump(false));
             ResetStatistics();
         }
-        
+
         private void CalculateProfileResult()
         {
             ProfileResult = currentContext.GetCodeFragment(0, currentContext.Program.Count - 1, true);

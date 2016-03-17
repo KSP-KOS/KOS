@@ -21,6 +21,7 @@ using System.Linq;
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Function;
 
 namespace kOS.Module
 {

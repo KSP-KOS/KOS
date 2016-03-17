@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\SafeBinding.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
@@ -174,6 +175,8 @@
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
+    <Compile Include="Function\SafeFunctionBase.cs" />
+    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\IFunctionManager.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IUpdateObserver.cs" />

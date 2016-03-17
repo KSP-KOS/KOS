@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using kOS.Safe;
 using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace kOS.Binding
+namespace kOS.CommandLine.Binding
 {
     [AssemblyWalk(AttributeType = typeof(BindingAttribute), StaticRegisterMethod = "RegisterMethod")]
     public class BindingManager : IDisposable, IBindingManager
@@ -14,8 +14,7 @@ namespace kOS.Binding
         private readonly List<kOS.Safe.Binding.SafeBinding> bindings = new List<kOS.Safe.Binding.SafeBinding>();
         private readonly Dictionary<string, BoundVariable> variables;
         private static readonly Dictionary<BindingAttribute, Type> rawAttributes = new Dictionary<BindingAttribute, Type>();
-        private FlightControlManager flightControl;
-
+        //private FlightControlManager flightControl;
 
         public BindingManager(SharedObjects shared)
         {
@@ -31,7 +30,7 @@ namespace kOS.Binding
 
             bindings.Clear();
             variables.Clear();
-            flightControl = null;
+            //flightControl = null;
 
             foreach (BindingAttribute attr in rawAttributes.Keys)
             {
@@ -41,17 +40,17 @@ namespace kOS.Binding
                 b.AddTo(shared);
                 bindings.Add(b);
 
-                var manager = b as FlightControlManager;
-                if (manager != null)
-                {
-                    flightControl = manager;
-                }
+                //var manager = b as FlightControlManager;
+                //if (manager != null)
+                //{
+                //    flightControl = manager;
+                //}
             }
         }
 
         public static void RegisterMethod(BindingAttribute attr, Type type)
         {
-            if (attr != null && !rawAttributes.ContainsKey(attr))
+            if (!rawAttributes.ContainsKey(attr))
             {
                 rawAttributes.Add(attr, type);
             }
@@ -67,9 +66,9 @@ namespace kOS.Binding
             else
             {
                 variable = new BoundVariable
-                    {
-                        Name = name, 
-                    };
+                {
+                    Name = name,
+                };
                 variables.Add(name, variable);
                 shared.Cpu.AddVariable(variable, name, false);
             }
@@ -122,39 +121,38 @@ namespace kOS.Binding
 
         public void PostUpdate()
         {
-
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (flightControl != null)
-            {
-                flightControl.ToggleFlyByWire(paramName, enabled);
-            }
+            //if (flightControl != null)
+            //{
+            //    flightControl.ToggleFlyByWire(paramName, enabled);
+            //}
         }
 
         public void UnBindAll()
         {
-            if (flightControl != null)
-            {
-                flightControl.UnBind ();
-            }
+            //if (flightControl != null)
+            //{
+            //    flightControl.UnBind();
+            //}
         }
 
         public void Dispose()
         {
-            if (flightControl != null)
-            {
-                flightControl.Dispose();
-            }
+            //if (flightControl != null)
+            //{
+            //    flightControl.Dispose();
+            //}
         }
 
         public void SelectAutopilotMode(string autopilotMode)
         {
-            if (flightControl != null)
-            {
-                flightControl.SelectAutopilotMode(autopilotMode);
-            }
+            //if (flightControl != null)
+            //{
+            //    flightControl.SelectAutopilotMode(autopilotMode);
+            //}
         }
     }
 }

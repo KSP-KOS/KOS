@@ -79,7 +79,6 @@
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
-    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />
@@ -224,7 +223,5 @@
   -->
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="AddOns\OrbitalScience\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
