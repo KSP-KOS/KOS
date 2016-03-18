@@ -84,7 +84,6 @@
     <Compile Include="Function\Misc.cs" />
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
-    <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
