@@ -44,7 +44,7 @@ Structure
           - destination of this connection
         * - :meth:`SENDMESSAGE(message)`
           - :struct:`Boolean`
-          - true if the message was succesfully sent
+          - Sends a message using this connection
 
 .. attribute:: Connection:ISCONNECTED
 
@@ -73,4 +73,4 @@ Structure
     :return: (:struct:`Boolean`) true if the message was successfully sent.
 
     Send a message using this connection. Any serializable structure or a primitive (:struct:`String`, :struct:`Scalar` or :struct:`Boolean`) can be given as an argument.
-    It is always worth checking the return value of this function. A returned false value would indicate that the message was not sent.
+    It is always worth checking the return value of this function. A returned false value would indicate that the message was not sent for some reason.

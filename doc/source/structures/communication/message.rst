@@ -5,6 +5,9 @@ Message
 
 Represents a single message stored in a CPU's or vessel's :struct:`message queue <MessageQueue>`.
 
+The main message content that the sender intended to send can be retrieved using :attr:`Message:CONTENT` attribute. Other suffixes are
+automatically added to every message by kOS.
+
 Messages are serializable and thus can be passed along::
 
   // if there is a message in the ship's message queue

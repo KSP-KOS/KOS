@@ -17,6 +17,9 @@ When you have RemoteTech installed you can only interact with the core's termina
 
 If you launch a manned craft while using RemoteTech, you are still able to input commands from the terminal even if you do not have a connection to the KSC.  The archive will still be inaccessible without a connection to the KSC.  Under the current implementation, there is no delay when accessing the archive with a local terminal.  This implementation may change in the future to account for delays in reading and writing data over the connection.
 
+Antennas
+~~~~~~~~
+
 It is possible to activate/deactivate RT antennas, as well as set their targets using kOS::
 
   SET p TO SHIP:PARTSNAMED("mediumDishAntenna")[0].
@@ -28,6 +31,16 @@ It is possible to activate/deactivate RT antennas, as well as set their targets 
   m:SETFIELD("target", "minmus").
 
 Acceptable values for `"target"` are: `"no-target"`, `"active-vessel"`, `"mission-control"`, a :struct:`Body`, a :struct:`Vessel`, or a string containing the name of a body or vessel.
+
+Communication
+~~~~~~~~~~~~~
+
+RemoteTech will influence :ref:`communication <communication>` between vessels. In order to send a message to another vessel a valid RemoteTech connection will have to exist between them
+and of course messages will arrive to their destination with a proper delay. Documentation of :struct:`Connection` class contains further information on how RemoteTech will change the behaviour
+of some of its suffixes.
+
+RTAddon
+~~~~~~~
 
 Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 

@@ -50,13 +50,13 @@ Structure
           - remove all messages
         * - :meth:`PUSH(message)`
           - None
-          - explicitely append a message
+          - explicitly append a message
 
 .. attribute:: MessageQueue:EMPTY
 
     :type: :struct:`Boolean`
 
-    True if there are message in this queue.
+    True if there are no messages in this queue.
 
 .. attribute:: MessageQueue:LENGTH
 
@@ -66,25 +66,21 @@ Structure
 
 .. method:: MessageQueue:POP()
 
-    :parameter item: (any type) item to be added
-
-    Appends the new value given to the end of the list.
+    Returns the first message in the queue and removes it. Messages in the queue are always ordered by their arrival date.
 
 .. method:: MessageQueue:PEEK()
 
-    :parameter item: (any type) item to be added
+    :return: :struct:`Message`
 
-    Appends the new value given to the end of the list.
+    Returns the first message in the queue without removing it from the queue.
 
 .. method:: MessageQueue:CLEAR()
 
-    :parameter item: (any type) item to be added
-
-    Appends the new value given to the end of the list.
+    Removes all messages from the queue.
 
 .. method:: MessageQueue:PUSH(message)
 
     :parameter message: :struct:`Message` message to be added
 
-    You can use this message to explicitely add a message to a queue.
-
+    You can use this message to explicitly add a message to this queue. This will insert this exact message to the queue, all attributes that are normally
+    added automatically by kOS (:attr:`Message:SENTAT`, :attr:`Message:RECEIVEDAT` and :attr:`Message:SENDER`) will not be changed.
