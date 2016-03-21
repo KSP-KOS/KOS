@@ -79,13 +79,11 @@
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
-    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
-    <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
@@ -224,7 +222,5 @@
   -->
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="AddOns\OrbitalScience\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

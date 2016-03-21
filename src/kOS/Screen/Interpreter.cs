@@ -142,7 +142,7 @@ namespace kOS.Screen
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter", options);
                 if (commandParts == null) return;
 
-                var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
+                var interpreterContext = Shared.Cpu.GetInterpreterContext();
                 interpreterContext.AddParts(commandParts);
             }
             catch (Exception e)

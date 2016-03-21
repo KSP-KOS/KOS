@@ -13,7 +13,7 @@ using Math = System.Math;
 namespace kOS.Binding
 {
     [Binding("ksp")]
-    public class FlightControlManager : Binding , IDisposable
+    public class FlightControlManager : Binding, IDisposable
     {
         private Vessel currentVessel;
         private readonly Dictionary<string, FlightCtrlParam> flightParameters = new Dictionary<string, FlightCtrlParam>();

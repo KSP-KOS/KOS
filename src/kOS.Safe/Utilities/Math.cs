@@ -91,5 +91,26 @@
 
             return outVal;
         }
+        
+        /// <summary>
+        ///   Fix the strange too-large or too-small angle degrees that are sometimes
+        ///   returned by KSP, normalizing them into a constrained 360 degree range.
+        /// </summary>
+        /// <param name="inAngle">input angle in degrees</param>
+        /// <param name="rangeStart">
+        ///   Bottom of 360 degree range to normalize to.
+        ///   ( 0 means the range [0..360]), while -180 means [-180,180] )
+        /// </param>
+        /// <returns>the same angle, normalized to the range given.</returns>
+        public static double DegreeFix(double inAngle, double rangeStart)
+        {
+            double rangeEnd = rangeStart + 360.0;
+            double outAngle = inAngle;
+            while (outAngle > rangeEnd)
+                outAngle -= 360.0;
+            while (outAngle < rangeStart)
+                outAngle += 360.0;
+            return outAngle;
+        }
     }
 }

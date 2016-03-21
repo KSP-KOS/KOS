@@ -381,8 +381,10 @@ namespace kOS.Safe.Compilation
             //
             // Reflection: A good way to make a simple idea look messier than it really is.
             //
-            var attributes1 = new List<Attribute>(a1.PropertyInfo.GetCustomAttributes(true) as Attribute[]);
-            var attributes2 = new List<Attribute>(a2.PropertyInfo.GetCustomAttributes(true) as Attribute[]);
+            var a1array = a1.PropertyInfo.GetCustomAttributes(true).Cast<Attribute>();
+            var a2array = a2.PropertyInfo.GetCustomAttributes(true).Cast<Attribute>();
+            var attributes1 = a1.PropertyInfo.GetCustomAttributes(true).Cast<Attribute>().ToList();
+            var attributes2 = a2.PropertyInfo.GetCustomAttributes(true).Cast<Attribute>().ToList();
             var f1 = (MLField) attributes1.First(a => a is MLField);
             var f2 = (MLField) attributes2.First(a => a is MLField);
             return (f1.Ordering < f2.Ordering) ? -1 : (f1.Ordering > f2.Ordering) ? 1 : 0;

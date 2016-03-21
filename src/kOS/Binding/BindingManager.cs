@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using kOS.Safe.Binding;
+using kOS.Safe.Utilities;
 
 namespace kOS.Binding
 {
+    [AssemblyWalk(AttributeType = typeof(BindingAttribute), StaticRegisterMethod = "RegisterMethod")]
     public class BindingManager : IDisposable, IBindingManager
     {
         private readonly SharedObjects shared;
-        private readonly List<Binding> bindings = new List<Binding>();
+        private readonly List<kOS.Safe.Binding.SafeBinding> bindings = new List<kOS.Safe.Binding.SafeBinding>();
         private readonly Dictionary<string, BoundVariable> variables;
+        private static readonly Dictionary<BindingAttribute, Type> rawAttributes = new Dictionary<BindingAttribute, Type>();
         private FlightControlManager flightControl;
 
 
@@ -30,13 +33,11 @@ namespace kOS.Binding
             variables.Clear();
             flightControl = null;
 
-            foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
+            foreach (BindingAttribute attr in rawAttributes.Keys)
             {
-                var attr = (BindingAttribute)t.GetCustomAttributes(typeof(BindingAttribute), true).FirstOrDefault();
-                if (attr == null) continue;
+                var t = rawAttributes[attr];
                 if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
-
-                var b = (Binding)Activator.CreateInstance(t);
+                var b = (kOS.Safe.Binding.SafeBinding)Activator.CreateInstance(t);
                 b.AddTo(shared);
                 bindings.Add(b);
 
@@ -45,6 +46,14 @@ namespace kOS.Binding
                 {
                     flightControl = manager;
                 }
+            }
+        }
+
+        public static void RegisterMethod(BindingAttribute attr, Type type)
+        {
+            if (attr != null && !rawAttributes.ContainsKey(attr))
+            {
+                rawAttributes.Add(attr, type);
             }
         }
 
