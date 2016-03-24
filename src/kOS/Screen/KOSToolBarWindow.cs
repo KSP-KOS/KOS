@@ -413,6 +413,7 @@ namespace kOS.Screen
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             string whichMessage = (GUI.tooltip.Length > 0 ? GUI.tooltip : TelnetStatusMessage()); // when tooltip isn't showing, show telnet status instead.
             GUILayout.Label(whichMessage, tooltipLabelStyle);
+
             CountEndVertical();
 
             EndHoverHousekeeping();

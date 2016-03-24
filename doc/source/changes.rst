@@ -24,6 +24,17 @@ release.
 
 ****
 
+Changes in 0.19.2
+-----------------
+
+This was mostly a bug fix release.  Not much changed in the documentation.
+
+FORCEACTIVE
+:::::::::::
+
+New alias ``KUNIVERSE:FORCEACTIVE()`` can be used instead of the
+longer name ``KUNIVERSE:FORCESETACTIVEVESSEL()``.
+
 Changes in 0.19.1
 -----------------
 

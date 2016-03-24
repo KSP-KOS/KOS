@@ -8,6 +8,7 @@ using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using kOS.Suffixed.PartModuleField;
 using kOS.Module;
@@ -185,6 +186,7 @@ namespace kOS.Function
             else
             {
                 // clear the "program" compilation context
+                shared.Cpu.StartCompileStopwatch();
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
@@ -214,6 +216,7 @@ namespace kOS.Function
                     }
                 }
                 programContext.AddParts(codeParts);
+                shared.Cpu.StopCompileStopwatch();
             }
 
             // Because run() returns FIRST, and THEN the CPU jumps to the new program's first instruction that it set up,
@@ -276,6 +279,7 @@ namespace kOS.Function
 
             if (shared.ScriptHandler != null)
             {
+                shared.Cpu.StartCompileStopwatch();
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 // add this program to the address space of the parent program,
@@ -306,6 +310,7 @@ namespace kOS.Function
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);
                 }
+                shared.Cpu.StopCompileStopwatch();
             }
         }
     }
@@ -397,6 +402,28 @@ namespace kOS.Function
         }
     }
 
+    [Function("profileresult")]
+    public class ProfileResult : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+            if (shared.Cpu.ProfileResult == null || shared.Cpu.ProfileResult.Count == 0)
+            {
+                ReturnValue = "<no profile data available>";
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            foreach (string textLine in shared.Cpu.ProfileResult)
+            {
+                if (sb.Length > 0 )
+                    sb.Append("\n");
+                sb.Append(textLine);
+            }
+            ReturnValue = sb.ToString();
+        }
+    }
+    
     [Function("warpto")]
     public class WarpTo : FunctionBase
     {

@@ -419,6 +419,51 @@ But kOS does not support this at the moment so in kOS if you set
 the LOADDISTANCE, you are setting it to the same value
 universally for all situations.
 
+.. _profileresult:
+
+PROFILERESULT()
+---------------
+
+If you have the runtime statistics configuration option
+:attr:`Config:STAT` set to ``True``, then in addition to
+the summary statistics after the program run, you can also
+see a detailed report of the "profiling" result of your 
+most recent program run, by calling the built-in function
+``ProfileResult()``.  *"Profiling"* is a programmer's term
+that means gathering data about how long the program is
+spending doing each piece of the program.  If you are trying
+to figure out whether your program spent more milliseconds
+printing numbers to the screen, or more milliseconds
+calculating a complex formula, or more milliseconds activating
+actions on a PartModule, and so on, then this feature may
+help.  The ProfileResult() was meant mainly for kOS developers
+trying to internally determine which parts of the system could
+use the most optomizing.  However, as long as it was implemented
+for that purpose, it may as well be made available to all
+the users of kOS as well.
+
+To use::
+
+   SET CONFIG:STAT TO TRUE.
+   RUN MYPROGRAM.
+   PRINT PROFILERESULT().
+   // <or>
+   LOG PROFILERESULT() TO SOMEFIELNAME.csv.
+
+The function ``ProfileResult()` returns a string containing
+a formatted dump of your whole program, broken down into
+the more low-level instructions that make it up, with data
+values describing how long was spent in total on each
+instruction, how many times that instruction was executed,
+and the average time spent on a single execution of that
+instruction (by dividing the total time by the count of how
+many executions it had).
+
+The format of ``ProfileResult()`` is designed to be suitable
+for importing into a spreadsheet program if you like, because
+it is formatted as a "comma separated values" file, or CSV
+for short.
+
 .. _solarprimevector:
 
 SOLARPRIMEVECTOR

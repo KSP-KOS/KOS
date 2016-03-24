@@ -1,6 +1,36 @@
 kOS Mod Changelog
 =================
 
+# v0.19.2
+
+This release is here primarily to fix a problem that made
+the new v0.19.1 terminal unusable for users who have to
+use low resolution texture settings in the Unity graphics
+configuration panel.
+
+### BREAKING
+* Nothing new breaking in this version is known about.
+
+### NEW FEATURES
+* New alias KUNIVERSE:FORCEACTIVE() can be used instead of the longer name KUNIVERSE:FORCESETACTIVEVESSEL().
+* More robust use of the font_sml.png file allows for replacement of font_sml.png by the end-user.
+  (However this may only be useful for a limited time, as Unity5 might make us implement the font differently
+  anyway.)
+
+### BUG FIXES
+* New terminal now works again at low texture resolution settings
+  (https://github.com/KSP-KOS/KOS/issues/1513).
+* New terminal shows grey color on power-off again
+  (https://github.com/KSP-KOS/KOS/issues/1525).
+* Terminal now shows a boot message that mentions the documentation URL
+  (https://github.com/KSP-KOS/KOS/issues/1527).
+* Fixed a situation that could make KSP itself crash if a script
+  attempted to perform an equality comparison on types that hadn't
+  had a meaningful implementation of equality defined.  (Instead
+  of a proper error message about it from kOS, kOS got stuck in
+  recursion.)
+
+
 # v0.19.1
 
 This release is a patch to v0.19.0, fixing some things

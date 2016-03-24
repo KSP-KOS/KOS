@@ -103,6 +103,10 @@ Configuration of kOS
 
     If true, then executing a program will log numbers to the screen showing execution speed statistics.
 
+    When this is set to true, it also makes the use of the
+    :ref:`ProfileResult() <profileresult>` function available, for
+    deep analysis of your program run, if you are so inclined.
+
 .. attribute:: Config:RT2
 
     :access: Get/Set

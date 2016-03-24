@@ -43,6 +43,11 @@ namespace kOS.Safe.Execution
         private double maxUpdateTime;
         private double maxTriggersTime;
         private double maxExecutionTime;
+        private Stopwatch instructionWatch = new Stopwatch();
+        private Stopwatch updateWatch = new Stopwatch();
+        private Stopwatch triggerWatch = new Stopwatch();
+        private Stopwatch executionWatch = new Stopwatch();
+        private Stopwatch compileWatch = new Stopwatch();
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
@@ -54,6 +59,8 @@ namespace kOS.Safe.Execution
         }
 
         public double SessionTime { get { return currentTime; } }
+        
+        public List<string> ProfileResult { get; private set; }
 
         public CPU(SharedObjects shared)
         {
@@ -91,7 +98,8 @@ namespace kOS.Safe.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", SafeHouse.Version);
+                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n(manual at {1})\n \n" + "Proceed.\n",
+                                                   SafeHouse.Version, SafeHouse.DocumentationURL);
                 List<string> nags = Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
@@ -354,6 +362,9 @@ namespace kOS.Safe.Execution
             if (contexts.Count > 1)
             {
                 EndWait();
+
+                if (SafeHouse.Config.ShowStatistics)
+                    CalculateProfileResult();
 
                 if (manual)
                 {
@@ -993,9 +1004,6 @@ namespace kOS.Safe.Execution
         public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
-            Stopwatch updateWatch = null;
-            Stopwatch triggerWatch = null;
-            Stopwatch executionWatch = null;
             var triggerElapsed = 0.0;
             var executionElapsed = 0.0;
 
@@ -1005,38 +1013,44 @@ namespace kOS.Safe.Execution
             var numTriggerInstructions = 0;
             var numMainlineInstructions = 0;
 
-            if (showStatistics) updateWatch = Stopwatch.StartNew();
+            if (showStatistics)
+            {
+                updateWatch.Reset();
+                triggerWatch.Reset();
+                executionWatch.Reset();
+                instructionWatch.Reset();
+                compileWatch.Stop();
+                compileWatch.Reset();
+                updateWatch.Start();
+            }
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
             try
             {
                 PreUpdateBindings();
+                if (showStatistics) instructionWatch.Start();
 
                 if (currentContext != null && currentContext.Program != null)
                 {
-                    if (showStatistics) triggerWatch = Stopwatch.StartNew();
-                    ProcessTriggers();
+                    if (showStatistics) triggerWatch.Start();
+                    ProcessTriggers(showStatistics);
                     numTriggerInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
-                        triggerElapsed = triggerWatch.ElapsedMilliseconds;
-                        totalTriggersTime += triggerElapsed;
                     }
 
                     ProcessWait();
 
                     if (currentStatus == Status.Running)
                     {
-                        if (showStatistics) executionWatch = Stopwatch.StartNew();
-                        ContinueExecution();
+                        if (showStatistics) executionWatch.Start();
+                        ContinueExecution(showStatistics);
                         numMainlineInstructions = instructionsSoFarInUpdate - numTriggerInstructions;
                         if (showStatistics)
                         {
                             executionWatch.Stop();
-                            executionElapsed = executionWatch.ElapsedMilliseconds;
-                            totalExecutionTime += executionElapsed;
                         }
                     }
                 }
@@ -1071,8 +1085,13 @@ namespace kOS.Safe.Execution
             if (showStatistics)
             {
                 updateWatch.Stop();
-                double updateElapsed = updateWatch.ElapsedMilliseconds;
+                double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 totalUpdateTime += updateElapsed;
+                triggerElapsed = triggerWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                totalTriggersTime += triggerElapsed;
+                executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                totalExecutionTime += executionElapsed;
+                totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 if (maxTriggerInstructionsSoFar < numTriggerInstructions)
                     maxTriggerInstructionsSoFar = numTriggerInstructions;
                 if (maxMainlineInstructionsSoFar < numMainlineInstructions)
@@ -1113,7 +1132,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void ProcessTriggers()
+        private void ProcessTriggers(bool doProfiling)
         {
             if (currentContext.Triggers.Count <= 0) return;
             int oldCount = currentContext.Program.Count;
@@ -1135,7 +1154,7 @@ namespace kOS.Safe.Execution
                         executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
                         while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                         {
-                            executeNext = ExecuteInstruction(currentContext);
+                            executeNext = ExecuteInstruction(currentContext, doProfiling);
                             instructionsSoFarInUpdate++;
                         }
                         if (executeLog.Length > 0)
@@ -1161,7 +1180,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void ContinueExecution()
+        private void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
             executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
@@ -1170,15 +1189,15 @@ namespace kOS.Safe.Execution
                    executeNext &&
                    currentContext != null)
             {
-                executeNext = ExecuteInstruction(currentContext);
+                executeNext = ExecuteInstruction(currentContext, doProfiling);
                 instructionsSoFarInUpdate++;
             }
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(IProgramContext context)
-        {
+        private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
+        {            
             Opcode opcode = context.Program[context.InstructionPointer];
 
             if (SafeHouse.Config.DebugEachOpcode)
@@ -1190,7 +1209,21 @@ namespace kOS.Safe.Execution
             {
                 opcode.AbortContext = false;
                 opcode.AbortProgram = false;
+
                 opcode.Execute(this);
+
+                if (doProfiling)
+                {
+                    // This will count *all* the time between the end of the prev instruction and now:
+                    instructionWatch.Stop();
+                    opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
+                    opcode.ProfileExecutionCount++;
+                    
+                    // start the *next* instruction's timer right after this instruction ended
+                    instructionWatch.Reset();
+                    instructionWatch.Start();
+                }
+                
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1263,21 +1296,33 @@ namespace kOS.Safe.Execution
             return currentContext.GetCodeFragment(contextLines);
         }
 
-        public void PrintStatistics()
+        public string StatisticsDump(bool doProfiling)
         {
-            if (!SafeHouse.Config.ShowStatistics) return;
+            if (!SafeHouse.Config.ShowStatistics) return "";
+            
+            string delimiter = "";
+            if (doProfiling)
+                delimiter = ",";
+            
+            StringBuilder sb = new StringBuilder();
 
-            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", totalCompileTime));
-            shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
-            shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
-            shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
-            shared.Screen.Print(string.Format("Maximum update time: {0:F3}ms", maxUpdateTime));
-            shared.Screen.Print(string.Format("Maximum triggers time: {0:F3}ms", maxTriggersTime));
-            shared.Screen.Print(string.Format("Maximum execution time: {0:F3}ms", maxExecutionTime));
-            shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", maxTriggerInstructionsSoFar));
-            shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", maxMainlineInstructionsSoFar));
-            shared.Screen.Print(" ");
-
+            sb.Append(string.Format("{0}{0}{0}{0}Total compile time: {0}{1:F3}ms\n", delimiter, totalCompileTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Total update time: {0}{1:F3}ms\n", delimiter, totalUpdateTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Total triggers time: {0}{1:F3}ms\n", delimiter, totalTriggersTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Total execution time: {0}{1:F3}ms\n", delimiter, totalExecutionTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Maximum update time: {0}{1:F3}ms\n", delimiter, maxUpdateTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Maximum triggers time: {0}{1:F3}ms\n", delimiter, maxTriggersTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Maximum execution time: {0}{1:F3}ms\n", delimiter, maxExecutionTime));
+            sb.Append(string.Format("{0}{0}{0}{0}Most Trigger instructions in one update: {0}{1}\n", delimiter, maxTriggerInstructionsSoFar));
+            sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
+            if (!doProfiling)
+                sb.Append("(`log ProfileResult() to file.csv` for more information.)\n");
+            sb.Append(" \n");
+            return sb.ToString();
+        }
+        
+        public void ResetStatistics()
+        {
             totalCompileTime = 0D;
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
@@ -1288,10 +1333,34 @@ namespace kOS.Safe.Execution
             maxMainlineInstructionsSoFar = 0;
             maxTriggerInstructionsSoFar = 0;
         }
+        
+        private void PrintStatistics()
+        {
+            shared.Screen.Print(StatisticsDump(false));
+            ResetStatistics();
+        }
+        
+        private void CalculateProfileResult()
+        {
+            ProfileResult = currentContext.GetCodeFragment(0, currentContext.Program.Count - 1, true);
+            // Prepend a header string consisting of the block of summary text:
+            ProfileResult.Insert(0, StatisticsDump(true));
+        }
 
         public void Dispose()
         {
             shared.UpdateHandler.RemoveFixedObserver(this);
+        }
+
+
+        public void StartCompileStopwatch()
+        {
+            compileWatch.Start();
+        }
+
+        public void StopCompileStopwatch()
+        {
+            compileWatch.Stop();
         }
     }
 }
