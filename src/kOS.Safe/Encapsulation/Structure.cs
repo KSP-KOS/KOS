@@ -11,7 +11,7 @@ using kOS.Safe.Serialization;
 namespace kOS.Safe.Encapsulation
 {
     [KOSNomenclature("Structure")]
-    public abstract class Structure : ISuffixed, IOperable 
+    public abstract class Structure : ISuffixed 
     {
         private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
         private readonly IDictionary<string, ISuffix> instanceSuffixes;
@@ -227,27 +227,6 @@ namespace kOS.Safe.Encapsulation
             return sb.ToString();
         }
 
-        public virtual object TryOperation(string op, object other, bool reverseOrder)
-        {
-            if (op == "==")
-            {
-                return Equals(other);
-            }
-            if (op == "<>")
-            {
-                return !Equals(other);
-            }
-            if (op == "+")
-            {
-                return ToString() + other;
-            }
-
-            var message = string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, GetType(),
-                other.GetType());
-            SafeHouse.Logger.Log(message);
-            throw new InvalidOperationException(message);
-        }
-
         protected object ConvertToDoubleIfNeeded(object value)
         {
             if (!(value is Structure) && !(value is double))
@@ -261,11 +240,6 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return "Structure ";
-        }
-
-        public static StringValue operator +(Structure val1, Structure val2)
-        {
-            return new StringValue(string.Concat(val1, val2));
         }
 
         /// <summary>

@@ -79,53 +79,6 @@ namespace kOS.Suffixed
             }));
         }
 
-        public override object TryOperation(string op, object other, bool reverseOrder)
-        {
-            other = ConvertToDoubleIfNeeded(other);
-            other = Structure.ToPrimitive(other);
-
-            switch (op)
-            {
-                case "*":
-                    if (other is Vector) return this * (Vector)other;
-                    if (other is double) return this * (double)other;
-                    break;
-
-                case "/":
-                    if (!reverseOrder)
-                    {
-                        if (other is Vector) throw new Exception("Cannot divide by a vector.");
-                        if (other is double) return this * (1.0 / (double)other);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException("Cannot divide by a vector.");
-                    }
-                    break;
-
-                case "+":
-                    if (other is Vector) return this + (Vector)other;
-                    break;
-
-                case "-":
-                    if (!reverseOrder)
-                    {
-                        if (other is Vector) return this - (Vector)other;
-                    }
-                    else
-                    {
-                        if (other is Vector) return (Vector)other - this;
-                    }
-                    break;
-
-                default:
-                    throw new NotImplementedException(string.Format(
-                        "Cannot perform operation: {0} {1} {2}", this, op, other));
-            }
-
-            return null;
-        }
-
         public ScalarValue Magnitude()
         {
             return new Vector3d(X, Y, Z).magnitude;
@@ -218,6 +171,16 @@ namespace kOS.Suffixed
         }
 
         public static Vector operator /(Vector a, ScalarValue b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
+        public static Vector operator /(Vector a, float b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
+        public static Vector operator /(Vector a, double b)
         {
             return new Vector(a.X / b, a.Y / b, a.Z / b);
         }

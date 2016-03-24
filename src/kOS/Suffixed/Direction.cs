@@ -160,6 +160,16 @@ namespace kOS.Suffixed
             return new Vector(a.Rotation * (Vector3d)b);
         }
 
+        public static Vector operator +(Direction a, Vector b)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
+        public static Vector operator +(Vector b, Direction a)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
         public static Direction operator +(Direction a, Direction b)
         {
             return new Direction(a.Euler + b.Euler, true);
@@ -199,34 +209,6 @@ namespace kOS.Suffixed
         public static bool operator !=(Direction a, Direction b)
         {
             return !(a == b);
-        }
-        
-        public override object TryOperation(string op, object other, bool reverseOrder)
-        {
-            var otherVector = other as Vector;
-            if (otherVector != null)
-            {
-                Vector3d vec = otherVector;
-                return new Vector(Rotation * vec);
-            }
-
-            if (op == "*" && other is Direction)
-            {
-                // If I remember correctly, order of multiplication DOES matter with quaternions
-                return !reverseOrder ? this * (Direction)other : (Direction)other * this;
-            }
-
-            if (op == "+" && other is Direction)
-            {
-                return this + (Direction)other;
-            }
-
-            if (op == "-" && other is Direction)
-            {
-                return !reverseOrder ? this - (Direction)other : (Direction)other - this;
-            }
-
-            return null;
         }
 
         /// <summary>

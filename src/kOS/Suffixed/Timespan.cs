@@ -94,6 +94,7 @@ namespace kOS.Suffixed
         public static TimeSpan operator -(TimeSpan a, double b) { return new TimeSpan(a.ToUnixStyleTime() - b); }
         public static TimeSpan operator *(TimeSpan a, double b) { return new TimeSpan(a.ToUnixStyleTime() * b); }
         public static TimeSpan operator /(TimeSpan a, double b) { return new TimeSpan(a.ToUnixStyleTime() / b); }
+        public static TimeSpan operator +(double b, TimeSpan a) { return new TimeSpan(b + a.ToUnixStyleTime()); }
         public static TimeSpan operator -(double b, TimeSpan a) { return new TimeSpan(b - a.ToUnixStyleTime()); }
         public static TimeSpan operator *(double b, TimeSpan a) { return new TimeSpan(b * a.ToUnixStyleTime()); }
         public static TimeSpan operator /(double b, TimeSpan a) { return new TimeSpan(b / a.ToUnixStyleTime()); }
@@ -153,50 +154,6 @@ namespace kOS.Suffixed
         public static bool operator !=(TimeSpan a, TimeSpan b)
         {
             return !(a == b);
-        }
-
-        public override object TryOperation(string op, object other, bool reverseOrder)
-        {
-            other = ConvertToDoubleIfNeeded(other);
-
-            // Order shouldn't matter here
-            if (other is TimeSpan && op == "+") return this + (TimeSpan)other;
-            if (other is double && op == "+") return this + (double)other;
-            if (other is double && op == "*") return this * (double)other; // Order would matter here if this were matrices
-
-            if (!reverseOrder)
-            {
-                if (other is TimeSpan && op == "-") return this - (TimeSpan)other;
-                if (other is TimeSpan && op == "/") return this / (TimeSpan)other;
-                if (other is double && op == "-") return this - (double)other;
-                if (other is double && op == "/") return this / (double)other;
-                if (other is TimeSpan && op == ">") return this > (TimeSpan)other;
-                if (other is TimeSpan && op == "<") return this < (TimeSpan)other;
-                if (other is TimeSpan && op == ">=") return this >= (TimeSpan)other;
-                if (other is TimeSpan && op == "<=") return this <= (TimeSpan)other;
-                if (other is double && op == ">") return this > (double)other;
-                if (other is double && op == "<") return this < (double)other;
-                if (other is double && op == ">=") return this >= (double)other;
-                if (other is double && op == "<=") return this <= (double)other;
-            }
-            else
-            {
-                if (other is TimeSpan && op == "-") return (TimeSpan)other - this;
-                if (other is TimeSpan && op == "/") return (TimeSpan)other / this;
-                if (other is double && op == "-") return (double)other - this;
-               if (other is double && op == "/") return (double)other / this; // Can't imagine why the heck you'd want to do this but here it is
-               if (other is TimeSpan && op == ">") return this < (TimeSpan)other;
-               if (other is TimeSpan && op == "<") return this > (TimeSpan)other;
-               if (other is TimeSpan && op == ">=") return (TimeSpan)other >= this;
-               if (other is TimeSpan && op == "<=") return (TimeSpan)other <= this;
-               if (other is double && op == ">") return (double)other > this;
-               if (other is double && op == "<") return (double)other < this;
-               if (other is double && op == ">=") return (double)other >= this;
-               if (other is double && op == "<=") return (double)other <= this;
-
-            }
-
-            return base.TryOperation(op, other, reverseOrder);
         }
 
         public override string ToString()

@@ -219,29 +219,6 @@ namespace kOS.Safe.Compilation
             return pair.Left.Equals(pair.Right);
         }
 
-        public override object Min(OperandPair pair)
-        {
-            CheckPairForNull(pair, "min");
-            return Calculate("min", pair);
-        }
-
-        public override object Max(OperandPair pair)
-        {
-            CheckPairForNull(pair, "max");
-            return Calculate("max", pair);
-        }
-
-        private object Calculate(string op, OperandPair pair)
-        {
-            var operable = pair.Left as IOperable;
-            if (operable == null)
-            {
-                return ((IOperable)pair.Right).TryOperation(op, pair.Left, true);
-            }
-
-            return operable.TryOperation(op, pair.Right, false);
-        }
-
         private static string GetMessage(string op, OperandPair pair)
         {
             string t1 = pair.Left == null ? "<null>" : KOSNomenclature.GetKOSName(pair.Left.GetType());
