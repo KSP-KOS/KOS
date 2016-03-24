@@ -2109,15 +2109,38 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "wait"; } }
         public override ByteCode Code { get { return ByteCode.WAIT; } }
+        private double endTime = -1d;
 
         public override void Execute(ICpu cpu)
         {
-            object arg = cpu.PopValue();
-            cpu.StartWait(Convert.ToDouble(arg));
+            // Wait model is: Because waits can occur in triggers as well as in
+            // mainline code, the CPU can't be the one to be tracking the
+            // remaining time on the wait.  There can be more than one place where
+            // a wait was pending.  So instead track the pending time inside the
+            // opcode itself, by having the opcode store its timestamp when it is
+            // meant to end, and checking it each time.
+            if (endTime < 0) // initial time being executed.
+            {
+                double arg = Convert.ToDouble(cpu.PopValue());
+                endTime = cpu.StartWait(arg);
+                DeltaInstructionPointer = 0; // stay here next time.
+            }
+            else if (cpu.SessionTime < endTime) // It's in the midst of an already running wait, and it's not expired yet.
+            {
+                cpu.StartWait(0); // kick back to wait mode again.
+                DeltaInstructionPointer = 0; // stay here next time, to test this again.
+            }
+            else // It was in an already running wait, and the wait just expired.
+            {
+                endTime = -1; // reset in case this is called again in a loop.
+                DeltaInstructionPointer = 1; // okay now move on.
+            }
         }
     }
 
-    
+    // TODO: Does this Opcode even need to exist?  What's the point?  You can't execute it while you're stuck inside
+    // a wait so.... when was anyone ever expecting it to happen?  Discuss if it can just be removed.  Nothing in
+    // the compiler currently builds any code that uses it:
     public class OpcodeEndWait : Opcode
     {
         protected override string Name { get { return "endwait"; } }

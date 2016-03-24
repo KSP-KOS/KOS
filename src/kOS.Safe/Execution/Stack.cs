@@ -200,5 +200,24 @@ namespace kOS.Safe.Execution
             }
             return trace;
         }
+        
+        /// <summary>
+        /// Check if the call-stack has evidence that we are currently inside
+        /// a trigger.
+        /// </summary>
+        /// <returns>True if the current call stack indicates that either we are
+        /// inside a trigger, or are inside code that was in turn indirectly called
+        /// from a trigger.  False if we are in mainline code instead.</returns>
+        public bool HasTriggerContexts()
+        {
+            for (int index = stackPointer + 1; index < stack.Count; ++index)
+            {
+                SubroutineContext contextRecord = stack[index] as SubroutineContext;
+                if (contextRecord != null)
+                    if (contextRecord.IsTrigger)
+                        return true;
+            }
+            return false;
+        }
     }
 }

@@ -24,7 +24,6 @@ namespace kOS.Safe.Execution
         private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
-        private double timeWaitUntil;
         private readonly SharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
@@ -53,6 +52,12 @@ namespace kOS.Safe.Execution
             get { return currentContext.InstructionPointer; }
             set { currentContext.InstructionPointer = value; }
         }
+        
+        /// <summary>
+        /// Where was the instruction pointer at the time this update
+        /// first started?
+        /// </summary>
+        int firstInstructionPointerInUpdate;
 
         public double SessionTime { get { return currentTime; } }
         
@@ -76,7 +81,6 @@ namespace kOS.Safe.Execution
             PushInterpreterContext();
             currentStatus = Status.Running;
             currentTime = 0;
-            timeWaitUntil = 0;
             maxUpdateTime = 0.0;
             maxExecutionTime = 0.0;
             // clear stack (which also orphans all local variables so they can get garbage collected)
@@ -382,7 +386,7 @@ namespace kOS.Safe.Execution
             }
             else
             {
-                currentContext.Triggers.Clear();   // remove all the active triggers
+                currentContext.ClearTriggers();   // remove all the triggers
                 SkipCurrentInstructionId();
             }
         }
@@ -970,30 +974,33 @@ namespace kOS.Safe.Execution
 
         public void AddTrigger(int triggerFunctionPointer)
         {
-            if (!currentContext.Triggers.Contains(triggerFunctionPointer))
-            {
-                currentContext.Triggers.Add(triggerFunctionPointer);
-            }
+            currentContext.AddPendingTrigger(triggerFunctionPointer);
         }
 
         public void RemoveTrigger(int triggerFunctionPointer)
         {
-            if (currentContext.Triggers.Contains(triggerFunctionPointer))
-            {
-                currentContext.Triggers.Remove(triggerFunctionPointer);
-            }
+            currentContext.RemoveTrigger(triggerFunctionPointer);
         }
 
-        public void StartWait(double waitTime)
+        /// <summary>
+        /// Put the CPU into wait state for now, which will reset next Update.
+        /// Also, if given a number of seconds, return the number of seconds into
+        /// the future that is, in game-terms, for the sake of making a timestamp
+        /// of when the wait is expected to be over.
+        /// </summary>
+        /// <param name="waitTime"></param>
+        /// <returns></returns>
+        public double StartWait(double waitTime)
         {
-            timeWaitUntil = currentTime + waitTime;
-            currentStatus = Status.Waiting;
+            if (currentStatus == Status.Running)
+                currentStatus = Status.Waiting;
+            return currentTime + waitTime;
         }
 
         public void EndWait()
         {
-            timeWaitUntil = 0;
-            currentStatus = Status.Running;
+            if (currentStatus == Status.Waiting)
+                currentStatus = Status.Running;
         }
 
         public void KOSFixedUpdate(double deltaTime)
@@ -1005,6 +1012,8 @@ namespace kOS.Safe.Execution
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
             instructionsSoFarInUpdate = 0;
             var numMainlineInstructions = 0;
+
+            firstInstructionPointerInUpdate = InstructionPointer;
 
             if (showStatistics)
             {
@@ -1026,9 +1035,7 @@ namespace kOS.Safe.Execution
                 {
                     ProcessTriggers();
 
-                    ProcessWait();
-
-                    if (currentStatus == Status.Running)
+                    if (currentStatus == Status.Running || currentStatus == Status.Waiting)
                     {
                         if (showStatistics)
                         {
@@ -1104,31 +1111,27 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void ProcessWait()
-        {
-            if (currentStatus == Status.Waiting)
-            {
-                if (currentTime >= timeWaitUntil)
-                {
-                    EndWait();
-                }
-            }
-        }
-
         private void ProcessTriggers()
         {
-            if (currentContext.Triggers.Count <= 0) return;
+            if (currentContext.ActiveTriggerCount() <= 0) return;
             int oldCount = currentContext.Program.Count;
 
             int currentInstructionPointer = currentContext.InstructionPointer;
-            var triggerList = new List<int>(currentContext.Triggers);
             var triggersToBeExecuted = new List<int>();
-
-            foreach (int triggerPointer in triggerList)
+            
+            // To ensure triggers execute in the same order in which they
+            // got added (thus ensuring the system favors trying the least
+            // recently added trigger first in a more fair round-robin way),
+            // the nested function calls get built in stack order, so that
+            // they execute in normal order.  Thus the backward iteration
+            // order used in the loop below:
+            for (int index = currentContext.ActiveTriggerCount() - 1 ; index >= 0 ; --index)
             {
+                int triggerPointer = currentContext.GetTriggerByIndex(index);
+                
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
                 // will be invalid.  Only execute the trigger if it still exists.
-                if (currentContext.Triggers.Contains(triggerPointer))
+                if (currentContext.ContainsTrigger(triggerPointer))
                 {
                     // Insert a faked function call as if the trigger had been called from just
                     // before whatever opcode was about to get executed, by pusing a context
@@ -1162,20 +1165,42 @@ namespace kOS.Safe.Execution
         private void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
-            executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
-            bool firstTime = true; // Guarantee at least one mainline instruction is attempted even
-                                   // if that means going over IPU limit by 1 to do it.  Thus if
-                                   // a bad programmer makes a forever recurring trigger that ends right on an
-                                   // IPU boundary it doesn't get stuck forever never moving the program forward.
+            int howManyMainLine = 0;
+            bool reachedMainLine = false;
+            executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
+
+            EndWait(); // Temporarily, perhaps. If the first thing it finds is the same OpcodeWait, it can revert back to wait mode.
+
             while (currentStatus == Status.Running &&
-                   (firstTime || instructionsSoFarInUpdate < instructionsPerUpdate) &&
+                   instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
+                if (InstructionPointer == firstInstructionPointerInUpdate &&
+                    ! stack.HasTriggerContexts()) // This additional check is important.
+                                                 // Hypothetically it could be possible for trigger code to hit the same
+                                                 // IP as where mainline code was interrupted, if both trigger code and
+                                                 // mainline code make use of the same library function, and the
+                                                 // trigger interruption occurred when mainline code was in that
+                                                 // same library function.  This ensures that if so, that doesn't count.
+                                                 // It only counts when all the triggers have popped off the call stack.
+                {
+                    reachedMainLine = true;
+                }
                 executeNext = ExecuteInstruction(currentContext, doProfiling);
                 instructionsSoFarInUpdate++;
-                firstTime = false;
+                if (reachedMainLine)
+                  ++howManyMainLine;
             }
+
+            // As long as at least one line of actual main code was reached, then re-enable all
+            // triggers that wanted to be re-enabled.  This delay in re-enabling them
+            // ensures that a nested bunch of triggers interruping other triggers can't
+            // *completely* starve mainline code of execution, no matter how invasive
+            // and cpu-hogging the user may have been written them to be:
+            if (reachedMainLine)
+                currentContext.ActivatePendingTriggers();
+
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());
         }

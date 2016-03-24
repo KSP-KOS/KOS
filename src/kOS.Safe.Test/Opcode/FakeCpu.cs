@@ -179,7 +179,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void StartWait(double waitTime)
+        public double StartWait(double waitTime)
         {
             throw new NotImplementedException();
         }
