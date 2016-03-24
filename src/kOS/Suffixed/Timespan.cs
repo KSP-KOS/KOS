@@ -130,27 +130,24 @@ namespace kOS.Suffixed
 
         public override bool Equals(object obj)
         {
-            TimeSpan t = obj as TimeSpan;
-            if (t != null)
+            Type compareType = typeof(TimeSpan);
+            if (compareType.IsInstanceOfType(obj))
             {
+                TimeSpan t = obj as TimeSpan;
                 // Check the equality of the span value
-                if (span == t.ToUnixStyleTime())
-                    return true;
+                return span == t.ToUnixStyleTime();
             }
             return false;
         }
 
         public static bool operator ==(TimeSpan a, TimeSpan b)
         {
-            if ((object)a != null)
+            Type compareType = typeof(TimeSpan);
+            if (compareType.IsInstanceOfType(a))
             {
-                if ((object)b != null)
-                    return a.Equals(b);  // a and b are not null, use a's Equals method
-                return false; // a is not null, b is null, therefor not equal
+                return a.Equals(b); // a is not null, we can use the built in equals function
             }
-            else if ((object)b != null)
-                return false; // a is not null, b is null, therefor not equal
-            return true; // both are null, return true
+            return !compareType.IsInstanceOfType(b); // a is null, return true if b is null and false if not null
         }
 
         public static bool operator !=(TimeSpan a, TimeSpan b)

@@ -163,11 +163,11 @@ namespace kOS.Suffixed
 
         public override bool Equals(object obj)
         {
-            Vector b = obj as Vector;
-            if (b != null)
+            Type compareType = typeof(Vector);
+            if (compareType.IsInstanceOfType(obj))
             {
-                if (X == b.X && Y == b.Y && Z == b.Z)
-                    return true;
+                Vector b = obj as Vector;
+                return (X == b.X && Y == b.Y && Z == b.Z);
             }
             return false;
         }
@@ -239,15 +239,12 @@ namespace kOS.Suffixed
 
         public static bool operator ==(Vector a, Vector b)
         {
-            if ((object)a != null)
+            Type compareType = typeof(Vector);
+            if (compareType.IsInstanceOfType(a))
             {
-                if ((object)b != null)
-                    return a.Equals(b);  // a and b are not null, use a's Equals method
-                return false; // a is not null, b is null, therefor not equal
+                return a.Equals(b); // a is not null, we can use the built in equals function
             }
-            else if ((object)b != null)
-                return false; // a is not null, b is null, therefor not equal
-            return true; // both are null, return true
+            return !compareType.IsInstanceOfType(b); // a is null, return true if b is null and false if not null
         }
 
         public static bool operator !=(Vector a, Vector b)
