@@ -42,6 +42,11 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue Create(object value)
         {
+            Type compareType = typeof(ScalarValue);
+            if (compareType.IsInstanceOfType(value))
+            {
+                return (ScalarValue)value;
+            }
             if (value is float)
                 value = Convert.ToDouble(value);
             if (value is double)
@@ -65,12 +70,6 @@ namespace kOS.Safe.Encapsulation
             if (value is int)
             {
                 return new ScalarIntValue((int)value);
-            }
-
-            var scalarValue = value as ScalarValue;
-            if (scalarValue != null)
-            {
-                return Create(scalarValue.Value);
             }
 
             throw new KOSException(string.Format("Failed to set scalar value.  Passed type {0}, expected Double or Int", value.GetType().Name));
@@ -127,28 +126,16 @@ namespace kOS.Safe.Encapsulation
 
         public static ScalarValue Add(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return Create(val1.GetIntValue() + val2.GetIntValue());
-            }
             return Create(val1.GetDoubleValue() + val2.GetDoubleValue());
         }
 
         public static ScalarValue Subtract(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return Create(val1.GetIntValue() - val2.GetIntValue());
-            }
             return Create(val1.GetDoubleValue() - val2.GetDoubleValue());
         }
 
         public static ScalarValue Multiply(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return Create(val1.GetIntValue() * val2.GetIntValue());
-            }
             return Create(val1.GetDoubleValue() * val2.GetDoubleValue());
         }
 
@@ -173,46 +160,26 @@ namespace kOS.Safe.Encapsulation
 
         public static bool GreaterThan(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return val1.GetIntValue() > val2.GetIntValue();
-            }
             return val1.GetDoubleValue() > val2.GetDoubleValue();
         }
 
         public static bool LessThan(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return val1.GetIntValue() < val2.GetIntValue();
-            }
             return val1.GetDoubleValue() < val2.GetDoubleValue();
         }
 
         public static ScalarValue Max(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return Create(Math.Max(val1.GetIntValue(), val2.GetIntValue()));
-            }
             return Create(Math.Max(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static ScalarValue Min(ScalarValue val1, ScalarValue val2)
         {
-            if (val1.IsInt && val2.IsInt)
-            {
-                return new ScalarIntValue(Math.Min(val1.GetIntValue(), val2.GetIntValue()));
-            }
             return Create(Math.Min(val1.GetDoubleValue(), val2.GetDoubleValue()));
         }
 
         public static ScalarValue Abs(ScalarValue val)
         {
-            if (val.IsInt)
-            {
-                return new ScalarIntValue(Math.Abs(val.GetIntValue()));
-            }
             return Create(Math.Abs(val.GetDoubleValue()));
         }
 
