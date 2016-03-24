@@ -197,7 +197,7 @@ namespace kOS.Safe.Compilation
                 return NotEqual(resultPair);
             }
 
-            throw new KOSException(GetMessage("<>", pair));
+            return !pair.Left.Equals(pair.Right);
         }
 
         public override object Equal(OperandPair pair)
@@ -216,7 +216,7 @@ namespace kOS.Safe.Compilation
                 return Equal(pair);
             }
 
-            throw new KOSException(GetMessage("=", pair));
+            return pair.Left.Equals(pair.Right);
         }
 
         public override object Min(OperandPair pair)
