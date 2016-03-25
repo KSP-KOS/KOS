@@ -24,7 +24,7 @@ namespace kOS.Suffixed
 
         public Vector()
         {
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         public Vector(Vector3d init)

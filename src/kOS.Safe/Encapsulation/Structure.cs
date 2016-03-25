@@ -17,6 +17,9 @@ namespace kOS.Safe.Encapsulation
         private readonly IDictionary<string, ISuffix> instanceSuffixes;
         private static readonly object globalSuffixLock = new object();
 
+        private bool needToInitializeSuffixes = true;
+        private List<Action> initializeSuffixCallbacks = new List<Action>();
+
         static Structure()
         {
             globalSuffixes = new Dictionary<Type, IDictionary<string, ISuffix>>();
@@ -26,7 +29,26 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
-            InitializeInstanceSuffixes();
+            RegisterInitializer(InitializeInstanceSuffixes);
+        }
+
+        protected void RegisterInitializer(Action callback)
+        {
+            if (!initializeSuffixCallbacks.Contains(callback))
+            {
+                initializeSuffixCallbacks.Add(callback);
+            }
+        }
+
+        private void callInitializeSuffixes()
+        {
+            if (needToInitializeSuffixes)
+            {
+                foreach (var callback in initializeSuffixCallbacks)
+                {
+                    callback.Invoke();
+                }
+            }
         }
         
         public string KOSName { get { return KOSNomenclature.GetKOSName(GetType()); } }
@@ -109,6 +131,7 @@ namespace kOS.Safe.Encapsulation
 
         public virtual bool SetSuffix(string suffixName, object value)
         {
+            callInitializeSuffixes();
             var suffixes = GetStaticSuffixesForType(GetType());
 
             if (!ProcessSetSuffix(suffixes, suffixName, value))
@@ -136,6 +159,7 @@ namespace kOS.Safe.Encapsulation
 
         public virtual ISuffixResult GetSuffix(string suffixName)
         {
+            callInitializeSuffixes();
             ISuffix suffix;
             if (instanceSuffixes.TryGetValue(suffixName, out suffix))
             {
@@ -153,6 +177,7 @@ namespace kOS.Safe.Encapsulation
         
         public virtual BooleanValue HasSuffix(StringValue suffixName)
         {
+            callInitializeSuffixes();
             if (instanceSuffixes.ContainsKey(suffixName.ToString()))
                 return true;
             if (GetStaticSuffixesForType(GetType()).ContainsKey(suffixName.ToString()))
@@ -162,6 +187,7 @@ namespace kOS.Safe.Encapsulation
         
         public virtual ListValue<StringValue> GetSuffixNames()
         {
+            callInitializeSuffixes();
             List<StringValue> names = new List<StringValue>();            
             
             names.AddRange(instanceSuffixes.Keys.Select(item => (StringValue)item));
@@ -225,16 +251,6 @@ namespace kOS.Safe.Encapsulation
                 }
             }
             return sb.ToString();
-        }
-
-        protected object ConvertToDoubleIfNeeded(object value)
-        {
-            if (!(value is Structure) && !(value is double))
-            {
-                value = Convert.ToDouble(value);
-            }
-
-            return value;
         }
 
         public override string ToString()
