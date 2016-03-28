@@ -125,14 +125,28 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object argument1 = PopValueAssert(shared);
-            object argument2 = PopValueAssert(shared);
+            Structure argument1 = PopStructureAssertEncapsulated(shared);
+            Structure argument2 = PopStructureAssertEncapsulated(shared);
             AssertArgBottomAndConsume(shared);
-
-            var pair = new OperandPair(argument1, argument2);
-            Calculator calculator = Calculator.GetCalculator(pair);
-            object result = calculator.Min(pair);
-            ReturnValue = result;
+            Type scalarCompare = typeof(ScalarValue);
+            Type stringCompare = typeof(StringValue);
+            if (scalarCompare.IsInstanceOfType(argument1) && scalarCompare.IsInstanceOfType(argument2))
+            {
+                double d1 = ((ScalarValue)argument1).GetDoubleValue();
+                double d2 = ((ScalarValue)argument2).GetDoubleValue();
+                ReturnValue = Math.Min(d1, d2);
+            }
+            else if (scalarCompare.IsInstanceOfType(argument1) && scalarCompare.IsInstanceOfType(argument2))
+            {
+                string arg1 = argument1.ToString();
+                string arg2 = argument2.ToString();
+                int compareNum = string.Compare(arg1, arg2, StringComparison.OrdinalIgnoreCase);
+                ReturnValue = (compareNum < 0) ? arg1 : arg2;
+            }
+            else
+            {
+                throw new KOSException("Argument Mismatch: the function MIN only accepts matching arguments of type Scalar or String");
+            }
         }
     }
 
@@ -141,14 +155,28 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object argument1 = PopValueAssert(shared);
-            object argument2 = PopValueAssert(shared);
+            Structure argument1 = PopStructureAssertEncapsulated(shared);
+            Structure argument2 = PopStructureAssertEncapsulated(shared);
             AssertArgBottomAndConsume(shared);
-
-            var pair = new OperandPair(argument1, argument2);
-            Calculator calculator = Calculator.GetCalculator(pair);
-            object result = calculator.Max(pair);
-            ReturnValue = result;
+            Type scalarCompare = typeof(ScalarValue);
+            Type stringCompare = typeof(StringValue);
+            if (scalarCompare.IsInstanceOfType(argument1) && scalarCompare.IsInstanceOfType(argument2))
+            {
+                double d1 = ((ScalarValue)argument1).GetDoubleValue();
+                double d2 = ((ScalarValue)argument2).GetDoubleValue();
+                ReturnValue = Math.Max(d1, d2);
+            }
+            else if (scalarCompare.IsInstanceOfType(argument1) && scalarCompare.IsInstanceOfType(argument2))
+            {
+                string arg1 = argument1.ToString();
+                string arg2 = argument2.ToString();
+                int compareNum = string.Compare(arg1, arg2, StringComparison.OrdinalIgnoreCase);
+                ReturnValue = (compareNum > 0) ? arg1 : arg2;
+            }
+            else
+            {
+                throw new KOSException("Argument Mismatch: the function MAX only accepts matching arguments of type Scalar or String");
+            }
         }
     }
 

@@ -220,8 +220,12 @@ namespace kOS.Safe.Encapsulation
 
         public static bool operator ==(StringValue val1, StringValue val2)
         {
-            if ((object)val1 == null) return ((object)val2 == null);
-            return val1.Equals(val2);
+            Type compareType = typeof(StringValue);
+            if (compareType.IsInstanceOfType(val1))
+            {
+                return val1.Equals(val2); // val1 is not null, we can use the built in equals function
+            }
+            return !compareType.IsInstanceOfType(val2); // val1 is null, return true if val2 is null and false if not null
         }
 
         public static bool operator !=(StringValue val1, StringValue val2)
