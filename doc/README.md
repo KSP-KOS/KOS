@@ -10,6 +10,7 @@ you should adjust your path based on your actual repository location)
 
 1. If you don't already have Python installed, install the latest version in the
   2.7 series.  At the time of this writing, 2.7.11 was the most current version.
+  You may download the installer from: https://www.python.org/downloads/
 
 2. You can verify the installation and version of Python (and pip) by issuing
   the following commands from the command line:
@@ -51,7 +52,11 @@ you should adjust your path based on your actual repository location)
   At which point you can point your browser to `http://localhost:8000`
 
 #Getting started on Linux
-1. TODO: WRITE LINUX INSTRUCTIONS WITH APT-GET AND PIP
+1. As with Windows above, install Python 2.7.  You may use your distribution's
+  package manager system, or download from: https://www.python.org/downloads/
+
+2. All other instructions are the same as above for windows, replacing the `\`
+  path character with `/` and adapting paths to reference your Linux file system.
 
 #Publishing
 1. Clone KSP-KOS/KOS gh-pages branch if not done already, pull the most recent
