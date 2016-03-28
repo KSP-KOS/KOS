@@ -240,6 +240,9 @@
     <Compile Include="Serialization\IDumper.cs" />
     <Compile Include="Communication\GenericMessageQueue.cs" />
     <Compile Include="Exceptions\KOSCommunicationException.cs" />
+    <Compile Include="Persistence\GlobalPath.cs" />
+    <Compile Include="Persistence\VolumePath.cs" />
+    <Compile Include="Exceptions\KOSInvalidPathException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

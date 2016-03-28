@@ -73,6 +73,8 @@
     <Compile Include="Serialization\FormatterTest.cs" />
     <Compile Include="Communication\MessageQueueTest.cs" />
     <Compile Include="Communication\FakeCurrentTimeProvider.cs" />
+    <Compile Include="Persistence\VolumePathTest.cs" />
+    <Compile Include="Persistence\GlobalPathTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -94,6 +96,7 @@
   <ItemGroup>
     <Folder Include="Serialization\" />
     <Folder Include="Communication\" />
+    <Folder Include="Persistence\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProfilingSessions\Session20160127_233127.sdps" />
