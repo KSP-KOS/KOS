@@ -11,7 +11,7 @@ namespace kOS.Safe.Execution
         int AddObjectParts(IEnumerable<CodePart> parts);
         void ToggleFlyByWire(string paramName, bool enabled);
         List<string> GetCodeFragment(int contextLines);
-        List<string> GetCodeFragment(int start, int stop);
+        List<string> GetCodeFragment(int start, int stop, bool doProfile = false);
         List<Opcode> Program { get; set; }
         int InstructionPointer { get; set; }
         List<int> Triggers { get; set; }
