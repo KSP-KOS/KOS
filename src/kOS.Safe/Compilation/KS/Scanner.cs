@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -415,6 +416,8 @@ namespace kOS.Safe.Compilation.KS
             Token tok = null;
             List<TokenType> scantokens;
 
+            string lowerInput = Input.ToLower();
+
 
             // this prevents double scanning and matching
             // increased performance
@@ -436,7 +439,7 @@ namespace kOS.Safe.Compilation.KS
 
                 int len = -1;
                 TokenType index = (TokenType)int.MaxValue;
-                string input = Input.Substring(startpos);
+                string input = lowerInput.Substring(startpos);
 
                 tok = new Token(startpos, endpos);
 
@@ -493,10 +496,10 @@ namespace kOS.Safe.Compilation.KS
                     var match = Patterns[tok.Type].Match(tok.Text);
                     var fileMatch = match.Groups["File"];
                     if (fileMatch.Success)
-                        currentFile = fileMatch.Value;
+                        currentFile = fileMatch.Value.Replace("\\\\", "\\");
                     var lineMatch = match.Groups["Line"];
                     if (lineMatch.Success)
-                        currentline = int.Parse(lineMatch.Value);
+                        currentline = int.Parse(lineMatch.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
                 }
             }
             while (SkipList.Contains(tok.Type));
