@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using Math = kOS.Safe.Utilities.Math;
 using kOS.AddOns.RemoteTech;
 using kOS.Safe.Utilities;
 
@@ -172,7 +171,7 @@ namespace kOS.Suffixed.PartModuleField
                 if (range != null)
                 {
                     float val = Convert.ToSingle(convertedVal);
-                    val = Math.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
+                    val = KOSMath.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
                     convertedVal = Convert.ToDouble(val);
                 }
                 if (!isLegal)

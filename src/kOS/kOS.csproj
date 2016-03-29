@@ -41,10 +41,6 @@
     <Reference Include="KSPUtil">
       <HintPath>..\..\..\..\..\..\..\Games\SteamLibrary\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\KSPUtil.dll</HintPath>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.9.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\packages\NSubstitute.1.9.2.0\lib\net35\NSubstitute.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Scale_Redist">
       <HintPath>..\..\..\..\..\Dropbox\kOS\Scale_Redist.dll</HintPath>
     </Reference>
