@@ -87,7 +87,7 @@ performed on every single documentation edit and every merged PR.
   ```
 
   (You may delete other branches from this clone if you want, but make sure you
-  so not delete the remote branch)
+  do not delete the remote branch)
 
 4. The previous sphinx output needs to be deleted.  Delete all files and folders
   within the `KOS-gh-pages` folder **except** files and folders with a leading `.`
