@@ -76,8 +76,8 @@ Locks an identifier to an expression. Each time the identifier is used in an exp
     PRINT Y.         // Outputs 6
 
 LOCK follows the same scoping rules as the SET command.  If the variable
-name used already exists in local scope, then the lock command creates 
-a lock function that only lasts as long as the current scope and then 
+name used already exists in local scope, then the lock command creates
+a lock function that only lasts as long as the current scope and then
 becomes unreachable after that.  If the variable name used does not exist
 in local scope, then LOCK will create it as a global variable, unless
 @NOLAZYGLOBAL is set to off, in which case it will be an error.
@@ -87,7 +87,7 @@ Every time you read the value of the "variable", it executes the expression
 again.
 
 .. note::
-    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each physics tick <physics tick>`.
+    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get repeatedly evaluated in :ref:`each physics tick <physics tick>`.
     When used with a flight control variable, a ``LOCK`` actually
     becomes a :ref:`trigger <triggers>`.
 
@@ -211,7 +211,7 @@ What the parts mean
     pass through the loop.  They may contain local declarations of new
     variables.  If they do, then the variables will be local to the body
     of the loop and won't be visible outside the loop.  In this case the
-    braces ``{`` and ``}`` are mandatory even when there is only one 
+    braces ``{`` and ``}`` are mandatory even when there is only one
     statement present.  To create a a null FROM clause, give it an empty
     set of braces.
 
@@ -222,7 +222,7 @@ What the parts mean
     it's true, it will abort and stop running the loop.  It checks before
     the initial first pass of the loop as well, so it's possible for the
     check to prevent the loop body from even executing once.  Braces
-    ``{``..``}`` are not used here because this is not technically a 
+    ``{``..``}`` are not used here because this is not technically a
     complete statement.  It is just an expression that evaluates to a
     value.
 
@@ -240,14 +240,14 @@ What the parts mean
   - This is where the loop body gets put.  Much like with the UNTIL and FOR
     loops, these braces are not mandatory when there is only exactly one
     statement in the body, but are a very good idea to have anyway.
-    
+
 Why some braces are mandatory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some braces are mandatory (for the ``FROM`` and ``STEP`` clauses) even
 when there is only one statement inside them, because the period that
-ends a single statement would look like it's terminating the entire 
-FROM loop if it was open and bare.  Wrapping it inside braces makes it 
+ends a single statement would look like it's terminating the entire
+FROM loop if it was open and bare.  Wrapping it inside braces makes it
 more visually obvious that it's not the end of the FROM loop.
 
 Why ``DO`` is mandatory
@@ -310,7 +310,7 @@ Any such combination of indenting styles, or mix and match of them, is
 understood by the compiler.  The compiler ignores the spacing and
 indenting.  It is recommended that you pick just two of them and stick
 with them - one compact one to use for short headers, and one longer exploded
-one to use for more wordy headers when you have to split it up across lines.  
+one to use for more wordy headers when you have to split it up across lines.
 
 The literal meaning of ``FROM``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -369,7 +369,7 @@ to be done for that iteration.
 If you are editing your script and need to cut a loop section and move it
 elsewhere, the FROM loop makes it more visually obvious how to cut
 that loop and move it.  It makes the important parts of the loop be self
-contained in the header, so you don't leave the initializer behind when 
+contained in the header, so you don't leave the initializer behind when
 moving the loop.
 
 
@@ -401,12 +401,12 @@ But when a ``WAIT`` is used in a trigger's body
 (A "trigger" is any ``WHEN``, or ``ON`` statement,
 or the expression in a steering control lock like
 ``lock throttle to mythrottlefunction().``), it actually
-causes all execution including other triggers to get 
+causes all execution including other triggers to get
 stuck until the wait is done.  Because of this, while
-it is allowed, it is 
+it is allowed, it is
 :ref:`usually a bad idea to use WAIT inside a trigger <wait_in_trigger>`.
 
-    
+
 .. index:: Boolean Operators
 .. _booleans:
 
@@ -435,19 +435,19 @@ Boolean is a type that can be stored in a variable and used that way as well. Th
     IF 1 { PRINT "This statement happens unconditionally." }
     IF 0 { PRINT "This statement never happens." }
     IF count { PRINT "count isn't zero.". }
- 
+
 
 ``DECLARE FUNCTION``
 --------------------
 
-Covered in more depth :ref:`elsewhere in the documentation <user_functions>`, 
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`,
 the ``DECLARE FUNCTION`` statement creates a user-defined function that
 you can then call elsewhere in the code.
 
 ``RETURN``
 ----------
 
-Covered in more depth :ref:`elsewhere in the documentation <user_functions>`, 
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`,
 the ``RETURN`` statement causes a user function, or a trigger body, to
 end, and chooses what the calling part of the program will see if it
 reads the value of the function.
@@ -502,7 +502,7 @@ Syntax examples:
         | }
       - | ON *any_expression* {
         |
-        |   *statements go here* 
+        |   *statements go here*
         |
         | }
     * - WHEN *boolean_expression* THEN *single_statement*.
@@ -524,7 +524,7 @@ Here is the difference between them:
   is possible to test equality.  It can be a boolean, a scalar, etc.
   All that matters is that kOS needs to be able to check if its
   new value is equal to its previous value or not.
-  
+
 Other than that, the two work the same way, and follow the same rules.
 
 ``WHEN`` example::
@@ -582,18 +582,16 @@ it will only fire off once, no matter how many times you press the
     used within the expression of a WHEN or an ON statement should
     be GLOBAL variables or the results are unpredictable.  If local
     variables were used, the results could change depending on where
-    you are within the execution at the time.  
+    you are within the execution at the time.
 
 .. warning::
     Do not make the body of a ``WHEN``/``THEN`` take a long time to
     execute. If you attempt to run code that lasts too long in the body
     of your ``WHEN``/``THEN`` statement, it will cause the main
     line code, and all other triggers (WHEN, ON, and cooked steering
-    locks) to be stuck unable to continue until it finishes.
-
-For the reason mentioned in the warning above, you also probably
-should not make the system execute a ``WAIT`` command when inside the
-body of a WHEN/THEN statement.
+    locks) to be stuck unable to continue until it finishes.  You also probably
+    should not make the system execute a ``WAIT`` command when inside the
+    body of a WHEN/THEN statement.
 
 kOS has a mechanism in place that allows triggers to interrupt mainline
 code that is stuck in a wait.  It does not have a mechanism to go the
@@ -688,7 +686,7 @@ you can conditionally decide what return value to use, like so::
     }
 
 There is an alternate, older syntax you can use to do the same thing,
-called the :ref:`preserve keyword`.  You may see it used in a lot of
+called the :ref:`preserve keyword <preserve>`.  You may see it used in a lot of
 older scripts, but the new way using the ``return`` keyword is
 cleaner.
 
@@ -719,7 +717,7 @@ To alter this, a new ability was added in kOS 0.19.3 and above to
 have triggers simply :ref:`return a true or false value <trigger_return>`
 to determine if they wish to be preserved.
 
-But prior to kOS 0.19.2 the only way to do it in kerboscript was
+But prior to kOS 0.19.3 the only way to do it in kerboscript was
 with the ``PRESERVE`` keyword, which will likely remain in
 kerboscript for quite some time because it has a lot of backward
 compatibility legacy.
@@ -727,7 +725,7 @@ compatibility legacy.
 If you execute the ``PRESERVE`` command anywhere within the body
 of a trigger, it tells kOS that you wish the trigger to remain
 present and not get deleted.  Choosing not to execute it, and
-just letting the execution fall through to the bottom of the 
+just letting the execution fall through to the bottom of the
 body, has the default behavior of causing the trigger to get
 deleted.
 
@@ -770,7 +768,7 @@ could also be expressed this way::
       SET count TO count - 1.
       PRINT "I will only pay attention " + count + " more times.".
       if count > 0
-        PRESERVE. 
+        PRESERVE.
     }
 
 Also note that unlike using ``RETURN``, the ``PRESERVE`` statement
@@ -798,4 +796,3 @@ has the same effect as this::
 (If you attempt to BOTH execute ``PRESERVE.`` *and* provide a ``RETURN false.``
 statement that contradicts it, the ``RETURN`` statement will end up
 overriding the effect of the ``PRESERVE``.)
-

@@ -112,7 +112,7 @@ stuck on a wait.
 
 If your program spins in a busy loop, never waiting, it can consume
 quite a bit more power than it would if you explicitly throw in a
-``WAIT 0.001.`` in the loop.  Even if the wait is very small, the 
+``WAIT 0.001.`` in the loop.  Even if the wait is very small, the
 mere fact that it yields the remaining instructions still allowed
 that update can make a big difference.
 
@@ -159,7 +159,7 @@ tick**.  Each of the ``ON`` and ``WHEN`` triggers also behave
 much like a function, with a body like this::
 
    if (not conditional_expression)
-       return 1.  // premature quit.  preserve and try again next time.
+       return true.  // premature quit.  preserve and try again next time.
    do_rest_of_trigger_body_here.
 
 
@@ -175,7 +175,7 @@ once per **physics tick** just to get far enough into the routine to
 reach the conditional expression check and discover that it's not
 time to run the rest of the body yet, so it returns.  An expensive
 to calculate conditional expression can really starve the system of
-instructions becuase it's getting run every single **physics tick**.
+instructions because it's getting run every single **physics tick**.
 *It's good practice to try to keep your trigger's conditional check
 short and fast to execute.  If it consists of multiple clauses, try
 to take advantage of :ref:`short circuit boolean <short_circuit>`
@@ -189,7 +189,7 @@ Wait in a Trigger
 It is possible for kOS to allow a trigger that takes longer than one
 *physics tick* to execute.  It just means the rest of the program is
 stuck until the trigger is done.  Triggers can interrupt mainline code, but
-mainline code can't interrupt triggers.  Thus using a ``wait`` in a trigger,
+mainline code can't interrupt triggers.  Thus using a ``WAIT`` in a trigger,
 while possible, may be a bad idea because it stops the entire rest of
 the program, including all its triggers, from happening, unlike how waits
 in mainline code work.  Before considering doing this, remember that a
@@ -217,7 +217,7 @@ who already know how to program and might be thinking there's a
 better way to do this.*
 
 Remember that triggers aren't *quite* true multi-threading.  If you make
-a trigger ``WAIT``, you're making the entire program wait.  If you make
+a trigger ``WAIT UNTIL AG1.``, you're making the entire program wait.  If you make
 the main-line code ``WAIT``, there is a mechanism to make triggers
 fire off during that ``WAIT`` because triggers can interrupt main line
 code, and in fact that's their intended purpose - to behave as interrupts.
@@ -348,7 +348,7 @@ ship itself, wakes up and performs the following steps, in this order:
    Step (1) above has caused each trigger to look like just a normal
    subroutine was called from main-line code.  When the nested subroutines
    all finish, the call stack has "popped" all the way back to where the
-   mainline code left off, and so it just continues on from there.  
+   mainline code left off, and so it just continues on from there.
    **Warning: Advanced sentence follows.  You can ignore it if you don't
    understand it:** *Because kOS is a pure stack computer with no
    temporary data held in "registers", this technique works because all
@@ -367,7 +367,7 @@ ship itself, wakes up and performs the following steps, in this order:
    :attr:`Config:IPU` inside triggers and never got back to mainline code.
    If it *has* gotten back to mainline code and executed at least one
    mainline instruction, then it re-enables all the triggers that wished
-   to be re-enabled because they executed ``preserve.`` or did a 
+   to be re-enabled because they executed ``preserve.`` or did a
    ``return true``.   (They were temporarily disabled up in Step(2) above.)
    If it has *not* gotten back to mainline code yet, then that means
    it's about to finish a physics tick while still inside a trigger, and
@@ -385,4 +385,3 @@ Each **physics** *tick*, the kOS mod wakes up and runs through all the currently
 Effectively, as far as the *simulated* universe can tell, it's as if your script runs several instructions in literally zero amount of time, and then pauses for a fraction of a second, and then runs more instructions in literally zero amount of time, then pauses for a fraction of a second, and so on, rather than running the program in a smoothed out continuous way.
 
 This is a vital difference between how a kOS CPU behaves versus how a real world computer behaves. In a real world computer, you would know for certain that time will pass, even if it's just a few picoseconds, between the execution of one statement and the next.
-

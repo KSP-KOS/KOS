@@ -30,7 +30,7 @@ The special LOCK variables for cooked steering
     LOCK THROTTLE.  See the note in the next section below.
 
 .. _LOCK STEERING:
-.. object:: LOCK STEERING TO expression. 
+.. object:: LOCK STEERING TO expression.
 
    This sets the direction **kOS** should point the ship where *expression* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
 
@@ -138,7 +138,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    **A warning about WHEELSTEERING and vertically mounted probe cores**:
 
    If you built your rover in such a way that the probe core controlling it
-   is stack-mounted facing up at the sky when the rover is driving, that 
+   is stack-mounted facing up at the sky when the rover is driving, that
    will confuse the ``lock WHEELSTEERING`` cooked control mechanism.  This
    is a common building pattern for KSP players and it seems to work okay
    when driving manually, but when driving by a kOS script, the fact that
@@ -181,7 +181,7 @@ For example, if you attempt this::
     }
     lock throttle to get_throttle().
 
-Then the ``WAIT`` command will be getting hit *every single*
+Then kOS will attempt to call the ``WAIT`` command *every single*
 update, as the kOS system keeps trying to re-run the
 ``lock throttle`` expression to learn what you want the new
 throttle value to be. This will starve your script of the
