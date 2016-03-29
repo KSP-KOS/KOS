@@ -12,7 +12,19 @@ namespace kOS.Safe.Execution
 
         public List<Opcode> Program { get; set; }
         public int InstructionPointer { get; set; }
-        public List<int> Triggers { get; set; }
+        
+        /// <summary>
+        /// List of triggers that are currently active
+        /// </summary>
+        private List<int> Triggers { get; set; }
+        /// <summary>
+        /// List of triggers that are *about to become* currently active, but only after
+        /// the CPU tells us it's a good safe time to re-insert them.  This delay is done
+        /// so that triggers interrupting other triggers can't entirely starve mainline
+        /// code from executing - they don't get re-inserted until back to the mainline
+        /// code again.
+        /// </summary>
+        private List<int> TriggersToInsert { get; set; }
         public bool Silent { get; set; }
 
         public ProgramContext(bool interpreterContext)
@@ -20,6 +32,7 @@ namespace kOS.Safe.Execution
             Program = new List<Opcode>();
             InstructionPointer = 0;
             Triggers = new List<int>();
+            TriggersToInsert = new List<int>();
             builder = interpreterContext ? new ProgramBuilderInterpreter() : new ProgramBuilder();
             flyByWire = new Dictionary<string, bool>();
         }
@@ -99,6 +112,87 @@ namespace kOS.Safe.Execution
             foreach (KeyValuePair<string, bool> kvp in flyByWire) {
                 manager.ToggleFlyByWire(kvp.Key, kvp.Value);
             }
+        }
+        
+        /// <summary>
+        /// Remove all active and pending triggers.
+        /// </summary>
+        public void ClearTriggers()
+        {
+            Triggers.Clear();
+            TriggersToInsert.Clear();
+        }
+        
+        /// <summary>
+        /// Add a trigger to the list of triggers pending insertion.
+        /// It will not *finish* inserting it until the CPU tells us it's a good
+        /// time to do so, by calling ActivatePendingTriggers().
+        /// It will also refuse to insert a trigger that's already either active
+        /// or pending insertion to the active list (avoids duplication).
+        /// </summary>
+        /// <param name="instructionPointer"></param>
+        public void AddPendingTrigger(int instructionPointer)
+        {
+            // CntainsTrigger is a sequential walk, but that should be okay
+            // because it should be unlikely that there's hundreds of
+            // triggers.  There'll be at most tens of them, and even that's
+            // unlikely.
+            if (! ContainsTrigger(instructionPointer))
+                TriggersToInsert.Add(instructionPointer);
+        }
+        
+        /// <summary>
+        /// Remove a trigger from current triggers or pending insertion
+        /// triggers or both if need be, so it's not there anymore at all.
+        /// </summary>
+        /// <param name="instructionPointer"></param>
+        public void RemoveTrigger(int instructionPointer)
+        {
+            Triggers.Remove(instructionPointer); // can ignore if it wasn't in the list.
+            TriggersToInsert.Remove(instructionPointer); // can ignore if it wasn't in the list.
+        }
+        
+        /// <summary>
+        /// How many triggers (active) there are.
+        /// </summary>
+        /// <returns></returns>
+        public int ActiveTriggerCount()
+        {
+            return Triggers.Count;
+        }
+        
+        /// <summary>
+        /// Return the active trigger at the given index.  Cannot be used
+        /// to get pending insertion triggers.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public int GetTriggerByIndex(int index)
+        {
+            return Triggers[index];
+        }
+        
+        /// <summary>
+        /// True if the given trigger's IP is for a trigger that
+        /// is currently active, or is about to become active.
+        /// </summary>
+        /// <param name="instructionPointer"></param>
+        /// <returns></returns>
+        public bool ContainsTrigger(int instructionPointer)
+        {
+            return Triggers.Contains(instructionPointer) || TriggersToInsert.Contains(instructionPointer);
+        }
+
+        /// <summary>
+        /// Take all the pending triggers that have been added by AddPendingTrigger,
+        /// and finally make them become active.  To be called by the CPU when it
+        /// decides that enough mainline code has had a chance to happen that it's
+        /// okay to enable triggers again.
+        /// </summary>
+        public void ActivatePendingTriggers()
+        {
+            Triggers.AddRange(TriggersToInsert);
+            TriggersToInsert.Clear();
         }
 
         public List<string> GetCodeFragment(int contextLines)

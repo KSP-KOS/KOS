@@ -14,7 +14,6 @@ namespace kOS.Safe.Execution
         List<string> GetCodeFragment(int start, int stop, bool doProfile = false);
         List<Opcode> Program { get; set; }
         int InstructionPointer { get; set; }
-        List<int> Triggers { get; set; }
         bool Silent { get; set; }
     }
 }
