@@ -1,5 +1,6 @@
 ####INDEX
 * [Pull Requests](#pull-requests)
+  * [Nobody merges their own PR](#nobody-merges-their-own-pr
 * [Setting Up Your Environment](#setting-up-your-environment)
   * [Assumptions](#assumptions)
   * [Your Repository](#setting-up-your-repository)
@@ -39,6 +40,30 @@ Pull Requests
      then just put the phrase "[Not Ready]" in the title of the PR to
      communicate the same thing, and edit the title to remove it later when
      it is ready.
+
+####Nobody merges their own PR
+
+(Rules for priviledged members of the team who have permission to
+write directly to the main repository.)
+
+1. As a general policy, even experienced developers on the team should not
+   merge their own pull requests into the upstream `develop`.  Instead they
+   should get another developer to merge it for them.
+2. As such, even if you have permission to do so, never directly push a
+   change to `upstream develop` except in cases where you are doing so as
+   part of the process of merging somebody *else's* pull request other than
+   your own, or during some of the final steps of the release checklist
+   that require it.
+3. When merging somebody else's pull request, do not "rubber stamp" it.  Actually
+   try to read and understand what it does and how, and raise questions with
+   the author using the github "line note" system.
+
+The general principle is that doing this has two beneficial effects:  (1) Redundancy.
+In order for a mistake to slip past, two different brains have to fail to notice it,
+rather than just one, and (2) In the event one developer falls off the face of
+the earth, never to be heard from again, everything they've done has had at least
+one other developer on the team with a bit of familiarity with it.
+
 
 Setting Up Your Environment
 ===========================
@@ -119,29 +144,6 @@ Setting Up Your Environment
 
 8. You may push your branch with edits to your `origin` on github, and submit a
   pull request to KSP-KOS/KOS `develop` for review to be included.
-
-####Nobody merges their own PR's.
-
-(Rules for priviledged members of the team who have permission to
-write directly to the main repository.)
-
-1. As a general policy, even experienced developers on the team should not
-   merge their own pull requests into the upstream `develop`.  Instead they
-   should get another developer to merge it for them.
-2. As such, even if you have permission to do so, never directly push a
-   change to `upstream develop` except in cases where you are doing so as
-   part of the process of merging somebody *else's* pull request other than
-   your own, or during some of the final steps of the release checklist
-   that require it.
-3. When merging somebody else's pull request, do not "rubber stamp" it.  Actually
-   try to read and understand what it does and how, and raise questions with
-   the author using the github "line note" system.
-
-The general principle is that doing this has two beneficial effects:  (1) Redundancy.
-In order for a mistake to slip past, two different brains have to fail to notice it,
-rather than just one, and (2) In the event one developer falls off the face of
-the earth, never to be heard from again, everything they've done has had at least
-one other developer on the team with a bit of familiarity with it.
 
 ####Setting Up The Solution Dependencies
 1. Download the latest KSPAPIExtensions.dll from
