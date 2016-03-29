@@ -1,6 +1,6 @@
 ####INDEX
 * [Pull Requests](#pull-requests)
-  * [Nobody merges their own PR](#nobody-merges-their-own-pr
+  * [Nobody merges their own PR](#nobody-merges-their-own-pr)
 * [Setting Up Your Environment](#setting-up-your-environment)
   * [Assumptions](#assumptions)
   * [Your Repository](#setting-up-your-repository)
