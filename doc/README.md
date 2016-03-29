@@ -59,61 +59,68 @@ you should adjust your path based on your actual repository location)
   path character with `/` and adapting paths to reference your Linux file system.
 
 #Publishing
+
+This section pertains only to what has to be done when a new release of
+the documentation is being made public (usually to correspond to a new
+release of kOS itself.)  These steps do not need to be (and should not be)
+performed on every single documentation edit and every merged PR.
+
 1. We recommend creating a second clone repository for managing Github pages
   publishing.  You should also add KSP-KOS/KOS as the upstream remote:
   ```
   C:\KOS>cd ..
-  C:\>git clone https://github.com/[username]/KOS.git KOS_DOC
-  C:\>cd KOS_DOC
-  C:\KOS_DOC>git remote add upstream https://github.com/KSP-KOS/KOS.git
+  C:\>git clone https://github.com/[username]/KOS.git KOS-gh-pages
+  C:\>cd KOS-gh-pages
+  C:\KOS-gh-pages>git remote add upstream https://github.com/KSP-KOS/KOS.git
   ```
 
 2. For those who have permission to publish to the KOS_DOC repository, you will
   also need to add it as a new remote:
   ```
-  C:\KOS_DOC>git remote add KOS_DOC https://github.com/KSP-KOS/KOS_DOC.git
+  C:\KOS-gh-pages>git remote add KOS_DOC https://github.com/KSP-KOS/KOS_DOC.git
   ```
 
 3. Checkout the gh-pages branch and update it to match the upstream version:
   ```
-  C:\KOS_DOC>git checkout gh-pages
-  C:\KOS_DOC>git pull --ff-only upstream gh-pages
+  C:\KOS-gh-pages>git checkout gh-pages
+  C:\KOS-gh-pages>git pull --ff-only upstream gh-pages
   ```
 
   (You may delete other branches from this clone if you want, but make sure you
   so not delete the remote branch)
 
 4. The previous sphinx output needs to be deleted.  Delete all files and folders
-  within the `KOS_DOC` folder **except** files and folders with a leading `.`
+  within the `KOS-gh-pages` folder **except** files and folders with a leading `.`
   character (such as `.git`, `.gitattributes`, `.nojekyll`, and similar files).
   The file `.buildinfo` also needs to be deleted even though it starts with `.`:
   ```
-  C:\KOS_DOC>git rm -r [!.]*
-  C:\KOS_DOC>git rm .buildinfo
+  C:\KOS-gh-pages>git rm -r [!.]*
+  C:\KOS-gh-pages>git rm .buildinfo
   ```
 
-5. Copy the contents of th `KOS\doc\gh-pages` folder into `KOS_DOC`.
+5. Copy the contents of th `KOS\doc\gh-pages` folder into `KOS-gh-pages`.
 
 6. Add the updated files, commit, and push to your origin.  You should include a
   message that represents the reason for the update, such as "Update docs for
   v0.19.3"
   ```
-  C:\KOS_DOC>git reset head
-  C:\KOS_DOC>git add --all
-  C:\KOS_DOC>git commit -m [message]
-  C:\KOS_DOC>git push
+  C:\KOS-gh-pages>git reset head
+  C:\KOS-gh-pages>git add --all
+  C:\KOS-gh-pages>git commit -m [message]
+  C:\KOS-gh-pages>git push
   ```
 
   If any of your local editing tools added extra files not created by sphinx,
   be sure to unstage them **before** you commit.
   ```
-  C:\KOS_DOC>git reset [path_to_file]
+  C:\KOS-gh-pages>git reset [path_to_file]
   ```
 
-7. Submit a Pull Request against `KSP-KOS/KOS gh-pages` with your changes.
-  Developers with write permission may push to the upstream branch like this:
+7. Submit a Pull Request with your changes against the `gh-pages` branch of
+  the `KSP-KOS/KOS` fork, or developers with write permission may push to the
+  upstream branch directly like this:
   ```
-  C:\KOS_DOC>git push upstream gh-pages
+  C:\KOS-gh-pages>git push upstream gh-pages
   ```
 
 8. You may test and review the documents on your own Github pages address:
@@ -125,5 +132,5 @@ you should adjust your path based on your actual repository location)
   the repository is unable to accept pull requests from standard KOS
   repositories:
   ```
-  C:\KOS_DOC>git push KOS_DOC gh-pages
+  C:\KOS-gh-pages>git push KOS_DOC gh-pages
   ```
