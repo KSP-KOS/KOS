@@ -24,7 +24,9 @@ Pull Requests
   and `merge` are acceptable.  If your pull request is knowingly being used as
   the base for another pull request or another user, please avoid `rebase`.
 * The act of submitting a PR is presumed to be your permission to place your
-  work under the license the KOS project is using (GPL3).
+  work under the license the KOS project is using (GPL3 for source code.
+  Art asset files are allowed to use a different license if you feel it's more
+  appropriate).
 * The act of submitting a PR is presumed to be your permission for someone to
   merge it into develop *right now* if they wish to.  If you have a PR that you
   don't want merged just yet, but are just getting it ready or showing it off
