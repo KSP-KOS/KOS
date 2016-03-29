@@ -509,7 +509,7 @@ namespace kOS.Function
             if (hasGreek)
                 pointName = baseName;
             Waypoint point = wpm.Waypoints.FirstOrDefault(
-                p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+                p => string.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
             
             // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
             // nulls), so bomb out here:

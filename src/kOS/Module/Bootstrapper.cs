@@ -56,6 +56,7 @@ namespace kOS.Module
                 return;
             }
 
+            //TODO: 1.1 TODO
             //PopupDialog.SpawnPopupDialog(
             //    new MultiOptionDialog(
             //        "The kOS v0.15 update has moved the archive folder to /Ships/Script/ and changed the file extension from *.txt to *.ks to be more in line with squad's current folder structure. Would you like us to attempt to migrate your existing scripts?",

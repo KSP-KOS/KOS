@@ -13,6 +13,7 @@ using kOS.Suffixed.PartModuleField;
 using kOS.Module;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
+using KSP.UI.Screens;
 
 namespace kOS.Function
 {
@@ -121,12 +122,11 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             AssertArgBottomAndConsume(shared);
-            Staging.ActivateNextStage();
-
-            if (Staging.separate_ready && shared.Vessel.isActiveVessel)
+            if (StageManager.CanSeparate && shared.Vessel.isActiveVessel)
             {
+                StageManager.ActivateNextStage();
             }
-            else if (!Staging.separate_ready)
+            else if (!StageManager.CanSeparate)
             {
                 SafeHouse.Logger.Log("FAIL SILENT: Stage is called before it is ready, Use STAGE:READY to check first if staging rapidly");
             }

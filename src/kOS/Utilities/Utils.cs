@@ -18,7 +18,7 @@ namespace kOS.Utilities
             return HighLogic.LoadedSceneIsEditor ?
                        EditorLogic.fetch.editorCamera :
                        (MapView.MapIsEnabled ?
-                           MapView.fetch.VectorCamera : FlightCamera.fetch.mainCamera);
+                           PlanetariumCamera.Camera : FlightCamera.fetch.mainCamera);
         }
         
         public static string GetAssemblyFileVersion()

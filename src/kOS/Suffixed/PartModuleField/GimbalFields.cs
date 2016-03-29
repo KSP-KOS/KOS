@@ -3,7 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.PartModuleField
 {
-    [kOS.Safe.Utilities.KOSNomenclature("Gimbal")]
+    [Safe.Utilities.KOSNomenclature("Gimbal")]
     public class GimbalFields : PartModuleFields
     {
         private readonly ModuleGimbal gimbal;
@@ -26,9 +26,9 @@ namespace kOS.Suffixed.PartModuleField
                                               "Gimbal range limit percentage"));
             AddSuffix("RANGE", new Suffix<ScalarValue>(() => gimbal.gimbalRange ,"The Gimbal's Possible Range of movement"));
             AddSuffix("RESPONSESPEED", new Suffix<ScalarValue>(() => gimbal.gimbalResponseSpeed, "The Gimbal's Possible Rate of travel"));
-            //AddSuffix("PITCHANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAnglePitch, "Current Gimbal Pitch"));
-            //AddSuffix("YAWANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAngleYaw, "Current Gimbal Yaw" ));
-            //AddSuffix("ROLLANGLE", new Suffix<ScalarValue>(() => gimbal.gimbalLock ? 0 : gimbal.gimbalAngleRoll, "Current Gimbal Roll"));
+            AddSuffix("PITCHANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.actuation.x, "Current Gimbal Pitch"));
+            AddSuffix("YAWANGLE", new Suffix<ScalarValue>(() =>  gimbal.gimbalLock ? 0 : gimbal.actuation.z, "Current Gimbal Yaw" ));
+            AddSuffix("ROLLANGLE", new Suffix<ScalarValue>(() => gimbal.gimbalLock ? 0 : gimbal.actuation.y, "Current Gimbal Roll"));
         }
     }
 }

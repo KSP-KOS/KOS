@@ -232,7 +232,8 @@ namespace kOS.Suffixed
 
                     line = lineObj.AddComponent<LineRenderer>();
                     hat = hatObj.AddComponent<LineRenderer>();
-                    label = labelObj.GetComponent<GUIText>();
+                    //TODO: 1.1 TODO
+                    //label = labelObj.guiText;
 
                     line.useWorldSpace = false;
                     hat.useWorldSpace = false;
