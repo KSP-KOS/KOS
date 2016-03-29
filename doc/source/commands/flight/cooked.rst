@@ -26,11 +26,11 @@ The special LOCK variables for cooked steering
 
 .. warning::
 
-    You cannot ``WAIT`` during the execution of the expression in a
+    It's a very bad idea to``WAIT`` during the execution of the expression in a
     LOCK THROTTLE.  See the note in the next section below.
 
 .. _LOCK STEERING:
-.. object:: LOCK STEERING TO expression. 
+.. object:: LOCK STEERING TO expression.
 
    This sets the direction **kOS** should point the ship where *expression* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
 
@@ -72,7 +72,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
 
 .. warning::
 
-    You cannot ``WAIT`` during the execution of the expression in a
+    It's a very bad idea to ``WAIT`` during the execution of the expression in a
     LOCK STEERING.  See the note in the next section below.
 
 
@@ -101,7 +101,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
 
 .. warning::
 
-    You cannot ``WAIT`` during the execution of the expression in a
+    It's a very bad idea to ``WAIT`` during the execution of the expression in a
     LOCK WHEELTHROTTLE.  See the note in the next section below.
 
 .. _LOCK WHEELSTEERING:
@@ -138,7 +138,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    **A warning about WHEELSTEERING and vertically mounted probe cores**:
 
    If you built your rover in such a way that the probe core controlling it
-   is stack-mounted facing up at the sky when the rover is driving, that 
+   is stack-mounted facing up at the sky when the rover is driving, that
    will confuse the ``lock WHEELSTEERING`` cooked control mechanism.  This
    is a common building pattern for KSP players and it seems to work okay
    when driving manually, but when driving by a kOS script, the fact that
@@ -157,35 +157,41 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
 
 .. warning::
 
-    You cannot ``WAIT`` during the execution of the expression in a
+    It's a very bad idea to ``WAIT`` during the execution of the expression in a
     LOCK WHEELSTEERING.  See the note in the next section below.
 
 
-Cannot 'WAIT' during cooked control calculation
------------------------------------------------
+Don't 'WAIT' during cooked control calculation
+----------------------------------------------
 
 Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
-WHEELTHROTTLE, and LOCK WHEELSTEERING cause your expression
+WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
+:ref:`triggers <triggers>` that cause your expression
 to be calculated every single physics update tick behind
-the scenes, you cannot execute a ``WAIT`` command during
-the evaluation of the value used in them.
+the scenes, you should not execute a ``WAIT`` command
+in the code that performs the evaluation of the value
+used in them, as that will effectively cheat the entire
+script out of the full execution speed it deserves.
 
 For example, if you attempt this::
 
     function get_throttle {
-	wait 1.  // this line won't work.
-	return 0.5.
+        wait 0.001.  // this line is a bad idea.
+        return 0.5.
     }
     lock throttle to get_throttle().
 
-Then the ``WAIT`` command won't work.  You can't make the
-system pause execution while it's trying to run the
-expression that tells it what to do 25 times a second.
-
-The entire expression that you LOCK any of the four cooked
-controls to must execute and finish quickly enough that it can
-be called 25 times a second (on typical default game settings
-that's how often the steering manager will run your expression).
+Then kOS will attempt to call the ``WAIT`` command *every single*
+update, as the kOS system keeps trying to re-run the
+``lock throttle`` expression to learn what you want the new
+throttle value to be. This will starve your script of the
+CPU time it deserves, having the effect of running the
+lock function every-other-tick, and the rest of your code
+every-other-tick on the ticks in-between.  (When the system
+hits the wait inside the throttle expression, it will stop
+there, not resuming until the next update, effectively meaning
+it doesn't get around to running any of your main-line code
+until the next tick.)
 
 Normally when you use a LOCK command, the expression is only evaluated
 when it needs to be by some other part of the script that is trying

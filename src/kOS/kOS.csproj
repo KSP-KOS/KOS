@@ -45,7 +45,7 @@
       <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="KSPAPIExtensions">
-      <HintPath>..\..\Resources\KSPAPIExtensions.dll</HintPath>
+      <HintPath>..\..\Resources\GameData\kOS\Plugins\KSPAPIExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

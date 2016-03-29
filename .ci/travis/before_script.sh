@@ -12,6 +12,8 @@ fi
 
 mkdir -p Resources
 tar -xvf kos-${KSP_VERSION}.tar -C Resources/
+mkdir -p Resources/GameData/kOS/Plugins
+mv Resources/KSPAPIExtensions.dll Resources/GameData/kOS/Plugins/
 
 python --version
 pip --version

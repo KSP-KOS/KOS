@@ -657,13 +657,14 @@ Scoping and Triggers:
 
 Triggers such as:
 
-  - WHEN <expression> { <statements> }.
+  - WHEN <boolean expression> THEN { <statements> }.
 
 and
 
-  - ON <boolean variable> { <statements> }.
+  - ON <boolean expression> { <statements> }.
 
-Do not work predictably when you use local variables in the <expression>
+Do not work predictably when you use local variables in the
+<boolean expression>
 part of them.  They need to be designed to use global variables only,
 because they outlive the duration of any particular scoping braces.
 You can declare local variables within their <statements> in their bodies,
