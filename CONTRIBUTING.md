@@ -30,9 +30,15 @@ Pull Requests
 * The act of submitting a PR is presumed to be your permission for someone to
   merge it into develop *right now* if they wish to.  If you have a PR that you
   don't want merged just yet, but are just getting it ready or showing it off
-  for discussion, then you *must* give it the label tag "Not Ready" in order
-  to make it clear nobody should try to merge it yet.  Later you remove the
-  label "Not Ready" when you do want it merged.
+  for discussion, then you *must* do one of the following two things:
+  1. (This only works if you are a priviledged team member with full permissions)
+     Give it the label tag "Not Ready" in order to make it clear nobody should
+     try to merge it yet.  Later you remove the label "Not Ready" when you do
+     want it merged.
+  2. If you are not a priviledged team member with permissions to edit labels,
+     then just put the phrase "[Not Ready]" in the title of the PR to
+     communicate the same thing, and edit the title to remove it later when
+     it is ready.
 
 Setting Up Your Environment
 ===========================
