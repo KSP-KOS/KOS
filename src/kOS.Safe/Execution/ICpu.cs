@@ -37,7 +37,7 @@ namespace kOS.Safe.Execution
         List<string> ProfileResult { get; }
         void AddTrigger(int triggerFunctionPointer);
         void RemoveTrigger(int triggerFunctionPointer);
-        void StartWait(double waitTime);
+        double StartWait(double waitTime);
         void EndWait();
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);

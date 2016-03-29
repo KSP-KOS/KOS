@@ -160,6 +160,16 @@ namespace kOS.Suffixed
             return new Vector(a.Rotation * (Vector3d)b);
         }
 
+        public static Vector operator +(Direction a, Vector b)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
+        public static Vector operator +(Vector b, Direction a)
+        {
+            return new Vector(a.Rotation * (Vector3d)b);
+        }
+
         public static Direction operator +(Direction a, Direction b)
         {
             return new Direction(a.Euler + b.Euler, true);
@@ -174,33 +184,31 @@ namespace kOS.Suffixed
         {
             return new Direction(a.rotation.Inverse());
         }
-        
-        public override object TryOperation(string op, object other, bool reverseOrder)
+
+        public override bool Equals(object obj)
         {
-            var otherVector = other as Vector;
-            if (otherVector != null)
+            Type compareType = typeof(Direction);
+            if (compareType.IsInstanceOfType(obj))
             {
-                Vector3d vec = otherVector;
-                return new Vector(Rotation * vec);
+                Direction d = obj as Direction;
+                return rotation.Equals(d.rotation);
             }
+            return false;
+        }
 
-            if (op == "*" && other is Direction)
+        public static bool operator ==(Direction a, Direction b)
+        {
+            Type compareType = typeof(Direction);
+            if (compareType.IsInstanceOfType(a))
             {
-                // If I remember correctly, order of multiplication DOES matter with quaternions
-                return !reverseOrder ? this * (Direction)other : (Direction)other * this;
+                return a.Equals(b); // a is not null, we can use the built in equals function
             }
+            return !compareType.IsInstanceOfType(b); // a is null, return true if b is null and false if not null
+        }
 
-            if (op == "+" && other is Direction)
-            {
-                return this + (Direction)other;
-            }
-
-            if (op == "-" && other is Direction)
-            {
-                return !reverseOrder ? this - (Direction)other : (Direction)other - this;
-            }
-
-            return null;
+        public static bool operator !=(Direction a, Direction b)
+        {
+            return !(a == b);
         }
 
         /// <summary>
