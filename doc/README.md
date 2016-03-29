@@ -59,15 +59,71 @@ you should adjust your path based on your actual repository location)
   path character with `/` and adapting paths to reference your Linux file system.
 
 #Publishing
-1. Clone KSP-KOS/KOS gh-pages branch if not done already, pull the most recent
-  version from the upstream repository if you already have a clone.
-2. The clone should either be in a different folder from the primary
-  repository or you need to copy the rendered `doc/gh-pages` contents to a
-  temporary folder
-3. Delete the contents of the repository root, except the `.git` folder,
-  `.gitatributes` file, and `.nojekyll` file.
-4. Copy the contents of `doc/gh-pages` into the `gh-pages` repository root folder
-5. Commit all of the changed files
-6. Push the gh-pages branch to your own kOS github repository
-7. You can test the documents at `https://[username].github.io/KOS`
-8. Make a pull request against the KSP-KOS/KOS gh-pages branch
+1. We recommend creating a second clone repository for managing Github pages
+  publishing.  You should also add KSP-KOS/KOS as the upstream remote:
+  ```
+  C:\KOS>cd ..
+  C:\>git clone https://github.com/[username]/KOS.git KOS_DOC
+  C:\>cd KOS_DOC
+  C:\KOS_DOC>git remote add upstream https://github.com/KSP-KOS/KOS.git
+  ```
+
+2. For those who have permission to publish to the KOS_DOC repository, you will
+  also need to add it as a new remote:
+  ```
+  C:\KOS_DOC>git remote add KOS_DOC https://github.com/KSP-KOS/KOS_DOC.git
+  ```
+
+3. Checkout the gh-pages branch and update it to match the upstream version:
+  ```
+  C:\KOS_DOC>git checkout gh-pages
+  C:\KOS_DOC>git pull --ff-only upstream gh-pages
+  ```
+
+  (You may delete other branches from this clone if you want, but make sure you
+  so not delete the remote branch)
+
+4. The previous sphinx output needs to be deleted.  Delete all files and folders
+  within the `KOS_DOC` folder **except** files and folders with a leading `.`
+  character (such as `.git`, `.gitattributes`, `.nojekyll`, and similar files).
+  The file `.buildinfo` also needs to be deleted even though it starts with `.`:
+  ```
+  C:\KOS_DOC>git rm -r [!.]*
+  C:\KOS_DOC>git rm .buildinfo
+  ```
+
+5. Copy the contents of th `KOS\doc\gh-pages` folder into `KOS_DOC`.
+
+6. Add the updated files, commit, and push to your origin.  You should include a
+  message that represents the reason for the update, such as "Update docs for
+  v0.19.3"
+  ```
+  C:\KOS_DOC>git reset head
+  C:\KOS_DOC>git add --all
+  C:\KOS_DOC>git commit -m [message]
+  C:\KOS_DOC>git push
+  ```
+
+  If any of your local editing tools added extra files not created by sphinx,
+  be sure to unstage them **before** you commit.
+  ```
+  C:\KOS_DOC>git reset [path_to_file]
+  ```
+
+7. Submit a Pull Request against `KSP-KOS/KOS gh-pages` with your changes.
+  Developers with write permission may push to the upstream branch like this:
+  ```
+  C:\KOS_DOC>git push upstream gh-pages
+  ```
+
+8. You may test and review the documents on your own Github pages address:
+  `https://[username].github.io/KOS`
+
+9. Developers with write permission may push to the `KSP-KOS/KOS_DOC gh-pages`
+  repository and branch to make the documentation publicly available at
+  `https://KSP-KOS.github.io/KOS_DOC`.  This must be done from the command line,
+  the repository is unable to accept pull requests from standard KOS
+  repositories:
+  ```
+  C:\KOS_DOC>git push KOS_DOC gh-pages
+  ```
