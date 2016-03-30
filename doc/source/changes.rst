@@ -24,6 +24,38 @@ release.
 
 ****
 
+Changes in 0.19.2
+-----------------
+
+This was mostly a bug fix release.  Not much changed in the documentation.
+
+FORCEACTIVE
+:::::::::::
+
+New alias ``KUNIVERSE:FORCEACTIVE()`` can be used instead of the
+longer name ``KUNIVERSE:FORCESETACTIVEVESSEL()``.
+
+Changes in 0.19.1
+-----------------
+
+This change was mostly for small bug fixes and didn't affect the
+documentation much.
+
+Mentioned PIDLoop() function in tutorial
+::::::::::::::::::::::::::::::::::::::::
+
+:ref:`Added section to PID loop tutorial <struct_pidloop_in_tutorial>`
+that explains better that there's a new function for doing PID loops.
+The tutorial had been originally written before that function existed.
+
+
+New Terminal brightness and char size features
+::::::::::::::::::::::::::::::::::::::::::::::
+
+:struct:`Terminal` structure now has suffixes, :attr:`TERMINAL:BRIGHTNESS`,
+:attr:`TERMINAL:CHARWIDTH`, and :attr:`TERMINAL:CHARHEIGHT` to go with
+the new widgets on the terminal GUI.
+
 Changes in 0.19.0
 -----------------
 
@@ -97,7 +129,7 @@ Better support for :ref:`DMagic's Orbital Science mod <orbitalscience>`
 Range
 :::::
 
-New :ref:`Range <range>` type for getting arbitrary iterable collections 
+New :ref:`Range <range>` type for getting arbitrary iterable collections
 of ranges of integers.
 
 Char and Unchar
@@ -127,7 +159,7 @@ Hours per day
 :::::::::::::
 
 :ref:`KUniverse <kuniverse>` now has a suffix to let you read the
-user setting for whether the clock is using a 24 hour day or a 
+user setting for whether the clock is using a 24 hour day or a
 Kerbin 6 hour day.
 
 Archive
@@ -142,7 +174,7 @@ Changes in 0.18.2
 Queue and Stack
 :::::::::::::::
 
-:ref:`Queues <queue>` and :ref:`Stacks <stack>` are now a feature 
+:ref:`Queues <queue>` and :ref:`Stacks <stack>` are now a feature
 you can use along with lists.
 
 Run Once
@@ -199,7 +231,7 @@ New :ref:`String <string>` structure now allows string manipulations.
 Science Experiment Control
 ::::::::::::::::::::::::::
 
-New :ref:`ScienceExperimentModule <scienceexperimentmodule>` allows you to fire off science experiments bypassing the user 
+New :ref:`ScienceExperimentModule <scienceexperimentmodule>` allows you to fire off science experiments bypassing the user
 interface dialog.
 
 Crew Member API
@@ -230,7 +262,7 @@ running the script.  This has been corrected.
 New quickstart tutorial
 :::::::::::::::::::::::
 
-`http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html <http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html>`_ 
+`http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html <http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html>`_
 
 A few more constants
 ::::::::::::::::::::
@@ -274,7 +306,7 @@ section.
 Short-Circuit Booleans
 ::::::::::::::::::::::
 
-Previously, kerboscript's AND and OR operators were not 
+Previously, kerboscript's AND and OR operators were not
 short-circuiting.  :ref:`Now they are <short_circuit>`.
 
 New Infernal Robotics interface
@@ -491,4 +523,3 @@ Vessels now have an :ISDEAD suffix you can use to detect if the
 vessel has gone away since the last time you got the handle to it.
 (for example, you LIST TARGETS IN FOO, then the ship foo[3] blows
 up, then foo[3]:ISDEAD should become true to clue you in to this fact.)
-

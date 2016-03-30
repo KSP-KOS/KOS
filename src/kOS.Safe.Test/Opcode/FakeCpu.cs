@@ -164,6 +164,11 @@ namespace kOS.Safe.Test.Opcode
             get { throw new NotImplementedException(); }
         }
 
+        public List<string> ProfileResult
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public void AddTrigger(int triggerFunctionPointer)
         {
             throw new NotImplementedException();
@@ -174,7 +179,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void StartWait(double waitTime)
+        public double StartWait(double waitTime)
         {
             throw new NotImplementedException();
         }
@@ -233,6 +238,16 @@ namespace kOS.Safe.Test.Opcode
         public int InstructionsThisUpdate
         {
             get { throw new NotImplementedException(); }
+        }
+
+        public void StartCompileStopwatch()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StopCompileStopwatch()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -76,8 +76,8 @@ Locks an identifier to an expression. Each time the identifier is used in an exp
     PRINT Y.         // Outputs 6
 
 LOCK follows the same scoping rules as the SET command.  If the variable
-name used already exists in local scope, then the lock command creates 
-a lock function that only lasts as long as the current scope and then 
+name used already exists in local scope, then the lock command creates
+a lock function that only lasts as long as the current scope and then
 becomes unreachable after that.  If the variable name used does not exist
 in local scope, then LOCK will create it as a global variable, unless
 @NOLAZYGLOBAL is set to off, in which case it will be an error.
@@ -87,7 +87,9 @@ Every time you read the value of the "variable", it executes the expression
 again.
 
 .. note::
-    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each physics tick <cpu hardware>`.
+    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get repeatedly evaluated in :ref:`each physics tick <physics tick>`.
+    When used with a flight control variable, a ``LOCK`` actually
+    becomes a :ref:`trigger <triggers>`.
 
 .. index:: UNLOCK
 .. _unlock:
@@ -209,7 +211,7 @@ What the parts mean
     pass through the loop.  They may contain local declarations of new
     variables.  If they do, then the variables will be local to the body
     of the loop and won't be visible outside the loop.  In this case the
-    braces ``{`` and ``}`` are mandatory even when there is only one 
+    braces ``{`` and ``}`` are mandatory even when there is only one
     statement present.  To create a a null FROM clause, give it an empty
     set of braces.
 
@@ -220,7 +222,7 @@ What the parts mean
     it's true, it will abort and stop running the loop.  It checks before
     the initial first pass of the loop as well, so it's possible for the
     check to prevent the loop body from even executing once.  Braces
-    ``{``..``}`` are not used here because this is not technically a 
+    ``{``..``}`` are not used here because this is not technically a
     complete statement.  It is just an expression that evaluates to a
     value.
 
@@ -238,14 +240,14 @@ What the parts mean
   - This is where the loop body gets put.  Much like with the UNTIL and FOR
     loops, these braces are not mandatory when there is only exactly one
     statement in the body, but are a very good idea to have anyway.
-    
+
 Why some braces are mandatory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some braces are mandatory (for the ``FROM`` and ``STEP`` clauses) even
 when there is only one statement inside them, because the period that
-ends a single statement would look like it's terminating the entire 
-FROM loop if it was open and bare.  Wrapping it inside braces makes it 
+ends a single statement would look like it's terminating the entire
+FROM loop if it was open and bare.  Wrapping it inside braces makes it
 more visually obvious that it's not the end of the FROM loop.
 
 Why ``DO`` is mandatory
@@ -308,7 +310,7 @@ Any such combination of indenting styles, or mix and match of them, is
 understood by the compiler.  The compiler ignores the spacing and
 indenting.  It is recommended that you pick just two of them and stick
 with them - one compact one to use for short headers, and one longer exploded
-one to use for more wordy headers when you have to split it up across lines.  
+one to use for more wordy headers when you have to split it up across lines.
 
 The literal meaning of ``FROM``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -367,7 +369,7 @@ to be done for that iteration.
 If you are editing your script and need to cut a loop section and move it
 elsewhere, the FROM loop makes it more visually obvious how to cut
 that loop and move it.  It makes the important parts of the loop be self
-contained in the header, so you don't leave the initializer behind when 
+contained in the header, so you don't leave the initializer behind when
 moving the loop.
 
 
@@ -384,143 +386,29 @@ Halts execution for a specified amount of time, or until a specific set of crite
     WAIT UNTIL X > 40.            // Wait until X is greater than 40
     WAIT UNTIL APOAPSIS > 150000. // You can see where this is going
 
-Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <cpu hardware>`.
+Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <physics tick>`.
 
-.. note::
+Difference between wait in mainline code and trigger code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    The :ref:`WAIT <wait>` command only causes mainline code
-    to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
-    and LOCK THROTTLE, will continue executing while your program
-    is sitting still on the WAIT command.  Furthermore, you cannot
-    cause a WAIT to happen when executing a trigger's body like
-    WHEN or ON, or in the formula for a LOCK STEERING or LOCK
-    THROTTLE or LOCK WHEELSTEERING or LOCK WHEELTHROTTLE statement.
-    
+When called from your mainline code, the :ref:`WAIT <wait>`
+command causes mainline code to be suspended, but does
+not stop :ref:`triggers <triggers>` from interrupting
+this waiting period.  Triggers will continue to fire off
+during the time that mainline code is stuck on a wait.
 
-.. index:: WHEN
-.. _when:
+But when a ``WAIT`` is used in a trigger's body
+(A "trigger" is any ``WHEN``, or ``ON`` statement,
+or the expression in a steering control lock like
+``lock throttle to mythrottlefunction().``), it actually
+causes all execution including other triggers to get
+stuck until the wait is done.  Because of this, while
+it is allowed, it is
+:ref:`usually a bad idea to use WAIT inside a trigger <wait_in_trigger>`.
 
-``WHEN`` / ``THEN``
--------------------
-
-Executes a command when a certain criteria are met. Unlike ``WAIT``, ``WHEN``
-does not halt execution. It starts a check in the background that will keep actively looking for the trigger condition while the rest of the code continues. When it triggers, the body after the ``THEN`` will execute exactly once, after which the trigger is removed unless the ``PRESERVE`` is used, in which case the trigger is not removed.
-
-The body of a ``THEN`` or an ``ON`` statement interrupts the normal flow of a **kOS** program. When the event that triggers the body happens, the main **kOS** program is paused until the body of the ``THEN`` completes.
-
-.. warning::
-    With the advent of :ref:`local variable scoping <trigger_scope>` in kOS
-    version 0.17 and above, it's important to note that the variables
-    used within the expression of a WHEN or an ON statement should
-    be GLOBAL variables or the results are unpredictable.  If local
-    variables were used, the results could change depending on where
-    you are within the execution at the time.  
-
-.. warning::
-    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
-
-For the reason mentioned in the warning above, you also cannot
-make the system execute a ``WAIT`` command when inside the
-body of a WHEN/THEN statement.  Attempting to do so will have
-no effect.
-
-.. note::
-    .. versionchanged:: 0.12
-        **IMPORTANT BREAKING CHANGE:** In previous versions of **kOS**, the body of a ``WHEN``/``THEN`` would execute simultaneously in the background with the rest of the main program. This behavior has changed as of version *0.12* of **kOS**, as described above, and scripts that used to rely on this behavior will not work with version *0.12* of **kOS**
-
-Example::
-
-    WHEN BCount < 99 THEN PRINT BCount + " bottles of beer on the wall”.
-
-    // Watch in the background for when the altitude is high enough.
-    // Once it is, then turn on the solar panels and action group 1
-    WHEN altitude > 70000 THEN {
-        PRINT "ACTIVATING PANELS AND AG 1.".
-        PANELS ON.
-        AG1 ON.
-    }
-
-A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, even if it has not occurred yet. The ``PRESERVE`` can be used inside the ``THEN`` clause of a ``WHEN`` statement. If you are going to make extensive use of ``WHEN``/``THEN`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
-
-.. index:: ON
-.. _on_trigger:
-
-``ON``
-------
-
-The ``ON`` command is almost identical to the ``WHEN``/``THEN`` command. ``ON`` sets up a trigger in the background that will run the selected command exactly once when the boolean variable changes state from true to false or from false to true. This command is best used to listen for action group activations.
-
-Just like with the ``WHEN``/``THEN`` command, the ``PRESERVE`` command can be used inside the code block to cause the trigger to remain active and not go away.
-
-.. warning::
-    With the advent of :ref:`local variable scoping <scope>` in kOS
-    version 0.17 and above, it's important to note that the variables
-    used within the expression of a WHEN or an ON statement should
-    be GLOBAL variables or the results are unpredictable.  If local
-    variables were used, the results could change depending on where
-    you are within the execution at the time.  
-
-How does it differ from ``WHEN``/``THEN``? The ``WHEN``/``THEN`` triggers are executed whenever the conditional expression *becomes true*. ``ON`` triggers are executed whenever the boolean variable *changes state* either from false to true or from true to false.
-
-The body of an ``ON`` statement can be a list of commands inside curly braces, just like for ``WHEN``/``THEN``. Also just like with ``WHEN``/``THEN``, the body of the ``ON`` interrupts all of **KSP** while it runs, so it should be designed to be a short and finish quickly without getting stuck in a long loop::
-
-    ON AG3 {
-       PRINT "Action Group 3 Activated!”.
-    }
-    ON SAS PRINT "SAS system has been toggled”.
-    ON AG1 {
-        PRINT "Action Group 1 activated.".
-        PRESERVE.
-    }
-
-.. warning::
-    DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
-
-For the reason mentioned in the warning above, you also cannot
-make the system execute a ``WAIT`` command when inside the
-body of a WHEN/THEN statement.  Attempting to do so will have
-no effect.
-
-
-Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
-
-.. index:: PRESERVE
-.. _preserve:
-
-``PRESERVE``
-------------
-
-``PRESERVE`` is a command keyword that is only valid inside of ``WHEN``/``THEN`` and ``ON`` code blocks.
-
-When a ``WHEN``/``THEN`` or ``ON`` condition is triggered, the default behavior is to execute the code block body exactly once and only once, and then the trigger condition is removed and the trigger will never occur again.
-
-To alter this, execute the ``PRESERVE`` command anywhere within the body of the code being executed and it tells the **kOS** computer to keep the trigger condition active. When it finishes executing the code block of the trigger, if ``PRESERVE`` has happened anywhere within that run of the block of code, it will not remove the trigger. Instead it will allow it to re-trigger, possibly as soon as the very next tick. If the ``PRESERVE`` keyword is executed again and again each time the trigger occurs, the trigger could remain active indefinitely.
-
-The following example sets up a continuous background check to keep looking for if there's no fuel in the current stage, and if there is, then it activates the next stage, but no more often than once every half second. Once more than ``NUMSTAGES`` have happened, it allows the check to stop executing but it keeps the check alive until that happens::
-
-    SET NUMSTAGES TO 5.
-    SET COOLDOWN_START TO 0.
-
-    WHEN (TIME:SECONDS > COOLDOWN_START + 0.5) AND STAGE:LIQUIDFUEL = 0 {
-        SET COOLDOWN_START TO TIME:SECONDS.
-        STAGE.
-        SET NUMSTAGES TO NUMSTAGES - 1.
-        IF NUMSTAGES > 0 {
-            PRESERVE.
-        }
-    }
-
-    // Continue to the rest of the code
 
 .. index:: Boolean Operators
 .. _booleans:
-
-``DECLARE FUNCTION``
---------------------
-
-Covered in more depth :ref:`elsewhere in the documentation <user_functions>`, 
-the ``DECLARE FUNCTION`` statement creates a user-defined function that
-you can then call elsewhere in the code.
 
 Boolean Operators
 -----------------
@@ -547,3 +435,364 @@ Boolean is a type that can be stored in a variable and used that way as well. Th
     IF 1 { PRINT "This statement happens unconditionally." }
     IF 0 { PRINT "This statement never happens." }
     IF count { PRINT "count isn't zero.". }
+
+
+``DECLARE FUNCTION``
+--------------------
+
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`,
+the ``DECLARE FUNCTION`` statement creates a user-defined function that
+you can then call elsewhere in the code.
+
+``RETURN``
+----------
+
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`,
+the ``RETURN`` statement causes a user function, or a trigger body, to
+end, and chooses what the calling part of the program will see if it
+reads the value of the function.
+
+.. index:: WHEN
+.. _when:
+.. index:: ON
+.. _on_trigger:
+
+``WHEN`` / ``THEN`` statements, and ``ON`` statements
+-----------------------------------------------------
+
+.. note::
+
+    Before going too far into this explanation, be aware that the
+    ``WHEN`` and ``ON`` statements are rather advanced topics for a
+    new programmer and if you're just getting a feel for how
+    programming works, and are using kOS as a first gentle introduction
+    to writing programs, you might want to avoid using them until
+    you're more comfortable with the other features of kOS first.
+
+*The WHEN and the ON statement are very similar to each other, and so
+they are documented together here.*
+
+
+``WHEN`` and ``ON`` both begin checking in the background for
+a condition that will cause some code to execute some statements
+later on.  They do NOT cause the code to necessarily get run right
+now.  The check will occur at regular fast intervals in the
+background, and the code will trigger whenever kOS next notices that
+the check happens to be true.
+
+kOS has a feature known as a :ref:`trigger <triggers>`, and a
+``WHEN`` or an ``ON`` statement are two of the ways to create one.
+Any time you make a section of program that is meant to repeatedly
+run a check in the background while the main program continues on,
+that is called a ``trigger`` in kOS terminology.  You may see the
+term ``trigger`` mentioned in many places in this documentation.
+
+Syntax examples:
+
+.. list-table:: When and On side by side
+    :header-rows: 1
+    :widths: 1 1
+
+    * - WHEN .. THEN syntax
+      - ON syntax
+    * - | WHEN *boolean_expression* THEN {
+        |
+        |   *statements go here*
+        |
+        | }
+      - | ON *any_expression* {
+        |
+        |   *statements go here*
+        |
+        | }
+    * - WHEN *boolean_expression* THEN *single_statement*.
+      - ON *any_expression* *single_statement*.
+
+For historical reasons, the ``THEN`` keyword is needed for ``WHEN``
+statements but not for ``ON`` statements.
+
+Here is the difference between them:
+
+- ``WHEN`` statement:  When kOS checks it in the background, if it
+  notices the condition is true, the trigger fires and it performs
+  the statements. The condition to check for must be a boolean
+  expression.
+- ``ON`` statement: When kOS checks it in the backround, if it
+  notices the expression *is now different from what it was the last
+  time it checked*, the trigger fires and it performs the statements.
+  The condition to check for can be any expression for which it
+  is possible to test equality.  It can be a boolean, a scalar, etc.
+  All that matters is that kOS needs to be able to check if its
+  new value is equal to its previous value or not.
+
+Other than that, the two work the same way, and follow the same rules.
+
+``WHEN`` example::
+
+    // This example will eventually print the message
+    // once enough time has passed:
+
+    SET tenSecondsLater to TIME:SECONDS + 10.
+    WHEN TIME:SECONDS > tenSecondsLater THEN {
+      PRINT "Ten seconds have passed.".
+    }
+
+    PRINT "now checking in the background to see if 10 seconds have passed yet.".
+
+    WAIT UNTIL FALSE. // Wait forever.  You have to end with Control-C
+                      // The trigger will interrupt this waiting when it
+                      // notices it should.
+
+``ON`` example.  This style is frequently used with action groups in kOS.
+KSP's action groups actually *toggle* from true to false or from false to
+true each time you press the key::
+
+    // This example will print a message whenever you toggle
+    // the lights, or press the '1' key.
+
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      PRINT "No longer paying attention.".
+    }
+
+    WAIT UNTIL FALSE. // Wait forever.  You have to end with Control-C
+                      // The trigger will interrupt this waiting when it
+                      // notices it should.
+
+For either ``WHEN`` or ``ON`` triggers, the check to see if it's
+time to trigger, and the subsequent run of the statements if they
+do trigger, interrupts the normal flow of the program.  The normal
+program flow will continue from where it left off, after the trigger
+finishes its work.
+
+In a sense, a trigger is a bit like a user function you created and
+then asked the kOS system to please keep running it again and again
+in the background until it finally says that it fired off.  In fact,
+it *is* implemented much like your own user functions.
+
+If you run the above examples, you will see that they actually only
+happen once, and then stop happening again.  In the ON AG1 example,
+it will only fire off once, no matter how many times you press the
+'1' key.  More will be covered about how to change that further down.
+
+.. warning::
+    With the advent of :ref:`local variable scoping <trigger_scope>` in kOS
+    version 0.17 and above, it's important to note that the variables
+    used within the expression of a WHEN or an ON statement should
+    be GLOBAL variables or the results are unpredictable.  If local
+    variables were used, the results could change depending on where
+    you are within the execution at the time.
+
+.. warning::
+    Do not make the body of a ``WHEN``/``THEN`` take a long time to
+    execute. If you attempt to run code that lasts too long in the body
+    of your ``WHEN``/``THEN`` statement, it will cause the main
+    line code, and all other triggers (WHEN, ON, and cooked steering
+    locks) to be stuck unable to continue until it finishes.  You also probably
+    should not make the system execute a ``WAIT`` command when inside the
+    body of a WHEN/THEN statement.
+
+kOS has a mechanism in place that allows triggers to interrupt mainline
+code that is stuck in a wait.  It does not have a mechanism to go the
+other way around and have a trigger get interrupted.  Triggers are
+meant to run quickly and finish so the system can get back to the
+mainline code.
+
+Don't let triggers bog down the code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are going to make extensive use of ``WHEN``/``THEN``
+triggers, it's important to understand more details of how they
+:ref:`work in the kOS CPU <triggers>`.
+
+Most importantly, be aware that since they get checked again and
+again in the background, having too many triggers that are
+"too expensive" can starve your main code of its use of the
+CPU, and thus slow down your program's rate of running.
+
+By default triggers only run once, but this can be changed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The original intention of the ``WHEN`` and ``ON`` triggers was that they
+create one-shot chunks of code you didn't want to fire off repeatedly.
+They were intended for things like only running a piece of code when
+you break a threshold altitude, or detect that you've landed, etc.
+
+So the default way they behave is that once the body of the trigger
+happens the first time, the trigger will never be checked again, and
+is now effectively dead for the rest of the program.
+
+Obviously, that's probably not the behavior you always want.  Sometimes
+you will want them to keep repeatedly happening, as a frequent
+background check.  One obvious example comes from the ``ON AG1``
+example above.  You probably want a program that can keep re-checking
+to see if the action group button has been hit again and again, not just
+notice it once and then quit looking for it.
+
+There are two ways to do this - the new (better) way with
+the ``return`` statement, and the older way, kept around for
+backward compatibility, of using the ``preserve`` keyword.
+
+.. _trigger_return:
+
+Preserving with ``return``
+::::::::::::::::::::::::::
+
+Triggers are essentialy functions that don't quite look like functions.
+They are frequently called, but they're not called *by you*.  They're
+called by the Kerbal Operating System itself.  So you can tell the
+Kerbal Operating System what your intentions were by simply deciding
+to return either a false or a true boolean value from the body of the
+trigger.  This tells kOS if you wanted to keep the trigger around or let
+it get deleted.
+
+- ``return true.`` to tell kOS to preserve the trigger and keep checking
+  it again next time.
+- ``return false.`` to tell kOS to disable the trigger after this check,
+  and never use it again.
+
+Therefore, if you want to have the ``ON AG1`` example always respond to
+the keypress from now on, then change this::
+
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      PRINT "No longer paying attention.".
+    }
+
+To this instead::
+
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      RETURN true.
+    }
+
+Or, for a more complex example, if you want it to only respond to
+the first 5 times you press the key and then stop after that,
+you can conditionally decide what return value to use, like so::
+
+    SET count TO 5.
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      SET count TO count - 1.
+      PRINT "I will only pay attention " + count + " more times.".
+      if count > 0
+        RETURN true. // will keep the trigger alive.
+      else
+        RETURN false. // will let the trigger die.
+    }
+
+There is an alternate, older syntax you can use to do the same thing,
+called the :ref:`preserve keyword <preserve>`.  You may see it used in a lot of
+older scripts, but the new way using the ``return`` keyword is
+cleaner.
+
+If you never mention either a true or a false return value, the default
+is to behave as if you had returned false, and delete the trigger.
+This works because of the sort-of-secret fact that in kOS, all
+functions return zero if you don't mention the return value explicitly.
+
+
+They don't last past the end of the program
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ``WHEN``/``THEN`` or ``ON`` trigger gets removed when the
+program that created it exits, even if it has not occurred yet.
+
+
+.. index:: PRESERVE
+.. _preserve:
+
+``PRESERVE``
+------------
+
+``PRESERVE`` is a command keyword that is only valid inside of ``WHEN``/``THEN`` and ``ON`` code blocks.
+
+When a ``WHEN``/``THEN`` or ``ON`` condition is triggered, the default behavior is to execute the code block body exactly once and only once, and then the trigger condition is removed and the trigger will never occur again.
+
+To alter this, a new ability was added in kOS 0.19.3 and above to
+have triggers simply :ref:`return a true or false value <trigger_return>`
+to determine if they wish to be preserved.
+
+But prior to kOS 0.19.3 the only way to do it in kerboscript was
+with the ``PRESERVE`` keyword, which will likely remain in
+kerboscript for quite some time because it has a lot of backward
+compatibility legacy.
+
+If you execute the ``PRESERVE`` command anywhere within the body
+of a trigger, it tells kOS that you wish the trigger to remain
+present and not get deleted.  Choosing not to execute it, and
+just letting the execution fall through to the bottom of the
+body, has the default behavior of causing the trigger to get
+deleted.
+
+For example, this::
+
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      RETURN true.
+    }
+
+could also be expressed this way::
+
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      PRESERVE.
+    }
+
+And this::
+
+    SET count TO 5.
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      SET count TO count - 1.
+      PRINT "I will only pay attention " + count + " more times.".
+      if count > 0
+        RETURN true. // will keep the trigger alive.
+      else
+        RETURN false. // will let the trigger die.
+    }
+
+could also be expressed this way::
+
+    SET count TO 5.
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      SET count TO count - 1.
+      PRINT "I will only pay attention " + count + " more times.".
+      if count > 0
+        PRESERVE.
+    }
+
+Also note that unlike using ``RETURN``, the ``PRESERVE`` statement
+doesn't actually cause the trigger to abort and return at that point.
+It just sets a flag for what the intended return value will be, without
+actually returning yet.  Therefore it doesn't actually matter where
+within the block of code it happens, it has the same effect.
+
+this::
+
+    ON AG1 {
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+      PRESERVE.
+    }
+
+has the same effect as this::
+
+    ON AG1 {
+      PRESERVE. // <-- Doesn't matter where you PRESERVE within the body.
+      PRINT "You pressed '1', causing action group 1 to toggle.".
+      PRINT "Action group 1 is now " + AG1.
+    }
+
+(If you attempt to BOTH execute ``PRESERVE.`` *and* provide a ``RETURN false.``
+statement that contradicts it, the ``RETURN`` statement will end up
+overriding the effect of the ``PRESERVE``.)

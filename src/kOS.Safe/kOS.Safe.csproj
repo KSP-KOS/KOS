@@ -93,7 +93,6 @@
     <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
-    <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
@@ -156,7 +155,6 @@
     <Compile Include="Exceptions\KOSSuffixUseException.cs" />
     <Compile Include="Exceptions\KOSUnavailableAddonException.cs" />
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
-    <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSWrongControlValueTypeException.cs" />
     <Compile Include="Exceptions\KOSWrongCPUVesselException.cs" />

@@ -41,6 +41,10 @@ Configuration of kOS
           - :ref:`boolean <boolean>`
           - False
           - Start on archive (instead of volume 1)
+        * - :attr:`OBEYHIDEUI`
+          - :ref:`boolean <boolean>`
+          - True
+          - Obey the KSP Hide user interface key (usually mapped to F2).
         * - :attr:`SAFE`
           - :ref:`boolean <boolean>`
           - False
@@ -99,6 +103,10 @@ Configuration of kOS
 
     If true, then executing a program will log numbers to the screen showing execution speed statistics.
 
+    When this is set to true, it also makes the use of the
+    :ref:`ProfileResult() <profileresult>` function available, for
+    deep analysis of your program run, if you are so inclined.
+
 .. attribute:: Config:RT2
 
     :access: Get/Set
@@ -119,6 +127,17 @@ Configuration of kOS
     Configures the ``StartOnArchive`` setting.
 
     If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.
+
+.. attribute:: Config:OBEYHIDEUI
+
+    :access: Get/Set
+    :type: :ref:`boolean <boolean>`
+
+    Configures the ``ObeyHideUI`` setting.
+
+    If true, then the kOS terminals will all hide when you toggle the user
+    interface widgets with Kerbal Space Program's Hide UI key (it is
+    set to F2 by default key bindings).
 
 .. highlight:: none
 
