@@ -94,7 +94,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<StringValue>(() => Name));
             AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Description));
             AddSuffix("EDITOR", new Suffix<StringValue>(() => Editor));
-            AddSuffix("LAUNCHFACILITY", new Suffix<StringValue>(() => LaunchFacility));
+            AddSuffix("LAUNCHSITE", new Suffix<StringValue>(() => LaunchFacility));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Mass));
             AddSuffix("COST", new Suffix<ScalarValue>(() => Cost));
             AddSuffix("PARTCOUNT", new Suffix<ScalarValue>(() => PartCount));
