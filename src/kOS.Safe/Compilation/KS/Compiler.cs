@@ -677,6 +677,11 @@ namespace kOS.Safe.Compilation.KS
                 if (userFuncObject.IsSystemLock())
                 {
                     AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
+                    AddOpcode(new OpcodeExists());
+                    var branch = new OpcodeBranchIfTrue();
+                    branch.Distance = 4;
+                    AddOpcode(branch);
+                    AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
                     AddOpcode(new OpcodeStore());
                 }
