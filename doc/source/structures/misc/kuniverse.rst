@@ -69,6 +69,22 @@ KUniverse 4th wall methods
           - n/a
           - Method
           - Same as :meth:`FORCESETACTIVEVESSEL`
+        * - :meth:`GETCRAFT(name, editor)`
+          - :struct:`CraftTemplate`
+          - Method
+          - Get the file path for the craft with the given name, saved in the given editor.
+        * - :meth:`LAUNCHCRAFT(path)`
+          - none
+          - Method
+          - Launch a new instance of the given craft at it's default launch site.
+        * - :meth:`LAUNCHCRAFTFROM(path, site)`
+          - none
+          - Method
+          - Launch a new instance of the given craft at it's default launch site.
+        * - :meth:`CRAFTLIST()`
+          - :struct:`List` of :struct:`CraftTemplate`
+          - Method
+          - A list of all craft templates in the save specific and stock folders.
 
 
 .. attribute:: KUniverse:CANREVERT
@@ -191,6 +207,54 @@ KUniverse 4th wall methods
     with code that only reads the setting once up front and then assumes
     it never changes after that.  Because in the stock game, that
     assumption would be true.
+
+.. method:: KUniverse:GETCRAFT(name, editor)
+
+    :parameter name: :struct:`String` craft name.
+    :parameter facility: :struct:`String` editor name.
+    :return: :struct:`CraftTemplate`
+
+    Returns the :struct:`CraftTemplate` matching the given craft name saved from
+    the given editor.  Valid values for editor include ``"VAB"`` and ``"SPH"``.
+
+.. method:: KUniverse:LAUNCHCRAFT(template)
+
+    :parameter template: :struct:`String` craft name.
+
+    Launch a new instance of the given :struct:`CraftTemplate` from the
+    template's default launch site.
+
+    **NOTE:** The craft will be launched with the KSP default crew assignment,
+    as if you had clicked launch from the editor without manually adjusting the
+    crew.
+
+    **NOTE:** Due to how KSP handles launching a new craft, this will end the
+    current program even if the currently active vessel is located within
+    physics range of the launch site.
+
+.. method:: KUniverse:LAUNCHCRAFTFROM(template, site)
+
+    :parameter template: :struct:`CraftTemplate`.
+    :parameter site: :struct:`String` editor name.
+
+    Returns the :struct:`CraftTemplate` matching the given craft name saved from
+    the given editor.  Valid values for site include ``"RUNWAY"`` and
+    ``"LAUNCHPAD"``.
+
+    **NOTE:** The craft will be launched with the KSP default crew assignment,
+    as if you had clicked launch from the editor without manually adjusting the
+    crew.
+
+    **NOTE:** Due to how KSP handles launching a new craft, this will end the
+    current program even if the currently active vessel is located within
+    physics range of the launch site.
+
+.. method:: KUniverse:CRAFTLIST()
+
+    :return: :struct:`List` of :struct:`CraftTemplate`
+
+    Returns a list of all :struct:`CraftTemplate` templates stored in the VAB
+    and SPH folders of the stock Ships folder and the save specific Ships folder.
 
 .. _debuglog:
 
