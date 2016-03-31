@@ -14,7 +14,6 @@ using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
 using KSP.IO;
-using KSPAPIExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

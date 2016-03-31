@@ -10,26 +10,14 @@ using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using KSP.UI.Screens;
 using UnityEngine;
-
 namespace kOS.Screen
 {
     /// <summary>
     /// Window that holds the popup that the toolbar button is meant to create.
-    /// Note that there should only be one of these at a time, unlike some of the
-    /// other KOSManagedWindows.
-    /// <br></br>
-    /// Frustratingly, The only two choices that KSP gives for the boolean
-    /// value "once" in the KSPAddon attribute are these:<br/>
-    /// <br/>
-    /// Set it to True to have your class instanced only exactly once in the entire game.<br/>
-    /// Set it to False to have your class instanced about 5-6 times per scene change.<br/>
-    /// <br/>
-    /// The sane behavior, of "instance it exactly once each time the scene changes, and no more"
-    /// does not seem to be an option.  Therefore this class has a lot of silly counters to
-    /// track how many times its been instanced.
+    /// window.
     /// </summary>
-    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
-    public class KOSToolBarWindow : MonoBehaviour
+    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
+    public class KOSToolbarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
         private IButton blizzyButton;
@@ -45,7 +33,7 @@ namespace kOS.Screen
         private static Texture2D terminalOpenIconTexture;
         private static Texture2D terminalClosedTelnetIconTexture;
         private static Texture2D terminalOpenTelnetIconTexture;
-
+        
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
 
@@ -86,6 +74,7 @@ namespace kOS.Screen
         private readonly Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
 
         private bool alreadyAwake;
+        private bool firstTime = true;
         private bool isOpen;
 
         private DateTime prevConfigTimeStamp = DateTime.MinValue;
@@ -114,18 +103,21 @@ namespace kOS.Screen
 
         public void Awake()
         {
-            GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
+            // TODO - remove commented-out line below after varifying KSP 1.1 works without it:
+            // GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
 
+            GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
+            GameEvents.onGUIApplicationLauncherReady.Add(RemoveButton);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
-
-            RunWhenReady();
+            GameObject.DontDestroyOnLoad(this);
         }
 
-        private void OnGameSceneLoadRequestedForAppLauncher(GameScenes sceneToLoad)
-        {
-            GoAway();
-        }
+        // TODO - Remove this next method after verifying KSP 1.1 works without it:
+        // private void OnGameSceneLoadRequestedForAppLauncher(GameScenes sceneToLoad)
+        // {
+        //     GoAway();
+        // }
 
         public void Start()
         {
@@ -133,12 +125,10 @@ namespace kOS.Screen
             if (alreadyAwake) return;
             alreadyAwake = true;
 
-            FirstTimeSetup();
-
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
 
-        public void RunWhenReady()
+        public void AddButton()
         {
             if (!ApplicationLauncher.Ready) return;
 
@@ -147,9 +137,16 @@ namespace kOS.Screen
             if (ToolbarManager.ToolbarAvailable)
                 useBlizzyOnly = SafeHouse.Config.UseBlizzyToolbarOnly;
 
-            if (!useBlizzyOnly && launcherButton == null)
+            if (firstTime)
+            {
+                FirstTimeSetup();
+                firstTime = false;
+            }
+
+                if (!useBlizzyOnly && launcherButton == null)
             {
                 ApplicationLauncher launcher = ApplicationLauncher.Instance;
+
 
                 launcherButton = launcher.AddModApplication(
                     CallbackOnTrue,
@@ -170,6 +167,12 @@ namespace kOS.Screen
 
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
+        }
+        
+        public void RemoveButton()
+        {
+            if (launcherButton != null)
+                GoAway();
         }
 
         public void AddBlizzyButton()
@@ -234,7 +237,8 @@ namespace kOS.Screen
 
         public void OnDestroy()
         {
-            GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
+            // TODO : Remove the following commented line after it's been discovered that KSP 1.1 works without it:
+            // GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
 
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
@@ -301,13 +305,39 @@ namespace kOS.Screen
         public void Open()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
+            
+            float assumeStagingListWidth = 64f; // hardcoded for now.  Might try to see how to read it on the fly later.
 
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
-            float fitWidth = UnityEngine.Screen.width - (HighLogic.LoadedSceneIsEditor ? 64f : 0);
-            float fitHeight = UnityEngine.Screen.height - 40f - 40f;
-            rectToFit = new Rect(0, 40f, fitWidth, fitHeight);
+            Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
+            
+            // There has *got* to be a method somewhere in Unity that does this transformation
+            // without having to hardcode the formula, but after wasting 5 hours searching
+            // Unity docs and google and ILSpy, I give up trying to find it.  This formula is
+            // probably sitting on top of fragile assumptions, but I give up on trying to find
+            // the "right" way.  (The values returned by the  RectTransform appear to be using
+            // screen pixel coords, but with the center of the screen being (0,0) rather than
+            // one of the corners.  This does not appear to be any of the named reference
+            // frames Unity docs talk about ("World", "Viewport", and "Screen")):
+            //
+            // If any other kOS devs want to try a hand at fighting the Unity docs to figure this
+            // out, be my guest.  In the mean time, this is the hardcoded solution:
+            float launcherScreenX = launcherScreenCenteredPos.x + UnityEngine.Screen.width / 2;
+            float launcherScreenY = launcherScreenCenteredPos.y + UnityEngine.Screen.height / 2;
+            
+            // amount to pad on the right side depending on what's there on the screen:
 
+            float fitWidth = (isTop ? launcherScreenX : UnityEngine.Screen.width - assumeStagingListWidth);
+            float fitHeight = (isTop ? UnityEngine.Screen.height : UnityEngine.Screen.height - launcherScreenY);
+
+            // subset of the screen we'll clamp to stay within:
+            rectToFit = new Rect(0, 0f, fitWidth, fitHeight);
+
+            // Attempt to place the window at first in a position that would extend
+            // outside the rectToFit, but at least establishes it at the correct corner
+            // of the screen.  Later the auto-layout elsewhere in this class will shift
+            // it as needed to obey rectToFit:
             float leftEdge = UnityEngine.Screen.width;
             float topEdge = isTop ? 0f : UnityEngine.Screen.height;
 

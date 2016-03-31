@@ -48,9 +48,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="KSPAPIExtensions">
-      <HintPath>..\..\..\..\..\Dropbox\kOS\KSPAPIExtensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
@@ -116,7 +113,7 @@
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
-    <Compile Include="Screen\KOSToolBarWindow.cs" />
+    <Compile Include="Screen\KOSToolbarWindow.cs" />
     <Compile Include="Screen\ToolbarWrapper.cs" />
     <Compile Include="Suffixed\ActiveResourceValue.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
