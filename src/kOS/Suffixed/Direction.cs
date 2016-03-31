@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
-    [kOS.Safe.Utilities.KOSNomenclature("Direction")]
-    [kOS.Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
+    [Safe.Utilities.KOSNomenclature("Direction")]
+    [Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
     public class Direction : Structure
     {
         private Vector3d euler;
@@ -140,9 +140,7 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "STARVECTOR", "RIGHTVECTOR" },
                       new Suffix<Vector>(() => new Vector(rotation * Vector3.right),
                                          "This direction's starboard direction expressed as a unit vector."));
-            AddSuffix("INVERSE",
-                      new Suffix<Direction>(() => new Direction(rotation.Inverse()),
-                                            "Returns the inverse of this direction - meaning the rotation that would go FROM this direction TO the universe's raw orientation."));
+            AddSuffix("INVERSE", new Suffix<Direction>(() => new Direction(rotation.Inverse()), "Returns the inverse of this direction - meaning the rotation that would go FROM this direction TO the universe's raw orientation."));
         }
 
         public static Direction operator *(Direction a, Direction b)

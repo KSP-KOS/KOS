@@ -1,6 +1,6 @@
 ﻿namespace kOS.Safe.Utilities
 {
-    public static class Math
+    public static class KOSMath
     {
         public static float Clamp(float input, float low, float high)
         {

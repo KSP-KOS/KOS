@@ -3,6 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
+using UnityEngine;
 
 namespace kOS.Binding
 {
@@ -12,7 +13,7 @@ namespace kOS.Binding
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
-            shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => shared.Vessel.transform.InverseTransformDirection(shared.Vessel.rigidbody.angularVelocity));
+            shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => shared.Vessel.transform.InverseTransformDirection(shared.Vessel.GetComponent<Rigidbody>().angularVelocity));
             shared.BindingMgr.AddGetter("COMMRANGE", () => int.MaxValue);
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
             shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
+using KSP.UI.Screens;
 using UnityEngine;
 
 namespace kOS.Screen

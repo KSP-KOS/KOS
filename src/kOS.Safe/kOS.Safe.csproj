@@ -213,7 +213,7 @@
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
-    <Compile Include="Utilities\Math.cs" />
+    <Compile Include="Utilities\kosMath.cs" />
     <Compile Include="Utilities\TickGen.cs" />
     <Compile Include="Encapsulation\QueueValue.cs" />
     <Compile Include="Encapsulation\StackValue.cs" />

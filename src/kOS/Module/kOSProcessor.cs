@@ -21,6 +21,7 @@ using System.Linq;
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
+using KSP.UI;
 
 namespace kOS.Module
 {
@@ -784,8 +785,8 @@ namespace kOS.Module
 
         public void SetAutopilotMode(int mode)
         {
-            RUIToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
-            modeButtons.ElementAt(mode).SetTrue();
+            UIStateToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
+            modeButtons.ElementAt(mode).SetState(true);
         }
 
         public string BootFilename
