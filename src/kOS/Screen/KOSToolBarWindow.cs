@@ -1,15 +1,15 @@
 ﻿using kOS.Module;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Module;
 using kOS.Safe.Utilities;
-using kOS.Suffixed;
 using kOS.UserIO;
 using kOS.Utilities;
+using KSP.UI.Screens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Encapsulation.Suffixes;
-using KSP.UI.Screens;
 using UnityEngine;
+
 namespace kOS.Screen
 {
     /// <summary>
@@ -33,7 +33,7 @@ namespace kOS.Screen
         private static Texture2D terminalOpenIconTexture;
         private static Texture2D terminalClosedTelnetIconTexture;
         private static Texture2D terminalOpenTelnetIconTexture;
-        
+
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
 
@@ -143,10 +143,9 @@ namespace kOS.Screen
                 firstTime = false;
             }
 
-                if (!useBlizzyOnly && launcherButton == null)
+            if (!useBlizzyOnly && launcherButton == null)
             {
                 ApplicationLauncher launcher = ApplicationLauncher.Instance;
-
 
                 launcherButton = launcher.AddModApplication(
                     CallbackOnTrue,
@@ -168,7 +167,7 @@ namespace kOS.Screen
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
         }
-        
+
         public void RemoveButton()
         {
             if (launcherButton != null)
@@ -305,13 +304,13 @@ namespace kOS.Screen
         public void Open()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
-            
+
             float assumeStagingListWidth = 64f; // hardcoded for now.  Might try to see how to read it on the fly later.
 
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
             Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
-            
+
             // There has *got* to be a method somewhere in Unity that does this transformation
             // without having to hardcode the formula, but after wasting 5 hours searching
             // Unity docs and google and ILSpy, I give up trying to find it.  This formula is
@@ -325,7 +324,7 @@ namespace kOS.Screen
             // out, be my guest.  In the mean time, this is the hardcoded solution:
             float launcherScreenX = launcherScreenCenteredPos.x + UnityEngine.Screen.width / 2;
             float launcherScreenY = launcherScreenCenteredPos.y + UnityEngine.Screen.height / 2;
-            
+
             // amount to pad on the right side depending on what's there on the screen:
 
             float fitWidth = (isTop ? launcherScreenX : UnityEngine.Screen.width - assumeStagingListWidth);
