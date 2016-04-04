@@ -25,9 +25,9 @@
 ### Post-Build
 * Update master branch from develop branch.
 * Build Github release with changelog and title
-* Copy Github release to Curseforge
-* Copy Github release to Kerbalstuff
-* Update Forum thread with new change log, release date and version http://forum.kerbalspaceprogram.com/threads/68089
+* Copy Github release to [Curseforge](http://kerbal.curseforge.com/projects/kos-scriptable-autopilot-system?gameCategorySlug=ksp-mods&projectID=220265)
+* Copy Github release to [Spacedock](http://spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System)
+* Update [Forum thread](http://forum.kerbalspaceprogram.com/index.php?/topic/61827-/) with new change log, release date and version
 * Post update in the forum thread
-* Post update on reddit board http://www.reddit.com/r/kos
+* Post update on [reddit board](http://www.reddit.com/r/kos)
 * Upload updated documentation
