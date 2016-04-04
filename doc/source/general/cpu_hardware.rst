@@ -122,7 +122,7 @@ Triggers
 
 .. versionadded:: 0.19.3
     Note that as of version 0.19.3 and up, the entire way that triggers
-    are dealt with by the underlying kOS CPU has be redesigned.  In
+    are dealt with by the underlying kOS CPU has been redesigned.  In
     previous versions it was not possible to have a trigger that lasts
     longer than one **physics tick**, leading to a lot of warnings in
     this section of the documentation.  Many of those warnings are now

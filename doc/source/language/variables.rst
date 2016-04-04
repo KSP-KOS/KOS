@@ -115,11 +115,11 @@ Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
 .. versionadded:: 0.17
-The syntax without the initializer, looking like so::
+    The syntax without the initializer, looking like so::
 
-    DECLARE x. // no initializer like "TO 1."
+        DECLARE x. // no initializer like "TO 1."
 
-is **no longer legal syntax**.
+    is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
