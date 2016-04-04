@@ -115,7 +115,6 @@ Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
 .. versionadded:: 0.17
-
 The syntax without the initializer, looking like so::
 
     DECLARE x. // no initializer like "TO 1."

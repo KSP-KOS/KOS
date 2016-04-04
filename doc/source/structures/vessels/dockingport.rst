@@ -8,7 +8,6 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
 .. note::
 
     .. versionadded:: 0.18
-
         The spelling of suffixes `AQUIRERANGE`, `AQUIREFORCE`, and `AQUIRETORQURE` on the :struct:`DockingPort` structure has been corrected.  Please use `ACQUIRERANGE`, `ACQUIREFORCE`, and `ACQUIRETORQURE` instead.  Using the old incorrect spelling, a deprecation exception will be thrown, with instruction to use the new spelling.
 
 
