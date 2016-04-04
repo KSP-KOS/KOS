@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation
 {
@@ -23,7 +24,7 @@ namespace kOS.Safe.Compilation
         /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
         /// <param name="scriptText">The text to be compiled.</param>
         /// <returns>The CodeParts made from the scriptText</returns>
-        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText)
+        public virtual List<CodePart> Compile(GlobalPath filePath, int startLineNum, string scriptText)
         {
             return Compile(filePath, startLineNum, scriptText, string.Empty);
         }
@@ -41,7 +42,7 @@ namespace kOS.Safe.Compilation
         /// <param name="scriptText">The text to be compiled.</param>
         /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
         /// <returns>The CodeParts made from the scriptText</returns>
-        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId)
+        public virtual List<CodePart> Compile(GlobalPath filePath, int startLineNum, string scriptText, string contextId)
         {
             return Compile(filePath, startLineNum, scriptText, contextId, new CompilerOptions());
         }
@@ -60,7 +61,7 @@ namespace kOS.Safe.Compilation
         /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
         /// <param name="options">settings for the compile</param>
         /// <returns>The CodeParts made from the scriptText</returns>
-        public abstract List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options);
+        public abstract List<CodePart> Compile(GlobalPath filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options);
 
         public abstract void ClearContext(string contextId);
 

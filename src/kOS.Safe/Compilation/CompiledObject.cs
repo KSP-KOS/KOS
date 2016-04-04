@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation
 {
@@ -469,11 +470,11 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// Given a packed representation of the program, load it back into program form:
         /// </summary>
-        /// <param name="filePath">name of file (with preceeding "volume/") that the program came from, for runtime error reporting.</param>
+        /// <param name="path">path of file (with preceeding "volume:") that the program came from, for runtime error reporting.</param>
         /// <param name="prefix">prepend this string to all labels in this program.</param>
         /// <param name="content">the file itself in ony big binary array.</param>
         /// <returns></returns>
-        public static List<CodePart> UnPack(string filePath, string prefix, byte[] content)
+        public static List<CodePart> UnPack(GlobalPath path, string prefix, byte[] content)
         {
             var program = new List<CodePart>();
             var reader = new BinaryReader(new MemoryStream(content));
@@ -507,7 +508,7 @@ namespace kOS.Safe.Compilation
                 {
                     case (byte)'F':
                         // new CodePart's always start with the function header:
-                        var nextPart = new CodePart(filePath);
+                        var nextPart = new CodePart();
                         program.Add(nextPart);
                         // If this is the very first code we've ever encountered in the file, remember its position:
                         if (codeStart == 0)
@@ -528,7 +529,7 @@ namespace kOS.Safe.Compilation
             }
             reader.Close();
 
-            PostReadProcessing(program, filePath, prefix, lineMap);
+            PostReadProcessing(program, path, prefix, lineMap);
                                                   
             return program;
         }
@@ -578,10 +579,10 @@ namespace kOS.Safe.Compilation
         /// proper values.
         /// </summary>
         /// <param name="program">recently built program parts to re-assign.</param>
-        /// <param name="filePath">name of file (with preceeding volume/) that the compiled code came from, for rutime error reporting purposes.</param>
+        /// <param name="path">path of file (with preceeding volume:) that the compiled code came from, for rutime error reporting purposes.</param>
         /// <param name="prefix">a string to prepend to the labels in the program.</param>
         /// <param name="lineMap">describes the mapping of line numbers to code locations.</param>
-        private static void PostReadProcessing(IEnumerable<CodePart> program, string filePath, string prefix, DebugLineMap lineMap)
+        private static void PostReadProcessing(IEnumerable<CodePart> program, GlobalPath path, string prefix, DebugLineMap lineMap)
         {
             //TODO:prefix is never used.
             SortedList<IntRange,int> lineLookup = lineMap.BuildInverseLookup();
@@ -627,8 +628,8 @@ namespace kOS.Safe.Compilation
                         else
                             // Not every opcode came from a source line - so if it's skipped over, assign it to bogus value.
                             op.SourceLine = -1;
-                        
-                        op.SourceName = string.IsNullOrEmpty(op.SourceName) ? filePath : String.Empty;
+
+                        op.SourcePath = (op.SourcePath == null || op.SourcePath == GlobalPath.EMPTY) ? path : GlobalPath.EMPTY;
 
                     }
                 }

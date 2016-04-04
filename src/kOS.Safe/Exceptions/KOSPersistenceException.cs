@@ -4,7 +4,11 @@ namespace kOS.Safe.Exceptions
 {
     public class KOSPersistenceException : Exception
     {
-        public KOSPersistenceException(string message):base(message)
+        public KOSPersistenceException(string message) : base(message)
+        {
+        }
+
+        public KOSPersistenceException(string message, Exception cause) : base(message, cause)
         {
         }
 

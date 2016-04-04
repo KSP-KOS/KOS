@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Text;
 using kOS.Utilities;
 using Math = System.Math;
+using System.Linq;
+using kOS.Safe;
 
 namespace kOS.Function
 {
@@ -85,22 +87,22 @@ namespace kOS.Function
             list.AddColumn("Name", 30, ColumnAlignment.Left);
             list.AddColumn("Size", 7, ColumnAlignment.Right);
 
-            if (shared.VolumeMgr != null)
+            list.Title = shared.VolumeMgr.CurrentDirectory.Path.ToString();
+
+            IOrderedEnumerable<VolumeItem> items = shared.VolumeMgr.CurrentDirectory.ListAsLexicon().Values.Cast<VolumeItem>().OrderBy(i => i.Name);
+
+            foreach (VolumeDirectory info in items.OfType<VolumeDirectory>())
             {
-                Volume volume = shared.VolumeMgr.CurrentVolume;
-                if (volume != null)
-                {
-                    list.Title = "Volume " + shared.VolumeMgr.GetVolumeBestIdentifier(volume);
-
-                    foreach (KeyValuePair<string, VolumeFile> pair in volume.FileList)
-                    {
-                        list.AddItem(pair.Key, pair.Value.Size);
-                    }
-
-                    long freeSpace = volume.FreeSpace;
-                    list.Footer = "Free space remaining: " + (freeSpace != Volume.INFINITE_CAPACITY ? freeSpace.ToString() : " infinite");
-                }
+                list.AddItem(info.Name, "<DIR>");
             }
+
+            foreach (VolumeFile info in items.OfType<VolumeFile>())
+            {
+                list.AddItem(info.Name, info.Size);
+            }
+
+            long freeSpace = shared.VolumeMgr.CurrentVolume.FreeSpace;
+            list.Footer = "Free space remaining: " + (freeSpace != Volume.INFINITE_CAPACITY ? freeSpace.ToString() : " infinite");
 
             return list;
         }

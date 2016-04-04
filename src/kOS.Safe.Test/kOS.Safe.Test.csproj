@@ -75,6 +75,9 @@
     <Compile Include="Communication\FakeCurrentTimeProvider.cs" />
     <Compile Include="Persistence\VolumePathTest.cs" />
     <Compile Include="Persistence\GlobalPathTest.cs" />
+    <Compile Include="Persistence\ArchiveTest.cs" />
+    <Compile Include="Persistence\HarddiskTest.cs" />
+    <Compile Include="Persistence\VolumeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

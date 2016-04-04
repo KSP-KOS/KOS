@@ -37,6 +37,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -230,9 +232,6 @@
     <Compile Include="Serialization\DumpWithHeader.cs" />
     <Compile Include="Serialization\SerializableStructure.cs" />
     <Compile Include="Persistence\FileContent.cs" />
-    <Compile Include="Encapsulation\VolumeFile.cs" />
-    <Compile Include="Encapsulation\ArchiveFile.cs" />
-    <Compile Include="Encapsulation\HarddiskFile.cs" />
     <Compile Include="Encapsulation\PrimitiveStructure.cs" />
     <Compile Include="Communication\Connection.cs" />
     <Compile Include="Communication\CurrentTimeProvider.cs" />
@@ -243,6 +242,13 @@
     <Compile Include="Persistence\GlobalPath.cs" />
     <Compile Include="Persistence\VolumePath.cs" />
     <Compile Include="Exceptions\KOSInvalidPathException.cs" />
+    <Compile Include="Persistence\ArchiveDirectory.cs" />
+    <Compile Include="Persistence\HarddiskDirectory.cs" />
+    <Compile Include="Persistence\VolumeDirectory.cs" />
+    <Compile Include="Persistence\VolumeItem.cs" />
+    <Compile Include="Persistence\ArchiveFile.cs" />
+    <Compile Include="Persistence\HarddiskFile.cs" />
+    <Compile Include="Persistence\VolumeFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

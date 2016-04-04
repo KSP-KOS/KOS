@@ -1,22 +1,21 @@
-﻿using kOS.Safe.Persistence;
-
-namespace kOS.Safe.Encapsulation
+﻿namespace kOS.Safe.Persistence
 {
     [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class HarddiskFile : VolumeFile
     {
-        private readonly Harddisk harddisk;
+        private readonly HarddiskDirectory hardiskDirectory;
 
         public override int Size { get { return ReadAll().Size; } }
 
-        public HarddiskFile(Harddisk harddisk, string name) : base(name)
+        public HarddiskFile(HarddiskDirectory harddiskDirectory, string name) : base(harddiskDirectory.Volume as Harddisk,
+            VolumePath.FromString(name, harddiskDirectory.Path))
         {
-            this.harddisk = harddisk;
+            this.hardiskDirectory = harddiskDirectory;
         }
 
         private FileContent GetFileContent()
         {
-            return harddisk.GetFileContent(Name);
+            return hardiskDirectory.GetFileContent(Name);
         }
 
         public override FileContent ReadAll()
@@ -26,7 +25,7 @@ namespace kOS.Safe.Encapsulation
 
         public override bool Write(byte[] content)
         {
-            if (harddisk.FreeSpace <= content.Length) return false;
+            if ((hardiskDirectory.Volume as Harddisk).FreeSpace <= content.Length) return false;
 
             GetFileContent().Write(content);
             return true;

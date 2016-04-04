@@ -221,7 +221,7 @@ namespace kOS.Safe.Execution
                 {
                     string thisLine = string.Format(
                         formatStr,
-                        Program[index].SourceName,
+                        Program[index].SourcePath,
                         Program[index].SourceLine,
                         Program[index].SourceColumn,
                         index,

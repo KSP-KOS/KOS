@@ -113,6 +113,15 @@ namespace kOS.Module
             ProcessorMode = ProcessorModes.READY;
         }
 
+        public VolumePath BootFilePath {
+            get {
+                return VolumePath.FromString(bootFile);
+            }
+            set {
+                bootFile = value.ToString();
+            }
+        }
+
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
@@ -277,13 +286,13 @@ namespace kOS.Module
 
             var bootFiles = new List<string>();
 
-            var temp = new Archive();
-            var files = temp.FileList;
+            var temp = new Archive(SafeHouse.ArchiveFolder);
+            var files = temp.Root.List();
             var maxchoice = 0;
             bootFiles.Add("None");
-            foreach (KeyValuePair<string, VolumeFile> pair in files)
+            foreach (KeyValuePair<string, VolumeItem> pair in files)
             {
-                if (!pair.Key.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                if (!(pair.Value is VolumeFile) || !pair.Key.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
                 bootFiles.Add(pair.Key);
                 maxchoice++;
             }
@@ -352,13 +361,14 @@ namespace kOS.Module
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
                 if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
                 {
-                    var bootVolumeFile = archive.Open(bootFile);
+                    var bootVolumeFile = archive.Open(bootFile) as VolumeFile;
                     if (bootVolumeFile != null)
                     {
+                        VolumePath bootFilePath = VolumePath.FromString(bootFile);
                         FileContent content = bootVolumeFile.ReadAll();
-                        if (HardDisk.IsRoomFor(bootFile, content))
+                        if (HardDisk.IsRoomFor(bootFilePath, content))
                         {
-                            HardDisk.Save(bootFile, content);
+                            HardDisk.Save(bootFilePath, content);
                         }
                         else
                         {

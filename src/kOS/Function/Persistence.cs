@@ -6,6 +6,9 @@ using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Serialization;
 using System;
+using KSP.IO;
+using kOS.Safe;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Function
 {
@@ -37,129 +40,125 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            if (shared.VolumeMgr != null)
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume vol = shared.VolumeMgr.GetVolumeFromPath(path);
+            shared.Window.OpenPopupEditor(vol, path);
+
+        }
+    }
+
+    [Function("cd")]
+    public class FunctionCd : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string pathString = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            VolumeDirectory directory = volume.Open(path) as VolumeDirectory;
+
+            if (directory == null)
             {
-                Volume vol = shared.VolumeMgr.CurrentVolume;
-                var volumeFile = vol.OpenOrCreate(fileName);
-                shared.Window.OpenPopupEditor(vol, volumeFile.Name);
+                throw new KOSException("Invalid directory: " + pathString);
             }
+
+            shared.VolumeMgr.CurrentDirectory = directory;
+        }
+    }
+
+    public abstract class FunctionWithCopy : FunctionBase
+    {
+        protected void Copy(IVolumeManager volumeManager, GlobalPath sourcePath, GlobalPath destinationPath)
+        {
+            Volume sourceVolume = volumeManager.GetVolumeFromPath(sourcePath);
+            Volume destinationVolume = volumeManager.GetVolumeFromPath(destinationPath);
+
+            VolumeItem source = sourceVolume.Open(sourcePath);
+            VolumeItem destination = destinationVolume.Open(sourcePath);
+
+            if (source == null)
+            {
+                throw new KOSPersistenceException("Path does not exist: " + sourcePath);
+            }
+
+            if (source is VolumeDirectory)
+            {
+                if (destination is VolumeFile)
+                {
+                    throw new KOSPersistenceException("Can't copy directory into a file");
+                }
+
+                CopyDirectory(source as VolumeDirectory, destination as VolumeDirectory);
+            } else
+            {
+                if (destination is VolumeFile || destination == null)
+                {
+                    CopyFile(source as VolumeFile, destinationPath);
+                } else
+                {
+                    CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory);
+                }
+            }
+        }
+
+        protected void CopyDirectory(VolumeDirectory volumeDirectory, VolumeDirectory volumeDirectory2)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void CopyFile(VolumeFile volumeFile, GlobalPath destinationPath)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void CopyFileToDirectory(VolumeFile volumeFile, VolumeDirectory volumeDirectory)
+        {
+            throw new NotImplementedException();
         }
     }
 
     [Function("copy")]
-    public class FunctionCopy : FunctionBase
+    public class FunctionCopy : FunctionWithCopy
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = PopValueAssert(shared, true);
-            string direction = PopValueAssert(shared).ToString();
-            string fileName = PopValueAssert(shared, true).ToString();
+            string destinationPathString = PopValueAssert(shared, true).ToString();
+            string sourcePathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            SafeHouse.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
+            SafeHouse.Logger.Log(string.Format("FunctionCopy: {0} {1}", sourcePathString, destinationPathString));
 
-            if (shared.VolumeMgr != null)
-            {
-                Volume origin;
-                Volume destination;
+            GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
+            GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
 
-                if (direction == "from")
-                {
-                    origin = volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId);
-                    destination = shared.VolumeMgr.CurrentVolume;
-                }
-                else
-                {
-                    origin = shared.VolumeMgr.CurrentVolume;
-                    destination = volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId);
-                }
-
-                if (origin != null && destination != null)
-                {
-                    if (origin == destination)
-                    {
-                        throw new Exception("Cannot copy from a volume to the same volume.");
-                    }
-
-                    VolumeFile file = origin.Open(fileName);
-                    if (file != null)
-                    {
-                        if (destination.Save(file.Name, file.ReadAll()) == null)
-                        {
-                            throw new Exception("File copy failed");
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format("File '{0}' not found", fileName));
-                    }
-                }
-                else
-                {
-                    throw new Exception(string.Format("Volume {0} not found", volumeId));
-                }
-            }
+            Copy(shared.VolumeMgr, sourcePath, destinationPath);
         }
     }
 
-    [Function("rename")]
-    public class FunctionRename : FunctionBase
+    [Function("move")]
+    public class FunctionMove : FunctionWithCopy
     {
         public override void Execute(SharedObjects shared)
         {
-            string newName = PopValueAssert(shared, true).ToString();
-            // old file name or, when we're renaming a volume, the old volume name or Volume instance
-            object volumeIdOrOldName = PopValueAssert(shared, true);
-            string objectToRename = PopValueAssert(shared).ToString();
+            string destinationPathString = PopValueAssert(shared, true).ToString();
+            string sourcePathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            if (shared.VolumeMgr != null)
-            {
-                if (objectToRename == "file")
-                {
-                    Volume volume = shared.VolumeMgr.CurrentVolume;
-                    if (volume != null)
-                    {
-                        if (volume.Open(newName) == null)
-                        {
-                            if (!volume.RenameFile(volumeIdOrOldName.ToString(), newName))
-                            {
-                                throw new Exception(string.Format("File '{0}' not found", volumeIdOrOldName));
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception(string.Format("File '{0}' already exists.", newName));
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Volume not found");
-                    }
-                }
-                else
-                {
-                    Volume volume = volumeIdOrOldName is Volume ? volumeIdOrOldName as Volume : shared.VolumeMgr.GetVolume(volumeIdOrOldName);
-                    if (volume != null)
-                    {
-                        if (volume.Renameable)
-                        {
-                            volume.Name = newName;
-                        }
-                        else
-                        {
-                            throw new Exception("Volume cannot be renamed");
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Volume not found");
-                    }
-                }
-            }
+            SafeHouse.Logger.Log(string.Format("FunctionCopy: {0} {1}", sourcePathString, destinationPathString));
+
+            GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
+            GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
+
+            Copy(shared.VolumeMgr, sourcePath, destinationPath);
+
+            Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(sourcePath);
+            sourceVolume.Delete(sourcePath);
         }
     }
 
@@ -168,25 +167,16 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = PopValueAssert(shared, true);
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            if (shared.VolumeMgr != null)
-            {
-                Volume volume = volumeId != null ? (volumeId is Volume ? volumeId as Volume : shared.VolumeMgr.GetVolume(volumeId)) : shared.VolumeMgr.CurrentVolume;
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+            volume.Delete(path);
 
-                if (volume != null)
-                {
-                    if (!volume.Delete(fileName))
-                    {
-                        throw new Exception(string.Format("File '{0}' not found", fileName));
-                    }
-                }
-                else
-                {
-                    throw new Exception("Volume not found");
-                }
+            if (!volume.Delete(path))
+            {
+                throw new Exception(string.Format("Could not remove '{0}'", path));
             }
         }
     }
@@ -196,7 +186,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             SerializableStructure serialized = PopValueAssert(shared, true) as SerializableStructure;
             AssertArgBottomAndConsume(shared);
 
@@ -209,10 +199,10 @@ namespace kOS.Function
 
             FileContent fileContent = new FileContent(serializedString);
 
-            if (shared.VolumeMgr != null)
-            {
-                shared.VolumeMgr.CurrentVolume.Save(fileName, fileContent);
-            }
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            ReturnValue = volume.Save(path, fileContent);
         }
     }
 
@@ -221,14 +211,17 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Open(fileName);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            VolumeFile volumeFile = volume.Open(pathString) as VolumeFile;
 
             if (volumeFile == null)
             {
-                throw new KOSException("File does not exist: " + fileName);
+                throw new KOSException("File does not exist: " + path);
             }
 
             Structure read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance) as SerializableStructure;
@@ -241,10 +234,13 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            ReturnValue = shared.VolumeMgr.CurrentVolume.Exists(fileName);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            ReturnValue = volume.Exists(path);
         }
     }
 
@@ -253,17 +249,20 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Open(fileName);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
-            if (volumeFile == null)
+            VolumeItem volumeItem = volume.Open(path);
+
+            if (volumeItem == null)
             {
-                throw new KOSException("File does not exist: " + fileName);
+                throw new KOSException("File or directory does not exist: " + path);
             }
 
-            ReturnValue = volumeFile;
+            ReturnValue = volumeItem;
         }
     }
 
@@ -272,12 +271,32 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = PopValueAssert(shared, true).ToString();
+            string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Create(fileName);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            VolumeFile volumeFile = volume.CreateFile(path);
 
             ReturnValue = volumeFile;
+        }
+    }
+
+    [Function("createdir")]
+    public class FunctionCreateDirectory : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string pathString = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            VolumeDirectory volumeDirectory = volume.CreateDirectory(path);
+
+            ReturnValue = volumeDirectory;
         }
     }
 }

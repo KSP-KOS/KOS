@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Debug = kOS.Safe.Utilities.Debug;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Execution
 {
@@ -120,15 +121,14 @@ namespace kOS.Safe.Execution
 
             if (!shared.Processor.CheckCanBoot()) return;
 
-            string filename = shared.Processor.BootFilename;
+            VolumePath path = shared.Processor.BootFilePath;
             // Check to make sure the boot file name is valid, and then that the boot file exists.
-            if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
-            else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-            else if (shared.VolumeMgr.CurrentVolume.Open(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
+            if (path == null) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
+            else if (shared.VolumeMgr.CurrentVolume.Open(path) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path)); }
             else
             {
                 var bootContext = "program";
-                string bootCommand = string.Format("run {0}.", filename);
+                string bootCommand = string.Format("run {0}.", path);
 
                 var options = new CompilerOptions
                 {
@@ -138,8 +138,7 @@ namespace kOS.Safe.Execution
                 };
 
                 shared.ScriptHandler.ClearContext(bootContext);
-                List<CodePart> parts = shared.ScriptHandler.Compile(
-                    "sys:boot", 1, bootCommand, bootContext, options);
+                List<CodePart> parts = shared.ScriptHandler.Compile(GlobalPath.FromString("sysboot:"), 1, bootCommand, bootContext, options);
 
                 IProgramContext programContext = SwitchToProgramContext();
                 programContext.Silent = true;
@@ -1291,10 +1290,10 @@ namespace kOS.Safe.Execution
         {
             if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
-            string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
+            GlobalPath currentSourcePath = currentContext.Program[currentContext.InstructionPointer].SourcePath;
 
             while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                   currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
+                currentContext.Program[currentContext.InstructionPointer].SourcePath == currentSourcePath)
             {
                 currentContext.InstructionPointer++;
             }
