@@ -1,7 +1,10 @@
 kOS Mod Changelog
 =================
 
-# v0.19.3 In anticipation of 1.1
+# v0.19.3 Last (intended) 1.0.5 update.
+
+(This is the last planned update to work with KSP 1.0.5 unless
+it breaks something big that requires an emergency patch.)
 
 ### BREAKING CHANGES
 * Triggers may now go beyond the limits of the IPU (https://github.com/KSP-KOS/KOS/pull/1542) but are no longer guaranteed to execute within a single update frame.  See http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware.html#triggers and http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware.html#cpu-update-loop for more details.
