@@ -25,7 +25,8 @@ namespace kOS.Safe.Execution
         private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
-        private readonly SharedObjects shared;
+        private double timeWaitUntil;
+        private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private VariableScope savedPointers;
@@ -64,7 +65,7 @@ namespace kOS.Safe.Execution
         
         public List<string> ProfileResult { get; private set; }
 
-        public CPU(SharedObjects shared)
+        public CPU(SafeSharedObjects shared)
         {
             this.shared = shared;
             this.shared.Cpu = this;

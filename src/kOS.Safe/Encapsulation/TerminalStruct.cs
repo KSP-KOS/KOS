@@ -5,7 +5,7 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Terminal")]
     public class TerminalStruct : Structure
     {
-        private readonly SharedObjects shared;
+        private readonly SafeSharedObjects shared;
 
         // Some sanity values to prevent the terminal display from getting garbled up:
         // They may have to change after experimentation.
@@ -23,14 +23,14 @@ namespace kOS.Safe.Encapsulation
         //
         // protected bool IsOpen { get { return shared.Window.IsOpen(); } set {if (value) shared.Window.Open(); else shared.Window.Close(); } }
 
-        public TerminalStruct(SharedObjects shared)
+        public TerminalStruct(SafeSharedObjects shared)
         {
             this.shared = shared;
 
             InitializeSuffixes();
         }
 
-        protected internal SharedObjects Shared
+        protected internal SafeSharedObjects Shared
         {
             get { return shared; }
         }

@@ -67,5 +67,35 @@ namespace kOS.Safe.Test.Persistence
         {
             GlobalPath.FromString("othervolume:/test/../../");
         }
+
+        [Test]
+        public void CanChangeExtension()
+        {
+            GlobalPath path = GlobalPath.FromString("othervolume:123");
+            GlobalPath newPath = path.ChangeExtension("txt");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(1, newPath.Length);
+            Assert.AreEqual("123.txt", newPath.Name);
+
+            path = GlobalPath.FromString("othervolume:/dir/file.jpg");
+            newPath = path.ChangeExtension("txt");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(2, newPath.Length);
+            Assert.AreEqual("file.txt", newPath.Name);
+
+            path = GlobalPath.FromString("othervolume:/dir/complex.file.name.");
+            newPath = path.ChangeExtension("txt");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(2, newPath.Length);
+            Assert.AreEqual("complex.file.name.txt", newPath.Name);
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSInvalidPathException))]
+        public void CanHandleChangingExtensionOfRootPaths()
+        {
+            GlobalPath path = GlobalPath.FromString("othervolume:");
+            path.ChangeExtension("txt");
+        }
     }
 }

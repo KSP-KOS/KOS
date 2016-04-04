@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using kOS.Safe.Persistence;
 using kOS.Safe.Exceptions;
 using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Persistence
 {
@@ -21,12 +22,16 @@ namespace kOS.Safe.Persistence
 
         public object VolumeId { get; private set; }
 
-        private GlobalPath(object volumeId, VolumePath path) : this(volumeId, new List<string>(path.Segments))
+        private GlobalPath(object volumeId)
         {
-
+            VolumeId = ValidateVolumeId(volumeId);
         }
 
-        private GlobalPath(object volumeId, List<string> segments) : base(new List<string>(segments))
+        private GlobalPath(object volumeId, VolumePath path) : this(volumeId, new List<string>(path.Segments))
+        {
+        }
+
+        private GlobalPath(object volumeId, IEnumerable<string> segments) : base(segments)
         {
             VolumeId = ValidateVolumeId(volumeId);
         }
@@ -67,9 +72,46 @@ namespace kOS.Safe.Persistence
             return VolumeId.Equals(path.VolumeId) && base.IsParent(path);
         }
 
+        public GlobalPath RootPath()
+        {
+            return new GlobalPath(VolumeId);
+        }
+
         public static GlobalPath FromVolumePath(VolumePath volumePath, Volume volume)
         {
             return new GlobalPath(volume.Name, new List<string>(volumePath.Segments));
+        }
+
+        public GlobalPath ChangeExtension(string newExtension)
+        {
+            if (Segments.Count == 0)
+            {
+                throw new KOSInvalidPathException("This path points to the root directory, you can't change its extension", this.ToString());
+            }
+
+            string nameSegment = Segments.Last();
+            List<string> newSegments = new List<string>(Segments);
+            newSegments.RemoveAt(newSegments.Count - 1);
+            var nameParts = new List<string>(nameSegment.Split('.'));
+
+            if (nameParts.Count() > 1)
+            {
+                nameParts.RemoveAt(nameParts.Count() - 1);
+            }
+
+            nameParts = new List<string>(nameParts);
+            nameParts.Add(newExtension);
+
+            var newName = String.Join(".", nameParts.ToArray());
+
+            newSegments.Add(newName);
+
+            return new GlobalPath(VolumeId, newSegments);
+        }
+
+        public GlobalPath Combine(string[] segments)
+        {
+            return new GlobalPath(VolumeId, Segments.Concat(segments));
         }
 
         /// <summary>

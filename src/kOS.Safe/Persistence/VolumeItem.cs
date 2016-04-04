@@ -22,8 +22,7 @@ namespace kOS.Safe.Persistence
         public string Extension {
             get
             {
-                var fileParts = Name.Split('.');
-                return fileParts.Count() > 1 ? fileParts.Last() : string.Empty;
+                return Path.Extension;
             }
         }
 

@@ -81,7 +81,7 @@ namespace kOS.Function
             }
         }
 
-        private kList GetFileList(Safe.SharedObjects shared)
+        private kList GetFileList(Safe.SafeSharedObjects shared)
         {
             var list = new kList();
             list.AddColumn("Name", 30, ColumnAlignment.Left);
@@ -107,7 +107,7 @@ namespace kOS.Function
             return list;
         }
 
-        private kList GetVolumeList(Safe.SharedObjects shared)
+        private kList GetVolumeList(Safe.SafeSharedObjects shared)
         {
             var list = new kList { Title = "Volumes" };
             list.AddColumn("ID", 6, ColumnAlignment.Left);

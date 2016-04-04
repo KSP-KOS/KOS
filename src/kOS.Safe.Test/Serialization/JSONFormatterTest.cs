@@ -23,6 +23,5 @@ namespace kOS.Safe.Test.Serialization
                 return JsonFormatter.WriterInstance;
             }
         }
-
     }
 }

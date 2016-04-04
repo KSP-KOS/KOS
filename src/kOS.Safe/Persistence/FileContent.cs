@@ -57,9 +57,7 @@ namespace kOS.Safe.Persistence
 
         public override Dump Dump()
         {
-            Dump dump = new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
-
-            return dump;
+            return new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
         }
 
         public override void LoadDump(Dump dump)

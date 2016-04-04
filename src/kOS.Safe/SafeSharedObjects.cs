@@ -9,12 +9,12 @@ using kOS.Safe.Sound;
 
 namespace kOS.Safe
 {
-    public class SharedObjects
+    public class SafeSharedObjects
     {
         public ICpu Cpu { get; set; }
         public IScreenBuffer Screen { get; set; }
         public IInterpreter Interpreter { get; set; }
-        public IBindingManager BindingMgr { get; set; }  
+        public IBindingManager BindingMgr { get; set; }
         public Script ScriptHandler { get; set; }
         public ILogger Logger { get; set; }
         public IProcessor Processor { get; set; }

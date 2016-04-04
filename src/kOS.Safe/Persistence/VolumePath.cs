@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Persistence
 {
@@ -54,6 +55,18 @@ namespace kOS.Safe.Persistence
         public string Name {
             get {
                 return Segments.Count > 0 ? Segments.Last() : null;
+            }
+        }
+
+        public string Extension {
+            get {
+                if (Name == null)
+                {
+                    return null;
+                }
+
+                var nameParts = Name.Split('.');
+                return nameParts.Count() > 1 ? nameParts.Last() : string.Empty;
             }
         }
 
@@ -114,14 +127,14 @@ namespace kOS.Safe.Persistence
             return new List<string>(segments);
         }
 
-        private VolumePath()
+        protected VolumePath()
         {
             this.Segments = new List<string>();
         }
 
-        protected VolumePath(List<string> segments)
+        protected VolumePath(IEnumerable<string> segments)
         {
-            this.Segments = segments;
+            this.Segments = new List<string>(segments);
 
             Canonicalize();
         }

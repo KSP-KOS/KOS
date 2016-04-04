@@ -202,7 +202,6 @@
     <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
-    <Compile Include="SharedObjects.cs" />
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
@@ -249,6 +248,9 @@
     <Compile Include="Persistence\ArchiveFile.cs" />
     <Compile Include="Persistence\HarddiskFile.cs" />
     <Compile Include="Persistence\VolumeFile.cs" />
+    <Compile Include="Serialization\IHasSafeSharedObjects.cs" />
+    <Compile Include="SafeSharedObjects.cs" />
+    <Compile Include="Persistence\PathValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
