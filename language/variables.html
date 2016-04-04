@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Variables &amp; Statements &mdash; kOS 0.19.2 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 0.19.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.19.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.19.3 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="KerboScript User Functions" href="user_functions.html"/>
         <link rel="prev" title="Flow Control" href="flow.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.2
+                0.19.3
               </div>
             
           
@@ -313,13 +313,11 @@ be referred to as a &#8220;declare statement&#8221;, even though the word
 <div class="section" id="initializer-required-in-declare">
 <h3><a class="toc-backref" href="#id11">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this headline">¶</a></h3>
 <div class="versionadded">
-<p><span class="versionmodified">New in version 0.17.</span></p>
-</div>
-<p>The syntax without the initializer, looking like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// no initializer like &quot;TO 1.&quot;</span>
-</pre></div>
-</div>
+<p><span class="versionmodified">New in version 0.17: </span>The syntax without the initializer, looking like so::</p>
+<blockquote>
+<div>DECLARE x. // no initializer like &#8220;TO 1.&#8221;</div></blockquote>
 <p>is <strong>no longer legal syntax</strong>.</p>
+</div>
 <p>Kerboscript now requires the use of the initializer clause (the &#8220;TO&#8221;
 keyword) after the identifier name so as to make it impossible for
 there to exist any uninitialized variables in a script.</p>
@@ -780,16 +778,17 @@ implicitly created.</p>
 <p>Triggers such as:</p>
 <blockquote>
 <div><ul class="simple">
-<li>WHEN &lt;expression&gt; { &lt;statements&gt; }.</li>
+<li>WHEN &lt;boolean expression&gt; THEN { &lt;statements&gt; }.</li>
 </ul>
 </div></blockquote>
 <p>and</p>
 <blockquote>
 <div><ul class="simple">
-<li>ON &lt;boolean variable&gt; { &lt;statements&gt; }.</li>
+<li>ON &lt;boolean expression&gt; { &lt;statements&gt; }.</li>
 </ul>
 </div></blockquote>
-<p>Do not work predictably when you use local variables in the &lt;expression&gt;
+<p>Do not work predictably when you use local variables in the
+&lt;boolean expression&gt;
 part of them.  They need to be designed to use global variables only,
 because they outlive the duration of any particular scoping braces.
 You can declare local variables within their &lt;statements&gt; in their bodies,
@@ -958,7 +957,7 @@ don&#8217;t need to understand or deal with scope.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.19.2',
+            VERSION:'0.19.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

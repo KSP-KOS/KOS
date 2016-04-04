@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Cooked Control &mdash; kOS 0.19.2 documentation</title>
+  <title>Cooked Control &mdash; kOS 0.19.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.19.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.19.3 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Raw Control" href="raw.html"/>
         <link rel="prev" title="Flight Control" href="../flight.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.2
+                0.19.3
               </div>
             
           
@@ -178,7 +178,7 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#the-special-lock-variables-for-cooked-steering" id="id1">The special LOCK variables for cooked steering</a></li>
-<li><a class="reference internal" href="#cannot-wait-during-cooked-control-calculation" id="id2">Cannot &#8216;WAIT&#8217; during cooked control calculation</a></li>
+<li><a class="reference internal" href="#don-t-wait-during-cooked-control-calculation" id="id2">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a></li>
 <li><a class="reference internal" href="#unlocking-controls" id="id3">Unlocking controls</a></li>
 <li><a class="reference internal" href="#tuning-cooked-steering" id="id4">Tuning cooked steering</a></li>
 <li><a class="reference internal" href="#advantages-disadvantages" id="id5">Advantages/Disadvantages</a></li>
@@ -199,7 +199,7 @@ in the range [0..1].</p>
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+<p class="last">It&#8217;s a very bad idea to``WAIT`` during the execution of the expression in a
 LOCK THROTTLE.  See the note in the next section below.</p>
 </div>
 <span class="target" id="lock-steering"></span><dl class="object">
@@ -248,7 +248,7 @@ LOCK THROTTLE.  See the note in the next section below.</p>
 <p>Like all <code class="docutils literal"><span class="pre">LOCK</span></code> expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other <code class="docutils literal"><span class="pre">LOCK</span></code> expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other <code class="docutils literal"><span class="pre">LOCK</span></code> expressions only get executed when you try to read the value of the variable. The reason is that the <strong>kOS</strong> computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+<p class="last">It&#8217;s a very bad idea to <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
 LOCK STEERING.  See the note in the next section below.</p>
 </div>
 <span class="target" id="lock-wheelthrottle"></span><dl class="object">
@@ -274,7 +274,7 @@ in the range [0..1].</p>
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+<p class="last">It&#8217;s a very bad idea to <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
 LOCK WHEELTHROTTLE.  See the note in the next section below.</p>
 </div>
 <span class="target" id="lock-wheelsteering"></span><dl class="object">
@@ -326,32 +326,39 @@ of the sky as &#8220;forward&#8221;.</p>
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">You cannot <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
+<p class="last">It&#8217;s a very bad idea to <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
 LOCK WHEELSTEERING.  See the note in the next section below.</p>
 </div>
 </div>
-<div class="section" id="cannot-wait-during-cooked-control-calculation">
-<h2><a class="toc-backref" href="#id2">Cannot &#8216;WAIT&#8217; during cooked control calculation</a><a class="headerlink" href="#cannot-wait-during-cooked-control-calculation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="don-t-wait-during-cooked-control-calculation">
+<h2><a class="toc-backref" href="#id2">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a><a class="headerlink" href="#don-t-wait-during-cooked-control-calculation" title="Permalink to this headline">¶</a></h2>
 <p>Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
-WHEELTHROTTLE, and LOCK WHEELSTEERING cause your expression
+WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
+<a class="reference internal" href="../../general/cpu_hardware.html#triggers"><span>triggers</span></a> that cause your expression
 to be calculated every single physics update tick behind
-the scenes, you cannot execute a <code class="docutils literal"><span class="pre">WAIT</span></code> command during
-the evaluation of the value used in them.</p>
+the scenes, you should not execute a <code class="docutils literal"><span class="pre">WAIT</span></code> command
+in the code that performs the evaluation of the value
+used in them, as that will effectively cheat the entire
+script out of the full execution speed it deserves.</p>
 <p>For example, if you attempt this:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">get_throttle</span> <span class="p">{</span>
-    <span class="k">wait</span> <span class="mf">1</span><span class="p">.</span>  <span class="c1">// this line won&#39;t work.</span>
+    <span class="k">wait</span> <span class="mf">0</span><span class="p">.</span><span class="mf">001</span><span class="p">.</span>  <span class="c1">// this line is a bad idea.</span>
     <span class="k">return</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span>
 <span class="p">}</span>
 <span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="nv">get_throttle</span><span class="p">().</span>
 </pre></div>
 </div>
-<p>Then the <code class="docutils literal"><span class="pre">WAIT</span></code> command won&#8217;t work.  You can&#8217;t make the
-system pause execution while it&#8217;s trying to run the
-expression that tells it what to do 25 times a second.</p>
-<p>The entire expression that you LOCK any of the four cooked
-controls to must execute and finish quickly enough that it can
-be called 25 times a second (on typical default game settings
-that&#8217;s how often the steering manager will run your expression).</p>
+<p>Then kOS will attempt to call the <code class="docutils literal"><span class="pre">WAIT</span></code> command <em>every single</em>
+update, as the kOS system keeps trying to re-run the
+<code class="docutils literal"><span class="pre">lock</span> <span class="pre">throttle</span></code> expression to learn what you want the new
+throttle value to be. This will starve your script of the
+CPU time it deserves, having the effect of running the
+lock function every-other-tick, and the rest of your code
+every-other-tick on the ticks in-between.  (When the system
+hits the wait inside the throttle expression, it will stop
+there, not resuming until the next update, effectively meaning
+it doesn&#8217;t get around to running any of your main-line code
+until the next tick.)</p>
 <p>Normally when you use a LOCK command, the expression is only evaluated
 when it needs to be by some other part of the script that is trying
 to read the value.  But with these special cooked control locks,
@@ -684,7 +691,7 @@ or to make your own steering control from scratch using raw steering.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.19.2',
+            VERSION:'0.19.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

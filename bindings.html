@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog of Bound Variable Names &mdash; kOS 0.19.2 documentation</title>
+  <title>Catalog of Bound Variable Names &mdash; kOS 0.19.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.19.2 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.19.3 documentation" href="index.html"/>
         <link rel="up" title="General Topics" href="general.html"/>
         <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
         <link rel="prev" title="General Topics" href="general.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.19.2
+                0.19.3
               </div>
             
           
@@ -679,8 +679,48 @@ the LOADDISTANCE, you are setting it to the same value
 universally for all situations.</p>
 </div>
 </div>
+<div class="section" id="profileresult">
+<span id="id2"></span><h2>PROFILERESULT()<a class="headerlink" href="#profileresult" title="Permalink to this headline">¶</a></h2>
+<p>If you have the runtime statistics configuration option
+<a class="reference internal" href="structures/misc/config.html#attribute:CONFIG:STAT" title="CONFIG:STAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:STAT</span></code></a> set to <code class="docutils literal"><span class="pre">True</span></code>, then in addition to
+the summary statistics after the program run, you can also
+see a detailed report of the &#8220;profiling&#8221; result of your
+most recent program run, by calling the built-in function
+<code class="docutils literal"><span class="pre">ProfileResult()</span></code>.  <em>&#8220;Profiling&#8221;</em> is a programmer&#8217;s term
+that means gathering data about how long the program is
+spending doing each piece of the program.  If you are trying
+to figure out whether your program spent more milliseconds
+printing numbers to the screen, or more milliseconds
+calculating a complex formula, or more milliseconds activating
+actions on a PartModule, and so on, then this feature may
+help.  The ProfileResult() was meant mainly for kOS developers
+trying to internally determine which parts of the system could
+use the most optomizing.  However, as long as it was implemented
+for that purpose, it may as well be made available to all
+the users of kOS as well.</p>
+<p>To use:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">CONFIG</span><span class="p">:</span><span class="nv">STAT</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
+<span class="k">RUN</span> <span class="nv">MYPROGRAM</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">PROFILERESULT</span><span class="p">().</span>
+<span class="c1">// &lt;or&gt;</span>
+<span class="k">LOG</span> <span class="nv">PROFILERESULT</span><span class="p">()</span> <span class="ow">TO</span> <span class="nv">SOMEFIELNAME</span><span class="p">.</span><span class="nv">csv</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>The function <a href="#id3"><span class="problematic" id="id4">``</span></a>ProfileResult()` returns a string containing
+a formatted dump of your whole program, broken down into
+the more low-level instructions that make it up, with data
+values describing how long was spent in total on each
+instruction, how many times that instruction was executed,
+and the average time spent on a single execution of that
+instruction (by dividing the total time by the count of how
+many executions it had).</p>
+<p>The format of <code class="docutils literal"><span class="pre">ProfileResult()</span></code> is designed to be suitable
+for importing into a spreadsheet program if you like, because
+it is formatted as a &#8220;comma separated values&#8221; file, or CSV
+for short.</p>
+</div>
 <div class="section" id="solarprimevector">
-<span id="id2"></span><h2>SOLARPRIMEVECTOR<a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2>SOLARPRIMEVECTOR<a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h2>
 <p>Gives the Prime Meridian <a class="reference internal" href="math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> for the Solar System itself, in
 current Ship-Raw XYZ coordinates.</p>
 <p>Both the <a class="reference internal" href="structures/orbits/orbit.html#attribute:ORBIT:LONGITUDEOFASCENDINGNODE" title="ORBIT:LONGITUDEOFASCENDINGNODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Orbit:LONGITUDEOFASCENDINGNODE</span></code></a> orbit suffix and the
@@ -755,7 +795,7 @@ to kOS that are designed to support the features introduced by some other mods. 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.19.2',
+            VERSION:'0.19.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
