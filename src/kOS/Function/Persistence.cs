@@ -92,6 +92,30 @@ namespace kOS.Function
         }
     }
 
+    [Function("volume")]
+    public class FunctionVolume : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int remaining = CountRemainingArgs(shared);
+
+            Volume volume;
+
+            if (remaining == 0)
+            {
+                volume = shared.VolumeMgr.CurrentVolume;
+            } else
+            {
+                object volumeId = PopValueAssert(shared, true);
+                volume = shared.VolumeMgr.GetVolume(volumeId);
+            }
+
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = volume;
+        }
+    }
+
     [Function("scriptpath")]
     public class FunctionScriptPath : FunctionBase
     {
