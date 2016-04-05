@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Variables &amp; Statements &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html" />
+    <link rel="up" title="The KerboScript Language" href="../language.html" />
+    <link rel="next" title="Mathematics and Basic Geometry" href="../math.html" />
+    <link rel="prev" title="Flow Control" href="flow.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../math.html" title="Mathematics and Basic Geometry"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="flow.html" title="Flow Control"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../language.html" accesskey="U">The <strong>KerboScript</strong> Language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="variables-statements">
+<span id="variables"></span><h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id8"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
+<li><a class="reference internal" href="#id2" id="id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#id3" id="id10"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
+<li><a class="reference internal" href="#id4" id="id11"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
+<li><a class="reference internal" href="#id5" id="id12"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
+<li><a class="reference internal" href="#id6" id="id13"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
+<li><a class="reference internal" href="#id7" id="id14"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id8"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Declares a global variable. Alternatively, a variable can be implicitly declared by any <tt class="docutils literal"><span class="pre">SET</span></tt> or <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">X</span><span class="p">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Declares variables to be used as a parameter that can be passed in using the <tt class="docutils literal"><span class="pre">RUN</span></tt> command.</p>
+<p>Program 1:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// This is the contents of program1:</span>
+<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">X</span><span class="p">.</span>
+<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">Y</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;X times Y is &quot;</span> <span class="o">+</span> <span class="n">X</span><span class="o">*</span><span class="n">Y</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Program 2:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// This is the contents of program2, which calls program1:</span>
+<span class="n">SET</span> <span class="n">A</span> <span class="n">TO</span> <span class="mf">7.</span>
+<span class="n">RUN</span> <span class="n">PROGRAM1</span><span class="p">(</span> <span class="n">A</span><span class="p">,</span> <span class="n">A</span><span class="o">+</span><span class="mi">1</span> <span class="p">).</span>
+</pre></div>
+</div>
+<p>The above example would give the output:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">X</span> <span class="n">times</span> <span class="n">Y</span> <span class="n">is</span> <span class="mf">56.</span>
+</pre></div>
+</div>
+<p>It is also possible to put more than one parameter into a single <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statement, separated by commas, as shown below:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">CheckFlag</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>This is exactly equivalent to:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">X</span><span class="p">.</span>
+<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">Y</span><span class="p">.</span>
+<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">CheckFlag</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Note: Unlike normal variables, Parameter variables are local to the program. When program A calls program B and passes parameters to it, program B can alter their values without affecting the values of the variables in program A.</p>
+<dl class="docutils">
+<dt>Caveat</dt>
+<dd>This is only true if the values are primitive singleton values like numbers or booleans. If the values are Structures like Vectors or Lists, then they do end up behaving as if they were passed by reference, in the usual way that should be familiar to people who have used languages like Java or C# before.</dd>
+</dl>
+<p>The <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statements can appear anywhere in a program as long as they are in the file at a point earlier than the point at which the parameter is being used. The order the arguments need to be passed in by the caller is the order the <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statements appear in the program being called.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>Pass By Value</strong></p>
+<p>The following paragraph is important for people familiar with other programming languages. If you are new to programming and don&#8217;t understand what it is saying, that&#8217;s okay you can ignore it.</p>
+<p class="last">At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don&#8217;t exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that kOS lets you use a colon suffix with), then the parameters will behave exactly like being passed by reference because all you&#8217;re passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Sets the value of a variable. Declares a global variable if it doesn’t already exist:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">Y</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">LOCK</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">Y</span> <span class="o">+</span> <span class="mf">1.</span>
+<span class="n">PRINT</span> <span class="n">X</span><span class="p">.</span>    <span class="c1">// prints &quot;2&quot;</span>
+<span class="n">SET</span> <span class="n">Y</span> <span class="n">TO</span> <span class="mf">2.</span>
+<span class="n">PRINT</span> <span class="n">X</span><span class="p">.</span>    <span class="c1">// prints &quot;3&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>Toggles a variable between <tt class="docutils literal"><span class="pre">TRUE</span></tt> or <tt class="docutils literal"><span class="pre">FALSE</span></tt>. If the variable in question starts out as a number, it will be converted to a boolean and then toggled. This is useful for setting action groups, which are activated whenever their values are inverted:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">TOGGLE</span> <span class="n">AG1</span><span class="p">.</span> <span class="c1">// Fires action group 1.</span>
+<span class="n">TOGGLE</span> <span class="n">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Sets a variable to <tt class="docutils literal"><span class="pre">TRUE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h2><a class="toc-backref" href="#id14"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>Sets a variable to <tt class="docutils literal"><span class="pre">FALSE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Variables &amp; Statements</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
+<li><a class="reference internal" href="#id2"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#id3"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
+<li><a class="reference internal" href="#id4"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
+<li><a class="reference internal" href="#id5"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
+<li><a class="reference internal" href="#id6"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
+<li><a class="reference internal" href="#id7"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="flow.html"
+                        title="previous chapter">Flow Control</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../math.html"
+                        title="next chapter">Mathematics and Basic Geometry</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/language/variables.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../math.html" title="Mathematics and Basic Geometry"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="flow.html" title="Flow Control"
+             >previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../language.html" >The <strong>KerboScript</strong> Language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

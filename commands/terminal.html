@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Terminal and game environment &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html" />
+    <link rel="up" title="Command Reference" href="../commands.html" />
+    <link rel="next" title="Structure Reference" href="../structures.html" />
+    <link rel="prev" title="File I/O" href="files.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../structures.html" title="Structure Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="files.html" title="File I/O"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" accesskey="U">Command Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="terminal-and-game-environment">
+<span id="terminal"></span><h1>Terminal and game environment<a class="headerlink" href="#terminal-and-game-environment" title="Permalink to this headline">¶</a></h1>
+<dl class="global">
+<dt id="CLEARSCREEN">
+<tt class="descname">CLEARSCREEN</tt><a class="headerlink" href="#CLEARSCREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the screen and places the cursor at the top left:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">CLEARSCREEN</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="PRINT">
+<tt class="descname">PRINT</tt><a class="headerlink" href="#PRINT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the selected text to the screen. Can print strings, or the result of an expression:</p>
+<div class="highlight-c"><div class="highlight"><pre>PRINT “Hello”.
+PRINT 4+1.
+PRINT “4 times 8 is: “ + (4*8).
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="AT">
+<tt class="descname">AT</tt><big>(</big>col,line<big>)</big><a class="headerlink" href="#AT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> &#8211; (integer) column starting with zero (left)</li>
+<li><strong>line</strong> &#8211; (integer) line starting with zero (top)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Used in combination with <a class="reference internal" href="#PRINT" title="PRINT global"><tt class="xref ks ks-global docutils literal"><span class="pre">PRINT</span></tt></a>. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression:</p>
+<div class="highlight-c"><div class="highlight"><pre>PRINT “Hello” AT(0,10).
+PRINT 4+1 AT(0,10).
+PRINT “4 times 8 is: “ + (4*8) AT(0,10).
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="MAPVIEW">
+<tt class="descname">MAPVIEW</tt><a class="headerlink" href="#MAPVIEW" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>A variable that controls or queries whether or not the game is in map view:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">MAPVIEW</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="s">&quot;You are looking at the map.&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="s">&quot;You are looking at the flight view.&quot;</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>You can switch between map and flight views by setting this variable:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MAPVIEW</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>  <span class="c1">// to map view</span>
+<span class="n">SET</span> <span class="n">MAPVIEW</span> <span class="n">TO</span> <span class="n">FALSE</span><span class="p">.</span> <span class="c1">// to flight view</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="REBOOT">
+<tt class="descname">REBOOT</tt><a class="headerlink" href="#REBOOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reboots the kOS module.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="SHUTDOWN">
+<tt class="descname">SHUTDOWN</tt><a class="headerlink" href="#SHUTDOWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes kOS module to shutdown.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="files.html"
+                        title="previous chapter">File I/O</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../structures.html"
+                        title="next chapter">Structure Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/commands/terminal.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../structures.html" title="Structure Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="files.html" title="File I/O"
+             >previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" >Command Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

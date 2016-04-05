@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Querying a vessel’s parts &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html" />
+    <link rel="up" title="Command Reference" href="../commands.html" />
+    <link rel="next" title="File I/O" href="files.html" />
+    <link rel="prev" title="LIST Command" href="list.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="files.html" title="File I/O"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="list.html" title="LIST Command"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" accesskey="U">Command Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="querying-a-vessel-s-parts">
+<h1>Querying a vessel&#8217;s parts<a class="headerlink" href="#querying-a-vessel-s-parts" title="Permalink to this headline">¶</a></h1>
+<p>This is a quick list to get the idea across fast. The actual
+details of the meaning of these things is complex enough to
+warrant <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">its own
+topic</a>.</p>
+<p>To get the parts of a vessel (such as your current vessel,
+called SHIP), you can do the following things:</p>
+<p>These are equivalent. They get the full list of all the parts:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">LIST</span> <span class="n">PARTS</span> <span class="n">IN</span> <span class="n">MyPartList</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">MyPartlist</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTS</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>This gets all the parts that have the name given, as either a
+nametag (Part:TAG), a title (Part:TITLE), or a name, (Part:NAME):</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MyPartList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;something&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>These are other ways to get parts that are more specific about what
+exact nomenclature system is being used:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MyPartList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSTAGGED</span><span class="p">(</span><span class="s">&quot;something&quot;</span><span class="p">).</span> <span class="c1">// only gets parts with Part:TAG = &quot;something&quot;.</span>
+<span class="n">SET</span> <span class="n">MyPartList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSTITLED</span><span class="p">(</span><span class="s">&quot;something&quot;</span><span class="p">).</span> <span class="c1">// only gets parts with Part:TITLE = &quot;something&quot;.</span>
+<span class="n">SET</span> <span class="n">MyPartList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;something&quot;</span><span class="p">).</span> <span class="c1">// only gets parts with Part:NAME = &quot;something&quot;.</span>
+</pre></div>
+</div>
+<p>This gets all the PartModules on a ship that have the same module name:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MyModList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">MODULESNAMED</span><span class="p">(</span><span class="s">&quot;something&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>This gets all the parts that have been defined to have some sort
+of activity occur from a particular action group:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MyPartList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSINGROUP</span><span class="p">(</span> <span class="n">AG1</span> <span class="p">).</span> <span class="c1">// all the parts in action group 1.</span>
+</pre></div>
+</div>
+<p>This gets all the modules that have been defined to have some sort
+of activity occur from a particular action group:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MyModList</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">MODULESINGROUP</span><span class="p">(</span> <span class="n">AG1</span> <span class="p">).</span> <span class="c1">// all the parts in action group 1.</span>
+</pre></div>
+</div>
+<p>This gets the primary root part of a vessel (the command core that you
+placed FIRST when building the ship in the VAB or SPH):</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">firstPart</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ROOTPART</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>This lets you query all the parts that are immediate children of the
+current part in the tree:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">firstPart</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ROOTPART</span><span class="p">.</span>
+<span class="n">FOR</span> <span class="n">P</span> <span class="n">IN</span> <span class="n">firstPart</span><span class="o">:</span><span class="n">CHILDREN</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;The root part as an immediately attached part called &quot;</span> <span class="o">+</span> <span class="n">P</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>You could keep walking down the tree this way, or go upward with PARENT
+and HASPARENT:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">thisPart</span><span class="o">:</span><span class="n">HASPARENT</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;This part&#39;s parent part is &quot;</span><span class="o">+</span> <span class="n">thisPart</span><span class="o">:</span><span class="n">PARENT</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>This tree method of walking the parts is slightly less useful because
+user
+functions don&#8217;t exist, making recursive algorithms messy to implement.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="list.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">LIST</span></tt> Command</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="files.html"
+                        title="next chapter">File I/O</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/commands/parts.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="files.html" title="File I/O"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="list.html" title="LIST Command"
+             >previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" >Command Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

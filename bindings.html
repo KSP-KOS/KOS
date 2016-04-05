@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Catalog of Bound Variable Names &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="index.html">kOS 0.15.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="catalog-of-bound-variable-names">
+<span id="bindings"></span><h1>Catalog of Bound Variable Names<a class="headerlink" href="#catalog-of-bound-variable-names" title="Permalink to this headline">¶</a></h1>
+<p>This is the list of special reserved keyword variable names that kOS
+will interpret
+to mean something special. If they are used as normal variable names by
+your kOS script
+program they may not work. Understanding them and their meaning is
+crucial to creating
+effective kOS scripts.</p>
+<div class="section" id="named-vessels-and-bodies">
+<h2>NAMED VESSELS AND BODIES<a class="headerlink" href="#named-vessels-and-bodies" title="Permalink to this headline">¶</a></h2>
+<p>Variable Name | Can Read | Can Set | Type | Description
+==============|==========|=========|======|============
+SHIP | yes | no | <a class="reference external" href="../structure/vessel/index.html">Vessel</a> |
+Whichever vessel happens to be the one containing the CPU part that is
+running this Kerboscript code at the moment. This is the <a class="reference external" href="../summary_topics/CPU_vessel/index.html">CPU
+Vessel</a>.
+TARGET | yes | yes | <a class="reference external" href="../structure/vessel/index.html">Vessel</a> or
+<a class="reference external" href="../structure/body/index.html">Body</a> | Whichever
+<a class="reference external" href="../structure/orbitable/index.html">Orbitable</a> object happens to be
+the one selected as the current KSP target. If set to a string, it will
+assume the string is the name of a vessel being targetted and set it to
+a vessel by that name. For best results set it to Body(&#8220;some name&#8221;) or
+Vessel(&#8220;some name&#8221;) explicitly.</p>
+</div>
+<div class="section" id="alias-shortcuts-for-ship-fields">
+<h2>Alias shortcuts for SHIP fields<a class="headerlink" href="#alias-shortcuts-for-ship-fields" title="Permalink to this headline">¶</a></h2>
+<p>The following are all alias shortcuts for accessing the fields of the
+SHIP vessel.
+To see their definition, please consult the
+<a class="reference external" href="../structure/vessel/index.html">Vessel</a>
+page, as they are all just instances of the standard vessel suffixes.</p>
+<p>Variable | Same as
+=========|===========
+HEADING | Same as SHIP:HEADING
+PROGRADE | Same as SHIP:PROGRADE
+RETROGRADE | Same as SHIP:RETROGRADE
+FACING | Same as SHIP:FACING
+MAXTHRUST | Same as SHIP:MAXTHRUST
+VELOCITY | Same as SHIP:VELOCITY
+GEOPOSITION | Same as SHIP:GEOPOSITION
+LATITUDE | Same as SHIP:LATITUDE
+LONGITUDE | Same as SHIP:LONGITUDE
+UP | Same as SHIP:UP
+NORTH | Same as SHIP:NORTH
+BODY | Same as SHIP:BODY
+ANGULARMOMENTUM | Same as SHIP:ANGULARMOMENTUM
+ANGULARVEL | Same as SHIP:ANGULARVEL
+ANGULARVELOCITY | Same as SHIP:ANGULARVEL
+COMMRANGE | Same as SHIP:COMMRANGE
+MASS | Same as SHIP:MASS
+VERTICALSPEED | Same as SHIP:VERTICALSPEED
+SURFACESPEED | Same as SHIP:SURFACESPEED
+AIRSPEED | Same as SHIP:AIRSPEED
+VESSELNAME | Same as SHIP:VESSELNAME
+ALTITUDE | Same as SHIP:ALTITUDE
+APOAPSIS | Same as SHIP:APOAPSIS
+PERIAPSIS | Same as SHIP:PERIAPSIS
+SENSOR | Same as SHIP:SENSOR
+SRFPROGRADE | Same as SHIP:SRFPROGRADE
+SRFREROGRADE | Same as SHIP:SRFREROGRADE
+OBT | Same as SHIP:OBT
+STATUS | Same as SHIP:STATUS
+VESSELNAME | Same as SHIP:NAME
+<em>Any resource</em> | Same as SHIP:<em>resource name</em>, eg. LIQUIDFUEL is the
+same as SHIP:LIQUIDFUEL</p>
+</div>
+<div class="section" id="resource-types">
+<h2>Resource Types<a class="headerlink" href="#resource-types" title="Permalink to this headline">¶</a></h2>
+<p>Any time there is a resource on the ship it can be queried. The
+resources are the values that appear when you click on the upper-right
+corner of the screen in the KSP window. <img alt="Resources" src="_images/resources.png" /></p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">LIQUIDFUEL</span>
+<span class="n">OXIDIZER</span>
+<span class="n">ELECTRICCHARGE</span>
+<span class="n">MONOPROPELLANT</span>
+<span class="n">INTAKEAIR</span>
+<span class="n">SOLIDFUEL</span>
+</pre></div>
+</div>
+<p>All of the above resources can be queried using either the prefix SHIP
+or STAGE, depending on whether you are trying to query how much is left
+in the curent stage or the entire ship:</p>
+<p>How much liquid fuel is left in the entire ship:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel on the ship.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>How much liquid fuel is left in just the current stage:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">STAGE</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel in this stage.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>How much liquid fuel is left in the target vessel:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">TARGET</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel in the target ship.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Any other resources that you have added using other mods should be
+query-able this way, provided that you spell
+the term exactly as it appears in the resources window.</p>
+</div>
+<div class="section" id="alt-alias">
+<h2>ALT ALIAS<a class="headerlink" href="#alt-alias" title="Permalink to this headline">¶</a></h2>
+<p>The special variable ALT is a unique exception. It behaves like a
+structure with suffixes but it&#8217;s acually a bit &#8220;fake&#8221; in that it&#8217;s not
+really a structure. The following terms are just exceptions that don&#8217;t
+fit anywhere else:</p>
+<p>Variable | Type | Meaning
+==============|========|==========
+ALT:APOAPSIS | number | The altitude of the apoapsis of the current
+ship. Identical to SHIP:APOAPSIS.
+ALT:PERIAPSIS | number | The altitude of the periapsis of the current
+ship. Identical to SHIP:PERIAPSIS.
+ALT:RADAR | number | The altitude of the current ship above the
+terrain, rather than above the sea level. Does not have an alias
+anywhere.</p>
+</div>
+<div class="section" id="eta-alias">
+<h2>ETA ALIAS<a class="headerlink" href="#eta-alias" title="Permalink to this headline">¶</a></h2>
+<p>The special variable ETA is a unique exception. It behaves like a
+structure with suffixes but it&#8217;s acually a bit &#8220;fake&#8221; in that it&#8217;s not
+really a structure. The following terms are just exceptions that don&#8217;t
+fit anywhere else:</p>
+<p>Variable | Type | Meaning
+===============|========|==========
+ETA:APOAPSIS | number | The number of seconds until the current ship
+will reach its apoapsis.
+ETA:PERIAPSIS | number | The number of seconds until the current ship
+will reach its periapsis.
+ETA:TRANSITION | number | The number of seconds until the current ship
+will leave the current sphere of influence and enter the sphere of
+influence of another celestial body.</p>
+</div>
+<div class="section" id="encounter">
+<h2>ENCOUNTER<a class="headerlink" href="#encounter" title="Permalink to this headline">¶</a></h2>
+<p>The body being encountered next by the current vessel. Returns the
+special string &#8220;None&#8221; if there is no expected encounter, or an object of
+type <a class="reference external" href="../structures/body/index.html">Body</a> if an encounter is
+expected.</p>
+</div>
+<div class="section" id="boolean-toggle-fields">
+<h2>BOOLEAN TOGGLE FIELDS:<a class="headerlink" href="#boolean-toggle-fields" title="Permalink to this headline">¶</a></h2>
+<p>These are variables that behave like boolean flags. They can be True or
+False, and can be set or toggled
+using the &#8220;ON&#8221; and &#8220;OFF&#8221; and &#8220;TOGGLE&#8221; commands.
+Many of these are for action group flags.
+<strong>NOTE ABOUT ACTION GROUP FLAGS:</strong> If the boolean flag is for an action
+group, be aware that each time the
+user presses the action group keypress, it <em>toggles</em> the action group,
+so you might need to check for both
+the change in state from false to true AND the change in state from true
+to false to see if the key was hit.</p>
+<p>Variable Name | Can Read | Can Set | Description
+==============|==========|=========|===============
+SAS | yes | yes | Is the SAS stabalizer control enabled right now?
+(Same as &#8220;SAS&#8221; indicator on the navball.)
+RCS | yes | yes | Is the RCS thrust flag enbabled right now? (Same as
+&#8220;RCS&#8221; indicator on the navball.)
+GEAR | yes | yes | Is the GEAR enabled right now? (Note, KSP does
+some strange things with this flag, like needing to hit it twice the
+first time).
+LEGS | yes | yes | Are the landing LEGS extended? (as opposed to GEAR
+which is for the wheels of a plane.)
+CHUTES | yes | yes | Are the parachutes extended? (Treats all
+parachutes as one single unit. Does not activate them individually.)
+LIGHTS | yes | yes | Are the lights on? (like the &#8220;U&#8221; key in manual
+flight.)
+PANELS | yes | yes | Are the solar panels extended? (Treats all solar
+panels as one single unit. Does not activate them individually.)
+BRAKES | yes | yes | Are the brakes on?
+ABORT | yes | yes | Abort Action Group.
+AG1 | yes | yes | Action Group 1.
+AG2 | yes | yes | Action Group 2.
+AG3 | yes | yes | Action Group 3.
+AG4 | yes | yes | Action Group 4.
+AG5 | yes | yes | Action Group 5.
+AG6 | yes | yes | Action Group 6.
+AG7 | yes | yes | Action Group 7.
+AG8 | yes | yes | Action Group 8.
+AG9 | yes | yes | Action Group 9.
+AG10 | yes | yes | Action Group 10.</p>
+</div>
+<div class="section" id="flight-control">
+<h2>Flight Control<a class="headerlink" href="#flight-control" title="Permalink to this headline">¶</a></h2>
+<p>A summary page describing the basics of controlling the flight of a ship
+<a class="reference external" href="../summary_topics/ship_control/index.html">can be found here</a></p>
+<div class="section" id="controls-that-must-be-used-with-lock">
+<h3>Controls that must be used with LOCK<a class="headerlink" href="#controls-that-must-be-used-with-lock" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">THROTTLE</span>            <span class="c1">// Lock to a decimal value between 0 and 1.</span>
+<span class="n">STEERING</span>            <span class="c1">// Lock to a direction, either a Vector or a Direction.</span>
+<span class="n">WHEELTHROTTLE</span>       <span class="c1">// Seperate throttle for wheels</span>
+<span class="n">WHEELSTEERING</span>       <span class="c1">// Seperate steering system for wheels</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="system-variables">
+<h2>System Variables<a class="headerlink" href="#system-variables" title="Permalink to this headline">¶</a></h2>
+<p>Returns values about kOS and hardware</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. i.e. 0.8.6</span>
+<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0</span>
+<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 8</span>
+<span class="n">PRINT</span> <span class="n">SESSIONTIME</span><span class="p">.</span>        <span class="c1">// Returns amount of time, in seconds, from vessel load.</span>
+</pre></div>
+</div>
+<p>NOTE the following important difference:</p>
+<p>SESSIONTIME is the time since the last time this vessel was loaded from
+on-rails into full physics.</p>
+<p>TIME is the time since the entire saved game campaign started, in the
+kerbal universe&#8217;s time. i.e. TIME = 0 means a brand new campaign was
+just started.</p>
+</div>
+<div class="section" id="config">
+<h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
+<p>CONFIG is a special variable name that refers to the configuration
+settings for
+the kOS mod, and can be used to set or get various options.</p>
+<p><a class="reference external" href="../structure/config/index.html">CONFIG has its own page</a> for further
+details.</p>
+</div>
+<div class="section" id="game-state">
+<h2>Game State<a class="headerlink" href="#game-state" title="Permalink to this headline">¶</a></h2>
+<p>Variables that have something to do with the state of the universe.</p>
+<p>Variable | Type | Meaning
+=========|======|=========
+TIME | <a class="reference external" href="../structure/time/index.html">Time</a> | Simulated amount of
+time that passed since the beginning of the game&#8217;s universe epoch. (A
+brand new campaign that just started begins at TIME zero.)
+MAPVIEW | boolean | Both settable and gettable. If you query MAPVIEW,
+it&#8217;s true if on the map screen, and false if on the flight view screen.
+If you SET MAPVIEW, you can cause the game to switch between mapview and
+flight view or visa versa.</p>
+<p>TIME is a useful system variable for calculating the passage of time
+between taking
+physical measurements (i.e. to calulate how fast a phenomenon is
+changing in a loop).
+It returns the KSP <em>simulated</em> time, rather than the actual realtime
+sitting in the
+chair playing the game. If everything is running smoothly on a fast
+computer, one
+second of simulated time will match one second of real time, but if
+anything is
+causing the game to stutter or lag a bit, then the simulated time will
+be a bit
+slower than the real time. For any script program trying to calculate
+physical
+properties of the KSP universe, the time that matters is the simulated
+time, which
+is what TIME returns.</p>
+<p>It&#8217;s important to be aware of the <a class="reference external" href="../summary_topics/CPU_hardware/index.html#FROZEN">frozen update
+nature</a> of the kOS
+computer when reading TIME.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Catalog of Bound Variable Names</a><ul>
+<li><a class="reference internal" href="#named-vessels-and-bodies">NAMED VESSELS AND BODIES</a></li>
+<li><a class="reference internal" href="#alias-shortcuts-for-ship-fields">Alias shortcuts for SHIP fields</a></li>
+<li><a class="reference internal" href="#resource-types">Resource Types</a></li>
+<li><a class="reference internal" href="#alt-alias">ALT ALIAS</a></li>
+<li><a class="reference internal" href="#eta-alias">ETA ALIAS</a></li>
+<li><a class="reference internal" href="#encounter">ENCOUNTER</a></li>
+<li><a class="reference internal" href="#boolean-toggle-fields">BOOLEAN TOGGLE FIELDS:</a></li>
+<li><a class="reference internal" href="#flight-control">Flight Control</a><ul>
+<li><a class="reference internal" href="#controls-that-must-be-used-with-lock">Controls that must be used with LOCK</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#system-variables">System Variables</a></li>
+<li><a class="reference internal" href="#config">Config</a></li>
+<li><a class="reference internal" href="#game-state">Game State</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/bindings.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="index.html">kOS 0.15.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

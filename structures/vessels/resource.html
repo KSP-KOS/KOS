@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Resource &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html" />
+    <link rel="up" title="Vessels and Parts" href="../vessels.html" />
+    <link rel="next" title="Sensor" href="sensor.html" />
+    <link rel="prev" title="PartModule" href="partmodule.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sensor.html" title="Sensor"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="partmodule.html" title="PartModule"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../vessels.html" accesskey="U">Vessels and Parts</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="resource">
+<span id="id1"></span><h1>Resource<a class="headerlink" href="#resource" title="Permalink to this headline">¶</a></h1>
+<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned as the elements of the list in <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST RESOURCES
+IN MyList</em></a>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;THESE ARE ALL THE RESOURCES ON THE SHIP:&quot;</span><span class="p">.</span>
+<span class="n">LIST</span> <span class="n">RESOURCES</span> <span class="n">IN</span> <span class="n">RESLIST</span><span class="p">.</span>
+<span class="n">FOR</span> <span class="n">RES</span> <span class="n">IN</span> <span class="n">RESLIST</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="s">&quot;Resource &quot;</span> <span class="o">+</span> <span class="n">RES</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;    value = &quot;</span> <span class="o">+</span> <span class="n">AMOUNT</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;    which is &quot;</span>
+          <span class="o">+</span> <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">RES</span><span class="o">:</span><span class="n">AMOUNT</span><span class="o">/</span><span class="n">RES</span><span class="o">:</span><span class="n">CAPACITY</span><span class="p">)</span>
+          <span class="o">+</span> <span class="s">&quot;% full.&quot;</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<dl class="structure">
+<dt id="RESOURCE">
+<em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="14%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#RESOURCE:NAME" title="RESOURCE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>Resource name</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></tt></a></td>
+<td>scalar</td>
+<td>Amount of this resource left</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
+<td>scalar</td>
+<td>Maximum amount of this resource</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="RESOURCE:NAME">
+Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#RESOURCE:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p>The name of the resource, i.e. &#8220;LIQUIDFUEL&#8221;, &#8220;ELECTRICCHARGE&#8221;, &#8220;MONOPROP&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="RESOURCE:AMOUNT">
+Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#RESOURCE:AMOUNT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The value of how much resource is left.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="RESOURCE:CAPACITY">
+Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#RESOURCE:CAPACITY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>What AMOUNT would be if the resource was filled to the top.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="partmodule.html"
+                        title="previous chapter">PartModule</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sensor.html"
+                        title="next chapter">Sensor</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/structures/vessels/resource.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sensor.html" title="Sensor"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="partmodule.html" title="PartModule"
+             >previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../vessels.html" >Vessels and Parts</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>General Topics &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="index.html" />
+    <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html" />
+    <link rel="prev" title="PID Loops in kOS" href="tutorials/pidloops.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="general/cpu_vessel.html" title="CPU Vessel (SHIP)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorials/pidloops.html" title="PID Loops in kOS"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">kOS 0.15.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="general-topics">
+<span id="general"></span><h1>General Topics<a class="headerlink" href="#general-topics" title="Permalink to this headline">¶</a></h1>
+<p>These topics discuss the interfacing between <strong>kOS</strong> and <strong>Kerbal Space Program</strong>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html#update-ticks-and-physics-ticks">Update Ticks and Physics Ticks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html#triggers">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html#the-frozen-universe">The Frozen Universe</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/volumes.html#script-files">Script Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/volumes.html#file-storage-behind-the-scenes">File Storage Behind the Scenes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/volumes.html#multiple-volumes-on-one-vessel">Multiple Volumes on One Vessel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/volumes.html#naming-volumes">Naming Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/volumes.html#archive">Archive</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general/compiling.html">Machine Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/compiling.html#compiling-to-a-ksm-file">Compiling to a KSM File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/compiling.html#how-to-use-ksm-files">How to Use KSM Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/compiling.html#default-file-naming-conventions">Default File Naming Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/compiling.html#downsides-to-using-ksm-files">Downsides to Using KSM Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/compiling.html#more-reading-and-fiddling-with-your-bits">More Reading and Fiddling with Your Bits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general/nametag.html">Name Tags</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/nametag.html#giving-a-part-a-name">Giving a Part a Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/nametag.html#cloning-with-symmetry">Cloning with Symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/nametag.html#where-is-it-saved">Where is it saved?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/nametag.html#examples-of-using-the-name">Examples of Using the Name</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html#tutorial">Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html#parts">Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html#partmodules-and-the-right-click-menu">PartModules and the right-click menu:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html#what-a-partmodule-means-to-a-kos-script">What a PartModule means to a kOS script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html#exploring-what-s-there-to-find-field-event-action-names">Exploring what&#8217;s there to find Field/Event/Action Names:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general/comm_range.html">Communication Range</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/comm_range.html#communication-range-deprecated">Communication Range (Deprecated)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorials/pidloops.html"
+                        title="previous chapter">PID Loops in kOS</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="general/cpu_vessel.html"
+                        title="next chapter">CPU Vessel (SHIP)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/general.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="general/cpu_vessel.html" title="CPU Vessel (SHIP)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorials/pidloops.html" title="PID Loops in kOS"
+             >previous</a> |</li>
+        <li><a href="index.html">kOS 0.15.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
