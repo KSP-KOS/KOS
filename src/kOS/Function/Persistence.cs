@@ -8,6 +8,7 @@ using kOS.Serialization;
 using System;
 using KSP.IO;
 using kOS.Safe;
+using kOS.Safe.Compilation;
 
 namespace kOS.Function
 {
@@ -32,6 +33,20 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             ReturnValue = new PathValue(path, shared);
+        }
+    }
+
+    [Function("scriptpath")]
+    public class FunctionScriptPath : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+
+            int currentOpcode = shared.Cpu.GetCallTrace()[0];
+            Opcode opcode = shared.Cpu.GetOpcodeAt(currentOpcode);
+
+            ReturnValue = new PathValue(opcode.SourcePath, shared);
         }
     }
 
