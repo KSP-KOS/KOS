@@ -61,7 +61,7 @@ namespace kOS.Safe.Persistence
                 var fileSystemInfo = Search(path, ksmDefault);
 
                 if (fileSystemInfo == null) {
-                    return null;
+                    throw new KOSPersistenceException("Could not open path: " + path);;
                 } else if (fileSystemInfo is FileInfo)
                 {
                     VolumePath filePath = VolumePath.FromString(fileSystemInfo.FullName.Substring(ArchiveFolder.Length));
@@ -81,12 +81,17 @@ namespace kOS.Safe.Persistence
         {
             string archivePath = GetArchivePath(path);
 
+            if (Directory.Exists(archivePath))
+            {
+                throw new KOSPersistenceException("Already exists: " + path);
+            }
+
             try
             {
                 Directory.CreateDirectory(archivePath);
             } catch (IOException)
             {
-                throw new KOSPersistenceException("Already exists: " + path);
+                throw new KOSPersistenceException("Could not create directory: " + path);
             }
 
             return new ArchiveDirectory(this, path);
@@ -95,6 +100,11 @@ namespace kOS.Safe.Persistence
         public override VolumeFile CreateFile(VolumePath path)
         {
             string archivePath = GetArchivePath(path);
+
+            if (File.Exists(archivePath))
+            {
+                throw new KOSPersistenceException("Already exists: " + path);
+            }
 
             Directory.CreateDirectory(GetArchivePath(path.GetParent()));
 

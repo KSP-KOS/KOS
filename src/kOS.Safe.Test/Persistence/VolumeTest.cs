@@ -75,7 +75,8 @@ namespace kOS.Safe.Test
         }
 
         [Test]
-        public void CanCreateDirectoryOverExistingDirectory()
+        [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenCreatingDirectoryOverExistingDirectory()
         {
             string parent = "/parent1";
             string dir = parent + "/sub1";
@@ -161,6 +162,16 @@ namespace kOS.Safe.Test
             Assert.IsInstanceOf<VolumeFile>(dir.List()["sub3"]);
         }
 
+        [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenCreatingFileOverExistingFile()
+        {
+            string parent = "/parent1";
+            string file = parent + "/file";
+
+            TestVolume.CreateFile(VolumePath.FromString(file));
+            TestVolume.CreateFile(VolumePath.FromString(file));
+        }
 
         [Test]
         [ExpectedException(typeof(KOSPersistenceException))]

@@ -40,7 +40,14 @@ namespace kOS.Safe.Persistence
         {
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
-            return directory.Open(path.Name, ksmDefault);
+            VolumeItem result = directory.Open(path.Name, ksmDefault);
+
+            if (result == null)
+            {
+                throw new KOSPersistenceException("Could not open path: " + path);;
+            }
+
+            return result;
         }
 
         public override VolumeDirectory CreateDirectory(VolumePath path)

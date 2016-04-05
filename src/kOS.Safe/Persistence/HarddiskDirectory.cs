@@ -51,19 +51,7 @@ namespace kOS.Safe.Persistence
 
         public HarddiskDirectory CreateDirectory(string name)
         {
-            try
-            {
-                return CreateDirectory(name, new HarddiskDirectory(Volume as Harddisk, VolumePath.FromString(name, Path)));
-            } catch (KOSPersistenceException e)
-            {
-                if (items[name] is HarddiskDirectory)
-                {
-                    return items[name] as HarddiskDirectory;
-                } else
-                {
-                    throw e;
-                }
-            }
+            return CreateDirectory(name, new HarddiskDirectory(Volume as Harddisk, VolumePath.FromString(name, Path)));
         }
 
         public HarddiskDirectory CreateDirectory(string name, HarddiskDirectory directory)
