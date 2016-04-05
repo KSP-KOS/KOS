@@ -164,7 +164,7 @@ namespace kOS.Safe.Execution
                 object item = stack[index];
                 builder.AppendLine(string.Format("{0:000} {1,4} {2} (type: {3})", index, (index == stackPointer ? "SP->" : ""),
                                                  (item == null ? "<null>" : item.ToString()),
-                                                 (item == null ? "<n/a>" : item.GetType().ToString())));
+                                                 (item == null ? "<n/a>" : KOSNomenclature.GetKOSName(item.GetType()))));
                 VariableScope dict = item as VariableScope;
                 if (dict != null)
                 {
@@ -174,7 +174,8 @@ namespace kOS.Safe.Execution
                     // Dump the local variable context stored here on the stack:
                     foreach (string varName in dict.Variables.Keys)
                     {
-                        builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, varName.GetType().FullName, dict.Variables[varName].Value);
+                        var value = dict.Variables[varName].Value;
+                        builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
                         builder.AppendLine();
                     }
                 }

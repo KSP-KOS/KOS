@@ -20,7 +20,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
 .. note::
 
     .. versionadded:: 0.13
-
         A vessel is now a type of :struct:`Orbitable`. Much of what a Vessel can do can now by done by any orbitable object. The documentation for those abilities has been moved to the :ref:`orbitable page <orbitable>`.
 
 
@@ -197,11 +196,10 @@ All vessels share a structure. To get a variable referring to any vessel you can
     .. note::
 
         .. versionadded:: 0.18
-
-        The old name for this value was SURFACESPEED.  The name was changed
-        because it was confusing before.  "surface speed" implied it's the
-        :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
-        it ignores the vertical component.
+            The old name for this value was SURFACESPEED.  The name was changed
+            because it was confusing before.  "surface speed" implied it's the
+            :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
+            it ignores the vertical component.
 
 
 .. attribute:: Vessel:AIRSPEED

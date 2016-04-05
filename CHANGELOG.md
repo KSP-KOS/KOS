@@ -1,6 +1,25 @@
 kOS Mod Changelog
 =================
 
+# v0.19.3 Last (intended) 1.0.5 update.
+
+(This is the last planned update to work with KSP 1.0.5 unless
+it breaks something big that requires an emergency patch.)
+
+### BREAKING CHANGES
+* Triggers may now go beyond the limits of the IPU (https://github.com/KSP-KOS/KOS/pull/1542) but are no longer guaranteed to execute within a single update frame.  See http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware.html#triggers and http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware.html#cpu-update-loop for more details.
+
+### NEW FEATURES
+* Profiling output via `ProfileResult()` (https://github.com/KSP-KOS/KOS/pull/1534)
+
+### BUG FIXES
+* Removed delay when enabling/disabling auto changeover for multi mode engines (https://github.com/KSP-KOS/KOS/pull/1451)
+* Improve performance of various math functions (https://github.com/KSP-KOS/KOS/issues/1553 https://github.com/KSP-KOS/KOS/pull/1523 https://github.com/KSP-KOS/KOS/pull/1563)
+* `on` logic now evaluates expressions and suffixes, instead of requiring a raw variable (https://github.com/KSP-KOS/KOS/issues/1376 https://github.com/KSP-KOS/KOS/pull/1542)
+* Documentation no longer inserts a space around highlighted search terms (https://github.com/KSP-KOS/KOS/pull/1548)
+* You can now use lock objects with the same identifier from within compiled scripts, like `lock throttle...` (https://github.com/KSP-KOS/KOS/issues/691 https://github.com/KSP-KOS/KOS/issues/1253 https://github.com/KSP-KOS/KOS/issues/1557 https://github.com/KSP-KOS/KOS/pull/1561)
+* The script parsing logic has been updated to improve compile times by roughly 50% (https://github.com/KSP-KOS/KOS/pull/1566)
+
 # v0.19.2
 
 This release is here primarily to fix a problem that made
