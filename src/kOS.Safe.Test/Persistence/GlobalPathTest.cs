@@ -83,11 +83,11 @@ namespace kOS.Safe.Test.Persistence
             Assert.AreEqual(2, newPath.Length);
             Assert.AreEqual("file.txt", newPath.Name);
 
-            path = GlobalPath.FromString("othervolume:/dir/complex.file.name.");
+            path = GlobalPath.FromString("othervolume:/dir/complex.file..name..");
             newPath = path.ChangeExtension("txt");
             Assert.AreEqual("othervolume", newPath.VolumeId);
             Assert.AreEqual(2, newPath.Length);
-            Assert.AreEqual("complex.file.name.txt", newPath.Name);
+            Assert.AreEqual("complex.file..name..txt", newPath.Name);
         }
 
         [Test]

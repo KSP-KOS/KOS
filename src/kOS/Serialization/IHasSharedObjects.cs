@@ -14,4 +14,3 @@ namespace kOS.Serialization
         SharedObjects Shared { set; }
     }
 }
-

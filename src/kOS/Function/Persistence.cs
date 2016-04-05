@@ -8,10 +8,33 @@ using kOS.Serialization;
 using System;
 using KSP.IO;
 using kOS.Safe;
-using kOS.Safe.Exceptions;
 
 namespace kOS.Function
 {
+    [Function("path")]
+    public class FunctionPath : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int remaining = CountRemainingArgs(shared);
+
+            GlobalPath path;
+
+            if (remaining == 0)
+            {
+                path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path, shared.VolumeMgr.CurrentVolume);
+            } else
+            {
+                string pathString = PopValueAssert(shared, true).ToString();
+                path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            }
+
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new PathValue(path, shared);
+        }
+    }
+
     [Function("switch")]
     public class FunctionSwitch : FunctionBase
     {
