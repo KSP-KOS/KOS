@@ -47,6 +47,7 @@ namespace kOS.Safe.Persistence
             AddSuffix("NAME", new Suffix<StringValue>(() => Name));
             AddSuffix("SIZE", new Suffix<ScalarIntValue>(() => new ScalarIntValue(Size)));
             AddSuffix("EXTENSION", new Suffix<StringValue>(() => Extension));
+            AddSuffix("ISFILE", new Suffix<BooleanValue>(() => this is VolumeFile));
         }
 
         public override string ToString()
