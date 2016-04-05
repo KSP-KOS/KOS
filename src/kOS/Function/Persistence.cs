@@ -12,6 +12,62 @@ using kOS.Safe.Compilation;
 
 namespace kOS.Function
 {
+    /*
+     * A couple of syntaxes from kRISC.tpg were deprecated when subdirectories where introduced. It will be possible to
+     * remove these function below as well any metions of delete/rename file/rename volume/copy from kRISC.tpg in the future.
+     */
+    [Function("copy_deprecated")]
+    public class FunctionCopyDeprecated : FunctionWithCopy
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string destinationPathString = PopValueAssert(shared, true).ToString();
+            string sourcePathString = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPY(FROMPATH, TOPATH)`");
+        }
+    }
+
+    [Function("rename_file_deprecated")]
+    public class FunctionRenameFileDeprecated : FunctionWithCopy
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string destinationPathString = PopValueAssert(shared, true).ToString();
+            string sourcePathString = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVE(FROMPATH, TOPATH)`");
+        }
+    }
+
+    [Function("rename_volume_deprecated")]
+    public class FunctionRenameVolumeDeprecated : FunctionWithCopy
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string destinationPathString = PopValueAssert(shared, true).ToString();
+            string sourcePathString = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`");
+        }
+    }
+
+    [Function("delete_deprecated")]
+    public class FunctionDeleteDeprecated : FunctionWithCopy
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string destinationPathString = PopValueAssert(shared, true).ToString();
+            string sourcePathString = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`");
+        }
+    }
+
     [Function("path")]
     public class FunctionPath : FunctionBase
     {

@@ -19,7 +19,7 @@ namespace kOS.Suffixed
             AddSuffix("SEALEVELPRESSURE", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel : 0));
             AddSuffix("HEIGHT", new Suffix<ScalarValue>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
 
-            AddSuffix("SCALE", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereDeprecationException("0.17.2","SCALE","<None>",string.Empty); }));
+            AddSuffix("SCALE", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereDeprecationException("0.17.2", "SCALE", "<None>"); }));
         }
 
         public override string ToString()

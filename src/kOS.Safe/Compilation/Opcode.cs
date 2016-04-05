@@ -652,7 +652,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                throw new KOSDeprecationException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
+                throw new KOSDeprecationException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>");
             }
         }
     }

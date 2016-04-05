@@ -2954,7 +2954,7 @@ namespace kOS.Safe.Compilation.KS
             }
             AddOpcode(new OpcodeCall("load()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
-       }
+        }
 
         private void VisitSwitchStatement(ParseNode node)
         {
@@ -2974,7 +2974,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "from" : "to"));
 
             VisitNode(node.Nodes[3]);
-            AddOpcode(new OpcodeCall("copy()"));
+            AddOpcode(new OpcodeCall("copy_deprecated()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
 
@@ -2984,21 +2984,32 @@ namespace kOS.Safe.Compilation.KS
             int oldNameIndex = 2;
             int newNameIndex = 4;
 
+            bool renameFile = false;
+
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             if (node.Nodes.Count == 5)
             {
                 oldNameIndex--;
                 newNameIndex--;
                 AddOpcode(new OpcodePush("file"));
+                renameFile = true;
             }
             else
             {
-                AddOpcode(new OpcodePush(node.Nodes[1].Token.Type == TokenType.FILE ? "file" : "volume"));
+                renameFile = node.Nodes[1].Token.Type == TokenType.FILE;
+                AddOpcode(new OpcodePush(renameFile ? "file" : "volume"));
             }
 
             VisitNode(node.Nodes[oldNameIndex]);
             VisitNode(node.Nodes[newNameIndex]);
-            AddOpcode(new OpcodeCall("rename()"));
+
+            if (renameFile)
+            {
+                AddOpcode(new OpcodeCall("rename_file_deprecated()"));
+            } else
+            {
+                AddOpcode(new OpcodeCall("rename_volume_deprecated()"));
+            }
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
 
@@ -3013,7 +3024,7 @@ namespace kOS.Safe.Compilation.KS
             else
                 AddOpcode(new OpcodePush(null));
 
-            AddOpcode(new OpcodeCall("delete()"));
+            AddOpcode(new OpcodeCall("delete_deprecated()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
 

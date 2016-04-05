@@ -8,7 +8,7 @@
         protected static string Url { get{return "TODO for v0.15 - Go back and fill in after docs are updated";}}
         
         public KOSPatchesDeprecationException() : 
-            base(Version, OldUsage, NewUsage, Url)
+            base(Version, OldUsage, NewUsage)
         {
         }
 
