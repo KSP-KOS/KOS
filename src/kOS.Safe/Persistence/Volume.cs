@@ -173,7 +173,7 @@ namespace kOS.Safe.Persistence
         {
             AddSuffix("FREESPACE" , new Suffix<ScalarValue>(() => FreeSpace));
             AddSuffix("CAPACITY" , new Suffix<ScalarValue>(() => Capacity));
-            AddSuffix("NAME" , new Suffix<StringValue>(() => Name));
+            AddSuffix("NAME" , new SetSuffix<StringValue>(() => Name, (newName) => Name = newName));
             AddSuffix("RENAMEABLE" , new Suffix<BooleanValue>(() => Renameable));
             AddSuffix("POWERREQUIREMENT" , new Suffix<ScalarValue>(() => RequiredPower()));
 
