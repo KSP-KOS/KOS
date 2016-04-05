@@ -30,12 +30,16 @@ namespace kOS.Safe.Persistence
         {
             Volume = volume;
             Path = path;
+
+            InitializeSuffixes();
         }
 
         public VolumeItem(Volume volume, VolumePath parentPath, String name)
         {
             Volume = volume;
             Path = VolumePath.FromString(name, parentPath);
+
+            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
