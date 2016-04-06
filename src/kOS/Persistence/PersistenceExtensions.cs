@@ -33,10 +33,9 @@ namespace kOS.Persistence
             return toReturn;
         }
 
-        private static HarddiskDirectory ToHarddiskDirectory(this ConfigNode configNode, Harddisk harddisk, VolumePath parentPath)
+        private static HarddiskDirectory ToHarddiskDirectory(this ConfigNode configNode, Harddisk harddisk, VolumePath path)
         {
-            string dirName = configNode.GetValue(DirnameValueString);
-            HarddiskDirectory directory = new HarddiskDirectory(harddisk, VolumePath.FromString(dirName, parentPath));
+            HarddiskDirectory directory = new HarddiskDirectory(harddisk, path);
 
             foreach (ConfigNode fileNode in configNode.GetNodes("file"))
             {
@@ -45,7 +44,9 @@ namespace kOS.Persistence
 
             foreach (ConfigNode dirNode in configNode.GetNodes("directory"))
             {
-                directory.CreateDirectory(dirName, dirNode.ToHarddiskDirectory(harddisk, VolumePath.FromString(dirName, parentPath)));
+                string dirName = dirNode.GetValue(DirnameValueString);
+
+                directory.CreateDirectory(dirName, dirNode.ToHarddiskDirectory(harddisk, VolumePath.FromString(dirName, path)));
             }
 
             return directory;
