@@ -9,6 +9,7 @@ using System;
 using KSP.IO;
 using kOS.Safe;
 using kOS.Safe.Compilation;
+using System.Collections.Generic;
 
 namespace kOS.Function
 {
@@ -198,7 +199,7 @@ namespace kOS.Function
             Volume destinationVolume = volumeManager.GetVolumeFromPath(destinationPath);
 
             VolumeItem source = sourceVolume.Open(sourcePath);
-            VolumeItem destination = destinationVolume.Open(sourcePath);
+            VolumeItem destination = destinationVolume.Open(destinationPath);
 
             if (source == null)
             {
@@ -212,12 +213,13 @@ namespace kOS.Function
                     throw new KOSPersistenceException("Can't copy directory into a file");
                 }
 
-                CopyDirectory(source as VolumeDirectory, destination as VolumeDirectory);
+                CopyDirectory(volumeManager, sourcePath, destinationPath);
             } else
             {
                 if (destination is VolumeFile || destination == null)
                 {
-                    CopyFile(source as VolumeFile, destinationPath);
+                    Volume targetVolume = volumeManager.GetVolumeFromPath(destinationPath);
+                    CopyFile(source as VolumeFile, destinationPath, targetVolume);
                 } else
                 {
                     CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory);
@@ -225,19 +227,54 @@ namespace kOS.Function
             }
         }
 
-        protected void CopyDirectory(VolumeDirectory volumeDirectory, VolumeDirectory volumeDirectory2)
+        protected void CopyDirectory(IVolumeManager volumeManager, GlobalPath sourcePath, GlobalPath destinationPath)
         {
-            throw new NotImplementedException();
+            Volume sourceVolume = volumeManager.GetVolumeFromPath(sourcePath);
+            Volume destinationVolume = volumeManager.GetVolumeFromPath(destinationPath);
+
+            VolumeDirectory source = sourceVolume.Open(sourcePath) as VolumeDirectory;
+
+            VolumeDirectory destination;
+
+            if (destinationVolume.Exists(destinationPath))
+            {
+                destination = destinationVolume.CreateDirectory(destinationPath.Combine(sourcePath.Name));
+
+                if (destination == null)
+                {
+                    throw new KOSException("Path was expected to point to a directory: " + destinationPath);
+                }
+            } else
+            {
+                destination = destinationVolume.CreateDirectory(destinationPath);
+            }
+
+            foreach (KeyValuePair<string, VolumeItem> pair in source.List())
+            {
+                if (pair.Value is VolumeDirectory)
+                {
+                    CopyDirectory(volumeManager, sourcePath.Combine(pair.Key), destinationPath.Combine(pair.Key));
+                } else
+                {
+                    CopyFileToDirectory(pair.Value as VolumeFile, destination);
+                }
+            }
         }
 
-        protected void CopyFile(VolumeFile volumeFile, GlobalPath destinationPath)
+        protected void CopyFile(VolumeFile volumeFile, GlobalPath destinationPath, Volume targetVolume)
         {
-            throw new NotImplementedException();
+            if (targetVolume.Save(destinationPath, volumeFile.ReadAll()) == null)
+            {
+                throw new KOSPersistenceException("Couldn not copy file");
+            }
         }
 
         protected void CopyFileToDirectory(VolumeFile volumeFile, VolumeDirectory volumeDirectory)
         {
-            throw new NotImplementedException();
+            if (volumeDirectory.Volume.Save(volumeDirectory.Path.Combine(volumeFile.Name), volumeFile.ReadAll()) == null)
+            {
+                throw new KOSPersistenceException("Couldn not copy file");
+            }
         }
     }
 

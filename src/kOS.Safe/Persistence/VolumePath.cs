@@ -88,6 +88,11 @@ namespace kOS.Safe.Persistence
             return pathString.StartsWith(PathSeparator.ToString());
         }
 
+        public VolumePath Combine(params string[] segments)
+        {
+            return new VolumePath(Segments.Concat(segments));
+        }
+
         public static VolumePath FromString(string pathString, VolumePath basePath)
         {
             if (IsAbsolute(pathString))
