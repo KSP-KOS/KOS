@@ -8,10 +8,13 @@ namespace kOS.Safe.Test.Persistence
     public class VolumePathTest
     {
         [Test]
-        [ExpectedException(typeof(KOSInvalidPathException))]
         public void CanHandleEmptyPath()
         {
-            VolumePath.FromString("");
+            VolumePath path = VolumePath.FromString("");
+            Assert.AreEqual(0, path.Length);
+            Assert.AreEqual(0, path.Depth);
+            Assert.AreEqual(string.Empty, path.Name);
+            Assert.AreEqual(string.Empty, path.Extension);
         }
 
         [Test]
@@ -20,8 +23,8 @@ namespace kOS.Safe.Test.Persistence
             VolumePath path = VolumePath.FromString("/");
             Assert.AreEqual(0, path.Length);
             Assert.AreEqual(0, path.Depth);
-            Assert.IsNull(path.Name);
-            Assert.IsNull(path.Extension);
+            Assert.AreEqual(string.Empty, path.Name);
+            Assert.AreEqual(string.Empty, path.Extension);
         }
 
         [Test]

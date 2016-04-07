@@ -109,11 +109,6 @@ namespace kOS.Safe.Persistence
 
         public static VolumePath FromString(string pathString)
         {
-            if (!pathString.StartsWith(PathSeparator.ToString()))
-            {
-                throw new KOSInvalidPathException("Absolute path expected", pathString);
-            }
-
             return new VolumePath(GetSegmentsFromString(pathString));
         }
 

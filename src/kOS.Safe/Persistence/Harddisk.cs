@@ -46,11 +46,6 @@ namespace kOS.Safe.Persistence
 
             VolumeItem result = directory.Open(path.Name, ksmDefault);
 
-            if (result == null)
-            {
-                throw new KOSPersistenceException("Could not open path: " + path);;
-            }
-
             return result;
         }
 

@@ -152,7 +152,7 @@ namespace kOS.Safe.Persistence
         private VolumeItem Search(string name, bool ksmDefault = false)
         {
             object item = items.ContainsKey(name) ? items[name] : null;
-            if (item is byte[])
+            if (item is FileContent)
             {
                 return new HarddiskFile(this, name);
             } else if (item is HarddiskDirectory)

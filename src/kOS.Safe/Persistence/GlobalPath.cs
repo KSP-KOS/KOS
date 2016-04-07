@@ -156,11 +156,6 @@ namespace kOS.Safe.Persistence
                 throw new KOSInvalidPathException("GlobalPath should contain a volumeId", pathString);
             }
 
-            if (!pathString.StartsWith(PathSeparator.ToString()))
-            {
-                pathString = PathSeparator + pathString;
-            }
-
             VolumePath path = VolumePath.FromString(pathString);
             return new GlobalPath(volumeName, path);
         }

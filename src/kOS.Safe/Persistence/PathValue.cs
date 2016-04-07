@@ -59,7 +59,12 @@ namespace kOS.Safe
             AddSuffix("HASEXTENSION", new Suffix<BooleanValue>(() => string.IsNullOrEmpty(Path.Extension)));
             AddSuffix("EXTENSION", new Suffix<StringValue>(() => Path.Extension));
             AddSuffix("CHANGEEXTENSION", new OneArgsSuffix<PathValue, StringValue>((e) => FromPath(Path.ChangeExtension(e))));
-            AddSuffix("COMBINE", new VarArgsSuffix<PathValue, StringValue>((segments) => FromPath(Path.Combine(segments.Cast<string>().ToArray()))));
+            AddSuffix("COMBINE", new VarArgsSuffix<PathValue, StringValue>(Combine));
+        }
+
+        public PathValue Combine(params StringValue[] segments)
+        {
+            return FromPath(Path.Combine(segments.Cast<string>().ToArray()));
         }
 
         public override Dump Dump()

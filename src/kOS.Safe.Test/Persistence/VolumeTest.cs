@@ -223,6 +223,12 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        public void CanHandleOpeningNonExistingFiles()
+        {
+            Assert.IsNull(TestVolume.Open(VolumePath.FromString("/idonotexist")));
+        }
+
+        [Test]
         public void CanDeleteFiles()
         {
             string parent1 = "/parent1";
@@ -231,7 +237,7 @@ namespace kOS.Safe.Test
             TestVolume.CreateFile(VolumePath.FromString(file1));
             TestVolume.CreateFile(VolumePath.FromString(file2));
 
-            TestVolume.Delete(VolumePath.FromString(file1));
+            Assert.IsTrue(TestVolume.Delete(VolumePath.FromString(file1)));
 
             VolumeDirectory dir = TestVolume.Open(VolumePath.FromString(parent1)) as VolumeDirectory;
             Assert.AreEqual(1, dir.List().Count);

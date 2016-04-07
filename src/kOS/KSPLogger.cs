@@ -159,7 +159,7 @@ namespace kOS
 
             if (path == Interpreter.InterpreterHistory)
                 return string.Format("interpreter line {0}", line);
-            return string.Format("{0}, line {2}", path, line);
+            return string.Format("{0}, line {1}", path, line);
         }
         
         private string GetSourceLine(GlobalPath path, int line)

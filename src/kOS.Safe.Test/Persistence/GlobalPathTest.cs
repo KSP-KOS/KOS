@@ -97,5 +97,20 @@ namespace kOS.Safe.Test.Persistence
             GlobalPath path = GlobalPath.FromString("othervolume:");
             path.ChangeExtension("txt");
         }
+
+        [Test]
+        public void CanCombine()
+        {
+            GlobalPath path = GlobalPath.FromString("othervolume:123");
+            GlobalPath newPath = path.Combine("456", "789");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(3, newPath.Length);
+            Assert.AreEqual("789", newPath.Name);
+
+            newPath = path.Combine("..", "abc");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(1, newPath.Length);
+            Assert.AreEqual("abc", newPath.Name);
+        }
     }
 }

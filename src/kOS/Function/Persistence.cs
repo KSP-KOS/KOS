@@ -22,8 +22,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true).ToString();
-            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPY(FROMPATH, TOPATH)`");
@@ -35,8 +36,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true).ToString();
-            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
+
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVE(FROMPATH, TOPATH)`");
@@ -48,24 +51,12 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true).ToString();
-            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`");
-        }
-    }
-
-    [Function("delete_deprecated")]
-    public class FunctionDeleteDeprecated : FunctionWithCopy
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            PopValueAssert(shared, true).ToString();
-            PopValueAssert(shared, true).ToString();
-            AssertArgBottomAndConsume(shared);
-
-            throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`");
         }
     }
 
@@ -334,6 +325,22 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            /*
+             * Parser will treat 'DELETE(filename)' as the old 'DELETE filename [FROM volume]' syntax. So we're unable
+             * to differentiate between new and old syntax. That's why currently both 'DELETE(filename)'
+             * and 'DELETE filename' will work. We only throw the depracation warning when 'FROM' is present, in this
+             * case we're sure that the user wanted to use the old syntax.
+             */
+            int remaining = CountRemainingArgs(shared);
+
+            if (remaining == 2) {
+                PopValueAssert(shared, true);
+                PopValueAssert(shared, true);
+                AssertArgBottomAndConsume(shared);
+
+                throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`");
+            }
+
             string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
@@ -384,7 +391,7 @@ namespace kOS.Function
             GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
-            VolumeFile volumeFile = volume.Open(pathString) as VolumeFile;
+            VolumeFile volumeFile = volume.Open(path) as VolumeFile;
 
             if (volumeFile == null)
             {

@@ -24,7 +24,7 @@ namespace kOS.Safe.Persistence
 
         public Archive(string archiveFolder)
         {
-            ArchiveFolder = archiveFolder;
+            ArchiveFolder = Path.GetFullPath(archiveFolder).TrimEnd(VolumePath.PathSeparator);
             CreateArchiveDirectory();
             Renameable = false;
             InitializeName(ArchiveName);
@@ -61,7 +61,7 @@ namespace kOS.Safe.Persistence
                 var fileSystemInfo = Search(path, ksmDefault);
 
                 if (fileSystemInfo == null) {
-                    throw new KOSPersistenceException("Could not open path: " + path);;
+                    return null;
                 } else if (fileSystemInfo is FileInfo)
                 {
                     VolumePath filePath = VolumePath.FromString(fileSystemInfo.FullName.Substring(ArchiveFolder.Length));

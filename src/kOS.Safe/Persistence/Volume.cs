@@ -67,7 +67,7 @@ namespace kOS.Safe.Persistence
         /// </summary>
         /// <param name="name">filename to get.  if it has no filename extension, one will be guessed at, ".ks" usually.</param>
         /// <param name="ksmDefault">in the scenario where there is no filename extension, do we prefer the .ksm over the .ks?  The default is to prefer .ks</param>
-        /// <returns>the file</returns>
+        /// <returns>VolumeFile or VolumeDirectory. Null if not found.</returns>
         public abstract VolumeItem Open(VolumePath path, bool ksmDefault = false);
 
         public VolumeDirectory CreateDirectory(string pathString)
@@ -166,7 +166,7 @@ namespace kOS.Safe.Persistence
 
         public override string ToString()
         {
-            return "Volume( " + Name + ", " + Capacity + ")";
+            return "Volume(" + Name + ", " + Capacity + ")";
         }
 
         private void InitializeVolumeSuffixes()
