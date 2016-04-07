@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeItem")]
     public abstract class VolumeItem : Structure
     {
         public Volume Volume { get; set; }

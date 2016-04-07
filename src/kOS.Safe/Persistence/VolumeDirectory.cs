@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeDirectory")]
     public abstract class VolumeDirectory : VolumeItem
     {
         public VolumeDirectory(Volume volume, VolumePath path) : base(volume, path)

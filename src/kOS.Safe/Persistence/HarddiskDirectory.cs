@@ -8,6 +8,7 @@ using System.Collections;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class HarddiskDirectory : VolumeDirectory, IEnumerable<VolumeItem>
     {
         private Dictionary<string, Structure> items;

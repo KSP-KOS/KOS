@@ -7,6 +7,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Persistence
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VolumeDirectory", KOSToCSharp = false)]
     public class ArchiveDirectory : VolumeDirectory
     {
         private Archive archive;
