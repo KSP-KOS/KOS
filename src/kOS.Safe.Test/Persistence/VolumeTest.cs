@@ -220,6 +220,20 @@ namespace kOS.Safe.Test
 
             Assert.AreEqual(contentLength, volumeFile.Size);
             Assert.AreEqual(content, volumeFile.ReadAll().String);
+
+            // we should be able to save the same file again
+            Assert.IsTrue(TestVolume.Save(volumeFile) != null);
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenSavingFileOverDirectory()
+        {
+            string parent1 = "/parent1";
+            string file1 = parent1 + "/sub1";
+
+            TestVolume.CreateDirectory(VolumePath.FromString(file1));
+            TestVolume.Save(VolumePath.FromString(file1), new FileContent());
         }
 
         [Test]

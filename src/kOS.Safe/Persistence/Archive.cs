@@ -145,9 +145,16 @@ namespace kOS.Safe.Persistence
         {
             Directory.CreateDirectory(ArchiveFolder);
 
+            string archivePath = GetArchivePath(path);
+            FileAttributes attr = File.GetAttributes(archivePath);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                throw new KOSPersistenceException("Can't save file over a directory: " + path);
+            }
+
             byte[] fileBody = ConvertToWindowsNewlines(content.Bytes);
 
-            using (var outfile = new BinaryWriter(File.Open(GetArchivePath(path), FileMode.Create)))
+            using (var outfile = new BinaryWriter(File.Open(archivePath, FileMode.Create)))
             {
                 outfile.Write(fileBody);
             }

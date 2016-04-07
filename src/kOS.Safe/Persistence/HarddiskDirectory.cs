@@ -40,12 +40,11 @@ namespace kOS.Safe.Persistence
 
         public HarddiskFile CreateFile(string name, FileContent fileContent)
         {
-            try {
-                items.Add(name, new FileContent(fileContent.Bytes.Clone() as byte[]));
-            } catch (ArgumentException)
-            {
+            if (items.ContainsKey(name)){
                 throw new KOSPersistenceException("Already exists: " + name);
             }
+
+            items[name] = new FileContent(fileContent.Bytes.Clone() as byte[]);
 
             return new HarddiskFile(this, name);
         }
@@ -66,6 +65,22 @@ namespace kOS.Safe.Persistence
             }
 
             return directory;
+        }
+
+        public VolumeFile Save(string name, FileContent fileContent)
+        {
+            if (!items.ContainsKey(name))
+            {
+                return CreateFile(name, fileContent);
+            } else if (items[name] is VolumeDirectory)
+            {
+                throw new KOSPersistenceException("Can't save file over a directory: " + name);
+            } else
+            {
+                items[name] = new FileContent(fileContent.Bytes.Clone() as byte[]);
+
+                return new HarddiskFile(this, name);
+            }
         }
 
         public bool Exists(string name, bool ksmDefault)

@@ -79,15 +79,19 @@ namespace kOS.Safe.Persistence
 
         public override VolumeFile Save(VolumePath path, FileContent content)
         {
-            if (!IsRoomFor(path, content))
+            try {
+                if (!IsRoomFor(path, content))
+                {
+                    return null;
+                }
+            } catch (KOSPersistenceException)
             {
-                return null;
+                throw new KOSPersistenceException("Can't save file over a directory: " + path);
             }
 
             HarddiskDirectory directory = ParentDirectoryForPath(path);
-            directory.CreateFile(path.Name, content);
 
-            return Open(path) as VolumeFile;
+            return directory.Save(path.Name, content) as VolumeFile;
         }
     }
 }

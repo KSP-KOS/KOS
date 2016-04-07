@@ -243,7 +243,7 @@ namespace kOS.Screen
 
         protected static void DelegateLoadContents(KOSTextEditPopup me)
         {
-            VolumeItem item = me.loadingVolume.Open(me.filePath);
+            VolumeItem item = me.loadingVolume.Open(me.loadingPath);
             if (item == null)
             {
                 me.term.Print("[New File]");
@@ -519,9 +519,7 @@ namespace kOS.Screen
 
         protected string BuildTitle()
         {
-            if (volume.Name.Length > 0)
-                return filePath + " on " + volume.Name;
-            return filePath + " on local volume";  // Don't know which number because no link to VolumeManager from this class.
+            return filePath.ToString();
         }
     }
 }
