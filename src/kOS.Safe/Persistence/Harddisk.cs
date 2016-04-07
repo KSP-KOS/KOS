@@ -25,15 +25,21 @@ namespace kOS.Safe.Persistence
             RootHarddiskDirectory = new HarddiskDirectory(this, VolumePath.EMPTY);
         }
 
+        public override void Clear()
+        {
+            RootHarddiskDirectory.Clear();
+        }
+
         private HarddiskDirectory ParentDirectoryForPath(VolumePath path, bool create = false)
         {
             HarddiskDirectory directory = RootHarddiskDirectory;
-            if (path.Depth > 1)
+            if (path.Depth > 0)
             {
-                directory = RootHarddiskDirectory.GetSubdirectory(path.GetParent(), create);
+                return RootHarddiskDirectory.GetSubdirectory(path.GetParent(), create);
+            } else
+            {
+                throw new Exception("This directory does not have a parent");
             }
-
-            return directory;
         }
 
         public override VolumeItem Open(VolumePath path, bool ksmDefault = false)
@@ -44,13 +50,16 @@ namespace kOS.Safe.Persistence
 
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
-            VolumeItem result = directory.Open(path.Name, ksmDefault);
-
-            return result;
+            return directory == null ? null : directory.Open(path.Name, ksmDefault);
         }
 
         public override VolumeDirectory CreateDirectory(VolumePath path)
         {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't create a directory over root directory");
+            }
+
             HarddiskDirectory directory = ParentDirectoryForPath(path, true);
 
             return directory.CreateDirectory(path.Name);
@@ -58,6 +67,11 @@ namespace kOS.Safe.Persistence
 
         public override VolumeFile CreateFile(VolumePath path)
         {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't create a file over root directory");
+            }
+
             HarddiskDirectory directory = ParentDirectoryForPath(path, true);
 
             return directory.CreateFile(path.Name);
@@ -77,7 +91,7 @@ namespace kOS.Safe.Persistence
             return directory.Delete(path.Name, ksmDefault);
         }
 
-        public override VolumeFile Save(VolumePath path, FileContent content)
+        public override VolumeFile SaveFile(VolumePath path, FileContent content)
         {
             try {
                 if (!IsRoomFor(path, content))
@@ -89,7 +103,7 @@ namespace kOS.Safe.Persistence
                 throw new KOSPersistenceException("Can't save file over a directory: " + path);
             }
 
-            HarddiskDirectory directory = ParentDirectoryForPath(path);
+            HarddiskDirectory directory = ParentDirectoryForPath(path, true);
 
             return directory.Save(path.Name, content) as VolumeFile;
         }

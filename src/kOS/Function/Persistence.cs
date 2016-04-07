@@ -18,7 +18,7 @@ namespace kOS.Function
      * remove these function below as well any metions of delete/rename file/rename volume/copy from kRISC.tpg in the future.
      */
     [Function("copy_deprecated")]
-    public class FunctionCopyDeprecated : FunctionWithCopy
+    public class FunctionCopyDeprecated : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -32,7 +32,7 @@ namespace kOS.Function
     }
 
     [Function("rename_file_deprecated")]
-    public class FunctionRenameFileDeprecated : FunctionWithCopy
+    public class FunctionRenameFileDeprecated : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -47,7 +47,7 @@ namespace kOS.Function
     }
 
     [Function("rename_volume_deprecated")]
-    public class FunctionRenameVolumeDeprecated : FunctionWithCopy
+    public class FunctionRenameVolumeDeprecated : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -194,95 +194,8 @@ namespace kOS.Function
         }
     }
 
-    public abstract class FunctionWithCopy : FunctionBase
-    {
-        protected void Copy(IVolumeManager volumeManager, GlobalPath sourcePath, GlobalPath destinationPath)
-        {
-            Volume sourceVolume = volumeManager.GetVolumeFromPath(sourcePath);
-            Volume destinationVolume = volumeManager.GetVolumeFromPath(destinationPath);
-
-            VolumeItem source = sourceVolume.Open(sourcePath);
-            VolumeItem destination = destinationVolume.Open(destinationPath);
-
-            if (source == null)
-            {
-                throw new KOSPersistenceException("Path does not exist: " + sourcePath);
-            }
-
-            if (source is VolumeDirectory)
-            {
-                if (destination is VolumeFile)
-                {
-                    throw new KOSPersistenceException("Can't copy directory into a file");
-                }
-
-                CopyDirectory(volumeManager, sourcePath, destinationPath);
-            } else
-            {
-                if (destination is VolumeFile || destination == null)
-                {
-                    Volume targetVolume = volumeManager.GetVolumeFromPath(destinationPath);
-                    CopyFile(source as VolumeFile, destinationPath, targetVolume);
-                } else
-                {
-                    CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory);
-                }
-            }
-        }
-
-        protected void CopyDirectory(IVolumeManager volumeManager, GlobalPath sourcePath, GlobalPath destinationPath)
-        {
-            Volume sourceVolume = volumeManager.GetVolumeFromPath(sourcePath);
-            Volume destinationVolume = volumeManager.GetVolumeFromPath(destinationPath);
-
-            VolumeDirectory source = sourceVolume.Open(sourcePath) as VolumeDirectory;
-
-            VolumeDirectory destination;
-
-            if (destinationVolume.Exists(destinationPath))
-            {
-                destination = destinationVolume.CreateDirectory(destinationPath.Combine(sourcePath.Name));
-
-                if (destination == null)
-                {
-                    throw new KOSException("Path was expected to point to a directory: " + destinationPath);
-                }
-            } else
-            {
-                destination = destinationVolume.CreateDirectory(destinationPath);
-            }
-
-            foreach (KeyValuePair<string, VolumeItem> pair in source.List())
-            {
-                if (pair.Value is VolumeDirectory)
-                {
-                    CopyDirectory(volumeManager, sourcePath.Combine(pair.Key), destinationPath.Combine(pair.Key));
-                } else
-                {
-                    CopyFileToDirectory(pair.Value as VolumeFile, destination);
-                }
-            }
-        }
-
-        protected void CopyFile(VolumeFile volumeFile, GlobalPath destinationPath, Volume targetVolume)
-        {
-            if (targetVolume.Save(destinationPath, volumeFile.ReadAll()) == null)
-            {
-                throw new KOSPersistenceException("Couldn not copy file");
-            }
-        }
-
-        protected void CopyFileToDirectory(VolumeFile volumeFile, VolumeDirectory volumeDirectory)
-        {
-            if (volumeDirectory.Volume.Save(volumeDirectory.Path.Combine(volumeFile.Name), volumeFile.ReadAll()) == null)
-            {
-                throw new KOSPersistenceException("Couldn not copy file");
-            }
-        }
-    }
-
     [Function("copy")]
-    public class FunctionCopy : FunctionWithCopy
+    public class FunctionCopy : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -295,12 +208,12 @@ namespace kOS.Function
             GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
             GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
 
-            Copy(shared.VolumeMgr, sourcePath, destinationPath);
+            shared.VolumeMgr.Copy(sourcePath, destinationPath);
         }
     }
 
     [Function("move")]
-    public class FunctionMove : FunctionWithCopy
+    public class FunctionMove : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -313,10 +226,10 @@ namespace kOS.Function
             GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
             GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
 
-            Copy(shared.VolumeMgr, sourcePath, destinationPath);
+            //Copy(shared.VolumeMgr, sourcePath, destinationPath);
 
-            Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(sourcePath);
-            sourceVolume.Delete(sourcePath);
+            //Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(sourcePath);
+            //sourceVolume.Delete(sourcePath);
         }
     }
 
@@ -376,7 +289,7 @@ namespace kOS.Function
             GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
-            ReturnValue = volume.Save(path, fileContent);
+            ReturnValue = volume.SaveFile(path, fileContent);
         }
     }
 

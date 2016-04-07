@@ -12,7 +12,7 @@ namespace kOS.Screen
 {
     public class Interpreter : TextEditor, IInterpreter
     {
-        public static GlobalPath InterpreterHistory = GlobalPath.FromString("terminal:");
+        public static GlobalPath InterpreterHistory = new InterpreterPath();
 
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
@@ -177,6 +177,19 @@ namespace kOS.Screen
             SaveCursorPos();
             base.PrintAt(textToPrint, row, column);
             RestoreCursorPos();
+        }
+
+        private class InterpreterPath : GlobalPath
+        {
+            public InterpreterPath() : base("Interpreter")
+            {
+
+            }
+
+            public override string ToString()
+            {
+                return "[Interpreter]";
+            }
         }
     }
 }

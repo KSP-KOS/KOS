@@ -22,7 +22,7 @@ namespace kOS.Safe.Persistence
 
         public object VolumeId { get; private set; }
 
-        private GlobalPath(object volumeId)
+        protected GlobalPath(object volumeId)
         {
             VolumeId = ValidateVolumeId(volumeId);
         }

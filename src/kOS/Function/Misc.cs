@@ -298,7 +298,7 @@ namespace kOS.Function
                 if (justCompiling)
                 {
                     List<CodePart> compileParts = shared.ScriptHandler.Compile(path, 1, fileContent.String, String.Empty, options);
-                    VolumeFile written = volume.Save(outPath, new FileContent(compileParts));
+                    VolumeFile written = volume.SaveFile(outPath, new FileContent(compileParts));
                     if (written == null)
                     {
                         throw new KOSFileException("Can't save compiled file: not enough space or access forbidden");

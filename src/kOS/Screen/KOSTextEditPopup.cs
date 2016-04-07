@@ -145,7 +145,7 @@ namespace kOS.Screen
 
         public void SaveContents()
         {
-            if (volume.Save(filePath, new FileContent(contents)) == null)
+            if (volume.SaveFile(filePath, new FileContent(contents)) == null)
             {
                 // For some reason the normal trap that prints exceptions on
                 // the terminal doesn't work here in this part of the code,

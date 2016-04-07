@@ -54,6 +54,14 @@ namespace kOS.Safe.Persistence
             return mergedPath;
         }
 
+        public override void Clear()
+        {
+            if (Directory.Exists(ArchiveFolder))
+            {
+                Directory.Delete(ArchiveFolder, true);
+            }
+        }
+
         public override VolumeItem Open(VolumePath path, bool ksmDefault = false)
         {
             try
@@ -99,6 +107,11 @@ namespace kOS.Safe.Persistence
 
         public override VolumeFile CreateFile(VolumePath path)
         {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't create a file over root directory");
+            }
+
             string archivePath = GetArchivePath(path);
 
             if (File.Exists(archivePath))
@@ -106,7 +119,12 @@ namespace kOS.Safe.Persistence
                 throw new KOSPersistenceException("Already exists: " + path);
             }
 
-            Directory.CreateDirectory(GetArchivePath(path.GetParent()));
+            try {
+                Directory.CreateDirectory(GetArchivePath(path.GetParent()));
+            } catch (IOException)
+            {
+                throw new KOSPersistenceException("Parent directory for path does not exist: " + path.ToString());
+            }
 
             try {
                 File.Create(archivePath).Dispose();
@@ -141,15 +159,21 @@ namespace kOS.Safe.Persistence
             return true;
         }
 
-        public override VolumeFile Save(VolumePath path, FileContent content)
+        public override VolumeFile SaveFile(VolumePath path, FileContent content)
         {
             Directory.CreateDirectory(ArchiveFolder);
 
             string archivePath = GetArchivePath(path);
-            FileAttributes attr = File.GetAttributes(archivePath);
-            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            if (Directory.Exists(archivePath))
             {
                 throw new KOSPersistenceException("Can't save file over a directory: " + path);
+            }
+
+            string parentPath = Directory.GetParent(archivePath).FullName;
+
+            if (!Directory.Exists(parentPath))
+            {
+                Directory.CreateDirectory(parentPath);
             }
 
             byte[] fileBody = ConvertToWindowsNewlines(content.Bytes);

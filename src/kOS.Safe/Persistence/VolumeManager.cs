@@ -221,5 +221,101 @@ namespace kOS.Safe.Persistence
         {
             CurrentRequiredPower = (float)Math.Round(CurrentVolume.RequiredPower(), 4);
         }
+
+        public bool Copy(GlobalPath sourcePath, GlobalPath destinationPath)
+        {
+            Volume sourceVolume = GetVolumeFromPath(sourcePath);
+            Volume destinationVolume = GetVolumeFromPath(destinationPath);
+
+            VolumeItem source = sourceVolume.Open(sourcePath);
+            VolumeItem destination = destinationVolume.Open(destinationPath);
+
+            if (source == null)
+            {
+                throw new KOSPersistenceException("Path does not exist: " + sourcePath);
+            }
+
+            if (source is VolumeDirectory)
+            {
+                if (destination is VolumeFile)
+                {
+                    throw new KOSPersistenceException("Can't copy directory into a file");
+                }
+
+                return CopyDirectory(sourcePath, destinationPath);
+            } else
+            {
+                if (destination is VolumeFile || destination == null)
+                {
+                    Volume targetVolume = GetVolumeFromPath(destinationPath);
+                    return CopyFile(source as VolumeFile, destinationPath, targetVolume);
+                } else
+                {
+                    return CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory);
+                }
+            }
+        }
+
+        protected bool CopyDirectory(GlobalPath sourcePath, GlobalPath destinationPath)
+        {
+            if (sourcePath.IsParent(destinationPath))
+            {
+                throw new KOSPersistenceException("Can't copy directory to a subdirectory of itself: " + destinationPath);
+            }
+
+            Volume sourceVolume = GetVolumeFromPath(sourcePath);
+            Volume destinationVolume = GetVolumeFromPath(destinationPath);
+
+            VolumeDirectory source = sourceVolume.Open(sourcePath) as VolumeDirectory;
+
+            VolumeDirectory destination;
+
+            if (destinationVolume.Exists(destinationPath))
+            {
+                destinationPath = destinationPath.Combine(sourcePath.Name);
+                destination = destinationVolume.CreateDirectory(destinationPath);
+
+                if (destination == null)
+                {
+                    throw new KOSException("Path was expected to point to a directory: " + destinationPath);
+                }
+            } else
+            {
+                destination = destinationVolume.CreateDirectory(destinationPath);
+            }
+
+            var l = source.List();
+
+            foreach (KeyValuePair<string, VolumeItem> pair in l)
+            {
+                if (pair.Value is VolumeDirectory)
+                {
+                    CopyDirectory(sourcePath.Combine(pair.Key), destinationPath.Combine(pair.Key));
+                } else
+                {
+                    if (!CopyFileToDirectory(pair.Value as VolumeFile, destination))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        protected bool CopyFile(VolumeFile volumeFile, GlobalPath destinationPath, Volume targetVolume)
+        {
+            return targetVolume.SaveFile(destinationPath, volumeFile.ReadAll()) != null;
+        }
+
+        protected bool CopyFileToDirectory(VolumeFile volumeFile, VolumeDirectory volumeDirectory)
+        {
+            return volumeDirectory.Volume.SaveFile(volumeDirectory.Path.Combine(volumeFile.Name), volumeFile.ReadAll()) != null;
+        }
+
+        public void Move(GlobalPath sourcePath, GlobalPath destinationPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

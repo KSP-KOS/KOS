@@ -18,6 +18,11 @@ namespace kOS.Safe.Persistence
             items = new Dictionary<string, Structure>(StringComparer.InvariantCultureIgnoreCase);
         }
 
+        public void Clear()
+        {
+            items.Clear();
+        }
+
         public VolumeItem Open(string name, bool ksmDefault = false)
         {
             return Search(name, ksmDefault);
@@ -132,10 +137,10 @@ namespace kOS.Safe.Persistence
 
             if (directory == null)
             {
-                throw new KOSException("Subdirectory does not exist: " + path.ToString());
+                throw new KOSPersistenceException("Directory does not exist: " + path.ToString());
             }
 
-            return directory;
+            return directory.GetSubdirectory(path, create);
         }
 
         public override IDictionary<string, VolumeItem> List()

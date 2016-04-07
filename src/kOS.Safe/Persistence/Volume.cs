@@ -57,6 +57,8 @@ namespace kOS.Safe.Persistence
             this.name = name;
         }
 
+        public abstract void Clear();
+
         public VolumeItem Open(string pathString, bool ksmDefault = false)
         {
             return Open(VolumePath.FromString(pathString), ksmDefault);
@@ -123,12 +125,12 @@ namespace kOS.Safe.Persistence
         public abstract bool Delete(VolumePath path, bool ksmDefault = false);
         //public abstract void Move(VolumePath oldPath, VolumePath newPath);
 
-        public VolumeFile Save(VolumeFile volumeFile)
+        public VolumeFile SaveFile(VolumeFile volumeFile)
         {
-            return Save(volumeFile.Path, volumeFile.ReadAll());
+            return SaveFile(volumeFile.Path, volumeFile.ReadAll());
         }
 
-        public abstract VolumeFile Save(VolumePath path, FileContent content);
+        public abstract VolumeFile SaveFile(VolumePath path, FileContent content);
 
         public bool IsRoomFor(VolumePath path, FileContent fileContent)
         {

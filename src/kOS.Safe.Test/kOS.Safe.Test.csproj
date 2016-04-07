@@ -78,6 +78,11 @@
     <Compile Include="Persistence\ArchiveTest.cs" />
     <Compile Include="Persistence\HarddiskTest.cs" />
     <Compile Include="Persistence\VolumeTest.cs" />
+    <Compile Include="Persistence\CopyAndMoveTest.cs" />
+    <Compile Include="Persistence\HarddiskToArchiveCopyAndMoveTest.cs" />
+    <Compile Include="Persistence\HarddiskToHarddiskCopyAndMoveTest.cs" />
+    <Compile Include="Persistence\ArchiveAndHarddiskCopyAndMoveTest.cs" />
+    <Compile Include="Persistence\ArchiveToHarddiskCopyAndMoveTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

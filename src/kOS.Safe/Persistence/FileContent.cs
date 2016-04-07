@@ -126,6 +126,16 @@ namespace kOS.Safe.Persistence
             return GetEnumerator();
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is FileContent && Bytes.Equals((obj as FileContent).Bytes);
+        }
+
+        public override int GetHashCode()
+        {
+            return Bytes.GetHashCode();
+        }
+
         public override string ToString()
         {
             return "File content";

@@ -87,6 +87,13 @@ namespace kOS.Safe.Test
 
         [Test]
         [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenCreatingDirectoryOverRootDirectory()
+        {
+            TestVolume.CreateDirectory(VolumePath.FromString("/"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
         public void CanFailWhenCreatingDirectoryOverFile()
         {
             string parent1 = "/parent1";
@@ -139,7 +146,7 @@ namespace kOS.Safe.Test
         public void CanCreateFiles()
         {
             string parent1 = "/parent1", parent2 = "/parent2";
-            string file1 = parent1 + "/sub1", file2 = parent1 + "/sub2", file3 = parent2 + "/sub3";
+            string file1 = parent1 + "/sub1/file", file2 = parent1 + "/sub2", file3 = parent2 + "/sub3";
 
             TestVolume.CreateFile(VolumePath.FromString(file1));
             TestVolume.CreateFile(VolumePath.FromString(file2));
@@ -151,10 +158,15 @@ namespace kOS.Safe.Test
 
             VolumeDirectory dir = TestVolume.Open(VolumePath.FromString(parent1)) as VolumeDirectory;
             Assert.AreEqual(2, dir.List().Count);
-            Assert.AreEqual(file1, dir.List()["sub1"].Path.ToString());
-            Assert.IsInstanceOf<VolumeFile>(dir.List()["sub1"]);
+            Assert.AreEqual("/parent1/sub1", dir.List()["sub1"].Path.ToString());
+            Assert.IsInstanceOf<VolumeDirectory>(dir.List()["sub1"]);
             Assert.AreEqual(file2, dir.List()["sub2"].Path.ToString());
             Assert.IsInstanceOf<VolumeFile>(dir.List()["sub2"]);
+
+            dir = TestVolume.Open(VolumePath.FromString("/parent1/sub1")) as VolumeDirectory;
+            Assert.AreEqual(1, dir.List().Count);
+            Assert.AreEqual("/parent1/sub1/file", dir.List()["file"].Path.ToString());
+            Assert.IsInstanceOf<VolumeFile>(dir.List()["file"]);
 
             dir = TestVolume.Open(VolumePath.FromString(parent2)) as VolumeDirectory;
             Assert.AreEqual(1, dir.List().Count);
@@ -175,6 +187,17 @@ namespace kOS.Safe.Test
 
         [Test]
         [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenCreatingFileInASubdirectoryThatIsAFile()
+        {
+            string parent = "/parent1";
+            string file = parent + "/file";
+
+            TestVolume.CreateFile(VolumePath.FromString(parent));
+            TestVolume.CreateFile(VolumePath.FromString(file));
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
         public void CanFailWhenCreatingFileOverDirectory()
         {
             string parent1 = "/parent1";
@@ -182,6 +205,13 @@ namespace kOS.Safe.Test
 
             TestVolume.CreateDirectory(VolumePath.FromString(file1));
             TestVolume.CreateFile(VolumePath.FromString(file1));
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenCreatingFileOverRootDirectory()
+        {
+            TestVolume.CreateFile(VolumePath.FromString("/"));
         }
 
         [Test]
@@ -222,7 +252,7 @@ namespace kOS.Safe.Test
             Assert.AreEqual(content, volumeFile.ReadAll().String);
 
             // we should be able to save the same file again
-            Assert.IsTrue(TestVolume.Save(volumeFile) != null);
+            Assert.IsTrue(TestVolume.SaveFile(volumeFile) != null);
         }
 
         [Test]
@@ -233,7 +263,7 @@ namespace kOS.Safe.Test
             string file1 = parent1 + "/sub1";
 
             TestVolume.CreateDirectory(VolumePath.FromString(file1));
-            TestVolume.Save(VolumePath.FromString(file1), new FileContent());
+            TestVolume.SaveFile(VolumePath.FromString(file1), new FileContent());
         }
 
         [Test]
