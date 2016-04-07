@@ -71,6 +71,11 @@ namespace kOS.Safe
         {
             Path = GlobalPath.FromString(dump[DumpPath] as string);
         }
+
+        public override string ToString()
+        {
+            return Path.ToString();
+        }
     }
 }
 

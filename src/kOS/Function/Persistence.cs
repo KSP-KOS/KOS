@@ -22,8 +22,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string destinationPathString = PopValueAssert(shared, true).ToString();
-            string sourcePathString = PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPY(FROMPATH, TOPATH)`");
@@ -35,8 +35,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string destinationPathString = PopValueAssert(shared, true).ToString();
-            string sourcePathString = PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVE(FROMPATH, TOPATH)`");
@@ -48,8 +48,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string destinationPathString = PopValueAssert(shared, true).ToString();
-            string sourcePathString = PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`");
@@ -61,8 +61,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string destinationPathString = PopValueAssert(shared, true).ToString();
-            string sourcePathString = PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
+            PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`");
@@ -174,18 +174,30 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
-            AssertArgBottomAndConsume(shared);
+            int remaining = CountRemainingArgs(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
-            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+            VolumeDirectory directory;
 
-            VolumeDirectory directory = volume.Open(path) as VolumeDirectory;
-
-            if (directory == null)
+            if (remaining == 0)
             {
-                throw new KOSException("Invalid directory: " + pathString);
+                directory = shared.VolumeMgr.CurrentVolume.Root;
+            } else
+            {
+                string pathString = PopValueAssert(shared, true).ToString();
+
+                GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+                Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+                directory = volume.Open(path) as VolumeDirectory;
+
+                if (directory == null)
+                {
+                    throw new KOSException("Invalid directory: " + pathString);
+                }
+
             }
+
+            AssertArgBottomAndConsume(shared);
 
             shared.VolumeMgr.CurrentDirectory = directory;
         }

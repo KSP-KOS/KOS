@@ -178,10 +178,10 @@ namespace kOS
                 return "<<Probably internal error within kOS C# code>>";
             }
 
-            Volume vol = Shared.VolumeMgr.GetVolumeFromPath(path);
-            
             if (path == Interpreter.InterpreterHistory)
                 return Shared.Interpreter.GetCommandHistoryAbsolute(line);
+
+            Volume vol = Shared.VolumeMgr.GetVolumeFromPath(path);
 
             VolumeFile file = vol.Open(path) as VolumeFile;
             if (file != null)

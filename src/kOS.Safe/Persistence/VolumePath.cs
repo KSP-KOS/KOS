@@ -54,7 +54,7 @@ namespace kOS.Safe.Persistence
         /// </summary>
         public string Name {
             get {
-                return Segments.Count > 0 ? Segments.Last() : null;
+                return Segments.Count > 0 ? Segments.Last() : string.Empty;
             }
         }
 

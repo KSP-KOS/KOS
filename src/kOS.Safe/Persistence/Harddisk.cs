@@ -38,6 +38,10 @@ namespace kOS.Safe.Persistence
 
         public override VolumeItem Open(VolumePath path, bool ksmDefault = false)
         {
+            if (path.Depth == 0) {
+                return Root;
+            }
+
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
             VolumeItem result = directory.Open(path.Name, ksmDefault);
