@@ -8,16 +8,8 @@ namespace kOS.Safe.Persistence
     public class VolumeManager : IVolumeManager
     {
         private readonly Dictionary<int, Volume> volumes;
-        public virtual Volume CurrentVolume { get; private set; }
-        public VolumeDirectory CurrentDirectory { get
-            {
-                return CurrentDirectory;
-            }
-            set {
-                CurrentDirectory = value;
-                CurrentVolume = value.Volume;
-            }
-        }
+        public virtual Volume CurrentVolume { get { return CurrentDirectory != null ? CurrentDirectory.Volume : null; } }
+        public VolumeDirectory CurrentDirectory { get; set; }
         private int lastId;
         
         public Dictionary<int, Volume> Volumes { get { return volumes; } }
@@ -26,7 +18,6 @@ namespace kOS.Safe.Persistence
         public VolumeManager()
         {
             volumes = new Dictionary<int, Volume>();
-            CurrentVolume = null;
             CurrentDirectory = null;
         }
 
@@ -108,9 +99,9 @@ namespace kOS.Safe.Persistence
             {
                 volumes.Add(lastId++, volume);
 
-                if (CurrentVolume == null)
+                if (CurrentDirectory == null)
                 {
-                    CurrentVolume = volumes[0];
+                    CurrentDirectory = volumes[0].Root;
                     UpdateRequiredPower();
                 }
             }
@@ -133,12 +124,12 @@ namespace kOS.Safe.Persistence
                 {
                     if (volumes.Count > 0)
                     {
-                        CurrentVolume = volumes[0];
+                        CurrentDirectory = volumes[0].Root;
                         UpdateRequiredPower();
                     }
                     else
                     {
-                        CurrentVolume = null;
+                        CurrentDirectory = null;
                     }
                 }
             }
@@ -146,7 +137,6 @@ namespace kOS.Safe.Persistence
 
         public void SwitchTo(Volume volume)
         {
-            CurrentVolume = volume;
             CurrentDirectory = volume.Root;
             UpdateRequiredPower();
         }
