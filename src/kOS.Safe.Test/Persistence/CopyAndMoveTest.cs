@@ -165,63 +165,109 @@ namespace kOS.Safe.Test
             Assert.IsFalse(volumeManager.Copy(subdir1Path, GlobalPath.FromString("1:/copy2")));
         }
 
-        /*
+
         [Test]
         public void CanMoveFileToExistingFile()
         {
-            Assert.Fail();
+            GlobalPath targetPath = GlobalPath.FromString("1:/dir1/file1");
+            TargetVolume.CreateFile(targetPath);
+            Assert.IsTrue(volumeManager.Move(subsubdir1File1Path, targetPath));
+
+            Assert.IsFalse(SourceVolume.Exists(subsubdir1File1Path));
+            Assert.AreEqual(1, TargetVolume.Root.List().Count);
+            VolumeDirectory parent = (TargetVolume.Open(dir1Path) as VolumeDirectory);
+            Assert.AreEqual(1, parent.List().Count);
+            Assert.AreEqual("subsubdir1File1\n", (parent.List()[file1] as VolumeFile).ReadAll().String);
+
         }
 
         [Test]
         public void CanMoveFileToNewFile()
         {
-            Assert.Fail();        }
+            Assert.IsTrue(volumeManager.Move(subsubdir1File1Path, GlobalPath.FromString("1:/dir1/file1")));
+
+            Assert.IsFalse(SourceVolume.Exists(subsubdir1File1Path));
+            Assert.AreEqual(1, TargetVolume.Root.List().Count);
+            VolumeDirectory parent = (TargetVolume.Open(dir1Path) as VolumeDirectory);
+            Assert.AreEqual(1, parent.List().Count);
+            Assert.AreEqual("subsubdir1File1\n", (parent.List()[file1] as VolumeFile).ReadAll().String);
+        }
 
 
         [Test]
         public void CanMoveFileToDirectory()
         {
-            Assert.Fail();
+            GlobalPath targetPath = GlobalPath.FromString("1:/dir1");
+            TargetVolume.CreateDirectory(targetPath);
+            Assert.IsTrue(volumeManager.Move(subsubdir1File1Path, targetPath));
+
+            Assert.IsFalse(SourceVolume.Exists(subsubdir1File1Path));
+            Assert.AreEqual(1, TargetVolume.Root.List().Count);
+            VolumeDirectory parent = (TargetVolume.Open(dir1Path) as VolumeDirectory);
+            Assert.AreEqual(1, parent.List().Count);
+            Assert.AreEqual("subsubdir1File1\n", (parent.List()[file1] as VolumeFile).ReadAll().String);
+
         }
 
         [Test]
         [ExpectedException(typeof(KOSPersistenceException))]
         public void CanFailWhenTryingToMoveDirectoryToAFile()
         {
-            Assert.Fail();
+            VolumePath filePath = TargetVolume.CreateFile("newfile").Path;
+            volumeManager.Move(dir1Path, GlobalPath.FromString("1:/newfile"));
         }
 
         [Test]
         [ExpectedException(typeof(KOSPersistenceException))]
         public void CanFailWhenTryingToMoveDirectoryIntoItself()
         {
-            Assert.Fail();
+            volumeManager.Move(dir1Path, subdir1Path);
         }
 
         [Test]
         public void CanMoveDirectoryToExistingDirectory()
         {
-            Assert.Fail();
+            TargetVolume.CreateDirectory(VolumePath.FromString("/newdirectory"));
+            Assert.IsTrue(volumeManager.Move(dir1Path, GlobalPath.FromString("1:/newdirectory")));
+            Assert.IsFalse(SourceVolume.Exists(dir1Path));
         }
 
         [Test]
         public void CanMoveDirectoryToNewDirectory()
         {
-            Assert.Fail();
+            GlobalPath targetPath = GlobalPath.FromString("1:/newname");
+            Assert.IsTrue(volumeManager.Move(dir1Path, targetPath));
+            Assert.IsFalse(SourceVolume.Exists(dir1Path));
         }
 
         [Test]
-        public void CanMoveEvenIfThereIsNoSpaceToCopy()
+        public void CanFailToMoveWhenTheresNoSpaceOnTargetVolume()
         {
-        if (TargetVolume.Capacity == Volume.INFINITE_CAPACITY)
+            if (TargetVolume.Capacity == Volume.INFINITE_CAPACITY)
             {
+                Assert.Pass();
                 return;
             }
 
-            Assert.Fail();
+            (SourceVolume.Open(subsubdir1File1Path) as VolumeFile)
+                .WriteLn(new string('a', (int)TargetVolume.Capacity / 2 + 1));
+            Assert.IsTrue(volumeManager.Copy(subdir1Path, GlobalPath.FromString("1:/copy1")));
+            Assert.IsFalse(volumeManager.Move(subdir1Path, GlobalPath.FromString("1:/copy2")));
         }
 
-        */
+        [Test]
+        public void CanMoveEvenIfThereIsNoSpaceOnSameVolume()
+        {
+            if (SourceVolume.Capacity == Volume.INFINITE_CAPACITY)
+            {
+                Assert.Pass();
+                return;
+            }
+
+            (SourceVolume.Open(subsubdir1File1Path) as VolumeFile)
+                .WriteLn(new string('a', (int)SourceVolume.Capacity / 2 + 1));
+            Assert.IsTrue(volumeManager.Move(subdir1Path, GlobalPath.FromString("0:/newname")));
+        }
 
         private void CompareDirectories(GlobalPath dir1Path, GlobalPath dir2Path)
         {

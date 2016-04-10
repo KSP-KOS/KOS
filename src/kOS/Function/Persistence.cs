@@ -221,15 +221,12 @@ namespace kOS.Function
             string sourcePathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            SafeHouse.Logger.Log(string.Format("FunctionCopy: {0} {1}", sourcePathString, destinationPathString));
+            SafeHouse.Logger.Log(string.Format("FunctionMove: {0} {1}", sourcePathString, destinationPathString));
 
             GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
             GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
 
-            //Copy(shared.VolumeMgr, sourcePath, destinationPath);
-
-            //Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(sourcePath);
-            //sourceVolume.Delete(sourcePath);
+            shared.VolumeMgr.Move(sourcePath, destinationPath);
         }
     }
 

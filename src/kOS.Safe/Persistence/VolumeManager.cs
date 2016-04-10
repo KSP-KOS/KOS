@@ -11,7 +11,7 @@ namespace kOS.Safe.Persistence
         public virtual Volume CurrentVolume { get { return CurrentDirectory != null ? CurrentDirectory.Volume : null; } }
         public VolumeDirectory CurrentDirectory { get; set; }
         private int lastId;
-        
+
         public Dictionary<int, Volume> Volumes { get { return volumes; } }
         public float CurrentRequiredPower { get; private set; }
 
@@ -30,7 +30,7 @@ namespace kOS.Safe.Persistence
         private int GetVolumeId(string name)
         {
             int volumeId = -1;
-            
+
             foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
                 if (string.Equals(kvp.Value.Name, name, StringComparison.CurrentCultureIgnoreCase))
@@ -174,7 +174,7 @@ namespace kOS.Safe.Persistence
             if (!string.IsNullOrEmpty(volume.Name)) return string.Format("#{0}: \"{1}\"", id, volume.Name);
             return "#" + id;
         }
-        
+
         /// <summary>
         /// Like GetVolumeBestIdentifier, but without the extra string formatting.
         /// </summary>
@@ -222,7 +222,7 @@ namespace kOS.Safe.Persistence
             CurrentRequiredPower = (float)Math.Round(CurrentVolume.RequiredPower(), 4);
         }
 
-        public bool Copy(GlobalPath sourcePath, GlobalPath destinationPath)
+        public bool Copy(GlobalPath sourcePath, GlobalPath destinationPath, bool verifyFreeSpace = true)
         {
             Volume sourceVolume = GetVolumeFromPath(sourcePath);
             Volume destinationVolume = GetVolumeFromPath(destinationPath);
@@ -242,21 +242,21 @@ namespace kOS.Safe.Persistence
                     throw new KOSPersistenceException("Can't copy directory into a file");
                 }
 
-                return CopyDirectory(sourcePath, destinationPath);
+                return CopyDirectory(sourcePath, destinationPath, verifyFreeSpace);
             } else
             {
                 if (destination is VolumeFile || destination == null)
                 {
                     Volume targetVolume = GetVolumeFromPath(destinationPath);
-                    return CopyFile(source as VolumeFile, destinationPath, targetVolume);
+                    return CopyFile(source as VolumeFile, destinationPath, targetVolume, verifyFreeSpace);
                 } else
                 {
-                    return CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory);
+                    return CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory, verifyFreeSpace);
                 }
             }
         }
 
-        protected bool CopyDirectory(GlobalPath sourcePath, GlobalPath destinationPath)
+        protected bool CopyDirectory(GlobalPath sourcePath, GlobalPath destinationPath, bool verifyFreeSpace)
         {
             if (sourcePath.IsParent(destinationPath))
             {
@@ -290,10 +290,13 @@ namespace kOS.Safe.Persistence
             {
                 if (pair.Value is VolumeDirectory)
                 {
-                    CopyDirectory(sourcePath.Combine(pair.Key), destinationPath.Combine(pair.Key));
+                    if (!CopyDirectory(sourcePath.Combine(pair.Key), destinationPath.Combine(pair.Key), verifyFreeSpace))
+                    {
+                        return false;
+                    }
                 } else
                 {
-                    if (!CopyFileToDirectory(pair.Value as VolumeFile, destination))
+                    if (!CopyFileToDirectory(pair.Value as VolumeFile, destination, verifyFreeSpace))
                     {
                         return false;
                     }
@@ -303,19 +306,42 @@ namespace kOS.Safe.Persistence
             return true;
         }
 
-        protected bool CopyFile(VolumeFile volumeFile, GlobalPath destinationPath, Volume targetVolume)
+        protected bool CopyFile(VolumeFile volumeFile, GlobalPath destinationPath, Volume targetVolume,
+            bool verifyFreeSpace)
         {
-            return targetVolume.SaveFile(destinationPath, volumeFile.ReadAll()) != null;
+            return targetVolume.SaveFile(destinationPath, volumeFile.ReadAll(), verifyFreeSpace) != null;
         }
 
-        protected bool CopyFileToDirectory(VolumeFile volumeFile, VolumeDirectory volumeDirectory)
+        protected bool CopyFileToDirectory(VolumeFile volumeFile, VolumeDirectory volumeDirectory,
+            bool verifyFreeSpace)
         {
-            return volumeDirectory.Volume.SaveFile(volumeDirectory.Path.Combine(volumeFile.Name), volumeFile.ReadAll()) != null;
+            return volumeDirectory.Volume.SaveFile(volumeDirectory.Path.Combine(volumeFile.Name), volumeFile.ReadAll(),
+                verifyFreeSpace) != null;
         }
 
-        public void Move(GlobalPath sourcePath, GlobalPath destinationPath)
+        public bool Move(GlobalPath sourcePath, GlobalPath destinationPath)
         {
-            throw new NotImplementedException();
+            if (sourcePath.IsParent(destinationPath))
+            {
+                throw new KOSPersistenceException("Can't move directory to a subdirectory of itself: " + destinationPath);
+            }
+
+            Volume sourceVolume = GetVolumeFromPath(sourcePath);
+            Volume destinationVolume = GetVolumeFromPath(destinationPath);
+
+            bool verifyFreeSpace = sourceVolume != destinationVolume;
+
+            if (!Copy(sourcePath, destinationPath, verifyFreeSpace))
+            {
+                return false;
+            }
+
+            if (!sourceVolume.Delete(sourcePath))
+            {
+                throw new KOSPersistenceException("Can't remove: " + sourcePath);
+            }
+
+            return true;
         }
     }
 }

@@ -81,6 +81,11 @@ namespace kOS.Safe.Persistence
         {
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
+            if (directory == null)
+            {
+                return false;
+            }
+
             return directory.Exists(path.Name, ksmDefault);
         }
 
@@ -91,10 +96,10 @@ namespace kOS.Safe.Persistence
             return directory.Delete(path.Name, ksmDefault);
         }
 
-        public override VolumeFile SaveFile(VolumePath path, FileContent content)
+        public override VolumeFile SaveFile(VolumePath path, FileContent content, bool verifyFreeSpace = true)
         {
             try {
-                if (!IsRoomFor(path, content))
+                if (verifyFreeSpace && !IsRoomFor(path, content))
                 {
                     return null;
                 }

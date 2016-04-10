@@ -20,8 +20,8 @@ namespace kOS.Safe.Persistence
         void SwitchTo(Volume volume);
         void UpdateVolumes(List<Volume> attachedVolumes);
         string GetVolumeBestIdentifier(Volume volume);
-        bool Copy(GlobalPath sourcePath, GlobalPath destinationPath);
-        void Move(GlobalPath sourcePath, GlobalPath destinationPath);
+        bool Copy(GlobalPath sourcePath, GlobalPath destinationPath, bool verifyFreeSpace = true);
+        bool Move(GlobalPath sourcePath, GlobalPath destinationPath);
 
         /// <summary>
         /// This creates a proper, absolute GlobalPath from the given string (which is assumed to come from the user).

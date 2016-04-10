@@ -296,10 +296,9 @@ namespace kOS.Safe.Test
             TestVolume.CreateFile(path);
 
             // Delete the file twice
-            TestVolume.Delete(path);
-            TestVolume.Delete(path);
+            Assert.IsTrue(TestVolume.Delete(path));
+            Assert.IsFalse(TestVolume.Delete(path));
         }
 
     }
 }
-

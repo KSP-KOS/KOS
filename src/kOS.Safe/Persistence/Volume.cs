@@ -130,7 +130,7 @@ namespace kOS.Safe.Persistence
             return SaveFile(volumeFile.Path, volumeFile.ReadAll());
         }
 
-        public abstract VolumeFile SaveFile(VolumePath path, FileContent content);
+        public abstract VolumeFile SaveFile(VolumePath path, FileContent content, bool verifyFreeSpace = true);
 
         public bool IsRoomFor(VolumePath path, FileContent fileContent)
         {

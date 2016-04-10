@@ -159,7 +159,7 @@ namespace kOS.Safe.Persistence
             return true;
         }
 
-        public override VolumeFile SaveFile(VolumePath path, FileContent content)
+        public override VolumeFile SaveFile(VolumePath path, FileContent content, bool verifyFreeSpace = true)
         {
             Directory.CreateDirectory(ArchiveFolder);
 
