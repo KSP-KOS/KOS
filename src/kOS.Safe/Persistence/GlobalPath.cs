@@ -77,9 +77,9 @@ namespace kOS.Safe.Persistence
             return new GlobalPath(VolumeId);
         }
 
-        public static GlobalPath FromVolumePath(VolumePath volumePath, Volume volume)
+        public static GlobalPath FromVolumePath(VolumePath volumePath, string volumeId)
         {
-            return new GlobalPath(volume.Name, new List<string>(volumePath.Segments));
+            return new GlobalPath(volumeId, new List<string>(volumePath.Segments));
         }
 
         public GlobalPath ChangeExtension(string newExtension)

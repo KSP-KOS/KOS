@@ -71,7 +71,8 @@ namespace kOS.Function
 
             if (remaining == 0)
             {
-                path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path, shared.VolumeMgr.CurrentVolume);
+                path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path,
+                    shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume));
             } else
             {
                 string pathString = PopValueAssert(shared, true).ToString();

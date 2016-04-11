@@ -44,9 +44,9 @@ namespace kOS.Safe
             return new PathValue(path, sharedObjects);
         }
 
-        public PathValue FromPath(VolumePath volumePath, Volume volume)
+        public PathValue FromPath(VolumePath volumePath, string volumeId)
         {
-            return new PathValue(GlobalPath.FromVolumePath(volumePath, volume), sharedObjects);
+            return new PathValue(GlobalPath.FromVolumePath(volumePath, volumeId), sharedObjects);
         }
 
         private void InitializeSuffixes()

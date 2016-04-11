@@ -196,10 +196,12 @@ namespace kOS.Safe.Persistence
             {
                 if (GlobalPath.IsAbsolute(pathString))
                 {
-                    return GlobalPath.FromVolumePath(VolumePath.FromString(pathString), CurrentVolume);
+                    return GlobalPath.FromVolumePath(VolumePath.FromString(pathString),
+                        GetVolumeRawIdentifier(CurrentVolume));
                 } else
                 {
-                    return GlobalPath.FromStringAndBase(pathString, GlobalPath.FromVolumePath(CurrentDirectory.Path, CurrentVolume));
+                    return GlobalPath.FromStringAndBase(pathString, GlobalPath.FromVolumePath(CurrentDirectory.Path,
+                        GetVolumeRawIdentifier(CurrentVolume)));
                 }
             }
 
