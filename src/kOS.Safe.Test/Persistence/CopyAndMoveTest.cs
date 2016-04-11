@@ -85,9 +85,19 @@ namespace kOS.Safe.Test
             Assert.AreEqual("subsubdir1File1\n", (parent.List()[file1] as VolumeFile).ReadAll().String);
         }
 
+        [Test]
+        public void CanCopyFileToRootDirectory()
+        {
+            GlobalPath targetPath = GlobalPath.FromString("1:");
+            Assert.IsTrue(volumeManager.Copy(subsubdir1File1Path, targetPath));
+
+            Assert.AreEqual(1, TargetVolume.Root.List().Count);
+            VolumeFile file = (TargetVolume.Open(file1) as VolumeFile);
+            Assert.AreEqual("subsubdir1File1\n", file.ReadAll().String);
+        }
 
         [Test]
-        public void CanCopyFileToDirectory()
+        public void CanCopyFileToSubdirectory()
         {
             GlobalPath targetPath = GlobalPath.FromString("1:/dir1");
             TargetVolume.CreateDirectory(targetPath);
@@ -132,6 +142,13 @@ namespace kOS.Safe.Test
             CompareDirectories(dir1Path, targetPath);
         }
 
+        [Test]
+        public void CanCopyDirectoryToRootDirectory()
+        {
+            Assert.IsTrue(volumeManager.Copy(dir1Path, GlobalPath.FromString("1:/")));
+
+            CompareDirectories(dir1Path, GlobalPath.FromString("1:/" + dir1));
+        }
 
         [Test]
         public void CanFailToCopyFileIfThereIsNoSpaceToCopy()

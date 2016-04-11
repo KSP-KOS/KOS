@@ -79,6 +79,11 @@ namespace kOS.Safe.Persistence
 
         public override bool Exists(VolumePath path, bool ksmDefault = false)
         {
+            if (path.Depth == 0)
+            {
+                return true;
+            }
+
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
             if (directory == null)
@@ -91,6 +96,11 @@ namespace kOS.Safe.Persistence
 
         public override bool Delete(VolumePath path, bool ksmDefault = false)
         {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't delete root directory");
+            }
+
             HarddiskDirectory directory = ParentDirectoryForPath(path);
 
             return directory.Delete(path.Name, ksmDefault);

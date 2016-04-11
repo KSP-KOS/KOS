@@ -60,6 +60,8 @@ namespace kOS.Safe.Persistence
             {
                 Directory.Delete(ArchiveFolder, true);
             }
+
+            Directory.CreateDirectory(ArchiveFolder);
         }
 
         public override VolumeItem Open(VolumePath path, bool ksmDefault = false)
@@ -143,6 +145,11 @@ namespace kOS.Safe.Persistence
 
         public override bool Delete(VolumePath path, bool ksmDefault = false)
         {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't delete root directory");
+            }
+
             var fileSystemInfo = Search(path, ksmDefault);
 
             if (fileSystemInfo == null)

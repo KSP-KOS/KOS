@@ -143,6 +143,14 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailWhenTryingToDeleteRootDirectory()
+        {
+            VolumePath path = VolumePath.FromString("/");
+            TestVolume.Delete(path);
+        }
+
+        [Test]
         public void CanCreateFiles()
         {
             string parent1 = "/parent1", parent2 = "/parent2";
