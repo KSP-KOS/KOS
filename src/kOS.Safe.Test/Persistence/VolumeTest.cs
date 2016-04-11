@@ -20,7 +20,6 @@ namespace kOS.Safe.Test
             SafeHouse.Logger = new TestLogger();
         }
 
-
         [Test]
         public void CanReturnCapacity()
         {
@@ -295,6 +294,21 @@ namespace kOS.Safe.Test
             Assert.AreEqual(1, dir.List().Count);
             Assert.AreEqual(file2, dir.List()["sub2"].Path.ToString());
             Assert.IsInstanceOf<VolumeFile>(dir.List()["sub2"]);
+
+            TestVolume.CreateFile(VolumePath.FromString(file2 + ".ks"));
+            Assert.IsTrue(TestVolume.Delete(VolumePath.FromString(file2 + ".ks")));
+            Assert.AreEqual(1, dir.List().Count);
+            Assert.AreEqual(file2, dir.List()["sub2"].Path.ToString());
+            Assert.IsInstanceOf<VolumeFile>(dir.List()["sub2"]);
+
+            TestVolume.CreateFile(VolumePath.FromString(file2 + ".ks"));
+            Assert.IsTrue(TestVolume.Delete(VolumePath.FromString(file2)));
+            Assert.AreEqual(1, dir.List().Count);
+            Assert.AreEqual(file2 + ".ks", dir.List()["sub2.ks"].Path.ToString());
+            Assert.IsInstanceOf<VolumeFile>(dir.List()["sub2.ks"]);
+
+            Assert.IsTrue(TestVolume.Delete(VolumePath.FromString(file2)));
+            Assert.AreEqual(0, dir.List().Count);
         }
 
         [Test]

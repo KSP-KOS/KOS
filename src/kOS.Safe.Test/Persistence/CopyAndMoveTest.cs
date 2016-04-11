@@ -17,11 +17,11 @@ namespace kOS.Safe.Test
         protected VolumeManager volumeManager;
 
         protected string dir1 = "dir1", subdir1 = "subdir1", subdir2 = "subdir2", subsubdir1 = "subsubdir1";
-        protected string file1 = "file1", file2 = "file2", file3 = "file3";
+        protected string file1 = "file1", file2 = "file2", file3 = "file3.ks";
 
         protected GlobalPath dir1Path, subdir1Path, subdir2Path, subsubdir1Path;
 
-        protected GlobalPath file1Path, dir1File1Path, dir1File2Path, subdir1File1Path, subsubdir1File1Path;
+        protected GlobalPath file1Path, dir1File1Path, dir1File2Path, dir1File3Path, subdir1File1Path, subsubdir1File1Path;
 
         [SetUp]
         public void SetupLogger()
@@ -48,6 +48,7 @@ namespace kOS.Safe.Test
             file1Path = GlobalPath.FromString("0:" + file1);
             dir1File1Path = dir1Path.Combine(file1);
             dir1File2Path = dir1Path.Combine(file2);
+            dir1File3Path = dir1Path.Combine(file3);
             subdir1File1Path = subdir1Path.Combine(file1);
             subsubdir1File1Path = subsubdir1Path.Combine(file1);
 
@@ -58,6 +59,7 @@ namespace kOS.Safe.Test
             SourceVolume.CreateDirectory(subsubdir1Path);
 
             SourceVolume.CreateFile(file1Path).WriteLn(file1);
+            SourceVolume.CreateFile(dir1File3Path).WriteLn(file2);
             SourceVolume.CreateFile(subsubdir1File1Path).WriteLn("subsubdir1File1");
         }
 
@@ -94,6 +96,16 @@ namespace kOS.Safe.Test
             Assert.AreEqual(1, TargetVolume.Root.List().Count);
             VolumeFile file = (TargetVolume.Open(file1) as VolumeFile);
             Assert.AreEqual("subsubdir1File1\n", file.ReadAll().String);
+        }
+
+        [Test]
+        public void CanCopyFileByCookedName()
+        {
+            GlobalPath targetPath = GlobalPath.FromString("1:");
+            Assert.IsTrue(volumeManager.Copy(dir1Path.Combine("file3"), targetPath));
+
+            Assert.AreEqual(1, TargetVolume.Root.List().Count);
+            Assert.IsTrue(TargetVolume.Root.List()[file3] is VolumeFile);
         }
 
         [Test]
@@ -224,6 +236,18 @@ namespace kOS.Safe.Test
             Assert.AreEqual(1, parent.List().Count);
             Assert.AreEqual("subsubdir1File1\n", (parent.List()[file1] as VolumeFile).ReadAll().String);
 
+        }
+
+        [Test]
+        public void CanMoveFileByCookedName()
+        {
+            var sourcePath = dir1Path.Combine("file3");
+            GlobalPath targetPath = GlobalPath.FromString("1:");
+            Assert.IsTrue(volumeManager.Move(sourcePath, targetPath));
+
+            Assert.IsFalse(SourceVolume.Exists(sourcePath));
+            Assert.AreEqual(1, TargetVolume.Root.List().Count);
+            Assert.IsTrue(TargetVolume.Root.List()[file3] is VolumeFile);
         }
 
         [Test]

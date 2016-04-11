@@ -95,7 +95,14 @@ namespace kOS.Safe.Persistence
 
         public bool Delete(string name, bool ksmDefault)
         {
-            return items.Remove(name);
+            var toDelete = Search(name);
+
+            if (toDelete == null)
+            {
+                return false;
+            }
+
+            return items.Remove(toDelete.Name);
         }
 
         public IEnumerator<VolumeItem> GetEnumerator()
