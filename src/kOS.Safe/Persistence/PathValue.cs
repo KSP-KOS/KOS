@@ -28,12 +28,15 @@ namespace kOS.Safe
             }
         }
 
-        public PathValue(GlobalPath path, SafeSharedObjects sharedObjects)
+        public PathValue()
+        {
+            InitializeSuffixes();
+        }
+
+        public PathValue(GlobalPath path, SafeSharedObjects sharedObjects) : this()
         {
             Path = path;
             this.sharedObjects = sharedObjects;
-
-            InitializeSuffixes();
         }
 
         public PathValue FromPath(GlobalPath path)
