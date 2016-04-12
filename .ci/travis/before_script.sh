@@ -1,19 +1,11 @@
 #!/bin/bash
 set -ev
 
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-	echo "Build from within the home repository, encryption enabled."
-	wget --quiet https://github.com/KSP-KOS/KSP_LIB/blob/master/kos-${KSP_VERSION}.tar.enc?raw=true -O kos-${KSP_VERSION}.tar.enc
-	openssl aes-256-cbc -K $encrypted_6287ee711a27_key -iv $encrypted_6287ee711a27_iv -in kos-${KSP_VERSION}.tar.enc -out kos-${KSP_VERSION}.tar -d
-else
-	echo "Build from pull request outside of the home repository, encryption disabled."
-	wget --quiet https://github.com/KSP-KOS/KSP_LIB/blob/master/kos-${KSP_VERSION}.tar?raw=true -O kos-${KSP_VERSION}.tar
-fi
+echo "Build using dummy assemblies."
+wget --quiet https://github.com/KSP-KOS/KSP_LIB/blob/master/kos-${KSP_VERSION}.tar?raw=true -O kos-${KSP_VERSION}.tar
 
 mkdir -p Resources
 tar -xvf kos-${KSP_VERSION}.tar -C Resources/
-mkdir -p Resources/GameData/kOS/Plugins
-mv Resources/KSPAPIExtensions.dll Resources/GameData/kOS/Plugins/
 
 python --version
 pip --version
