@@ -27,7 +27,7 @@ namespace kOS.Function
             PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPY(FROMPATH, TOPATH)`");
+            throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPY(FROMPATH, TOPATH)`", string.Empty);
         }
     }
 
@@ -42,7 +42,7 @@ namespace kOS.Function
 
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVE(FROMPATH, TOPATH)`");
+            throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVE(FROMPATH, TOPATH)`", string.Empty);
         }
     }
 
@@ -56,7 +56,7 @@ namespace kOS.Function
             PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`");
+            throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`", string.Empty);
         }
     }
 
@@ -249,7 +249,7 @@ namespace kOS.Function
                 PopValueAssert(shared, true);
                 AssertArgBottomAndConsume(shared);
 
-                throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`");
+                throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`", string.Empty);
             }
 
             string pathString = PopValueAssert(shared, true).ToString();

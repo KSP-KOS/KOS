@@ -2,7 +2,7 @@ namespace kOS.Safe.Exceptions
 {
     public class KOSAtmosphereDeprecationException : KOSDeprecationException
     {
-        public KOSAtmosphereDeprecationException(string version, string oldUsage, string newUsage) : base(version, oldUsage, newUsage)
+        public KOSAtmosphereDeprecationException(string version, string oldUsage, string newUsage, string url) : base(version, oldUsage, newUsage, url)
         {
         }
 
