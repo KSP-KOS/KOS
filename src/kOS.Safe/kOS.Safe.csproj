@@ -251,6 +251,7 @@
     <Compile Include="Serialization\IHasSafeSharedObjects.cs" />
     <Compile Include="SafeSharedObjects.cs" />
     <Compile Include="Persistence\PathValue.cs" />
+    <Compile Include="Execution\InternalPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

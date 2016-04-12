@@ -246,7 +246,7 @@ namespace kOS.Function
         {
             bool defaultOutput = false;
             bool justCompiling = false; // is this load() happening to compile, or to run?
-            string outPathString = null;
+            GlobalPath outPath = null;
             object topStack = PopValueAssert(shared, true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
             {
@@ -255,7 +255,7 @@ namespace kOS.Function
                 if (outputArg.Equals("-default-compile-out-"))
                     defaultOutput = true;
                 else
-                    outPathString = outputArg;
+                    outPath = shared.VolumeMgr.GlobalPathFromString(outputArg);
             }
 
             string pathString = null;
@@ -265,23 +265,20 @@ namespace kOS.Function
 
             AssertArgBottomAndConsume(shared);
 
-            if (pathString == null)
+            if (string.IsNullOrEmpty(pathString))
                 throw new KOSFileException("No filename to load was given.");
 
             GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
-            VolumeFile file = volume.Open(path) as VolumeFile; // if running, look for KSM first.  If compiling look for KS first.
+            VolumeFile file = volume.Open(path, !justCompiling) as VolumeFile; // if running, look for KSM first.  If compiling look for KS first.
             if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", path));
-            string fileName = file.Name; // just in case Get picked an extension that changed it.
 
             FileContent fileContent = file.ReadAll();
 
             // filename is now guaranteed to have an extension.  To make default output name, replace the extension with KSM:
             if (defaultOutput)
-                outPathString = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + Volume.KOS_MACHINELANGUAGE_EXTENSION;
-
-            GlobalPath outPath = shared.VolumeMgr.GlobalPathFromString(outPathString);
+                outPath = path.ChangeExtension(Volume.KOS_MACHINELANGUAGE_EXTENSION);
 
             if (path.Equals(outPath))
                 throw new KOSFileException("Input and output paths must differ.");

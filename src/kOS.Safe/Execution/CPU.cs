@@ -25,7 +25,6 @@ namespace kOS.Safe.Execution
         private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
-        private double timeWaitUntil;
         private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
@@ -122,14 +121,21 @@ namespace kOS.Safe.Execution
 
             if (!shared.Processor.CheckCanBoot()) return;
 
-            VolumePath path = shared.Processor.BootFilePath;
+            GlobalPath path = shared.Processor.BootFilePath;
+            Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(path);
             // Check to make sure the boot file name is valid, and then that the boot file exists.
-            if (path == null) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
-            else if (shared.VolumeMgr.CurrentVolume.Open(path) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path)); }
-            else
+            if (path == null)
+            {
+                SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
+            }
+            else if (sourceVolume.Open(path) == null)
+            {
+                SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
+            } else
             {
                 var bootContext = "program";
-                string bootCommand = string.Format("run {0}.", path);
+
+                string bootCommand = string.Format("run {0}.", path.Name);
 
                 var options = new CompilerOptions
                 {
@@ -139,7 +145,8 @@ namespace kOS.Safe.Execution
                 };
 
                 shared.ScriptHandler.ClearContext(bootContext);
-                List<CodePart> parts = shared.ScriptHandler.Compile(GlobalPath.FromString("sysboot:"), 1, bootCommand, bootContext, options);
+                List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
+                    1, bootCommand, bootContext, options);
 
                 IProgramContext programContext = SwitchToProgramContext();
                 programContext.Silent = true;
@@ -1387,6 +1394,26 @@ namespace kOS.Safe.Execution
         public void StopCompileStopwatch()
         {
             compileWatch.Stop();
+        }
+
+        private class BootGlobalPath : InternalPath
+        {
+            private string command;
+
+            public BootGlobalPath(string command) : base()
+            {
+                this.command = command;
+            }
+
+            public override string Line(int line)
+            {
+                return command;
+            }
+
+            public override string ToString()
+            {
+                return "[Boot sequence]";
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace kOS.Safe.Module
         /// <summary>
         /// Gets or sets the boot file path. Has to be a valid path or null.
         /// </summary>
-        VolumePath BootFilePath { get; set; }
+        GlobalPath BootFilePath { get; }
 
         bool CheckCanBoot();
         string Tag { get; }
