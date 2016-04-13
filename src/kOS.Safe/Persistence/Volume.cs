@@ -64,6 +64,13 @@ namespace kOS.Safe.Persistence
             return Open(VolumePath.FromString(pathString), ksmDefault);
         }
 
+        public Structure OpenSafe(string pathString, bool ksmDefault = false)
+        {
+            VolumeItem item = Open(VolumePath.FromString(pathString), ksmDefault);
+
+            return item != null ? (Structure)item : BooleanValue.False;
+        }
+
         /// <summary>
         /// Get a file given its name
         /// </summary>
@@ -183,7 +190,7 @@ namespace kOS.Safe.Persistence
             AddSuffix("FILES" , new Suffix<Lexicon>(ListAsLexicon));
             AddSuffix("CREATE" , new OneArgsSuffix<VolumeFile, StringValue>(path => CreateFile(path)));
             AddSuffix("CREATEDIR" , new OneArgsSuffix<VolumeDirectory, StringValue>(path => CreateDirectory(path)));
-            AddSuffix("OPEN" , new OneArgsSuffix<VolumeItem, StringValue>(path => Open(path)));
+            AddSuffix("OPEN" , new OneArgsSuffix<Structure, StringValue>(path => OpenSafe(path)));
             AddSuffix("DELETE" , new OneArgsSuffix<BooleanValue, StringValue>(path => Delete(path)));
         }
     }
