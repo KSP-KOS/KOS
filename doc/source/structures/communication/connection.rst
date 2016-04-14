@@ -12,13 +12,14 @@ Obtaining a connection
 There are 2 types of connections. The first type is used to communicate with other :struct:`processors <kOSProcessor>` within the same vessel.
 You can obtain a connection by using `CONNECTION` suffix. Assuming your vessel has a second processor tagged `'second'` it could look like this::
 
-  SET PROCESSOR TO PROCESSOR("second").
-  SET CONNECTION TO PROCESSOR:CONNECTION.
+  SET MY_PROCESSOR TO PROCESSOR("second").
+  SET MY_CONNECTION TO MY_PROCESSOR:CONNECTION.
 
 The second type are connections to other vessels. Assuming you have a rover on duna named `'dunarover'` you could obtain a connection to it like this::
 
-  SET VESSEL TO VESSEL("dunarover").
-  SET CONNECTION TO VESSEL:CONNECTION.
+  SET MY_VESSEL TO VESSEL("dunarover").
+  SET MY_CONNECTION TO MY_VESSEL:CONNECTION.
+
 
 Structure
 ---------
@@ -52,6 +53,8 @@ Structure
 
     True if the connection is opened and messages can be sent. For CPU connections this will be always true if the destionation CPU belongs to the same vessel as the current CPU.
     For vessel connections this will be always true in stock game. :ref:`RemoteTech <remotetech>` introduces the concept of connectivity and may cause this to be false.
+    The connection has to be opened only in the moment of sending the message in order for it to arrive. If connection is lost after the message was sent,
+    but before it arrives at its destination it will have no effect on whether the message will reach its destination or not.
 
 .. attribute:: Connection:DELAY
 
@@ -74,3 +77,4 @@ Structure
 
     Send a message using this connection. Any serializable structure or a primitive (:struct:`String`, :struct:`Scalar` or :struct:`Boolean`) can be given as an argument.
     It is always worth checking the return value of this function. A returned false value would indicate that the message was not sent for some reason.
+    This method will fail to send the message and return false if :attr:`Connection:ISCONNECTED` is false.

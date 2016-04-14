@@ -41,10 +41,10 @@ Structure
           - number of messages in the queue
         * - :meth:`POP()`
           - :struct:`Message`
-          - returns the first element in the queue and removes it
+          - returns the oldest element in the queue and removes it
         * - :meth:`PEEK()`
           - :struct:`Message`
-          - returns the first element in the queue without removing it
+          - returns the oldest element in the queue without removing it
         * - :meth:`CLEAR()`
           - None
           - remove all messages
@@ -66,13 +66,13 @@ Structure
 
 .. method:: MessageQueue:POP()
 
-    Returns the first message in the queue and removes it. Messages in the queue are always ordered by their arrival date.
+    Returns the first (oldest) message in the queue and removes it. Messages in the queue are always ordered by their arrival date.
 
 .. method:: MessageQueue:PEEK()
 
     :return: :struct:`Message`
 
-    Returns the first message in the queue without removing it from the queue.
+    Returns the oldest message in the queue without removing it from the queue.
 
 .. method:: MessageQueue:CLEAR()
 

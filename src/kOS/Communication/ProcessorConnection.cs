@@ -31,7 +31,10 @@ namespace kOS.Communication
 
         protected override BooleanValue SendMessage(Structure content)
         {
-            ThrowIfNotCPUVessel();
+            if (!Connected)
+            {
+                return false;
+            }
 
             processor.Send(content);
 

@@ -11,7 +11,7 @@ Messages
 
 The basic unit of data that is sent between two entities (CPUs or vessels) is called a :struct:`Message`.
 Messages can contain any primitive (scalars, strings, booleans) data types as well as any
-:ref:`serializable <serialization>` types. This allows for a lot of flexibility. It is up to you as a developer
+:ref:`serializable <serialization>` types. This allows for a lot of flexibility. It is up to you as a script author
 to decide what those messages will need to contain in order to achieve a specific task.
 
 kOS will automatically add 3 values to every message that is sent: :attr:`Message:SENTAT`, :attr:`Message:RECEIVEDAT`
@@ -51,7 +51,7 @@ Inter-processor communication
 -----------------------------
 
 First we'll have a look at the scenario where we want to send messages between two processors on the same vessel. As
-a first step we must obtain the :struct:`kOSProcessor` structure associated with the target CPU.
+the first step we must obtain the :struct:`kOSProcessor` structure associated with the target CPU.
 
 Accessing processors
 ~~~~~~~~~~~~~~~~~~~~

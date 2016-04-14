@@ -35,7 +35,7 @@ Acceptable values for `"target"` are: `"no-target"`, `"active-vessel"`, `"missio
 Communication
 ~~~~~~~~~~~~~
 
-RemoteTech will influence :ref:`communication <communication>` between vessels. In order to send a message to another vessel a valid RemoteTech connection will have to exist between them
+When installed RemoteTech will influence :ref:`communication <communication>` between vessels. In order to send a message to another vessel a valid RemoteTech connection will have to exist between them
 and of course messages will arrive to their destination with a proper delay. Documentation of :struct:`Connection` class contains further information on how RemoteTech will change the behaviour
 of some of its suffixes.
 
