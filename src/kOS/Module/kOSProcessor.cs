@@ -204,9 +204,16 @@ namespace kOS.Module
         }
 
         //implement IPartCostModifier component
-        public float GetModuleCost(float defaultCost)
+        public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
+            // the 'sit' arg is irrelevant to us, but the interface requires it.
+
             return additionalCost;
+        }
+        //implement IPartMassModifier component
+        public ModifierChangeWhen GetModuleCostChangeWhen()
+        {
+            return ModifierChangeWhen.FIXED;
         }
 
         private void UpdateCostAndMass()
@@ -221,10 +228,17 @@ namespace kOS.Module
         }
 
         //implement IPartMassModifier component
-        public float GetModuleMass(float defaultMass)
+        public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
         {
+            // the 'sit' arg is irrelevant to us, but the interface requires it.
+            
             return part.mass - defaultMass; //copied this fix from ProceduralParts mod as we already changed part.mass
             //return additionalMass;
+        }
+        //implement IPartMassModifier component
+        public ModifierChangeWhen GetModuleMassChangeWhen()
+        {
+            return ModifierChangeWhen.FIXED;
         }
 
         public override void OnStart(StartState state)
