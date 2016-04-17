@@ -6,6 +6,7 @@ using kOS.Safe.Utilities;
 using System.Linq;
 using System.Collections;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Persistence;
 
 namespace kOS.Serialization
 {
@@ -47,7 +48,8 @@ namespace kOS.Serialization
 
             var indexedList = list.Select((value, index) => new { Value = value, Index = index.ToString() });
 
-            foreach (var item in indexedList) {
+            foreach (var item in indexedList)
+            {
                 HandleValue(innerNode, item.Index, item.Value);
             }
 
@@ -79,7 +81,8 @@ namespace kOS.Serialization
 
             configNode.name = name;
 
-            foreach (var entry in dump) {
+            foreach (var entry in dump)
+            {
                 HandleValue(configNode, entry.Key.ToString(), entry.Value);
             }
 
@@ -94,16 +97,19 @@ namespace kOS.Serialization
             } else if (value is List<object>)
             {
                 configNode.AddNode(key, ToConfigNode(key, value as List<object>));
-            } else if (value is int) {
+            } else if (value is int)
+            {
                 configNode.AddNode(key, ScalarToConfigNode(key, ScalarKey, Convert.ToString(value)));
-            } else if (value is double) {
+            } else if (value is double)
+            {
                 configNode.AddNode(key, ScalarToConfigNode(key, ScalarKey, ((double)value).ToString("R")));
 
-            } else if (value is bool) {
+            } else if (value is bool)
+            {
                 configNode.AddNode(key, ScalarToConfigNode(key, BooleanKey, Convert.ToString(value)));
             } else
             {
-                configNode.AddValue(key, value);
+                configNode.AddValue(key, PersistenceUtilities.EncodeLine(value.ToString()));
             }
         }
 
@@ -111,21 +117,20 @@ namespace kOS.Serialization
         {
             List<object> result = new List<object>();
 
-            int i = 0;
+            bool hasMoreValues = true;
 
-            while (true) {
+            for (int i = 0; hasMoreValues; i++)
+            {
                 if (configNode.HasValue(i.ToString()))
                 {
-                    result.Add(configNode.GetValue(i.ToString()));
+                    result.Add(PersistenceUtilities.DecodeLine(configNode.GetValue(i.ToString())));
                 } else if (configNode.HasNode(i.ToString()))
                 {
                     result.Add(ObjectFromConfigNode(configNode.GetNode(i.ToString())));
                 } else
                 {
-                    break;
+                    hasMoreValues = false;
                 }
-
-                i++;
             }
 
             return result;
@@ -157,7 +162,7 @@ namespace kOS.Serialization
 
             foreach (ConfigNode.Value val in configNode.values)
             {
-                result[val.name] = val.value;
+                result[val.name] = PersistenceUtilities.DecodeLine(val.value);
             }
 
             foreach (ConfigNode subNode in configNode.GetNodes())

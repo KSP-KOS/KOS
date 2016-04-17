@@ -12,24 +12,30 @@ using kOS.Safe.Communication;
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Connection", KOSToCSharp = false)]
-    public class VesselConnection : Connection<kOS.SharedObjects>
+    public class VesselConnection : Connection
     {
+        private SharedObjects shared;
         private Vessel vessel;
 
-        public override bool Connected {
-            get {
-                return shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel) != -1;
+        public override bool Connected
+        {
+            get
+            {
+                return Delay >= 0;
             }
         }
 
-        public override double Delay {
-            get {
+        public override double Delay
+        {
+            get
+            {
                 return shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel);
             }
         }
 
-        public VesselConnection(Vessel vessel, SharedObjects shared) : base(shared)
+        public VesselConnection(Vessel vessel, SharedObjects shared) : base()
         {
+            this.shared = shared;
             this.vessel = vessel;
         }
 
@@ -40,9 +46,7 @@ namespace kOS.Communication
 
         protected override BooleanValue SendMessage(Structure content)
         {
-            double delay = shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel);
-
-            if (delay == -1)
+            if (!Connected)
             {
                 return false;
             }
@@ -50,7 +54,7 @@ namespace kOS.Communication
             MessageQueueStructure queue = InterVesselManager.Instance.GetQueue(vessel, shared);
 
             double sentAt = Planetarium.GetUniversalTime();
-            double receivedAt = sentAt + delay;
+            double receivedAt = sentAt + Delay;
             queue.Push(Message.Create(content, sentAt, receivedAt, new VesselTarget(shared), shared.Processor.Tag));
 
             return true;

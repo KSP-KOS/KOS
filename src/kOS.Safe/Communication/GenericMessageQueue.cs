@@ -18,14 +18,21 @@ namespace kOS.Safe.Communication
         private SortedList<double, List<M>> queue = new SortedList<double, List<M>>();
         private CurrentTimeProvider timeProvider;
 
-        private List<M> Messages {
-            get {
-                return queue.Aggregate(new List<M>(), (acc, l) => { acc.AddRange(l.Value); return acc; } );
+        private List<M> Messages
+        {
+            get
+            {
+                return queue.Aggregate(new List<M>(), (acc, l) => {
+                    acc.AddRange(l.Value);
+                    return acc;
+                });
             }
         }
 
-        private List<M> ReceivedMessages {
-            get {
+        private List<M> ReceivedMessages
+        {
+            get
+            {
                 return Messages.Where(IsReceived).ToList();
             }
         }
@@ -45,7 +52,8 @@ namespace kOS.Safe.Communication
             this.timeProvider = timeProvider;
         }
 
-        private void RemoveMessage(KeyValuePair<double, List<M>> queueItem, M message) {
+        private void RemoveMessage(KeyValuePair<double, List<M>> queueItem, M message)
+        {
             queueItem.Value.Remove(message);
             if (queueItem.Value.Count() == 0)
             {
@@ -72,7 +80,7 @@ namespace kOS.Safe.Communication
                 return queue.First().Value.First();
             }
 
-            throw new KOSException("Message queue is empty");
+            throw new KOSCommunicationException("Message queue is empty");
         }
 
         public M Pop()
@@ -85,7 +93,7 @@ namespace kOS.Safe.Communication
                 return message;
             }
 
-            throw new KOSException("Message queue is empty");
+            throw new KOSCommunicationException("Message queue is empty");
         }
 
         public int Count()

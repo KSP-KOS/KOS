@@ -477,7 +477,7 @@ namespace kOS.Suffixed
         {
             if (Shared.Vessel.id != Vessel.id)
             {
-                throw new KOSException("You can only access the message queue of the current vessel");
+                throw new KOSWrongCPUVesselException("MESSAGES");
             }
 
             return InterVesselManager.Instance.GetQueue(Shared.Vessel, Shared);

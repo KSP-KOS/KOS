@@ -28,8 +28,8 @@ namespace kOS.Safe.Test.Communication
         {
             Assert.AreEqual(0, queue.Count());
             Assert.AreEqual(0, queue.ReceivedCount());
-            Assert.Throws<KOSException>(delegate { queue.Pop(); });
-            Assert.Throws<KOSException>(delegate { queue.Peek(); });
+            Assert.Throws<KOSCommunicationException>(delegate { queue.Pop(); });
+            Assert.Throws<KOSCommunicationException>(delegate { queue.Peek(); });
         }
 
         [Test]
@@ -47,8 +47,8 @@ namespace kOS.Safe.Test.Communication
 
             Assert.AreEqual(5, queue.Count());
             Assert.AreEqual(0, queue.ReceivedCount());
-            Assert.Throws<KOSException>(delegate { queue.Pop(); });
-            Assert.Throws<KOSException>(delegate { queue.Peek(); });
+            Assert.Throws<KOSCommunicationException>(delegate { queue.Pop(); });
+            Assert.Throws<KOSCommunicationException>(delegate { queue.Peek(); });
 
             timeProvider.FakeTime = 10;
 

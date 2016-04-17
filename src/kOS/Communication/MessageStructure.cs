@@ -16,8 +16,10 @@ namespace kOS.Communication
         public Message Message { get; private set; }
         private SharedObjects shared;
 
-        public SharedObjects Shared {
-            set {
+        public SharedObjects Shared
+        {
+            set
+            {
                 shared = value;
             }
         }
@@ -60,7 +62,8 @@ namespace kOS.Communication
 
         public override Dump Dump()
         {
-            Dump dump = new DumpWithHeader {
+            Dump dump = new DumpWithHeader
+            {
                 Header = "Message"
             };
 

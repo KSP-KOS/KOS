@@ -26,7 +26,7 @@ namespace kOS.Communication
                 return new Message(content as PrimitiveStructure, sentAt, receivedAt, sender);
             } else
             {
-                throw new KOSException("Only serializable types and primitives can be sent in a message");
+                throw new KOSCommunicationException("Only serializable types and primitives can be sent in a message");
             }
         }
 

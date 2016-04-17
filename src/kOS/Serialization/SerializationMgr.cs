@@ -12,7 +12,8 @@ namespace kOS.Serialization
     {
         private readonly SharedObjects sharedObjects;
 
-        static SerializationMgr() {
+        static SerializationMgr()
+        {
             SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
         }
 

@@ -18,7 +18,8 @@ namespace kOS.Communication
 
         public static InterVesselManager Instance { get; private set; }
 
-        static InterVesselManager() {
+        static InterVesselManager()
+        {
             // normally we do this in SerializationMgr, but KSPScenarios run before we create any instances
             SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
         }

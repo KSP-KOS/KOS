@@ -5,17 +5,13 @@ using kOS.Safe.Encapsulation.Suffixes;
 namespace kOS.Safe.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Connection")]
-    public abstract class Connection<S> : Structure where S : SharedObjects
+    public abstract class Connection : Structure
     {
-        protected S shared;
-
         public abstract bool Connected { get; }
         public abstract double Delay { get; }
 
-        public Connection(S shared)
+        public Connection()
         {
-            this.shared = shared;
-
             InitializeSuffixes();
         }
 
@@ -31,4 +27,3 @@ namespace kOS.Safe.Communication
         protected abstract BooleanValue SendMessage(Structure content);
     }
 }
-

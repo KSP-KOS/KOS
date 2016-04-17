@@ -8,24 +8,30 @@ using kOS.Safe.Communication;
 namespace kOS.Communication
 {
     [kOS.Safe.Utilities.KOSNomenclature("Connection", KOSToCSharp = false)]
-    public class ProcessorConnection : Connection<kOS.SharedObjects>
+    public class ProcessorConnection : Connection
     {
+        private SharedObjects shared;
         private kOSProcessor processor;
 
-        public override bool Connected {
-            get {
+        public override bool Connected
+        {
+            get
+            {
                 return IsCpuVessel();
             }
         }
 
-        public override double Delay {
-            get {
+        public override double Delay
+        {
+            get
+            {
                 return IsCpuVessel() ? 0 : -1;
             }
         }
 
-        public ProcessorConnection(kOSProcessor processor, SharedObjects shared) : base(shared)
+        public ProcessorConnection(kOSProcessor processor, SharedObjects shared) : base()
         {
+            this.shared = shared;
             this.processor = processor;
         }
 

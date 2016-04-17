@@ -8,14 +8,18 @@ namespace kOS.Safe.Test.Serialization
     [TestFixture]
     public class JSONFormatterTest : FormatterTest
     {
-        protected override IFormatReader FormatReader {
-            get {
+        protected override IFormatReader FormatReader
+        {
+            get
+            {
                 return JsonFormatter.ReaderInstance;
             }
         }
 
-        protected override IFormatWriter FormatWriter {
-            get {
+        protected override IFormatWriter FormatWriter
+        {
+            get
+            {
                 return JsonFormatter.WriterInstance;
             }
         }

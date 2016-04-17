@@ -47,10 +47,44 @@ Connections
 :struct:`Connection` structure represents your ability to communicate with a processor or a vessel. Whenever you want
 to send a message you need to obtain a connection first.
 
+Inter-vessel communication
+--------------------------
+
+First we'll have a look at the scenario where we want to send messages between two processors on different vessels. As
+the first step we must obtain the :struct:`Vessel` structure associated with the target vessel. We can do that using::
+
+  SET V TO VESSEL("vesselname").
+
+Sending messages
+~~~~~~~~~~~~~~~~
+
+Once we have a :struct:`Vessel` structure associated with the vessel we want to send the message to we can
+easily obtain a :struct:`Connection` to that vessel using :attr:`Vessel:CONNECTION`. Next we're going to
+send a message using :meth:`Connection:SENDMESSAGE`. This is an example of how the whole thing could look::
+
+  SET MESSAGE TO "HELLO". // can be any serializable value or a primitive
+  SET C TO VESSEL("probe"):CONNECTION.
+  PRINT "Delay is " + C:DELAY + " seconds".
+  IF C:SENDMESSAGE(MESSAGE) {
+    PRINT "Message sent!".
+  }
+
+Receiving messages
+~~~~~~~~~~~~~~~~~~
+
+We now switch to the second vessel (in the example above it was named `"probe."`). It should have a message
+in its message queue. To access the queue from the current processor we use the :attr:`SHIP:MESSAGES <Vessel:MESSAGES>` suffix::
+
+  WHEN NOT SHIP:MESSAGES:EMPTY {
+    SET RECEIVED TO SHIP:MESSAGES:POP.
+    PRINT "Sent by " + RECEIVED:SENDER:NAME + " at " + RECEIVED:SENTAT.
+    PRINT RECEIVED:CONTENT.
+  }
+
 Inter-processor communication
 -----------------------------
 
-First we'll have a look at the scenario where we want to send messages between two processors on the same vessel. As
+This will be very similar to how inter-vessel communication was done. As
 the first step we must obtain the :struct:`kOSProcessor` structure associated with the target CPU.
 
 Accessing processors
@@ -75,25 +109,18 @@ Finally, processors can be accessed directly, like other :ref:`parts and modules
 
   PRINT SHIP:MODULESNAMED("kOSProcessor")[0]:VOLUME:NAME.
 
-Sending messages
-~~~~~~~~~~~~~~~~
+Sending and receiving messages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once we have a :struct:`kOSProcessor` structure associated with the processor we want to send the message to we can
-easily obtain a :struct:`Connection` to that processor using :attr:`kOSProcessor:CONNECTION`. Next we're going to
-send a message using :meth:`Connection:SENDMESSAGE`. This is an example of how the whole thing could look::
+Then we can use :attr:`kOSProcessor:CONNECTION` to get the connection to that processor. This is how sender's code could look like::
 
   SET MESSAGE TO "undock". // can be any serializable value or a primitive
   SET P TO PROCESSOR("probe").
-  IF P:SENDMESSAGE(MESSAGE) {
+  IF P:CONNECTION:SENDMESSAGE(MESSAGE) {
     PRINT "Message sent!".
   }
 
-Receiving messages
-~~~~~~~~~~~~~~~~~~
-
-We now switch to the second CPU (in the example above it had a name tag `"probe."`). It should have a message
-in its message queue. To access the queue from the current processor we use the :attr:`CORE:MESSAGES` suffix.
-The following code will initiate undocking after the `"undock"` message is received::
+The receiving CPU will use :attr:`CORE:MESSAGES` to access its message queue::
 
   WAIT UNTIL NOT CORE:MESSAGES:EMPTY. // make sure we've received something
   SET RECEIVED TO CORE:MESSAGES:POP.
@@ -104,26 +131,3 @@ The following code will initiate undocking after the `"undock"` message is recei
     PRINT "Unexpected message: " + RECEIVED:CONTENT.
   }
 
-
-Inter-vessel communication
---------------------------
-
-This will be very similar to how inter-processor communication was done. We'll just have to use
-:struct:`vessel(vesselName) <Vessel>` to find the vessel we want to send the message to
-and then :attr:`Vessel:CONNECTION` to get the connection. This is how sender's code could look like::
-
-
-  SET MESSAGE TO "HELLO". // can be any serializable value or a primitive
-  SET C TO VESSEL("SOMEVESSEL"):CONNECTION.
-  PRINT "Delay is " + C:DELAY + " seconds".
-  IF C:SENDMESSAGE(MESSAGE) {
-    PRINT "Message sent!".
-  }
-
-The CPU on the receiving vessel will use :attr:`SHIP:MESSAGES <Vessel:MESSAGES>` to access the vessel's message queue::
-
-  WHEN NOT SHIP:MESSAGES:EMPTY {
-    SET RECEIVED TO SHIP:MESSAGES:POP. // or do something else...
-    PRINT "Sent by " + RECEIVED:SENDER:NAME + " at " + RECEIVED:SENTAT.
-    PRINT RECEIVED:CONTENT.
-  }

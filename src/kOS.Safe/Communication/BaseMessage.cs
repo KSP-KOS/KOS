@@ -22,17 +22,20 @@ namespace kOS.Safe.Communication
         /// </summary>
         private object content;
 
-        public object Content {
-            get {
+        public object Content
+        {
+            get
+            {
                 return content;
             }
-            set {
+            set
+            {
                 if (value is PrimitiveStructure || value is Dump)
                 {
                     content = value;
                 } else
                 {
-                    throw new KOSException("Message can only contain primitives and serializable types");
+                    throw new KOSCommunicationException("Message can only contain primitives and serializable types");
                 }
             }
         }
