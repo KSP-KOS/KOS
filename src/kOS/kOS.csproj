@@ -69,6 +69,8 @@
     <Compile Include="AddOns\RemoteTech\RemoteTechUtility.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechInterpreter.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechVolumeManager.cs" />
+    <Compile Include="AddOns\Trajectories\Addon.cs" />
+    <Compile Include="AddOns\Trajectories\TRWrapper.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
