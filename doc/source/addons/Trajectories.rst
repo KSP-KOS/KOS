@@ -4,7 +4,7 @@ Trajectories
 ==================
 
 - Download: https://github.com/neuoy/KSPTrajectories/releases
-- Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/94368-trajectories
+- Forum thread: http://forum.kerbalspaceprogram.com/index.php?/topic/94368-trajectories
 
 Trajectories is a mod that displays trajectory predictions, accounting for atmospheric drag, lift, etc.. See the forum thread for more details.
 
@@ -16,7 +16,7 @@ Compatible with Trajectories 1.4.6.
 
 **Important notes**
 
-Trajectories only predicts the trajectory of the "Active Vessel," which is the vessel with the camera focused on it. `ADDONS:TR:IMPACTPOS` will throw an exception if you try to call it from an inactive vessel. You should always check `HASIMPACT` before accessing `IMPACTPOS`.
+Trajectories only predicts the trajectory of the "Active Vessel," which is the vessel with the camera focused on it. `ADDONS:TR:IMPACTPOS` will throw an exception if you try to call it from an inactive vessel. You should always check if `HASIMPACT` is true before accessing `IMPACTPOS`.
 
     if ADDONS:TR:AVAILABLE {
         if ADDONS:TR:HASIMPACT {
@@ -28,7 +28,7 @@ Trajectories only predicts the trajectory of the "Active Vessel," which is the v
         PRINT "Trajectories is not available.".
     }
     
-Trajectories does it's calculation based on the vessel's current orientation. Any tiny change in orientation will change the prediction.
+Trajectories does its calculation based on the vessel's current orientation. Any tiny change in orientation will change the prediction.
 
 Accuracy is not guaranteed.
 
