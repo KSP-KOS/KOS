@@ -9,7 +9,7 @@ using System.Linq;
 using UnityEngine;
 using Math = System.Math;
 
-namespace kOS.Binding
+namespace kOS.Control
 {
     [kOS.Safe.Utilities.KOSNomenclature("SteeringManager")]
     public class SteeringManager : Structure, IDisposable, IFlightControlParameter
