@@ -9,10 +9,8 @@ namespace kOS.Control
     {
         bool Enabled { get; }
         bool IsAutopilot { get; }
-        object Value { get; set; }
         uint ControlPartId { get; }
         void UpdateValue(object value, SharedObjects shared);
-        void UpdateValue(object value);
         object GetValue();
         SharedObjects GetShared();
         void UpdateState();

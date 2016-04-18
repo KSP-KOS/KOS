@@ -38,11 +38,11 @@ namespace kOS.Module
 
         #region KSP Vessel Module Events
         /// <summary>
-        /// Awake is called once when instatiating a new VesselModule.  This is the first method called
+        /// OnAwake is called once when instatiating a new VesselModule.  This is the first method called
         /// by KSP after the VesselModule has been attached to the parent Vessel.  We use it to store
         /// the parent Vessel and track the kOSVesselModule instances.
         /// </summary>
-        public void Awake()
+        public override void OnAwake()
         {
             if (kOS.Safe.Utilities.SafeHouse.Logger != null)
             {
@@ -174,7 +174,7 @@ namespace kOS.Module
                                 // control, copy it's Value setpoint, and disable control on the old parameter.
                                 SharedObjects shared = paramOrigin.GetShared();
                                 paramDestination.EnableControl(shared);
-                                paramDestination.UpdateValue(paramOrigin.GetValue());
+                                paramDestination.UpdateValue(paramOrigin.GetValue(), shared);
                                 paramOrigin.DisableControl();
                             }
                         }

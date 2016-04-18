@@ -316,7 +316,7 @@ namespace kOS.Binding
                 }
                 else if (name == "steering")
                 {
-                    return kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering").Value;
+                    return kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering").GetValue();
                 }
                 else
                 {
@@ -329,7 +329,7 @@ namespace kOS.Binding
                 if (name == "steering")
                 {
                     IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
-                    param.Value = val;
+                    if (param != null) param.UpdateValue(val, shared);
                 }
                 else
                 {
