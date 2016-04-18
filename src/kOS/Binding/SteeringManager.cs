@@ -53,8 +53,6 @@ namespace kOS.Binding
             }
         }
 
-        public List<uint> SubscribedParts = new List<uint>();
-
         private SharedObjects shared;
 
         private uint partId = 0;
@@ -145,8 +143,6 @@ namespace kOS.Binding
         private readonly MovingAverage yawMOICalc = new MovingAverage { SampleLimit = 5 };
         private readonly MovingAverage rollMOICalc = new MovingAverage { SampleLimit = 5 };
 
-        private bool enableMoiAdjust;
-
         public MovingAverage AverageDuration = new MovingAverage { SampleLimit = 60 };
 
         #region doubles
@@ -218,7 +214,6 @@ namespace kOS.Binding
         private Vector3d targetStarboard;
 
         private Vector3d adjustTorque;
-        private Vector3d adjustMomentOfInertia;
 
         private Vector3d omega = Vector3d.zero; // x: pitch, y: yaw, z: roll
         private Vector3d lastOmega = Vector3d.zero;
@@ -302,9 +297,7 @@ namespace kOS.Binding
             adjustTorqueWriter = null;
 
             adjustTorque = Vector3d.zero;
-            adjustMomentOfInertia = Vector3d.one;
 
-            enableMoiAdjust = false;
             EnableTorqueAdjust = true;
 
             MaxStoppingTime = 2;
@@ -360,7 +353,6 @@ namespace kOS.Binding
             AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
             AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
             AddSuffix("ENABLETORQUEADJUST", new SetSuffix<BooleanValue>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
-            AddSuffix("ENABLEMOIADJUST", new SetSuffix<BooleanValue>(() => enableMoiAdjust, value => enableMoiAdjust = value));
 #endif
         }
 
@@ -378,7 +370,6 @@ namespace kOS.Binding
             yawTorqueCalc.Reset();
 
             adjustTorque = Vector3d.zero;
-            adjustMomentOfInertia = Vector3d.one;
         }
 
         public void DisableControl()
@@ -539,30 +530,9 @@ namespace kOS.Binding
                 double dt = sessionTime - lastSessionTime;
                 angularAcceleration = (omega - oldOmega) / dt;
                 angularAcceleration = new Vector3d(angularAcceleration.x, angularAcceleration.z, angularAcceleration.y);
-                if (enableMoiAdjust)
-                {
-                    measuredMomentOfInertia = new Vector3d(
-                        controlTorque.x * accPitch / angularAcceleration.x,
-                        controlTorque.y * accRoll / angularAcceleration.y,
-                        controlTorque.z * accYaw / angularAcceleration.z);
-
-                    if (Math.Abs(accPitch) > EPSILON)
-                    {
-                        adjustMomentOfInertia.x = pitchMOICalc.Update(Math.Abs(measuredMomentOfInertia.x) / momentOfInertia.x);
-                    }
-                    if (Math.Abs(accYaw) > EPSILON)
-                    {
-                        adjustMomentOfInertia.z = yawMOICalc.Update(Math.Abs(measuredMomentOfInertia.z) / momentOfInertia.z);
-                    }
-                    if (Math.Abs(accRoll) > EPSILON)
-                    {
-                        adjustMomentOfInertia.y = rollMOICalc.Update(Math.Abs(measuredMomentOfInertia.y) / momentOfInertia.y);
-                    }
-                }
             }
-
-            momentOfInertia = shared.Vessel.findLocalMOI(centerOfMass);
-            momentOfInertia.Scale(adjustMomentOfInertia);
+            
+            momentOfInertia = shared.Vessel.MOI;
             adjustTorque = Vector3d.zero;
             measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
 
@@ -693,9 +663,9 @@ namespace kOS.Binding
 
                             // component values of the local torque are calculated using the dot product with the rotation axis.
                             // Only using positive contributions, which is only valid when symmetric placement is assumed
-                            rawTorque.x += Math.Max(Vector3d.Dot(torque, vesselStarboard), 0);
-                            rawTorque.z += Math.Max(Vector3d.Dot(torque, vesselTop), 0);
-                            rawTorque.y += Math.Max(Vector3d.Dot(torque, vesselForward), 0);
+                            if (rcs.enablePitch) rawTorque.x += Math.Max(Vector3d.Dot(torque, vesselStarboard), 0);
+                            if (rcs.enableYaw) rawTorque.z += Math.Max(Vector3d.Dot(torque, vesselTop), 0);
+                            if (rcs.enableRoll) rawTorque.y += Math.Max(Vector3d.Dot(torque, vesselForward), 0);
                         }
                     }
                 }
@@ -1677,19 +1647,6 @@ namespace kOS.Binding
             }
         }
 
-        object IFlightControlParameter.Value
-        {
-            get
-            {
-                return this.Value;
-            }
-            set
-            {
-                this.Value = value;
-            }
-        }
-
-
         uint IFlightControlParameter.ControlPartId
         {
             get { return this.PartId; }
@@ -1699,11 +1656,6 @@ namespace kOS.Binding
         {
             if (enabled && partId != shared.KSPPart.flightID)
                 throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
-            Value = value;
-        }
-
-        void IFlightControlParameter.UpdateValue(object value)
-        {
             Value = value;
         }
 
