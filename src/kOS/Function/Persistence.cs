@@ -27,7 +27,7 @@ namespace kOS.Function
             PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPY(FROMPATH, TOPATH)`", string.Empty);
+            throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPYPATH(FROMPATH, TOPATH)`", string.Empty);
         }
     }
 
@@ -42,7 +42,7 @@ namespace kOS.Function
 
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVE(FROMPATH, TOPATH)`", string.Empty);
+            throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVEPATH(FROMPATH, TOPATH)`", string.Empty);
         }
     }
 
@@ -57,6 +57,19 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`", string.Empty);
+        }
+    }
+
+    [Function("delete_deprecated")]
+    public class FunctionDeleteDeprecated : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            PopValueAssert(shared, true);
+            PopValueAssert(shared, true);
+            AssertArgBottomAndConsume(shared);
+
+            throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETEPATH(PATH)`", string.Empty);
         }
     }
 
@@ -195,16 +208,14 @@ namespace kOS.Function
         }
     }
 
-    [Function("copy")]
-    public class FunctionCopy : FunctionBase
+    [Function("copypath")]
+    public class FunctionCopyPath : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
             string destinationPathString = PopValueAssert(shared, true).ToString();
             string sourcePathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
-
-            SafeHouse.Logger.Log(string.Format("FunctionCopy: {0} {1}", sourcePathString, destinationPathString));
 
             GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
             GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
@@ -213,7 +224,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("move")]
+    [Function("movepath")]
     public class FunctionMove : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -222,8 +233,6 @@ namespace kOS.Function
             string sourcePathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            SafeHouse.Logger.Log(string.Format("FunctionMove: {0} {1}", sourcePathString, destinationPathString));
-
             GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
             GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
 
@@ -231,27 +240,11 @@ namespace kOS.Function
         }
     }
 
-    [Function("delete")]
-    public class FunctionDelete : FunctionBase
+    [Function("deletepath")]
+    public class FunctionDeletePath : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
-            /*
-             * Parser will treat 'DELETE(filename)' as the old 'DELETE filename [FROM volume]' syntax. So we're unable
-             * to differentiate between new and old syntax. That's why currently both 'DELETE(filename)'
-             * and 'DELETE filename' will work. We only throw the depracation warning when 'FROM' is present, in this
-             * case we're sure that the user wanted to use the old syntax.
-             */
-            int remaining = CountRemainingArgs(shared);
-
-            if (remaining == 2) {
-                PopValueAssert(shared, true);
-                PopValueAssert(shared, true);
-                AssertArgBottomAndConsume(shared);
-
-                throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETE(PATH)`", string.Empty);
-            }
-
             string pathString = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
