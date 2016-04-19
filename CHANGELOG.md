@@ -1,6 +1,15 @@
 kOS Mod Changelog
 =================
 
+# v0.20.0 KSP 1.1 Hype!
+
+This release is functionally identical to v0.19.3, it is recompiled against the
+KSP 1.1 release binaries (build 1230)
+
+### BUG FIXES
+* [KSP1.1] Removing a node leaves an artifact (https://github.com/KSP-KOS/KOS/issues/1572 https://github.com/KSP-KOS/KOS/issues/1576)
+* [KSP1.1] Toolbar button doesn't display (https://github.com/KSP-KOS/KOS/issues/1573 https://github.com/KSP-KOS/KOS/issues/1569)
+
 # v0.19.3 Last (intended) 1.0.5 update.
 
 (This is the last planned update to work with KSP 1.0.5 unless
