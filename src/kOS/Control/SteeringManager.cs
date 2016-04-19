@@ -197,6 +197,8 @@ namespace kOS.Control
         private readonly List<ModuleEngines> engineModules = new List<ModuleEngines>();
         private readonly List<ModuleGimbal> gimbalModules = new List<ModuleGimbal>();
 
+        private readonly Dictionary<PartModule, ITorqueProvider> torqueProviders = new Dictionary<PartModule, ITorqueProvider>();
+
         private Quaternion vesselRotation;
         private Quaternion targetRot;
 
@@ -298,7 +300,7 @@ namespace kOS.Control
 
             adjustTorque = Vector3d.zero;
 
-            EnableTorqueAdjust = true;
+            EnableTorqueAdjust = false;
 
             MaxStoppingTime = 2;
 
@@ -568,6 +570,7 @@ namespace kOS.Control
                 rcsModules.Clear();
                 engineModules.Clear();
                 gimbalModules.Clear();
+                torqueProviders.Clear();
                 clearEngineRCSVectors();
                 foreach (Part part in shared.Vessel.Parts)
                 {
@@ -575,6 +578,12 @@ namespace kOS.Control
                     ModuleGimbal partGimbal = null;
                     foreach (PartModule pm in part.Modules)
                     {
+                        ITorqueProvider tp = pm as ITorqueProvider;
+                        if (tp != null)
+                        {
+                            torqueProviders.Add(pm, tp);
+                        }
+
                         ModuleReactionWheel wheel = pm as ModuleReactionWheel;
                         if (wheel != null)
                         {
@@ -631,6 +640,14 @@ namespace kOS.Control
             engineYawVectors.Clear();
             engineRollVectors.Clear();
 
+            foreach (var pm in torqueProviders.Keys)
+            {
+                var tp = torqueProviders[pm];
+                var torque = tp.GetPotentialTorque();
+                rawTorque += torque;
+            }
+
+#if FALSE
             foreach (ModuleReactionWheel wheel in reactionWheelModules)
             {
                 if (wheel.isActiveAndEnabled && wheel.State == ModuleReactionWheel.WheelState.Active)
@@ -868,6 +885,7 @@ namespace kOS.Control
             rawTorque.x += controlEngineTorque.x;
             rawTorque.z += controlEngineTorque.z;
             rawTorque.y += controlEngineTorque.y;
+#endif
 
             rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
             rawTorque.z = (rawTorque.z + YawTorqueAdjust) * YawTorqueFactor;
