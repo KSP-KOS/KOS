@@ -23,7 +23,7 @@ SHIP:
 - **Description**: Whichever vessel happens to be the one containing the
   CPU part that is running this Kerboscript code at the moment. This is
   the `CPU Vessel <general/cpu_vessel.html>`__.
- 
+
 TARGET:
 
 - **Variable Name**: TARGET
@@ -38,7 +38,7 @@ TARGET:
   to Body("some name") or Vessel("some name") explicitly.  This will
   throw an exception if called from a vessel other than the active vessel,
   as limitations in how KSP sets the target vessel limit the
-  implementation to working with only the active vessel.  
+  implementation to working with only the active vessel.
 
 .. _hastarget:
 
@@ -81,7 +81,7 @@ ANGULARVEL       Same as SHIP:ANGULARVEL
 ANGULARVELOCITY  Same as SHIP:ANGULARVEL
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
-GROUNDSPEED      Same as SHIP:GROUNDSPEED 
+GROUNDSPEED      Same as SHIP:GROUNDSPEED
 SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
 ALTITUDE         Same as SHIP:ALTITUDE
@@ -192,7 +192,7 @@ Any other resources that you have added using other mods should be
 query-able this way, provided that you spell
 the term exactly as it appears in the resources window.
 
-You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix. 
+You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix.
 
 .. |Resources| image:: /_images/reference/bindings/resources.png
 
@@ -202,7 +202,7 @@ ALT ALIAS
 The special variable `ALT <structures/vessels/alt.html>`__ gives you
 access to a few altitude predictions:
 
-ALT:APOAPSIS 
+ALT:APOAPSIS
 
 ALT:PERIAPSIS
 
@@ -217,7 +217,7 @@ ETA ALIAS
 The special variable `ETA <structures/vessels/eta.html>`__ gives you
 access to a few time predictions:
 
-ETA:APOAPSIS 
+ETA:APOAPSIS
 
 ETA:PERIAPSIS
 
@@ -289,7 +289,7 @@ use `Raw Control <commands/flight/raw.html>`__.
 
 If you want to be able to READ what the player is attempting to do
 while your script is running, and perhaps respond to it, then use
-`Reading the Pilot's Control settings (i.e reading what the manual input is attempting) <commands/flight/pilot.html>`__ 
+`Reading the Pilot's Control settings (i.e reading what the manual input is attempting) <commands/flight/pilot.html>`__
 (By default your script will override manual piloting attempts, but
 you can read what the pilot's controls are set at and make your
 autopilot take them under advisement - sort of like how a
@@ -427,7 +427,7 @@ PROFILERESULT()
 If you have the runtime statistics configuration option
 :attr:`Config:STAT` set to ``True``, then in addition to
 the summary statistics after the program run, you can also
-see a detailed report of the "profiling" result of your 
+see a detailed report of the "profiling" result of your
 most recent program run, by calling the built-in function
 ``ProfileResult()``.  *"Profiling"* is a programmer's term
 that means gathering data about how long the program is
@@ -450,7 +450,7 @@ To use::
    // <or>
    LOG PROFILERESULT() TO SOMEFIELNAME.csv.
 
-The function ``ProfileResult()` returns a string containing
+The function ``ProfileResult()`` returns a string containing
 a formatted dump of your whole program, broken down into
 the more low-level instructions that make it up, with data
 values describing how long was spent in total on each
