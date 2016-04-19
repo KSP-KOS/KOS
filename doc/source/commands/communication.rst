@@ -6,6 +6,24 @@ Communication
 kOS allows you to write scripts that communicate with scripts running on other processors within the same vessel
 (inter-processor communication) or on other vessels (inter-vessel communication).
 
+Limitations
+-----------
+
+First off, we have to discuss certain limitations of how communications in kOS can be conducted. Those limitations
+stem directly from how KSP is built and how it simulates the physical world.
+
+Whenever you switch to a vessel KSP simulates the vessel itself and anything that is closer than a certain distance from it
+(including other vessel if there are any). This distance varies based on the situation your vessel is currently in, but
+is usually around few kilometers. Things that are outside of that range are not loaded into the simulation.
+KSP uses a simpler simulation method for them that only calculates their position and other most basic properties.
+KSP calls that "being on rails". You can read a much more detailed explanation on the :ref:`loaddistance` page.
+
+This means kOS can't run at the same time two processors that are separated by bigger distances.
+As a consequence it's impossible for them to communicate live. If you want to exchange messages between them
+you will have to switch from one vessel to the other. This can be troublesome if you plan on sending more
+than a few messages back and forth. Of course everything will work as expected when vessels are close enough
+to each other.
+
 Messages
 --------
 
