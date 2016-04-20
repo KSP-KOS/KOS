@@ -42,20 +42,31 @@ namespace kOS.Communication
         {
             AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.SentAt)));
             AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.ReceivedAt)));
-            AddSuffix("SENDER", new Suffix<VesselTarget>(GetVesselTarget));
+            AddSuffix("SENDER", new Suffix<Structure>(GetVesselTarget));
+            AddSuffix("HASSENDER", new Suffix<BooleanValue>(GetVesselExists));
             AddSuffix("CONTENT", new Suffix<Structure>(DeserializeContent));
         }
 
-        public VesselTarget GetVesselTarget()
+        public Vessel GetVessel()
         {
-            Vessel vessel = FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(Message.Vessel));
+            return (FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(Message.Vessel)));
+        }
+
+        public Structure GetVesselTarget()
+        {
+            Vessel vessel = GetVessel();
 
             if (vessel == null)
             {
-                throw new KOSCommunicationException("Vessel does not exist");
+                return new BooleanValue(false);
             }
 
             return new VesselTarget(vessel, shared);
+        }
+        
+        public BooleanValue GetVesselExists()
+        {
+            return new BooleanValue((GetVessel() != null));
         }
 
         public Structure DeserializeContent()
