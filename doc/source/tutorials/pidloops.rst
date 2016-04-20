@@ -4,8 +4,7 @@ PID Loops in kOS
 ================
 
 .. versionadded:: 0.18.1
-
-    Note, this is an older tutorial.  As of 
+    Note, this is an older tutorial.  As of
     kOS version 0.18.1 and up, a new :struct:`pidloop`
     feature was added to kOS to allow you to use a built-in PID
     controller that executes very quickly in the kOS "hardware"

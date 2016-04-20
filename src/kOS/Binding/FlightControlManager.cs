@@ -404,7 +404,7 @@ namespace kOS.Binding
                 {
                     double doubleValue = Convert.ToDouble(value);
                     if (!double.IsNaN(doubleValue))
-                        c.mainThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, 0, 1);
+                        c.mainThrottle = (float)Safe.Utilities.KOSMath.Clamp(doubleValue, 0, 1);
                 }
                 catch (InvalidCastException) // Note, very few types actually fail Convert.ToDouble(), so it's hard to get this to occur.
                 {
@@ -423,7 +423,7 @@ namespace kOS.Binding
                 {
                     double doubleValue = Convert.ToDouble(value);
                     if (!double.IsNaN(doubleValue))
-                        c.wheelThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, -1, 1);
+                        c.wheelThrottle = (float)Safe.Utilities.KOSMath.Clamp(doubleValue, -1, 1);
                 }
                 catch (InvalidCastException) // Note, very few types actually fail Convert.ToDouble(), so it's hard to get this to occur.
                 {

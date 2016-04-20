@@ -218,7 +218,6 @@ Tuning cooked steering
 ----------------------
 
 .. versionadded:: 0.18.0
-
     Version 0.18 of kOS completely gutted the internals of the old steering
     system and replaced them with the system described below.  Anything
     said below this point is pertinent to version 0.18 and higher only.

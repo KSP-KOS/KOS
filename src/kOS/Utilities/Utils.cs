@@ -1,15 +1,12 @@
-﻿using kOS.Safe.Compilation;
-using kOS.Safe.Utilities;
+﻿using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using System.Reflection;
 
 namespace kOS.Utilities
 {
-
     public static class Utils
     {
         public static Camera GetCurrentCamera()
@@ -18,7 +15,7 @@ namespace kOS.Utilities
             return HighLogic.LoadedSceneIsEditor ?
                        EditorLogic.fetch.editorCamera :
                        (MapView.MapIsEnabled ?
-                           MapView.MapCamera.camera : FlightCamera.fetch.mainCamera);
+                           PlanetariumCamera.Camera : FlightCamera.fetch.mainCamera);
         }
         
         public static string GetAssemblyFileVersion()
@@ -32,6 +29,16 @@ namespace kOS.Utilities
         public static bool IsValidNumber(double input)
         {
             return !(double.IsInfinity(input) || double.IsNaN(input));
+        }
+
+        public static double DegreesToRadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
+        }
+
+        public static double RadiansToDegrees(double radians)
+        {
+            return radians * 180 / Math.PI;
         }
 
         public static bool IsValidVector(Vector3d vector)

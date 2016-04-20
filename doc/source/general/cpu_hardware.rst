@@ -79,7 +79,6 @@ Electric Drain
 --------------
 
 .. versionadded:: 0.19.0
-
     As of version 0.19.0, the electric charge drain varies depending
     on CPU % usage.  Prior to version 0.19.0, the CPU load made no
     difference and the electric drain was constant regardless of
@@ -122,9 +121,8 @@ Triggers
 --------
 
 .. versionadded:: 0.19.3
-
     Note that as of version 0.19.3 and up, the entire way that triggers
-    are dealt with by the underlying kOS CPU has be redesigned.  In
+    are dealt with by the underlying kOS CPU has been redesigned.  In
     previous versions it was not possible to have a trigger that lasts
     longer than one **physics tick**, leading to a lot of warnings in
     this section of the documentation.  Many of those warnings are now
@@ -309,7 +307,6 @@ CPU Update Loop
     every *update tick* as it did before.
 
 .. versionadded:: 0.19.3
-
     As of version 0.19.3, the behaviour of triggers was changed
     dramatically to enable triggers that last longer than one
     *physics tick*, thereby causing the section of documentation

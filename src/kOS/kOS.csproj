@@ -29,11 +29,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\Resources\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="KSPUtil">
+      <HintPath>..\..\Resources\KSPUtil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,11 +48,12 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="KSPAPIExtensions">
-      <HintPath>..\..\Resources\GameData\kOS\Plugins\KSPAPIExtensions.dll</HintPath>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\Resources\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +114,7 @@
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
-    <Compile Include="Screen\KOSToolBarWindow.cs" />
+    <Compile Include="Screen\KOSToolbarWindow.cs" />
     <Compile Include="Screen\ToolbarWrapper.cs" />
     <Compile Include="Suffixed\ActiveResourceValue.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
@@ -121,9 +129,6 @@
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
     <Compile Include="Function\PrintList.cs" />
-    <Compile Include="InterProcessor\InterProcCommand.cs" />
-    <Compile Include="InterProcessor\ProcessorManager.cs" />
-    <Compile Include="InterProcessor\RunCommand.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />
@@ -181,6 +186,12 @@
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
     <Compile Include="Suffixed\CrewMember.cs" />
     <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
+    <Compile Include="Communication\ProcessorManager.cs" />
+    <Compile Include="Communication\InterVesselManager.cs" />
+    <Compile Include="Serialization\ConfigNodeFormatter.cs" />
+    <Compile Include="Communication\ConnectivityManager.cs" />
+    <Compile Include="Communication\StockConnectivityManager.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Serialization\IHasSharedObjects.cs" />
     <Compile Include="Suffixed\ScienceDataValue.cs" />
@@ -191,6 +202,15 @@
     <Compile Include="Suffixed\PartModuleField\StockScienceExperimentFields.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
     <Compile Include="AddOns\OrbitalScience\DMScienceExperimentFields.cs" />
+    <Compile Include="Communication\MessageQueueStructure.cs" />
+    <Compile Include="Communication\InterProcCommand.cs" />
+    <Compile Include="Communication\RunCommand.cs" />
+    <Compile Include="Communication\MessageStructure.cs" />
+    <Compile Include="Communication\VesselConnection.cs" />
+    <Compile Include="Communication\ProcessorConnection.cs" />
+    <Compile Include="Communication\PlanetariumTimeProvider.cs" />
+    <Compile Include="Communication\Message.cs" />
+    <Compile Include="Communication\MessageQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -204,7 +224,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
@@ -223,9 +245,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
-  <ItemGroup />
   <ItemGroup>
-    <Folder Include="AddOns\OrbitalScience\" />
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup />
 </Project>
