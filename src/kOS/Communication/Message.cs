@@ -13,7 +13,7 @@ namespace kOS.Communication
         public const string DumpVessel = "vessel";
         public const string DumpProcessor = "processor";
 
-        public VesselTarget Vessel { get; set; }
+        public string Vessel { get; set; }
         public string Processor { get; set; }
 
         public static Message Create(object content, double sentAt, double receivedAt, VesselTarget sender, string processor)
@@ -38,13 +38,13 @@ namespace kOS.Communication
         public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender;
+            Vessel = sender.GetGuid().ToString();
         }
 
         public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender;
+            Vessel = sender.GetGuid().ToString();
         }
 
         public override Dump Dump()
@@ -60,7 +60,7 @@ namespace kOS.Communication
         {
             base.LoadDump(dump);
 
-            Vessel = dump[DumpVessel] as VesselTarget;
+            Vessel = dump[DumpVessel] as string;
         }
     }
 }
