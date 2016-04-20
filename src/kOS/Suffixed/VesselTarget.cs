@@ -30,6 +30,11 @@ namespace kOS.Suffixed
             return Vessel.vesselName;
         }
 
+        public Guid GetGuid()
+        {
+            return Vessel.id;
+        }
+
         public override Vector GetPosition()
         {
             return new Vector(Vessel.findWorldCenterOfMass() - CurrentVessel.findWorldCenterOfMass());
