@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Compilation;
 
-namespace kOS.InterProcessor
+namespace kOS.Communication
 {
     public class RunCommand : InterProcCommand
     {

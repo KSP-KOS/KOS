@@ -67,8 +67,7 @@ Structures are variables that contain more than one piece of information. For ex
     PRINT "The ship's surface velocity is: " + SHIP:VELOCITY:SURFACE.
 
 .. versionadded:: 0.19.0
-
-    As of kOS version 0.19.0, in fact ALL values a script can see are 
+    As of kOS version 0.19.0, in fact ALL values a script can see are
     now a kind of :struct:`Structure <structure>`, even basic primitive
     types such as Boolean and Scalar.
 

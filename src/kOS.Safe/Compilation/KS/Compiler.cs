@@ -20,7 +20,7 @@ namespace kOS.Safe.Compilation.KS
         private short lastColumn;
         private readonly List<BreakInfo> breakList = new List<BreakInfo>();
         private readonly List<int> returnList = new List<int>();
-        private readonly List<string> triggerRemoveNames = new List<string>();
+        private readonly List<string> triggerKeepNames = new List<string>();
         private bool nowCompilingTrigger;
         private bool compilingSetDestination;
         private bool identifierIsVariable;
@@ -61,7 +61,7 @@ namespace kOS.Safe.Compilation.KS
             lastColumn = 0;
             breakList.Clear();
             returnList.Clear();
-            triggerRemoveNames.Clear();
+            triggerKeepNames.Clear();
             nowCompilingTrigger = false;
             compilingSetDestination = false;
             identifierIsSuffix = false;
@@ -413,76 +413,85 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcessOnStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
+            nextBraceIsFunction = true; // triggers aren't really functions but act like it a lot.
+
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-            triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
             currentCodeSection = triggerObject.Code;
-            AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
-            AddOpcode(new OpcodePush(triggerObject.VariableName));
+            // Put the old value on top of the stack for equals comparison later:
+            AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
+            AddOpcode(new OpcodeEval());
+            // eval the expression for the new value, and leave it on the stack twice.
+            VisitNode(node.Nodes[1]);
+            AddOpcode(new OpcodeEval());
+            AddOpcode(new OpcodeDup());
+            // Put one of those two copies of the new value into the old value identifier for next time:
+            AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(new OpcodeStoreGlobal());
+            // Use the other dup'ed copy of the new value to actually do the equals
+            // comparison with the old value that's still under it on the stack:
             AddOpcode(new OpcodeCompareEqual());
-            AddOpcode(new OpcodeLogicNot());
-            Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
+            OpcodeBranchIfFalse branchToBody = new OpcodeBranchIfFalse();
+            branchToBody.Distance = 3;
+            AddOpcode(branchToBody);
+            AddOpcode(new OpcodePush(true));       // wasn't triggered yet, so preserve.
+            AddOpcode(new OpcodeReturn((short)0)); // premature return because it wasn't triggered
 
             // make flag that remembers whether to remove trigger:
             // defaults to true = removal should happen.
-            string triggerRemoveVarName = "$remove-" + triggerIdentifier;
-            PushTriggerRemoveName(triggerRemoveVarName);
-            AddOpcode(new OpcodePush(triggerRemoveVarName));
-            AddOpcode(new OpcodePush(true));
+            string triggerKeepName = "$keep-" + triggerIdentifier;
+            PushTriggerKeepName(triggerKeepName);
+            AddOpcode(new OpcodePush(triggerKeepName));
+            AddOpcode(new OpcodePush(false));
             AddOpcode(new OpcodeStoreGlobal());
 
             VisitNode(node.Nodes[2]);
 
-            // Reset the "old value" so the boolean has to change *again* to re-trigger
-            AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
-            AddOpcode(new OpcodePush(triggerObject.VariableName));
-            AddOpcode(new OpcodeStore());
-
-            // Skip removing the trigger if PRESERVE happened:
-            PopTriggerRemoveName(); // Throw away return value.
-            AddOpcode(new OpcodePush(triggerRemoveVarName));
-            Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
-
-            AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-            AddOpcode(new OpcodeRemoveTrigger());
-            Opcode eofOpcode = AddOpcode(new OpcodeEOF());
-            branchOpcode.DestinationLabel = eofOpcode.Label;
-            skipRemoval.DestinationLabel = eofOpcode.Label;
+            // PRESERVE will determine whether or not the trigger returns true (true means
+            // re-enable the trigger upon exit.)
+            PopTriggerKeepName();
+            AddOpcode(new OpcodePush(triggerKeepName));
+            AddOpcode(new OpcodeReturn((short)0));
+            
+            nextBraceIsFunction = false;
         }
 
         private void PreProcessWhenStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
+            nextBraceIsFunction = true; // triggers aren't really functions but act like it a lot.
+            
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
             currentCodeSection = triggerObject.Code;
             VisitNode(node.Nodes[1]);
-            Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
+            OpcodeBranchIfTrue branchToBody = new OpcodeBranchIfTrue();
+            branchToBody.Distance = 3;
+            AddOpcode(branchToBody);
+            AddOpcode(new OpcodePush(true));       // wasn't triggered yet, so preserve.
+            AddOpcode(new OpcodeReturn((short)0)); // premature return because it wasn't triggered
 
             // make flag that remembers whether to remove trigger:
             // defaults to true = removal should happen.
-            string triggerRemoveVarName = "$remove-" + triggerIdentifier;
-            PushTriggerRemoveName(triggerRemoveVarName);
-            AddOpcode(new OpcodePush(triggerRemoveVarName));
-            AddOpcode(new OpcodePush(true));
+            string triggerKeepName = "$keep-" + triggerIdentifier;
+            PushTriggerKeepName(triggerKeepName);
+            AddOpcode(new OpcodePush(triggerKeepName));
+            AddOpcode(new OpcodePush(false));
             AddOpcode(new OpcodeStoreGlobal());
 
             VisitNode(node.Nodes[3]);
 
-            // Skip removing the trigger if PRESERVE happened:
-            PopTriggerRemoveName(); // Throw away return value.
-            AddOpcode(new OpcodePush(triggerRemoveVarName));
-            Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
-
-            AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-            AddOpcode(new OpcodeRemoveTrigger());
-            Opcode eofOpcode = AddOpcode(new OpcodeEOF());
-            branchOpcode.DestinationLabel = eofOpcode.Label;
-            skipRemoval.DestinationLabel = eofOpcode.Label;
+            // PRESERVE will determine whether or not the trigger returns true (true means
+            // re-enable the trigger upon exit.)
+            PopTriggerKeepName();
+            AddOpcode(new OpcodePush(triggerKeepName));
+            AddOpcode(new OpcodeReturn((short)0));
+            nextBraceIsFunction = false;
         }
 
         /// <summary>
@@ -668,6 +677,11 @@ namespace kOS.Safe.Compilation.KS
                 if (userFuncObject.IsSystemLock())
                 {
                     AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
+                    AddOpcode(new OpcodeExists());
+                    var branch = new OpcodeBranchIfTrue();
+                    branch.Distance = 4;
+                    AddOpcode(branch);
+                    AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
                     AddOpcode(new OpcodeStore());
                 }
@@ -749,11 +763,12 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // need these for all locks now.
             AddOpcode(new OpcodeCall(func.ScopelessPointerIdentifier));
             AddOpcode(new OpcodeStoreGlobal());
-            AddOpcode(new OpcodeEOF());
+            AddOpcode(new OpcodePush(true)); // always preserve this particular kind of trigger.
+            AddOpcode(new OpcodeReturn((short)0));
             lastLine = rememberLastLine;
             currentCodeSection = rememberCurrentCodeSection;
         }
-        
+
         /// <summary>
         /// Get the instruction_block this node is immediately inside of.
         /// Gives a null if the node isn't in one (it's global).
@@ -847,26 +862,26 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void PushTriggerRemoveName(string newLabel)
+        private void PushTriggerKeepName(string newLabel)
         {
-            triggerRemoveNames.Add(newLabel);
+            triggerKeepNames.Add(newLabel);
             nowCompilingTrigger = true;
         }
 
-        private string PeekTriggerRemoveName()
+        private string PeekTriggerKeepName()
         {
-            return nowCompilingTrigger ? triggerRemoveNames[triggerRemoveNames.Count - 1] : string.Empty;
+            return nowCompilingTrigger ? triggerKeepNames[triggerKeepNames.Count - 1] : string.Empty;
         }
 
-        private string PopTriggerRemoveName()
+        private string PopTriggerKeepName()
         {
             // Will throw exception if list is empty, but that "should
             // never happen" as pushes and pops should be balanced in
             // the compiler's code.  If it throws exception we want to
             // let the exception happen to highlight the bug
-            string returnVal = triggerRemoveNames[triggerRemoveNames.Count - 1];
-            triggerRemoveNames.RemoveAt(triggerRemoveNames.Count - 1);
-            nowCompilingTrigger = (triggerRemoveNames.Count > 0);
+            string returnVal = triggerKeepNames[triggerKeepNames.Count - 1];
+            triggerKeepNames.RemoveAt(triggerKeepNames.Count - 1);
+            nowCompilingTrigger = (triggerKeepNames.Count > 0);
             return returnVal;
         }
 
@@ -2520,8 +2535,9 @@ namespace kOS.Safe.Compilation.KS
 
             if (triggerObject.IsInitialized())
             {
-                AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
-                AddOpcode(new OpcodePush(triggerObject.VariableName));
+                // Store the current value into the old value to prep for the first use of the ON trigger:
+                AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
+                VisitNode(node.Nodes[1]); // the expression in the on statement.
                 AddOpcode(new OpcodeStore());
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger());
@@ -2545,9 +2561,6 @@ namespace kOS.Safe.Compilation.KS
         private void VisitWaitStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-
-            if (nowCompilingTrigger)
-                throw new KOSWaitInvalidHereException(new LineCol(lastLine, lastColumn));
 
             if (node.Nodes.Count == 3)
             {
@@ -3106,9 +3119,9 @@ namespace kOS.Safe.Compilation.KS
             if (!nowCompilingTrigger)
                 throw new KOSPreserveInvalidHereException(new LineCol(lastLine, lastColumn));
 
-            string flagName = PeekTriggerRemoveName();
+            string flagName = PeekTriggerKeepName();
             AddOpcode(new OpcodePush(flagName));
-            AddOpcode(new OpcodePush(false));
+            AddOpcode(new OpcodePush(true));
             AddOpcode(new OpcodeStore());
         }
 

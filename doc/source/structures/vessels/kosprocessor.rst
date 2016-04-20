@@ -37,6 +37,9 @@ The type of structures returned by kOS when querying a module that contains a kO
         * - :attr:`BOOTFILENAME`
           - `:ref:`string <string>``
           - The filename for the boot file on this processor
+        * - :attr:`CONNECTION`
+          - `:struct:`Connection`
+          - Returns your connection to this processor
 
 .. note::
 
@@ -81,4 +84,10 @@ The type of structures returned by kOS when querying a module that contains a kO
     :type: `:ref:`string <string>``
 
     The filename for the boot file on this processor. This may be set to an empty :ref:`string <string>` “” or to “None” to disable the use of a boot file.
+
+.. attribute:: kOSProcessor:CONNECTION()
+
+    :return: :struct:`Connection`
+
+    Returns your connection to this processor.
 

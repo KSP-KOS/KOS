@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
 using kOS.Screen;
+using kOS.Communication;
 
 namespace kOS.Factories
 {
@@ -19,6 +20,11 @@ namespace kOS.Factories
         public IVolumeManager CreateVolumeManager(SharedObjects sharedObjects)
         {
             return new VolumeManager();
+        }
+
+        public ConnectivityManager CreateConnectivityManager()
+        {
+            return new StockConnectivityManager();
         }
     }
 }

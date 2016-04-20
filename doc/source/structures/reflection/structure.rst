@@ -13,7 +13,6 @@ Overview
 --------
 
 .. versionadded:: 0.19.0
-
     This is a new feature of kOS v0.19.0.  Most of what is
     documented on this page won't work on earlier versions.
 

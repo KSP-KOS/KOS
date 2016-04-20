@@ -12,5 +12,6 @@ Command Reference
     Parts Information <commands/parts>
     File I/O <commands/files>
     Terminal and GUI <commands/terminalgui>
+    Serialization <commands/serialization>
+    Communication <commands/communication>
     Resource Transfer <commands/resource_transfer>
-    Processors <commands/processors>
