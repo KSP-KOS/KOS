@@ -3,7 +3,7 @@
 Message
 =======
 
-Represents a single message stored in a CPU's or vessel's :struct:`message queue <MessageQueue>`.
+Represents a single message stored in a CPU's or vessel's :struct:`MessageQueue`.
 
 The main message content that the sender intended to send can be retrieved using :attr:`Message:CONTENT` attribute. Other suffixes are
 automatically added to every message by kOS.
@@ -83,7 +83,7 @@ Structure
 
 .. attribute:: Message:HASSENDER
 
-    :struct:`Boolean`
+    :type: :struct:`Boolean`
 
     Because there can be a delay between when the message was sent and
     when it was processed by the receiving script, it's possibile that
@@ -91,7 +91,7 @@ Structure
     have either exploded, or been recovered, or been merged into another
     vessel via docking.  You can check the value of the ``:HASSENDER``
     suffix to find out if the sender of the message is still a valid vessel.
-    If :attr:`:HASSENDER` is false, then :attr:`SENDER` won't give you an
+    If :attr:`HASSENDER` is false, then :attr:`SENDER` won't give you an
     object of type :struct:`Vessel` and instead will give you just a
     :struct:`Boolean` false.
 
