@@ -73,11 +73,11 @@ KUniverse 4th wall methods
           - :struct:`CraftTemplate`
           - Method
           - Get the file path for the craft with the given name, saved in the given editor.
-        * - :meth:`LAUNCHCRAFT(path)`
+        * - :meth:`LAUNCHCRAFT(template)`
           - none
           - Method
           - Launch a new instance of the given craft at it's default launch site.
-        * - :meth:`LAUNCHCRAFTFROM(path, site)`
+        * - :meth:`LAUNCHCRAFTFROM(template, site)`
           - none
           - Method
           - Launch a new instance of the given craft at it's default launch site.
@@ -219,7 +219,7 @@ KUniverse 4th wall methods
 
 .. method:: KUniverse:LAUNCHCRAFT(template)
 
-    :parameter template: :struct:`String` craft name.
+    :parameter template: :struct:`CraftTemplate` craft template object.
 
     Launch a new instance of the given :struct:`CraftTemplate` from the
     template's default launch site.
@@ -234,7 +234,7 @@ KUniverse 4th wall methods
 
 .. method:: KUniverse:LAUNCHCRAFTFROM(template, site)
 
-    :parameter template: :struct:`CraftTemplate`.
+    :parameter template: :struct:`CraftTemplate` craft template object.
     :parameter site: :struct:`String` editor name.
 
     Returns the :struct:`CraftTemplate` matching the given craft name saved from

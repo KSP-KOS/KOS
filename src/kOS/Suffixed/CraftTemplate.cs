@@ -61,8 +61,11 @@ namespace kOS.Suffixed
             string path2 = KSPUtil.GetOrCreatePath("Ships/SPH");
             string path3 = KSPUtil.GetOrCreatePath("saves/" + HighLogic.SaveFolder + "/Ships/VAB");
             string path4 = KSPUtil.GetOrCreatePath("saves/" + HighLogic.SaveFolder + "/Ships/SPH");
-            ret.AddRange(Directory.GetFiles(path1));
-            ret.AddRange(Directory.GetFiles(path2));
+            if (HighLogic.CurrentGame.Parameters.Difficulty.AllowStockVessels)
+            {
+                ret.AddRange(Directory.GetFiles(path1));
+                ret.AddRange(Directory.GetFiles(path2));
+            }
             ret.AddRange(Directory.GetFiles(path3));
             ret.AddRange(Directory.GetFiles(path4));
             return ret;
@@ -129,5 +132,10 @@ namespace kOS.Suffixed
         public double Cost { get { return template.totalCost; } }
 
         public double PartCount { get { return template.partCount; } }
+
+        public override string ToString()
+        {
+            return string.Format("CRAFTTEMPLATE(\"{0}\", \"{1}\")", Name, Editor);
+        }
     }
 }
