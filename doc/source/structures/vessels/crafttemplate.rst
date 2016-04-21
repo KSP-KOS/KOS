@@ -40,7 +40,7 @@ CraftTemplate
           - The default cost of the craft
         * - :attr:`PARTCOUNT`
           - :struct:`Scalar`
-          - The total number of parts n this craft.
+          - The total number of parts in this craft.
 
 
 .. attribute:: CraftTemplate:NAME

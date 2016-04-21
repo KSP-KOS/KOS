@@ -80,7 +80,7 @@ KUniverse 4th wall methods
         * - :meth:`LAUNCHCRAFTFROM(template, site)`
           - none
           - Method
-          - Launch a new instance of the given craft at it's default launch site.
+          - Launch a new instance of the given craft at the given site.
         * - :meth:`CRAFTLIST()`
           - :struct:`List` of :struct:`CraftTemplate`
           - Method
@@ -235,11 +235,10 @@ KUniverse 4th wall methods
 .. method:: KUniverse:LAUNCHCRAFTFROM(template, site)
 
     :parameter template: :struct:`CraftTemplate` craft template object.
-    :parameter site: :struct:`String` editor name.
+    :parameter site: :struct:`String` launch site name.
 
-    Returns the :struct:`CraftTemplate` matching the given craft name saved from
-    the given editor.  Valid values for site include ``"RUNWAY"`` and
-    ``"LAUNCHPAD"``.
+    Launch a new instance of the given :struct:`CraftTemplate` from the given
+    launch site. Valid values for site include ``"RUNWAY"`` and ``"LAUNCHPAD"``.
 
     **NOTE:** The craft will be launched with the KSP default crew assignment,
     as if you had clicked launch from the editor without manually adjusting the

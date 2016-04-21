@@ -75,12 +75,8 @@ namespace kOS.Suffixed
         private ShipTemplate template;
 
         public CraftTemplate(string filePath)
+            : this(filePath, ShipConstruction.LoadTemplate(filePath))
         {
-            path = filePath;
-            template = ShipConstruction.LoadTemplate(filePath);
-            if (template == null)
-                throw new KOSException("Failed to load template from given path:\n  " + filePath);
-            InitializeSuffixes();
         }
 
         public CraftTemplate(string filePath, ShipTemplate temp)
