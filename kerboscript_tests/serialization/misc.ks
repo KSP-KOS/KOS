@@ -12,6 +12,7 @@ writejson(latlng(10,20), "geo.json").
 set read to readjson("geo.json").
 print read:lat = 10.
 print read:lng = 20.
+print read:heading <> 0.
 
 // Timespan
 set t to time.
