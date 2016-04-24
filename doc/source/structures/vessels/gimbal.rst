@@ -23,7 +23,19 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
         * - :attr:`LOCK`
           - :ref:`Boolean <boolean>`
           - Is the Gimbal locked in neutral position? 
-          
+
+        * - :attr:`PITCH`
+          - :ref:`Boolean <boolean>`
+          - Does the Gimbal respond to pitch controls? 
+
+        * - :attr:`YAW`
+          - :ref:`Boolean <boolean>`
+          - Does the Gimbal respond to yaw controls? 
+
+        * - :attr:`ROLL`
+          - :ref:`Boolean <boolean>`
+          - Does the Gimbal respond to roll controls? 
+
         * - :attr:`LIMIT`
           - :ref:`scalar <scalar>` (%)
           - Percentage of the maximum range the Gimbal is allowed to travel 
@@ -60,6 +72,27 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
     :access: Get/Set
         
     Is this gimbal locked to neutral position and not responding to steering controls right now? When you set it to true it will snap the engine back to 0s for pitch, yaw and roll
+
+.. attribute:: Gimbal:PITCH
+
+    :type: :ref:`Boolean <boolean>`
+    :access: Get/Set
+        
+    Is the gimbal responding to pitch controls? Relevant only if the gimbal is not locked.
+
+.. attribute:: Gimbal:YAW
+
+    :type: :ref:`Boolean <boolean>`
+    :access: Get/Set
+        
+    Is the gimbal responding to yaw controls? Relevant only if the gimbal is not locked.
+
+.. attribute:: Gimbal:ROLL
+
+    :type: :ref:`Boolean <boolean>`
+    :access: Get/Set
+        
+    Is the gimbal responding to roll controls? Relevant only if the gimbal is not locked.
 
 .. attribute:: Gimbal:LIMIT
 
