@@ -20,6 +20,18 @@ namespace kOS.Suffixed.PartModuleField
             {
                 gimbal.gimbalLock = value;
             }, "Is the Gimbal free to travel?"));
+            AddSuffix("PITCH", new SetSuffix<BooleanValue>(() => gimbal.enablePitch, value =>
+            {
+                gimbal.enablePitch = value;
+            }, "Does the Gimbal respond to pitch controls?"));
+            AddSuffix("YAW", new SetSuffix<BooleanValue>(() => gimbal.enableYaw, value =>
+            {
+                gimbal.enableYaw = value;
+            }, "Does the Gimbal respond to yaw controls?"));
+            AddSuffix("ROLL", new SetSuffix<BooleanValue>(() => gimbal.enableRoll, value =>
+            {
+                gimbal.enableRoll = value;
+            }, "Does the Gimbal respond to roll controls?"));
             AddSuffix("LIMIT", new ClampSetSuffix<ScalarValue>(() => gimbal.gimbalLimiter,
                                               value => gimbal.gimbalLimiter = value,
                                               0f, 100f, 1f,
