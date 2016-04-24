@@ -60,6 +60,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`ISDEAD`                        :struct:`Boolean`               True if the vessel refers to a ship that has gone away.
     :attr:`PATCHES`                       :struct:`List`                  :struct:`Orbit` patches
     :attr:`ROOTPART`                      :struct:`Part`                  Root :struct:`Part` of this vessel
+    :attr:`CONTROLPART`                   :struct:`Part`                  Control reference :struct:`Part` of this vessel
     :attr:`PARTS`                         :struct:`List`                  all :struct:`Parts <Part>`
     :attr:`DOCKINGPORTS`                  :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
     :attr:`ELEMENTS`                      :struct:`List`                  all :struct:`Elements <Element>`
@@ -355,6 +356,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     The ROOTPART is usually the first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.
+
+.. attribute:: Vessel:CONTROLPART
+
+    :type: :struct:`Part`
+    :access: Get only
+
+    Control reference part is the :struct:`Part` relative to which the directions (as displayed on the navball and returned in :attr:`FACING`) are determined. A part may be set as the control reference part by "Control From Here" action or :attr:`PART:CONTROLFROM` command (available for parts of specific types), but if it's not set, the root part is used as the reference part (even if a part of this type can't be selected as the reference part otherwise).
 
 .. attribute:: Vessel:PARTS
 
