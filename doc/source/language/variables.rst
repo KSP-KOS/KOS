@@ -115,12 +115,11 @@ Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
 .. versionadded:: 0.17
+    The syntax without the initializer, looking like so::
 
-The syntax without the initializer, looking like so::
+        DECLARE x. // no initializer like "TO 1."
 
-    DECLARE x. // no initializer like "TO 1."
-
-is **no longer legal syntax**.
+    is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
@@ -157,9 +156,13 @@ Program 2::
     SET A TO 7.
     RUN PROGRAM1( A, A+1 ).
 
+.. highlight:: none
+
 The above example would give the output::
 
     X times Y is 56.
+
+.. highlight:: kerboscript
 
 It is also possible to put more than one parameter into a single ``DECLARE PARAMETER`` statement, separated by commas, as shown below::
 
@@ -622,12 +625,17 @@ Examples::
     print "average is " + calcAverage(testList).
     print "but out here where it's global, sum is still " + sum.
 
+.. highlight:: none
+
 This example will print::
+
 
     Inside calcAverage, sum is 30
     average is 10
     but out here where it's global, sum is still -1
     
+.. highlight:: kerboscript
+
 Thus proving that the variable called SUM inside the function is NOT the
 same variable as the one called SUM out in the global main code.
 
@@ -648,13 +656,14 @@ Scoping and Triggers:
 
 Triggers such as:
 
-  - WHEN <expression> { <statements> }.
+  - WHEN <boolean expression> THEN { <statements> }.
 
 and
 
-  - ON <boolean variable> { <statements> }.
+  - ON <boolean expression> { <statements> }.
 
-Do not work predictably when you use local variables in the <expression>
+Do not work predictably when you use local variables in the
+<boolean expression>
 part of them.  They need to be designed to use global variables only,
 because they outlive the duration of any particular scoping braces.
 You can declare local variables within their <statements> in their bodies,

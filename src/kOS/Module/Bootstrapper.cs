@@ -24,6 +24,7 @@ namespace kOS.Module
 
             CheckForLegacyArchive();
 
+            KOSNomenclature.PopulateMapping(typeof(kOS.Safe.Encapsulation.Structure).Assembly, this.GetType().Assembly);
         }
 
         private void BuildEnvironment()
@@ -31,6 +32,7 @@ namespace kOS.Module
             SafeHouse.Init(
                 Config.Instance, 
                 Core.VersionInfo,
+                "http://ksp-kos.github.io/KOS_DOC/",
                 Application.platform == RuntimePlatform.WindowsPlayer,
                 GameDatabase.Instance.PluginDataFolder + "/Ships/Script/"
                 );
@@ -55,18 +57,19 @@ namespace kOS.Module
                 return;
             }
 
-            PopupDialog.SpawnPopupDialog(
-                new MultiOptionDialog(
-                    "The kOS v0.15 update has moved the archive folder to /Ships/Script/ and changed the file extension from *.txt to *.ks to be more in line with squad's current folder structure. Would you like us to attempt to migrate your existing scripts?",
-                    () => backup = GUILayout.Toggle(backup, "Backup My scripts first"),
-                    "kOS",
-                    HighLogic.Skin, 
-                    new DialogOption("Yes, Do it!", MigrateScripts, true),
-                    new DialogOption("No, I'll do it myself", () => { }, true)
-                    ),
-                true,
-                HighLogic.Skin
-                );
+            //TODO: 1.1 TODO
+            //PopupDialog.SpawnPopupDialog(
+            //    new MultiOptionDialog(
+            //        "The kOS v0.15 update has moved the archive folder to /Ships/Script/ and changed the file extension from *.txt to *.ks to be more in line with squad's current folder structure. Would you like us to attempt to migrate your existing scripts?",
+            //        () => backup = GUILayout.Toggle(backup, "Backup My scripts first"),
+            //        "kOS",
+            //        HighLogic.Skin, 
+            //        new DialogOption("Yes, Do it!", MigrateScripts, true),
+            //        new DialogOption("No, I'll do it myself", () => { }, true)
+            //        ),
+            //    true,
+            //    HighLogic.Skin
+            //    );
         }
 
         private void MigrateScripts()

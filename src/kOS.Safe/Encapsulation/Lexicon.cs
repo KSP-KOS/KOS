@@ -5,9 +5,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Lexicon")]
+    [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false) ]
     public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
@@ -53,13 +56,34 @@ namespace kOS.Safe.Encapsulation
             InitalizeSuffixes();
         }
 
-        private Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon)
+        public Lexicon(IEnumerable<Structure> values) : this()
+        {
+            FillWithEnumerableValues(values);
+        }
+
+        public Lexicon(IEnumerable<KeyValuePair<Structure, Structure>> lexicon)
             : this()
         {
-            foreach (var u in lexicon)
+            foreach (KeyValuePair<Structure, Structure> u in lexicon)
             {
                 internalDictionary.Add(u);
             }
+        }
+
+        private void FillWithEnumerableValues(IEnumerable<Structure> values)
+        {
+            if ((values.Count() == 1) && (values.First() is IEnumerable<Structure>)) {
+                FillWithEnumerableValues(values.First() as IEnumerable<Structure>);
+                return;
+            }
+
+            if (values.Count() % 2 == 1) {
+                throw new KOSException("Lexicon constructor expects an even number of arguments or a single enumerable type");
+            }
+
+            values.Select((value, index) => new {Index = index, Value = value})
+                .GroupBy(x => x.Index / 2).ForEach(g => internalDictionary[g.ElementAt(0).Value] = g.ElementAt(1).Value);
+
         }
 
         private void InitalizeSuffixes()
@@ -232,7 +256,7 @@ namespace kOS.Safe.Encapsulation
         {
             internalDictionary[index] = value;
         }
-        
+
         // Only needed because IIndexable demands it.  For a lexicon, none of the code is
         // actually trying to call this:
         public void SetIndex(int index, Structure value)

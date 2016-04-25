@@ -39,6 +39,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -88,10 +91,8 @@
     <Compile Include="Encapsulation\BooleanValue.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\Enumerator.cs" />
-    <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
-    <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
@@ -154,7 +155,6 @@
     <Compile Include="Exceptions\KOSSuffixUseException.cs" />
     <Compile Include="Exceptions\KOSUnavailableAddonException.cs" />
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
-    <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSWrongControlValueTypeException.cs" />
     <Compile Include="Exceptions\KOSWrongCPUVesselException.cs" />
@@ -182,7 +182,6 @@
     <Compile Include="Persistence\IVolumeManager.cs" />
     <Compile Include="Persistence\KOSFileException.cs" />
     <Compile Include="Persistence\PersistenceUtilities.cs" />
-    <Compile Include="Persistence\ProgramFile.cs" />
     <Compile Include="Persistence\Volume.cs" />
     <Compile Include="Persistence\VolumeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -208,14 +207,18 @@
     <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\KOSNomenclature.cs" />
+    <Compile Include="Utilities\KOSNomenclatureAttribute.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
-    <Compile Include="Utilities\Math.cs" />
+    <Compile Include="Utilities\kosMath.cs" />
     <Compile Include="Utilities\TickGen.cs" />
     <Compile Include="Encapsulation\QueueValue.cs" />
     <Compile Include="Encapsulation\StackValue.cs" />
+    <Compile Include="Encapsulation\RangeValue.cs" />
+    <Compile Include="Encapsulation\CollectionValue.cs" />
     <Compile Include="Encapsulation\EnumerableValue.cs" />
     <Compile Include="Serialization\Formatter.cs" />
     <Compile Include="Serialization\JSONFormatter.cs" />
@@ -226,7 +229,17 @@
     <Compile Include="Serialization\Dump.cs" />
     <Compile Include="Serialization\DumpWithHeader.cs" />
     <Compile Include="Serialization\SerializableStructure.cs" />
-    <Compile Include="Encapsulation\ISerializableValue.cs" />
+    <Compile Include="Persistence\FileContent.cs" />
+    <Compile Include="Encapsulation\VolumeFile.cs" />
+    <Compile Include="Encapsulation\ArchiveFile.cs" />
+    <Compile Include="Encapsulation\HarddiskFile.cs" />
+    <Compile Include="Encapsulation\PrimitiveStructure.cs" />
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\CurrentTimeProvider.cs" />
+    <Compile Include="Communication\BaseMessage.cs" />
+    <Compile Include="Serialization\IDumper.cs" />
+    <Compile Include="Communication\GenericMessageQueue.cs" />
+    <Compile Include="Exceptions\KOSCommunicationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -259,4 +272,7 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Communication\" />
+  </ItemGroup>
 </Project>

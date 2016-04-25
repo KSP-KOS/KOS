@@ -8,6 +8,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("LoadDistances")]
     public class LoadDistanceValue : Structure
     {
         private VesselRanges vesselRanges;
@@ -33,6 +34,8 @@ namespace kOS.Suffixed
             AddSuffix("SPLASHED", new Suffix<SituationLoadDistanceValue>(() => new SituationLoadDistanceValue(vesselRanges.splashed)));
             AddSuffix("SUBORBITAL", new Suffix<SituationLoadDistanceValue>(() => new SituationLoadDistanceValue(vesselRanges.subOrbital)));
         }
+        
+        [kOS.Safe.Utilities.KOSNomenclature("LoadDistance")]
         public class SituationLoadDistanceValue : Structure
         {
             private VesselRanges.Situation situationValue;

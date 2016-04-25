@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Career")]
     public class Career : Structure
     {        
         static Career()
@@ -108,7 +109,7 @@ namespace kOS.Suffixed
             reason = "vehicle assembly building or space plane hangar";
             float buildingLevel = Math.Max(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding),
                                             ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar));
-            return GameVariables.Instance.UnlockedActionGroupsCustom(buildingLevel);
+            return GameVariables.Instance.UnlockedActionGroupsCustom(buildingLevel, false);
         }
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace kOS.Suffixed
                     return false; // not even sure how you could get here.
             }
             // We'll attach it to the same point where the game starts unlocking basic action groups:
-            return GameVariables.Instance.UnlockedActionGroupsStock(buildingLevel);
+            return GameVariables.Instance.UnlockedActionGroupsStock(buildingLevel, false);
         }
 
         /// <summary>

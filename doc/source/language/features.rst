@@ -10,29 +10,34 @@ General Features of the **KerboScript** Language
 Case Insensitivity
 ------------------
 
-Everything in **KerboScript** is case-insensitive, including your own variable names and filenames. The only exception is when you perform a string comparison, (``"Hello"="HELLO"`` will return false.)
-
-Most of the examples here will show the syntax in all-uppercase to help make it stand out from the explanatory text.
+Everything in **KerboScript** is case-insensitive, including your own variable names and filenames.
+This extends to string comparison as well. (``"Hello"="HELLO"`` will return true.)
 
 Expressions
 -----------
 
 KerboScript uses an expression evaluation system that allows you to perform math operations on variables. Some variables are defined by you. Others are defined by the system. There are four basic types:
 
-1. Numbers
-~~~~~~~~~~
+Numbers (Scalars)
+~~~~~~~~~~~~~~~~~
 
 You can use mathematical operations on numbers, like this::
 
     SET X TO 4 + 2.5.
     PRINT X.             // Outputs 6.5
 
-The system follows the order of operations, but currently the implementation is imperfect. For example, multiplication will always be performed before division, regardless of the order they come in. This will be fixed in a future release.
+The system follows the usual mathematical order of operations.
 
-2. Strings
-~~~~~~~~~~
+Throughout the documentation, numbers like this are referred to
+as :struct:`Scalars <scalar>` to distinguish them from the many
+places where the mod works with :struct:`Vector <vector>` values
+instead.
 
-Strings are pieces of text that are generally meant to be printed to the screen. For example::
+Strings
+~~~~~~~
+
+:struct:`Strings <string>` are pieces of text that are generally
+meant to be printed to the screen. For example::
 
     PRINT "Hello World!".
 
@@ -40,15 +45,32 @@ To concatenate strings, you can use the + operator. This works with mixtures of 
 
     PRINT "4 plus 3 is: " + (4+3).
 
+Booleans
+~~~~~~~~
+
+:struct:`Booleans <boolean>` are values that can either be ``True``
+or ``False`` and can be used to store the result of conditional checks::
+
+    set myValue to (x >= 10 and x <= 99).
+    if myValue {
+      print "x is a two digit number.".
+    }
+
 .. _features structures:
 
-3. Structures
-~~~~~~~~~~~~~
+Structures
+~~~~~~~~~~
 
 Structures are variables that contain more than one piece of information. For example, a Vector has an X, a Y, and a Z component. Structures can be used with SET.. TO just like any other variable. To access the sub-elements of a structure, you use the colon operator (":"). Here are some examples::
 
     PRINT "The Mun's periapsis altitude is: " + MUN:PERIAPSIS.
     PRINT "The ship's surface velocity is: " + SHIP:VELOCITY:SURFACE.
+
+.. versionadded:: 0.19.0
+    As of kOS version 0.19.0, in fact ALL values a script can see are
+    now a kind of :struct:`Structure <structure>`, even basic primitive
+    types such as Boolean and Scalar.
+
 
 Many structures also let you set a specific component of them, for example::
 
@@ -59,8 +81,8 @@ Many structures also let you set a specific component of them, for example::
 
 .. _features methods:
 
-4. Structure Methods
-~~~~~~~~~~~~~~~~~~~~
+Structure Methods
+~~~~~~~~~~~~~~~~~
 
 Structures also often contain methods. A method is a suffix of a structure that actually performs an activity when you mention it, and can sometimes take parameters. The following are examples of calling methods of a structure::
 

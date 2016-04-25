@@ -7,6 +7,7 @@ Mathematics and Basic Geometry
     :maxdepth: 2
 
     math/basic
+    math/scalar
     math/vector
     math/direction
     math/geocoordinates

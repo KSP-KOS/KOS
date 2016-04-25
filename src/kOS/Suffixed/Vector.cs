@@ -9,6 +9,7 @@ using kOS.Safe;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Vector")]
     public class Vector : SerializableStructure
     {
         public const string DumpX = "x";
@@ -23,7 +24,7 @@ namespace kOS.Suffixed
 
         public Vector()
         {
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         public Vector(Vector3d init)
@@ -78,53 +79,6 @@ namespace kOS.Suffixed
             }));
         }
 
-        public override object TryOperation(string op, object other, bool reverseOrder)
-        {
-            other = ConvertToDoubleIfNeeded(other);
-            other = Structure.ToPrimitive(other);
-
-            switch (op)
-            {
-                case "*":
-                    if (other is Vector) return this * (Vector)other;
-                    if (other is double) return this * (double)other;
-                    break;
-
-                case "/":
-                    if (!reverseOrder)
-                    {
-                        if (other is Vector) throw new Exception("Cannot divide by a vector.");
-                        if (other is double) return this * (1.0 / (double)other);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException("Cannot divide by a vector.");
-                    }
-                    break;
-
-                case "+":
-                    if (other is Vector) return this + (Vector)other;
-                    break;
-
-                case "-":
-                    if (!reverseOrder)
-                    {
-                        if (other is Vector) return this - (Vector)other;
-                    }
-                    else
-                    {
-                        if (other is Vector) return (Vector)other - this;
-                    }
-                    break;
-
-                default:
-                    throw new NotImplementedException(string.Format(
-                        "Cannot perform operation: {0} {1} {2}", this, op, other));
-            }
-
-            return null;
-        }
-
         public ScalarValue Magnitude()
         {
             return new Vector3d(X, Y, Z).magnitude;
@@ -158,6 +112,17 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "V(" + X + ", " + Y + ", " + Z + ")";
+        }
+
+        public override bool Equals(object obj)
+        {
+            Type compareType = typeof(Vector);
+            if (compareType.IsInstanceOfType(obj))
+            {
+                Vector b = obj as Vector;
+                return (X == b.X && Y == b.Y && Z == b.Z);
+            }
+            return false;
         }
 
         public static implicit operator Vector3d(Vector d)
@@ -210,6 +175,16 @@ namespace kOS.Suffixed
             return new Vector(a.X / b, a.Y / b, a.Z / b);
         }
 
+        public static Vector operator /(Vector a, float b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
+        public static Vector operator /(Vector a, double b)
+        {
+            return new Vector(a.X / b, a.Y / b, a.Z / b);
+        }
+
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.ToVector3D() + b.ToVector3D());
@@ -223,6 +198,21 @@ namespace kOS.Suffixed
         public static Vector operator -(Vector a)
         {
             return a * (-1d);
+        }
+
+        public static bool operator ==(Vector a, Vector b)
+        {
+            Type compareType = typeof(Vector);
+            if (compareType.IsInstanceOfType(a))
+            {
+                return a.Equals(b); // a is not null, we can use the built in equals function
+            }
+            return !compareType.IsInstanceOfType(b); // a is null, return true if b is null and false if not null
+        }
+
+        public static bool operator !=(Vector a, Vector b)
+        {
+            return !(a == b);
         }
 
         public override Dump Dump()

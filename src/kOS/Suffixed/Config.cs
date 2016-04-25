@@ -8,6 +8,7 @@ using KSP.IO;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Config")]
     public class Config : Structure, IConfig
     {
         private static Config instance;
@@ -20,6 +21,7 @@ namespace kOS.Suffixed
         public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
         public bool EnableRTIntegration { get { return GetPropValue<bool>(PropId.EnableRTIntegration); } set { SetPropValue(PropId.EnableRTIntegration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
+        public bool ObeyHideUI { get { return GetPropValue<bool>(PropId.ObeyHideUI); } set { SetPropValue(PropId.ObeyHideUI, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         public bool AudibleExceptions { get { return GetPropValue<bool>(PropId.AudibleExceptions); } set { SetPropValue(PropId.AudibleExceptions, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
@@ -46,6 +48,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", true, false, true, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.ObeyHideUI , new ConfigKey("ObeyHideUI", "OBEYHIDEUI", "Obey UI hide (F2 key)", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.AudibleExceptions, new ConfigKey("AudibleExceptions", "AUDIOERR", "Sound effect when KOS gives an error", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
@@ -197,14 +200,15 @@ namespace kOS.Suffixed
             ShowStatistics = 3,
             EnableRTIntegration = 4,
             StartOnArchive = 5,
-            EnableSafeMode = 6,
-            AudibleExceptions = 7,
-            VerboseExceptions = 8,
-            EnableTelnet = 9,
-            TelnetPort = 10,
-            TelnetLoopback = 11,
-            UseBlizzyToolbarOnly = 12,
-            DebugEachOpcode = 13
+            ObeyHideUI = 6,
+            EnableSafeMode = 7,
+            AudibleExceptions = 8,
+            VerboseExceptions = 9,
+            EnableTelnet = 10,
+            TelnetPort = 11,
+            TelnetLoopback = 12,
+            UseBlizzyToolbarOnly = 13,
+            DebugEachOpcode = 14
         }
     }
 }

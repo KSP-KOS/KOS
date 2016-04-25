@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
+    [kOS.Safe.Utilities.KOSNomenclature("DockingPort")]
     public class DockingPortValue : PartValue
     {
         private readonly ModuleDockingNode module;
@@ -27,7 +28,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("DOCKEDSHIPNAME", new Suffix<StringValue>(() => module.vesselInfo != null ? module.vesselInfo.name : string.Empty));
             AddSuffix("STATE", new Suffix<StringValue>(() => module.state));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => true));
-            AddSuffix("UNDOCK", new NoArgsVoidSuffix(() => module.Undock()));
+            AddSuffix("UNDOCK", new NoArgsVoidSuffix(() => DoUndock()));
             AddSuffix("TARGET", new NoArgsVoidSuffix(() => module.SetAsTarget()));
             AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing,
                                                                "The direction facing outward from the docking port.  This " +
@@ -77,6 +78,41 @@ namespace kOS.Suffixed.Part
             // with docking operations
 
             return new Vector(module.nodeTransform.position - Shared.Vessel.findWorldCenterOfMass());
+        }
+
+        public void DoUndock()
+        {
+            // if the module is not currently docked, fail silently.
+            if (module.otherNode != null)
+            {
+                // check to see if either the undock or decouple events are available
+                // and execute accordingly.
+                var evnt1 = module.Events["Undock"];
+                var evnt2 = module.Events["Decouple"];
+                if (evnt1 != null && evnt1.guiActive && evnt1.active)
+                {
+                    module.Undock();
+                }
+                else if (evnt2 != null && evnt2.guiActive && evnt2.active)
+                {
+                    module.Decouple();
+                }
+                else
+                {
+                    // If you can't do either event on this port, check to see if
+                    // you can on the port it's docked too!
+                    evnt1 = module.otherNode.Events["Undock"];
+                    evnt2 = module.otherNode.Events["Decouple"];
+                    if (evnt1 != null && evnt1.guiActive && evnt1.active)
+                    {
+                        module.otherNode.Undock();
+                    }
+                    else if (evnt2 != null && evnt2.guiActive && evnt2.active)
+                    {
+                        module.otherNode.Decouple();
+                    }
+                }
+            }
         }
     }
 }

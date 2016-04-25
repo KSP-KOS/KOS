@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace kOS.Screen
@@ -16,7 +17,7 @@ namespace kOS.Screen
         private const string EXIT_BUTTON_TEXT = "(E)xit";
         private const string SAVE_BUTTON_TEXT = "(S)ave";
         private const string RELOAD_BUTTON_TEXT = "(R)eload";
-        
+
         private Rect innerCoords;
         private Rect saveCoords;
         private Rect exitCoords;
@@ -40,36 +41,36 @@ namespace kOS.Screen
 
         public KOSTextEditPopup()
         {
-            UniqueId = 100 ; // This is expected to be overridden, but Unity requires that
-                             // KosTextEditPopup() be a constructor that takes zero arguments,
-                             // so the real WindowId has to be set after construction.
-            WindowRect = new Rect(0,0,470,280); // bogus starting value will be changed later when attaching to a terminal.
+            UniqueId = 100; // This is expected to be overridden, but Unity requires that
+                            // KosTextEditPopup() be a constructor that takes zero arguments,
+                            // so the real WindowId has to be set after construction.
+            WindowRect = new Rect(0, 0, 470, 280); // bogus starting value will be changed later when attaching to a terminal.
         }
 
         public void Freeze(bool newVal)
         {
             frozen = newVal;
         }
-        
+
         public void Awake()
         {
-            var gObj = new GameObject( "texteditConfirm", typeof(DelegateDialog) );
+            var gObj = new GameObject("texteditConfirm", typeof(DelegateDialog));
             DontDestroyOnLoad(gObj);
-            dialog = ((DelegateDialog)gObj.GetComponent(typeof(DelegateDialog)));
-            var urlGetter = new WWW( string.Format("file://{0}GameData/kOS/GFX/resize-button.png", KSPUtil.ApplicationRootPath.Replace("\\", "/")) );
-            urlGetter.LoadImageIntoTexture( resizeImage );
+            dialog = (DelegateDialog)gObj.GetComponent(typeof(DelegateDialog));
+            var urlGetter = new WWW(string.Format("file://{0}GameData/kOS/GFX/resize-button.png", KSPUtil.ApplicationRootPath.Replace("\\", "/")));
+            urlGetter.LoadImageIntoTexture(resizeImage);
         }
 
-        public void AttachTo( TermWindow termWindow, Volume attachVolume, string attachFileName = "" )
+        public void AttachTo(TermWindow termWindow, Volume attachVolume, string attachFileName = "")
         {
             term = termWindow;
-            WindowRect = new Rect(0,0,470,280); // will be resized and moved in onGUI.
+            WindowRect = new Rect(0, 0, 470, 280); // will be resized and moved in onGUI.
             frozen = false;
             loadingVolume = attachVolume;
             loadingFileName = attachFileName;
             LoadContents(attachVolume, attachFileName);
         }
-        
+
         public bool Contains(Vector2 posAbs)
         {
             return WindowRect.Contains(posAbs);
@@ -78,12 +79,12 @@ namespace kOS.Screen
         public override void GetFocus()
         {
             Freeze(false);
-        }            
+        }
 
         public override void LoseFocus()
         {
             Freeze(true);
-        }            
+        }
 
         public override void Open()
         {
@@ -91,18 +92,18 @@ namespace kOS.Screen
             base.Open();
             BringToFront();
         }
-        
+
         public override void Close()
         {
             isDirty = false;
             base.Close();
         }
-                
+
         public int GetUniqueId()
         {
             return UniqueId;
         }
-        
+
         public void SetUniqueId(int newValue)
         {
             UniqueId = newValue;
@@ -111,11 +112,11 @@ namespace kOS.Screen
         public void Update()
         {
             // Only stay open as long as the attached terminal window stays open:
-            if (IsOpen && ( term == null || !(term.IsPowered) ))
+            if (IsOpen && (term == null || !(term.IsPowered)))
                 IsOpen = false;
             UpdateLogic();
         }
-        
+
         public void OnGUI()
         {
             if (!IsOpen) return;
@@ -123,15 +124,13 @@ namespace kOS.Screen
             CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
             CalcInnerCoords();
 
-            WindowRect = GUI.Window( UniqueId, WindowRect, ProcessWindow, "" );
+            WindowRect = GUI.Window(UniqueId, WindowRect, ProcessWindow, "");
             // Some mouse global state data used by several of the checks:
-            // TODO: we aren't using this, do we need it?
-            Event e = Event.current;
 
             if (consumeEvent)
             {
                 consumeEvent = false;
-                Event.current.Use();  
+                Event.current.Use();
             }
         }
 
@@ -143,35 +142,29 @@ namespace kOS.Screen
                 Close();
         }
 
-        
         public void SaveContents()
         {
-            var file = new ProgramFile(fileName)
-            {
-                StringContent = contents
-            };
-
-            if (! volume.SaveFile(file) )
+            if (volume.Save(fileName, new FileContent(contents)) == null)
             {
                 // For some reason the normal trap that prints exceptions on
                 // the terminal doesn't work here in this part of the code,
                 // thus the two messages:
                 term.Print("[File Save failed. Check space on device?]");
-                throw new Exception( "File Save Failed from Text Editor.");
+                throw new Exception("File Save Failed from Text Editor.");
             }
             isDirty = false;
             term.Print("[Saved changes to " + fileName + "]");
         }
-        
+
         protected void ReloadContents()
         {
             if (isDirty)
                 InvokeReloadConfirmDialog();
             else
-                DelegateLoadContents(this);                
+                DelegateLoadContents(this);
         }
 
-        public void LoadContents( Volume vol, string fName )
+        public void LoadContents(Volume vol, string fName)
         {
             if (isDirty)
             {
@@ -187,88 +180,88 @@ namespace kOS.Screen
                 DelegateLoadContents(this);
             }
         }
-        
+
         protected void InvokeDirtySaveExitDialog()
         {
             var choices = new List<string>();
             var actions = new List<DialogAction>();
-            choices.Add( "Yes" );
-            actions.Add( DelegateSaveExit );
-            choices.Add( "No" );
-            actions.Add( DelegateNoSaveExit );
-            choices.Add( "Cancel" );
-            actions.Add( DelegateCancel );
-            
-            dialog.Invoke( this, "\""+fileName+"\" has been edited.  Save it before exiting?", choices, actions );
+            choices.Add("Yes");
+            actions.Add(DelegateSaveExit);
+            choices.Add("No");
+            actions.Add(DelegateNoSaveExit);
+            choices.Add("Cancel");
+            actions.Add(DelegateCancel);
+
+            dialog.Invoke(this, "\"" + fileName + "\" has been edited.  Save it before exiting?", choices, actions);
         }
 
         protected void InvokeDirtySaveLoadDialog()
         {
             var choices = new List<string>();
             var actions = new List<DialogAction>();
-            choices.Add( "Yes" );
-            actions.Add( DelegateSaveThenLoad );
-            choices.Add( "No" );
-            actions.Add( DelegateLoadContents );
-            choices.Add( "Cancel" );
-            actions.Add( DelegateCancel );
-            
-            dialog.Invoke( this, "\""+fileName+"\" has been edited.  Save before loading \""+loadingFileName+"\"?", choices, actions );
+            choices.Add("Yes");
+            actions.Add(DelegateSaveThenLoad);
+            choices.Add("No");
+            actions.Add(DelegateLoadContents);
+            choices.Add("Cancel");
+            actions.Add(DelegateCancel);
+
+            dialog.Invoke(this, "\"" + fileName + "\" has been edited.  Save before loading \"" + loadingFileName + "\"?", choices, actions);
         }
 
         protected void InvokeReloadConfirmDialog()
         {
             var choices = new List<string>();
             var actions = new List<DialogAction>();
-            choices.Add( "Yes" );
-            actions.Add( DelegateLoadContents );
-            choices.Add( "No" );
-            actions.Add( DelegateCancel );
-            
-            dialog.Invoke( this, "\""+fileName+"\" has been edited.  Throw away changes and reload?", choices, actions );
+            choices.Add("Yes");
+            actions.Add(DelegateLoadContents);
+            choices.Add("No");
+            actions.Add(DelegateCancel);
+
+            dialog.Invoke(this, "\"" + fileName + "\" has been edited.  Throw away changes and reload?", choices, actions);
         }
-        
-        protected static void DelegateSaveExit( KOSTextEditPopup me )
+
+        protected static void DelegateSaveExit(KOSTextEditPopup me)
         {
             me.SaveContents();
             me.Freeze(false);
             me.Close();
         }
 
-        protected static void DelegateNoSaveExit( KOSTextEditPopup me )
+        protected static void DelegateNoSaveExit(KOSTextEditPopup me)
         {
             me.Freeze(false);
             me.Close();
         }
-        
-        protected static void DelegateSaveThenLoad( KOSTextEditPopup me )
+
+        protected static void DelegateSaveThenLoad(KOSTextEditPopup me)
         {
             me.SaveContents();
-            DelegateLoadContents( me );
+            DelegateLoadContents(me);
         }
 
-        protected static void DelegateLoadContents( KOSTextEditPopup me )
+        protected static void DelegateLoadContents(KOSTextEditPopup me)
         {
             me.volume = me.loadingVolume;
             me.fileName = me.loadingFileName;
-            ProgramFile file = me.volume.GetByName( me.fileName );
-            if ( file == null )
+            VolumeFile file = me.volume.Open(me.fileName);
+            if (file == null)
             {
                 me.term.Print("[New File]");
                 me.contents = "";
             }
             else
             {
-                me.contents = file.StringContent;
+                me.contents = file.ReadAll().String;
             }
             me.isDirty = false;
         }
 
-        protected static void DelegateCancel( KOSTextEditPopup me )
+        protected static void DelegateCancel(KOSTextEditPopup me)
         {
             // do nothing.
         }
-        
+
         protected void CheckKeyboard()
         {
             if (Event.current.type == EventType.KeyDown)
@@ -279,20 +272,24 @@ namespace kOS.Screen
                         DoPageUp();
                         Event.current.Use();
                         break;
+
                     case KeyCode.PageDown:
                         DoPageDown();
                         Event.current.Use();
                         break;
+
                     case KeyCode.E:
                         if (Event.current.control)
                             ExitEditor();
                         Event.current.Use();
                         break;
+
                     case KeyCode.S:
                         if (Event.current.control)
                             SaveContents();
                         Event.current.Use();
                         break;
+
                     case KeyCode.R:
                         if (Event.current.control)
                             ReloadContents();
@@ -301,14 +298,14 @@ namespace kOS.Screen
                 }
             }
         }
-        
+
         protected void DoPageUp()
         {
             var editor = GetWidgetController();
 
             // Seems to be no way to move more than one line at
             // a time - so have to do this:
-            int pos = Math.Min( editor.pos, contents.Length - 1);
+            int pos = Math.Min(editor.cursorIndex, contents.Length - 1);
             int rows = ((int)innerCoords.height) / FONT_HEIGHT;
             while (rows > 0 && pos >= 0)
             {
@@ -321,11 +318,11 @@ namespace kOS.Screen
 
         protected void DoPageDown()
         {
-            var editor = GetWidgetController();          
-            
+            var editor = GetWidgetController();
+
             // Seems to be no way to move more than one line at
             // a time - so have to do this:
-            int pos = Math.Min( editor.pos, contents.Length - 1);
+            int pos = Math.Min(editor.cursorIndex, contents.Length - 1);
             int rows = ((int)innerCoords.height) / FONT_HEIGHT;
             while (rows > 0 && pos < contents.Length)
             {
@@ -345,7 +342,7 @@ namespace kOS.Screen
                 if (resizeButtonCoords.Contains(MouseButtonDownPosRelative))
                 {
                     resizeMouseDown = true;
-                    resizeOldSize = new Vector2(WindowRect.width,WindowRect.height);
+                    resizeOldSize = new Vector2(WindowRect.width, WindowRect.height);
                     Event.current.Use();
                 }
             }
@@ -366,59 +363,57 @@ namespace kOS.Screen
                 {
                     var mousePos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
                     Vector2 dragDelta = mousePos - MouseButtonDownPosRelative;
-                    WindowRect = new Rect( WindowRect.xMin,
+                    WindowRect = new Rect(WindowRect.xMin,
                                             WindowRect.yMin,
-                                            Math.Max( resizeOldSize.x + dragDelta.x, 100 ),
-                                            Math.Max( resizeOldSize.y + dragDelta.y, 30 )   );
+                                            Math.Max(resizeOldSize.x + dragDelta.x, 100),
+                                            Math.Max(resizeOldSize.y + dragDelta.y, 30));
                     CalcInnerCoords();
                     Event.current.Use();
                 }
             }
         }
-                
-        void ProcessWindow( int windowId )
-        {
 
+        private void ProcessWindow(int windowId)
+        {
             if (!frozen)
                 CheckKeyboard();
 
-            DrawWindow( windowId );
+            DrawWindow(windowId);
 
             CheckResizeDrag();
 
             CalcOuterCoords();
         }
-        
-        protected void DrawWindow( int windowId )
+
+        protected void DrawWindow(int windowId)
         {
             GUI.contentColor = Color.green;
 
-
-            GUILayout.BeginArea( innerCoords );
-            scrollPosition = GUILayout.BeginScrollView( scrollPosition );
+            GUILayout.BeginArea(innerCoords);
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
             int preLength = contents.Length;
-            contents = GUILayout.TextArea( contents );
+            contents = GUILayout.TextArea(contents);
             int postLength = contents.Length;
-            GUILayout.EndScrollView();            
+            GUILayout.EndScrollView();
             GUILayout.EndArea();
-            
-            GUI.Label( labelCoords, BuildTitle() );
-            if (GUI.Button( exitCoords, EXIT_BUTTON_TEXT ))
+
+            GUI.Label(labelCoords, BuildTitle());
+            if (GUI.Button(exitCoords, EXIT_BUTTON_TEXT))
             {
                 ExitEditor();
             }
-            if (GUI.Button( saveCoords, SAVE_BUTTON_TEXT ))
+            if (GUI.Button(saveCoords, SAVE_BUTTON_TEXT))
             {
                 SaveContents();
             }
-            if (GUI.Button( reloadCoords, RELOAD_BUTTON_TEXT ))
+            if (GUI.Button(reloadCoords, RELOAD_BUTTON_TEXT))
             {
                 ReloadContents();
             }
-            KeepCursorScrolledInView();            
+            KeepCursorScrolledInView();
 
-            GUI.Box( resizeButtonCoords, resizeImage );
-            
+            GUI.Box(resizeButtonCoords, resizeImage);
+
             if (preLength != postLength)
             {
                 isDirty = true;
@@ -430,17 +425,17 @@ namespace kOS.Screen
             if (IsOpen && term != null)
             {
                 Rect tRect = term.GetRect();
-                
+
                 // Glue it to the bottom of the attached term window - move wherever it moves:
                 float left = tRect.xMin;
                 float top = tRect.yMin + tRect.height;
-                
+
                 // If it hasn't been given a size yet, then give it a starting size that matches
                 // the attached terminal window size.  Otherwise keep whatever size the user changed it to:
                 if (WindowRect.width == 0)
-                    WindowRect = new Rect( left, top, tRect.width, tRect.height );
+                    WindowRect = new Rect(left, top, tRect.width, tRect.height);
                 else
-                    WindowRect = new Rect( left, top, WindowRect.width, WindowRect.height );
+                    WindowRect = new Rect(left, top, WindowRect.width, WindowRect.height);
             }
         }
 
@@ -448,38 +443,38 @@ namespace kOS.Screen
         {
             if (!IsOpen) return;
 
-            innerCoords = new Rect( FRAME_THICKNESS,
-                                    FRAME_THICKNESS + 1.5f*FONT_HEIGHT,
-                                    WindowRect.width - 2*FRAME_THICKNESS,
-                                    WindowRect.height - 2*FRAME_THICKNESS -2*FONT_HEIGHT );
+            innerCoords = new Rect(FRAME_THICKNESS,
+                                    FRAME_THICKNESS + 1.5f * FONT_HEIGHT,
+                                    WindowRect.width - 2 * FRAME_THICKNESS,
+                                    WindowRect.height - 2 * FRAME_THICKNESS - 2 * FONT_HEIGHT);
 
-            Vector2 labSize  = GUI.skin.label.CalcSize( new GUIContent(BuildTitle()) );
-            Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent(EXIT_BUTTON_TEXT) );
-            exitSize = new Vector2(exitSize.x+4, exitSize.y+4);
-            Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent(SAVE_BUTTON_TEXT) );
-            saveSize = new Vector2(saveSize.x+4, saveSize.y+4);
-            Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent(RELOAD_BUTTON_TEXT) );
-            reloadSize = new Vector2(reloadSize.x+4, reloadSize.y+4);
-                
-            labelCoords = new Rect( 5, 1, labSize.x, labSize.y);
-                
+            Vector2 labSize = GUI.skin.label.CalcSize(new GUIContent(BuildTitle()));
+            Vector2 exitSize = GUI.skin.box.CalcSize(new GUIContent(EXIT_BUTTON_TEXT));
+            exitSize = new Vector2(exitSize.x + 4, exitSize.y + 4);
+            Vector2 saveSize = GUI.skin.box.CalcSize(new GUIContent(SAVE_BUTTON_TEXT));
+            saveSize = new Vector2(saveSize.x + 4, saveSize.y + 4);
+            Vector2 reloadSize = GUI.skin.box.CalcSize(new GUIContent(RELOAD_BUTTON_TEXT));
+            reloadSize = new Vector2(reloadSize.x + 4, reloadSize.y + 4);
+
+            labelCoords = new Rect(5, 1, labSize.x, labSize.y);
+
             float buttonXCounter = WindowRect.width; // Keep track of the x coord of leftmost button so far.
 
             buttonXCounter -= (exitSize.x + 5);
-            exitCoords = new Rect( buttonXCounter, 1, exitSize.x, exitSize.y );
-                
-            buttonXCounter -= (saveSize.x + 2);
-            saveCoords = new Rect( buttonXCounter, 1, saveSize.x, saveSize.y );
-                
-            buttonXCounter -= (reloadSize.x + 2);
-            reloadCoords = new Rect( buttonXCounter, 1, reloadSize.x, reloadSize.y );
+            exitCoords = new Rect(buttonXCounter, 1, exitSize.x, exitSize.y);
 
-            resizeButtonCoords = new Rect( WindowRect.width - resizeImage.width,
+            buttonXCounter -= (saveSize.x + 2);
+            saveCoords = new Rect(buttonXCounter, 1, saveSize.x, saveSize.y);
+
+            buttonXCounter -= (reloadSize.x + 2);
+            reloadCoords = new Rect(buttonXCounter, 1, reloadSize.x, reloadSize.y);
+
+            resizeButtonCoords = new Rect(WindowRect.width - resizeImage.width,
                                            WindowRect.height - resizeImage.height,
                                            resizeImage.width,
-                                           resizeImage.height );
+                                           resizeImage.height);
         }
-        
+
         protected void KeepCursorScrolledInView()
         {
             // It's utterly ridiculous that Unity's TextArea widget doesn't
@@ -492,35 +487,34 @@ namespace kOS.Screen
             // to only be allowed to move as far as the cursor is still in view.
             // Fixing that would take a bit of work.
             //
-            
+
             var editor = GetWidgetController();
             Vector2 pos = editor.graphicalCursorPos;
-            float usableHeight = innerCoords.height - 2.5f*FONT_HEIGHT;
+            float usableHeight = innerCoords.height - 2.5f * FONT_HEIGHT;
             if (pos.y < scrollPosition.y)
                 scrollPosition.y = pos.y;
             else if (pos.y > scrollPosition.y + usableHeight)
                 scrollPosition.y = pos.y - usableHeight;
-            
         }
 
         // Return type needs full namespace path because kOS namespace has a TextEditor class too:
         protected TextEditor GetWidgetController()
         {
             // Whichever TextEdit widget has current focus (should be this one if processing input):
-            // There seems to be no way to grab the text edit controller of a Unity Widget by 
+            // There seems to be no way to grab the text edit controller of a Unity Widget by
             // specific ID.
             return (TextEditor)
                 GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
         }
-        
+
         public Rect GetRect()
         {
             return WindowRect;
         }
-        
+
         protected string BuildTitle()
         {
-            if (volume.Name.Length > 0)                
+            if (volume.Name.Length > 0)
                 return fileName + " on " + volume.Name;
             return fileName + " on local volume";  // Don't know which number because no link to VolumeManager from this class.
         }

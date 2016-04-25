@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculator\CalculatorScalarTest.cs" />
+    <Compile Include="Calculator\CalculatorStructureTest.cs" />
     <Compile Include="Collections\MixedCollectionPrintingTest.cs" />
     <Compile Include="Structures\BooleanValueTest.cs" />
     <Compile Include="Structures\ScalarValueTest.cs" />
@@ -67,6 +69,10 @@
     <Compile Include="Serialization\JSONFormatterTest.cs" />
     <Compile Include="Serialization\TerminalFormatterTest.cs" />
     <Compile Include="Collections\CollectionValueTest.cs" />
+    <Compile Include="Collections\RangeValueTest.cs" />
+    <Compile Include="Serialization\FormatterTest.cs" />
+    <Compile Include="Communication\MessageQueueTest.cs" />
+    <Compile Include="Communication\FakeCurrentTimeProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -87,6 +93,7 @@
   -->
   <ItemGroup>
     <Folder Include="Serialization\" />
+    <Folder Include="Communication\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProfilingSessions\Session20160127_233127.sdps" />

@@ -4,6 +4,7 @@ using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.InfernalRobotics
 {
+    [kOS.Safe.Utilities.KOSNomenclature("IRServo")]
     public class IRServoWrapper : Structure
     {
         private readonly IRWrapper.IServo servo;
@@ -44,7 +45,7 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("MOVEPREVPRESET", new NoArgsVoidSuffix(MovePrevPreset));
             AddSuffix("STOP", new NoArgsVoidSuffix(Stop));
 
-            AddSuffix("MOVETO", new TwoArgsSuffix<ScalarDoubleValue, ScalarDoubleValue>(MoveTo));
+            AddSuffix("MOVETO", new TwoArgsSuffix<ScalarValue, ScalarValue>(MoveTo));
 
             AddSuffix("PART", new Suffix<PartValue>(GetPart));
         }
@@ -80,7 +81,7 @@ namespace kOS.AddOns.InfernalRobotics
             servo.Stop();
         }
 
-        public void MoveTo(ScalarDoubleValue position, ScalarDoubleValue speed)
+        public void MoveTo(ScalarValue position, ScalarValue speed)
         {
             servo.MoveTo(position, speed);
         }

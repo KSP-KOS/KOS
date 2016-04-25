@@ -8,6 +8,7 @@ using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
 using FinePrint;
+using kOS.Safe;
 
 namespace kOS.Function
 {
@@ -225,14 +226,53 @@ namespace kOS.Function
         }
     }
 
+    [Function("range")]
+    public class FunctionRange : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            // Default values for parameters
+            int from = RangeValue.DEFAULT_START;
+            int to = RangeValue.DEFAULT_STOP;
+            int step = RangeValue.DEFAULT_STEP;
+
+            int argCount = CountRemainingArgs(shared);
+            // assign parameter values from the stack, pop them in reverse order
+            switch (argCount)
+            {
+                case 1:
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                case 2:
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                case 3:
+                    step = GetInt(PopStructureAssertEncapsulated(shared));
+                    to = GetInt(PopStructureAssertEncapsulated(shared));
+                    from = GetInt(PopStructureAssertEncapsulated(shared));
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new int[] { 1, 2, 3 }, argCount, "Thrown from function RANGE()");
+            }
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new RangeValue(from, to, step);
+        }
+    }
+
     [Function("lex", "lexicon")]
     public class FunctionLexicon : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
+
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
-            var listValue = new Lexicon();
-            ReturnValue = listValue;
+            var lexicon = new Lexicon(argArray.ToList());
+            ReturnValue = lexicon;
         }
     }
 
@@ -434,7 +474,7 @@ namespace kOS.Function
                 return;
             }
 
-            List<Waypoint> points = wpm.AllWaypoints();
+            List<Waypoint> points = wpm.Waypoints;
 
             // If the code below gets used in more places it may be worth moving into a factory method
             // akin to how PartValueFactory makes a ListValue<PartValue> from a List<Part>.
@@ -468,8 +508,8 @@ namespace kOS.Function
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
             if (hasGreek)
                 pointName = baseName;
-            Waypoint point = wpm.AllWaypoints().FirstOrDefault(
-                p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+            Waypoint point = wpm.Waypoints.FirstOrDefault(
+                p => string.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
             
             // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
             // nulls), so bomb out here:

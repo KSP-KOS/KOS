@@ -8,7 +8,8 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
+    [kOS.Safe.Utilities.KOSNomenclature("List")]
+    public class ListValue<T> : CollectionValue<T, IList<T>>, IIndexable
         where T : Structure
     {
         public ListValue()
@@ -16,7 +17,7 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public ListValue(IEnumerable<T> listValue) : base(new List<T>(listValue))
+        public ListValue(IEnumerable<T> listValue) : base("LIST", new List<T>(listValue))
         {
             ListInitializeSuffixes();
         }
@@ -39,11 +40,6 @@ namespace kOS.Safe.Encapsulation
         public void Clear()
         {
             Collection.Clear();
-        }
-
-        public override int Count
-        {
-            get { return Collection.Count; }
         }
 
         public void RemoveAt(int index)
@@ -89,12 +85,11 @@ namespace kOS.Safe.Encapsulation
         private void ListInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
-            AddSuffix("LENGTH",   new NoArgsSuffix<ScalarValue>         (() => Collection.Count));
-            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => Collection.Clear()));
             AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Collection.Add(toAdd), Resources.ListAddDescription));
             AddSuffix("INSERT",   new TwoArgsSuffix<ScalarValue, T>     ((index, toAdd) => Collection.Insert(index, toAdd)));
             AddSuffix("REMOVE",   new OneArgsSuffix<ScalarValue>        (toRemove => Collection.RemoveAt(toRemove)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarValue, ScalarValue>(SubListMethod));
+            AddSuffix("JOIN",     new OneArgsSuffix<StringValue, StringValue>(Join));
        }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
@@ -143,15 +138,18 @@ namespace kOS.Safe.Encapsulation
             Collection[idx] = (T)value;
         }
 
-
         public void SetIndex(int index, Structure value)
         {
             Collection[index] = (T)value;
         }
 
-
+        private StringValue Join(StringValue separator)
+        {
+            return string.Join(separator, Collection.Select(i => i.ToString()).ToArray());
+        }
     }
 
+    [kOS.Safe.Utilities.KOSNomenclature("List", KOSToCSharp = false)] // one-way because the generic templated ListValue<T> is the canonical one.  
     public class ListValue : ListValue<Structure>
     {
         public ListValue()

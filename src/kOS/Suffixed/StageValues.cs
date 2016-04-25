@@ -5,9 +5,11 @@ using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KSP.UI.Screens;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Stage")]
     public class StageValues : Structure
     {
         private readonly SharedObjects shared;
@@ -21,8 +23,8 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NUMBER", new Suffix<ScalarValue>(() => Staging.CurrentStage));
-            AddSuffix("READY", new Suffix<BooleanValue>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
+            AddSuffix("NUMBER", new Suffix<ScalarValue>(() => StageManager.CurrentStage));
+            AddSuffix("READY", new Suffix<BooleanValue>(() => shared.Vessel.isActiveVessel && StageManager.CanSeparate));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
             AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
         }

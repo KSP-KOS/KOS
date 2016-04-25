@@ -16,8 +16,6 @@ namespace kOS.Safe.Compilation
         public abstract object LessThanEqual(OperandPair pair);
         public abstract object NotEqual(OperandPair pair);
         public abstract object Equal(OperandPair pair);
-        public abstract object Min(OperandPair pair);
-        public abstract object Max(OperandPair pair);
 
         public static Calculator GetCalculator(OperandPair operandPair)
         {

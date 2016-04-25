@@ -12,6 +12,7 @@ namespace kOS.Safe.Encapsulation
     /// which is the base class underneath references to user functions,
     /// built-in functions, or suffix methods.
     /// </summary>
+    [kOS.Safe.Utilities.KOSNomenclature("Delegate")]
     public abstract class KOSDelegate : Structure
     {
         protected IList<Structure> PreBoundArgs { get; set; }

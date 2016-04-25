@@ -1,11 +1,11 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Serialization;
+using System;
 
 namespace kOS.Function
 {
@@ -31,7 +31,7 @@ namespace kOS.Function
             }
         }
     }
-    
+
     [Function("edit")]
     public class FunctionEdit : FunctionBase
     {
@@ -40,13 +40,11 @@ namespace kOS.Function
             string fileName = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            // If no filename extension, then give it one:
-            fileName = PersistenceUtilities.CookedFilename(fileName, Volume.KERBOSCRIPT_EXTENSION);
-            
             if (shared.VolumeMgr != null)
             {
                 Volume vol = shared.VolumeMgr.CurrentVolume;
-                shared.Window.OpenPopupEditor( vol, fileName );
+                var volumeFile = vol.OpenOrCreate(fileName);
+                shared.Window.OpenPopupEditor(vol, volumeFile.Name);
             }
         }
     }
@@ -86,10 +84,10 @@ namespace kOS.Function
                         throw new Exception("Cannot copy from a volume to the same volume.");
                     }
 
-                    ProgramFile file = origin.GetByName(fileName);
+                    VolumeFile file = origin.Open(fileName);
                     if (file != null)
                     {
-                        if (!destination.SaveFile(new ProgramFile(file)))
+                        if (destination.Save(file.Name, file.ReadAll()) == null)
                         {
                             throw new Exception("File copy failed");
                         }
@@ -125,7 +123,7 @@ namespace kOS.Function
                     Volume volume = shared.VolumeMgr.CurrentVolume;
                     if (volume != null)
                     {
-                        if (volume.GetByName(newName) == null)
+                        if (volume.Open(newName) == null)
                         {
                             if (!volume.RenameFile(volumeIdOrOldName.ToString(), newName))
                             {
@@ -180,7 +178,7 @@ namespace kOS.Function
 
                 if (volume != null)
                 {
-                    if (!volume.DeleteByName(fileName))
+                    if (!volume.Delete(fileName))
                     {
                         throw new Exception(string.Format("File '{0}' not found", fileName));
                     }
@@ -194,7 +192,7 @@ namespace kOS.Function
     }
 
     [Function("writejson")]
-    public class FunctionWriteFile : FunctionBase
+    public class FunctionWriteJson : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
@@ -209,36 +207,77 @@ namespace kOS.Function
 
             string serializedString = new SerializationMgr(shared).Serialize(serialized, JsonFormatter.WriterInstance);
 
-            ProgramFile programFile = new ProgramFile(fileName)
-            {
-                StringContent = serializedString
-            };
+            FileContent fileContent = new FileContent(serializedString);
 
             if (shared.VolumeMgr != null)
             {
-                shared.VolumeMgr.CurrentVolume.SaveFile(programFile);
+                shared.VolumeMgr.CurrentVolume.Save(fileName, fileContent);
             }
         }
     }
 
     [Function("readjson")]
-    public class FunctionReadFile : FunctionBase
+    public class FunctionReadJson : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
             string fileName = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
 
-            ProgramFile programFile = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
+            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Open(fileName);
 
-            if (programFile == null)
+            if (volumeFile == null)
             {
                 throw new KOSException("File does not exist: " + fileName);
             }
 
-            object read = new SerializationMgr(shared).Deserialize(programFile.StringContent, JsonFormatter.ReaderInstance);
-
+            Structure read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance) as SerializableStructure;
             ReturnValue = read;
+        }
+    }
+
+    [Function("exists")]
+    public class FunctionExists : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = shared.VolumeMgr.CurrentVolume.Exists(fileName);
+        }
+    }
+
+    [Function("open")]
+    public class FunctionOpen : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Open(fileName);
+
+            if (volumeFile == null)
+            {
+                throw new KOSException("File does not exist: " + fileName);
+            }
+
+            ReturnValue = volumeFile;
+        }
+    }
+
+    [Function("create")]
+    public class FunctionCreate : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
+
+            VolumeFile volumeFile = shared.VolumeMgr.CurrentVolume.Create(fileName);
+
+            ReturnValue = volumeFile;
         }
     }
 }

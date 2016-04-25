@@ -1,0 +1,23 @@
+/* start from read-the-docs' standard theme: */
+@import url("theme.css");
+
+/* Some of the syntax highlighing done by
+ * read-the-docs is barely visible unless the
+ * font is zoomed large.  At 10 point or 12 point,
+ * boldface doesn't stand out on the font they use,
+ * and many of the keywords are only highlighted
+ * by being bold.  So doing a slight tint from 
+ * the default black just to make it stand out a
+ * little bit more:
+ */
+.k { color:#042; } /*keywords*/
+.o { color:#024; } /*operators*/
+
+a.reference span.pre { color: #2980B9; }
+
+/*removes extra padding around highlighted search results*/
+.rst-content span.highlighted{padding: 0 0px}
+
+/* It is possible to do a lot more here, but let's
+ * leave it at that for now.
+ */

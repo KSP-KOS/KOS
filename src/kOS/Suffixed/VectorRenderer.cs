@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Vecdraw")]
     public class VectorRenderer : Structure, IUpdateObserver, IKOSScopeObserver
     {
         public Vector3d Vector { get; set; }
@@ -231,7 +232,8 @@ namespace kOS.Suffixed
 
                     line = lineObj.AddComponent<LineRenderer>();
                     hat = hatObj.AddComponent<LineRenderer>();
-                    label = labelObj.guiText;
+                    //TODO: 1.1 TODO
+                    label = labelObj.GetComponent<GUIText>();
 
                     line.useWorldSpace = false;
                     hat.useWorldSpace = false;

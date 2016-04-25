@@ -11,15 +11,28 @@ For more information, check out the documentation for the :struct:`SteeringManag
 
 In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:
 
-.. _LOCK THROTTLE:
-.. object:: LOCK THROTTLE TO value.
+The special LOCK variables for cooked steering
+----------------------------------------------
 
-    This sets the main throttle of the ship to *value*. Where *value* is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.
+.. _LOCK THROTTLE:
+.. object:: LOCK THROTTLE TO expression. // value range [0.0 .. 1.0]
+
+    This sets the main throttle of the ship to *expression*. Where *expression* is a floating point number between 0.0 and 1.0. A value of 0.0 means the throttle is idle, and a value of 1.0 means the throttle is at maximum. A value of 0.5 means the throttle is at the halfway point, and so on.
+
+
+    The expression used in this statement can be any formula and can
+    call your own user functions.  Just make sure it returns a value
+    in the range [0..1].
+
+.. warning::
+
+    It's a very bad idea to``WAIT`` during the execution of the expression in a
+    LOCK THROTTLE.  See the note in the next section below.
 
 .. _LOCK STEERING:
-.. object:: LOCK STEERING TO value. // value range [0.0 .. 1.0]
+.. object:: LOCK STEERING TO expression.
 
-   This sets the direction **kOS** should point the ship where *value* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
+   This sets the direction **kOS** should point the ship where *expression* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
 
     :ref:`Rotation <rotation>`
 
@@ -57,9 +70,14 @@ In this style of controlling the craft, you do not steer the craft directly, but
 
 Like all ``LOCK`` expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other ``LOCK`` expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other ``LOCK`` expressions only get executed when you try to read the value of the variable. The reason is that the **kOS** computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.
 
+.. warning::
+
+    It's a very bad idea to ``WAIT`` during the execution of the expression in a
+    LOCK STEERING.  See the note in the next section below.
+
 
 .. _LOCK WHEELTHROTTLE:
-.. object:: LOCK WHEELTHROTTLE TO value. // value range [-1.0 .. 1.0]
+.. object:: LOCK WHEELTHROTTLE TO expression. // value range [-1.0 .. 1.0]
 
     **(For Rovers)** This is used to control the throttle that is used when
     driving a wheeled vehicle on the ground.  It is an entirely independent
@@ -77,8 +95,17 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
     torque wheel rotational power.  In kOS those two features are
     done independently.
 
+    The expression used in this statement can be any formula and can
+    call your own user functions.  Just make sure it returns a value
+    in the range [0..1].
+
+.. warning::
+
+    It's a very bad idea to ``WAIT`` during the execution of the expression in a
+    LOCK WHEELTHROTTLE.  See the note in the next section below.
+
 .. _LOCK WHEELSTEERING:
-.. object:: LOCK WHEELSTEERING TO value.
+.. object:: LOCK WHEELSTEERING TO expression.
 
    **(For Rovers)** This is used to tell the rover's cooked steering
    where to go.  The rover's cooked steering doesn't use nearly as
@@ -89,7 +116,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    There are 3 kinds of value understood by WHEELSTEERING:
 
    - :struct:`GeoCoordinates` - If you lock wheelsteering to a
-     :ref:`latlng`, that will mean the rover will try to steer in
+     :struct:`GetCoordinates`, that will mean the rover will try to steer in
      whichever compass direction will aim at that location.
 
    - :struct:`Vessel` - If you try to lock wheelsteering to a vessel,
@@ -111,7 +138,7 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    **A warning about WHEELSTEERING and vertically mounted probe cores**:
 
    If you built your rover in such a way that the probe core controlling it
-   is stack-mounted facing up at the sky when the rover is driving, that 
+   is stack-mounted facing up at the sky when the rover is driving, that
    will confuse the ``lock WHEELSTEERING`` cooked control mechanism.  This
    is a common building pattern for KSP players and it seems to work okay
    when driving manually, but when driving by a kOS script, the fact that
@@ -127,6 +154,53 @@ Like all ``LOCK`` expressions, the steering and throttle continually update on t
    front of the rover, or perform a "control from here" on some forward
    facing docking port or something like that to get it to stop thinking
    of the sky as "forward".
+
+.. warning::
+
+    It's a very bad idea to ``WAIT`` during the execution of the expression in a
+    LOCK WHEELSTEERING.  See the note in the next section below.
+
+
+Don't 'WAIT' during cooked control calculation
+----------------------------------------------
+
+Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
+WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
+:ref:`triggers <triggers>` that cause your expression
+to be calculated every single physics update tick behind
+the scenes, you should not execute a ``WAIT`` command
+in the code that performs the evaluation of the value
+used in them, as that will effectively cheat the entire
+script out of the full execution speed it deserves.
+
+For example, if you attempt this::
+
+    function get_throttle {
+        wait 0.001.  // this line is a bad idea.
+        return 0.5.
+    }
+    lock throttle to get_throttle().
+
+Then kOS will attempt to call the ``WAIT`` command *every single*
+update, as the kOS system keeps trying to re-run the
+``lock throttle`` expression to learn what you want the new
+throttle value to be. This will starve your script of the
+CPU time it deserves, having the effect of running the
+lock function every-other-tick, and the rest of your code
+every-other-tick on the ticks in-between.  (When the system
+hits the wait inside the throttle expression, it will stop
+there, not resuming until the next update, effectively meaning
+it doesn't get around to running any of your main-line code
+until the next tick.)
+
+Normally when you use a LOCK command, the expression is only evaluated
+when it needs to be by some other part of the script that is trying
+to read the value.  But with these special cooked control locks,
+remember that the kOS system *itself* will query the value repeatedly
+in the background so it knows how to adjust the piloting.  Unlike
+normal LOCKs, these LOCKs will be executed again and again even when
+you're not explicitly trying to get their values.
+
 
 Unlocking controls
 ------------------
@@ -144,7 +218,6 @@ Tuning cooked steering
 ----------------------
 
 .. versionadded:: 0.18.0
-
     Version 0.18 of kOS completely gutted the internals of the old steering
     system and replaced them with the system described below.  Anything
     said below this point is pertinent to version 0.18 and higher only.
@@ -264,6 +337,8 @@ scope of this document, but you can check out :ref:`the PID Loop tutorial. <pidl
 Cooked Steering's use of PID controllers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. highlight:: none
+
 kOS's cooked steering uses two nested PID controllers per axis of rotation::
 
     Seek direction   Current Direction Measurement
@@ -301,6 +376,8 @@ kOS's cooked steering uses two nested PID controllers per axis of rotation::
        \|/
     Feed this control value to KSP.  (This is the value you can see
     on the control indicator meters in the lower-left of the screen).
+
+.. highlight:: kerboscript
 
 .. _cooked_omega_pid:
 

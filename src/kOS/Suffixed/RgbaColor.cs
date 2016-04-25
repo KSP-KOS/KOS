@@ -2,10 +2,10 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using UnityEngine;
-using Math = kOS.Safe.Utilities.Math;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
     public class RgbaColor : Structure
     {
         protected float Red { get; set; }
@@ -24,10 +24,10 @@ namespace kOS.Suffixed
         public RgbaColor(float red, float green, float blue, float alpha = (float) 1.0)
             : this()
         {
-            Red = Math.Clamp(red, 0, 255);
-            Green = Math.Clamp(green, 0, 255);
-            Blue = Math.Clamp(blue, 0, 255);
-            Alpha = Math.Clamp(alpha, 0, 255);
+            Red = KOSMath.Clamp(red, 0, 255);
+            Green = KOSMath.Clamp(green, 0, 255);
+            Blue = KOSMath.Clamp(blue, 0, 255);
+            Alpha = KOSMath.Clamp(alpha, 0, 255);
         }
 
         public RgbaColor(RgbaColor copyFrom)

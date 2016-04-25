@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("VesselAltitude")]
     public class VesselAlt : Structure
     {
         private readonly SharedObjects shared;

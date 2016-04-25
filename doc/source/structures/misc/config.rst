@@ -22,58 +22,62 @@ Configuration of kOS
           - Description
 
         * - :attr:`IPU`
-          - integer
+          - :ref:`scalar <scalar>` (integer)
           - 150
           - Instructions per update
         * - :attr:`UCP`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Use compressed persistence
         * - :attr:`STAT`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Print statistics to screen
         * - :attr:`RT2`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable RemoteTech2 integration
         * - :attr:`ARCH`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Start on archive (instead of volume 1)
+        * - :attr:`OBEYHIDEUI`
+          - :ref:`boolean <boolean>`
+          - True
+          - Obey the KSP Hide user interface key (usually mapped to F2).
         * - :attr:`SAFE`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable safe mode
         * - :attr:`AUDIOERR`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable sound effect on kOS error
         * - :attr:`VERBOSE`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - Enable verbose exceptions
         * - :attr:`TELNET`
-          - boolean
+          - :ref:`boolean <boolean>`
           - False
           - activate the telnet server
         * - :attr:`TPORT`
-          - integer
+          - :ref:`scalar <scalar>` (integer)
           - 5410
           - set the port the telnet server will run on
         * - :attr:`LOOPBACK`
-          - boolean
+          - :ref:`boolean <boolean>`
           - True
           - Force the telnet server to use loopback (127.0.0.1) address
         * - :attr:`DEBUGEACHOPCODE`
-          - boolean
+          - :ref:`boolean <boolean>`
           - false
           - Unholy debug spam used by the kOS developers
 
 .. attribute:: Config:IPU
 
     :access: Get/Set
-    :type: integer. range = [50,2000]
+    :type: :ref:`scalar <scalar>` integer. range = [50,2000]
 
     Configures the ``InstructionsPerUpdate`` setting.
 
@@ -84,7 +88,7 @@ Configuration of kOS
 .. attribute:: Config:UCP
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``UseCompressedPersistence`` setting.
 
@@ -93,16 +97,20 @@ Configuration of kOS
 .. attribute:: Config:STAT
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``ShowStatistics`` setting.
 
     If true, then executing a program will log numbers to the screen showing execution speed statistics.
 
+    When this is set to true, it also makes the use of the
+    :ref:`ProfileResult() <profileresult>` function available, for
+    deep analysis of your program run, if you are so inclined.
+
 .. attribute:: Config:RT2
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``EnableRT2Integration`` setting.
 
@@ -114,19 +122,32 @@ Configuration of kOS
 .. attribute:: Config:ARCH
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``StartOnArchive`` setting.
 
     If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.
 
+.. attribute:: Config:OBEYHIDEUI
+
+    :access: Get/Set
+    :type: :ref:`boolean <boolean>`
+
+    Configures the ``ObeyHideUI`` setting.
+
+    If true, then the kOS terminals will all hide when you toggle the user
+    interface widgets with Kerbal Space Program's Hide UI key (it is
+    set to F2 by default key bindings).
+
+.. highlight:: none
+
 .. attribute:: Config:SAFE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
+
 
     Configures the ``EnableSafeMode`` setting.
-
     If true, then it enables the following error messages::
 
         Tried to push NaN into the stack.
@@ -136,10 +157,12 @@ Configuration of kOS
 
     If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program's API routines. KSP's own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.
 
+.. highlight:: kerboscript
+
 .. attribute:: Config:AUDIOERR
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``AudibleExceptions`` setting.
 
@@ -152,7 +175,7 @@ Configuration of kOS
 .. attribute:: Config:VERBOSE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``VerboseExceptions`` setting.
 
@@ -161,7 +184,7 @@ Configuration of kOS
 .. attribute:: Config:TELNET
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``EnableTelnet`` setting.
 
@@ -185,7 +208,7 @@ Configuration of kOS
 .. attribute:: Config:TPORT
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`scalar <scalar>` (integer)
 
     Configures the ``TelnetPort`` setting.
 
@@ -199,7 +222,7 @@ Configuration of kOS
 .. attribute:: Config:LOOPBACK
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``TelnetLoopback`` setting.
 
@@ -216,7 +239,7 @@ Configuration of kOS
 .. attribute:: Config:DEBUGEACHOPCODE
 
     :access: Get/Set
-    :type: boolean
+    :type: :ref:`boolean <boolean>`
 
     Configures the ``DebugEachOpcode`` setting.
 

@@ -10,6 +10,7 @@ using Math = System.Math;
 
 namespace kOS.Binding
 {
+    [kOS.Safe.Utilities.KOSNomenclature("SteeringManager")]
     public class SteeringManager : Structure, IDisposable
     {
         public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
@@ -151,7 +152,7 @@ namespace kOS.Binding
 
         public const double RadToDeg = 180d / Math.PI;
 
-        private const double EPSILON = 0.00001;
+        private const double EPSILON = 1e-16;
 
         private double sessionTime = double.MaxValue;
         private double lastSessionTime = double.MaxValue;
@@ -499,7 +500,7 @@ namespace kOS.Binding
 
             Vector3d oldOmega = omega;
             // omega is angular rotation.  need to correct the signs to agree with the facing axis
-            omega = Quaternion.Inverse(vesselRotation) * shared.Vessel.rigidbody.angularVelocity;
+            omega = Quaternion.Inverse(vesselRotation) * shared.Vessel.GetComponent<Rigidbody>().angularVelocity;
             omega.x *= -1; //positive values pull the nose to the starboard.
             //omega.y *= -1; // positive values pull the nose up.
             omega.z *= -1; // positive values pull the starboard side up.

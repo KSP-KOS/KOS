@@ -23,6 +23,15 @@ to perform all science-related tasks without any manual intervention::
     WAIT UNTIL M:HASDATA.
     M:TRANSMIT.
 
+Please note the use of :code:`WAIT UNTIL M:HASDATA`.
+
+This structure should work well with stock science experiments. Mods that introduce their own
+science parts might not be compatible with it. One notable example is SCANsat. Even though
+SCANsat parts look and behave very similarly to stock science experiments under the hood
+they work very differently. Other mods can cause problems as well, please test them before use.
+
+:ref:`DMagic Orbital Science <orbitalscience>` has dedicated support in kOS and should work
+properly.
 
 .. structure:: ScienceExperimentModule
 
@@ -50,17 +59,20 @@ to perform all science-related tasks without any manual intervention::
           -
           - Discard the data
         * - :attr:`INOPERABLE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Is this experiment inoperable
         * - :attr:`RERUNNABLE`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Can this experiment be run multiple times
         * - :attr:`DEPLOYED`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Is this experiment deployed
         * - :attr:`HASDATA`
-          - boolean
+          - :ref:`Boolean <boolean>`
           - Does the experiment have scientific data
+        * - :attr:`DATA`
+          - :struct:`List` of :struct:`ScienceData`
+          - List of scientific data obtained by this experiment
 
 .. note::
 
@@ -82,33 +94,39 @@ to perform all science-related tasks without any manual intervention::
 
 .. method:: ScienceExperimentModule:DUMP()
 
-    Call this method to discard the data obtained as a result of running this experiment. This will render the experiment
-    inoperable if it is not rerunnable.
+    Call this method to discard the data obtained as a result of running this experiment.
 
 .. attribute:: ScienceExperimentModule:INOPERABLE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment is no longer operable.
 
 .. attribute:: ScienceExperimentModule:RERUNNABLE
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment can be run multiple times.
 
 .. attribute:: ScienceExperimentModule:DEPLOYED
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment is deployed.
 
 .. attribute:: ScienceExperimentModule:HASDATA
 
     :access: Get only
-    :type: boolean
+    :type: :ref:`Boolean <boolean>`
 
     True if this experiment has scientific data stored.
+
+.. attribute:: ScienceExperimentModule:DATA
+
+    :access: Get only
+    :type: :struct:`List` of :struct:`ScienceData`
+
+    List of scientific data obtained by this experiment

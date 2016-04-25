@@ -4,13 +4,14 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
-    public interface IConfig: ISuffixed, IOperable
+    public interface IConfig: ISuffixed
     {
         int InstructionsPerUpdate { get; set; }
         bool UseCompressedPersistence { get; set; }
         bool ShowStatistics { get; set; }
         bool EnableRTIntegration { get; set; }
         bool StartOnArchive { get; set; }
+        bool ObeyHideUI { get; set; }
         bool EnableSafeMode { get; set; }
         bool VerboseExceptions { get; set; }
         bool EnableTelnet { get; set; }

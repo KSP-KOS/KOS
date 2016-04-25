@@ -16,29 +16,41 @@ NAMED VESSELS AND BODIES
 
 SHIP:
 
-| **Variable name**: SHIP
-| **Gettable**: yes
-| **Settable**: no
-| **Type**: `Vessel <structures/vessels/vessel.html>`__
-| **Description**: Whichever vessel happens to be the one containing the CPU part that is running this Kerboscript code at the moment. This is the `CPU Vessel <general/cpu_vessel.html>`__.
+- **Variable name**: SHIP
+- **Gettable**: yes
+- **Settable**: no
+- **Type**: `Vessel <structures/vessels/vessel.html>`__
+- **Description**: Whichever vessel happens to be the one containing the
+  CPU part that is running this Kerboscript code at the moment. This is
+  the `CPU Vessel <general/cpu_vessel.html>`__.
  
 TARGET:
 
-| **Variable Name**: TARGET
-| **Gettable**: yes
-| **Settable**: yes
-| **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__
-| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targeted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.  This will throw an exception if called from a vessel other than the active vessel, as limitations in how KSP sets the
-target vessel limit the implementation to working with only the active vessel.
+- **Variable Name**: TARGET
+- **Gettable**: yes
+- **Settable**: yes
+- **Type**: `Vessel <structures/vessels/vessel.html>`__ or
+  `Body <structures/celestial_bodies/body.html>`__
+- **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__
+  object happens to be the one selected as the current KSP target. If set
+  to a string, it will assume the string is the name of a vessel being
+  targeted and set it to a vessel by that name. For best results set it
+  to Body("some name") or Vessel("some name") explicitly.  This will
+  throw an exception if called from a vessel other than the active vessel,
+  as limitations in how KSP sets the target vessel limit the
+  implementation to working with only the active vessel.  
+
+.. _hastarget:
 
 HASTARGET:
 
-| **Variable Name**: TARGET
-| **Gettable**: yes
-| **Settable**: no
-| **Type**: boolean
-| **Description**: Will return true if the ship has a target selected.  This will always return false
-when not on the active vessel, due to limitations in how KSP sets the target vessel.
+- **Variable Name**: TARGET
+- **Gettable**: yes
+- **Settable**: no
+- **Type**: boolean
+- **Description**: Will return true if the ship has a target selected.
+  This will always return false when not on the active vessel, due to
+  limitations in how KSP sets the target vessel.
 
 Alias shortcuts for SHIP fields
 -------------------------------
@@ -67,13 +79,11 @@ BODY             Same as SHIP:BODY
 ANGULARMOMENTUM  Same as SHIP:ANGULARMOMENTUM
 ANGULARVEL       Same as SHIP:ANGULARVEL
 ANGULARVELOCITY  Same as SHIP:ANGULARVEL
-COMMRANGE        Same as SHIP:COMMRANGE
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
 GROUNDSPEED      Same as SHIP:GROUNDSPEED 
 SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
-VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
 APOAPSIS         Same as SHIP:APOAPSIS
 PERIAPSIS        Same as SHIP:PERIAPSIS
@@ -113,6 +123,12 @@ Core
 Get-only. ``core`` returns a :struct:`core` structure referring to the CPU you
 are running on.
 
+Archive
+-------
+
+Get-only. ``archive`` returns a :struct:`Volume` structure referring to the archive.
+You can read more about what archive is on the :ref:`File & volumes <volumes>` page.
+
 Stage
 -----
 
@@ -125,6 +141,8 @@ NextNode
 
 Get-only. ``nextnode`` returns the next planned maneuver :struct:`node` in the SHIP's flight plan.  Will throw an exception if
 no node exists, or if called on a ship that is not the active vessel.
+
+.. _hasnode:
 
 HasNode
 --------
@@ -291,6 +309,23 @@ Controls that must be used with LOCK
 Time
 ----
 
+MISSIONTIME
+~~~~~~~~~~~~~~~~~~~
+
+You can obtain the number of seconds it has been since the current
+CPU vessel has been launched with the bound global variable
+``MISSIONTIME``.  In real space programs this is referred to usually
+as "MET" - Mission Elapsed Time, and it's what's being measured when
+you hear that familiar voice saying "T minus 10 seconds..."  Point "T"
+is the zero point of the mission elapsed time, and everything before that
+is a negative number and everything after it is a positive number.
+kOS is only capable of returning the "T+" times, not the "T-" times,
+because it doesn't read your mind to know ahead of time when you plan
+to launch.
+
+Time Structure
+~~~~~~~~~~~~~~
+
 `Time <structures/misc/time.html>`__ is the simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
 
 TIME is a useful system variable for calculating the passage of time
@@ -383,6 +418,51 @@ situations such that the value changes depending on where you are.
 But kOS does not support this at the moment so in kOS if you set
 the LOADDISTANCE, you are setting it to the same value
 universally for all situations.
+
+.. _profileresult:
+
+PROFILERESULT()
+---------------
+
+If you have the runtime statistics configuration option
+:attr:`Config:STAT` set to ``True``, then in addition to
+the summary statistics after the program run, you can also
+see a detailed report of the "profiling" result of your 
+most recent program run, by calling the built-in function
+``ProfileResult()``.  *"Profiling"* is a programmer's term
+that means gathering data about how long the program is
+spending doing each piece of the program.  If you are trying
+to figure out whether your program spent more milliseconds
+printing numbers to the screen, or more milliseconds
+calculating a complex formula, or more milliseconds activating
+actions on a PartModule, and so on, then this feature may
+help.  The ProfileResult() was meant mainly for kOS developers
+trying to internally determine which parts of the system could
+use the most optomizing.  However, as long as it was implemented
+for that purpose, it may as well be made available to all
+the users of kOS as well.
+
+To use::
+
+   SET CONFIG:STAT TO TRUE.
+   RUN MYPROGRAM.
+   PRINT PROFILERESULT().
+   // <or>
+   LOG PROFILERESULT() TO SOMEFIELNAME.csv.
+
+The function ``ProfileResult()`` returns a string containing
+a formatted dump of your whole program, broken down into
+the more low-level instructions that make it up, with data
+values describing how long was spent in total on each
+instruction, how many times that instruction was executed,
+and the average time spent on a single execution of that
+instruction (by dividing the total time by the count of how
+many executions it had).
+
+The format of ``ProfileResult()`` is designed to be suitable
+for importing into a spreadsheet program if you like, because
+it is formatted as a "comma separated values" file, or CSV
+for short.
 
 .. _solarprimevector:
 

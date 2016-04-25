@@ -12,6 +12,7 @@ Addon Reference
     RemoteTech <addons/RemoteTech>
     Kerbal Alarm Clock <addons/KAC>
     Infernal Robotics <addons/IR>
+    DMagic Orbital Science <addons/OrbitalScience>
     Trajectories <addons/Trajectories>
 
 To help KOS scripts identify whether or not certain mod is installed and available following suffixed functions were introduced in version 0.17

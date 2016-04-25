@@ -6,6 +6,7 @@ using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
+    [kOS.Safe.Utilities.KOSNomenclature("Kuniverse")]
     public class KUniverseValue : Structure
     {
         private readonly SharedObjects shared;
@@ -27,7 +28,7 @@ namespace kOS.Suffixed
             AddSuffix("ORIGINEDITOR", new Suffix<StringValue>(OriginatingEditor));
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
             AddSuffix("ACTIVEVESSEL", new SetSuffix<VesselTarget>(() => new VesselTarget(FlightGlobals.ActiveVessel, shared), SetActiveVessel));
-            AddSuffix("FORCESETACTIVEVESSEL", new OneArgsSuffix<VesselTarget>(ForceSetActiveVessel));
+            AddSuffix(new string[] { "FORCESETACTIVEVESSEL", "FORCEACTIVE" }, new OneArgsSuffix<VesselTarget>(ForceSetActiveVessel));
             AddSuffix("HOURSPERDAY", new Suffix<ScalarValue>(GetHoursPerDay));
             AddSuffix("DEBUGLOG", new OneArgsSuffix<StringValue>(DebugLog));
         }

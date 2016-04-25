@@ -60,15 +60,5 @@ namespace kOS.Safe.Compilation
         {
             return new BooleanValue(Convert.ToBoolean(pair.Left) == Convert.ToBoolean(pair.Right));
         }
-
-        public override object Min(OperandPair pair)
-        {
-            throw new KOSBinaryOperandTypeException(pair, "get minimum of", "and");
-        }
-
-        public override object Max(OperandPair pair)
-        {
-            throw new KOSBinaryOperandTypeException(pair, "get maximum of", "and");
-        }
     }
 }

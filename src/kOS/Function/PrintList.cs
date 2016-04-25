@@ -3,13 +3,12 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
-using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
-using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using kOS.Utilities;
 using Math = System.Math;
 
 namespace kOS.Function
@@ -93,13 +92,13 @@ namespace kOS.Function
                 {
                     list.Title = "Volume " + shared.VolumeMgr.GetVolumeBestIdentifier(volume);
 
-                    foreach (FileInfo info in volume.GetFileList())
+                    foreach (KeyValuePair<string, VolumeFile> pair in volume.FileList)
                     {
-                        list.AddItem(info.Name, info.Size);
+                        list.AddItem(pair.Key, pair.Value.Size);
                     }
 
-                    int freeSpace = volume.GetFreeSpace();
-                    list.Footer = "Free space remaining: " + (freeSpace > -1 ? freeSpace.ToString() : " infinite");
+                    long freeSpace = volume.FreeSpace;
+                    list.Footer = "Free space remaining: " + (freeSpace != Volume.INFINITE_CAPACITY ? freeSpace.ToString() : " infinite");
                 }
             }
 
@@ -235,10 +234,11 @@ namespace kOS.Function
             list.AddColumn("Stage", 8, ColumnAlignment.Left);
             list.AddColumn("Name", 28, ColumnAlignment.Left);
 
-            ListValue PartList = EngineValue.PartsToList(shared.Vessel.Parts, shared);
+            ListValue partList = EngineValue.PartsToList(shared.Vessel.Parts, shared);
 
-            foreach (PartValue part in PartList)
+            foreach (Structure structure in partList)
             {
+                var part = (PartValue) structure;
                 list.AddItem(part.Part.uid(), part.Part.inverseStage, part.Part.partInfo.name);
             }
 
@@ -324,7 +324,7 @@ namespace kOS.Function
                     string alignment = columns[index].Alignment == ColumnAlignment.Left ? "-" : "";
                     string separator;
 
-                    if (index < (columns.Count - 1))
+                    if (index < columns.Count - 1)
                     {
                         columns[index].ItemWidth = columns[index].Width - 1;
                         separator = " ";

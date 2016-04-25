@@ -90,22 +90,22 @@ namespace kOS.Safe.Test.Opcode
 
         public Encapsulation.Structure PopStructureEncapsulated(bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PopValue(barewordOkay));
         }
 
         public Encapsulation.Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
         }
         
         public object PopValueEncapsulated(bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PopValue(barewordOkay));
         }
 
         public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
         }
 
         public int GetStackSize()
@@ -164,6 +164,11 @@ namespace kOS.Safe.Test.Opcode
             get { throw new NotImplementedException(); }
         }
 
+        public List<string> ProfileResult
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public void AddTrigger(int triggerFunctionPointer)
         {
             throw new NotImplementedException();
@@ -174,7 +179,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void StartWait(double waitTime)
+        public double StartWait(double waitTime)
         {
             throw new NotImplementedException();
         }
@@ -225,6 +230,22 @@ namespace kOS.Safe.Test.Opcode
         }
 
         public void RunProgram(List<Compilation.Opcode> program)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public int InstructionsThisUpdate
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void StartCompileStopwatch()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StopCompileStopwatch()
         {
             throw new NotImplementedException();
         }
