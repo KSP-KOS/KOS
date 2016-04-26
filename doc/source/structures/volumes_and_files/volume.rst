@@ -34,27 +34,31 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
         * - :attr:`FILES`
           - :struct:`Lexicon`
-          - Lexicon of all files on the volume
+          - Lexicon of all files and directories on the volume
 
         * - :attr:`POWERREQUIREMENT`
           - :ref:`scalar <scalar>`
           - Amount of power consumed when this volume is set as the current volume
 
-        * - :meth:`EXISTS(filename)`
+        * - :meth:`EXISTS(path)`
           - :ref:`boolean <boolean>`
-          - Returns true if the given file exists
+          - Returns true if the given file or directory exists
 
-        * - :meth:`CREATE(filename)`
+        * - :meth:`CREATE(path)`
           - :struct:`VolumeFile`
           - Creates a file
 
-        * - :meth:`OPEN(filename)`
-          - :struct:`VolumeFile`
-          - Opens a file
+        * - :meth:`CREATEDIR(path)`
+          - :struct:`VolumeDirectory`
+          - Creates a directory
 
-        * - :meth:`DELETE(filename)`
+        * - :meth:`OPEN(path)`
+          - :struct:`VolumeItem`
+          - Opens a file or directory
+
+        * - :meth:`DELETE(path)`
           - :ref:`boolean <boolean>`
-          - Deletes a file
+          - Deletes a file or directory
 
 .. attribute:: Volume:FREESPACE
 
@@ -87,10 +91,10 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
 .. attribute:: Volume:FILES
 
-    :type: :struct:`Lexicon` of :struct:`VolumeFile`
+    :type: :struct:`Lexicon` of :struct:`VolumeItem`
     :access: Get only
 
-    List of files on this volume. Keys are the names of all files on this volume and values are the associated :struct:`VolumeFile` structures.
+    List of files and directories on this volume. Keys are the names of all items on this volume and values are the associated :struct:`VolumeItem` structures.
 
 
 .. attribute:: Volume:POWERREQUIREMENT
@@ -101,28 +105,34 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
     Amount of power consumed when this volume is set as the current volume
 
 
-.. method:: Volume:EXISTS(filename)
+.. method:: Volume:EXISTS(path)
 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
-    Returns true if the given file exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
-    Use ``Volume:FILES:HASKEY(filename)`` to perform a strict check.
+    Returns true if the given file or directory exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
+    Use ``Volume:FILES:HASKEY(name)`` to perform a strict check.
 
-.. method:: Volume:OPEN(filename)
+.. method:: Volume:OPEN(path)
+
+    :return: :struct:`VolumeItem`
+
+    Opens the file or directory pointed to by the given path and returns :struct:`VolumeItem`. It will fail if the file or directory doesn't exist.
+
+.. method:: Volume:CREATE(path)
 
     :return: :struct:`VolumeFile`
 
-    Opens the file with the given name and returns :struct:`VolumeFile`. It will fail if the file doesn't exist.
+    Creates a file under the given path and returns :struct:`VolumeFile`. It will fail if the file already exists.
 
-.. method:: Volume:CREATE(filename)
+.. method:: Volume:CREATEDIR(path)
 
-    :return: :struct:`VolumeFile`
+    :return: :struct:`VolumeDirectory`
 
-    Creates a file with the given name and returns :struct:`VolumeFile`. It will fail if the file already exists.
+    Creates a directory under the given path and returns :struct:`VolumeDirectory`. It will fail if the directory already exists.
 
-.. method:: Volume:DELETE(filename)
+.. method:: Volume:DELETE(path)
 
     :return: boolean
 
-    Deletes the given file. It will return true if file was successfully deleted and false otherwise.
+    Deletes the given file or directory (recursively). It will return true if the given item was successfully deleted and false otherwise.
 
