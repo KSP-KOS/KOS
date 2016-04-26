@@ -57,6 +57,7 @@ namespace kOS.Safe.Test.Persistence
         {
             GlobalPath path = GlobalPath.FromString("othervolume:");
             Assert.AreEqual("othervolume", path.VolumeId);
+            Assert.IsEmpty(path.Name);
             Assert.AreEqual(0, path.Depth);
             Assert.AreEqual(0, path.Length);
         }
@@ -111,6 +112,22 @@ namespace kOS.Safe.Test.Persistence
             Assert.AreEqual("othervolume", newPath.VolumeId);
             Assert.AreEqual(1, newPath.Length);
             Assert.AreEqual("abc", newPath.Name);
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSInvalidPathException))]
+        public void CanFailToCombineSegmentsWithSlashes()
+        {
+            GlobalPath path = GlobalPath.FromString("othervolume:123");
+            path.Combine("456/abc", "789");
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSInvalidPathException))]
+        public void CanFailToCombineOutside()
+        {
+            GlobalPath path = GlobalPath.FromString("othervolume:123");
+            path.Combine("..", "..");
         }
     }
 }

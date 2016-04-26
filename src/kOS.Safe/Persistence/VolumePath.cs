@@ -145,6 +145,11 @@ namespace kOS.Safe.Persistence
 
             for (int i = 0; i < Segments.Count; i++)
             {
+                if (Segments[i].Contains(PathSeparator))
+                {
+                    throw new KOSInvalidPathException("Segment can't contain '" + PathSeparator + "'", Segments[i]);
+                }
+
                 if (Segments[i].Equals(UpSegment) && newSegments.Count != 0 && !newSegments.Last().Equals(UpSegment))
                 {
                     newSegments.RemoveAt(newSegments.Count() - 1);
