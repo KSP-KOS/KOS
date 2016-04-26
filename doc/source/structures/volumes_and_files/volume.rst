@@ -116,7 +116,7 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
     :return: :struct:`VolumeItem`
 
-    Opens the file or directory pointed to by the given path and returns :struct:`VolumeItem`. It will fail if the file or directory doesn't exist.
+    Opens the file or directory pointed to by the given path and returns :struct:`VolumeItem`. It will return a boolean false if the given file or directory does not exist.
 
 .. method:: Volume:CREATE(path)
 
