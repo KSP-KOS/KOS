@@ -52,15 +52,15 @@ namespace kOS.Safe
         private void InitializeSuffixes()
         {
             AddSuffix("VOLUME", new Suffix<Volume>(() => sharedObjects.VolumeMgr.GetVolumeFromPath(Path)));
-            AddSuffix("PARENT", new Suffix<PathValue>(() => FromPath(Path.GetParent())));
-            AddSuffix("ISPARENT", new OneArgsSuffix<BooleanValue, PathValue>((p) => Path.IsParent(p.Path)));
-            AddSuffix("ROOT", new Suffix<PathValue>(() => FromPath(Path.RootPath())));
             AddSuffix("SEGMENTS", new Suffix<ListValue>(() => new ListValue(Path.Segments.Select((s) => (Structure)new StringValue(s)))));
             AddSuffix("LENGTH", new Suffix<ScalarIntValue>(() => Path.Length));
-            AddSuffix("DEPTH", new Suffix<ScalarIntValue>(() => Path.Depth));
             AddSuffix("NAME", new Suffix<StringValue>(() => Path.Name));
             AddSuffix("HASEXTENSION", new Suffix<BooleanValue>(() => string.IsNullOrEmpty(Path.Extension)));
             AddSuffix("EXTENSION", new Suffix<StringValue>(() => Path.Extension));
+            AddSuffix("ROOT", new Suffix<PathValue>(() => FromPath(Path.RootPath())));
+            AddSuffix("PARENT", new Suffix<PathValue>(() => FromPath(Path.GetParent())));
+
+            AddSuffix("ISPARENT", new OneArgsSuffix<BooleanValue, PathValue>((p) => Path.IsParent(p.Path)));
             AddSuffix("CHANGEEXTENSION", new OneArgsSuffix<PathValue, StringValue>((e) => FromPath(Path.ChangeExtension(e))));
             AddSuffix("COMBINE", new VarArgsSuffix<PathValue, StringValue>(Combine));
         }
