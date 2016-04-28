@@ -171,6 +171,26 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        public void CanCopyRootDirectoryToExistingDirectory()
+        {
+            TargetVolume.CreateDirectory(VolumePath.FromString("/newdirectory"));
+            Assert.IsTrue(volumeManager.Copy(GlobalPath.FromString("0:/"), GlobalPath.FromString("1:/newdirectory")));
+
+            CompareDirectories(GlobalPath.FromString("0:/"), GlobalPath.FromString("1:/newdirectory"));
+        }
+
+        [Test]
+        public void CanCopyRootDirectoryToRootDirectoryTwice()
+        {
+            GlobalPath source = GlobalPath.FromString("0:/");
+            GlobalPath destination = GlobalPath.FromString("1:/");
+            Assert.IsTrue(volumeManager.Copy(source, destination));
+            Assert.IsTrue(volumeManager.Copy(source, destination));
+
+            CompareDirectories(source, destination);
+        }
+
+        [Test]
         public void CanFailToCopyFileIfThereIsNoSpaceToCopy()
         {
             if (TargetVolume.Capacity == Volume.INFINITE_CAPACITY)

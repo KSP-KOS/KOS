@@ -244,6 +244,20 @@ namespace kOS.Safe.Persistence
                     throw new KOSPersistenceException("Can't copy directory into a file");
                 }
 
+                if (destination == null)
+                {
+                    destination = destinationVolume.CreateDirectory(destinationPath);
+                } else if (!sourcePath.IsRoot)
+                {
+                    destinationPath = destinationPath.Combine(sourcePath.Name);
+                    destination = destinationVolume.CreateDirectory(destinationPath);
+                }
+
+                if (destination == null)
+                {
+                    throw new KOSException("Path was expected to point to a directory: " + destinationPath);
+                }
+
                 return CopyDirectory(sourcePath, destinationPath, verifyFreeSpace);
             } else
             {
@@ -270,24 +284,16 @@ namespace kOS.Safe.Persistence
 
             VolumeDirectory source = sourceVolume.Open(sourcePath) as VolumeDirectory;
 
-            VolumeDirectory destination;
+            VolumeItem destinationItem = destinationVolume.Open(destinationPath);
 
-            if (destinationVolume.Exists(destinationPath))
+            if (destinationItem is VolumeFile)
             {
-                if (!destinationPath.IsRoot || !sourcePath.IsRoot)
-                {
-                    destinationPath = destinationPath.Combine(sourcePath.Name);
-                    destination = destinationVolume.CreateDirectory(destinationPath);
-                } else
-                {
-                    destination = destinationVolume.Open(destinationPath) as VolumeDirectory;
-                }
+                throw new KOSPersistenceException("Can't copy directory into a file");
+            }
 
-                if (destination == null)
-                {
-                    throw new KOSException ("Path was expected to point to a directory: " + destinationPath);
-                }
-            } else
+            VolumeDirectory destination = destinationItem as VolumeDirectory;
+
+            if (destination == null)
             {
                 destination = destinationVolume.CreateDirectory(destinationPath);
             }

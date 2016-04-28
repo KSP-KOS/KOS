@@ -28,6 +28,15 @@ namespace kOS.Safe.Test.Persistence
         }
 
         [Test]
+        public void CanHandleMultipleSlashes()
+        {
+            VolumePath path = VolumePath.FromString("//test//test2/");
+            Assert.AreEqual(2, path.Length);
+            Assert.AreEqual(2, path.Depth);
+            Assert.AreEqual("test2", path.Name);
+        }
+
+        [Test]
         public void CanHandleSimplePath()
         {
             VolumePath path = VolumePath.FromString("/identifier");

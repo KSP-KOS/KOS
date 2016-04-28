@@ -154,6 +154,10 @@ namespace kOS.Safe.Persistence
 
             for (int i = 0; i < Segments.Count; i++)
             {
+                if (string.IsNullOrEmpty(Segments[i])) {
+                    continue;
+                }
+
                 if (Segments[i].Contains(PathSeparator))
                 {
                     throw new KOSInvalidPathException("Segment can't contain '" + PathSeparator + "'", Segments[i]);
