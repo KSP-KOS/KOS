@@ -130,7 +130,6 @@ namespace kOS.Safe.Persistence
         }
 
         public abstract bool Delete(VolumePath path, bool ksmDefault = false);
-        //public abstract void Move(VolumePath oldPath, VolumePath newPath);
 
         public VolumeFile SaveFile(VolumeFile volumeFile)
         {

@@ -146,6 +146,16 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        public void CanCopyDirectoryToExistingDirectoryTwice()
+        {
+            TargetVolume.CreateDirectory(VolumePath.FromString("/newdirectory"));
+            Assert.IsTrue(volumeManager.Copy(dir1Path, GlobalPath.FromString("1:/newdirectory")));
+            Assert.IsTrue(volumeManager.Copy(dir1Path, GlobalPath.FromString("1:/newdirectory")));
+
+            CompareDirectories(dir1Path, GlobalPath.FromString("1:/newdirectory/" + dir1));
+        }
+
+        [Test]
         public void CanCopyDirectoryToNewDirectory()
         {
             GlobalPath targetPath = GlobalPath.FromString("1:/newname");
@@ -263,7 +273,6 @@ namespace kOS.Safe.Test
             VolumeDirectory parent = (TargetVolume.Open(dir1Path) as VolumeDirectory);
             Assert.AreEqual(1, parent.List().Count);
             Assert.AreEqual("subsubdir1File1\n", (parent.List()[file1] as VolumeFile).ReadAll().String);
-
         }
 
         [Test]
@@ -307,6 +316,23 @@ namespace kOS.Safe.Test
             GlobalPath targetPath = GlobalPath.FromString("1:/newname");
             Assert.IsTrue(volumeManager.Move(dir1Path, targetPath));
             Assert.IsFalse(SourceVolume.Exists(dir1Path));
+        }
+
+        [Test]
+        public void CanMoveDirectoryToRootDirectory()
+        {
+            GlobalPath targetPath = GlobalPath.FromString("1:");
+            Assert.IsTrue(volumeManager.Move(dir1Path, targetPath));
+            Assert.IsFalse(SourceVolume.Exists(dir1Path));
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSPersistenceException))]
+        public void CanFailToMoveRootDirectory()
+        {
+            GlobalPath sourcePath = GlobalPath.FromString("0:");
+            GlobalPath targetPath = GlobalPath.FromString("1:/newname");
+            volumeManager.Move(sourcePath, targetPath);
         }
 
         [Test]

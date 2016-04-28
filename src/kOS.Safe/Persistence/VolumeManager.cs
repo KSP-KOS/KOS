@@ -250,7 +250,7 @@ namespace kOS.Safe.Persistence
                 } else if (!sourcePath.IsRoot)
                 {
                     destinationPath = destinationPath.Combine(sourcePath.Name);
-                    destination = destinationVolume.CreateDirectory(destinationPath);
+                    destination = destinationVolume.OpenOrCreateDirectory(destinationPath);
                 }
 
                 if (destination == null)
@@ -335,6 +335,11 @@ namespace kOS.Safe.Persistence
 
         public bool Move(GlobalPath sourcePath, GlobalPath destinationPath)
         {
+            if (sourcePath.IsRoot)
+            {
+                throw new KOSPersistenceException("Can't move root directory: " + sourcePath);
+            }
+
             if (sourcePath.IsParent(destinationPath))
             {
                 throw new KOSPersistenceException("Can't move directory to a subdirectory of itself: " + destinationPath);
