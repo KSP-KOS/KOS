@@ -163,6 +163,14 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        public void CanCopyRootDirectoryToRootDirectory()
+        {
+            Assert.IsTrue(volumeManager.Copy(GlobalPath.FromString("0:/"), GlobalPath.FromString("1:/")));
+
+            CompareDirectories(GlobalPath.FromString("0:/"), GlobalPath.FromString("1:/"));
+        }
+
+        [Test]
         public void CanFailToCopyFileIfThereIsNoSpaceToCopy()
         {
             if (TargetVolume.Capacity == Volume.INFINITE_CAPACITY)
@@ -317,6 +325,9 @@ namespace kOS.Safe.Test
 
             VolumeDirectory dir1 = dir1Volume.Open(dir1Path) as VolumeDirectory;
             VolumeDirectory dir2 = dir2Volume.Open(dir2Path) as VolumeDirectory;
+
+            Assert.NotNull(dir1);
+            Assert.NotNull(dir2);
 
             int dir1Count = dir1.List().Count;
             int dir2Count = dir2.List().Count;

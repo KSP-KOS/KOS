@@ -124,7 +124,7 @@ namespace kOS.Safe.Persistence
 
             if (!Path.IsParent(path))
             {
-                throw new KOSException("This directory does not contain that path: " + path.ToString());
+                throw new KOSException("This directory does not contain path: " + path.ToString());
             }
 
             string subdirectory = path.Segments[Path.Segments.Count];

@@ -53,7 +53,7 @@ namespace kOS.Safe.Persistence
 
         public override string ToString()
         {
-            return Path.ToString();
+            return string.IsNullOrEmpty(Path.Name) ? "Root directory" : Path.Name;
         }
 
         public abstract int Size { get; }

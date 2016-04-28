@@ -274,12 +274,18 @@ namespace kOS.Safe.Persistence
 
             if (destinationVolume.Exists(destinationPath))
             {
-                destinationPath = destinationPath.Combine(sourcePath.Name);
-                destination = destinationVolume.CreateDirectory(destinationPath);
+                if (!destinationPath.IsRoot || !sourcePath.IsRoot)
+                {
+                    destinationPath = destinationPath.Combine(sourcePath.Name);
+                    destination = destinationVolume.CreateDirectory(destinationPath);
+                } else
+                {
+                    destination = destinationVolume.Open(destinationPath) as VolumeDirectory;
+                }
 
                 if (destination == null)
                 {
-                    throw new KOSException("Path was expected to point to a directory: " + destinationPath);
+                    throw new KOSException ("Path was expected to point to a directory: " + destinationPath);
                 }
             } else
             {

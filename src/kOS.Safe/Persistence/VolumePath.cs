@@ -31,6 +31,15 @@ namespace kOS.Safe.Persistence
         }
 
         /// <summary>
+        /// True if path is a root path.
+        /// </summary>
+        public bool IsRoot {
+            get {
+                return Segments.Count == 0;
+            }
+        }
+
+        /// <summary>
         /// Depth of the path. Same as Length if the path does not contain any '..'.
         /// </summary>
         public int Depth {

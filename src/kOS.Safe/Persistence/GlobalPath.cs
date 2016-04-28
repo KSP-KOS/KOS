@@ -109,7 +109,7 @@ namespace kOS.Safe.Persistence
             return new GlobalPath(VolumeId, newSegments);
         }
 
-        public GlobalPath Combine(params string[] segments)
+        public new GlobalPath Combine(params string[] segments)
         {
             return new GlobalPath(VolumeId, Segments.Concat(segments));
         }
