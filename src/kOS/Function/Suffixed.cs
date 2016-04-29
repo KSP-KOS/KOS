@@ -474,7 +474,7 @@ namespace kOS.Function
                 return;
             }
 
-            List<Waypoint> points = wpm.AllWaypoints();
+            List<Waypoint> points = wpm.Waypoints;
 
             // If the code below gets used in more places it may be worth moving into a factory method
             // akin to how PartValueFactory makes a ListValue<PartValue> from a List<Part>.
@@ -508,8 +508,8 @@ namespace kOS.Function
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
             if (hasGreek)
                 pointName = baseName;
-            Waypoint point = wpm.AllWaypoints().FirstOrDefault(
-                p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+            Waypoint point = wpm.Waypoints.FirstOrDefault(
+                p => string.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
             
             // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
             // nulls), so bomb out here:

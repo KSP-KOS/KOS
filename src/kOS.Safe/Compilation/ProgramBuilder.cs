@@ -126,6 +126,8 @@ namespace kOS.Safe.Compilation
                 {
                     if (labels.ContainsKey(program[index].Label))
                     {
+                        if (program[index].Label.EndsWith("-default"))
+                            continue;
                         // This is one of those "should never happen" errors that if it happens
                         // it means kOS devs screwed up - so dump the partially relabeled program
                         // to the log just to help in diagnosing the bug report that may happen:

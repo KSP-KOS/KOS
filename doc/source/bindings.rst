@@ -450,7 +450,7 @@ To use::
    // <or>
    LOG PROFILERESULT() TO SOMEFIELNAME.csv.
 
-The function ``ProfileResult()` returns a string containing
+The function ``ProfileResult()`` returns a string containing
 a formatted dump of your whole program, broken down into
 the more low-level instructions that make it up, with data
 values describing how long was spent in total on each

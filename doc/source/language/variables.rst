@@ -115,12 +115,11 @@ Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
 .. versionadded:: 0.17
+    The syntax without the initializer, looking like so::
 
-The syntax without the initializer, looking like so::
+        DECLARE x. // no initializer like "TO 1."
 
-    DECLARE x. // no initializer like "TO 1."
-
-is **no longer legal syntax**.
+    is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
@@ -657,13 +656,14 @@ Scoping and Triggers:
 
 Triggers such as:
 
-  - WHEN <expression> { <statements> }.
+  - WHEN <boolean expression> THEN { <statements> }.
 
 and
 
-  - ON <boolean variable> { <statements> }.
+  - ON <boolean expression> { <statements> }.
 
-Do not work predictably when you use local variables in the <expression>
+Do not work predictably when you use local variables in the
+<boolean expression>
 part of them.  They need to be designed to use global variables only,
 because they outlive the duration of any particular scoping braces.
 You can declare local variables within their <statements> in their bodies,

@@ -29,6 +29,8 @@ Core represents your ability to identify and interact directly with the running 
           - `Version`
         * - :attr:`CURRENTVOLUME`
           - :struct:`Volume`
+        * - :attr:`MESSAGES`
+          - :struct:`MessageQueue`
 
 
 .. attribute:: CORE:VESSEL
@@ -59,3 +61,11 @@ Core represents your ability to identify and interact directly with the running 
     :access: Get only
 
     The currently selected volume for the current processor.  This may be useful to prevent deleting files on the Archive, or for interacting with multiple local hard disks.
+
+.. attribute:: CORE:MESSAGES
+
+    :type: :struct:`MessageQueue`
+    :access: Get only
+
+    Returns this processsor's message queue.
+

@@ -58,15 +58,5 @@ namespace kOS.Safe.Compilation
         {
             return ScalarValue.Create(pair.Left) == ScalarValue.Create(pair.Right);
         }
-
-        public override object Min(OperandPair pair)
-        {
-            return ScalarValue.Min(ScalarValue.Create(pair.Left), ScalarValue.Create(pair.Right));
-        }
-
-        public override object Max(OperandPair pair)
-        {
-            return ScalarValue.Max(ScalarValue.Create(pair.Left), ScalarValue.Create(pair.Right));
-        }
     }
 }

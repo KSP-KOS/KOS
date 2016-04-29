@@ -4,7 +4,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
-    public interface IConfig: ISuffixed, IOperable
+    public interface IConfig: ISuffixed
     {
         int InstructionsPerUpdate { get; set; }
         bool UseCompressedPersistence { get; set; }
