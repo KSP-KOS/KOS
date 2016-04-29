@@ -194,6 +194,7 @@ namespace kOS.Safe.Encapsulation
         public void ResetI()
         {
             ErrorSum = 0;
+            ITerm = 0;
             LastSampleTime = double.MaxValue;
         }
 
