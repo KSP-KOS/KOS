@@ -24,6 +24,12 @@ release.
 
 ****
 
+Changes in 0.20.0
+-----------------
+
+This release is functionally identical to v0.19.3, it is recompiled against the
+KSP 1.1 release binaries (build 1230)
+
 Changes in 0.19.3
 -----------------
 
