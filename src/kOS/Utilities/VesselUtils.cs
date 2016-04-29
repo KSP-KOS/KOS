@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using System;
@@ -295,6 +295,42 @@ namespace kOS.Utilities
             }
         }
 
+        public static object GetChuteSafeStatus(Vessel vessel) // returns false only if there are chutes to be safely deployed
+        {
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleParachute>())
+                {
+
+                    if ((c.deploymentState == ModuleParachute.deploymentStates.STOWED)&&(c.deploymentSafeState==ModuleParachute.deploymentSafeStates.SAFE))
+                    {
+                        // If just one chute can be safely deployed return false
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public static void DeployParachutesSafe(Vessel vessel, bool state)
+        {
+            if (!vessel.mainBody.atmosphere || !state) return;
+            foreach (var p in vessel.parts)
+            {
+                if (!p.Modules.OfType<ModuleParachute>().Any()) continue;
+                foreach (var c in p.FindModulesImplementing<ModuleParachute>())
+                {
+                    if ((c.deploymentState == ModuleParachute.deploymentStates.STOWED) && (c.deploymentSafeState == ModuleParachute.deploymentSafeStates.SAFE))
+                    //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
+                    {
+                        c.DeployAction(null);
+                    }
+                }
+            }
+        }
+
         public static object GetSolarPanelStatus(Vessel vessel)
         {
             var atLeastOneSolarPanel = false; // No panels at all? Always return false
@@ -318,8 +354,282 @@ namespace kOS.Utilities
 
         public static void SolarPanelCtrl(Vessel vessel, bool state)
         {
-            vessel.rootPart.SendEvent(state ? "Extend" : "Retract");
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
+                {
+                    if (state) { c.Extend(); }else { c.Retract(); }
+                }
+            }
         }
+
+        public static object GetRadiatorStatus(Vessel vessel)
+        {
+            var atLeastOneRadiator = false; // No radiators at all? Always return false
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleActiveRadiator>())
+                {
+                    atLeastOneRadiator = true;
+
+                    if (! c.IsCooling)
+                    {
+                        // If just one radiator is not deployed/activated return false
+                        return false;
+                    }
+                }
+            }
+
+            return atLeastOneRadiator;
+        }
+
+        public static void RadiatorCtrl(Vessel vessel, bool state)
+        {
+            foreach (var p in vessel.parts)
+            {
+                var cl = p.FindModulesImplementing<ModuleActiveRadiator>();
+                if (cl.Count > 0)
+                {
+                    var drl = p.FindModulesImplementing<ModuleDeployableRadiator>();
+                    if (drl.Count == 0)
+                    {
+                        foreach (var c in cl)
+                        {
+
+                            if (state) { c.Activate(); } else { c.Shutdown(); } //fixed radiators
+                        }
+                    }
+                    else
+                    {
+                        foreach (var dr in drl)
+                        {
+
+                            if (state) { dr.Extend(); } else { dr.Retract(); } //deployable radiators
+                        }
+                    }
+
+                }
+            }
+        }
+
+        public static object GetLadderStatus(Vessel vessel)
+        {
+            var atLeastOneLadder = false; // No ladders at all? Always return false
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<RetractableLadder>())
+                {
+                    atLeastOneLadder = true;
+
+                    if (c.StateName != "Extended")
+                    {
+                        // If just one ladder is not extended return false
+                        return false;
+                    }
+                }
+            }
+
+            return atLeastOneLadder;
+        }
+
+        public static void LadderCtrl(Vessel vessel, bool state)
+        {
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<RetractableLadder>())
+                {
+                    if (state) { c.Extend(); } else { c.Retract(); }
+                }
+            }
+        }
+
+        public static object GetBayStatus(Vessel vessel)
+        {
+            
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleCargoBay>())
+                {
+                    var m = p.Modules[c.DeployModuleIndex] as ModuleAnimateGeneric; //apparently, it's referenced by the number
+                    if (m != null) //bays have ModuleAnimateGeneric, fairings have their own, but they all use ModuleCargoBay
+                    {// if (m.GetScalar != c.closedPosition)
+                          if  (m.animSwitch == (c.closedPosition != 0))
+                        { return true; } } //even one open bay may be critical, therefore return true if any found
+                }
+            }
+
+            return false;
+        }
+
+        public static void BayCtrl(Vessel vessel, bool state)
+        {
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleCargoBay>())
+                {
+                    var m = p.Modules[c.DeployModuleIndex] as ModuleAnimateGeneric; //apparently, it's referenced by the number
+                    if (m != null)
+                    {
+                        if ((m.animSwitch == (c.closedPosition == 0))) //closed/closing
+                            {if (state) { m.Toggle(); } } //open
+                        else //open/opening
+                        { if (!state) { m.Toggle(); } }// close
+                    } 
+                }
+            }
+        }
+
+        public static object GetDrillDeployStatus(Vessel vessel)
+        {
+            var atLeastOneDrill = false; // No drills at all? Always return false
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleAnimationGroup>())
+                {if (c.moduleType == "Drill") //drill animation module
+                    {
+                        atLeastOneDrill = true;
+
+                        if (!c.isDeployed)
+                        {
+                            // If just one drill is not extended return false
+                            return false;
+                        }
+                    }
+                    }
+                }
+            return atLeastOneDrill;
+        }
+
+        public static void DrillDeployCtrl(Vessel vessel, bool state)
+        {
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleAnimationGroup>())
+                {
+                    if (c.moduleType == "Drill") //drill animation module
+                    {
+                        if (state) { c.DeployModule(); } else
+                        {
+                            c.RetractModule(); 
+                        }
+                    }
+                }
+            }
+        }
+
+        public static object GetDrillStatus(Vessel vessel)
+        {
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceHarvester>())
+                {
+                    if (c.IsActivated)
+                    {
+                        // return true if at least one working - you won't get both modules running at once
+                        return true;
+                    }
+                }
+                foreach (var c in p.FindModulesImplementing<ModuleAsteroidDrill>())
+                {
+                    if (c.IsActivated)
+                    {
+                        // return true if at least one working - you won't get both modules running at once
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static void DrillCtrl(Vessel vessel, bool state)
+        {
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceHarvester>())
+                {
+                    if (state) {c.StartResourceConverter(); }else { c.StartResourceConverter(); }
+                }
+                foreach (var c in p.FindModulesImplementing<ModuleAsteroidDrill>())
+                {
+                    if (state) { c.StartResourceConverter(); } else { c.StartResourceConverter(); } //call activate on both?
+                }
+            }
+        }
+
+        public static object GetFuelCellStatus(Vessel vessel)
+        {
+            string convID = "Fuel Cell";
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceConverter>())
+                {
+                    if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID)))
+                    {
+                        if (c.IsActivated)
+                        {
+                            // Converters aren't always run all at once
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static void FuelCellCtrl(Vessel vessel, bool state)
+        {
+            string convID = "Fuel Cell";
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceConverter>())
+                {
+                    if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID)))
+                    {
+                        if (state) { c.StartResourceConverter(); } else { c.StopResourceConverter(); }
+                    }
+                }
+            }
+        }
+
+        public static object GetISRUStatus(Vessel vessel)
+        {
+            string convID = "ISRU";
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceConverter>())
+                {
+                    if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID))) 
+                    {
+                        if (c.IsActivated)
+                        {
+                            // Converters aren't always run all at once
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static void ISRUCtrl(Vessel vessel, bool state)
+        {
+            string convID = "ISRU";
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceConverter>())
+                {
+                    if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID)))
+                    {
+                        if (state) { c.StartResourceConverter(); } else { c.StopResourceConverter(); }
+                    }
+                }
+            }
+        }
+
 
         private static double GetMassDrag(Vessel vessel)
         {
