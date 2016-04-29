@@ -51,7 +51,7 @@ namespace kOS.Module
                 if (parentVessel != null)
                 {
                     allInstances[ID] = this;
-                    addDefaultParameters();
+                    AddDefaultParameters();
                 }
                 kOS.Safe.Utilities.SafeHouse.Logger.LogError(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.name, ID));
             }
@@ -65,8 +65,8 @@ namespace kOS.Module
         public void Start()
         {
             kOS.Safe.Utilities.SafeHouse.Logger.LogError(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.name, ID));
-            harvestParts();
-            hookEvents();
+            HarvestParts();
+            HookEvents();
             initialized = true;
         }
 
@@ -79,8 +79,8 @@ namespace kOS.Module
             if (kOS.Safe.Utilities.SafeHouse.Logger != null)
             {
                 kOS.Safe.Utilities.SafeHouse.Logger.LogError("kOSVesselModule OnDestroy()!");
-                unHookEvents();
-                clearParts();
+                UnHookEvents();
+                ClearParts();
                 if (parentVessel != null && allInstances.ContainsKey(ID))
                 {
                     allInstances.Remove(ID);
@@ -107,13 +107,13 @@ namespace kOS.Module
             {
                 if (parentVessel.Parts.Count != partCount)
                 {
-                    clearParts();
-                    harvestParts();
+                    ClearParts();
+                    HarvestParts();
                     partCount = parentVessel.Parts.Count;
                 }
                 if (parentVessel.loaded)
                 {
-                    updateParameterState();
+                    UpdateParameterState();
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace kOS.Module
         /// <summary>
         /// Generates a list of all processorModules included on the parentVessel.
         /// </summary>
-        private void harvestParts()
+        private void HarvestParts()
         {
             var proccessorModules = parentVessel.FindPartModulesImplementing<kOSProcessor>();
             foreach (var proc in proccessorModules)
@@ -186,7 +186,10 @@ namespace kOS.Module
             partCount = parentVessel.Parts.Count;
         }
 
-        private void clearParts()
+        /// <summary>
+        /// Clear the childParts list.  This is used when refreshing the parts list, or when destroying the module.
+        /// </summary>
+        private void ClearParts()
         {
             childParts.Clear();
             partCount = 0;
@@ -195,7 +198,7 @@ namespace kOS.Module
         /// <summary>
         /// Setup the default flight parameters.
         /// </summary>
-        private void addDefaultParameters()
+        private void AddDefaultParameters()
         {
             AddFlightControlParameter("steering", new SteeringManager(parentVessel));
         }
@@ -203,34 +206,47 @@ namespace kOS.Module
         /// <summary>
         /// Hook up to any vessel/game events that might be needed.
         /// </summary>
-        private void hookEvents()
+        private void HookEvents()
         {
             if (RemoteTechHook.IsAvailable(parentVessel.id))
             {
-                RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, updateAutopilot);
+                RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, UpdateAutopilot);
             }
             else
             {
-                parentVessel.OnPreAutopilotUpdate += updateAutopilot;
+                parentVessel.OnPreAutopilotUpdate += UpdateAutopilot;
+            }
+            GameEvents.onPartCouple.Add(OnDocking);
+        }
+
+        private void OnDocking(GameEvents.FromToAction<Part, Part> data)
+        {
+            if (data.from.vessel == parentVessel)
+            {
+                Destroy(this);
             }
         }
 
         /// <summary>
         /// Unhook from events we previously hooked up to.
         /// </summary>
-        private void unHookEvents()
+        private void UnHookEvents()
         {
             if (RemoteTechHook.IsAvailable(parentVessel.id))
             {
-                RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, updateAutopilot);
+                RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, UpdateAutopilot);
             }
             else
             {
-                parentVessel.OnPreAutopilotUpdate -= updateAutopilot;
+                parentVessel.OnPreAutopilotUpdate -= UpdateAutopilot;
             }
+            GameEvents.onPartCouple.Remove(OnDocking);
         }
 
-        private void updateParameterState()
+        /// <summary>
+        /// Update the current stte of the each IFlightControlParameter.  This is called during FixedUpdate
+        /// </summary>
+        private void UpdateParameterState()
         {
             foreach (var parameter in flightControlParameters.Values)
             {
@@ -238,7 +254,11 @@ namespace kOS.Module
             }
         }
 
-        private void updateAutopilot(FlightCtrlState c)
+        /// <summary>
+        /// Call to each IFlightControlParameter to update the flight controls.  This is called during OnPreAutopilotUpdate
+        /// </summary>
+        /// <param name="c"></param>
+        private void UpdateAutopilot(FlightCtrlState c)
         {
             if (childParts.Count > 0)
             {
@@ -252,27 +272,50 @@ namespace kOS.Module
             }
         }
 
+        /// <summary>
+        /// Adds an IFlightControlParameter to the reference dictionary, and throws an error if it already exists.
+        /// </summary>
+        /// <param name="name">the bound name of the parameter, this will be converted to lower case internally</param>
+        /// <param name="parameter"></param>
         public void AddFlightControlParameter(string name, IFlightControlParameter parameter)
         {
+            name = name.ToLower();
             if (flightControlParameters.ContainsKey(name))
                 throw new Exception("Flight parameter by the name " + name + " already exists.");
             flightControlParameters[name] = parameter;
         }
 
+        /// <summary>
+        /// Returns the named IFlightControlParameter
+        /// </summary>
+        /// <param name="name">the bound name of the parameter, this will be converted to lower case internally</param>
+        /// <returns></returns>
         public IFlightControlParameter GetFlightControlParameter(string name)
         {
+            name = name.ToLower();
             if (!flightControlParameters.ContainsKey(name))
                 throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.name, name));
             return flightControlParameters[name];
         }
 
+        /// <summary>
+        /// Returns true if the named IFlightControlParameter already exists
+        /// </summary>
+        /// <param name="name">the bound name of the parameter, this will be converted to lower case internally</param>
+        /// <returns></returns>
         public bool HasFlightControlParameter(string name)
         {
+            name = name.ToLower();
             return flightControlParameters.ContainsKey(name);
         }
 
+        /// <summary>
+        /// Removes the named IFlightControlParameter from the reference dictionary.
+        /// </summary>
+        /// <param name="name">the bound name of the parameter, this will be converted to lower case internally</param>
         public void RemoveFlightControlParameter(string name)
         {
+            name = name.ToLower();
             if (flightControlParameters.ContainsKey(name))
             {
                 var fc = flightControlParameters[name];
@@ -282,9 +325,22 @@ namespace kOS.Module
             }
         }
 
+        /// <summary>
+        /// Return the kOSVesselModule instance associated with the given Vessel object
+        /// </summary>
+        /// <param name="vessel">the vessel for which the module should be returned</param>
+        /// <returns></returns>
         public static kOSVesselModule GetInstance(Vessel vessel)
         {
-            return allInstances[vessel.id];
+            kOSVesselModule ret;
+            if (!allInstances.TryGetValue(vessel.id, out ret))
+            {
+                ret = vessel.GetComponent<kOSVesselModule>();
+                if (ret == null)
+                    throw new kOS.Safe.Exceptions.KOSException("Cannot find kOSVesselModule on vessel " + vessel.name);
+                allInstances.Add(vessel.id, ret);
+            }
+            return ret;
         }
     }
 }
