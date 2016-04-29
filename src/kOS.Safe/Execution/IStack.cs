@@ -13,5 +13,6 @@ namespace kOS.Safe.Execution
         void Clear();
         string Dump();
         List<int> GetCallTrace();
+        bool HasTriggerContexts();
     }
 }

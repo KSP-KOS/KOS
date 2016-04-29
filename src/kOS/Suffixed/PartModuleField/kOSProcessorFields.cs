@@ -2,13 +2,16 @@
 using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
+using kOS.Safe.Module;
+using System;
+using kOS.Communication;
 
 namespace kOS.Suffixed.PartModuleField
 {
     [kOS.Safe.Utilities.KOSNomenclature("KOSProcessor")]
     public class kOSProcessorFields : PartModuleFields
     {
-        private readonly kOSProcessor processor;
+        protected readonly kOSProcessor processor;
 
         public kOSProcessorFields(kOSProcessor processor, SharedObjects sharedObj):base(processor, sharedObj)
         {
@@ -24,20 +27,21 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("VOLUME", new NoArgsSuffix<Volume>(() => processor.HardDisk, "This processor's hard disk"));
             AddSuffix("TAG", new NoArgsSuffix<StringValue>(() => processor.Tag, "This processor's tag"));
             AddSuffix("BOOTFILENAME", new SetSuffix<StringValue>(GetBootFilename, SetBootFilename, "The name of the processor's boot file."));
+            AddSuffix("CONNECTION", new NoArgsSuffix<ProcessorConnection>(() => new ProcessorConnection(processor, shared), "Get a connection to this processor"));
         }
 
         private void Activate()
         {
             ThrowIfNotCPUVessel();
 
-            processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.STARVED;
+            processor.SetMode(ProcessorModes.STARVED);
         }
 
         private void Deactivate()
         {
             ThrowIfNotCPUVessel();
 
-            processor.ProcessorMode = kOS.Safe.Module.ProcessorModes.OFF;
+            processor.SetMode(ProcessorModes.OFF);
         }
 
         private StringValue GetBootFilename()

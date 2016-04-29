@@ -20,7 +20,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
 .. note::
 
     .. versionadded:: 0.13
-
         A vessel is now a type of :struct:`Orbitable`. Much of what a Vessel can do can now by done by any orbitable object. The documentation for those abilities has been moved to the :ref:`orbitable page <orbitable>`.
 
 
@@ -75,6 +74,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :meth:`ALLPARTSTAGGED()`              :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
     :attr:`CREWCAPACITY`                  :struct:`scalar`                Crew capacity of this vessel
     :meth:`CREW()`                        :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
+    :attr:`CONNECTION`                    :struct:`Connection`            Returns your connection to this vessel
+    :attr:`MESSAGES`                      :struct:`MessageQueue`          This vessel's message queue
     ===================================== =============================== =============
 
 .. note::
@@ -197,11 +198,10 @@ All vessels share a structure. To get a variable referring to any vessel you can
     .. note::
 
         .. versionadded:: 0.18
-
-        The old name for this value was SURFACESPEED.  The name was changed
-        because it was confusing before.  "surface speed" implied it's the
-        :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
-        it ignores the vertical component.
+            The old name for this value was SURFACESPEED.  The name was changed
+            because it was confusing before.  "surface speed" implied it's the
+            :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
+            it ignores the vertical component.
 
 
 .. attribute:: Vessel:AIRSPEED
@@ -452,3 +452,15 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`List` of :struct:`CrewMember` objects
 
     list of all :struct:`kerbonauts <CrewMember>` aboard this vessel
+
+.. attribute:: Vessel:CONNECTION
+
+    :return: :struct:`Connection`
+
+    Returns your connection to this vessel.
+
+.. attribute:: Vessel:MESSAGES
+
+    :return: :struct:`MessageQueue`
+
+    Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).

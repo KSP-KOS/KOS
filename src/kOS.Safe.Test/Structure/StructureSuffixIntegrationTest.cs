@@ -57,11 +57,11 @@ namespace kOS.Safe.Test.Structure
             structure.TestAddInstanceSuffix("FOO", new SetSuffix<ScalarIntValue>(BuildBasicGetter(strongBox), BuildBasicSetter(strongBox)));
             structure.TestAddInstanceSuffix("BAR", new SetSuffix<ScalarIntValue>(BuildBasicGetter(strongBox), BuildBasicSetter(strongBox)));
 
-            Assert.AreEqual(TEST_VALUE, structure.GetSuffix("FOO"));
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE), structure.GetSuffix("FOO").Value);
             structure.SetSuffix("FOO", TEST_VALUE - 10);
-            Assert.AreEqual(TEST_VALUE - 10, structure.GetSuffix("FOO"));
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE - 10), structure.GetSuffix("FOO").Value);
             structure.SetSuffix("FOO", TEST_VALUE / 20);
-            Assert.AreEqual(TEST_VALUE / 20, structure.GetSuffix("FOO"));
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE / 20), structure.GetSuffix("FOO").Value);
         }
 
         [Test]
@@ -73,14 +73,14 @@ namespace kOS.Safe.Test.Structure
             structure.TestAddInstanceSuffix("FOO", new SetSuffix<ScalarIntValue>(BuildBasicGetter(strongBox), BuildBasicSetter(strongBox)));
             structure.TestAddInstanceSuffix("BAR", new SetSuffix<ScalarIntValue>(BuildBasicGetter(strongBox), BuildBasicSetter(strongBox)));
 
-            Assert.AreEqual(TEST_VALUE, structure.GetSuffix("FOO"));
-            Assert.AreEqual(TEST_VALUE, structure.GetSuffix("BAR"));
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE), structure.GetSuffix("FOO").Value);
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE), structure.GetSuffix("BAR").Value);
             structure.SetSuffix("FOO", TEST_VALUE - 10);
-            Assert.AreEqual(TEST_VALUE - 10, structure.GetSuffix("FOO"));
-            Assert.AreEqual(TEST_VALUE - 10, structure.GetSuffix("BAR"));
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE - 10), structure.GetSuffix("FOO").Value);
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE - 10), structure.GetSuffix("BAR").Value);
             structure.SetSuffix("BAR", TEST_VALUE / 20);
-            Assert.AreEqual(TEST_VALUE / 20, structure.GetSuffix("BAR"));
-            Assert.AreEqual(TEST_VALUE / 20, structure.GetSuffix("FOO"));
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE / 20), structure.GetSuffix("BAR").Value);
+            Assert.AreEqual(ScalarValue.Create(TEST_VALUE / 20), structure.GetSuffix("FOO").Value);
         }
 
         private static SuffixSetDlg<TParam> BuildBasicSetter<TParam>(StrongBox<TParam> state) where TParam : Encapsulation.Structure

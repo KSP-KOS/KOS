@@ -126,7 +126,10 @@ namespace kOS.Binding
 
         public void UnBindAll()
         {
-            flightControl.UnBind();
+            if (flightControl != null)
+            {
+                flightControl.UnBind ();
+            }
         }
 
         public void Dispose()

@@ -6,6 +6,10 @@ Terminal
 The TERMINAL identifier refers to a special structure that lets you access
 some of the information about the screen you are running on.
 
+Warning: Features related to the in-game terminal GUI may change
+when KSP 1.1 comes out, as we may redesign some of the user
+interface.
+
 Structure
 ---------
 
@@ -39,6 +43,21 @@ Structure
 	  - :ref:`Boolean <boolean>`
 	  - get and set
 	  - Turns beeps into silent visual screen flashes instead.
+
+        * - :attr:`BRIGHTNESS`
+	  - :ref:`Scalar <scalar>`
+	  - get and set
+	  - Adjusts brightness slider of the terminal between 0.0 (min) and 1.0 (max).
+
+        * - :attr:`CHARWIDTH`
+	  - :ref:`Scalar <scalar>`
+	  - get and set
+	  - Width of a character cell in pixels.
+
+        * - :attr:`CHARHEIGHT`
+	  - :ref:`Scalar <scalar>`
+	  - get and set
+	  - Height of a character cell in pixels.
 
 .. attribute:: Terminal:WIDTH
 
@@ -112,3 +131,44 @@ Structure
 
     This setting is different per kOS CPU part.  Different terminal
     windows can have different settings for this value.
+
+.. attribute:: Terminal:BRIGHTNESS
+
+    :access: Get/Set
+    :type: :ref:`Scalar <scalar>`
+
+    The same thing as the brightness slider on the terminal GUI.
+    The values range from 0.0 (minimum) to 1.0 (maximum).  At
+    zero, the effect is to entirely hide the letters altogether.
+
+    Warning: Features related to the in-game terminal GUI may change
+    when KSP 1.1 comes out, as we may redesign some of the user
+    interface.
+
+.. attribute:: Terminal:CHARWIDTH
+
+    :access: Get/Set
+    :type: :ref:`Scalar <scalar>`
+
+    Width of a character cell in the display terminal, in pixels.
+    The value is forced to remain in the range [4..24] and be
+    divisible by 2.  If you try to set it to any other value, it
+    will snap to the allowed range and increment.
+
+    Warning: Features related to the in-game terminal GUI may change
+    when KSP 1.1 comes out, as we may redesign some of the user
+    interface.
+    
+.. attribute:: Terminal:CHARHEIGHT
+
+    :access: Get/Set
+    :type: :ref:`Scalar <scalar>`
+
+    Height of a character cell in the display terminal, in pixels.
+    The value is forced to remain in the range [4..24] and be
+    divisible by 2.  If you try to set it to any other value, it
+    will snap to the allowed range and increment.
+
+    Warning: Features related to the in-game terminal GUI may change
+    when KSP 1.1 comes out, as we may redesign some of the user
+    interface.

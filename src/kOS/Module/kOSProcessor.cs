@@ -3,7 +3,7 @@ using kOS.Binding;
 using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
-using kOS.InterProcessor;
+using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
 using kOS.Safe.Compilation;
@@ -14,21 +14,25 @@ using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
 using KSP.IO;
-using KSPAPIExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
+using KSP.UI;
+using kOS.Suffixed;
+using kOS.Safe.Communication;
 
 namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessor, IPartCostModifier, IPartMassModifier
     {
-        public ProcessorModes ProcessorMode = ProcessorModes.READY;
+        public ProcessorModes ProcessorMode { get; private set; }
 
         public Harddisk HardDisk { get; private set; }
+
+        public MessageQueue Messages { get; private set; }
 
         public string Tag
         {
@@ -97,6 +101,11 @@ namespace kOS.Module
         // definition for any given part (within the part.cfg file).
         [KSPField(isPersistant = false, guiActive = false)]
         public float ECPerBytePerSecond = 0F;
+
+        public kOSProcessor()
+        {
+            ProcessorMode = ProcessorModes.READY;
+        }
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
@@ -199,9 +208,16 @@ namespace kOS.Module
         }
 
         //implement IPartCostModifier component
-        public float GetModuleCost(float defaultCost)
+        public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
+            // the 'sit' arg is irrelevant to us, but the interface requires it.
+
             return additionalCost;
+        }
+        //implement IPartMassModifier component
+        public ModifierChangeWhen GetModuleCostChangeWhen()
+        {
+            return ModifierChangeWhen.FIXED;
         }
 
         private void UpdateCostAndMass()
@@ -216,10 +232,17 @@ namespace kOS.Module
         }
 
         //implement IPartMassModifier component
-        public float GetModuleMass(float defaultMass)
+        public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
         {
+            // the 'sit' arg is irrelevant to us, but the interface requires it.
+            
             return part.mass - defaultMass; //copied this fix from ProceduralParts mod as we already changed part.mass
             //return additionalMass;
+        }
+        //implement IPartMassModifier component
+        public ModifierChangeWhen GetModuleMassChangeWhen()
+        {
+            return ModifierChangeWhen.FIXED;
         }
 
         public override void OnStart(StartState state)
@@ -306,6 +329,7 @@ namespace kOS.Module
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
+            shared.ConnectivityMgr = shared.Factory.CreateConnectivityManager();
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
@@ -321,6 +345,8 @@ namespace kOS.Module
             // initialize archive
             var archive = shared.Factory.CreateArchive();
             shared.VolumeMgr.Add(archive);
+
+            Messages = new MessageQueue();
 
             // initialize harddisk
             if (HardDisk == null)
@@ -338,7 +364,18 @@ namespace kOS.Module
                     var bootVolumeFile = archive.Open(bootFile);
                     if (bootVolumeFile != null)
                     {
-                        HardDisk.Save(bootFile, bootVolumeFile.ReadAll());
+                        FileContent content = bootVolumeFile.ReadAll();
+                        if (HardDisk.IsRoomFor(bootFile, content))
+                        {
+                            HardDisk.Save(bootFile, content);
+                        }
+                        else
+                        {
+                            // Throwing an exception during InitObjects will break the initialization and won't show
+                            // the error to the user.  So we just log the error instead.  At some point in the future
+                            // it would be nice to queue up these init errors and display them to the user somewhere.
+                            SafeHouse.Logger.LogError("Error copying boot file to local volume: not enough space.");
+                        }
                     }
                 }
             }
@@ -348,6 +385,12 @@ namespace kOS.Module
             if (!SafeHouse.Config.StartOnArchive)
             {
                 shared.VolumeMgr.SwitchTo(HardDisk);
+            }
+
+            // initialize processor mode if different than READY
+            if (ProcessorMode != ProcessorModes.READY)
+            {
+                ProcessorModeChanged();
             }
 
             InitProcessorTracking();
@@ -723,27 +766,33 @@ namespace kOS.Module
         {
             if (newProcessorMode != ProcessorMode)
             {
-                switch (newProcessorMode)
-                {
-                    case ProcessorModes.READY:
-                        shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
-                            ? shared.VolumeMgr.GetVolume(0)
-                            : HardDisk);
-                        if (shared.Cpu != null) shared.Cpu.Boot();
-                        if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
-                        if (shared.Window != null) shared.Window.IsPowered = true;
-                        break;
-
-                    case ProcessorModes.OFF:
-                    case ProcessorModes.STARVED:
-                        if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
-                        if (shared.Window != null) shared.Window.IsPowered = false;
-                        if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
-                        break;
-                }
-
                 ProcessorMode = newProcessorMode;
+
+                ProcessorModeChanged();
             }
+        }
+
+        private void ProcessorModeChanged()
+        {
+            switch (ProcessorMode)
+            {
+            case ProcessorModes.READY:
+                shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
+                    ? shared.VolumeMgr.GetVolume(0)
+                    : HardDisk);
+                if (shared.Cpu != null) shared.Cpu.Boot();
+                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                if (shared.Window != null) shared.Window.IsPowered = true;
+                break;
+
+            case ProcessorModes.OFF:
+            case ProcessorModes.STARVED:
+                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                if (shared.Window != null) shared.Window.IsPowered = false;
+                if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
+                break;
+            }
+
         }
 
         public void ExecuteInterProcCommand(InterProcCommand command)
@@ -756,8 +805,8 @@ namespace kOS.Module
 
         public void SetAutopilotMode(int mode)
         {
-            RUIToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
-            modeButtons.ElementAt(mode).SetTrue();
+            UIStateToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
+            modeButtons.ElementAt(mode).SetState(true);
         }
 
         public string BootFilename
@@ -777,6 +826,12 @@ namespace kOS.Module
                 return true;
             }
             return false;
+        }
+
+        public void Send(Structure content)
+        {
+            double sentAt = Planetarium.GetUniversalTime();
+            Messages.Push(Message.Create(content, sentAt, sentAt, new VesselTarget(shared), Tag));
         }
     }
 }

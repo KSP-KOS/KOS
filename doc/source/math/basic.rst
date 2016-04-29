@@ -15,7 +15,6 @@ There is a bound variable called CONSTANT which contains some basic fundamental
 constants about the universe that you may find handy in your math operations.
 
 .. versionadded:: 0.18
-
     Prior to kOS version 0.18, ``constant`` was a function call, and
     therefore to say ``constant:pi``, you had to say ``constant():pi``.
     The function call ``constant()`` still exists and still works, but

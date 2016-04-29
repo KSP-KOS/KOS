@@ -181,7 +181,8 @@ namespace kOS.Suffixed.Part
             if (!MultiMode)
                 throw new KOSException("Attempted to call the TOGGLEMODE suffix on a non-multi mode engine.");
             // Use Invoke to call ModeEvent, since the underlying method is private.
-            MMengine.Invoke("ModeEvent", 0);
+            // partModule.Invoke(eventName, 0) introduces 1-frame delay. Getting the event directly does it immediately.
+            MMengine.Events.First(kspEvent => kspEvent.name == "ModeEvent").Invoke();
         }
 
         public BooleanValue GetRunningPrimary()
@@ -217,9 +218,9 @@ namespace kOS.Suffixed.Part
             if (MMengine.autoSwitch != auto)
             {
                 if (auto)
-                    MMengine.Invoke("EnableAutoSwitch", 0);
+                    MMengine.Events.First(kspEvent => kspEvent.name == "EnableAutoSwitch").Invoke();
                 else
-                    MMengine.Invoke("DisableAutoSwitch", 0);
+                    MMengine.Events.First(kspEvent => kspEvent.name == "DisableAutoSwitch").Invoke();
             }
         }
 

@@ -1,6 +1,104 @@
 kOS Mod Changelog
 =================
 
+# v0.20.0 KSP 1.1 Hype!
+
+This release is functionally identical to v0.19.3, it is recompiled against the
+KSP 1.1 release binaries (build 1230)
+
+### BUG FIXES
+* [KSP1.1] Removing a node leaves an artifact (https://github.com/KSP-KOS/KOS/issues/1572 https://github.com/KSP-KOS/KOS/issues/1576)
+* [KSP1.1] Toolbar button doesn't display (https://github.com/KSP-KOS/KOS/issues/1573 https://github.com/KSP-KOS/KOS/issues/1569)
+
+# v0.19.3 Last (intended) 1.0.5 update.
+
+(This is the last planned update to work with KSP 1.0.5 unless
+it breaks something big that requires an emergency patch.)
+
+### BREAKING CHANGES
+* Triggers may now go beyond the limits of the IPU (https://github.com/KSP-KOS/KOS/pull/1542) but are no longer guaranteed to execute within a single update frame.  See http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware.html#triggers and http://ksp-kos.github.io/KOS_DOC/general/cpu_hardware.html#cpu-update-loop for more details.
+
+### NEW FEATURES
+* Profiling output via `ProfileResult()` (https://github.com/KSP-KOS/KOS/pull/1534)
+
+### BUG FIXES
+* Removed delay when enabling/disabling auto changeover for multi mode engines (https://github.com/KSP-KOS/KOS/pull/1451)
+* Improve performance of various math functions (https://github.com/KSP-KOS/KOS/issues/1553 https://github.com/KSP-KOS/KOS/pull/1523 https://github.com/KSP-KOS/KOS/pull/1563)
+* `on` logic now evaluates expressions and suffixes, instead of requiring a raw variable (https://github.com/KSP-KOS/KOS/issues/1376 https://github.com/KSP-KOS/KOS/pull/1542)
+* Documentation no longer inserts a space around highlighted search terms (https://github.com/KSP-KOS/KOS/pull/1548)
+* You can now use lock objects with the same identifier from within compiled scripts, like `lock throttle...` (https://github.com/KSP-KOS/KOS/issues/691 https://github.com/KSP-KOS/KOS/issues/1253 https://github.com/KSP-KOS/KOS/issues/1557 https://github.com/KSP-KOS/KOS/pull/1561)
+* The script parsing logic has been updated to improve compile times by roughly 50% (https://github.com/KSP-KOS/KOS/pull/1566)
+
+# v0.19.2
+
+This release is here primarily to fix a problem that made
+the new v0.19.1 terminal unusable for users who have to
+use low resolution texture settings in the Unity graphics
+configuration panel.
+
+### BREAKING
+* Nothing new breaking in this version is known about.
+
+### NEW FEATURES
+* New alias KUNIVERSE:FORCEACTIVE() can be used instead of the longer name KUNIVERSE:FORCESETACTIVEVESSEL().
+* More robust use of the font_sml.png file allows for replacement of font_sml.png by the end-user.
+  (However this may only be useful for a limited time, as Unity5 might make us implement the font differently
+  anyway.)
+
+### BUG FIXES
+* New terminal now works again at low texture resolution settings
+  (https://github.com/KSP-KOS/KOS/issues/1513).
+* New terminal shows grey color on power-off again
+  (https://github.com/KSP-KOS/KOS/issues/1525).
+* Terminal now shows a boot message that mentions the documentation URL
+  (https://github.com/KSP-KOS/KOS/issues/1527).
+* Fixed a situation that could make KSP itself crash if a script
+  attempted to perform an equality comparison on types that hadn't
+  had a meaningful implementation of equality defined.  (Instead
+  of a proper error message about it from kOS, kOS got stuck in
+  recursion.)
+
+
+# v0.19.1
+
+This release is a patch to v0.19.0, fixing some things
+found by the user community in the two days shortly after
+v0.19.0 released.
+
+It also happens to contain a few terminal window features
+that were being worked on before v0.19.0 but were not deemed
+ready yet when 0.19.0 was released.
+
+### NEW FEATURES
+* PIDLoop tutorial section in the docs edited to mention new PIDLoop()
+  function that did not exist back when that page was first written.
+  (http://ksp-kos.github.io/KOS_DOC/tutorials/pidloops.html)
+* New Terminal GUI doodads and widgets: A brightness slider,
+  and the ability to zoom the character width and height.  Also
+  made the transparency and dimming of the 'non-active' terminals
+  a bit less severe so you can still read them when un-focused.
+  Also, these new features can be script controlled by new
+  suffixes, however it is unclear if that feature (doing it from
+  a script) will remain in the future so use it with care:
+  (http://ksp-kos.github.io/KOS_DOC/structures/misc/terminal.html)
+
+### BUG FIXES
+* Fixed file rename bug on local hard disks:
+  (https://github.com/KSP-KOS/KOS/issues/1498)
+* Fixed boot files can be larger than the local disk
+  (https://github.com/KSP-KOS/KOS/issues/1094)
+* Fixed a bug where Infernal Robotics would break when switching vessels or
+  reverting. (https://github.com/KSP-KOS/KOS/issues/1501)
+* Fixes problems with using PartModule's SetField(), and infernal Robotics which
+  had been failing for all cases where the field was a "float".
+  (https://github.com/KSP-KOS/KOS/issues/1503).
+  There may have been other places this bug affected, but this is
+  where it was noticed.  Hypothetically, anywhere the stock game's
+  library insists on only accepting a single-precision float and
+  not a double would have had the problem.
+* Improve steering when small control magnitudes are required.
+  (https://github.com/KSP-KOS/KOS/issues/1512)
+
 # v0.19.0
 
 ### BREAKING CHANGES
