@@ -84,6 +84,9 @@ Structure
         * - :attr:`NEXTPATCH`
           - :struct:`Orbit`
           - Next :struct:`Orbit`
+        * - :attr:`NEXTPATCHETA`
+          - :struct:`Scalar`
+          - ETA to next :struct:`Orbit`
         * - :attr:`HASNEXTPATCH`
           - :ref:`boolean <boolean>`
           - Has a next :struct:`Orbit`
@@ -228,6 +231,18 @@ Structure
 
     When this orbit has a transition to another orbit coming up, this suffix returns the next Orbit patch after this one. For example, when escaping from a Mun orbit into a Kerbin orbit from which you will escape and hit a Solar orbit, then the current orbit's ``:NEXTPATCH`` will show the Kerbin orbit, and ``:NEXTPATCH:NEXTPATCH`` will show the solar orbit. The number of patches into the future that you can peek depends on your conic patches setting in your **Kerbal Space Program** Settings.cfg file.
 
+.. attribute:: Orbit:NEXTPATCHETA
+
+    :type: :struct:`Scalar`
+    :access: Get only
+
+    When this orbit has a transition to another orbit coming up, this suffix
+    returns the eta to that transition.  This is different from the value
+    provided by the :struct:`ETA` ``TRANSITION`` suffix as it is not limited
+    to the patch following the current orbit, but rather may be chained to
+    multiple patch transitions.  The number of patches depends on your conic
+    patches setting in your **Kerbal Space Program** Settings.cfg file.
+
 .. attribute:: Orbit:HASNEXTPATCH
 
     :ref:`boolean <boolean>`
@@ -257,9 +272,9 @@ Deprecated Suffix
     :access: Get only
 
     .. note::
-    
+
         .. deprecated:: 0.15
-        
+
             To get the same functionality, you must use :attr:`Vessel:PATCHES`  which is a suffix of the :struct:`Vessel` itself.
 
 .. _transitions:
@@ -281,4 +296,3 @@ ESCAPE
 
 MANEUVER
     Means that this orbit will end due to a manuever node that starts a new orbit?
-
