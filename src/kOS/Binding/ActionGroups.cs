@@ -23,6 +23,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddSetter("DRILLS", val => VesselUtils.DrillCtrl(shared.Vessel, (bool)val));
             shared.BindingMgr.AddSetter("FUELCELLS", val => VesselUtils.FuelCellCtrl(shared.Vessel, (bool)val));
             shared.BindingMgr.AddSetter("ISRU", val => VesselUtils.ISRUCtrl(shared.Vessel, (bool)val));
+            shared.BindingMgr.AddSetter("INTAKES", val => VesselUtils.IntakeCtrl(shared.Vessel, (bool)val));
             shared.BindingMgr.AddSetter("BRAKES", val => shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, (bool) val));
             shared.BindingMgr.AddSetter("RCS", val => shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, (bool) val));
             shared.BindingMgr.AddSetter("ABORT", val => shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Abort, (bool) val));
@@ -51,6 +52,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("DRILLS", () => VesselUtils.GetDrillStatus(shared.Vessel));
             shared.BindingMgr.AddGetter("FUELCELLS", () => VesselUtils.GetFuelCellStatus(shared.Vessel));
             shared.BindingMgr.AddGetter("ISRU", () => VesselUtils.GetISRUStatus(shared.Vessel));
+            shared.BindingMgr.AddGetter("INTAKES", () => VesselUtils.GetIntakeStatus(shared.Vessel));
             shared.BindingMgr.AddGetter("BRAKES", () => shared.Vessel.ActionGroups[KSPActionGroup.Brakes]);
             shared.BindingMgr.AddGetter("RCS", () => shared.Vessel.ActionGroups[KSPActionGroup.RCS]);
             shared.BindingMgr.AddGetter("ABORT", () => shared.Vessel.ActionGroups[KSPActionGroup.Abort]);
