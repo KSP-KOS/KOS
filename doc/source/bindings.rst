@@ -23,22 +23,25 @@ SHIP:
 - **Description**: Whichever vessel happens to be the one containing the
   CPU part that is running this Kerboscript code at the moment. This is
   the `CPU Vessel <general/cpu_vessel.html>`__.
- 
+
 TARGET:
 
 - **Variable Name**: TARGET
 - **Gettable**: yes
 - **Settable**: yes
 - **Type**: `Vessel <structures/vessels/vessel.html>`__ or
-  `Body <structures/celestial_bodies/body.html>`__
+  `Body <structures/celestial_bodies/body.html>`__ or
+  `Part <structures/vessels/part.html>`__
+
 - **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__
-  object happens to be the one selected as the current KSP target. If set
-  to a string, it will assume the string is the name of a vessel being
+  object happens to be the one selected as the current KSP target. If a
+  docking port is selected as the target, it will be the corresponding part.
+  If set to a string, it will assume the string is the name of a vessel being
   targeted and set it to a vessel by that name. For best results set it
   to Body("some name") or Vessel("some name") explicitly.  This will
   throw an exception if called from a vessel other than the active vessel,
   as limitations in how KSP sets the target vessel limit the
-  implementation to working with only the active vessel.  
+  implementation to working with only the active vessel.
 
 .. _hastarget:
 
@@ -81,7 +84,7 @@ ANGULARVEL       Same as SHIP:ANGULARVEL
 ANGULARVELOCITY  Same as SHIP:ANGULARVEL
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
-GROUNDSPEED      Same as SHIP:GROUNDSPEED 
+GROUNDSPEED      Same as SHIP:GROUNDSPEED
 SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
 ALTITUDE         Same as SHIP:ALTITUDE
@@ -192,7 +195,7 @@ Any other resources that you have added using other mods should be
 query-able this way, provided that you spell
 the term exactly as it appears in the resources window.
 
-You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix. 
+You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix.
 
 .. |Resources| image:: /_images/reference/bindings/resources.png
 
@@ -202,7 +205,7 @@ ALT ALIAS
 The special variable `ALT <structures/vessels/alt.html>`__ gives you
 access to a few altitude predictions:
 
-ALT:APOAPSIS 
+ALT:APOAPSIS
 
 ALT:PERIAPSIS
 
@@ -217,7 +220,7 @@ ETA ALIAS
 The special variable `ETA <structures/vessels/eta.html>`__ gives you
 access to a few time predictions:
 
-ETA:APOAPSIS 
+ETA:APOAPSIS
 
 ETA:PERIAPSIS
 
@@ -242,37 +245,55 @@ These are variables that behave like boolean flags. They can be True or
 False, and can be set or toggled
 using the "ON" and "OFF" and "TOGGLE" commands.
 Many of these are for action group flags.
-**NOTE ABOUT ACTION GROUP FLAGS:** If the boolean flag is for an action
+
+**NOTE ABOUT STOCK/AGE ACTION GROUP FLAGS:** If the boolean flag is for a tock or AGE action
 group, be aware that each time the
 user presses the action group keypress, it *toggles* the action group,
 so you might need to check for both
 the change in state from false to true AND the change in state from true
 to false to see if the key was hit.
+Setting a value to these flags will result in actions triggered only if the value is changed.
 
-============== ==========   ========= ===============
-Variable Name  Can Read     Can Set   Description
-============== ==========   ========= ===============
-SAS            yes          yes       (Same as "SAS" indicator on the navball.)
-RCS            yes          yes       (Same as "RCS" indicator on the navball.)
-GEAR           yes          yes       Is the GEAR enabled right now? (Note, KSP does some strange things with this flag, like needing to hit it twice the first time).
-LEGS           yes          yes       Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)
-CHUTES         yes          yes       Are the parachutes extended? (Treats all parachutes as one single unit. Does not activate them individually.)
-LIGHTS         yes          yes       Are the lights on? (like the "U" key in manual flight.)
-PANELS         yes          yes       Are the solar panels extended? (Treats all solar panels as one single unit. Does not activate them individually.)
-BRAKES         yes          yes       Are the brakes on?
-ABORT          yes          yes       Abort Action Group.
-AG1            yes          yes       Action Group 1.
-AG2            yes          yes       Action Group 2.
-AG3            yes          yes       Action Group 3.
-AG4            yes          yes       Action Group 4.
-AG5            yes          yes       Action Group 5.
-AG6            yes          yes       Action Group 6.
-AG7            yes          yes       Action Group 7.
-AG8            yes          yes       Action Group 8.
-AG9            yes          yes       Action Group 9.
-AG10           yes          yes       Action Group 10.
-AGn            yes          yes       If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.
-============== ==========   ========= ===============
+**NOTE ABOUT kOS CUSTOM ACTION GROUP FLAGS:** If the boolean flag is for a kOS action
+group, be aware that the value of the flag represents the actual state of the parts of the particular type
+(most of them will always return false if no corresponding parts found) 
+and is neither guaranteed to change immediately when a value is set, nor prevents the actions happening
+when the value is set to its current value (if the parts are in different states). 
+Setting the values to these fields will trigger all the corresponding parts that have different state than the one being set.
+
+============== ==========   =========   ========= ===============
+Variable Name  Can Read     Can Set     Source    Description
+============== ==========   =========   ========= ===============
+SAS            yes          yes          stock     (Same as "SAS" indicator on the navball.)
+RCS            yes          yes          stock     (Same as "RCS" indicator on the navball.)
+GEAR           yes          yes          stock     Is the GEAR enabled right now? (Note, since it may be true with all or most gear retracted, you may want to set it off and back on to guarantee everything is deployed).
+LIGHTS         yes          yes          stock     Are the lights on? (like the "U" key in manual flight)
+BRAKES         yes          yes          stock     Are the brakes on?
+ABORT          yes          yes          stock     Abort Action Group.
+LEGS           yes          yes          kOS       Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)
+CHUTES         yes          yes          kOS       Are the parachutes deployed? (Deploys all chutes when set to true)
+CHUTESSAFE     yes          yes          kOS       Are the parachutes that are safe to deploy deployed? (Deploys all chutes that are currently safe to deploy when set to true)
+PANELS         yes          yes          kOS       Are the solar panels extended? (Deploys/retracts all the solar panels when set)
+RADIATORS      yes          yes          kOS       Are the radiators extended/active? (Deploys and activates/retracts and deactivates all the radiators when set)
+LADDERS        yes          yes          kOS       Are the ladders extended? (Deploys/retracts all the extendable ladders when set)
+BAYS           yes          yes          kOS       Are any payload/service bays open? (Opens/closes all the payload and service bays when set)
+INTAKES        yes          yes          kOS       Are the air intakes open? (Opens/closes all the intakes when set)
+DRILLSDEPLOY   yes          yes          kOS       Are the resource drills deployed? (Deploys/retracts all the drills when set)
+DRILLS         yes          yes          kOS       Are any resource drills mining? (Starts/stops all the drills when set)
+FUELCELLS      yes          yes          kOS       Are any fuel cells active? (Starts/stops all the fuel cells when set)
+ISRU           yes          yes          kOS       Are any ISRU converters active? (Starts/stops all the ISRU converters when set)
+AG1            yes          yes          stock     Action Group 1.
+AG2            yes          yes          stock     Action Group 2.
+AG3            yes          yes          stock     Action Group 3.
+AG4            yes          yes          stock     Action Group 4.
+AG5            yes          yes          stock     Action Group 5.
+AG6            yes          yes          stock     Action Group 6.
+AG7            yes          yes          stock     Action Group 7.
+AG8            yes          yes          stock     Action Group 8.
+AG9            yes          yes          stock     Action Group 9.
+AG10           yes          yes          stock     Action Group 10.
+AGn            yes          yes          AGE       If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.
+============== ==========   =========   ========= ===============
 
 Flight Control
 --------------
@@ -289,7 +310,7 @@ use `Raw Control <commands/flight/raw.html>`__.
 
 If you want to be able to READ what the player is attempting to do
 while your script is running, and perhaps respond to it, then use
-`Reading the Pilot's Control settings (i.e reading what the manual input is attempting) <commands/flight/pilot.html>`__ 
+`Reading the Pilot's Control settings (i.e reading what the manual input is attempting) <commands/flight/pilot.html>`__
 (By default your script will override manual piloting attempts, but
 you can read what the pilot's controls are set at and make your
 autopilot take them under advisement - sort of like how a
@@ -427,7 +448,7 @@ PROFILERESULT()
 If you have the runtime statistics configuration option
 :attr:`Config:STAT` set to ``True``, then in addition to
 the summary statistics after the program run, you can also
-see a detailed report of the "profiling" result of your 
+see a detailed report of the "profiling" result of your
 most recent program run, by calling the built-in function
 ``ProfileResult()``.  *"Profiling"* is a programmer's term
 that means gathering data about how long the program is
