@@ -231,29 +231,64 @@ namespace kOS.Utilities
             return "None";
         }
 
-        public static void LandingLegsCtrl(Vessel vessel, bool state)
+               public static KSPActionParam makeActionParam(bool state) // just use this to when you need to call action that requires bool input for direction
         {
-            // This appears to work on all legs in 0.22
-            vessel.rootPart.SendEvent(state ? "LowerLeg" : "RaiseLeg");
+            if (state){ return new KSPActionParam(0, KSPActionType.Activate); }
+            else { return new KSPActionParam(0, KSPActionType.Deactivate);}
         }
 
-        internal static object GetLandingLegStatus(Vessel vessel)
+        public static void LandingLegsCtrl(Vessel vessel, bool state)
+        {
+            vessel.rootPart.SendEvent(state ? "LowerLeg" : "RaiseLeg"); //legacy
+
+            foreach (var p in vessel.parts)
+            {
+                var geardeploy = p.FindModulesImplementing<ModuleWheels.ModuleWheelDeployment>();
+                foreach (var gd in geardeploy)
+                {
+                    var gear = p.Modules[gd.baseModuleIndex] as ModuleWheelBase;
+                    if ((gear != null) && (gear.wheelType == WheelType.LEG)) // identify leg
+                    {gd.ActionToggle(makeActionParam(state)); }
+                }
+            }
+        }
+
+        public static object GetLandingLegStatus(Vessel vessel)
         {
             var atLeastOneLeg = false; // No legs at all? Always return false
 
             foreach (var p in vessel.parts)
             {
-                if (!p.Modules.OfType<ModuleLandingLeg>().Any()) continue;
-                atLeastOneLeg = true;
-
-                var legs = p.FindModulesImplementing<ModuleLandingLeg>();
-
-                if (legs.Any(l => l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED)))
+                if (p.Modules.OfType<ModuleLandingLeg>().Any()) //Legacy
                 {
-                    return false;
+                    atLeastOneLeg = true;
+
+                    var legs = p.FindModulesImplementing<ModuleLandingLeg>();
+
+                    if (legs.Any(l => l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED)))
+                    {
+                        return false;
+                    }
+                }
+               var gearlist = p.FindModulesImplementing<ModuleWheelBase>();
+                if (gearlist.Count>0)
+                {
+                    foreach (var gear in gearlist)
+                    {
+                        if (gear.wheelType == WheelType.LEG)
+                        {
+                            atLeastOneLeg = true;
+                            var geardeploy = p.FindModulesImplementing<ModuleWheels.ModuleWheelDeployment>();
+                            foreach (var gd in geardeploy) {
+                                if ((p.Modules[gd.baseModuleIndex]==gear)&&(gd.fsm.CurrentState!=gd.st_deployed)) //state string is unreliable - may be just empty
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
             return atLeastOneLeg;
         }
 
