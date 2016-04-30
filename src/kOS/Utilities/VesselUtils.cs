@@ -665,6 +665,37 @@ namespace kOS.Utilities
             }
         }
 
+        public static object GetIntakeStatus(Vessel vessel)
+        {
+            var atLeastOneIntake = false; // No intakes at all? Always return false
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceIntake>())
+                {
+                    atLeastOneIntake = true;
+
+                    if (!c.intakeEnabled)
+                    {
+                        // If just one intake is not open return false
+                        return false;
+                    }
+                }
+            }
+
+            return atLeastOneIntake;
+        }
+
+        public static void IntakeCtrl(Vessel vessel, bool state)
+        {
+            foreach (var p in vessel.parts)
+            {
+                foreach (var c in p.FindModulesImplementing<ModuleResourceIntake>())
+                {
+                    if (state) { c.Activate(); }else { c.Deactivate(); }
+                }
+            }
+        }
 
         private static double GetMassDrag(Vessel vessel)
         {
