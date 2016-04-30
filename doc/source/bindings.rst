@@ -246,7 +246,7 @@ False, and can be set or toggled
 using the "ON" and "OFF" and "TOGGLE" commands.
 Many of these are for action group flags.
 
-**NOTE ABOUT STOCK/AGE ACTION GROUP FLAGS:** If the boolean flag is for a tock or AGE action
+**NOTE ABOUT STOCK/AGX ACTION GROUP FLAGS:** If the boolean flag is for a stock or AGX action
 group, be aware that each time the
 user presses the action group keypress, it *toggles* the action group,
 so you might need to check for both
@@ -259,41 +259,42 @@ group, be aware that the value of the flag represents the actual state of the pa
 (most of them will always return false if no corresponding parts found) 
 and is neither guaranteed to change immediately when a value is set, nor prevents the actions happening
 when the value is set to its current value (if the parts are in different states). 
-Setting the values to these fields will trigger all the corresponding parts that have different state than the one being set.
+Setting the values to these fields will trigger all the corresponding parts that have different state than the one being set. 
 
-============== ==========   =========   ========= ===============
-Variable Name  Can Read     Can Set     Source    Description
-============== ==========   =========   ========= ===============
-SAS            yes          yes          stock     (Same as "SAS" indicator on the navball.)
-RCS            yes          yes          stock     (Same as "RCS" indicator on the navball.)
-GEAR           yes          yes          stock     Is the GEAR enabled right now? (Note, since it may be true with all or most gear retracted, you may want to set it off and back on to guarantee everything is deployed).
-LIGHTS         yes          yes          stock     Are the lights on? (like the "U" key in manual flight)
-BRAKES         yes          yes          stock     Are the brakes on?
-ABORT          yes          yes          stock     Abort Action Group.
-LEGS           yes          yes          kOS       Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)
-CHUTES         yes          yes          kOS       Are the parachutes deployed? (Deploys all chutes when set to true)
-CHUTESSAFE     yes          yes          kOS       Are the parachutes that are safe to deploy deployed? (Deploys all chutes that are currently safe to deploy when set to true)
-PANELS         yes          yes          kOS       Are the solar panels extended? (Deploys/retracts all the solar panels when set)
-RADIATORS      yes          yes          kOS       Are the radiators extended/active? (Deploys and activates/retracts and deactivates all the radiators when set)
-LADDERS        yes          yes          kOS       Are the ladders extended? (Deploys/retracts all the extendable ladders when set)
-BAYS           yes          yes          kOS       Are any payload/service bays open? (Opens/closes all the payload and service bays when set)
-INTAKES        yes          yes          kOS       Are the air intakes open? (Opens/closes all the intakes when set)
-DRILLSDEPLOY   yes          yes          kOS       Are the resource drills deployed? (Deploys/retracts all the drills when set)
-DRILLS         yes          yes          kOS       Are any resource drills mining? (Starts/stops all the drills when set)
-FUELCELLS      yes          yes          kOS       Are any fuel cells active? (Starts/stops all the fuel cells when set)
-ISRU           yes          yes          kOS       Are any ISRU converters active? (Starts/stops all the ISRU converters when set)
-AG1            yes          yes          stock     Action Group 1.
-AG2            yes          yes          stock     Action Group 2.
-AG3            yes          yes          stock     Action Group 3.
-AG4            yes          yes          stock     Action Group 4.
-AG5            yes          yes          stock     Action Group 5.
-AG6            yes          yes          stock     Action Group 6.
-AG7            yes          yes          stock     Action Group 7.
-AG8            yes          yes          stock     Action Group 8.
-AG9            yes          yes          stock     Action Group 9.
-AG10           yes          yes          stock     Action Group 10.
-AGn            yes          yes          AGE       If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.
-============== ==========   =========   ========= ===============
+
+===================================================================  ==========   =========   ========= ===============
+Variable Name                                                         Can Read     Can Set     Source    Description
+===================================================================  ==========   =========   ========= ===============
+`SAS <commands/flight/systems.html#global:SAS>`__                     yes          yes          stock     (Same as "SAS" indicator on the navball.)
+`RCS <commands/flight/systems.html#global:RCS>`__                     yes          yes          stock     (Same as "RCS" indicator on the navball.)
+`GEAR <commands/flight/systems.html#global:GEAR>`__                   yes          yes          stock     Is the GEAR enabled right now? (Note, since it may be true with all or most gear retracted, you may want to set it off and back on to guarantee everything is deployed).
+`LIGHTS <commands/flight/systems.html#global:LIGHTS>`__               yes          yes          stock     Are the lights on? (like the "U" key in manual flight)
+`BRAKES <commands/flight/systems.html#global:BRAKES>`__               yes          yes          stock     Are the brakes on?
+`ABORT <commands/flight/systems.html#global:ABORT>`__                 yes          yes          stock     Abort Action Group.
+`LEGS <commands/flight/systems.html#global:LEGS>`__                   yes          yes          kOS       Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)
+`CHUTES <commands/flight/systems.html#global:CHUTES>`__               yes          yes          kOS       Are the parachutes deployed? (Deploys all chutes when set to true)
+`CHUTESSAFE <commands/flight/systems.html#global:CHUTESSAFE>`__       yes          yes          kOS       Are the parachutes that are safe to deploy deployed? (Deploys all chutes that are currently safe to deploy when set to true)
+`PANELS <commands/flight/systems.html#global:PANELS>`__               yes          yes          kOS       Are the solar panels extended? (Deploys/retracts all the solar panels when set)
+`RADIATORS <commands/flight/systems.html#global:RADIATORS>`__         yes          yes          kOS       Are the radiators extended/active? (Deploys and activates/retracts and deactivates all the radiators when set)
+`LADDERS <commands/flight/systems.html#global:LADDERS>`__             yes          yes          kOS       Are the ladders extended? (Deploys/retracts all the extendable ladders when set)
+`BAYS <commands/flight/systems.html#global:BAYS>`__                   yes          yes          kOS       Are any payload/service bays open? (Opens/closes all the payload and service bays when set)
+`INTAKES <commands/flight/systems.html#global:INTAKES>`__             yes          yes          kOS       Are the air intakes open? (Opens/closes all the intakes when set)
+`DRILLSDEPLOY <commands/flight/systems.html#global:DRILLSDEPLOY>`__   yes          yes          kOS       Are the resource drills deployed? (Deploys/retracts all the drills when set)
+`DRILLS <commands/flight/systems.html#global:DRILLS>`__               yes          yes          kOS       Are any resource drills mining? (Starts/stops all the drills when set)
+`FUELCELLS <commands/flight/systems.html#global:FUELCELLS>`__         yes          yes          kOS       Are any fuel cells active? (Starts/stops all the fuel cells when set)
+`ISRU <commands/flight/systems.html#global:ISRU>`__                   yes          yes          kOS       Are any ISRU converters active? (Starts/stops all the ISRU converters when set)
+AG1                                                                   yes          yes          stock     Action Group 1.
+AG2                                                                   yes          yes          stock     Action Group 2.
+AG3                                                                   yes          yes          stock     Action Group 3.
+AG4                                                                   yes          yes          stock     Action Group 4.
+AG5                                                                   yes          yes          stock     Action Group 5.
+AG6                                                                   yes          yes          stock     Action Group 6.
+AG7                                                                   yes          yes          stock     Action Group 7.
+AG8                                                                   yes          yes          stock     Action Group 8.
+AG9                                                                   yes          yes          stock     Action Group 9.
+AG10                                                                  yes          yes          stock     Action Group 10.
+`AGn <addons/AGX.html>`__                                             yes          yes          AGX       If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.
+===================================================================  ==========   =========   ========= ===============
 
 Flight Control
 --------------
