@@ -4,7 +4,7 @@ Infernal Robotics
 =================
 
 - Download: http://kerbal.curseforge.com/ksp-mods/220267
-- Alternative download: https://github.com/MagicSmokeIndustries/IR-Sequencer/releases
+- Alternative download: https://github.com/MagicSmokeIndustries/InfernalRobotics/releases
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/
 
 Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren't possible under stock KSP.
