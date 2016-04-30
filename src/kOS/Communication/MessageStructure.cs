@@ -5,6 +5,7 @@ using kOS.Suffixed;
 using kOS.Safe;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Communication
 {
@@ -41,8 +42,31 @@ namespace kOS.Communication
         {
             AddSuffix("SENTAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.SentAt)));
             AddSuffix("RECEIVEDAT", new Suffix<kOS.Suffixed.TimeSpan>(() => new kOS.Suffixed.TimeSpan(Message.ReceivedAt)));
-            AddSuffix("SENDER", new Suffix<VesselTarget>(() => Message.Vessel));
+            AddSuffix("SENDER", new Suffix<Structure>(GetVesselTarget));
+            AddSuffix("HASSENDER", new Suffix<BooleanValue>(GetVesselExists));
             AddSuffix("CONTENT", new Suffix<Structure>(DeserializeContent));
+        }
+
+        public Vessel GetVessel()
+        {
+            return (FlightGlobals.Vessels.Find((v) => v.id.ToString().Equals(Message.Vessel)));
+        }
+
+        public Structure GetVesselTarget()
+        {
+            Vessel vessel = GetVessel();
+
+            if (vessel == null)
+            {
+                return new BooleanValue(false);
+            }
+
+            return new VesselTarget(vessel, shared);
+        }
+        
+        public BooleanValue GetVesselExists()
+        {
+            return new BooleanValue((GetVessel() != null));
         }
 
         public Structure DeserializeContent()
