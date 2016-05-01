@@ -54,11 +54,11 @@ RCS and SAS
     :access: Get/Set
     :type: :ref:`string <string>`
 
-    Getting this variable will return the currently selected mode.  Where ``value`` is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel::
+    Getting this variable will return the currently selected SAS mode.  Where ``value`` is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel::
 
         SET SASMODE TO value.
 
-    It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for ``value`` are ``"PROGRADE"``, ``"RETROGRADE"``, ``"NORMAL"``, ``"ANTINORMAL"``, ``"RADIALOUT"``, ``"RADIALIN"``, ``"TARGET"``, ``"ANTITARGET"``, ``"MANEUVER"``, ``"STABILITYASSIST"``, and ``"STABILITY"``.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if ``"TARGET"`` or ``"ANTITARGET"`` are used, but no target is selected.
+    It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity - use NAVMODE to read or set it).  Valid strings for ``value`` are ``"PROGRADE"``, ``"RETROGRADE"``, ``"NORMAL"``, ``"ANTINORMAL"``, ``"RADIALOUT"``, ``"RADIALIN"``, ``"TARGET"``, ``"ANTITARGET"``, ``"MANEUVER"``, ``"STABILITYASSIST"``, and ``"STABILITY"``.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if ``"TARGET"`` or ``"ANTITARGET"`` are used, but no target is selected.
 
     .. note::
         SAS mode is reset to stability assist when toggling SAS on, however it doesn't happen immediately.
@@ -68,6 +68,19 @@ RCS and SAS
 .. warning:: SASMODE does not work with RemoteTech
 
     Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.
+
+.. _navmode:
+
+.. object:: NAVMODE
+
+    :access: Get/Set
+    :type: :ref:`string <string>`
+
+    Getting this variable will return the currently selected nav ball speed display mode.  Where ``value`` is one of the valid strings listed below, this will set the nav ball mode for the cpu vessel::
+
+        SET NAVMODE TO value.
+
+    It is the equivalent to changing the nav ball mode by clicking on speed display on the nav ball while manually piloting the craft, and will change the current mode of the nav ball, affecting behavior of most SAS modes.  Valid strings for ``value`` are ``"ORBIT"``, ``"SURFACE"`` and ``"TARGET"``.  A null or empty string will default to orbit mode, however any other invalid string will throw an exception.  This feature is accessible only for the active vessel, and will throw an exception if the current vessel is not active.  An exception is also thrown if ``"TARGET"`` is used, but no target is selected.
 
 STOCK ACTION GROUPS
 -------------------
