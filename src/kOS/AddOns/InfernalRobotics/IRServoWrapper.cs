@@ -98,8 +98,6 @@ namespace kOS.AddOns.InfernalRobotics
 
         private PartValue GetPart()
         {
-            var v = shared.Vessel;
-
             var p = servo.HostPart;
 
             if(!p)
