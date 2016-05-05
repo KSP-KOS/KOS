@@ -29,10 +29,10 @@ File name and size information. You can obtain a list of values of type VolumeFi
           - :struct:`FileContent`
           - Reads file contents
         * - :meth:`WRITE(String|FileContent)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Writes the given string to the file
         * - :meth:`WRITELN(string)`
-          - :struct:`FileContent`
+          - :struct:`Boolean`
           - Writes the given string and a newline to the file
         * - :meth:`CLEAR`
           - None
@@ -69,13 +69,13 @@ File name and size information. You can obtain a list of values of type VolumeFi
 
 .. method:: VolumeFile:WRITE(String|FileContent)
 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Writes the given string or a :struct:`FileContent` to the file. Returns true if successful (lack of space on the :struct:`Volume` can cause a failure).
 
 .. method:: VolumeFile:WRITELN(string)
 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Writes the given string followed by a newline to the file. Returns true if successful.
 

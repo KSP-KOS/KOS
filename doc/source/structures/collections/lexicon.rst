@@ -240,7 +240,7 @@ Access to Individual Elements
 
 ``lexicon[expression]``
     operator: another syntax to access the element at position 'expression'. Works for get or set. Any arbitrary complex expression may be used with this syntax, not just a number or variable name. 
-``FOR VAR IN LEXICON.KEYS { ... }.``
+``FOR VAR IN LEXICON:KEYS { ... }.``
     :ref:`A type of loop <flow>` in which var iterates over all the items of lexicon from item 0 to item LENGTH-1.
 
 Implicit ADD when using index brackets with new key values
