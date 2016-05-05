@@ -371,6 +371,7 @@ namespace kOS.Safe.Execution
                     shared.Screen.Print("Program aborted.");
                     shared.BindingMgr.UnBindAll();
                     PrintStatistics();
+                    stack.Clear();
                 }
                 else
                 {
@@ -381,6 +382,7 @@ namespace kOS.Safe.Execution
                         shared.Screen.Print("Program ended.");
                         shared.BindingMgr.UnBindAll();
                         PrintStatistics();
+                        stack.Clear();
                     }
                 }
             }
@@ -413,11 +415,32 @@ namespace kOS.Safe.Execution
         {
             if (userDelegate.ProgContext != currentContext)
             {
-                throw new KOSInvalidDelegateContextException(
-                    (currentContext == contexts[0] ? "the interpreter" : "a program"),
-                    (currentContext == contexts[0] ? "a program" : "the interpreter")
-                    );
-            }
+                string currentContextName;
+                if (currentContext == contexts[0])
+                {
+                    currentContextName = "the interpreter";
+                }
+                else
+                {
+                    currentContextName = "a program";
+                }
+
+                string delegateContextName;
+                if (userDelegate.ProgContext == contexts[0])
+                {
+                    delegateContextName = "the interpreter";
+                }
+                else if (currentContext == contexts[0])
+                {
+                    delegateContextName = "a program";
+                }
+                else
+                {
+                    delegateContextName = "a different program from a previous run";
+                }
+
+                throw new KOSInvalidDelegateContextException(currentContextName, delegateContextName);
+           }
         }
 
         /// <summary>
