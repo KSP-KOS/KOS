@@ -100,8 +100,10 @@ namespace kOS.AddOns.InfernalRobotics
         {
             var v = shared.Vessel;
 
-            var p = v.Parts.Find (s => s.craftID == servo.UID);
-            shared.Logger.LogError("Cannot find Infernal Robotics part with UID: " + servo.UID);
+            var p = servo.HostPart;
+
+            if(!p)
+                shared.Logger.LogError("Cannot find Infernal Robotics part with UID: " + servo.UID);
 
             return p != null ? new PartValue (p, shared) : null;
         }
