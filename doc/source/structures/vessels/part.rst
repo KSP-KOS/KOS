@@ -33,8 +33,8 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`TAG`
           - :ref:`string <string>`
           - Name-tag if assigned by the player
-        * - :attr:`CONTROLFROM`
-          - Void
+        * - :meth:`CONTROLFROM`
+          - None
           - Call to control-from to this part
         * - :attr:`STAGE`
           - :ref:`scalar <scalar>`
@@ -131,10 +131,10 @@ These are the generic properties every PART has. You can obtain a list of values
         PRINT "...and " + totTargetable.
         PRINT " of them are targetable parts.".
 
-.. attribute:: Part:CONTROLFROM
+.. method:: Part:CONTROLFROM
 
     :access: Callable function only
-    :type: void
+    :type: None
 
     Call this function to cause the game to do the same thing as when you right-click a part on a vessel and select "control from here" on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).  It accepts no arguments, and returns no value.
     All vessels must have at least one "control from"
