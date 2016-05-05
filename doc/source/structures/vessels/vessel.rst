@@ -261,7 +261,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     (Normal SI units would use kilograms, but in KSP all masses use a
     1000x scaling factor.)
 
-    **Justification for radians here:** 
+    **Justification for radians here:**
     Unlike the trigonometry functions in kOS, this value uses radians
     rather than degrees.  The convention of always expressing angular
     momentum using a formula that assumes you're using radians is a very
@@ -271,7 +271,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     helpful formulae about angular momentum.  This is why kOS doesn't
     use degrees here.  (That an backward compatibility for old scripts.
     It's been like this for quite a while.).
-    
+
     .. note::
 
         .. versionchanged:: 0.15.4
@@ -362,7 +362,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`Part`
     :access: Get only
 
-    Control reference part is the :struct:`Part` relative to which the directions (as displayed on the navball and returned in :attr:`FACING`) are determined. A part may be set as the control reference part by "Control From Here" action or :attr:`PART:CONTROLFROM` command (available for parts of specific types), but if it's not set, the root part is used as the reference part (even if a part of this type can't be selected as the reference part otherwise).
+    Returns the :struct:`Part` serving as the control reference, relative to
+    which the directions (as displayed on the navball and returned in
+    :attr:`FACING`) are determined. A part may be set as the control reference
+    part by "Control From Here" action or :meth:`PART:CONTROLFROM` command
+    (available for parts of specific types).  **NOTE:** It is possible for this
+    to return unexpected values if the root part of the vessel cannot serve as a
+    control reference, and the control has not been directly selected.
 
 .. attribute:: Vessel:PARTS
 

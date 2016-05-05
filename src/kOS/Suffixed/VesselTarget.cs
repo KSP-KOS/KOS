@@ -467,7 +467,7 @@ namespace kOS.Suffixed
 
         public global::Part GetControlPart()
         {
-            global::Part res = Vessel.GetReferenceTransformPart(); //this can actually be null if "control from here" has never been used
+            global::Part res = Vessel.GetReferenceTransformPart(); //this can actually be null
             if (res != null) { return res; } 
             else { return Vessel.rootPart; } //the root part is used as reference in that case
         }
