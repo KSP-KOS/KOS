@@ -415,10 +415,29 @@ namespace kOS.Safe.Execution
         {
             if (userDelegate.ProgContext != currentContext)
             {
-                string currentContextName = (currentContext == contexts[0] ? "the interpreter" : "a program");
-                string delegateContextName = (
-                    userDelegate.ProgContext == contexts[0] ? currentContextName = "the interpreter" : (
-                        currentContext == contexts[0] ? "a program" : "a different program from a previous run" ) );
+                string currentContextName;
+                if (currentContext == contexts[0])
+                {
+                    currentContextName = "the interpreter";
+                }
+                else
+                {
+                    currentContextName = "a program";
+                }
+
+                string delegateContextName;
+                if (userDelegate.ProgContext == contexts[0])
+                {
+                    delegateContextName = "the interpreter";
+                }
+                else if (currentContext == contexts[0])
+                {
+                    delegateContextName = "a program";
+                }
+                else
+                {
+                    delegateContextName = "a different program from a previous run";
+                }
 
                 throw new KOSInvalidDelegateContextException(currentContextName, delegateContextName);
            }
