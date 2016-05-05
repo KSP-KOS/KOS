@@ -64,21 +64,5 @@ namespace kOS.Safe.Compilation
         {
             return string.Equals(pair.Left.ToString(), pair.Right.ToString(), StringComparison.OrdinalIgnoreCase);
         }
-
-        public override object Min(OperandPair pair)
-        {
-            string arg1 = pair.Left.ToString();
-            string arg2 = pair.Right.ToString();
-            int compareNum = string.Compare(arg1, arg2, StringComparison.OrdinalIgnoreCase);
-            return (compareNum < 0) ? arg1 : arg2;
-        }
-
-        public override object Max(OperandPair pair)
-        {
-            string arg1 = pair.Left.ToString();
-            string arg2 = pair.Right.ToString();
-            int compareNum = string.Compare(arg1, arg2, StringComparison.OrdinalIgnoreCase);
-            return (compareNum > 0) ? arg1 : arg2;
-        }
     }
 }

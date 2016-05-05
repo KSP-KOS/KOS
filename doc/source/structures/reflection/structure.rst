@@ -13,7 +13,6 @@ Overview
 --------
 
 .. versionadded:: 0.19.0
-
     This is a new feature of kOS v0.19.0.  Most of what is
     documented on this page won't work on earlier versions.
 
@@ -48,11 +47,11 @@ or ``42`` or ``"abc"``.  For example, you can do::
           - Description
 
         * - :attr:`TOSTRING`
-          - String
+          - :struct:`String`
           - The string that gets shown on-screen when doing the PRINT command.
 
         * - :attr:`HASSUFFIX(name)`
-          - Boolean
+          - :struct:`Boolean`
           - Test whether or not this value has a suffix with the given name.
 
         * - :attr:`SUFFIXNAMES`
@@ -60,24 +59,24 @@ or ``42`` or ``"abc"``.  For example, you can do::
           - Gives a list of all the names of all the suffixes this thing has.
 
         * - :attr:`ISSERIALIZABLE`
-          - Boolean
+          - :struct:`Boolean`
           - Is true if this type is one that works with :ref:`WRITEJSON <writejson>`
 
         * - :attr:`TYPENAME`
-          - String
+          - :struct:`String`
           - Gives a string for the name of the type of this object.
 
         * - :attr:`ISTYPE(name)`
-          - Boolean
+          - :struct:`Boolean`
           - true if this value is of the given type name, or is derived from the given type name
 
         * - :attr:`INHERITANCE`
-          - String
+          - :struct:`String`
           - Gives a string describing the kOS type, and the kOS types it is inherited from.
 
 .. attribute:: Structure:TOSTRING
 
-    :type: String
+    :type: :struct:`String`
     :access: Get only
 
     When issuing the command ``PRINT aaa.``, the variable ``aaa`` gets
@@ -87,8 +86,8 @@ or ``42`` or ``"abc"``.  For example, you can do::
 
 .. attribute:: Structure:HASSUFFIX(name)
 
-    :parameter name: string name of the suffix being tested for
-    :type: Boolean
+    :parameter name: :struct:`String` name of the suffix being tested for
+    :type: :struct:`Boolean`
     :access: Get only
 
     Given the name of a suffix, returns true if the object has a suffix
@@ -149,7 +148,7 @@ or ``42`` or ``"abc"``.  For example, you can do::
 
 .. attribute:: Structure:TYPENAME
 
-    :type: String
+    :type: :struct:`String`
     :access: Get only
 
     Gives the name of the type of the object, in kOS terminology.
@@ -187,7 +186,7 @@ or ``42`` or ``"abc"``.  For example, you can do::
 .. attribute:: Structure:ISTYPE(name)
 
     :Parameter name: string name of the type being checked for
-    :type: Boolean
+    :type: :struct:`Boolean`
     :access: Get only
 
     This is ``True`` if the value is of the type mentioned in the name, or
@@ -214,7 +213,7 @@ or ``42`` or ``"abc"``.  For example, you can do::
 
 .. attribute:: Structure:INHERITANCE
 
-    :type: String
+    :type: :struct:`String`
     :access: Get only
 
     Gives a string describing the typename of this value, and the
@@ -235,7 +234,7 @@ or ``42`` or ``"abc"``.  For example, you can do::
 
 .. attribute:: Structure:ISSERIALIZABLE
 
-    :type: Boolean
+    :type: :struct:`Boolean`
     :access: Get only
 
     Not all types can be saved using the built-in serialization function

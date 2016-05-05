@@ -34,9 +34,10 @@ namespace kOS.Safe.Execution
         void RemoveVariable(string identifier);
         int InstructionPointer { get; set; }
         double SessionTime { get; }
+        List<string> ProfileResult { get; }
         void AddTrigger(int triggerFunctionPointer);
         void RemoveTrigger(int triggerFunctionPointer);
-        void StartWait(double waitTime);
+        double StartWait(double waitTime);
         void EndWait();
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);
@@ -45,6 +46,8 @@ namespace kOS.Safe.Execution
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
         int InstructionsThisUpdate { get; }
+        void StartCompileStopwatch();
+        void StopCompileStopwatch();
 
         /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.

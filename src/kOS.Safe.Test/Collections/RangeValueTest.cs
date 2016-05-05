@@ -30,8 +30,8 @@ namespace kOS.Safe.Test.Collections
         {
             var range = new RangeValue(5);
             Assert.AreEqual(new ScalarIntValue(5), InvokeDelegate(range, "LENGTH"));
-            Assert.AreEqual(new ScalarIntValue(0), InvokeDelegate(range, "FROM"));
-            Assert.AreEqual(new ScalarIntValue(5), InvokeDelegate(range, "TO"));
+            Assert.AreEqual(new ScalarIntValue(0), InvokeDelegate(range, "START"));
+            Assert.AreEqual(new ScalarIntValue(5), InvokeDelegate(range, "STOP"));
             Assert.AreEqual(new ScalarIntValue(1), InvokeDelegate(range, "STEP"));
             Assert.IsFalse((BooleanValue)InvokeDelegate(range, "EMPTY"));
             Assert.IsTrue((BooleanValue)InvokeDelegate(range, "CONTAINS", new ScalarIntValue(1)));
@@ -43,8 +43,8 @@ namespace kOS.Safe.Test.Collections
         {
             var range = new RangeValue(6, -3);
             Assert.AreEqual(new ScalarIntValue(9), InvokeDelegate(range, "LENGTH"));
-            Assert.AreEqual(new ScalarIntValue(6), InvokeDelegate(range, "FROM"));
-            Assert.AreEqual(new ScalarIntValue(-3), InvokeDelegate(range, "TO"));
+            Assert.AreEqual(new ScalarIntValue(6), InvokeDelegate(range, "START"));
+            Assert.AreEqual(new ScalarIntValue(-3), InvokeDelegate(range, "STOP"));
             Assert.AreEqual(new ScalarIntValue(1), InvokeDelegate(range, "STEP"));
             Assert.IsFalse((BooleanValue)InvokeDelegate(range, "EMPTY"));
             Assert.IsTrue((BooleanValue)InvokeDelegate(range, "CONTAINS", new ScalarIntValue(-2)));
@@ -62,8 +62,8 @@ namespace kOS.Safe.Test.Collections
         {
             var range = new RangeValue(2, 12, 3);
             Assert.AreEqual(new ScalarIntValue(4), InvokeDelegate(range, "LENGTH"));
-            Assert.AreEqual(new ScalarIntValue(2), InvokeDelegate(range, "FROM"));
-            Assert.AreEqual(new ScalarIntValue(12), InvokeDelegate(range, "TO"));
+            Assert.AreEqual(new ScalarIntValue(2), InvokeDelegate(range, "START"));
+            Assert.AreEqual(new ScalarIntValue(12), InvokeDelegate(range, "STOP"));
             Assert.AreEqual(new ScalarIntValue(3), InvokeDelegate(range, "STEP"));
             Assert.IsFalse((BooleanValue)InvokeDelegate(range, "EMPTY"));
             Assert.IsTrue((BooleanValue)InvokeDelegate(range, "CONTAINS", new ScalarIntValue(5)));

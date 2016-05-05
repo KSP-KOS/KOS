@@ -15,6 +15,9 @@
 
 a.reference span.pre { color: #2980B9; }
 
+/*removes extra padding around highlighted search results*/
+.rst-content span.highlighted{padding: 0 0px}
+
 /* It is possible to do a lot more here, but let's
  * leave it at that for now.
  */

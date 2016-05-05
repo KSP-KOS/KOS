@@ -1,7 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
-using kOS.Suffixed;
 using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.InfernalRobotics
@@ -9,7 +8,8 @@ namespace kOS.AddOns.InfernalRobotics
     [kOS.Safe.Utilities.KOSNomenclature("IRAddon")]
     public class Addon : Suffixed.Addon
     {
-        public Addon(SharedObjects shared) : base ("IR", shared)
+        public Addon(SharedObjects shared)
+            : base("IR", shared)
         {
             InitializeSuffixes();
         }
@@ -44,7 +44,6 @@ namespace kOS.AddOns.InfernalRobotics
                     list.Add(new IRControlGroupWrapper(cg, shared));
             }
 
-
             return list;
         }
 
@@ -67,19 +66,17 @@ namespace kOS.AddOns.InfernalRobotics
 
             foreach (IRWrapper.IControlGroup cg in controlGroups)
             {
-                if (cg.Servos == null || (cg.Vessel!=null && cg.Vessel != shared.Vessel))
+                if (cg.Servos == null || (cg.Vessel != null && cg.Vessel != shared.Vessel))
                     continue;
-                
+
                 foreach (IRWrapper.IServo s in cg.Servos)
                 {
-                    list.Add (new IRServoWrapper (s, shared));
+                    list.Add(new IRServoWrapper(s, shared));
                 }
             }
 
-
             return list;
         }
-
 
         private ListValue GetPartServos(PartValue pv)
         {
@@ -110,7 +107,6 @@ namespace kOS.AddOns.InfernalRobotics
                 }
             }
 
-
             return list;
         }
 
@@ -118,7 +114,5 @@ namespace kOS.AddOns.InfernalRobotics
         {
             return IRWrapper.APIReady;
         }
-
     }
 }
-
