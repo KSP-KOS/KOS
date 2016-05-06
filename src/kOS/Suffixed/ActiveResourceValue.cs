@@ -22,6 +22,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<StringValue>(() => activeResource.info.name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
             AddSuffix("AMOUNT", new Suffix<ScalarValue>(() => activeResource.amount, "The resources currently available"));
             AddSuffix("CAPACITY", new Suffix<ScalarValue>(() => activeResource.maxAmount, "The total storage capacity currently available"));
+            AddSuffix("DENSITY", new Suffix<ScalarValue>(() => activeResource.info.density, "The density of this resource"));
             AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(activeResource.parts, shared), "The containers for this resource"));
         }
 

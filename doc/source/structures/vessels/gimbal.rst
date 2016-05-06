@@ -21,32 +21,44 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
           -
 
         * - :attr:`LOCK`
-          - :ref:`Boolean <boolean>`
-          - Is the Gimbal locked in neutral position? 
-          
+          - :struct:`Boolean`
+          - Is the Gimbal locked in neutral position?
+
+        * - :attr:`PITCH`
+          - :struct:`Boolean`
+          - Does the Gimbal respond to pitch controls?
+
+        * - :attr:`YAW`
+          - :struct:`Boolean`
+          - Does the Gimbal respond to yaw controls?
+
+        * - :attr:`ROLL`
+          - :struct:`Boolean`
+          - Does the Gimbal respond to roll controls?
+
         * - :attr:`LIMIT`
-          - :ref:`scalar <scalar>` (%)
-          - Percentage of the maximum range the Gimbal is allowed to travel 
+          - :struct:`Scalar` (%)
+          - Percentage of the maximum range the Gimbal is allowed to travel
 
         * - :attr:`RANGE`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
           - The Gimbal's Possible Range of movement
 
         * - :attr:`RESPONSESPEED`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - The Gimbal's Possible Rate of travel
 
         * - :attr:`PITCHANGLE`
-          - :ref:`scalar <scalar>`
-          - Current Gimbal Pitch 
-		  
+          - :struct:`Scalar`
+          - Current Gimbal Pitch
+
         * - :attr:`YAWANGLE`
-          - :ref:`scalar <scalar>`
-          - Current Gimbal Yaw 
-		  
+          - :struct:`Scalar`
+          - Current Gimbal Yaw
+
         * - :attr:`ROLLANGLE`
-          - :ref:`scalar <scalar>`
-          - Current Gimbal Roll 
+          - :struct:`Scalar`
+          - Current Gimbal Roll
 
 
 .. note::
@@ -56,50 +68,70 @@ Many engines in KSP have thrust vectoring gimbals which are handled by their own
 
 .. attribute:: Gimbal:LOCK
 
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get/Set
-        
+
     Is this gimbal locked to neutral position and not responding to steering controls right now? When you set it to true it will snap the engine back to 0s for pitch, yaw and roll
+
+.. attribute:: Gimbal:PITCH
+
+    :type: :struct:`Boolean`
+    :access: Get/Set
+
+    Is the gimbal responding to pitch controls? Relevant only if the gimbal is not locked.
+
+.. attribute:: Gimbal:YAW
+
+    :type: :struct:`Boolean`
+    :access: Get/Set
+
+    Is the gimbal responding to yaw controls? Relevant only if the gimbal is not locked.
+
+.. attribute:: Gimbal:ROLL
+
+    :type: :struct:`Boolean`
+    :access: Get/Set
+
+    Is the gimbal responding to roll controls? Relevant only if the gimbal is not locked.
 
 .. attribute:: Gimbal:LIMIT
 
-    :type: :ref:`scalar <scalar>` (%)
+    :type: :struct:`Scalar` (%)
     :access: Get/Set
-        
+
     Percentage of maximum range this gimbal is allowed to travel
 
 .. attribute:: Gimbal:RANGE
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
-    The maximum extent of travel possible for the gimbal along all 3 axis (Pitch, Yaw, Roll) 
+    The maximum extent of travel possible for the gimbal along all 3 axis (Pitch, Yaw, Roll)
 
 .. attribute:: Gimbal:RESPONSESPEED
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     A Measure of the rate of travel for the gimbal
 
 .. attribute:: Gimbal:PITCHANGLE
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The gimbals current pitch, has a range of -1 to 1. Will always be 0 when LOCK is true
 
 .. attribute:: Gimbal:YAWANGLE
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The gimbals current yaw, has a range of -1 to 1. Will always be 0 when LOCK is true
 
 .. attribute:: Gimbal:ROLLANGLE
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     The gimbals current roll, has a range of -1 to 1. Will always be 0 when LOCK is true
-
