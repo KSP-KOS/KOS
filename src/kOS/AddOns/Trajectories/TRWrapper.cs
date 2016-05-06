@@ -11,79 +11,49 @@ namespace kOS.AddOns.TrajectoriesAddon
     public class TRWrapper
     {
         private static bool? wrapped = null;
-        private static Type trajectoriesType = null;
-        private static object trFetch = null;
-        private static MethodInfo trComputeMethod = null;
-        private static PropertyInfo patches = null;
-        private static PropertyInfo patchImpact = null;
-        private static Type descentProfileType = null;
-        private static object descentProfileFetch = null;
-        
+        private static Type trajectoriesAPIType = null;
+        private static MethodInfo trGetImpactPosition = null;
+        private static MethodInfo trCorrectedDirection = null;
+        private static MethodInfo trPlannedDirection = null;
+        private static MethodInfo trSetTarget = null;
+
         private static void init()
         {
-            Type trajectoriesMapOverlay = AssemblyLoader.loadedAssemblies
+            trajectoriesAPIType = AssemblyLoader.loadedAssemblies
                 .Select(a => a.assembly.GetExportedTypes())
                 .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "Trajectories.MapOverlay"); //MapOverlay is public, use it to get the Trajectories assembly
-            if (trajectoriesMapOverlay == null) //Check everything because who knows when Trajectories mod classes will change
+                .FirstOrDefault(t => t.FullName == "Trajectories.API");
+            if (trajectoriesAPIType == null)
             {
-                Debug.Log("Trajectories MapOverlay Type is null. Trajectories not installed or is wrong version.");
+                Debug.Log("[kOS] Trajectories API Type is null. Trajectories not installed or is wrong version.");
                 wrapped = false;
                 return;
             }
-            Assembly trajectories = trajectoriesMapOverlay.Assembly;
-            if (trajectories == null)
+            trGetImpactPosition = trajectoriesAPIType.GetMethod("getImpactPosition");
+            if (trGetImpactPosition == null)
             {
-                Debug.Log("Trajectories assembly is null.");
+                Debug.Log("[kOS] Trajectories.API.getImpactPosition method is null.");
                 wrapped = false;
                 return;
             }
-            trajectoriesType = trajectories.GetType("Trajectories.Trajectory");
-            if (trajectoriesType == null)
+            trCorrectedDirection = trajectoriesAPIType.GetMethod("correctedDirection");
+            if (trCorrectedDirection == null)
             {
-                Debug.Log("Trajectories.Trajectory Type is Null. Incompatible Trajectories version.");
+                Debug.Log("[kOS] Trajectories.API.correctedDirection method is null.");
                 wrapped = false;
                 return;
             }
-            descentProfileType = trajectories.GetType("Trajectories.DescentProfile");
-            if (descentProfileType == null)
+            trPlannedDirection = trajectoriesAPIType.GetMethod("plannedDirection");
+            if (trPlannedDirection == null)
             {
-                Debug.Log("Trajectories.DescentProfile Type is Null. Incompatible Trajectories version.");
+                Debug.Log("[kOS] Trajectories.API.plannedDirection method is null.");
                 wrapped = false;
                 return;
             }
-            trFetch = trajectoriesType.GetProperty("fetch").GetValue(null, null);
-            if (trFetch == null)
+            trSetTarget = trajectoriesAPIType.GetMethod("setTarget");
+            if (trSetTarget == null)
             {
-                Debug.Log("Trajectories.Trajectory fetch failed.");
-                wrapped = false;
-                return;
-            }
-            trComputeMethod = trajectoriesType.GetMethod("ComputeTrajectory", new[] { typeof(Vessel), descentProfileType, typeof(bool) });
-            if (trComputeMethod == null)
-            {
-                Debug.Log("Trajectories.Trajectory.ComputeTrajectory method is null.");
-                wrapped = false;
-                return;
-            }
-            patches = trajectoriesType.GetProperty("patches");
-            if (patches == null)
-            {
-                Debug.Log("Trajectories.Trajectory.patches PropertyInfo is null.");
-                wrapped = false;
-                return;
-            }
-            patchImpact = patches.PropertyType.GetGenericArguments()[0].GetProperty("impactPosition");
-            if (patchImpact == null)
-            {
-                Debug.Log("Trajectories.Trajectory.patch.impactPosition PropertyInfo is null.");
-                wrapped = false;
-                return;
-            }
-            descentProfileFetch = descentProfileType.GetProperty("fetch").GetValue(null, null);
-            if (descentProfileFetch == null)
-            {
-                Debug.Log("Trajectories.DescentProfile fetch failed.");
+                Debug.Log("[kOS] Trajectories.API.setTarget method is null.");
                 wrapped = false;
                 return;
             }
@@ -103,7 +73,7 @@ namespace kOS.AddOns.TrajectoriesAddon
         {
             if (wrapped != null)
             {
-                return (BooleanValue)wrapped;
+                return wrapped;
             }
             else //if available == null
             {
