@@ -16,7 +16,9 @@ Compatible with Trajectories 1.4.6.
 
 **Important notes**
 
-Trajectories only predicts the trajectory of the "Active Vessel," which is the vessel with the camera focused on it. `ADDONS:TR:IMPACTPOS` will throw an exception if you try to call it from an inactive vessel. You should always check if `HASIMPACT` is true before accessing `IMPACTPOS`.
+Trajectories only predicts the trajectory of the "Active Vessel," which is the vessel with the camera focused on it. `IMPACTPOS`, `PLANNEDVECT`, `SETTARGET`, and `CORRECTEDVECT` will throw exceptions if you try to call them from an inactive vessel or if Trajectories has not calculated an impact position. You should always check if `HASIMPACT` is true before accessing these suffixes.
+
+For example:
 
     if ADDONS:TR:AVAILABLE {
         if ADDONS:TR:HASIMPACT {
@@ -42,8 +44,11 @@ Access structure TRAddon via `ADDONS:TR`.
      Suffix                                Type                      Description
     ===================================== ========================= =============
      :attr:`AVAILABLE`                     bool(readonly)            True if a compatible Trajectories version is installed.
-     :attr:`HASIMPACT`                     bool(readonly)            True if `IMPACTPOS` is available.
-     :attr:`IMPACTPOS`                     GeoCoordinates(readonly)  Returns a 'LATLNG' with 
+     :attr:`HASIMPACT`                     bool(readonly)            True if Trajectories has calculated an impact position for the current vessel.
+     :attr:`IMPACTPOS`                     GeoCoordinates(readonly)  Returns a `LATLNG` with the predicted impact position.
+     :attr:`PLANNEDVECT`                   Vector(readonly)          Direction to point to follow predicted trajectory.
+     :attr:`SETTARGET(position)`           void                      Set Trajectories target.
+     :attr:`CORRECTEDVECT`                 Vector(readonly)          A hint about the direction you should go to reach the target.
     ===================================== ========================= =============
 
 
@@ -51,20 +56,41 @@ Access structure TRAddon via `ADDONS:TR`.
 .. attribute:: TRAddon:AVAILABLE
 
     :type: bool
-    :access: Get only
+    :access: Get
 
     True if a compatible Trajectories version is installed.
 
 .. attribute:: TRAddon:HASIMPACT
 
     :type: bool
-    :access: Get only
+    :access: Get
 
-    True if it is safe to call `ADDONS:TR:IMPACTPOS`, meaning that Trajectories has calculated an impact position for the current `vessel`.
+    True if Trajectories has calculated an impact position for the current `vessel`. You should always check this before using `impactPos`, `plannedVect`, `setTarget`, or `correctedVect` to avoid exceptions.
 
 .. attribute:: TRAddon:IMPACTPOS
 
     :type: GeoCoordinates
-    :access: Get only
+    :access: Get
 
     Estimated impact position.
+
+.. attribute:: TRAddon:PLANNEDVECT
+
+    :type: Vector
+    :access: Get
+
+    Direction to point to follow the currently predicted trajectory.
+
+.. attribute:: TRAddon:SETTARGET(position)
+
+    :parameter position: (GeoPosition) Position to set Trajectories target to.
+    :return: void
+
+    Direction to point to follow predicted trajectory.
+
+.. attribute:: TRAddon:CORRECTEDVECT
+
+    :type: Vector
+    :access: Get
+
+    A hint about the direction you should go to adjust your trajectory to reach the target. This is not necessarily where you need to point, what's important is the direction between this and `PLANNEDVECT`, and the angle between them indicates how far you are from the perfect trajectory.
