@@ -7,7 +7,6 @@ namespace kOS.Safe.Persistence
         Dictionary<int, Volume> Volumes { get; }
         Volume CurrentVolume { get; }
         VolumeDirectory CurrentDirectory { get; set; }
-        float CurrentRequiredPower { get; }
         bool VolumeIsCurrent(Volume volume);
         int GetVolumeId(Volume volume);
         Volume GetVolume(object volumeId);

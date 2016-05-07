@@ -14,7 +14,6 @@ namespace kOS.Safe.Persistence
         private int lastId;
 
         public Dictionary<int, Volume> Volumes { get { return volumes; } }
-        public float CurrentRequiredPower { get; private set; }
 
         public VolumeManager()
         {
@@ -103,7 +102,6 @@ namespace kOS.Safe.Persistence
                 if (CurrentDirectory == null)
                 {
                     CurrentDirectory = volumes[0].Root;
-                    UpdateRequiredPower();
                 }
             }
         }
@@ -126,7 +124,6 @@ namespace kOS.Safe.Persistence
                     if (volumes.Count > 0)
                     {
                         CurrentDirectory = volumes[0].Root;
-                        UpdateRequiredPower();
                     }
                     else
                     {
@@ -139,7 +136,6 @@ namespace kOS.Safe.Persistence
         public void SwitchTo(Volume volume)
         {
             CurrentDirectory = volume.Root;
-            UpdateRequiredPower();
         }
 
         public void UpdateVolumes(List<Volume> attachedVolumes)
@@ -237,11 +233,6 @@ namespace kOS.Safe.Persistence
             }
 
             return volume;
-        }
-
-        private void UpdateRequiredPower()
-        {
-            CurrentRequiredPower = (float)Math.Round(CurrentVolume.RequiredPower(), 4);
         }
 
         public bool Copy(GlobalPath sourcePath, GlobalPath destinationPath, bool verifyFreeSpace = true)
