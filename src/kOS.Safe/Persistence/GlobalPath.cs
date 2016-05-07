@@ -82,6 +82,21 @@ namespace kOS.Safe.Persistence
             return new GlobalPath(volumeId, new List<string>(volumePath.Segments));
         }
 
+        public GlobalPath ChangeName(string newName)
+        {
+            if (Segments.Count == 0)
+            {
+                throw new KOSInvalidPathException("This path points to the root directory, you can't change its name",
+                    this.ToString());
+            }
+
+            List<string> newSegments = new List<string>(Segments);
+            newSegments.RemoveAt(newSegments.Count - 1);
+            newSegments.Add(newName);
+
+            return new GlobalPath(VolumeId, newSegments);
+        }
+
         public GlobalPath ChangeExtension(string newExtension)
         {
             if (Segments.Count == 0)

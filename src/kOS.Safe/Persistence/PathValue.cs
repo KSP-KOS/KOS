@@ -61,6 +61,7 @@ namespace kOS.Safe
             AddSuffix("PARENT", new Suffix<PathValue>(() => FromPath(Path.GetParent())));
 
             AddSuffix("ISPARENT", new OneArgsSuffix<BooleanValue, PathValue>((p) => Path.IsParent(p.Path)));
+            AddSuffix("CHANGENAME", new OneArgsSuffix<PathValue, StringValue>((n) => FromPath(Path.ChangeName(n))));
             AddSuffix("CHANGEEXTENSION", new OneArgsSuffix<PathValue, StringValue>((e) => FromPath(Path.ChangeExtension(e))));
             AddSuffix("COMBINE", new VarArgsSuffix<PathValue, StringValue>(Combine));
         }

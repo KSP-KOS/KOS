@@ -70,6 +70,22 @@ namespace kOS.Safe.Test.Persistence
         }
 
         [Test]
+        public void CanChangeName()
+        {
+            GlobalPath path = GlobalPath.FromString("othervolume:123");
+            GlobalPath newPath = path.ChangeName("abc");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(1, newPath.Length);
+            Assert.AreEqual("abc", newPath.Name);
+
+            path = GlobalPath.FromString("othervolume:/dir/file.jpg");
+            newPath = path.ChangeName("new.txt");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(2, newPath.Length);
+            Assert.AreEqual("new.txt", newPath.Name);
+        }
+
+        [Test]
         public void CanChangeExtension()
         {
             GlobalPath path = GlobalPath.FromString("othervolume:123");

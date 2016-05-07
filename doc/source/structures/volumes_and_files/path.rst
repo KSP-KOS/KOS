@@ -44,6 +44,9 @@ Instances of this structure can be passed as arguments instead of ordinary, stri
         * - :attr:`PARENT`
           - :struct:`Path`
           - Parent path
+        * - :meth:`CHANGENAME(name)`
+          - :struct:`Path`
+          - Returns a new path with its name (last segment) changed
         * - :meth:`CHANGEEXTENSION(extension)`
           - :struct:`Path`
           - Returns a new path with extension changed
@@ -111,6 +114,13 @@ Instances of this structure can be passed as arguments instead of ordinary, stri
     :access: Get only
 
     Returns a new path that points to this path's parent. This method will throw an exception if this path does not have a parent (its length is 0).
+
+.. method:: Path:CHANGENAME(name)
+
+    :parameter name: :struct:`String` new path name
+    :return: :struct:`Path`
+
+    Will return a new path with the value of the last segment of this path replaced (or added if there's none).
 
 .. method:: Path:CHANGEEXTENSION(extension)
 
