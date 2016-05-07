@@ -147,7 +147,7 @@ namespace kOS.Function
             // run() is strange.  It needs two levels of args - the args to itself, and the args it is meant to
             // pass on to the program it's invoking.  First, these are the args to run itself:
             object volumeId = PopValueAssert(shared, true);
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
             // Now the args it is going to be passing on to the program:
@@ -159,7 +159,7 @@ namespace kOS.Function
 
             if (shared.VolumeMgr == null) return;
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
             VolumeFile volumeFile = volume.Open(path) as VolumeFile;
 
@@ -255,20 +255,17 @@ namespace kOS.Function
                 if (outputArg.Equals("-default-compile-out-"))
                     defaultOutput = true;
                 else
-                    outPath = shared.VolumeMgr.GlobalPathFromString(outputArg);
+                    outPath = shared.VolumeMgr.GlobalPathFromObject(outputArg);
             }
 
-            string pathString = null;
-            topStack = PopValueAssert(shared, true);
-            if (topStack != null)
-                pathString = topStack.ToString();
+            object pathObject = PopValueAssert(shared, true);
 
             AssertArgBottomAndConsume(shared);
 
-            if (string.IsNullOrEmpty(pathString))
+            if (pathObject == null)
                 throw new KOSFileException("No filename to load was given.");
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             VolumeFile file = volume.Open(path, !justCompiling) as VolumeFile; // if running, look for KSM first.  If compiling look for KS first.
@@ -356,7 +353,7 @@ namespace kOS.Function
 
             if (shared.VolumeMgr != null)
             {
-                GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+                GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathString);
                 Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
                 VolumeItem volumeItem = volume.Open(path) as VolumeFile;

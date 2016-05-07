@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Persistence
 {
@@ -186,8 +187,27 @@ namespace kOS.Safe.Persistence
             return !string.IsNullOrEmpty(volume.Name) ? volume.Name : id.ToString();
         }
 
+        // Volumes, VolumeItems and strings
+        public GlobalPath GlobalPathFromObject(object pathObject)
+        {
+            if (pathObject is Volume)
+            {
+                GlobalPath p = GlobalPath.FromVolumePath(VolumePath.EMPTY, GetVolumeRawIdentifier(pathObject as Volume));
+                SafeHouse.Logger.Log("Path from volume: " + p);
+                return p;
+            } else if (pathObject is VolumeItem)
+            {
+                VolumeItem volumeItem = pathObject as VolumeItem;
+                return GlobalPath.FromVolumePath(volumeItem.Path, GetVolumeRawIdentifier(volumeItem.Volume));
+            } else
+            {
+                return GlobalPathFromString(pathObject.ToString());
+            }
+
+        }
+
         // Handles global, absolute and relative paths
-        public GlobalPath GlobalPathFromString(string pathString)
+        private GlobalPath GlobalPathFromString(string pathString)
         {
             if (GlobalPath.HasVolumeId(pathString))
             {

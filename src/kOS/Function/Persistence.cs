@@ -88,8 +88,8 @@ namespace kOS.Function
                     shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume));
             } else
             {
-                string pathString = PopValueAssert(shared, true).ToString();
-                path = shared.VolumeMgr.GlobalPathFromString(pathString);
+                object pathObject = PopValueAssert(shared, true);
+                path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             }
 
             AssertArgBottomAndConsume(shared);
@@ -114,6 +114,11 @@ namespace kOS.Function
             {
                 object volumeId = PopValueAssert(shared, true);
                 volume = shared.VolumeMgr.GetVolume(volumeId);
+
+                if (volume == null)
+                {
+                    throw new KOSPersistenceException("Could not find volume: " + volumeId);
+                }
             }
 
             AssertArgBottomAndConsume(shared);
@@ -164,10 +169,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume vol = shared.VolumeMgr.GetVolumeFromPath(path);
             shared.Window.OpenPopupEditor(vol, path);
 
@@ -188,16 +193,16 @@ namespace kOS.Function
                 directory = shared.VolumeMgr.CurrentVolume.Root;
             } else
             {
-                string pathString = PopValueAssert(shared, true).ToString();
+                object pathObject = PopValueAssert(shared, true);
 
-                GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+                GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
                 Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
                 directory = volume.Open(path) as VolumeDirectory;
 
                 if (directory == null)
                 {
-                    throw new KOSException("Invalid directory: " + pathString);
+                    throw new KOSException("Invalid directory: " + pathObject);
                 }
 
             }
@@ -213,14 +218,14 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string destinationPathString = PopValueAssert(shared, true).ToString();
-            string sourcePathString = PopValueAssert(shared, true).ToString();
+            object destinationPathObject = PopValueAssert(shared, true);
+            object sourcePathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
-            GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
+            GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromObject(sourcePathObject);
+            GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromObject(destinationPathObject);
 
-            shared.VolumeMgr.Copy(sourcePath, destinationPath);
+            ReturnValue = shared.VolumeMgr.Copy(sourcePath, destinationPath);
         }
     }
 
@@ -229,14 +234,14 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string destinationPathString = PopValueAssert(shared, true).ToString();
-            string sourcePathString = PopValueAssert(shared, true).ToString();
+            object destinationPathObject = PopValueAssert(shared, true);
+            object sourcePathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromString(sourcePathString);
-            GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromString(destinationPathString);
+            GlobalPath sourcePath = shared.VolumeMgr.GlobalPathFromObject(sourcePathObject);
+            GlobalPath destinationPath = shared.VolumeMgr.GlobalPathFromObject(destinationPathObject);
 
-            shared.VolumeMgr.Move(sourcePath, destinationPath);
+            ReturnValue = shared.VolumeMgr.Move(sourcePath, destinationPath);
         }
     }
 
@@ -245,17 +250,13 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
-            volume.Delete(path);
 
-            if (!volume.Delete(path))
-            {
-                throw new Exception(string.Format("Could not remove '{0}'", path));
-            }
+            ReturnValue = volume.Delete(path);
         }
     }
 
@@ -264,7 +265,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             SerializableStructure serialized = PopValueAssert(shared, true) as SerializableStructure;
             AssertArgBottomAndConsume(shared);
 
@@ -277,7 +278,7 @@ namespace kOS.Function
 
             FileContent fileContent = new FileContent(serializedString);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             ReturnValue = volume.SaveFile(path, fileContent);
@@ -289,10 +290,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             VolumeFile volumeFile = volume.Open(path) as VolumeFile;
@@ -312,10 +313,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             ReturnValue = volume.Exists(path);
@@ -327,10 +328,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             VolumeItem volumeItem = volume.Open(path);
@@ -349,10 +350,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             VolumeFile volumeFile = volume.CreateFile(path);
@@ -366,10 +367,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string pathString = PopValueAssert(shared, true).ToString();
+            object pathObject = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            GlobalPath path = shared.VolumeMgr.GlobalPathFromString(pathString);
+            GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
             Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
 
             VolumeDirectory volumeDirectory = volume.CreateDirectory(path);
