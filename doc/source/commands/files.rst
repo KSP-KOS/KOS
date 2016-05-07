@@ -245,8 +245,9 @@ Files and directories
         make it difficult for the kOS parser to properly handle paths.
 
         Please update your scripts to use the new commands:
-        :ref:`movepath(frompath, topath)`, :ref:`copypath(frompath, topath)` and
-        :ref:`deletepath(path)`.
+        :ref:`movepath(frompath, topath) <movepath>`,
+        :ref:`copypath(frompath, topath) <copypath>` and
+        :ref:`deletepath(path) <deletepath>`.
 
 LIST
 ~~~~
@@ -260,6 +261,8 @@ CD(PATH)
 Changes the current directory to the one pointed to by the :code:`PATH`
 argument. This command will fail if the path is invalid or does not point
 to an existing directory.
+
+.. _copypath:
 
 COPYPATH(FROMPATH, TOPATH)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -309,12 +312,16 @@ to the exact behaviour of this command will differ:
 
    The command will fail.
 
+.. _movepath:
+
 MOVEPATH(FROMPATH, TOPATH)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Moves the file or directory pointed to by :code:`FROMPATH` to the location
 pointed to :code:`TOPATH`. Depending on what kind of items both paths point
 to the exact behaviour of this command will differ, see :code:`COPYPATH` above.
+
+.. _deletepath:
 
 DELETEPATH(PATH)
 ~~~~~~~~~~~~~~~~
@@ -325,22 +332,29 @@ removed along with all the items they contain.
 EXISTS(PATH)
 ~~~~~~~~~~~~
 
-A shortcut for ``CORE:CURRENTVOLUME:EXISTS(PATH)``. See :meth:`Volume:EXISTS`.
+Returns true if there exists a file or a directory under the given path,
+otherwise returns false. Also see :meth:`Volume:EXISTS`.
 
 CREATE(PATH)
 ~~~~~~~~~~~~
 
-A shortcut for ``CORE:CURRENTVOLUME:CREATE(PATH)``. See :meth:`Volume:CREATE`.
+Creates a file under the given path. Will create parent directories if needed.
+It will fail if a file or a directory already exists under the given path.
+Also see :meth:`Volume:CREATE`.
 
 CREATEDIR(PATH)
 ~~~~~~~~~~~~~~~
 
-A shortcut for ``CORE:CURRENTVOLUME:CREATEDIR(PATH)``. See :meth:`Volume:CREATE`.
+Creates a directory under the given path. Will create parent directories
+if needed. It will fail if a file or a directory already exists under the
+given path. Also see :meth:`Volume:CREATEDIR`.
 
 OPEN(PATH)
 ~~~~~~~~~~
 
-A shortcut for ``CORE:CURRENTVOLUME:OPEN(PATH)``. See :meth:`Volume:OPEN`.
+Will return a :struct:`VolumeFile` or :struct:`Directory` representing the item
+pointed to by :code:`PATH`. It will return a :struct:`Boolean` false if there's
+nothing present under the given path. Also see :meth:`Volume:OPEN`.
 
 
 JSON
@@ -503,7 +517,7 @@ Please see :ref:`the details of the Kerboscript ML
 Executable <compiling>`.
 
 EDIT PATH
----------
+~~~~~~~~~
 
 Edits a program pointed to by :code:`PATH`.
 
