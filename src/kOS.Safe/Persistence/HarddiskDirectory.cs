@@ -105,7 +105,7 @@ namespace kOS.Safe.Persistence
             return items.Remove(toDelete.Name);
         }
 
-        public IEnumerator<VolumeItem> GetEnumerator()
+        public new IEnumerator<VolumeItem> GetEnumerator()
         {
             return List().Values.GetEnumerator();
         }

@@ -41,6 +41,7 @@ namespace kOS.Safe
 
         private void InitializeSuffixes()
         {
+            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>(() => new Enumerator(GetEnumerator())));
             AddSuffix("LIST", new Suffix<Lexicon>(ListAsLexicon));
         }
     }
