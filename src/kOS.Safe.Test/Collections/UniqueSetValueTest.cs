@@ -8,19 +8,19 @@ using kOS.Safe.Serialization;
 namespace kOS.Safe.Test.Collections
 {
     [TestFixture]
-    public class HashSetValueTest : CollectionValueTest
+    public class UniqueSetValueTest : CollectionValueTest
     {
         [Test]
         public void CanCreate()
         {
-            var set = new HashSetValue();
+            var set = new UniqueSetValue();
             Assert.IsNotNull(set);
         }
 
         [Test]
         public void CanAddAndRemoveItems()
         {
-            var set = new HashSetValue();
+            var set = new UniqueSetValue();
             Assert.IsNotNull(set);
             var length = InvokeDelegate(set, "LENGTH");
             Assert.AreEqual(ScalarIntValue.Zero, length);
@@ -51,7 +51,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanClear()
         {
-            var set = new HashSetValue();
+            var set = new UniqueSetValue();
 
             InvokeDelegate(set, "ADD", new ScalarIntValue(1));
             InvokeDelegate(set, "ADD", new ScalarIntValue(2));
@@ -66,7 +66,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CopyIsACopy()
         {
-            var set = new HashSetValue();
+            var set = new UniqueSetValue();
 
             var zedObject = ScalarIntValue.Zero;
             InvokeDelegate(set, "ADD", zedObject);
@@ -80,7 +80,7 @@ namespace kOS.Safe.Test.Collections
             var length = InvokeDelegate(set, "LENGTH");
             Assert.AreEqual(new ScalarIntValue(4), length);
 
-            var copy = InvokeDelegate(set, "COPY") as HashSetValue;
+            var copy = InvokeDelegate(set, "COPY") as UniqueSetValue;
             Assert.AreNotSame(set, copy);
 
             var copyLength = InvokeDelegate(copy, "LENGTH");
@@ -98,7 +98,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanTestContains()
         {
-            var set = new HashSetValue();
+            var set = new UniqueSetValue();
 
             var zedObject = new StringValue("abc");
             InvokeDelegate(set, "ADD", zedObject);

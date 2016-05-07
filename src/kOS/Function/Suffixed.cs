@@ -226,7 +226,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("set")]
+    [Function("uniqueset")]
     public class FunctionSet : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -235,7 +235,7 @@ namespace kOS.Function
             for (int i = argArray.Length - 1 ; i >= 0 ; --i)
                 argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
-            var setValue = new HashSetValue(argArray.ToList());
+            var setValue = new UniqueSetValue(argArray.ToList());
             ReturnValue = setValue;
         }
     }

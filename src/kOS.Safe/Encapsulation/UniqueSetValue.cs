@@ -7,16 +7,16 @@ using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
-    [kOS.Safe.Utilities.KOSNomenclature("Set")]
-    public class HashSetValue<T> : CollectionValue<T, HashSet<T>>
+    [kOS.Safe.Utilities.KOSNomenclature("UniqueSet")]
+    public class UniqueSetValue<T> : CollectionValue<T, HashSet<T>>
         where T : Structure
     {
-        public HashSetValue()
+        public UniqueSetValue()
             : this(new HashSet<T>())
         {
         }
 
-        public HashSetValue(IEnumerable<T> setValue) : base("SET", new HashSet<T>(setValue))
+        public UniqueSetValue(IEnumerable<T> setValue) : base("UNIQUESET", new HashSet<T>(setValue))
         {
             SetInitializeSuffixes();
         }
@@ -55,21 +55,21 @@ namespace kOS.Safe.Encapsulation
 
         private void SetInitializeSuffixes()
         {
-            AddSuffix("COPY",     new NoArgsSuffix<HashSetValue<T>>         (() => new HashSetValue<T>(this)));
+            AddSuffix("COPY",     new NoArgsSuffix<UniqueSetValue<T>>         (() => new UniqueSetValue<T>(this)));
             AddSuffix("ADD",      new OneArgsSuffix<T>                      (toAdd => Collection.Add(toAdd)));
             AddSuffix("REMOVE",   new OneArgsSuffix<BooleanValue, T>        (toRemove => Collection.Remove(toRemove)));
        }
     }
 
-    [kOS.Safe.Utilities.KOSNomenclature("Set", KOSToCSharp = false)] // one-way because the generic templated HashSetValue<T> is the canonical one.
-    public class HashSetValue : HashSetValue<Structure>
+    [kOS.Safe.Utilities.KOSNomenclature("UniqueSet", KOSToCSharp = false)] // one-way because the generic templated UniqueSetValue<T> is the canonical one.
+    public class UniqueSetValue : UniqueSetValue<Structure>
     {
-        public HashSetValue()
+        public UniqueSetValue()
         {
             InitializeSuffixes();
         }
 
-        public HashSetValue(IEnumerable<Structure> toCopy)
+        public UniqueSetValue(IEnumerable<Structure> toCopy)
             : base(toCopy)
         {
             InitializeSuffixes();
@@ -77,7 +77,7 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeSuffixes()
         {
-            AddSuffix("COPY", new NoArgsSuffix<HashSetValue>(() => new HashSetValue(this)));
+            AddSuffix("COPY", new NoArgsSuffix<UniqueSetValue>(() => new UniqueSetValue(this)));
         }
     }
 }

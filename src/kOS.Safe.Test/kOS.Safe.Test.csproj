@@ -73,7 +73,7 @@
     <Compile Include="Serialization\FormatterTest.cs" />
     <Compile Include="Communication\MessageQueueTest.cs" />
     <Compile Include="Communication\FakeCurrentTimeProvider.cs" />
-    <Compile Include="Collections\HashSetValueTest.cs" />
+    <Compile Include="Collections\UniqueSetValueTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

@@ -240,7 +240,7 @@
     <Compile Include="Serialization\IDumper.cs" />
     <Compile Include="Communication\GenericMessageQueue.cs" />
     <Compile Include="Exceptions\KOSCommunicationException.cs" />
-    <Compile Include="Encapsulation\HashSetValue.cs" />
+    <Compile Include="Encapsulation\UniqueSetValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

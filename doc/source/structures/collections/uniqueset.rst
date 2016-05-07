@@ -1,14 +1,14 @@
-.. _set:
+.. _uniqueset:
 
-Set
-====
+UniqueSet
+=========
 
-A :struct:`Set` is a collection of any type in kOS. It doesn't store items in any particular order and does not allow duplicate items.
+A :struct:`UniqueSet` is a collection of any type in kOS. It doesn't store items in any particular order and does not allow duplicate items.
 You can read more about sets on `Wikipedia <https://en.wikipedia.org/wiki/Set_(abstract_data_type)>`_.
 
 Usage example::
 
-  SET S TO SET(1,2,3).
+  SET S TO UNIQUESET(1,2,3).
   PRINT S:LENGTH. // will print 3
   S:ADD(1). // 1 was already in the set so nothing happens
   PRINT S:LENGTH. // will print 3 again
@@ -17,7 +17,7 @@ Usage example::
 Structure
 ---------
 
-.. structure:: Set
+.. structure:: UniqueSet
 
     .. list-table::
         :header-rows: 1
@@ -29,7 +29,7 @@ Structure
 
         * - All suffixes of :struct:`Enumerable`
           -
-          - :struct:`Set` objects are a type of :struct:`Enumerable`
+          - :struct:`UniqueSet` objects are a type of :struct:`Enumerable`
         * - :meth:`ADD(item)`
           - None
           - append an item
@@ -40,7 +40,7 @@ Structure
           - None
           - remove all elements
         * - :attr:`COPY`
-          - :struct:`Set`
+          - :struct:`UniqueSet`
           - a new copy of this set
 
 .. note::
@@ -48,27 +48,27 @@ Structure
     This type is serializable.
 
 
-.. method:: Set:ADD(item)
+.. method:: UniqueSet:ADD(item)
 
     :parameter item: (any type) item to be added
 
     Appends the new value given.
 
-.. method:: Set:REMOVE(item)
+.. method:: UniqueSet:REMOVE(item)
 
     :parameter item: (any type) item to be removed
 
     Remove the item from the set.
 
-.. method:: Set:CLEAR()
+.. method:: UniqueSet:CLEAR()
 
     :return: none
 
     Calling this suffix will remove all of the items currently stored in the set.
 
-.. attribute:: Set:COPY
+.. attribute:: UniqueSet:COPY
 
-    :type: :struct:`set`
+    :type: :struct:`UniqueSet`
     :access: Get only
 
     Returns a new set that contains the same thing as the old set.
