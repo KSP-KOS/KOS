@@ -185,6 +185,7 @@ namespace kOS.Safe.Persistence
             AddSuffix("RENAMEABLE" , new Suffix<BooleanValue>(() => Renameable));
             AddSuffix("POWERREQUIREMENT" , new Suffix<ScalarValue>(() => RequiredPower()));
 
+            AddSuffix("ROOT" , new Suffix<VolumeDirectory>(() => Root));
             AddSuffix("EXISTS" , new OneArgsSuffix<BooleanValue, StringValue>(path => Exists(path)));
             AddSuffix("FILES" , new Suffix<Lexicon>(ListAsLexicon));
             AddSuffix("CREATE" , new OneArgsSuffix<VolumeFile, StringValue>(path => CreateFile(path)));

@@ -32,6 +32,10 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
           - :ref:`scalar <scalar>`
           - True if the name can be changed
 
+        * - :attr:`ROOT`
+          - :struct:`VolumeDirectory`
+          - Volume's root directory
+
         * - :attr:`FILES`
           - :struct:`Lexicon`
           - Lexicon of all files and directories on the volume
@@ -96,6 +100,12 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
     List of files and directories on this volume. Keys are the names of all items on this volume and values are the associated :struct:`VolumeItem` structures.
 
+.. attribute:: Volume:ROOT
+
+    :type: :struct:`VolumeDirectory`
+    :access: Get only
+
+    Returns volume's root directory
 
 .. attribute:: Volume:POWERREQUIREMENT
 
