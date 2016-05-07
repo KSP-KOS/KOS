@@ -3,11 +3,12 @@ using kOS.Safe.Persistence;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using System.Collections;
 
 namespace kOS.Safe
 {
     [kOS.Safe.Utilities.KOSNomenclature("VolumeDirectory")]
-    public abstract class VolumeDirectory : VolumeItem
+    public abstract class VolumeDirectory : VolumeItem, IEnumerable<VolumeItem>
     {
         public VolumeDirectory(Volume volume, VolumePath path) : base(volume, path)
         {
@@ -27,6 +28,16 @@ namespace kOS.Safe
         }
 
         public abstract IDictionary<string, VolumeItem> List();
+
+        public IEnumerator<VolumeItem> GetEnumerator()
+        {
+            return List().Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         private void InitializeSuffixes()
         {
