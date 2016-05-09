@@ -103,9 +103,9 @@ namespace kOS.Control
         private const string FILE_BASE_NAME = "{0}-{1}-{2}.csv";
         private readonly string fileDateString = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
-        public object Value { get; set; }
+        public Direction Value { get; set; }
 
-        public Direction TargetDirection { get { return GetDirectionFromValue(); } }
+        public Direction TargetDirection { get { return Value == null ? new Direction() : Value; } }
 
         private Transform vesselTransform;
 
@@ -455,37 +455,48 @@ namespace kOS.Control
             AverageDuration.Update((double)sw.ElapsedTicks / (double)System.TimeSpan.TicksPerMillisecond);
         }
 
-        private Direction GetDirectionFromValue()
+        private Direction GetDirectionFromValue(object value)
         {
-            if (Value is Direction)
-                return (Direction)Value;
-            else if (Value is Vector)
-                return Direction.LookRotation((Vector)Value, vesselUp);
-            else if (Value is Node)
-                return Direction.LookRotation(((Node)Value).GetBurnVector(), vesselUp);
-            else if (Value is string)
+            // The vesselUp vector is used when calculating the "up" vector of the direction, and it
+            // is OK that it's a stale reference since LookRotation only uses the projection of the
+            // vector anyways (essentially the "up" vector, excluding the "look at" vector).
+            if (value is Direction)
+                return (Direction)value;
+            else if (value is Vector)
+                return Direction.LookRotation((Vector)value, vesselUp);
+            else if (value is Node)
+                return Direction.LookRotation(((Node)value).GetBurnVector(), vesselUp);
+            else if (value is string || value is StringValue)
             {
-                if (string.Equals((string)Value, "KILL", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(value.ToString(), "KILL", StringComparison.OrdinalIgnoreCase))
                 {
+                    // For the value of "KILL" keep the vessel rotation pointed at the previous rotation.
+                    // This value is intentionally stale from the last update, with the hope that it will
+                    // lead to quicker stopping (essentially each update frame become a bisection).  It
+                    // may however cause oscillation, so there may be need in the future to update the
+                    // rotation instead.
                     return new Direction(vesselRotation);
                 }
             }
-            DisableControl();
-            SafeHouse.Logger.LogException(new Safe.Exceptions.KOSWrongControlValueTypeException(
-                "STEERING", Value.GetType().Name, "Direction, Vector, Maneuver Node, or special string \"KILL\""));
-            return new Direction(vesselRotation);
+            // Bindings pass primatives instead of encapsulated values, so we want to encapsulate the value
+            // before throwing a type exception so that we can report the urser friendly type, instead of C#.
+            value = Structure.FromPrimitive(value);
+            throw new Safe.Exceptions.KOSWrongControlValueTypeException(
+                "STEERING", KOSNomenclature.GetKOSName(value.GetType()), "Direction, Vector, Maneuver Node, or special string \"KILL\"");
         }
 
         public void UpdateStateVectors()
         {
-            Direction targetdir = GetDirectionFromValue();
-            if (targetdir == null)
+            if (Value == null)
             {
-                shared.Logger.LogWarning(string.Format("SteeringManager target direction is null, Value = {0}", Value));
+                // There is a single dead frame where the steering manager is enabled, but the trigger has not
+                // yet been run to update Value.  Skip the update in these cases, but log it in case we find a
+                // time where the trigger and steering manager are no longer synced.
+                shared.Logger.LogWarning("SteeringManager target direction is null, skipping this update.");
                 return;
             }
 
-            targetRot = targetdir.Rotation;
+            targetRot = Value.Rotation;
             centerOfMass = shared.Vessel.findWorldCenterOfMass();
 
             vesselTransform = shared.Vessel.ReferenceTransform;
@@ -1279,7 +1290,7 @@ namespace kOS.Control
         {
             if (enabled && partId != shared.KSPPart.flightID)
                 throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
-            Value = value;
+            Value = GetDirectionFromValue(value);
         }
 
         object IFlightControlParameter.GetValue()
