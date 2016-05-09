@@ -46,14 +46,14 @@ namespace kOS.Module
         {
             if (kOS.Safe.Utilities.SafeHouse.Logger != null)
             {
-                kOS.Safe.Utilities.SafeHouse.Logger.LogError("kOSVesselModule Awake()!");
+                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
                 parentVessel = GetComponent<Vessel>();
                 if (parentVessel != null)
                 {
                     allInstances[ID] = this;
                     AddDefaultParameters();
                 }
-                kOS.Safe.Utilities.SafeHouse.Logger.LogError(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.name, ID));
+                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.name, ID));
             }
         }
 
@@ -64,7 +64,7 @@ namespace kOS.Module
         /// </summary>
         public void Start()
         {
-            kOS.Safe.Utilities.SafeHouse.Logger.LogError(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.name, ID));
+            kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.name, ID));
             HarvestParts();
             HookEvents();
             initialized = true;
@@ -78,7 +78,7 @@ namespace kOS.Module
         {
             if (kOS.Safe.Utilities.SafeHouse.Logger != null)
             {
-                kOS.Safe.Utilities.SafeHouse.Logger.LogError("kOSVesselModule OnDestroy()!");
+                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
                 UnHookEvents();
                 ClearParts();
                 if (parentVessel != null && allInstances.ContainsKey(ID))
