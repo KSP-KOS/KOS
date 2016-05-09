@@ -168,7 +168,7 @@ namespace kOS
         private string GetSourceLine(string filePath, int line)
         {
             string returnVal = "(Can't show source line)";
-            if (line < 0 && string.IsNullOrEmpty(filePath))
+            if (line < 0)
             {
                 // Special exception - if line number is negative then this isn't from any
                 // line of user's code but from the system itself (like the triggers the compiler builds
