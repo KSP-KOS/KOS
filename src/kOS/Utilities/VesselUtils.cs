@@ -586,11 +586,11 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleResourceHarvester>())
                 {
-                    if (state) {c.StartResourceConverter(); }else { c.StartResourceConverter(); }
+                    if (state) {c.StartResourceConverter(); }else { c.StopResourceConverter(); }
                 }
                 foreach (var c in p.FindModulesImplementing<ModuleAsteroidDrill>())
                 {
-                    if (state) { c.StartResourceConverter(); } else { c.StartResourceConverter(); } //call activate on both?
+                    if (state) { c.StartResourceConverter(); } else { c.StopResourceConverter(); } //call activate on both madules
                 }
             }
         }
