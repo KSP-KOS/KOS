@@ -6,6 +6,19 @@ Communication
 kOS allows you to write scripts that communicate with scripts running on other processors within the same vessel
 (inter-processor communication) or on other vessels (inter-vessel communication).
 
+Limitations
+-----------
+
+While you are able to send messages to vessels that are unloaded, the receiving
+vessel must be loaded in order to use and reply to the message.  This is because
+kOS is unable to run on an unloaded vessel.  The loaded status of a vessel
+depends on proximity to the active vessel (usually a sphere a couple of
+kilometers in radius) as well as current situation (landed, orbit, suborbit,
+etc).  For more information about how vessels are loaded, check the
+:struct:`loaddistance` documentation page.  In order to have the receiving
+vessel reply when unloaded, it will need to be set to the
+:attr:`KUNIVERSE:ACTIVEVESSEL` or the load distance needs to be adjusted.
+
 Messages
 --------
 
@@ -130,4 +143,3 @@ The receiving CPU will use :attr:`CORE:MESSAGES` to access its message queue::
   } ELSE {
     PRINT "Unexpected message: " + RECEIVED:CONTENT.
   }
-
