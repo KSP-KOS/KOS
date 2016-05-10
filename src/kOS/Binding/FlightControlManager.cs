@@ -46,10 +46,10 @@ namespace kOS.Binding
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
 
-            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode((string)value));
-            shared.BindingMgr.AddGetter("SASMODE", () => GetAutopilotModeName().ToUpper());
-            shared.BindingMgr.AddSetter("NAVMODE", value => SetNavMode((string)value));
-            shared.BindingMgr.AddGetter("NAVMODE", () => getNavMode().ToString().ToUpper());
+            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode(value));
+            shared.BindingMgr.AddGetter("SASMODE", () => GetAutopilotModeName());
+            shared.BindingMgr.AddSetter("NAVMODE", value => SetNavMode(value));
+            shared.BindingMgr.AddGetter("NAVMODE", () => getNavModeName());
         }
 
 
@@ -229,11 +229,11 @@ namespace kOS.Binding
 
         public string GetAutopilotModeName()
         {
-            // TODO: As of KSP 1.0.4, RadialIn and RadialOut are swapped.  Check if still true in future versions.
-            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialOut) { return "RadialIn"; }
-            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialIn) { return "RadialOut"; }
+            // TODO: As of KSP 1.1.2, RadialIn and RadialOut are still swapped.  Check if still true in future versions.
+            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialOut) { return "RADIALIN"; }
+            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialIn) { return "RADIALOUT"; }
 
-            return currentVessel.Autopilot.Mode.ToString();
+            return currentVessel.Autopilot.Mode.ToString().ToUpper();
         }
 
         public void SelectAutopilotMode(string autopilotMode)
@@ -288,7 +288,12 @@ namespace kOS.Binding
             }
         }
 
-  
+        public string getNavModeName()
+        {
+            return getNavMode().ToString().ToUpper();
+        }
+
+
         public FlightGlobals.SpeedDisplayModes getNavMode()
         {
             if (Shared.Vessel != FlightGlobals.ActiveVessel)
@@ -301,6 +306,11 @@ namespace kOS.Binding
         public void SetNavMode(FlightGlobals.SpeedDisplayModes navMode)
         {
             FlightGlobals.SetSpeedMode(navMode);
+        }
+
+        public void SetNavMode(object navMode)
+        {
+            SetNavMode((string)navMode);
         }
 
         public void SetNavMode(string navMode)
@@ -316,7 +326,7 @@ namespace kOS.Binding
             }
             else
             {
-                // determine the AutopilotMode to use
+                // determine the navigation mode to use
                 switch (navMode.ToLower())
                 {
                     case "orbit":
