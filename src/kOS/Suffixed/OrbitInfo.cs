@@ -47,7 +47,7 @@ namespace kOS.Suffixed
             AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<ScalarValue>(() => orbit.LAN));
             AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<ScalarValue>(() => orbit.argumentOfPeriapsis));
             AddSuffix("TRUEANOMALY", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.trueAnomaly),0.0)));
-            AddSuffix("MEANANOMALYATEPOCH", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.meanAnomalyAtEpoch * 180.0 / Math.PI), 0.0)));
+            AddSuffix("MEANANOMALYATEPOCH", new Suffix<ScalarValue>(() => Utilities.Utils.DegreeFix(Utilities.Utils.RadiansToDegrees(orbit.meanAnomalyAtEpoch), 0.0)));
             AddSuffix("TRANSITION", new Suffix<StringValue>(() => orbit.patchEndTransition.ToString()));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
