@@ -201,6 +201,8 @@ namespace kOS.Binding
             if (autopilotMode is Direction)
             {
                 //TODO: implment use of direction subclasses.
+                throw new Safe.Exceptions.KOSException(
+                    string.Format("Cannot set autopilot mode to direction {0}, use the name of the mode (as string) for SASMODE or, alternatively, LOCK STEERING to direction", autopilotMode));
             }
             else SelectAutopilotMode((string)autopilotMode);
         }
