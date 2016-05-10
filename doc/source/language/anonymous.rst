@@ -3,14 +3,14 @@
 Anonymous Functions (A kind of Delegate)
 ========================================
 
-.. versionadded:: 0.19.3
+.. versionadded:: 1.0.0
    The anonymous function feature described on
-   this page did not exist prior to kOS 0.19.3.
+   this page did not exist prior to kOS 1.0.0
 
 .. contents:: Contents
     :local:
     :depth: 2
-    
+
 Overview
 --------
 
@@ -20,7 +20,7 @@ assign it right into a variable *as* a delegate to begin with, or
 pass it *as* a delegate to another function call.
 
 This is referred to as an
-`Anonymous Funcion <https://en.wikipedia.org/wiki/Anonymous_function>`__.
+`Anonymous Function <https://en.wikipedia.org/wiki/Anonymous_function>`__.
 
 Syntax
 ------
@@ -87,7 +87,7 @@ some criteria that are unspecified until it gets used, like so::
 
     // Example of how it could have been used with a traditional named function:
     // -------------------------------------------------------------------------
-    // 
+    //
     // function is_smaller_than_mun {
     //   parameter b. return (b:RADIUS < Mun:RADIUS).
     // }
@@ -139,4 +139,3 @@ Although kerboscript isn't *entirely* "object oriented", some kinds of
 object-oriented ways of thinking can be simulated with techniques
 like this.  Once you have the ability to treat a function as being
 a piece of data, a lot of possibilities open up.
-
