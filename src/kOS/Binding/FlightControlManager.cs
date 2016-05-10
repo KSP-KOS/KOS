@@ -202,9 +202,16 @@ namespace kOS.Binding
             {
                 //TODO: implment use of direction subclasses.
                 throw new Safe.Exceptions.KOSException(
-                    string.Format("Cannot set autopilot mode to direction {0}, use the name of the mode (as string) for SASMODE or, alternatively, LOCK STEERING to direction", autopilotMode));
+                    string.Format("Cannot set SAS mode to a direction. Should use the name of the mode (as string, e.g. \"PROGRADE\", not PROGRADE) for SASMODE. Alternatively, can use LOCK STEERING TO Direction instead of using SAS"));
             }
-            else SelectAutopilotMode((string)autopilotMode);
+            else
+            {
+                if (!((autopilotMode is kOS.Safe.Encapsulation.StringValue) || (autopilotMode is string)))
+                {
+                    throw new KOSWrongControlValueTypeException(
+                      "SASMODE", autopilotMode.GetType().Name, "name of the SAS mode (as string)");
+                }
+                SelectAutopilotMode((string)autopilotMode); }
         }
 
         public void SelectAutopilotMode(VesselAutopilot.AutopilotMode autopilotMode)
@@ -312,6 +319,11 @@ namespace kOS.Binding
 
         public void SetNavMode(object navMode)
         {
+            if (!((navMode is kOS.Safe.Encapsulation.StringValue) || (navMode is string)))
+            {
+                throw new KOSWrongControlValueTypeException(
+                  "NAVMODE", navMode.GetType().Name, "string (\"ORBIT\", \"SURFACE\" or \"TARGET\")");
+            }
             SetNavMode((string)navMode);
         }
 
