@@ -63,11 +63,11 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false)]
         public int baseDiskSpace = 0;
 
-        [KSPField(isPersistant = true, guiName = "kOS Base Module Cost", guiActive = false)]
-        public float baseModuleCost = 0F;
+        [KSPField(isPersistant = false, guiName = "kOS Base Module Cost", guiActive = false)]
+        public float baseModuleCost = 0F;  // this is the base cost added to a part for including the kOSProcessor, default to 0.
 
-        [KSPField(isPersistant = true, guiName = "kOS Base Part Mass", guiActive = false)]
-        public float basePartMass = 0F;
+        [KSPField(isPersistant = true, guiName = "kOS Base Module Mass", guiActive = false)]
+        public float baseModuleMass = 0F;  // this is the base mass added to a part for including the kOSProcessor, default to 0.
 
         [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string diskSpaceUI = "1024";
@@ -77,6 +77,12 @@ namespace kOS.Module
 
         [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true)]
         public float additionalMass = 0F;
+
+        [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
+        public float diskSpaceCostFactor = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
+
+        [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
+        public float diskSpaceMassFactor = 0.0000048829F;  //implies approx 20kg for 4096bytes of diskSpace
 
         [KSPField(isPersistant = true, guiActive = false)]
         public int MaxPartId = 100;
@@ -208,7 +214,7 @@ namespace kOS.Module
         {
             // the 'sit' arg is irrelevant to us, but the interface requires it.
 
-            return additionalCost;
+            return baseModuleCost + additionalCost;
         }
         //implement IPartMassModifier component
         public ModifierChangeWhen GetModuleCostChangeWhen()
@@ -218,13 +224,9 @@ namespace kOS.Module
 
         private void UpdateCostAndMass()
         {
-            const float DISK_SPACE_MASS_MULTIPLIER = 0.0000048829F; //implies approx 20kg for 4096bytes of diskSpace
-            const float DISK_SPACE_COST_MULTIPLIER = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
-
-            additionalCost = baseModuleCost + (float)System.Math.Round((diskSpace - baseDiskSpace) * DISK_SPACE_COST_MULTIPLIER, 0);
-            additionalMass = (diskSpace - baseDiskSpace) * DISK_SPACE_MASS_MULTIPLIER;
-
-            part.mass = basePartMass + additionalMass;
+            float spaceDelta = diskSpace - baseDiskSpace;
+            additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
+            additionalMass = spaceDelta * diskSpaceMassFactor;
         }
 
         //implement IPartMassModifier component
@@ -232,8 +234,7 @@ namespace kOS.Module
         {
             // the 'sit' arg is irrelevant to us, but the interface requires it.
             
-            return part.mass - defaultMass; //copied this fix from ProceduralParts mod as we already changed part.mass
-            //return additionalMass;
+            return baseModuleMass + additionalMass;
         }
         //implement IPartMassModifier component
         public ModifierChangeWhen GetModuleMassChangeWhen()
@@ -248,16 +249,6 @@ namespace kOS.Module
             {
                 if (baseDiskSpace == 0)
                     baseDiskSpace = diskSpace;
-
-                if (System.Math.Abs(baseModuleCost) < 0.000001F)
-                    baseModuleCost = additionalCost;  //remember module cost before tweaks
-                else
-                    additionalCost = baseModuleCost; //reset module cost and update later in UpdateCostAndMass()
-
-                if (System.Math.Abs(basePartMass) < 0.000001F)
-                    basePartMass = part.mass;  //remember part mass before tweaks
-                else
-                    part.mass = basePartMass; //reset part mass to original value and update later in UpdateCostAndMass()
 
                 InitUI();
             }
