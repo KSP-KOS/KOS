@@ -6,6 +6,7 @@ namespace kOS.Safe.Module
         string BootFilename { get; set; }
 
         bool CheckCanBoot();
+        string Tag { get; }
     }
     public enum ProcessorModes { READY, STARVED, OFF };
 }

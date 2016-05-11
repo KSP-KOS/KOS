@@ -3,6 +3,7 @@ using kOS.Safe.Serialization;
 using kOS.Safe.Encapsulation;
 using System.Collections.Generic;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 using kOS.Safe;
 
 namespace kOS.Serialization
@@ -11,22 +12,20 @@ namespace kOS.Serialization
     {
         private readonly SharedObjects sharedObjects;
 
+        static SerializationMgr()
+        {
+            SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
+        }
+
         public SerializationMgr(SharedObjects sharedObjects)
         {
             this.sharedObjects = sharedObjects;
         }
 
-        public override SerializableStructure CreateInstance(string typeFullName, Dump data)
+
+        public override IDumper CreateAndLoad(string typeFullName, Dump data)
         {
-            var deserializedType = Type.GetType(typeFullName) ??
-                                   Type.GetType(typeFullName + ", " + typeof(SafeSerializationMgr).Assembly.FullName);
-
-            if (deserializedType == null)
-            {
-                throw new KOSSerializationException("Unrecognized type: " + typeFullName);
-            }
-
-            SerializableStructure instance = Activator.CreateInstance(deserializedType) as SerializableStructure;
+            IDumper instance = base.CreateInstance(typeFullName);
 
             if (instance is IHasSharedObjects)
             {

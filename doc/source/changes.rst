@@ -24,6 +24,55 @@ release.
 
 ****
 
+Changes in 0.20.0
+-----------------
+
+This release is functionally identical to v0.19.3, it is recompiled against the
+KSP 1.1 release binaries (build 1230)
+
+Changes in 0.19.3
+-----------------
+
+Interuptable Triggers
+:::::::::::::::::::::
+
+Triggers are no longer required to complete within a single update frame,
+allowing them to be more than the IPU instructions long.  This also means that
+they are no longer guaranteed to be atomic, and that long running triggers may
+prevent the execution of other triggers or the mainline code.  See
+:ref:`the trigger documentation <triggers>` for details.
+
+Script Profiling
+::::::::::::::::
+
+You may now profile the performance of your scripts to better understand how the
+underlying opcodes operate, as well as to identify slow executing sections of
+code.  See :ref:`the function ProfileResult <profileresult>` for more information.
+
+Compiled LOCK
+:::::::::::::
+
+In previous versions, attempting to create a lock with a duplicate identifier
+from within a compiled script would throw an error regarding label replacement.
+In this version, the handling of lock objects is updated to be more flexible at
+run-time, instead of relying on compile-time information.
+
+ON Using Expressions
+::::::::::::::::::::
+
+In previous versions, ``ON`` would not accept an expression as a parameter like
+this: ::
+
+    ON STAGE:READY {
+        PRINT "STAGE: " + STAGE:READY.
+    }
+    ON ROUND(MAX(2000, ALT:RADAR)) {
+        PRINT ROUND(ALT:RADAR).
+    }
+
+``ON`` will now evaluate the expression instead of treating it like a variable
+identifer.
+
 Changes in 0.19.2
 -----------------
 

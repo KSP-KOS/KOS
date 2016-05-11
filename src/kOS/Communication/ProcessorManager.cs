@@ -6,7 +6,7 @@ using kOS.Safe.Compilation;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 
-namespace kOS.InterProcessor
+namespace kOS.Communication
 {
     public class ProcessorManager
     {
@@ -53,7 +53,7 @@ namespace kOS.InterProcessor
         {
             kOSProcessor processor = GetProcessor(volume);
             var runCommand = new RunCommand {Program = program};
-            processor.ExecuteInterProcCommand(runCommand);            
+            processor.ExecuteInterProcCommand(runCommand);
         }
     }
 }

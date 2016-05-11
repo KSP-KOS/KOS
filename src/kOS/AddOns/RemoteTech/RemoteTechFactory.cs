@@ -1,6 +1,7 @@
 ﻿using kOS.Factories;
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
+using kOS.Communication;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -19,6 +20,11 @@ namespace kOS.AddOns.RemoteTech
         public IVolumeManager CreateVolumeManager(SharedObjects sharedObjects)
         {
             return new RemoteTechVolumeManager(sharedObjects);
+        }
+
+        public ConnectivityManager CreateConnectivityManager()
+        {
+            return new RemoteTechConnectivityManager();
         }
     }
 }

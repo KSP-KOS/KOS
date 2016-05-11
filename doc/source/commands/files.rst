@@ -330,13 +330,7 @@ WRITEJSON(OBJECT, FILENAME).
 
 Serializes the given object to JSON format and saves it under the given filename on the current volume.
 
-**Important:** only certain types of objects can be serialized. If a type is serializable then that fact
-is explicitly mentioned in the type's documentation like so:
-
-.. note::
-
-  This type is serializable.
-
+Go to :ref:`Serialization page <serialization>` to read more about serialization.
 
 Usage example::
 
@@ -353,7 +347,12 @@ Usage example::
 READJSON(FILENAME).
 -------------------
 
-Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them. Example::
+Reads the contents of a file previously created using ``WRITEJSON`` and deserializes them.
+
+Go to :ref:`Serialization page <serialization>` to read more about serialization.
+
+Example::
+
 
     SET L TO READJSON("output.json").
     PRINT L["key1"].

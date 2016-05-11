@@ -26,8 +26,8 @@ namespace kOS.Safe.Encapsulation.Suffixes
             var dblValue = System.Convert.ToDouble(value);
 
             base.Set(System.Math.Abs(stepIncrement) < 0.0001
-                ? Math.Clamp(dblValue, min, max)
-                : Math.ClampToIndent(dblValue, min, max, stepIncrement));
+                ? KOSMath.Clamp(dblValue, min, max)
+                : KOSMath.ClampToIndent(dblValue, min, max, stepIncrement));
         }
     }
 }

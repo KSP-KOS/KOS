@@ -231,8 +231,7 @@ namespace kOS.Function
                 throw new KOSException("File does not exist: " + fileName);
             }
 
-            object read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance);
-
+            Structure read = new SerializationMgr(shared).Deserialize(volumeFile.ReadAll().String, JsonFormatter.ReaderInstance) as SerializableStructure;
             ReturnValue = read;
         }
     }
