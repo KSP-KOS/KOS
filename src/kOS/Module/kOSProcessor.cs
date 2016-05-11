@@ -82,7 +82,7 @@ namespace kOS.Module
         public float diskSpaceCostFactor = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
-        public float diskSpaceMassFactor = 0.0000048829F;  //implies approx 20kg for 4096bytes of diskSpace
+        public float diskSpaceMassFactor = 0.0000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
 
         [KSPField(isPersistant = true, guiActive = false)]
         public int MaxPartId = 100;
