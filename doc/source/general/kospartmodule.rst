@@ -25,10 +25,10 @@ attached to the small disk shaped CPU part (KR-2402 b)::
 
     MODULE
     {
-	    name = kOSProcessor
-	    diskSpace = 5000
-	    ECPerBytePerSecond = 0
-	    ECPerInstruction = 0.000004
+        name = kOSProcessor
+        diskSpace = 5000
+        ECPerBytePerSecond = 0
+        ECPerInstruction = 0.000004
         # Optional fields shown below with default value
         baseDiskSpace = 0
         diskSpaceCostFactor = 0.0244140625
