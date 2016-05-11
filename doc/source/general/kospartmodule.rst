@@ -21,7 +21,8 @@ to the part (although this may cause strange interactions that are not
 officially supported).
 
 Here is an example of the kOS processor module : the one that is
-attached to the small disk shaped CPU part (KR-2402 b)::
+attached to the small disk shaped CPU part (KR-2402 b).  Optional fields
+have been added in comments for clarity::
 
     MODULE
     {
@@ -30,11 +31,11 @@ attached to the small disk shaped CPU part (KR-2402 b)::
         ECPerBytePerSecond = 0
         ECPerInstruction = 0.000004
         # Optional fields shown below with default value
-        baseDiskSpace = 0
-        diskSpaceCostFactor = 0.0244140625
-        baseModuleCost = 0
-        diskSpaceMassFactor = 0.0000048829
-        baseModuleMass = 0
+        # baseDiskSpace = 0
+        # diskSpaceCostFactor = 0.0244140625
+        # baseModuleCost = 0
+        # diskSpaceMassFactor = 0.0000048829
+        # baseModuleMass = 0
     }
 
 If you add a section like that to the part.cfg, via directly editing it,
