@@ -29,11 +29,12 @@ namespace kOS.Suffixed
             AddSuffix("REVERTTOLAUNCH", new NoArgsVoidSuffix(RevertToLaunch));
             AddSuffix("REVERTTOEDITOR", new NoArgsVoidSuffix(RevertToEditor));
             AddSuffix("REVERTTO", new OneArgsSuffix<StringValue>(RevertTo));
+            AddSuffix("CANQUICKSAVE", new Suffix<BooleanValue>(CanQuicksave));
             AddSuffix("QUICKSAVE", new NoArgsVoidSuffix(QuickSave));
             AddSuffix("QUICKLOAD", new NoArgsVoidSuffix(QuickLoad));
             AddSuffix("QUICKSAVETO", new OneArgsSuffix<StringValue>(QuickSaveTo));
             AddSuffix("QUICKLOADFROM", new OneArgsSuffix<StringValue>(QuickLoadFrom));
-            AddSuffix("QUICKSAVELIST", new NoArgsSuffix<ListValue>(GetQuicksaveList));
+            AddSuffix("QUICKSAVELIST", new Suffix<ListValue>(GetQuicksaveList));
             AddSuffix("ORIGINEDITOR", new Suffix<StringValue>(OriginatingEditor));
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
             AddSuffix("ACTIVEVESSEL", new SetSuffix<VesselTarget>(() => new VesselTarget(FlightGlobals.ActiveVessel, shared), SetActiveVessel));
@@ -142,6 +143,15 @@ namespace kOS.Suffixed
         public void DebugLog(StringValue message)
         {
             SafeHouse.Logger.Log("(KUNIVERSE:DEBUGLOG) " + message);
+        }
+
+        public BooleanValue CanQuicksave()
+        {
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
+            {
+                return true;
+            }
+            return false;
         }
         
         public void QuickSave()
