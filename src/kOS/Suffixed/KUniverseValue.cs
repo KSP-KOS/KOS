@@ -147,7 +147,7 @@ namespace kOS.Suffixed
 
         public BooleanValue CanQuicksave()
         {
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR)
             {
                 return true;
             }
@@ -184,9 +184,12 @@ namespace kOS.Suffixed
 
         private void SaveGame(string name)
         {
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR)
             {
-                GamePersistence.SaveGame(name, HighLogic.SaveFolder, SaveMode.OVERWRITE);
+                var game = HighLogic.CurrentGame.Updated();
+                game.startScene = GameScenes.FLIGHT;
+                GamePersistence.SaveGame(game, name, HighLogic.SaveFolder, SaveMode.OVERWRITE);
+                game.startScene = GameScenes.SPACECENTER;
             }
             else throw new KOSException("KSP prevents using quicksave currently.");
         }
