@@ -21,14 +21,21 @@ to the part (although this may cause strange interactions that are not
 officially supported).
 
 Here is an example of the kOS processor module : the one that is
-attached to the small disk shaped CPU part (KR-2402 b)::
+attached to the small disk shaped CPU part (KR-2402 b).  Optional fields
+have been added in comments for clarity::
 
     MODULE
     {
-	    name = kOSProcessor
-	    diskSpace = 5000
-	    ECPerBytePerSecond = 0
-	    ECPerInstruction = 0.000004
+        name = kOSProcessor
+        diskSpace = 5000
+        ECPerBytePerSecond = 0
+        ECPerInstruction = 0.000004
+        # Optional fields shown below with default value
+        # baseDiskSpace = 0
+        # diskSpaceCostFactor = 0.0244140625
+        # baseModuleCost = 0
+        # diskSpaceMassFactor = 0.0000048829
+        # baseModuleMass = 0
     }
 
 If you add a section like that to the part.cfg, via directly editing it,
@@ -105,4 +112,64 @@ by a re-balancing mod by changing this value.  This value is
 multiplied by how much available space there is total (used + free),
 not just how much is currently in use.
 
-.. _electriccharge:
+.. _diskSpaceCostFactor:
+
+diskSpaceCostFactor:
+--------------------
+
+   - **Type:** float
+   - **Default if omitted:** 0.0244140625
+   - **Effect:** How much additional cost is incurred per
+     byte of disk space added via the editor tweakable.
+
+When using the editor tweakable to increase storage, cost is added to the
+module.  That additional cost is found by multiplying the number of additional
+bytes by this factor.  The default value is balanced for approximately 100
+additional funds for 4096 Bytes.
+
+.. _baseModuleCost:
+
+baseModuleCost:
+---------------
+
+   - **Type:** float
+   - **Default if omitted:** 0.0
+   - **Effect:** How much cost is added to the part cost by including this
+     module.
+
+While kOS only includes kOSProcessor in dedicated parts, users may choose to add
+it to existing parts by editing cfg files or using a ModuleManager patch.  In
+cases where the cost of a part may depend on multiple PartModules this allows
+you to specify the cost for the kOSProcessor itself without changing the part's
+cost directly.
+
+.. _diskSpaceMassFactor:
+
+diskSpaceMassFactor:
+--------------------
+
+   - **Type:** float
+   - **Default if omitted:** 0.0000048829
+   - **Effect:** How much additional cost is incurred per
+     byte of disk space added via the editor tweakable.
+
+When using the editor tweakable to increase storage, mass is added to the
+module.  That additional mass is found by multiplying the number of additional
+bytes by this factor.  The default value is balanced for approximately 0.02kg
+of additional mass for 4096 Bytes.
+
+.. _baseModuleMass:
+
+baseModuleMass:
+---------------
+
+   - **Type:** float
+   - **Default if omitted:** 0.0
+   - **Effect:** How much mass is added to the part cost by including this
+     module.
+
+While kOS only includes kOSProcessor in dedicated parts, users may choose to add
+it to existing parts by editing cfg files or using a ModuleManager patch.  In
+cases where the mass of a part may depend on multiple PartModules this allows
+you to specify the mass for the kOSProcessor itself without changing the part's
+mass directly.
