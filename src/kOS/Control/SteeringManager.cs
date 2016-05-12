@@ -2,57 +2,54 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
+using kOS.Control;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Math = System.Math;
 
-namespace kOS.Binding
+namespace kOS.Control
 {
     [kOS.Safe.Utilities.KOSNomenclature("SteeringManager")]
-    public class SteeringManager : Structure, IDisposable
+    public class SteeringManager : Structure, IDisposable, IFlightControlParameter
     {
-        public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
+        public static void Copy(SteeringManager origin, SteeringManager destination)
         {
-            SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
-            instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
-            instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
-            instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
-            instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
-            instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
-            instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
-            instance.MaxStoppingTime = oldInstance.MaxStoppingTime;
+            destination.ShowAngularVectors = origin.ShowAngularVectors;
+            destination.ShowFacingVectors = origin.ShowFacingVectors;
+            destination.ShowSteeringStats = origin.ShowSteeringStats;
+            destination.WriteCSVFiles = origin.WriteCSVFiles;
+            destination.MaxStoppingTime = origin.MaxStoppingTime;
 
-            instance.pitchPI.Ts = oldInstance.pitchPI.Ts;
-            instance.yawPI.Ts = oldInstance.yawPI.Ts;
-            instance.rollPI.Ts = oldInstance.rollPI.Ts;
-            instance.pitchPI.Loop = PIDLoop.DeepCopy(oldInstance.pitchPI.Loop);
-            instance.yawPI.Loop = PIDLoop.DeepCopy(oldInstance.yawPI.Loop);
-            instance.rollPI.Loop = PIDLoop.DeepCopy(oldInstance.rollPI.Loop);
+            destination.pitchPI.Ts = origin.pitchPI.Ts;
+            destination.yawPI.Ts = origin.yawPI.Ts;
+            destination.rollPI.Ts = origin.rollPI.Ts;
+            destination.pitchPI.Loop = PIDLoop.DeepCopy(origin.pitchPI.Loop);
+            destination.yawPI.Loop = PIDLoop.DeepCopy(origin.yawPI.Loop);
+            destination.rollPI.Loop = PIDLoop.DeepCopy(origin.rollPI.Loop);
 
-            instance.pitchRatePI = PIDLoop.DeepCopy(oldInstance.pitchRatePI);
-            instance.yawRatePI = PIDLoop.DeepCopy(oldInstance.yawRatePI);
-            instance.rollRatePI = PIDLoop.DeepCopy(oldInstance.rollRatePI);
+            destination.pitchRatePI = PIDLoop.DeepCopy(origin.pitchRatePI);
+            destination.yawRatePI = PIDLoop.DeepCopy(origin.yawRatePI);
+            destination.rollRatePI = PIDLoop.DeepCopy(origin.rollRatePI);
 
-            instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
-            instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
-            instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
-            instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
-            instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
-            instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
-            return instance;
+            destination.PitchTorqueAdjust = origin.PitchTorqueAdjust;
+            destination.PitchTorqueFactor = origin.PitchTorqueFactor;
+            destination.RollTorqueAdjust = origin.RollTorqueAdjust;
+            destination.RollTorqueFactor = origin.RollTorqueFactor;
+            destination.YawTorqueAdjust = origin.YawTorqueAdjust;
+            destination.YawTorqueFactor = origin.YawTorqueFactor;
         }
+
+        private Vessel internalVessel;
 
         public Vessel Vessel
         {
             get
             {
-                return shared.Vessel;
+                return internalVessel;
             }
         }
-
-        public List<uint> SubscribedParts = new List<uint>();
 
         private SharedObjects shared;
 
@@ -99,10 +96,6 @@ namespace kOS.Binding
 
         public bool ShowAngularVectors { get; set; }
 
-        public bool ShowThrustVectors { get; set; }
-
-        public bool ShowRCSVectors { get; set; }
-
         public bool ShowSteeringStats { get; set; }
 
         public bool WriteCSVFiles { get; set; }
@@ -110,9 +103,9 @@ namespace kOS.Binding
         private const string FILE_BASE_NAME = "{0}-{1}-{2}.csv";
         private readonly string fileDateString = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
-        public object Value { get; set; }
+        public Direction Value { get; set; }
 
-        public Direction TargetDirection { get { return GetDirectionFromValue(); } }
+        public Direction TargetDirection { get { return Value == null ? new Direction() : Value; } }
 
         private Transform vesselTransform;
 
@@ -139,12 +132,6 @@ namespace kOS.Binding
         private readonly MovingAverage rollTorqueCalc = new MovingAverage { SampleLimit = 15 };
 
         private bool EnableTorqueAdjust { get; set; }
-
-        private readonly MovingAverage pitchMOICalc = new MovingAverage { SampleLimit = 5 };
-        private readonly MovingAverage yawMOICalc = new MovingAverage { SampleLimit = 5 };
-        private readonly MovingAverage rollMOICalc = new MovingAverage { SampleLimit = 5 };
-
-        private bool enableMoiAdjust;
 
         public MovingAverage AverageDuration = new MovingAverage { SampleLimit = 60 };
 
@@ -191,14 +178,10 @@ namespace kOS.Binding
         public double RollTorqueFactor { get; set; }
 
         private int vesselParts;
-        private double vesselMass = 0;
 
         #endregion doubles
-
-        private readonly List<ModuleReactionWheel> reactionWheelModules = new List<ModuleReactionWheel>();
-        private readonly List<ModuleRCS> rcsModules = new List<ModuleRCS>();
-        private readonly List<ModuleEngines> engineModules = new List<ModuleEngines>();
-        private readonly List<ModuleGimbal> gimbalModules = new List<ModuleGimbal>();
+        
+        private readonly Dictionary<PartModule, ITorqueProvider> torqueProviders = new Dictionary<PartModule, ITorqueProvider>();
 
         private Quaternion vesselRotation;
         private Quaternion targetRot;
@@ -217,7 +200,6 @@ namespace kOS.Binding
         private Vector3d targetStarboard;
 
         private Vector3d adjustTorque;
-        private Vector3d adjustMomentOfInertia;
 
         private Vector3d omega = Vector3d.zero; // x: pitch, y: yaw, z: roll
         private Vector3d lastOmega = Vector3d.zero;
@@ -225,17 +207,8 @@ namespace kOS.Binding
         private Vector3d momentOfInertia = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d measuredMomentOfInertia = Vector3d.zero;
         private Vector3d measuredTorque = Vector3d.zero;
-        private Vector3d staticTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d controlTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d rawTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
-        private Vector3d staticEngineTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
-        private Vector3d controlEngineTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
-
-        private readonly List<ForceVector> rcsVectors = new List<ForceVector>();
-        private readonly List<ForceVector> engineNeutVectors = new List<ForceVector>();
-        private readonly List<ForceVector> enginePitchVectors = new List<ForceVector>();
-        private readonly List<ForceVector> engineYawVectors = new List<ForceVector>();
-        private readonly List<ForceVector> engineRollVectors = new List<ForceVector>();
 
         #endregion Vectors
 
@@ -261,18 +234,17 @@ namespace kOS.Binding
         private VectorRenderer vTgtTorqueY;
         private VectorRenderer vTgtTorqueZ;
 
-        private readonly Dictionary<string, VectorRenderer> vEngines = new Dictionary<string, VectorRenderer>();
-        private readonly Dictionary<string, VectorRenderer> vRcs = new Dictionary<string, VectorRenderer>();
-
         #endregion VectorRenderers
 
-        public SteeringManager(SharedObjects sharedObj)
+        public SteeringManager(SharedObjects sharedObj) : this(sharedObj.Vessel)
         {
-            shared = sharedObj;
+        }
+
+        public SteeringManager(Vessel vessel)
+        {
+            internalVessel = vessel;
             ShowFacingVectors = false;
             ShowAngularVectors = false;
-            ShowThrustVectors = false;
-            ShowRCSVectors = false;
             ShowSteeringStats = false;
             WriteCSVFiles = false;
 
@@ -297,10 +269,8 @@ namespace kOS.Binding
             adjustTorqueWriter = null;
 
             adjustTorque = Vector3d.zero;
-            adjustMomentOfInertia = Vector3d.one;
 
-            enableMoiAdjust = false;
-            EnableTorqueAdjust = true;
+            EnableTorqueAdjust = false;
 
             MaxStoppingTime = 2;
 
@@ -325,8 +295,22 @@ namespace kOS.Binding
             AddSuffix("RESETPIDS", new NoArgsVoidSuffix(ResetIs));
             AddSuffix("SHOWFACINGVECTORS", new SetSuffix<BooleanValue>(() => ShowFacingVectors, value => ShowFacingVectors = value));
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
-            AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() => ShowThrustVectors, value => ShowThrustVectors = value));
-            AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() => ShowRCSVectors, value => ShowRCSVectors = value));
+            AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() =>
+                {
+                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
+                },
+                value =>
+                {
+                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
+                }));
+            AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() =>
+                {
+                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
+                },
+                value =>
+                {
+                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
+                }));
             AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<BooleanValue>(() => ShowSteeringStats, value => ShowSteeringStats = value));
             AddSuffix("WRITECSVFILES", new SetSuffix<BooleanValue>(() => WriteCSVFiles, value => WriteCSVFiles = value));
             AddSuffix("PITCHTS", new SetSuffix<ScalarValue>(() => pitchPI.Ts, value => pitchPI.Ts = value));
@@ -350,11 +334,11 @@ namespace kOS.Binding
             AddSuffix("CONTROLTORQUE", new Suffix<Vector>(() => new Vector(controlTorque)));
             AddSuffix("MEASUREDTORQUE", new Suffix<Vector>(() => new Vector(measuredTorque)));
             AddSuffix("RAWTORQUE", new Suffix<Vector>(() => new Vector(rawTorque)));
+            AddSuffix("ADJUSTTORQUE", new Suffix<Vector>(() => new Vector(adjustTorque)));
             AddSuffix("TARGETTORQUE", new Suffix<Vector>(() => new Vector(tgtPitchTorque, tgtRollTorque, tgtYawTorque)));
             AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
             AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
             AddSuffix("ENABLETORQUEADJUST", new SetSuffix<BooleanValue>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
-            AddSuffix("ENABLEMOIADJUST", new SetSuffix<BooleanValue>(() => enableMoiAdjust, value => enableMoiAdjust = value));
 #endif
         }
 
@@ -372,13 +356,18 @@ namespace kOS.Binding
             yawTorqueCalc.Reset();
 
             adjustTorque = Vector3d.zero;
-            adjustMomentOfInertia = Vector3d.one;
         }
 
         public void DisableControl()
         {
-            if (enabled && partId != shared.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Cannon unbind Steering Manager on this ship in use by another processor.");
+            partId = 0;
+            Enabled = false;
+        }
+
+        public void DisableControl(SharedObjects sharedObj)
+        {
+            if (enabled && partId != sharedObj.KSPPart.flightID)
+                throw new Safe.Exceptions.KOSException("Cannot unbind Steering Manager on this ship in use by another processor.");
             partId = 0;
             Enabled = false;
         }
@@ -431,57 +420,83 @@ namespace kOS.Binding
 
         private void Update(FlightCtrlState c)
         {
-            if (Value == null) return;
+            if (Value == null)
+            {
+                SafeHouse.Logger.LogError("SteeringManager.Update: Value is <null>");
+                return;
+            }
 
+            sw.Reset();
+            sw.Start();
             lastSessionTime = sessionTime;
-            sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
+            sessionTime = shared.UpdateHandler.CurrentFixedTime;
+            if (sessionTime - lastSessionTime > 1) ResetIs();
             //if (sessionTime > lastSessionTime)
             //{
             //}
-            sw.Reset();
-            sw.Start();
-            UpdateStateVectors();
-            UpdateControlParts();
-            UpdateTorque();
-            UpdatePredictionPI();
-            UpdateControl(c);
-            if (ShowSteeringStats) PrintDebug();
-            if (WriteCSVFiles) WriteCSVs();
-            UpdateVectorRenders();
+            if (shared.Vessel.ActionGroups[KSPActionGroup.SAS])
+            {
+                UpdateStateVectors();
+                UpdateControl(c);
+                UpdateVectorRenders();
+            }
+            else
+            {
+                UpdateStateVectors();
+                UpdateControlParts();
+                UpdateTorque();
+                UpdatePredictionPI();
+                UpdateControl(c);
+                if (ShowSteeringStats) PrintDebug();
+                if (WriteCSVFiles) WriteCSVs();
+                UpdateVectorRenders();
+            }
             sw.Stop();
             AverageDuration.Update((double)sw.ElapsedTicks / (double)System.TimeSpan.TicksPerMillisecond);
         }
 
-        private Direction GetDirectionFromValue()
+        private Direction GetDirectionFromValue(object value)
         {
-            if (Value is Direction)
-                return (Direction)Value;
-            else if (Value is Vector)
-                return Direction.LookRotation((Vector)Value, vesselUp);
-            else if (Value is Node)
-                return Direction.LookRotation(((Node)Value).GetBurnVector(), vesselUp);
-            else if (Value is string)
+            // The vesselUp vector is used when calculating the "up" vector of the direction, and it
+            // is OK that it's a stale reference since LookRotation only uses the projection of the
+            // vector anyways (essentially the "up" vector, excluding the "look at" vector).
+            if (value is Direction)
+                return (Direction)value;
+            else if (value is Vector)
+                return Direction.LookRotation((Vector)value, vesselUp);
+            else if (value is Node)
+                return Direction.LookRotation(((Node)value).GetBurnVector(), vesselUp);
+            else if (value is string || value is StringValue)
             {
-                if (string.Equals((string)Value, "KILL", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(value.ToString(), "KILL", StringComparison.OrdinalIgnoreCase))
                 {
+                    // For the value of "KILL" keep the vessel rotation pointed at the previous rotation.
+                    // This value is intentionally stale from the last update, with the hope that it will
+                    // lead to quicker stopping (essentially each update frame become a bisection).  It
+                    // may however cause oscillation, so there may be need in the future to update the
+                    // rotation instead.
                     return new Direction(vesselRotation);
                 }
             }
-            DisableControl();
+            // Bindings pass primatives instead of encapsulated values, so we want to encapsulate the value
+            // before throwing a type exception so that we can report the urser friendly type, instead of C#.
+            value = Structure.FromPrimitive(value);
             throw new Safe.Exceptions.KOSWrongControlValueTypeException(
-                "STEERING", Value.GetType().Name, "Direction, Vector, Maneuver Node, or special string \"KILL\"");
+                "STEERING", KOSNomenclature.GetKOSName(value.GetType()), "Direction, Vector, Maneuver Node, or special string \"KILL\"");
         }
 
         public void UpdateStateVectors()
         {
-            Direction targetdir = GetDirectionFromValue();
-            if (targetdir == null)
+            if (Value == null)
             {
-                shared.Logger.LogWarning(string.Format("SteeringManager target direction is null, Value = {0}", Value));
+                // There is a single dead frame where the steering manager is enabled, but the trigger has not
+                // yet been run to update Value.  Skip the update in these cases, but log it in case we find a
+                // time where the trigger and steering manager are no longer synced.
+                shared.Logger.LogWarning("SteeringManager target direction is null, skipping this update.");
                 return;
             }
 
-            targetRot = targetdir.Rotation;
+            targetRot = Value.Rotation;
             centerOfMass = shared.Vessel.findWorldCenterOfMass();
 
             vesselTransform = shared.Vessel.ReferenceTransform;
@@ -512,30 +527,11 @@ namespace kOS.Binding
                 double dt = sessionTime - lastSessionTime;
                 angularAcceleration = (omega - oldOmega) / dt;
                 angularAcceleration = new Vector3d(angularAcceleration.x, angularAcceleration.z, angularAcceleration.y);
-                if (enableMoiAdjust)
-                {
-                    measuredMomentOfInertia = new Vector3d(
-                        controlTorque.x * accPitch / angularAcceleration.x,
-                        controlTorque.y * accRoll / angularAcceleration.y,
-                        controlTorque.z * accYaw / angularAcceleration.z);
-
-                    if (Math.Abs(accPitch) > EPSILON)
-                    {
-                        adjustMomentOfInertia.x = pitchMOICalc.Update(Math.Abs(measuredMomentOfInertia.x) / momentOfInertia.x);
-                    }
-                    if (Math.Abs(accYaw) > EPSILON)
-                    {
-                        adjustMomentOfInertia.z = yawMOICalc.Update(Math.Abs(measuredMomentOfInertia.z) / momentOfInertia.z);
-                    }
-                    if (Math.Abs(accRoll) > EPSILON)
-                    {
-                        adjustMomentOfInertia.y = rollMOICalc.Update(Math.Abs(measuredMomentOfInertia.y) / momentOfInertia.y);
-                    }
-                }
             }
-
-            momentOfInertia = shared.Vessel.findLocalMOI(centerOfMass);
-            momentOfInertia.Scale(adjustMomentOfInertia);
+            
+            // TODO: This is a temporary fix for the Moment of Inertial  This can be removed after the next KSP release.
+            //momentOfInertia = shared.Vessel.MOI;
+            momentOfInertia = FindMoI();
             adjustTorque = Vector3d.zero;
             measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
 
@@ -567,48 +563,15 @@ namespace kOS.Binding
             if (shared.Vessel.parts.Count != vesselParts)
             {
                 vesselParts = shared.Vessel.parts.Count;
-                reactionWheelModules.Clear();
-                rcsModules.Clear();
-                engineModules.Clear();
-                gimbalModules.Clear();
-                clearEngineRCSVectors();
+                torqueProviders.Clear();
                 foreach (Part part in shared.Vessel.Parts)
                 {
-                    int engineCount = 0;
-                    ModuleGimbal partGimbal = null;
                     foreach (PartModule pm in part.Modules)
                     {
-                        ModuleReactionWheel wheel = pm as ModuleReactionWheel;
-                        if (wheel != null)
+                        ITorqueProvider tp = pm as ITorqueProvider;
+                        if (tp != null)
                         {
-                            reactionWheelModules.Add(wheel);
-                            continue;
-                        }
-                        ModuleRCS rcs = pm as ModuleRCS;
-                        if (rcs != null)
-                        {
-                            rcsModules.Add(rcs);
-                            continue;
-                        }
-                        ModuleGimbal gimbal = pm as ModuleGimbal;
-                        if (gimbal != null)
-                        {
-                            partGimbal = gimbal;
-                            if (engineCount > 0)
-                            {
-                                for (int i = 0; i < engineCount; i++)
-                                {
-                                    gimbalModules[gimbalModules.Count - i - 1] = gimbal;
-                                }
-                            }
-                            continue;
-                        }
-                        ModuleEngines engine = pm as ModuleEngines;
-                        if (engine != null)
-                        {
-                            engineCount++;
-                            engineModules.Add(engine);
-                            gimbalModules.Add(partGimbal);
+                            torqueProviders.Add(pm, tp);
                         }
                     }
                 }
@@ -617,260 +580,19 @@ namespace kOS.Binding
 
         public void UpdateTorque()
         {
-            // staticTorque will represent engine torque due to imbalanced placement
-            staticTorque.Zero();
             // controlTorque is the maximum amount of torque applied by setting a control to 1.0.
             controlTorque.Zero();
             rawTorque.Zero();
-            staticEngineTorque.Zero();
-            controlEngineTorque.Zero();
             Vector3d pitchControl = Vector3d.zero;
             Vector3d yawControl = Vector3d.zero;
             Vector3d rollControl = Vector3d.zero;
 
-            rcsVectors.Clear();
-            engineNeutVectors.Clear();
-            enginePitchVectors.Clear();
-            engineYawVectors.Clear();
-            engineRollVectors.Clear();
-
-            foreach (ModuleReactionWheel wheel in reactionWheelModules)
+            foreach (var pm in torqueProviders.Keys)
             {
-                if (wheel.isActiveAndEnabled && wheel.State == ModuleReactionWheel.WheelState.Active)
-                {
-                    // TODO: Check to see if the component values depend on part orientation, and implement if needed.
-                    rawTorque.x += wheel.PitchTorque;
-                    rawTorque.z += wheel.YawTorque;
-                    rawTorque.y += wheel.RollTorque;
-                }
+                var tp = torqueProviders[pm];
+                var torque = tp.GetPotentialTorque();
+                rawTorque += torque;
             }
-            if (shared.Vessel.ActionGroups[KSPActionGroup.RCS])
-            {
-                foreach (ModuleRCS rcs in rcsModules)
-                {
-                    if (rcs.rcsEnabled && !rcs.part.ShieldedFromAirstream)
-                    {
-                        for (int i = 0; i < rcs.thrusterTransforms.Count; i++)
-                        {
-                            Transform thrustdir = rcs.thrusterTransforms[i];
-                            ForceVector force = new ForceVector
-                            {
-                                Force = thrustdir.up * rcs.thrusterPower,
-                                Position = thrustdir.position - centerOfMass,
-                                // We need to adjust the relative center of mass because the rigid body
-                                // will report the position of the parent part
-                                ID = rcs.part.flightID.ToString() + "-" + i.ToString()
-                            };
-                            Vector3d torque = force.Torque;
-                            rcsVectors.Add(force);
-
-                            // component values of the local torque are calculated using the dot product with the rotation axis.
-                            // Only using positive contributions, which is only valid when symmetric placement is assumed
-                            rawTorque.x += Math.Max(Vector3d.Dot(torque, vesselStarboard), 0);
-                            rawTorque.z += Math.Max(Vector3d.Dot(torque, vesselTop), 0);
-                            rawTorque.y += Math.Max(Vector3d.Dot(torque, vesselForward), 0);
-                        }
-                    }
-                }
-            }
-            for (int i = 0; i < engineModules.Count; i++)
-            {
-                ModuleEngines engine = engineModules[i];
-                ModuleGimbal gimbal = gimbalModules[i];
-                if (engine.isActiveAndEnabled && engine.EngineIgnited)
-                {
-                    // if the engine is active and ignited, calculate torque
-                    float gimbalRange = 0;
-                    List<Quaternion> initRots = new List<Quaternion>();
-                    if (gimbal != null && !gimbal.gimbalLock)
-                    {
-                        gimbalRange = gimbal.gimbalRange * gimbal.gimbalLimiter / 100;  // grab the gimbal range
-
-                        // To determine the neutral thrust vector, we reset the gimbal transform to it's "initial" value
-                        // from the initRots array and then read the direction from the thrustTransform.  We do this for
-                        // each gimbal object, and then return them to the previous value after calculating the thrust
-                        // transforms, so that we don't inerupt the gimbal logic.
-                        for (int gblIdx = 0; gblIdx < gimbal.gimbalTransforms.Count; gblIdx++)
-                        {
-                            initRots.Add(gimbal.gimbalTransforms[gblIdx].localRotation); // store the current rotation
-                            gimbal.gimbalTransforms[gblIdx].localRotation = gimbal.initRots[gblIdx]; // set the rotation to the "initial" value
-                        }
-                    }
-                    for (int xfrmIdx = 0; xfrmIdx < engine.thrustTransforms.Count; xfrmIdx++)
-                    {
-                        // iterate through each thrust transform.  Some engines have multiple transforms for
-                        // thrust and/or gimbal, so we need to be able to use as many as the part contains.
-                        Transform thrustTransform = engine.thrustTransforms[xfrmIdx];
-                        Vector3d position = thrustTransform.position;
-                        if (gimbal != null && !gimbal.gimbalLock)
-                        {
-                            Transform gimbalTransform = FindParentTransform(thrustTransform, gimbal.gimbalTransformName, engine.part.transform);
-                            if (gimbalTransform != null)
-                            {
-                                // The gimbal position will not move as the gimbal rotates.  As of KSP 1.0.5, the Vector engine appears
-                                // to be the only engine that moves it's thrust transform location, because the transform itself is located
-                                // at the end of the nozzel.  Doing so means that our calculated available torque could very well be inaccurate
-                                // specifically in the case of roll torque, where it may appear that an axial engine's thrust transform is offset from the
-                                // vessel's axial centerline when in fact the axial engine can produce no roll torque.
-                                // If there is ever an engine where the thrust transform does not align to the gimbal transform, this assumption
-                                // will no longer be valid.
-                                position = gimbalTransform.position;  // use the gimbal position as the thrust position
-                            }
-                        }
-                        Vector3d neut = -engine.thrustTransforms[xfrmIdx].forward * engine.finalThrust / engine.thrustTransforms.Count; // the neutral control thrust (force is opposite of exhaust direction)
-                        Vector3d relCom = position - centerOfMass;
-
-                        string id = string.Format("{0}[{1}]", engine.part.flightID, xfrmIdx);
-
-                        // calculate the neutral gimbal force vector based on the neutral direction and thrust magnitude
-                        ForceVector neutralForce = new ForceVector
-                        {
-                            Force = neut,
-                            ID = id,
-                            Position = relCom,
-                        };
-                        engineNeutVectors.Add(neutralForce);
-                        staticEngineTorque += neutralForce.Torque;
-                        if (gimbalRange > EPSILON) // only do the gimbal calculation if the range allows it.
-                        {
-                            Vector3d pitchAxis = Vector3d.Exclude(neut, vesselStarboard);  // pitch rotates about the starboard vector
-                            Vector3d yawAxis = Vector3d.Exclude(neut, vesselTop);  // yaw rotates about the top vector
-                            Vector3d rollAxis = Vector3d.Exclude(vesselForward, relCom);  // roll rotates about the forward vector
-                            ForceVector pitchForce = new ForceVector
-                            {
-                                Force = Quaternion.AngleAxis(gimbalRange, pitchAxis) * neut,
-                                ID = id,
-                                Position = relCom
-                            };
-                            enginePitchVectors.Add(pitchForce);
-                            pitchControl += pitchForce.Torque;
-                            ForceVector yawForce = new ForceVector
-                            {
-                                Force = Quaternion.AngleAxis(gimbalRange, yawAxis) * neut,
-                                ID = id,
-                                Position = relCom
-                            };
-                            engineYawVectors.Add(yawForce);
-                            yawControl += yawForce.Torque;
-                            ForceVector rollForce;
-
-                            // because of deflection, sometimes an axial engine will look like it can 
-                            // generate roll torque when it cannot do so reliably.  Ignore small offsets.
-                            if (rollAxis.sqrMagnitude < 0.02)
-                            {
-                                rollForce = neutralForce;
-                                rollForce = new ForceVector
-                                {
-                                    Force = neutralForce.Force,
-                                    ID = id,
-                                    Position = neutralForce.Position
-                                };
-                            }
-                            else
-                            {
-                                rollForce = new ForceVector
-                                {
-                                    Force = Quaternion.AngleAxis(gimbalRange, rollAxis) * neut,
-                                    ID = id,
-                                    Position = relCom
-                                };
-                            }
-                            engineRollVectors.Add(rollForce);
-                            rollControl += rollForce.Torque;
-                        }
-                        else
-                        {
-                            // if there is no gimbal available, or it's too small, just clone the neutral thrust vector
-                            enginePitchVectors.Add(new ForceVector
-                            {
-                                Force = neutralForce.Force,
-                                ID = id,
-                                Position = neutralForce.Position
-                            });
-                            engineYawVectors.Add(new ForceVector
-                            {
-                                Force = neutralForce.Force,
-                                ID = id,
-                                Position = neutralForce.Position
-                            });
-                            engineRollVectors.Add(new ForceVector
-                            {
-                                Force = neutralForce.Force,
-                                ID = id,
-                                Position = neutralForce.Position
-                            });
-
-                            pitchControl += neutralForce.Torque;
-                            yawControl += neutralForce.Torque;
-                            rollControl += neutralForce.Torque;
-                        }
-                    }
-                    if (gimbal != null && !gimbal.gimbalLock)
-                    {
-                        // Reset each of the gimbal rotations back to their previous values.  This prevents
-                        // our calculations from interupting the internal gimbal logic, since some gimbals
-                        // do not rotate instantly.
-                        for (int gblIdx = 0; gblIdx < gimbal.gimbalTransforms.Count; gblIdx++)
-                        {
-                            gimbal.gimbalTransforms[gblIdx].localRotation = initRots[gblIdx]; // set the rotation to the previous value
-                        }
-                    }
-                }
-                else
-                {
-                    // if an engine is disabled, hide the associated vectors (do this for all transforms)
-                    for (int xfrmIdx = 0; xfrmIdx < engine.thrustTransforms.Count; xfrmIdx++)
-                    {
-                        string key = string.Format("{0}[{1}]", engine.part.flightID, xfrmIdx);
-                        if (vEngines.Keys.Contains(key))
-                        {
-                            vEngines[key].SetShow(false);
-                            vEngines.Remove(key);
-                        }
-                        key = engine.part.flightID.ToString() + "gimbaled";
-                        if (vEngines.Keys.Contains(key))
-                        {
-                            vEngines[key].SetShow(false);
-                            vEngines.Remove(key);
-                        }
-                        key = engine.part.flightID.ToString() + "torque";
-                        if (vEngines.Keys.Contains(key))
-                        {
-                            vEngines[key].SetShow(false);
-                            vEngines.Remove(key);
-                        }
-                        key = engine.part.flightID.ToString() + "control";
-                        if (vEngines.Keys.Contains(key))
-                        {
-                            vEngines[key].SetShow(false);
-                            vEngines.Remove(key);
-                        }
-                        key = engine.part.flightID.ToString() + "position";
-                        if (vEngines.Keys.Contains(key))
-                        {
-                            vEngines[key].SetShow(false);
-                            vEngines.Remove(key);
-                        }
-                    }
-                }
-            }
-
-            // Because the engines may generate torque about the other 2 axes when trying to rotate about one,
-            // use a dot product to get the component of the torque in the desired direction.  Also subtract out
-            // the static engine torque, to account for offset placement.  This still does not properly balance
-            // engines that are offset, since the available torque may be drastically different between the
-            // positive and negative limit.  If there is a large static torque, it's also possible for the
-            // calculation to show that there is a small amount of available torque, even though the static
-            // torque will actually overpower the control torque.  Eventually it would be nice to modify this
-            // calculation to properly handle asymetric gimbal torque, but for now it will need to be a
-            // constraint of ship design.
-            controlEngineTorque.x = Math.Abs(Vector3d.Dot(pitchControl - staticEngineTorque, vesselStarboard));
-            controlEngineTorque.z = Math.Abs(Vector3d.Dot(yawControl - staticEngineTorque, vesselTop));
-            controlEngineTorque.y = Math.Abs(Vector3d.Dot(rollControl - staticEngineTorque, vesselForward));
-
-            rawTorque.x += controlEngineTorque.x;
-            rawTorque.z += controlEngineTorque.z;
-            rawTorque.y += controlEngineTorque.y;
 
             rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
             rawTorque.z = (rawTorque.z + YawTorqueAdjust) * YawTorqueFactor;
@@ -885,6 +607,61 @@ namespace kOS.Binding
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
         }
+
+        #region TEMPORARY MOI CALCULATION
+        // TODO: This is a temporary fix for the Moment of Inertial  This can be removed after the next KSP release.
+        public Vector3 FindMoI()
+        {
+            var tensor = Matrix4x4.zero;
+            Matrix4x4 partTensor = Matrix4x4.identity;
+            Matrix4x4 inertiaMatrix = Matrix4x4.identity;
+            Matrix4x4 productMatrix = Matrix4x4.identity;
+            foreach (var part in Vessel.Parts)
+            {
+                if (part.rb != null)
+                {
+                    KSPUtil.ToDiagonalMatrix2(part.rb.inertiaTensor, ref partTensor);
+
+                    Quaternion rot = Quaternion.Inverse(vesselRotation) * part.transform.rotation * part.rb.inertiaTensorRotation;
+                    Quaternion inv = Quaternion.Inverse(rot);
+
+                    Matrix4x4 rotMatrix = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
+                    Matrix4x4 invMatrix = Matrix4x4.TRS(Vector3.zero, inv, Vector3.one);
+
+                    // add the part inertiaTensor to the ship inertiaTensor
+                    KSPUtil.Add(ref tensor, rotMatrix * partTensor * invMatrix);
+
+                    Vector3 position = vesselTransform.InverseTransformDirection(part.rb.position - centerOfMass);
+
+                    // add the part mass to the ship inertiaTensor
+                    KSPUtil.ToDiagonalMatrix2(part.rb.mass * position.sqrMagnitude, ref inertiaMatrix);
+                    KSPUtil.Add(ref tensor, inertiaMatrix);
+
+                    // add the part distance offset to the ship inertiaTensor
+                    OuterProduct2(position, -part.rb.mass * position, ref productMatrix);
+                    KSPUtil.Add(ref tensor, productMatrix);
+                }
+            }
+            return KSPUtil.Diag(tensor);
+        }
+
+        /// <summary>
+        /// Construct the outer product of two 3-vectors as a 4x4 matrix
+        /// DOES NOT ZERO ANY THINGS WOT ARE ZERO OR IDENTITY INNIT
+        /// </summary>
+        public static void OuterProduct2(Vector3 left, Vector3 right, ref Matrix4x4 m)
+        {
+            m.m00 = left.x * right.x;
+            m.m01 = left.x * right.y;
+            m.m02 = left.x * right.z;
+            m.m10 = left.y * right.x;
+            m.m11 = left.y * right.y;
+            m.m12 = left.y * right.z;
+            m.m20 = left.z * right.x;
+            m.m21 = left.z * right.y;
+            m.m22 = left.z * right.z;
+        }
+        #endregion
 
         public Transform FindParentTransform(Transform transform, string name, Transform topLevel)
         {
@@ -1107,7 +884,7 @@ namespace kOS.Binding
                 }
             }
 
-            if (ShowAngularVectors && enabled)
+            if (ShowAngularVectors && enabled && !Vessel.ActionGroups[KSPActionGroup.SAS])
             {
                 if (vOmegaX == null)
                 {
@@ -1200,119 +977,6 @@ namespace kOS.Binding
                     vTgtTorqueZ = null;
                 }
             }
-
-            if (ShowThrustVectors && enabled)
-            {
-                foreach (var fv in engineNeutVectors)
-                {
-                    string key = fv.ID;
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.yellow, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    vEngines[key].Vector = -fv.Force;
-                    vEngines[key].Start = fv.Position;
-
-                    key = fv.ID + "torque";
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.red, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    vEngines[key].Vector = fv.Torque;
-                    vEngines[key].Start = fv.Position;
-
-                    key = fv.ID + "position";
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.cyan, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    vEngines[key].Vector = fv.Position;
-                }
-                foreach (var fv in engineRollVectors)
-                {
-                    string key = fv.ID + "gimbaled";
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.magenta, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    vEngines[key].Vector = -fv.Force;
-                    vEngines[key].Start = fv.Position;
-
-                    key = fv.ID + "control";
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.blue, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    vEngines[key].Vector = fv.Torque;
-                    vEngines[key].Start = fv.Position;
-                }
-            }
-            else
-            {
-                foreach (string key in vEngines.Keys)
-                {
-                    vEngines[key].SetShow(false);
-                }
-                vEngines.Clear();
-            }
-
-            if (ShowRCSVectors && enabled && Vessel.ActionGroups[KSPActionGroup.RCS])
-            {
-                foreach (var force in rcsVectors)
-                {
-                    string key = force.ID;
-                    if (!vRcs.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.magenta, 0.25, shared);
-                        vecdraw.SetShow(true);
-                        vRcs.Add(key, vecdraw);
-                    }
-                    vRcs[key].Vector = force.Force;
-                    vRcs[key].Start = force.Position;
-
-                    key = force.ID + "torque";
-                    if (!vRcs.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(Color.yellow, 0.25, shared);
-                        vecdraw.SetShow(true);
-                        vRcs.Add(key, vecdraw);
-                    }
-                    vRcs[key].Vector = force.Torque;
-                    vRcs[key].Start = force.Position;
-                }
-            }
-            else
-            {
-                foreach (string key in vRcs.Keys)
-                {
-                    vRcs[key].SetShow(false);
-                }
-                vRcs.Clear();
-            }
-        }
-
-        private void clearEngineRCSVectors()
-        {
-            foreach (string key in vEngines.Keys)
-            {
-                vEngines[key].SetShow(false);
-            }
-            vEngines.Clear();
-            foreach (string key in vRcs.Keys)
-            {
-                vRcs[key].SetShow(false);
-            }
-            vRcs.Clear();
         }
 
         public void PrintDebug()
@@ -1325,7 +989,6 @@ namespace kOS.Binding
             //shared.Screen.Print(string.Format("phiPitch: {0}", deltaRotation.eulerAngles.x));
             shared.Screen.Print(string.Format("I pitch: {0}", momentOfInertia.x));
             shared.Screen.Print(string.Format("torque pitch: {0}", controlTorque.x));
-            shared.Screen.Print(string.Format("torque gimbal: {0}", controlEngineTorque.x));
             shared.Screen.Print(string.Format("maxPitchOmega: {0}", maxPitchOmega));
             shared.Screen.Print(string.Format("tgtPitchOmega: {0}", tgtPitchOmega));
             shared.Screen.Print(string.Format("pitchOmega: {0}", omega.x));
@@ -1336,7 +999,6 @@ namespace kOS.Binding
             //shared.Screen.Print(string.Format("phiYaw: {0}", deltaRotation.eulerAngles.y));
             shared.Screen.Print(string.Format("I yaw: {0}", momentOfInertia.z));
             shared.Screen.Print(string.Format("torque yaw: {0}", controlTorque.z));
-            shared.Screen.Print(string.Format("torque gimbal: {0}", controlEngineTorque.z));
             shared.Screen.Print(string.Format("maxYawOmega: {0}", maxYawOmega));
             shared.Screen.Print(string.Format("tgtYawOmega: {0}", tgtYawOmega));
             shared.Screen.Print(string.Format("yawOmega: {0}", omega.y));
@@ -1347,7 +1009,6 @@ namespace kOS.Binding
             //shared.Screen.Print(string.Format("phiRoll: {0}", deltaRotation.eulerAngles.z));
             shared.Screen.Print(string.Format("I roll: {0}", momentOfInertia.y));
             shared.Screen.Print(string.Format("torque roll: {0}", controlTorque.y));
-            shared.Screen.Print(string.Format("torque gimbal: {0}", controlEngineTorque.y));
             shared.Screen.Print(string.Format("maxRollOmega: {0}", maxRollOmega));
             shared.Screen.Print(string.Format("tgtRollOmega: {0}", tgtRollOmega));
             shared.Screen.Print(string.Format("rollOmega: {0}", omega.z));
@@ -1510,25 +1171,6 @@ namespace kOS.Binding
                 vOmegaZ.Dispose();
                 vOmegaZ = null;
             }
-
-            foreach (string key in vEngines.Keys.ToArray())
-            {
-                if (vEngines[key] != null)
-                {
-                    vEngines[key].SetShow(false);
-                    vEngines[key].Dispose();
-                }
-                vEngines.Remove(key);
-            }
-            foreach (string key in vRcs.Keys.ToArray())
-            {
-                if (vRcs[key] != null)
-                {
-                    vRcs[key].SetShow(false);
-                    vRcs[key].Dispose();
-                }
-                vRcs.Remove(key);
-            }
         }
 
         public void Dispose()
@@ -1555,18 +1197,6 @@ namespace kOS.Binding
 
             adjustTorqueWriter = null;
 
-            SteeringManagerProvider.RemoveInstance(shared.Vessel);
-        }
-
-        private struct ForceVector
-        {
-            public Vector3d Force { get; set; }
-
-            public Vector3d Position { get; set; }
-
-            public Vector3d Torque { get { return Vector3d.Cross(Force, Position); } }
-
-            public string ID { get; set; }
         }
 
         public class TorquePI
@@ -1633,6 +1263,79 @@ namespace kOS.Binding
                 return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
                     Loop.LastSampleTime, Loop.Input, Loop.Setpoint, Loop.Error, Loop.ErrorSum, Loop.Output, Loop.Kp, Loop.Ki, Tr, Ts, I, Loop.MaxOutput);
             }
+        }
+
+        bool IFlightControlParameter.Enabled
+        {
+            get
+            {
+                return this.Enabled;
+            }
+        }
+
+        bool IFlightControlParameter.IsAutopilot
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        uint IFlightControlParameter.ControlPartId
+        {
+            get { return this.PartId; }
+        }
+
+        void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
+        {
+            if (enabled && partId != shared.KSPPart.flightID)
+                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
+            Value = GetDirectionFromValue(value);
+        }
+
+        object IFlightControlParameter.GetValue()
+        {
+            return Value;
+        }
+
+        void IFlightControlParameter.UpdateState()
+        {
+            //throw new NotImplementedException();
+        }
+
+        void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
+        {
+            this.OnFlyByWire(c);
+        }
+
+
+        void IFlightControlParameter.EnableControl(SharedObjects shared)
+        {
+            this.EnableControl(shared);
+        }
+
+        void IFlightControlParameter.DisableControl(SharedObjects shared)
+        {
+            this.DisableControl(shared);
+        }
+
+        void IFlightControlParameter.DisableControl()
+        {
+            this.DisableControl();
+        }
+
+        void IFlightControlParameter.CopyFrom(IFlightControlParameter origin)
+        {
+            SteeringManager smOrigin = origin as SteeringManager;
+            if (smOrigin != null)
+            {
+                Copy(smOrigin, this);
+            }
+        }
+
+        SharedObjects IFlightControlParameter.GetShared()
+        {
+            return shared;
         }
     }
 }
