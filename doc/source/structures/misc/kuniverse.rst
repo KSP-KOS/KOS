@@ -18,41 +18,65 @@ KUniverse 4th wall methods
           - Description
 
         * - :attr:`CANREVERT`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Get
           - Is any revert possible?
         * - :attr:`CANREVERTTOLAUNCH`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Get
           - Is revert to launch possible?
         * - :attr:`CANREVERTTOEDITOR`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Get
           - Is revert to editor possible?
         * - :meth:`REVERTTOLAUNCH`
-          - none
+          - None
           - Method
           - Invoke revert to launch
         * - :meth:`REVERTTOEDITOR`
-          - none
+          - None
           - Method
           - Invoke revert to editor
         * - :meth:`REVERTTO(name)`
-          - :ref:`string <string>`
+          - :struct:`String`
           - Method
           - Invoke revert to the named editor
         * - :attr:`ORIGINEDITOR`
-          - :ref:`string <string>`
+          - :struct:`String`
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
+        * - :attr:`CANQUICKSAVE`
+          - :struct:`Boolean`
+          - Get
+          - Returns true if quicksave is currently enabled and available.
+        * - :meth:`QUICKSAVE()`
+          - None
+          - Method
+          - Invoke KSP's built in quicksave.
+        * - :meth:`QUICKLOAD()`
+          - None
+          - Method
+          - Invoke KSP's built in quickload.
+        * - :meth:`QUICKSAVETO(name)`
+          - :struct:`String`
+          - Method
+          - Perform quicksave to the save with the given name.
+        * - :meth:`QUICKLOADFROM(name)`
+          - None
+          - Method
+          - Perform quickload from the save with the given name.
+        * - :attr:`QUICKSAVELIST`
+          - :struct:`List` of :struct:`String`
+          - Get
+          - A list of all quicksave files for this game.
         * - :attr:`HOURSPERDAY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Get
           - Number of hours per day (6 or 24) according to your game settings.
         * - :meth:`DEBUGLOG(message)`
-          - none
+          - None
           - Method
-          - Causes a :ref:`string <string>` to append to the Unity debug log file.
+          - Causes a :struct:`String` to append to the Unity debug log file.
         * - :attr:`DEFAULTLOADDISTANCE`
           - :struct:`LoadDistance`
           - Get
@@ -62,11 +86,11 @@ KUniverse 4th wall methods
           - Get/Set
           - Returns the active vessel, or lets you set the active vessel.
         * - :meth:`FORCESETACTIVEVESSEL(vessel)`
-          - n/a
+          - None
           - Method
           - Lets you switch active vessels even when the game refuses to allow it.
         * - :meth:`FORCEACTIVE(vessel)`
-          - n/a
+          - None
           - Method
           - Same as :meth:`FORCESETACTIVEVESSEL`
         * - :meth:`GETCRAFT(name, editor)`
@@ -74,11 +98,11 @@ KUniverse 4th wall methods
           - Method
           - Get the file path for the craft with the given name, saved in the given editor.
         * - :meth:`LAUNCHCRAFT(template)`
-          - none
+          - None
           - Method
           - Launch a new instance of the given craft at it's default launch site.
         * - :meth:`LAUNCHCRAFTFROM(template, site)`
-          - none
+          - None
           - Method
           - Launch a new instance of the given craft at the given site.
         * - :meth:`CRAFTLIST()`
@@ -90,21 +114,21 @@ KUniverse 4th wall methods
 .. attribute:: KUniverse:CANREVERT
 
     :access: Get
-    :type: :ref:`boolean <boolean>`.
+    :type: :struct:`Boolean`.
 
     Returns true if either revert to launch or revert to editor is available.  Note: either option may still be unavailable, use the specific methods below to check the exact option you are looking for.
 
 .. attribute:: KUniverse:CANREVERTTOLAUNCH
 
     :access: Get
-    :type: :ref:`boolean <boolean>`.
+    :type: :struct:`Boolean`.
 
     Returns true if either revert to launch is available.
 
 .. attribute:: KUniverse:CANREVERTTOEDITOR
 
     :access: Get
-    :type: :ref:`boolean <boolean>`.
+    :type: :struct:`Boolean`.
 
     Returns true if either revert to the editor is available.  This tends
     to be false after reloading from a saved game where the vessel was
@@ -127,21 +151,67 @@ KUniverse 4th wall methods
 .. method:: KUniverse:REVERTTO(editor)
 
     :parameter editor: The editor identifier
-    :return: none
+    :return: None
 
     Revert to the provided editor.  Valid inputs are `"VAB"` and `"SPH"`.
 
 .. attribute:: KUniverse:ORIGINEDITOR
 
     :access: Get
-    :type: :ref:`string <string>`.
+    :type: :struct:`String`.
 
     Returns the name of the originating editor based on the vessel type.
     The value is one of:
 
     - "SPH" for things built in the space plane hangar,
     - "VAB" for things built in the vehicle assembly building.
-    - "" (empty :ref:`string <string>`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+    - "" (empty :struct:`String`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+
+.. attribute:: KUniverse:CANQUICKSAVE
+
+    :access: Get
+    :type: :struct:`Boolean`
+
+    Returns true if KSP's quicksave feature is enabled and available.
+
+.. method:: KUniverse:QUICKSAVE()
+
+    :access: Method
+    :type: None.
+
+    Initiate the KSP game's quicksave function.  The game will save the current
+    state to the default quicksave file.
+
+.. method:: KUniverse:QUICKLOAD()
+
+    :access: Method
+    :type: None.
+
+    Initiate the KSP game's quickload function.  The game will load the game
+    state from the default quickload file.
+
+.. method:: KUniverse:QUICKSAVETO(name)
+
+    :parameter name: The name of the save file
+    :return: None
+
+    Initiate the KSP game's quicksave function.  The game will save the current
+    state to a quicksave file matching the name parameter.
+
+.. method:: KUniverse:QUICKLOADFROM(name)
+
+    :parameter name: The name of the save file
+    :return: None
+
+    Initiate the KSP game's quickload function.  The game will load the game
+    state from the quicksave file matching the name parameter.
+
+.. attribute:: KUniverse:QUICKSAVELIST
+
+    :access: Get
+    :type: :struct:`List` of :struct:`String`
+
+    Returns a list of names of all quicksave file in this KSP game.
 
 .. attribute:: KUniverse:DEFAULTLOADDISTANCE
 
@@ -169,21 +239,21 @@ KUniverse 4th wall methods
 .. method:: KUniverse:FORCESETACTIVEVESSEL(vessel)
 
     :parameter vessel: :struct:`Vessel` to switch to.
-    :return: none
+    :return: None
 
     Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
 
 .. method:: KUniverse:FORCEACTIVE(vessel)
 
     :parameter vessel: :struct:`Vessel` to switch to.
-    :return: none
+    :return: None
 
     Same as :meth:`FORCESETACTIVEVESSEL`.
 
 .. attribute:: KUniverse:HOURSPERDAY
 
     :access: Get
-    :type: :ref:`scalar <scalar>` (integer)
+    :type: :struct:`Scalar` (integer)
 
     Has the value of either 6 or 24, depending on what setting you used
     on Kerbal Space Program's main settings screen for whether you wanted
@@ -259,8 +329,8 @@ KUniverse 4th wall methods
 
 .. method:: KUniverse:DEBUGLOG(message)
 
-    :parameter message: :ref:`string <string>` message to append to the log.
-    :return: none
+    :parameter message: :struct:`String` message to append to the log.
+    :return: None
 
     All Unity games (Kerbal Space Program included) have a standard
     "log" file where they can store a lot of verbose messages that
