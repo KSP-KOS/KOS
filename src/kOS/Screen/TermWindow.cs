@@ -250,7 +250,8 @@ namespace kOS.Screen
             cameraManager = CameraManager.Instance;
             cameraManager.enabled = false;
 
-            InputLockManager.SetControlLock(CONTROL_LOCKOUT);
+            // Exclude the TARGETING ControlType so that we can set the target vessel with the terminal open.
+            InputLockManager.SetControlLock(ControlTypes.All & ~ControlTypes.TARGETING, CONTROL_LOCKOUT);
 
             // Prevent editor keys from being pressed while typing
             EditorLogic editor = EditorLogic.fetch;
