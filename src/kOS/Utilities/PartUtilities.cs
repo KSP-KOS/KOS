@@ -7,17 +7,10 @@ namespace kOS.Utilities
     {
         public static float CalculateCurrentMass(this Part part)
         {
-            if (part.HasPhysics())
-            {
-                if (part.rb != null)
-                {
-                    // rb mass is one physics tick behind.  Use part.GetPhysicslessChildMass() if the
-                    // delay becomes a significant problem, but this should be good 99% of the time.
-                    return part.rb.mass;
-                }
-            }
-            // default to zero if the rigid body is not yet updated, or the part is physics-less
-            return 0;
+            // rb mass is one physics tick behind.  Use part.GetPhysicslessChildMass() if the
+            // delay becomes a significant problem, but this should be good 99% of the time.
+            // Default to zero if the rigid body is not yet updated, or the part is physics-less
+            return part.HasPhysics() && part.rb != null ? part.rb.mass : 0;
         }
 
         public static bool HasPhysics(this Part part)

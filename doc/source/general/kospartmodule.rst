@@ -124,7 +124,7 @@ diskSpaceCostFactor:
 
 When using the editor tweakable to increase storage, cost is added to the
 module.  That additional cost is found by multiplying the number of additional
-bytes by this factor.The default value is balanced for approximately 100
+bytes by this factor.  The default value is balanced for approximately 100
 additional funds for 4096 Bytes.
 
 .. _baseModuleCost:
