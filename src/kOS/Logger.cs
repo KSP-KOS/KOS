@@ -44,11 +44,8 @@ namespace kOS
 
                 message += "\n" + LINE_RULE + "           VERBOSE DESCRIPTION\n";
                 
-                message += ((KOSException)e).VerboseMessage;
+                message += ((KOSException)e).VerboseMessage + "\n";
                 
-                // Fallback if there was no verbose message defined:
-                if (message == String.Empty)
-                    message += e.Message;
                 message += LINE_RULE;
                 
                 // Take on the URL if there is one:
