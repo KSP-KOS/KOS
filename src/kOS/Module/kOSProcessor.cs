@@ -32,6 +32,8 @@ namespace kOS.Module
 
         public Harddisk HardDisk { get; private set; }
 
+        public Archive Archive { get; private set; }
+
         public MessageQueue Messages { get; private set; }
 
         public string Tag
@@ -343,8 +345,8 @@ namespace kOS.Module
             shared.Window.AttachTo(shared);
 
             // initialize archive
-            var archive = shared.Factory.CreateArchive();
-            shared.VolumeMgr.Add(archive);
+            Archive = shared.Factory.CreateArchive();
+            shared.VolumeMgr.Add(Archive);
 
             Messages = new MessageQueue();
 
@@ -361,7 +363,7 @@ namespace kOS.Module
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
                 if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
                 {
-                    var bootVolumeFile = archive.Open(bootFile);
+                    var bootVolumeFile = Archive.Open(bootFile);
                     if (bootVolumeFile != null)
                     {
                         FileContent content = bootVolumeFile.ReadAll();
@@ -697,14 +699,23 @@ namespace kOS.Module
             if (ProcessorMode == ProcessorModes.OFF) return;
 
             double volumePower = 0;
-            var volume = shared.VolumeMgr.CurrentVolume;
-            if (volume.Name == "Archive")
+            if (shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel))
             {
-                volumePower = ARCHIVE_EFFECTIVE_BYTES * ECPerBytePerSecond;
+                // If the current volume is in range, check the capacity and calculate power
+                var volume = shared.VolumeMgr.CurrentVolume;
+                if (volume.Name == "Archive")
+                {
+                    volumePower = ARCHIVE_EFFECTIVE_BYTES * ECPerBytePerSecond;
+                }
+                else
+                {
+                    volumePower = volume.Capacity * ECPerBytePerSecond;
+                }
             }
             else
             {
-                volumePower = volume.Capacity * ECPerBytePerSecond;
+                // if the volume isn't in range, assume it doesn't consume any power
+                volumePower = 0;
             }
 
             if (ProcessorMode == ProcessorModes.STARVED)
@@ -777,9 +788,7 @@ namespace kOS.Module
             switch (ProcessorMode)
             {
             case ProcessorModes.READY:
-                shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive
-                    ? shared.VolumeMgr.GetVolume(0)
-                    : HardDisk);
+                shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive ? (Volume)Archive : HardDisk);
                 if (shared.Cpu != null) shared.Cpu.Boot();
                 if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                 if (shared.Window != null) shared.Window.IsPowered = true;
@@ -817,10 +826,10 @@ namespace kOS.Module
 
         public bool CheckCanBoot()
         {
-            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
-            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
-            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            if (shared.VolumeMgr == null) { shared.Logger.Log("No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { shared.Logger.Log(new Safe.Exceptions.KOSVolumeOutOfRangeException("Boot")); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { shared.Logger.Log("No current volume"); }
+            else if (shared.ScriptHandler == null) { shared.Logger.Log("No script handler"); }
             else
             {
                 return true;

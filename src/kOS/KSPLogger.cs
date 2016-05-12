@@ -23,7 +23,6 @@ namespace kOS
 
         public override void Log(string text)
         {
-            base.Log(text);
             UnityEngine.Debug.Log(string.Format("{0} {1}", LOGGER_PREFIX, text));
         }
 
@@ -64,17 +63,20 @@ namespace kOS
             // print the call stack
             UnityEngine.Debug.Log(e);
             
-            // print a fragment of the code where the exception ocurred
-            int logContextLines = 16;
-            #if DEBUG
-            logContextLines = 999999; // in debug mode let's just dump everything because it's easier that way.
-            #endif
-            List<string> codeFragment = Shared.Cpu.GetCodeFragment(logContextLines);
-            var messageBuilder = new StringBuilder();
-            messageBuilder.AppendLine("Code Fragment");
-            foreach (string instruction in codeFragment)
-                messageBuilder.AppendLine(instruction);
-            UnityEngine.Debug.Log(messageBuilder.ToString());
+            if (Shared != null && Shared.Cpu != null)
+            {
+                // print a fragment of the code where the exception ocurred
+                int logContextLines = 16;
+#if DEBUG
+                logContextLines = 999999; // in debug mode let's just dump everything because it's easier that way.
+#endif
+                List<string> codeFragment = Shared.Cpu.GetCodeFragment(logContextLines);
+                var messageBuilder = new StringBuilder();
+                messageBuilder.AppendLine("Code Fragment");
+                foreach (string instruction in codeFragment)
+                    messageBuilder.AppendLine(instruction);
+                UnityEngine.Debug.Log(messageBuilder.ToString());
+            }
         }
         
         /// <summary>
