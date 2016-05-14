@@ -26,7 +26,7 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 
         * - :attr:`NAME`
           - :struct:`String`
-          - Volume name
+          - Get or set volume name
 
         * - :attr:`RENAMEABLE`
           - :struct:`Scalar`
@@ -81,9 +81,9 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
 .. attribute:: Volume:NAME
 
     :type: :struct:`String`
-    :access: Get only
+    :access: Get and Set
 
-    Volume name. This name can be used instead of the volumeId with some :ref:`file and volume-related commands<files>`
+    Gets or sets volume name. This name can be used instead of the volumeId with some :ref:`file and volume-related commands<files>`
 
 .. attribute:: Volume:RENAMEABLE
 
