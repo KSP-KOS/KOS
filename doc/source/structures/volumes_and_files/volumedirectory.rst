@@ -1,6 +1,6 @@
 .. _volumedirectory:
 
-VolumeDirecotry
+VolumeDirectory
 ===============
 
 Represents a directory on a kOS file system.

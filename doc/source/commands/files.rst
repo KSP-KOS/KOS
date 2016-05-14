@@ -352,7 +352,7 @@ given path. Also see :meth:`Volume:CREATEDIR`.
 OPEN(PATH)
 ~~~~~~~~~~
 
-Will return a :struct:`VolumeFile` or :struct:`Directory` representing the item
+Will return a :struct:`VolumeFile` or :struct:`VolumeDirectory` representing the item
 pointed to by :code:`PATH`. It will return a :struct:`Boolean` false if there's
 nothing present under the given path. Also see :meth:`Volume:OPEN`.
 
