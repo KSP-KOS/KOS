@@ -61,13 +61,19 @@ namespace kOS.AddOns.TrajectoriesAddon
         }
         public static Vector3? impactVector()
         {
-            trComputeMethod.Invoke(trFetch, new object[] { FlightGlobals.ActiveVessel, descentProfileFetch, true }); //Update Trajectories prediction
-            foreach (object patch in (IEnumerable)patches.GetValue(trFetch, null)) //Check if each patch (prediction segment) has an impactPosition
-            {
-                Vector3? impactPosition = (Vector3?)patchImpact.GetValue(patch, null);
-                if (impactPosition != null) return impactPosition;
-            };
-            return null;
+            return (Vector3?)trGetImpactPosition.Invoke(null, new object[] {});
+        }
+        public static Vector3 correctedDirection()
+        {
+            return (Vector3)trCorrectedDirection.Invoke(null, new object[] {});
+        }
+        public static Vector3 plannedDirection()
+        {
+            return (Vector3)trPlannedDirection.Invoke(null, new object[] { });
+        }
+        public static void setTarget(double lat, double lon, double alt)
+        {
+            trSetTarget.Invoke(null, new object[] {lat,lon,alt});
         }
         public static BooleanValue Wrapped()
         {
@@ -75,10 +81,10 @@ namespace kOS.AddOns.TrajectoriesAddon
             {
                 return wrapped;
             }
-            else //if available == null
+            else //if wrapped == null
             {
                 init();
-                return (BooleanValue)wrapped;
+                return wrapped;
             }
         }
     }
