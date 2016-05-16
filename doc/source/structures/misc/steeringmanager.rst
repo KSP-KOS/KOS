@@ -54,7 +54,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     ==================================== ========================= =============
 
 .. warning::
-    .. versionadded:: v1.0.0
+    .. versionadded:: v0.20.1
         The suffixes ``SHOWRCSVECTORS`` and ``SHOWTHRUSTVECTORS`` were
         deprecated with the move to using stock torque calculation with KSP 1.1.
 
