@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog of Bound Variable Names &mdash; kOS 0.20.0 documentation</title>
+  <title>Catalog of Bound Variable Names &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="index.html"/>
         <link rel="up" title="General Topics" href="general.html"/>
         <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
         <link rel="prev" title="General Topics" href="general.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -97,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="general.html">General</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Bound Variables</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Bound Variables</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -142,7 +142,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -326,13 +326,13 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 <h2>Constants (pi, e, etc)<a class="headerlink" href="#constants-pi-e-etc" title="Permalink to this headline">¶</a></h2>
 <p>Get-only.</p>
 <p>The variable <code class="docutils literal"><span class="pre">constant</span></code> provides a way to access a few
-<a class="reference internal" href="math/basic.html#constants"><span>basic math and physics constants</span></a>, such as Pi, Euler&#8217;s
+<a class="reference internal" href="math/basic.html#constants"><span class="std std-ref">basic math and physics constants</span></a>, such as Pi, Euler&#8217;s
 number, and so on.</p>
 <p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;Kerbin&#39;s circumference: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mf">2</span><span class="o">*</span><span class="nv">constant</span><span class="p">:</span><span class="nv">pi</span><span class="o">*</span><span class="nv">Kerbin</span><span class="p">:</span><span class="nv">radius</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;meters.&quot;</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>The full list is here: <a class="reference internal" href="math/basic.html#constants"><span>constants page</span></a>.</p>
+<p>The full list is here: <a class="reference internal" href="math/basic.html#constants"><span class="std std-ref">constants page</span></a>.</p>
 </div>
 <div class="section" id="terminal">
 <h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h2>
@@ -348,7 +348,7 @@ are running on.</p>
 <div class="section" id="archive">
 <h2>Archive<a class="headerlink" href="#archive" title="Permalink to this headline">¶</a></h2>
 <p>Get-only. <code class="docutils literal"><span class="pre">archive</span></code> returns a <a class="reference internal" href="structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a> structure referring to the archive.
-You can read more about what archive is on the <a class="reference internal" href="general/volumes.html#volumes"><span>File &amp; volumes</span></a> page.</p>
+You can read more about what archive is on the <a class="reference internal" href="general/volumes.html#volumes"><span class="std std-ref">File &amp; volumes</span></a> page.</p>
 </div>
 <div class="section" id="stage">
 <h2>Stage<a class="headerlink" href="#stage" title="Permalink to this headline">¶</a></h2>
@@ -422,7 +422,7 @@ access to a few time predictions:</p>
 <p>The orbit patch describing the next encounter with a body the current
 vessel will enter. If there is no such encounter coming, it will return
 the special string &#8220;None&#8221;.  If there is an encounter coming, it will
-return an object <a class="reference internal" href="structures/orbits/orbit.html#orbit"><span>of type Orbit</span></a>.  (i.e. to obtain the name
+return an object <a class="reference internal" href="structures/orbits/orbit.html#orbit"><span class="std std-ref">of type Orbit</span></a>.  (i.e. to obtain the name
 of the planet the encounter is with, you can do:
 <code class="docutils literal"><span class="pre">print</span> <span class="pre">ENCOUNTER:BODY:NAME.</span></code>, for example.).</p>
 </div>
@@ -644,7 +644,7 @@ kerbal universe&#8217;s time. i.e. TIME = 0 means a brand new campaign was
 just started.</p>
 <div class="section" id="kuniverse">
 <h3>KUNIVERSE<a class="headerlink" href="#kuniverse" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="structures/misc/kuniverse.html#kuniverse"><span>Kuniverse</span></a> is a structure that contains many settings that
+<p><a class="reference internal" href="structures/misc/kuniverse.html#kuniverse"><span class="std std-ref">Kuniverse</span></a> is a structure that contains many settings that
 break the fourth wall a little bit and control the game simulation directly.
 The eventual goal is probably to move many of the variables you see listed
 below into <code class="docutils literal"><span class="pre">kuniverse</span></code>.</p>
@@ -660,7 +660,7 @@ details.</p>
 <div class="section" id="warp-and-warpmode">
 <h3>WARP and WARPMODE<a class="headerlink" href="#warp-and-warpmode" title="Permalink to this headline">¶</a></h3>
 <p>Time warp can be controlled with the variables
-WARP and WARPMODE.  See <a class="reference internal" href="commands/flight/warp.html#warp"><span>WARP</span></a></p>
+WARP and WARPMODE.  See <a class="reference internal" href="commands/flight/warp.html#warp"><span class="std std-ref">WARP</span></a></p>
 </div>
 <div class="section" id="mapview">
 <h3>MAPVIEW<a class="headerlink" href="#mapview" title="Permalink to this headline">¶</a></h3>
@@ -746,11 +746,11 @@ point in the firmament, also known as the &#8220;skybox&#8221;.</p>
 <div class="section" id="addons">
 <h2>Addons<a class="headerlink" href="#addons" title="Permalink to this headline">¶</a></h2>
 <p>Get-only.  <code class="docutils literal"><span class="pre">addons</span></code> is a special variable used to access various extensions
-to kOS that are designed to support the features introduced by some other mods.  More info can be found on the <a class="reference internal" href="addons.html#addons"><span>addons</span></a> page.</p>
+to kOS that are designed to support the features introduced by some other mods.  More info can be found on the <a class="reference internal" href="addons.html#addons"><span class="std std-ref">addons</span></a> page.</p>
 </div>
 <div class="section" id="colors">
 <h2>Colors<a class="headerlink" href="#colors" title="Permalink to this headline">¶</a></h2>
-<p>There are several bound variables associated with <a class="reference internal" href="structures/misc/colors.html#colors"><span>hardcoded colors</span></a> such as WHITE, BLACK, RED, etc.  See the linked page for the full list.</p>
+<p>There are several bound variables associated with <a class="reference internal" href="structures/misc/colors.html#colors"><span class="std std-ref">hardcoded colors</span></a> such as WHITE, BLACK, RED, etc.  See the linked page for the full list.</p>
 </div>
 </div>
 
@@ -795,7 +795,7 @@ to kOS that are designed to support the features introduced by some other mods. 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

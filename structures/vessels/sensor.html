@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Sensor &mdash; kOS 0.20.0 documentation</title>
+  <title>Sensor &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Stage" href="stage.html"/>
         <link rel="prev" title="ScienceExperimentModule" href="scienceexperiment.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -120,7 +120,7 @@
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Sensor</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -187,7 +187,7 @@
             
   <div class="section" id="sensor">
 <span id="id1"></span><h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h1>
-<p>The type of structures returned by <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST SENSORS IN SOMEVARIABLE</span></a>. This is not fully understood because the type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> in the KSP API called <code class="docutils literal"><span class="pre">ModuleEnviroSensor</span></code>, which all Sensors are a kind of, is not well documented. Here is an example of using <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></code></a>:</p>
+<p>The type of structures returned by <a class="reference internal" href="../../commands/list.html#list-command"><span class="std std-ref">LIST SENSORS IN SOMEVARIABLE</span></a>. This is not fully understood because the type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> in the KSP API called <code class="docutils literal"><span class="pre">ModuleEnviroSensor</span></code>, which all Sensors are a kind of, is not well documented. Here is an example of using <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></code></a>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;Full Sensor Dump:&quot;</span><span class="p">.</span>
 <span class="k">LIST</span> <span class="nv">SENSORS</span> <span class="nv">IN</span> <span class="nv">SENSELIST</span><span class="p">.</span>
 
@@ -225,7 +225,7 @@
 <td><a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></code></a> objects are a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:ACTIVE" title="SENSOR:ACTIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 <td>Check if this sensor is active</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:TYPE" title="SENSOR:TYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></code></a></td>
@@ -237,7 +237,7 @@
 <td>Value of the readout</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:POWERCONSUMPTION" title="SENSOR:POWERCONSUMPTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POWERCONSUMPTION</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 <td>Rate of required electric charge</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:SENSOR:TOGGLE" title="SENSOR:TOGGLE method"><code class="xref ks ks-meth docutils literal"><span class="pre">TOGGLE()</span></code></a></td>
@@ -261,7 +261,7 @@ Sensor:<code class="descname">ACTIVE</code><a class="headerlink" href="#attribut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -306,7 +306,7 @@ Sensor:<code class="descname">POWERCONSUMPTION</code><a class="headerlink" href=
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -362,7 +362,7 @@ Sensor:<code class="descname">TOGGLE</code><span class="sig-paren">(</span><span
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

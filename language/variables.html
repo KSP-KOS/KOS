@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Variables &amp; Statements &mdash; kOS 0.20.0 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="KerboScript User Functions" href="user_functions.html"/>
         <link rel="prev" title="Flow Control" href="flow.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -101,7 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Variables</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Variables</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
@@ -139,7 +139,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -285,7 +285,7 @@ After that code block is finished, the variable will no longer exist.</p>
 <h3><a class="toc-backref" href="#id10">See Scoping:</a><a class="headerlink" href="#see-scoping" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div>If you don&#8217;t know what the terms &#8220;global&#8221; or &#8220;local&#8221; mean, it&#8217;s
-important to read the <a class="reference internal" href="#scope"><span>section below about scoping.</span></a></div></blockquote>
+important to read the <a class="reference internal" href="#scope"><span class="std std-ref">section below about scoping.</span></a></div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It is implied that the outermost scope of a program file is
@@ -328,10 +328,10 @@ there to exist any uninitialized variables in a script.</p>
 <p>If you put this statement in the main part of your script, it
 declares variables to be used as a parameter that can be passed
 in using the <code class="docutils literal"><span class="pre">RUN</span></code> command.</p>
-<p>If you put this statement inside of a <a class="reference internal" href="user_functions.html#user-functions"><span>Function body</span></a>,
+<p>If you put this statement inside of a <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">Function body</span></a>,
 then it declares variables to be used as a parameter that can
 be passed in to that function when calling the function.</p>
-<p>Just as with a <a class="reference internal" href="#declare"><span>declare identifier statement</span></a>,
+<p>Just as with a <a class="reference internal" href="#declare"><span class="std std-ref">declare identifier statement</span></a>,
 in a <code class="docutils literal"><span class="pre">declare</span> <span class="pre">parameter</span></code> statement, the actual keyword
 <code class="docutils literal"><span class="pre">declare</span></code> need not be used.  The word <code class="docutils literal"><span class="pre">parameter</span></code> may
 be used alone and that is legal syntax.</p>
@@ -425,7 +425,7 @@ only gets executed if the system needed to pad a missing argument.</p>
 <span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="nv">y</span><span class="o">*</span><span class="mf">2</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>This follows the <a class="reference internal" href="#scope"><span>scoping rules explained below</span></a>.  If the
+<p>This follows the <a class="reference internal" href="#scope"><span class="std std-ref">scoping rules explained below</span></a>.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won&#8217;t be created and instead the existing one will be used.</p>
 </div>
@@ -456,7 +456,7 @@ and visible right now):</p>
 </pre></div>
 </div>
 <p>The DEFINED operator pays attention to all the normal scoping rules
-described in the <a class="reference internal" href="#scope"><span>scoping section below</span></a>.  If an identifier
+described in the <a class="reference internal" href="#scope"><span class="std std-ref">scoping section below</span></a>.  If an identifier
 does exist but is not usable from the current scope, it will return false.</p>
 <p>Note that DEFINED does not work well on things that are not pure identifiers.
 for example:</p>
@@ -512,7 +512,7 @@ and only pass back things to the caller as return values.</p>
 </div>
 <div class="section" id="lock">
 <h2><a class="toc-backref" href="#id18"><code class="docutils literal"><span class="pre">LOCK</span></code></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
-<p>Declares that the identifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><span>Flow Control documentation</span></a>):</p>
+<p>Declares that the identifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><span class="std std-ref">Flow Control documentation</span></a>):</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">Y</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">LOCK</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="nv">Y</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">X</span><span class="p">.</span>    <span class="c1">// prints &quot;2&quot;</span>
@@ -594,7 +594,7 @@ section of code is over, make it a local lock.</p>
 <span class="k">TOGGLE</span> <span class="nv">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
 </pre></div>
 </div>
-<p>This follows the same rules as <a class="reference internal" href="#set"><span>SET</span></a>, in that if the variable in
+<p>This follows the same rules as <a class="reference internal" href="#set"><span class="std std-ref">SET</span></a>, in that if the variable in
 question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
@@ -604,7 +604,7 @@ variable.</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
 </pre></div>
 </div>
-<p>This follows the same rules as <a class="reference internal" href="#set"><span>SET</span></a>, in that if the variable in
+<p>This follows the same rules as <a class="reference internal" href="#set"><span class="std std-ref">SET</span></a>, in that if the variable in
 question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
@@ -614,7 +614,7 @@ variable.</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
 </pre></div>
 </div>
-<p>This follows the same rules as <a class="reference internal" href="#set"><span>SET</span></a>, in that if the variable in
+<p>This follows the same rules as <a class="reference internal" href="#set"><span class="std std-ref">SET</span></a>, in that if the variable in
 question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
@@ -711,7 +711,7 @@ merely to reduce verbosity.</p>
 </div>
 <div class="section" id="explicit-scoping-required-for-lazyglobal-off">
 <h3><a class="toc-backref" href="#id28">Explicit Scoping required for &#64;lazyglobal off</a><a class="headerlink" href="#explicit-scoping-required-for-lazyglobal-off" title="Permalink to this headline">¶</a></h3>
-<p>Note that when operating under the <a class="reference internal" href="#lazyglobal"><span>&#64;LAZYGLOBAL OFF</span></a>
+<p>Note that when operating under the <a class="reference internal" href="#lazyglobal"><span class="std std-ref">&#64;LAZYGLOBAL OFF</span></a>
 directive the keywords LOCAL and GLOBAL are no longer optional for
 <strong>declare identifier</strong> statements, and are in fact required.  You
 are not allowed to rely on these presumed defaults when you&#8217;ve
@@ -957,7 +957,7 @@ don&#8217;t need to understand or deal with scope.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

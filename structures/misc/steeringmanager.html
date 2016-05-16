@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SteeringManager &mdash; kOS 0.20.0 documentation</title>
+  <title>SteeringManager &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="String" href="string.html"/>
         <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -119,7 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">SteeringManager</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SteeringManager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
@@ -155,7 +155,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -183,7 +183,7 @@
             
   <div class="section" id="steeringmanager">
 <span id="id1"></span><h1>SteeringManager<a class="headerlink" href="#steeringmanager" title="Permalink to this headline">¶</a></h1>
-<p>See <a class="reference internal" href="../../commands/flight/cooked.html#cooked-tuning"><span>the cooked control tuning explanation</span></a> for
+<p>See <a class="reference internal" href="../../commands/flight/cooked.html#cooked-tuning"><span class="std std-ref">the cooked control tuning explanation</span></a> for
 information to help with tuning the steering manager.  It&#8217;s important to read
 that section first to understand which setting below is affecting which
 portion of the steering system.</p>
@@ -219,15 +219,15 @@ portion of the steering system.</p>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHPID" title="STEERINGMANAGER:PITCHPID attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHPID</span></code></a></td>
 <td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a></td>
-<td>The PIDLoop for the pitch <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>rotational velocity PID</span></a>.</td>
+<td>The PIDLoop for the pitch <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">rotational velocity PID</span></a>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWPID" title="STEERINGMANAGER:YAWPID attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWPID</span></code></a></td>
 <td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a></td>
-<td>The PIDLoop for the yaw <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>rotational velocity PID</span></a>.</td>
+<td>The PIDLoop for the yaw <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">rotational velocity PID</span></a>.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLPID" title="STEERINGMANAGER:ROLLPID attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLPID</span></code></a></td>
 <td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a></td>
-<td>The PIDLoop for the roll <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>rotational velocity PID</span></a>.</td>
+<td>The PIDLoop for the roll <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">rotational velocity PID</span></a>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ENABLED" title="STEERINGMANAGER:ENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
@@ -248,14 +248,6 @@ portion of the steering system.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWANGULARVECTORS" title="STEERINGMANAGER:SHOWANGULARVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWANGULARVECTORS</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
 <td>Enable/disable display of angular rotation vectors</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWTHRUSTVECTORS" title="STEERINGMANAGER:SHOWTHRUSTVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWTHRUSTVECTORS</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
-<td>Enable/disable display of engine thrust vectors</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWRCSVECTORS" title="STEERINGMANAGER:SHOWRCSVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWRCSVECTORS</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
-<td>Enable/disable display of rcs thrust vectors</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWSTEERINGSTATS" title="STEERINGMANAGER:SHOWSTEERINGSTATS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWSTEERINGSTATS</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
@@ -325,6 +317,13 @@ portion of the steering system.</p>
 </table>
 </dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version v0.20.1: </span>The suffixes <code class="docutils literal"><span class="pre">SHOWRCSVECTORS</span></code> and <code class="docutils literal"><span class="pre">SHOWTHRUSTVECTORS</span></code> were
+deprecated with the move to using stock torque calculation with KSP 1.1.</p>
+</div>
+</div>
 <dl class="attribute">
 <dt id="attribute:STEERINGMANAGER:PITCHPID">
 SteeringManager:<code class="descname">PITCHPID</code><a class="headerlink" href="#attribute:STEERINGMANAGER:PITCHPID" title="Permalink to this definition">¶</a></dt>
@@ -338,7 +337,7 @@ SteeringManager:<code class="descname">PITCHPID</code><a class="headerlink" href
 </tr>
 </tbody>
 </table>
-<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>target angular velocity</span></a> in the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">target angular velocity</span></a> in the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -354,7 +353,7 @@ SteeringManager:<code class="descname">YAWPID</code><a class="headerlink" href="
 </tr>
 </tbody>
 </table>
-<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>target angular velocity</span></a> in the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">target angular velocity</span></a> in the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -370,7 +369,7 @@ SteeringManager:<code class="descname">ROLLPID</code><a class="headerlink" href=
 </tr>
 </tbody>
 </table>
-<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>target angular velocity</span></a> in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">target angular velocity</span></a> in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The SteeringManager will ignore the roll component of steering
@@ -390,7 +389,7 @@ SteeringManager:<code class="descname">ENABLED</code><a class="headerlink" href=
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -436,7 +435,7 @@ SteeringManager:<code class="descname">SHOWFACINGVECTORS</code><a class="headerl
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -452,7 +451,7 @@ SteeringManager:<code class="descname">SHOWANGULARVECTORS</code><a class="header
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -462,45 +461,13 @@ SteeringManager:<code class="descname">SHOWANGULARVECTORS</code><a class="header
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:STEERINGMANAGER:SHOWTHRUSTVECTORS">
-SteeringManager:<code class="descname">SHOWTHRUSTVECTORS</code><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWTHRUSTVECTORS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>Setting this suffix to true will cause the steering manager to display graphical vectors (see <a class="reference internal" href="vecdraw.html#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a>) representing the thrust and torque for each active engine.  Setting to false will hide the vectors, as will disabling locked steering.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:STEERINGMANAGER:SHOWRCSVECTORS">
-SteeringManager:<code class="descname">SHOWRCSVECTORS</code><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWRCSVECTORS" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>Setting this suffix to true will cause the steering manager to display graphical vectors (see <a class="reference internal" href="vecdraw.html#structure:VECDRAW" title="VECDRAW structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></code></a>) representing the thrust and torque for each active RCS block.  Setting to false will hide the vectors, as will disabling locked steering.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="attribute:STEERINGMANAGER:SHOWSTEERINGSTATS">
 SteeringManager:<code class="descname">SHOWSTEERINGSTATS</code><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWSTEERINGSTATS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -516,7 +483,7 @@ SteeringManager:<code class="descname">WRITECSVFILES</code><a class="headerlink"
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -532,13 +499,13 @@ SteeringManager:<code class="descname">PITCHTS</code><a class="headerlink" href=
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>PID calculating pitch torque based on target angular velocity</span></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">PID calculating pitch torque based on target angular velocity</span></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -548,13 +515,13 @@ SteeringManager:<code class="descname">YAWTS</code><a class="headerlink" href="#
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>PID calculating yaw torque based on target angular velocity</span></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">PID calculating yaw torque based on target angular velocity</span></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -564,13 +531,13 @@ SteeringManager:<code class="descname">ROLLTS</code><a class="headerlink" href="
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>PID calculating roll torque based on target angular velocity</span></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">PID calculating roll torque based on target angular velocity</span></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -580,16 +547,16 @@ SteeringManager:<code class="descname">MAXSTOPPINGTIME</code><a class="headerlin
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>This value is used to limit the turning rate when <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>calculating target angular velocity</span></a>.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).</p>
+<p>This value is used to limit the turning rate when <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">calculating target angular velocity</span></a>.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This setting affects all three of the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span>rotational velocity PID&#8217;s</span></a> at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.</p>
+<p class="last">This setting affects all three of the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><span class="std std-ref">rotational velocity PID&#8217;s</span></a> at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.</p>
 </div>
 </dd></dl>
 
@@ -600,7 +567,7 @@ SteeringManager:<code class="descname">ANGLEERROR</code><a class="headerlink" hr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -616,7 +583,7 @@ SteeringManager:<code class="descname">PITCHERROR</code><a class="headerlink" hr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -632,7 +599,7 @@ SteeringManager:<code class="descname">YAWERROR</code><a class="headerlink" href
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -648,7 +615,7 @@ SteeringManager:<code class="descname">ROLLERROR</code><a class="headerlink" hre
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -664,13 +631,13 @@ SteeringManager:<code class="descname">PITCHTORQUEADJUST</code><a class="headerl
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kNm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kNm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an additive bias to the calculated available pitch torque used in the pitch <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>torque PID</span></a>. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
+<p>You can set this value to provide an additive bias to the calculated available pitch torque used in the pitch <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">torque PID</span></a>. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -680,13 +647,13 @@ SteeringManager:<code class="descname">YAWTORQUEADJUST</code><a class="headerlin
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kNm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kNm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an additive bias to the calculated available yaw torque used in the yaw <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>torque PID</span></a>. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
+<p>You can set this value to provide an additive bias to the calculated available yaw torque used in the yaw <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">torque PID</span></a>. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -696,13 +663,13 @@ SteeringManager:<code class="descname">ROLLTORQUEADJUST</code><a class="headerli
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kNm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kNm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an additive bias to the calculated available roll torque used in the roll <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>torque PID</span></a>. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
+<p>You can set this value to provide an additive bias to the calculated available roll torque used in the roll <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">torque PID</span></a>. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -712,13 +679,13 @@ SteeringManager:<code class="descname">PITCHTORQUEFACTOR</code><a class="headerl
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kNm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kNm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an multiplicative factor bias to the calculated available pitch torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>torque PID</span></a>. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available pitch torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">torque PID</span></a>. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -728,13 +695,13 @@ SteeringManager:<code class="descname">YAWTORQUEFACTOR</code><a class="headerlin
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kNm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kNm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an multiplicative factor bias to the calculated available yaw torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>torque PID</span></a>. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available yaw torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">torque PID</span></a>. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -744,13 +711,13 @@ SteeringManager:<code class="descname">ROLLTORQUEFACTOR</code><a class="headerli
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kNm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kNm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an multiplicative factor bias to the calculated available roll torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span>torque PID</span></a>. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available roll torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><span class="std std-ref">torque PID</span></a>. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
 </dd></dl>
 
 </div>
@@ -796,7 +763,7 @@ SteeringManager:<code class="descname">ROLLTORQUEFACTOR</code><a class="headerli
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
