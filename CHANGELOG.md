@@ -16,7 +16,7 @@ But any new features (rather than bug fixes) in the pipeline not directly
 related to that "remit" are not in this release.
 
 ### BREAKING CHANGES
-* None that we're aware of at this time.
+* `STEERINGMANAGER:SHOWRCSVECTORS` and `STEERINGMANAGER:SHOWENGINEVECTORS` are now obsolete and will throw an error.
 
 ### BUG FIXES
 * Infinitely growing mass:  Realism Overhaul users could not use kOS anymore, because kOS was re-adding its small module mass to the part again and again each physics tick.  Even though the mass of kOS is small, adding it to the part 25 times a second quickly made the vessel grow too massive to do anything with.  The bug was not caught earlier because it only happened if kOS was added to parts other than the parts kOS ships with (i.e. by using ModuleManager), and those parts also had other mass-affecting modules on them.  Although discovered in Realism Overhaul, the problem could have been affecting any users who used kOS in that same fashion.  The cause was traced to an incorrect use of the new mass API by kOS and has been fixed. (https://github.com/KSP-KOS/KOS/pull/1644).
