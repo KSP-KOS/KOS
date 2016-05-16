@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Processors &mdash; kOS 0.20.0 documentation</title>
+  <title>Processors &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Structure Reference" href="../structures.html"/>
         <link rel="prev" title="Transferring resources" href="resource_transfer.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -107,7 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Processors</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Processors</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -139,7 +139,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -186,12 +186,12 @@
 <p>Depending on the type of the parameter value will either return the processor associated with the given <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a> or the processor with the given name tag.</p>
 </dd></dl>
 
-<p>A list of all processors can be obtained using the <a class="reference internal" href="../structures/collections/list.html#list"><span>List</span></a> command:</p>
+<p>A list of all processors can be obtained using the <a class="reference internal" href="../structures/collections/list.html#list"><span class="std std-ref">List</span></a> command:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">PROCESSORS</span> <span class="nv">IN</span> <span class="nv">ALL_PROCESSORS</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">ALL_PROCESSORS</span><span class="p">[</span><span class="mf">0</span><span class="p">]:</span><span class="nv">NAME</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Finally, processors can be accessed directly, like other <a class="reference internal" href="../structures/vessels/part.html#part"><span>parts and modules</span></a>:</p>
+<p>Finally, processors can be accessed directly, like other <a class="reference internal" href="../structures/vessels/part.html#part"><span class="std std-ref">parts and modules</span></a>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">MODULESNAMED</span><span class="p">(</span><span class="s">&quot;kOSProcessor&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]:</span><span class="k">VOLUME</span><span class="p">:</span><span class="nv">NAME</span><span class="p">.</span>
 </pre></div>
 </div>
@@ -239,7 +239,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

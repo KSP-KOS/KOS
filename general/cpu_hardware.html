@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS CPU hardware &mdash; kOS 0.20.0 documentation</title>
+  <title>The kOS CPU hardware &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html"/>
         <link rel="prev" title="CPU Vessel (SHIP)" href="cpu_vessel.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -99,7 +99,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">CPU Hardware</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CPU Hardware</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
@@ -142,7 +142,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -260,7 +260,7 @@ speed up to normal speed again when it needs to wake up and do something.</p>
 <p>In kOS, this concept is simplified by just draining electric charge by
 &#8220;micropayments&#8221; of charge per instruction executed.</p>
 <p>To change this setting if you want to re-balance the system, see the
-page about <a class="reference internal" href="kospartmodule.html#ecperinstruction"><span>kOSProcessor part config values</span></a>.</p>
+page about <a class="reference internal" href="kospartmodule.html#ecperinstruction"><span class="std std-ref">kOSProcessor part config values</span></a>.</p>
 <p>The shorthand version is this:  The more instructions per update
 actually get executed, the more power is drained.  This can be reduced
 by either lowering <code class="docutils literal"><span class="pre">CONFIG:IPU</span></code> or by making sure your main loop
@@ -306,7 +306,7 @@ etc), but not other LOCKS.</li>
 trigger routines get run, including those locks that are always
 re-evaluated by the cooked steering, and the <code class="docutils literal"><span class="pre">ON</span></code> and <code class="docutils literal"><span class="pre">WHEN</span></code>
 triggers.  (This isn&#8217;t <em>quite</em> true.  The real answer is more
-complex than that - see <a class="reference internal" href="#cpu-update-loop"><span>CPU Update Loop</span></a>
+complex than that - see <a class="reference internal" href="#cpu-update-loop"><span class="std std-ref">CPU Update Loop</span></a>
 elsewhere on this page).</p>
 <p>Each of the steering locks behaves like a function that returns
 a value, and is re-called to get the new value for this <strong>physics
@@ -556,7 +556,7 @@ has had a chance to go again.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Gimbal &mdash; kOS 0.20.0 documentation</title>
+  <title>Gimbal &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="kOSProcessor" href="kosprocessor.html"/>
         <link rel="prev" title="ETA" href="eta.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -112,7 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Gimbal</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -209,31 +209,43 @@
 <td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:LOCK" title="GIMBAL:LOCK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOCK</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 <td>Is the Gimbal locked in neutral position?</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:LIMIT" title="GIMBAL:LIMIT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LIMIT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (%)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:PITCH" title="GIMBAL:PITCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCH</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td>Does the Gimbal respond to pitch controls?</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:YAW" title="GIMBAL:YAW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAW</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td>Does the Gimbal respond to yaw controls?</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:ROLL" title="GIMBAL:ROLL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLL</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td>Does the Gimbal respond to roll controls?</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:LIMIT" title="GIMBAL:LIMIT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LIMIT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (%)</td>
 <td>Percentage of the maximum range the Gimbal is allowed to travel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:RANGE" title="GIMBAL:RANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RANGE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:RANGE" title="GIMBAL:RANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RANGE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 <td>The Gimbal&#8217;s Possible Range of movement</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:RESPONSESPEED" title="GIMBAL:RESPONSESPEED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESPONSESPEED</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:RESPONSESPEED" title="GIMBAL:RESPONSESPEED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESPONSESPEED</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 <td>The Gimbal&#8217;s Possible Rate of travel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:PITCHANGLE" title="GIMBAL:PITCHANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHANGLE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:PITCHANGLE" title="GIMBAL:PITCHANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHANGLE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 <td>Current Gimbal Pitch</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:YAWANGLE" title="GIMBAL:YAWANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWANGLE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:YAWANGLE" title="GIMBAL:YAWANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWANGLE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 <td>Current Gimbal Yaw</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:GIMBAL:ROLLANGLE" title="GIMBAL:ROLLANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLANGLE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GIMBAL:ROLLANGLE" title="GIMBAL:ROLLANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLANGLE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 <td>Current Gimbal Roll</td>
 </tr>
 </tbody>
@@ -252,7 +264,7 @@ Gimbal:<code class="descname">LOCK</code><a class="headerlink" href="#attribute:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -262,13 +274,61 @@ Gimbal:<code class="descname">LOCK</code><a class="headerlink" href="#attribute:
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:GIMBAL:PITCH">
+Gimbal:<code class="descname">PITCH</code><a class="headerlink" href="#attribute:GIMBAL:PITCH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Is the gimbal responding to pitch controls? Relevant only if the gimbal is not locked.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:GIMBAL:YAW">
+Gimbal:<code class="descname">YAW</code><a class="headerlink" href="#attribute:GIMBAL:YAW" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Is the gimbal responding to yaw controls? Relevant only if the gimbal is not locked.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:GIMBAL:ROLL">
+Gimbal:<code class="descname">ROLL</code><a class="headerlink" href="#attribute:GIMBAL:ROLL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Is the gimbal responding to roll controls? Relevant only if the gimbal is not locked.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:GIMBAL:LIMIT">
 Gimbal:<code class="descname">LIMIT</code><a class="headerlink" href="#attribute:GIMBAL:LIMIT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (%)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (%)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -284,7 +344,7 @@ Gimbal:<code class="descname">RANGE</code><a class="headerlink" href="#attribute
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -300,7 +360,7 @@ Gimbal:<code class="descname">RESPONSESPEED</code><a class="headerlink" href="#a
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -316,7 +376,7 @@ Gimbal:<code class="descname">PITCHANGLE</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -332,7 +392,7 @@ Gimbal:<code class="descname">YAWANGLE</code><a class="headerlink" href="#attrib
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -348,7 +408,7 @@ Gimbal:<code class="descname">ROLLANGLE</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -400,7 +460,7 @@ Gimbal:<code class="descname">ROLLANGLE</code><a class="headerlink" href="#attri
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

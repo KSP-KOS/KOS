@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 0.20.0 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Part Highlighting" href="highlight.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -111,7 +111,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Configuration of kOS</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
@@ -155,7 +155,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -187,7 +187,7 @@
 <dt id="structure:CONFIG">
 <em class="property">structure </em><code class="descname">Config</code><a class="headerlink" href="#structure:CONFIG" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#structure:CONFIG" title="CONFIG structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Config</span></code></a> is a special structure that allows your kerboscript programs to set or get the values stored in the kOS plugin&#8217;s config file.</p>
-<p>The options here can also be set by using the user interface panel shown here. This control panel is part of the <a class="reference internal" href="../../general/applauncher_panel.html#applauncher"><span>App Control Panel</span></a></p>
+<p>The options here can also be set by using the user interface panel shown here. This control panel is part of the <a class="reference internal" href="../../general/applauncher_panel.html#applauncher"><span class="std std-ref">App Control Panel</span></a></p>
 <p>In either case, whether the setting is changed via the GUI panel, or via script code, these are settings that <strong>affect the kOS mod in all saved games</strong> as soon as the change is made. It&#8217;s identical to editing the config file in the kOS installation directory, and in fact will actually change that file the next time the game saves its state.</p>
 <table border="1" class="docutils" id="id1">
 <caption><span class="caption-text">Members (all Gettable and Settable)</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
@@ -206,67 +206,67 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IPU</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (integer)</td>
 <td>150</td>
 <td>Instructions per update</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:UCP" title="CONFIG:UCP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UCP</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Use compressed persistence</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:STAT" title="CONFIG:STAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STAT</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Print statistics to screen</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:RT2" title="CONFIG:RT2 attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RT2</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Enable RemoteTech2 integration</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:ARCH" title="CONFIG:ARCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ARCH</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Start on archive (instead of volume 1)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:OBEYHIDEUI" title="CONFIG:OBEYHIDEUI attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBEYHIDEUI</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>True</td>
 <td>Obey the KSP Hide user interface key (usually mapped to F2).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:SAFE" title="CONFIG:SAFE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SAFE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Enable safe mode</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Enable sound effect on kOS error</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>Enable verbose exceptions</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>False</td>
 <td>activate the telnet server</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (integer)</td>
 <td>5410</td>
 <td>set the port the telnet server will run on</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>True</td>
 <td>Force the telnet server to use loopback (127.0.0.1) address</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="CONFIG:DEBUGEACHOPCODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEBUGEACHOPCODE</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>false</td>
 <td>Unholy debug spam used by the kOS developers</td>
 </tr>
@@ -283,12 +283,12 @@ Config:<code class="descname">IPU</code><a class="headerlink" href="#attribute:C
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> integer. range = [50,2000]</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> integer. range = [50,2000]</td>
 </tr>
 </tbody>
 </table>
 <p>Configures the <code class="docutils literal"><span class="pre">InstructionsPerUpdate</span></code> setting.</p>
-<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span>physics update tick</span></a>.</p>
+<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span class="std std-ref">physics update tick</span></a>.</p>
 <p>This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.</p>
 </dd></dl>
 
@@ -301,7 +301,7 @@ Config:<code class="descname">UCP</code><a class="headerlink" href="#attribute:C
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -318,14 +318,14 @@ Config:<code class="descname">STAT</code><a class="headerlink" href="#attribute:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
 <p>Configures the <code class="docutils literal"><span class="pre">ShowStatistics</span></code> setting.</p>
 <p>If true, then executing a program will log numbers to the screen showing execution speed statistics.</p>
 <p>When this is set to true, it also makes the use of the
-<a class="reference internal" href="../../bindings.html#profileresult"><span>ProfileResult()</span></a> function available, for
+<a class="reference internal" href="../../bindings.html#profileresult"><span class="std std-ref">ProfileResult()</span></a> function available, for
 deep analysis of your program run, if you are so inclined.</p>
 </dd></dl>
 
@@ -338,7 +338,7 @@ Config:<code class="descname">RT2</code><a class="headerlink" href="#attribute:C
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -356,7 +356,7 @@ Config:<code class="descname">ARCH</code><a class="headerlink" href="#attribute:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -373,7 +373,7 @@ Config:<code class="descname">OBEYHIDEUI</code><a class="headerlink" href="#attr
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -392,7 +392,7 @@ Config:<code class="descname">SAFE</code><a class="headerlink" href="#attribute:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -415,7 +415,7 @@ Config:<code class="descname">AUDIOERR</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -436,7 +436,7 @@ Config:<code class="descname">VERBOSE</code><a class="headerlink" href="#attribu
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -453,7 +453,7 @@ Config:<code class="descname">TELNET</code><a class="headerlink" href="#attribut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -485,7 +485,7 @@ Config:<code class="descname">TPORT</code><a class="headerlink" href="#attribute
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (integer)</td>
 </tr>
 </tbody>
 </table>
@@ -506,7 +506,7 @@ Config:<code class="descname">LOOPBACK</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -530,7 +530,7 @@ Config:<code class="descname">DEBUGEACHOPCODE</code><a class="headerlink" href="
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -586,7 +586,7 @@ the kOS dev team.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

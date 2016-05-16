@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript User Functions &mdash; kOS 0.20.0 documentation</title>
+  <title>KerboScript User Functions &mdash; kOS 0.20.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Delegates (function references)" href="delegates.html"/>
         <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                0.20.1
               </div>
             
           
@@ -102,7 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">User Functions</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">User Functions</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html">Delegates (function references)</a></li>
@@ -139,7 +139,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -252,7 +252,7 @@ it from inside a program, it will definitely not work properly,
 but the exact error you get will depend on several &#8220;random&#8221;
 factors.  This may be fixed later by a later release, but for
 now, don&#8217;t do it.  For further explanation, see the section entitled
-<a class="reference internal" href="#interpreter-functions"><span>Functions and the interpreter terminal</span></a></p>
+<a class="reference internal" href="#interpreter-functions"><span class="std std-ref">Functions and the interpreter terminal</span></a></p>
 </div>
 </div>
 <div class="section" id="declare-function">
@@ -397,7 +397,7 @@ subprogram: next counter ID = 3
 <div class="section" id="declare-parameter">
 <h2><a class="toc-backref" href="#id6">DECLARE PARAMETER</a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>If your function expects to have parameters passed into it, you can
-use the <a class="reference internal" href="variables.html#declare-parameter"><span>DECLARE PARAMETER</span></a> command to do
+use the <a class="reference internal" href="variables.html#declare-parameter"><span class="std std-ref">DECLARE PARAMETER</span></a> command to do
 so.  This is the same command as is used to declare parameters for
 running a whole script.  By putting a DECLARE PARAMETER statement
 inside a function, you tell the kerboscript compiler that you want
@@ -552,7 +552,7 @@ just says <code class="docutils literal"><span class="pre">LOCAL</span> <span cl
 </pre></div>
 </div>
 <p>If your function needs to make a local variable, it can do so using
-the <a class="reference internal" href="variables.html#declare"><span>DECLARE</span></a> command.  Whenever the DECLARE command is
+the <a class="reference internal" href="variables.html#declare"><span class="std std-ref">DECLARE</span></a> command.  Whenever the DECLARE command is
 seen inside a function, the compiler assumes the variable is meant to
 be local to that function&#8217;s block.  This also works with recursion.
 If you recursively call a function again and again, there will be
@@ -561,7 +561,7 @@ but not of the variables implicitly made global without DECLARE.</p>
 <p>An example of using <code class="docutils literal"><span class="pre">local</span></code> for a local variable can be seen in
 the example above, where it is used for the <code class="docutils literal"><span class="pre">row</span></code> and <code class="docutils literal"><span class="pre">col</span></code> variables.</p>
 <p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
-work is found <a class="reference internal" href="variables.html#scope"><span>on another page</span></a></p>
+work is found <a class="reference internal" href="variables.html#scope"><span class="std std-ref">on another page</span></a></p>
 <div class="section" id="initializers-are-now-mandatory-for-the-declare-statement">
 <h3><a class="toc-backref" href="#id14">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
 <p>This is now <strong>illegal</strong> syntax:</p>
@@ -759,7 +759,7 @@ something that you intended to be different per recursive call.</p>
 <h2><a class="toc-backref" href="#id21">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="calling-program-s-functions-from-the-interpreter">
 <h3><a class="toc-backref" href="#id22">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
-<p>As <a class="reference internal" href="#interpreter-functions"><span>explained above</span></a>, kOS 0.17.0 does
+<p>As <a class="reference internal" href="#interpreter-functions"><span class="std std-ref">explained above</span></a>, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.</p>
@@ -823,7 +823,7 @@ declaring them first.  Most such languages have provided a way to
 catch the problem, and allow you to instruct the compiler &#8220;please
 don&#8217;t let me do that.  Please force me to declare everything&#8221;.</p>
 <p>The way that is done in kerboscript is by using a <code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></code>
-compiler directive, <a class="reference internal" href="variables.html#lazyglobal"><span>as described here</span></a>.</p>
+compiler directive, <a class="reference internal" href="variables.html#lazyglobal"><span class="std std-ref">as described here</span></a>.</p>
 <p>Had the function above been compiled under a <code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span> <span class="pre">off.</span></code>
 compiler directive, the typo would be noticed:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">@</span><span class="nv">lazyglobal</span> <span class="nb">off</span><span class="p">.</span>
@@ -885,7 +885,7 @@ compiler directive, the typo would be noticed:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.0',
+            VERSION:'0.20.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
