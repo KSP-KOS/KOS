@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 using kOS.Safe.Compilation;
 using kOS.Safe.Persistence;
 using kOS.Safe.Encapsulation;
+using kOS.Screen;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 
 namespace kOS
 {
@@ -106,21 +109,22 @@ namespace kOS
                     if (index > 0)
                     {
                         Opcode prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
-                        if (prevOpcode.SourceName == thisOpcode.SourceName &&
+                        if (prevOpcode.SourcePath.Equals(thisOpcode.SourcePath) &&
                             prevOpcode.SourceLine == thisOpcode.SourceLine)
                         {
                             continue;
                         }
                     }
 
-                    string textLine = (thisOpcode is OpcodeEOF) ? "<<--EOF" : GetSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
+                    string textLine = (thisOpcode is OpcodeEOF) ? "<<--EOF" : GetSourceLine(thisOpcode.SourcePath, thisOpcode.SourceLine);
                     
                     if (msg.Length == 0)
                         msg += "At ";
                     else
                         msg += "Called from ";
                     
-                    msg += (thisOpcode is OpcodeEOF) ? "interpreter" : BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine);
+                    msg += (thisOpcode is OpcodeEOF) ? Interpreter.InterpreterName
+                        : BuildLocationString(thisOpcode.SourcePath, thisOpcode.SourceLine);
                     msg += "\n" + textLine + "\n";
 
                     int useColumn = (thisOpcode is OpcodeEOF) ? 1 : thisOpcode.SourceColumn;
@@ -142,7 +146,7 @@ namespace kOS
             }
         }
         
-        private string BuildLocationString(string source, int line)
+        private string BuildLocationString(GlobalPath path, int line)
         {
             if (line < 0)
             {
@@ -151,23 +155,14 @@ namespace kOS
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "(kOS built-in Update)";
             }
-            if (string.IsNullOrEmpty(source))
-            {
-                return "<<probably internal kOS C# error>>";
-            }
 
-            string[] splitParts = source.Split('/');
-
-            if (splitParts.Length <= 1)
-                return string.Format("{0}, line {1}", source, line);
-            if (source == "interpreter history")
-                return string.Format("interpreter line {0}", line);
-            return string.Format("{0} on {1}, line {2}", splitParts[1], splitParts[0], line);
+            return string.Format("{0}, line {1}", path, line);
         }
         
-        private string GetSourceLine(string filePath, int line)
+        private string GetSourceLine(GlobalPath path, int line)
         {
             string returnVal = "(Can't show source line)";
+
             if (line < 0)
             {
                 // Special exception - if line number is negative then this isn't from any
@@ -176,37 +171,22 @@ namespace kOS
                 return "<<System Built-In Flight Control Updater>>";
             }
 
-            if (string.IsNullOrEmpty(filePath))
+            if (path is InternalPath)
             {
-                return "<<Probably internal error within kOS C# code>>";
+                return (path as InternalPath).Line(line);
             }
-            string[] pathParts = filePath.Split('/');
-            string fileName = pathParts.Last();
-            Volume vol;
-            if (pathParts.Length > 1)
-            {
-                string volName = pathParts.First();
-                if (Regex.IsMatch(volName, @"^\d+$"))
-                {
-                    // If the volume is a number, then get the volume by integer id.
-                    int volNum;
-                    int.TryParse(volName, out volNum);
-                    vol = Shared.VolumeMgr.GetVolume(volNum);
-                }
-                else
-                {
-                    // If the volume is not a number, then get the volume by name string.
-                    vol = Shared.VolumeMgr.GetVolume(volName);
-                }
-            }
-            else
-                vol = Shared.VolumeMgr.CurrentVolume;
-            
-            if (fileName == "interpreter history")
-                return Shared.Interpreter.GetCommandHistoryAbsolute(line);
 
-            VolumeFile file = vol.Open(fileName);
-            if (file!=null)
+            Volume vol;
+
+            try {
+                vol = Shared.VolumeMgr.GetVolumeFromPath(path);
+            } catch (KOSPersistenceException)
+            {
+                return returnVal;
+            }
+
+            VolumeFile file = vol.Open(path) as VolumeFile;
+            if (file != null)
             {
                 if (file.ReadAll().Category == FileCategory.KSM)
                     return  "<<machine language file: can't show source line>>";
@@ -217,8 +197,8 @@ namespace kOS
                     returnVal = splitLines[line-1];
                 }
             }
+
             return returnVal;
         }
-
     }
 }

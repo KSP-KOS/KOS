@@ -4,20 +4,12 @@
 Files and Volumes
 =================
 
-Using the COPY, SWITCH, DELETE, and RENAME commands, you can manipulate the archive and the volumes as described in the :ref:`File I/O page <files>`. But before you do that, it's useful to know how kOS manages the archive and the volumes, and what they mean.
+Using the COPYPATH, SWITCH, DELETEPATH, and RENAMEPATH commands, you can manipulate the archive and the volumes as described in the :ref:`File I/O page <files>`. But before you do that, it's useful to know how kOS manages the archive and the volumes, and what they mean.
 
 .. contents::
     :local:
     :depth: 2
 
-.. warning::
-
-    .. versionchanged:: 0.15
-
-        **Archive location and file extension change**
-
-        The Archive where KerboScript files are kept has been changed from ``Plugins/PluginData/Archive`` to ``Ships/Script``, but still under the top-level **KSP** installation directory. The file name extensions have also changes from ``.txt`` to ``.ks``.
-    
 Script Files
 ------------
 
@@ -53,7 +45,7 @@ program on it. To simulate the sense that this game takes place at the
 dawn of the space race with 1960's and 1970's technology, the storage
 capacity of a volume is very limited.
 
-For example, the CX-4181 Scriptable Control System part defaults to only 
+For example, the CX-4181 Scriptable Control System part defaults to only
 allowing 1000 bytes of storage.
 
 The byte count of a program is just the
@@ -99,8 +91,7 @@ volume inside it.
 If you have multiple CX-4181 parts on the same craft, they are assumed
 to be networked together on the same system, and capable of reading each
 other's hard drives. Their disk drives each have a different Volume, and
-by default they are simply numbered 1,2,3, … unless you rename them with
-the RENAME command.
+by default they are simply numbered 1,2,3, … unless you rename them.
 
 For example, if you have two CX-4181's on the same craft, called 1 and
 2, with volumes on them called 1 and 2, respectively, it is possible for
@@ -116,11 +107,13 @@ different CPUs. The same volume which was called '2' when one CPU was
 looking at it might instead be called '1' when a different CPU is
 looking at it. Each CPU thinks of its OWN volume as number '1'.
 
-Therefore using the RENAME command on the volumes is useful when dealing
+Therefore using the SET command on the volumes is useful when dealing
 with multiple CX-4181's on the same vessel, so they all will refer to
-the volumes using the same names.
+the volumes using the same names::
 
-If a kOS processor has a name tag set, then that processor's volume 
+  SET VOLUME("0"):NAME TO "newname".
+
+If a kOS processor has a name tag set, then that processor's volume
 will have its name initially set to the value of the name tag.
 
 Archive
@@ -163,4 +156,36 @@ volume but with the following exceptions:
    a persistence file, on the other hand, is a bad idea and probably
    constitutes a form of cheating similar to any other edit of the
    persistence file.
+
+.. _boot:
+
+Special handling of files in the "boot" directory
+-------------------------------------------------
+
+For users requiring even more automation, the feature of custom boot scripts
+was introduced. If you have at least 1 file in the :code:`boot` directory on
+your Archive volume, you will be presented with the option to choose one of
+those files as a boot script for your kOS CPU.
+
+.. image:: http://i.imgur.com/05kp7Sy.jpg
+
+As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad
+(e.g. its status is PRELAUNCH) the assigned script will be copied to CPU's
+local hard disk with the same name.  If kOS is configured to start on the
+archive, the file will not be copied locally automatically. This script will
+be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics
+range or power on your CPU if it was turned off.  You may get or set the name
+of the boot file using the :attr:`kOSProcessor:BOOTFILENAME` suffix.
+
+Important things to consider:
+
+  * kOS CPU hard disk space is limited, avoid using complex boot scripts or increase disk space using MM config.
+  * Boot script runs immediately on initialisation, it should avoid interaction with parts/modules until physics fully load. It is best to wait for couple seconds or until certain trigger.
+
+Possible uses for boot scripts:
+
+  * Automatically activate sleeper/background scripts which will run on CPU until triggered by certain condition.
+  * Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.
+  * Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)
+  * Anything else you can come up with
 

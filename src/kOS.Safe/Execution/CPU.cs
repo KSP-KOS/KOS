@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Debug = kOS.Safe.Utilities.Debug;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Execution
 {
@@ -24,7 +25,7 @@ namespace kOS.Safe.Execution
         private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
-        private readonly SharedObjects shared;
+        private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private VariableScope savedPointers;
@@ -63,7 +64,7 @@ namespace kOS.Safe.Execution
         
         public List<string> ProfileResult { get; private set; }
 
-        public CPU(SharedObjects shared)
+        public CPU(SafeSharedObjects shared)
         {
             this.shared = shared;
             this.shared.Cpu = this;
@@ -120,15 +121,21 @@ namespace kOS.Safe.Execution
 
             if (!shared.Processor.CheckCanBoot()) return;
 
-            string filename = shared.Processor.BootFilename;
+            GlobalPath path = shared.Processor.BootFilePath;
+            Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(path);
             // Check to make sure the boot file name is valid, and then that the boot file exists.
-            if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
-            else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-            else if (shared.VolumeMgr.CurrentVolume.Open(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
-            else
+            if (path == null)
+            {
+                SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
+            }
+            else if (sourceVolume.Open(path) == null)
+            {
+                SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
+            } else
             {
                 var bootContext = "program";
-                string bootCommand = string.Format("run {0}.", filename);
+
+                string bootCommand = string.Format("run {0}.", path.Name);
 
                 var options = new CompilerOptions
                 {
@@ -138,8 +145,8 @@ namespace kOS.Safe.Execution
                 };
 
                 shared.ScriptHandler.ClearContext(bootContext);
-                List<CodePart> parts = shared.ScriptHandler.Compile(
-                    "sys:boot", 1, bootCommand, bootContext, options);
+                List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
+                    1, bootCommand, bootContext, options);
 
                 IProgramContext programContext = SwitchToProgramContext();
                 programContext.Silent = true;
@@ -1291,10 +1298,10 @@ namespace kOS.Safe.Execution
         {
             if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
-            string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
+            GlobalPath currentSourcePath = currentContext.Program[currentContext.InstructionPointer].SourcePath;
 
             while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                   currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
+                currentContext.Program[currentContext.InstructionPointer].SourcePath == currentSourcePath)
             {
                 currentContext.InstructionPointer++;
             }
@@ -1387,6 +1394,26 @@ namespace kOS.Safe.Execution
         public void StopCompileStopwatch()
         {
             compileWatch.Stop();
+        }
+
+        private class BootGlobalPath : InternalPath
+        {
+            private string command;
+
+            public BootGlobalPath(string command) : base()
+            {
+                this.command = command;
+            }
+
+            public override string Line(int line)
+            {
+                return command;
+            }
+
+            public override string ToString()
+            {
+                return "[Boot sequence]";
+            }
         }
     }
 }

@@ -98,12 +98,12 @@ namespace kOS.Safe.Test.Serialization
 
         private string Serialize(IDumper o)
         {
-            return new SafeSerializationMgr().Serialize(o, FormatWriter);
+            return new SafeSerializationMgr(null).Serialize(o, FormatWriter);
         }
 
         private IDumper Deserialize(string s)
         {
-            return new SafeSerializationMgr().Deserialize(s, FormatReader);
+            return new SafeSerializationMgr(null).Deserialize(s, FormatReader);
         }
     }
 }

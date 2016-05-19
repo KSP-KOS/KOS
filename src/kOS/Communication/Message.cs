@@ -20,7 +20,7 @@ namespace kOS.Communication
         {
             if (content is SerializableStructure)
             {
-                return new Message(new SafeSerializationMgr().Dump(content as SerializableStructure), sentAt, receivedAt, sender);
+                return new Message(new SafeSerializationMgr(null).Dump(content as SerializableStructure), sentAt, receivedAt, sender);
             } else if (content is PrimitiveStructure)
             {
                 return new Message(content as PrimitiveStructure, sentAt, receivedAt, sender);

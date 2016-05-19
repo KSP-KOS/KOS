@@ -6,7 +6,7 @@ using kOS.Screen;
 
 namespace kOS
 {
-    public class SharedObjects : Safe.SharedObjects
+    public class SharedObjects : Safe.SafeSharedObjects
     {
         public Vessel Vessel { get; set; }
         public ProcessorManager ProcessorMgr { get; set; }

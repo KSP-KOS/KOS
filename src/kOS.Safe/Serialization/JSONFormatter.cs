@@ -112,7 +112,7 @@ namespace kOS.Safe.Serialization
                         sb.Append(ch);
                         if (!quoted)
                         {
-                            sb.Append(FileContent.NEW_LINE);
+                            sb.Append(FileContent.NewLine);
                             Enumerable.Range(0, ++indent).ForEach(item => sb.Append(INDENT_STRING));
                         }
                         break;
@@ -120,7 +120,7 @@ namespace kOS.Safe.Serialization
                     case ']':
                         if (!quoted)
                         {
-                            sb.Append(FileContent.NEW_LINE);
+                            sb.Append(FileContent.NewLine);
                             Enumerable.Range(0, --indent).ForEach(item => sb.Append(INDENT_STRING));
                         }
                         sb.Append(ch);
@@ -138,7 +138,7 @@ namespace kOS.Safe.Serialization
                         sb.Append(ch);
                         if (!quoted)
                         {
-                            sb.Append(FileContent.NEW_LINE);
+                            sb.Append(FileContent.NewLine);
                             Enumerable.Range(0, indent).ForEach(item => sb.Append(INDENT_STRING));
                         }
                         break;

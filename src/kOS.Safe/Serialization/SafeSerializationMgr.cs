@@ -12,6 +12,13 @@ namespace kOS.Safe.Serialization
         public static string TYPE_KEY = "$type";
         private static HashSet<string> assemblies = new HashSet<string>();
 
+        private readonly SafeSharedObjects safeSharedObjects;
+
+        public SafeSerializationMgr(SafeSharedObjects sharedObjects)
+        {
+            this.safeSharedObjects = sharedObjects;
+        }
+
         public static void AddAssembly(string assembly)
         {
             assemblies.Add(assembly);
@@ -131,7 +138,15 @@ namespace kOS.Safe.Serialization
                 }
             }
 
-            return Activator.CreateInstance(deserializedType) as IDumper;
+            IDumper instance = Activator.CreateInstance(deserializedType) as IDumper;
+
+            if (instance is IHasSafeSharedObjects)
+            {
+                IHasSafeSharedObjects withSharedObjects = instance as IHasSafeSharedObjects;
+                withSharedObjects.Shared = safeSharedObjects;
+            }
+
+            return instance;
         }
 
         public IDumper Deserialize(string input, IFormatReader formatter)

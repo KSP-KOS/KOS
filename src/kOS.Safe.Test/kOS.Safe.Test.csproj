@@ -73,6 +73,16 @@
     <Compile Include="Serialization\FormatterTest.cs" />
     <Compile Include="Communication\MessageQueueTest.cs" />
     <Compile Include="Communication\FakeCurrentTimeProvider.cs" />
+    <Compile Include="Persistence\VolumePathTest.cs" />
+    <Compile Include="Persistence\GlobalPathTest.cs" />
+    <Compile Include="Persistence\ArchiveTest.cs" />
+    <Compile Include="Persistence\HarddiskTest.cs" />
+    <Compile Include="Persistence\VolumeTest.cs" />
+    <Compile Include="Persistence\CopyAndMoveTest.cs" />
+    <Compile Include="Persistence\HarddiskToArchiveCopyAndMoveTest.cs" />
+    <Compile Include="Persistence\HarddiskToHarddiskCopyAndMoveTest.cs" />
+    <Compile Include="Persistence\ArchiveAndHarddiskCopyAndMoveTest.cs" />
+    <Compile Include="Persistence\ArchiveToHarddiskCopyAndMoveTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -94,6 +104,7 @@
   <ItemGroup>
     <Folder Include="Serialization\" />
     <Folder Include="Communication\" />
+    <Folder Include="Persistence\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProfilingSessions\Session20160127_233127.sdps" />
