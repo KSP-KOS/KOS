@@ -164,10 +164,13 @@ namespace kOS.Safe.Persistence
             string volumeName = null;
             Match match = volumeIdentifierRegex.Match(pathString);
 
-            if (match.Success) {
+            if (match.Success)
+            {
                 volumeName = match.Groups["id"].Captures[0].Value;
                 pathString = match.Groups["rest"].Captures[0].Value;
-            } else {
+            }
+            else
+            {
                 throw new KOSInvalidPathException("GlobalPath should contain a volumeId", pathString);
             }
 

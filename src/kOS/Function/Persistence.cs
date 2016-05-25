@@ -22,12 +22,35 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
+            object arg3 = PopValueAssert(shared, true);
+            object arg2 = PopValueAssert(shared, true);
+            object arg1 = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`COPY FILENAME FROM VOLUMEID.` syntax", "`COPYPATH(FROMPATH, TOPATH)`", string.Empty);
+            string fromName, toName;
+            
+            if (arg2.ToString() == "from")
+            {
+                fromName = arg3.ToString() + ":/" + arg1.ToString();
+                toName = "";
+            }
+            else
+            {
+                fromName = arg1.ToString();
+                toName = arg3.ToString() + ":/" + fromName;
+            }
+
+            shared.Logger.LogWarningAndScreen(
+                string.Format( "WARNING: COPY {0} {1} {2} is deprecated as of kOS v1.0.0.  Use COPYPATH(\"{3}\", \"{4}\") instead.",
+                              arg1.ToString(), arg2.ToString(), arg3.ToString(), fromName, toName));
+
+            // Redirect into a call to the copypath function, so as to keep all
+            // the copy file logic there in one unified location.  This is slightly slow,
+            // but we don't care because this is just to support deprecation:
+            shared.Cpu.PushStack(new kOS.Safe.Execution.KOSArgMarkerType());
+            shared.Cpu.PushStack(fromName);
+            shared.Cpu.PushStack(toName);
+            shared.Cpu.CallBuiltinFunction("copypath");
         }
     }
 
@@ -36,13 +59,25 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
+            object newArg = PopValueAssert(shared, true);
+            object oldArg = PopValueAssert(shared, true);
+            PopValueAssert(shared, true); // This gets ignored because we already know its "file".
 
+            string newName = newArg.ToString();
+            string oldName = oldArg.ToString();
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`RENAME FILE OLDNAME TO NEWNAME.` syntax", "`MOVEPATH(FROMPATH, TOPATH)`", string.Empty);
+            shared.Logger.LogWarningAndScreen(
+                string.Format( "WARNING: RENAME FILE {0} TO {1} is deprecated as of kOS v1.0.0.  Use MOVEPATH(\"{2}\", \"{3}\") instead.",
+                              oldName, newName, oldName, newName));
+            
+            // Redirect into a call to the movepath function, so as to keep all
+            // the file logic there in one unified location.  This is slightly slow,
+            // but we don't care because this is just to support deprecation:
+            shared.Cpu.PushStack(new kOS.Safe.Execution.KOSArgMarkerType());
+            shared.Cpu.PushStack(oldName);
+            shared.Cpu.PushStack(newName);
+            shared.Cpu.CallBuiltinFunction("movepath");
         }
     }
 
@@ -51,12 +86,21 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
+            object newArg = PopValueAssert(shared, true);
+            object oldArg = PopValueAssert(shared, true);
+            PopValueAssert(shared, true); // This gets ignored because we already know its "volume".
+
+            string newName = newArg.ToString();
+            string oldName = oldArg.ToString();
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`RENAME VOLUME OLDNAME TO NEWNAME.` syntax", "`SET VOLUME:NAME TO NEWNAME.`", string.Empty);
+            Volume volume = oldName is Volume ? oldArg as Volume : shared.VolumeMgr.GetVolume(oldArg.ToString());
+
+            shared.Logger.LogWarningAndScreen(
+                string.Format( "WARNING: RENAME VOLUME {0} TO {1} is deprecated as of kOS v1.0.0.  Use SET VOLUME({2}):NAME TO \"{3}\" instead.",
+                              oldName, newName, volume.Name, newName));
+
+            volume.Name = newName;
         }
     }
 
@@ -65,11 +109,26 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            PopValueAssert(shared, true);
-            PopValueAssert(shared, true);
+            object volumeId = PopValueAssert(shared, true);
+            object fileName = PopValueAssert(shared, true);
             AssertArgBottomAndConsume(shared);
 
-            throw new KOSDeprecationException("1.0.0", "`DELETE FILENAME FROM VOLUMEID.` syntax", "`DELETEPATH(PATH)`", string.Empty);
+            string pathName;
+            if (volumeId != null)
+                pathName = volumeId.ToString() + ":/" + fileName.ToString();
+            else
+                pathName = fileName.ToString();
+
+            shared.Logger.LogWarningAndScreen(
+                string.Format( "WARNING: DELETE {0} {1} is deprecated as of kOS v1.0.0.  Use DELETEPATH(\"{2}\") instead.",
+                              fileName.ToString(), (volumeId == null ? "" : ("FROM " + volumeId.ToString())), pathName));
+
+            // Redirect into a call to the deletepath function, so as to keep all
+            // the file logic there in one unified location.  This is slightly slow,
+            // but we don't care because this is just to support deprecation:
+            shared.Cpu.PushStack(new kOS.Safe.Execution.KOSArgMarkerType());
+            shared.Cpu.PushStack(pathName);
+            shared.Cpu.CallBuiltinFunction("deletepath");
         }
     }
 
@@ -86,7 +145,8 @@ namespace kOS.Function
             {
                 path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path,
                     shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume));
-            } else
+            }
+            else
             {
                 object pathObject = PopValueAssert(shared, true);
                 path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
@@ -110,7 +170,8 @@ namespace kOS.Function
             if (remaining == 0)
             {
                 volume = shared.VolumeMgr.CurrentVolume;
-            } else
+            }
+            else
             {
                 object volumeId = PopValueAssert(shared, true);
                 volume = shared.VolumeMgr.GetVolume(volumeId);
@@ -179,7 +240,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("cd")]
+    [Function("cd", "chdir")]
     public class FunctionCd : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -191,7 +252,8 @@ namespace kOS.Function
             if (remaining == 0)
             {
                 directory = shared.VolumeMgr.CurrentVolume.Root;
-            } else
+            }
+            else
             {
                 object pathObject = PopValueAssert(shared, true);
 

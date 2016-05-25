@@ -297,19 +297,19 @@ namespace kOS.Control
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
             AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
                 },
                 value =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
                 }));
             AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
                 },
                 value =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
                 }));
             AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<BooleanValue>(() => ShowSteeringStats, value => ShowSteeringStats = value));
             AddSuffix("WRITECSVFILES", new SetSuffix<BooleanValue>(() => WriteCSVFiles, value => WriteCSVFiles = value));

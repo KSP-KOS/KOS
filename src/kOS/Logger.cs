@@ -74,6 +74,8 @@ namespace kOS
         }
 
         public abstract void LogWarning(string s);
+        
+        public abstract void LogWarningAndScreen(string s);
 
         public abstract void LogException(Exception exception);
 

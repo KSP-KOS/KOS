@@ -248,11 +248,13 @@ namespace kOS.Screen
             {
                 me.term.Print("[New File]");
                 me.contents = "";
-            } else if (item is VolumeFile)
+            }
+            else if (item is VolumeFile)
             {
                 VolumeFile file = item as VolumeFile;
                 me.contents = file.ReadAll().String;
-            } else
+            }
+            else
             {
                 throw new KOSPersistenceException("Path '" + me.filePath + "' points to a directory");
             }

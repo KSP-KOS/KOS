@@ -34,6 +34,13 @@ namespace kOS
         {
             UnityEngine.Debug.LogWarning(string.Format("{0} {1}", LOGGER_PREFIX, s));
         }
+        
+        public override void LogWarningAndScreen(string s)
+        {
+            LogWarning(s);
+            LogToScreen(s);
+            ScreenMessages.PostScreenMessage("<color=#dddd55><size=30>" + s + "</size></color>", 20, ScreenMessageStyle.UPPER_CENTER);
+        }
 
         public override void LogException(Exception exception)
         {

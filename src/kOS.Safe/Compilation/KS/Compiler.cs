@@ -3006,7 +3006,8 @@ namespace kOS.Safe.Compilation.KS
             if (renameFile)
             {
                 AddOpcode(new OpcodeCall("rename_file_deprecated()"));
-            } else
+            }
+            else
             {
                 AddOpcode(new OpcodeCall("rename_volume_deprecated()"));
             }
@@ -3021,6 +3022,8 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count == 5)
                 VisitNode(node.Nodes[3]);
+            else
+                AddOpcode(new OpcodePush(null));
 
             AddOpcode(new OpcodeCall("delete_deprecated()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
@@ -3050,8 +3053,10 @@ namespace kOS.Safe.Compilation.KS
             {
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 // list type
-                if (hasIdentifier) VisitNode(node.Nodes[1]);
-                else AddOpcode(new OpcodePush("files"));
+                if (hasIdentifier)
+                    VisitNode(node.Nodes[1]);
+                else
+                    AddOpcode(new OpcodePush("files"));
                 // print list
                 AddOpcode(new OpcodeCall("printlist()"));
                 AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.

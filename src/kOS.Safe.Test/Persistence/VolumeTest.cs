@@ -250,7 +250,8 @@ namespace kOS.Safe.Test
             if (ExpectedCapacity != Volume.INFINITE_CAPACITY)
             {
                 Assert.AreEqual(ExpectedCapacity - contentLength, TestVolume.FreeSpace);
-            } else
+            }
+            else
             {
                 Assert.AreEqual(Volume.INFINITE_CAPACITY, TestVolume.FreeSpace);
             }

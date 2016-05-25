@@ -25,7 +25,8 @@ namespace kOS.Serialization
             {
                 IHasSharedObjects withSharedObjects = instance as IHasSharedObjects;
                 withSharedObjects.Shared = sharedObjects;
-            } else if (instance is IHasSafeSharedObjects)
+            }
+            else if (instance is IHasSafeSharedObjects)
             {
                 IHasSafeSharedObjects withSharedObjects = instance as IHasSafeSharedObjects;
                 withSharedObjects.Shared = sharedObjects;

@@ -36,7 +36,8 @@ namespace kOS.Safe.Persistence
             if (path.Depth > 0)
             {
                 return RootHarddiskDirectory.GetSubdirectory(path.GetParent(), create);
-            } else
+            }
+            else
             {
                 throw new Exception("This directory does not have a parent");
             }
@@ -108,12 +109,14 @@ namespace kOS.Safe.Persistence
 
         public override VolumeFile SaveFile(VolumePath path, FileContent content, bool verifyFreeSpace = true)
         {
-            try {
+            try
+            {
                 if (verifyFreeSpace && !IsRoomFor(path, content))
                 {
                     return null;
                 }
-            } catch (KOSPersistenceException)
+            }
+            catch (KOSPersistenceException)
             {
                 throw new KOSPersistenceException("Can't save file over a directory: " + path);
             }

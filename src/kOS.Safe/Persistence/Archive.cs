@@ -72,11 +72,13 @@ namespace kOS.Safe.Persistence
 
                 if (fileSystemInfo == null) {
                     return null;
-                } else if (fileSystemInfo is FileInfo)
+                }
+                else if (fileSystemInfo is FileInfo)
                 {
                     VolumePath filePath = VolumePath.FromString(fileSystemInfo.FullName.Substring(ArchiveFolder.Length));
                     return new ArchiveFile(this, fileSystemInfo as FileInfo, filePath);
-                } else {
+                }
+                else {
                     // we can use 'path' here, default extensions are not added to directories
                     return new ArchiveDirectory(this, path);
                 }
@@ -99,7 +101,8 @@ namespace kOS.Safe.Persistence
             try
             {
                 Directory.CreateDirectory(archivePath);
-            } catch (IOException)
+            }
+            catch (IOException)
             {
                 throw new KOSPersistenceException("Could not create directory: " + path);
             }
@@ -121,16 +124,20 @@ namespace kOS.Safe.Persistence
                 throw new KOSPersistenceException("Already exists: " + path);
             }
 
-            try {
+            try
+            {
                 Directory.CreateDirectory(GetArchivePath(path.GetParent()));
-            } catch (IOException)
+            }
+            catch (IOException)
             {
                 throw new KOSPersistenceException("Parent directory for path does not exist: " + path.ToString());
             }
 
-            try {
+            try
+            {
                 File.Create(archivePath).Dispose();
-            } catch (UnauthorizedAccessException)
+            }
+            catch (UnauthorizedAccessException)
             {
                 throw new KOSPersistenceException("Could not create file: " + path);
             }
@@ -155,10 +162,12 @@ namespace kOS.Safe.Persistence
             if (fileSystemInfo == null)
             {
                 return false;
-            } else if (fileSystemInfo is FileInfo)
+            }
+            else if (fileSystemInfo is FileInfo)
             {
                 File.Delete(fileSystemInfo.FullName);
-            } else
+            }
+            else
             {
                 Directory.Delete(fileSystemInfo.FullName, true);
             }

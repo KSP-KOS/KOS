@@ -20,25 +20,35 @@ namespace kOS.Safe.Persistence
 
         public abstract VolumeDirectory Root { get; }
         public long Capacity { get; protected set; }
-        public long FreeSpace {
-            get {
+        public long FreeSpace
+        {
+            get
+            {
                 return Capacity == INFINITE_CAPACITY ? INFINITE_CAPACITY : Capacity - Size;
             }
         }
-        public long Size {
-            get {
+        public long Size
+        {
+            get
+            {
                 return Root.Size;
             }
         }
         public bool Renameable { get; protected set; }
-        public string Name {
-            get {
+        public string Name
+        {
+            get
+            {
                 return name;
             }
-            set {
-                if (Renameable) {
+            set
+            {
+                if (Renameable)
+                {
                     name = value;
-                } else {
+                }
+                else
+                {
                     throw new KOSException("Volume name can't be changed");
                 }
             }

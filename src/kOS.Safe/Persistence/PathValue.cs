@@ -23,7 +23,8 @@ namespace kOS.Safe
         private SafeSharedObjects sharedObjects;
 
         public SafeSharedObjects Shared {
-            set {
+            set
+            {
                 sharedObjects = value;
             }
         }

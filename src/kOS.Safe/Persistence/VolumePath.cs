@@ -24,8 +24,10 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// Number of segments in the path.
         /// </summary>
-        public int Length {
-            get {
+        public int Length
+        {
+            get
+            {
                 return Segments.Count;
             }
         }
@@ -33,8 +35,10 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// True if path is a root path.
         /// </summary>
-        public bool IsRoot {
-            get {
+        public bool IsRoot
+        {
+            get
+            {
                 return Segments.Count == 0;
             }
         }
@@ -42,8 +46,10 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// Depth of the path. Same as Length if the path does not contain any '..'.
         /// </summary>
-        public int Depth {
-            get {
+        public int Depth
+        {
+            get
+            {
                 int upSegments = Segments.Count(s => s.Equals(UpSegment));
                 return Length - 2 * upSegments;
             }
@@ -52,8 +58,10 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// Gets a value indicating whether this <see cref="kOS.Safe.Persistence.VolumePath"/> points outside of this volume.
         /// </summary>
-        public bool PointsOutside {
-            get {
+        public bool PointsOutside
+        {
+            get
+            {
                 return Segments.Count > 0 && Segments[0].Equals(UpSegment);
             }
         }
@@ -61,14 +69,18 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name {
-            get {
+        public string Name
+        {
+            get
+            {
                 return Segments.Count > 0 ? Segments.Last() : string.Empty;
             }
         }
 
-        public string Extension {
-            get {
+        public string Extension
+        {
+            get
+            {
                 if (Name == null)
                 {
                     return null;

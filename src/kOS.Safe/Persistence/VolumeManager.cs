@@ -191,11 +191,13 @@ namespace kOS.Safe.Persistence
                 GlobalPath p = GlobalPath.FromVolumePath(VolumePath.EMPTY, GetVolumeRawIdentifier(pathObject as Volume));
                 SafeHouse.Logger.Log("Path from volume: " + p);
                 return p;
-            } else if (pathObject is VolumeItem)
+            }
+            else if (pathObject is VolumeItem)
             {
                 VolumeItem volumeItem = pathObject as VolumeItem;
                 return GlobalPath.FromVolumePath(volumeItem.Path, GetVolumeRawIdentifier(volumeItem.Volume));
-            } else
+            }
+            else
             {
                 return GlobalPathFromString(pathObject.ToString());
             }
@@ -208,13 +210,15 @@ namespace kOS.Safe.Persistence
             if (GlobalPath.HasVolumeId(pathString))
             {
                 return GlobalPath.FromString(pathString);
-            } else
+            }
+            else
             {
                 if (GlobalPath.IsAbsolute(pathString))
                 {
                     return GlobalPath.FromVolumePath(VolumePath.FromString(pathString),
                         GetVolumeRawIdentifier(CurrentVolume));
-                } else
+                }
+                else
                 {
                     return GlobalPath.FromStringAndBase(pathString, GlobalPath.FromVolumePath(CurrentDirectory.Path,
                         GetVolumeRawIdentifier(CurrentVolume)));
@@ -258,7 +262,8 @@ namespace kOS.Safe.Persistence
                 if (destination == null)
                 {
                     destination = destinationVolume.CreateDirectory(destinationPath);
-                } else if (!sourcePath.IsRoot)
+                }
+                else if (!sourcePath.IsRoot)
                 {
                     destinationPath = destinationPath.Combine(sourcePath.Name);
                     destination = destinationVolume.OpenOrCreateDirectory(destinationPath);
@@ -276,7 +281,8 @@ namespace kOS.Safe.Persistence
                 {
                     Volume targetVolume = GetVolumeFromPath(destinationPath);
                     return CopyFile(source as VolumeFile, destinationPath, targetVolume, verifyFreeSpace);
-                } else
+                }
+                else
                 {
                     return CopyFileToDirectory(source as VolumeFile, destination as VolumeDirectory, verifyFreeSpace);
                 }
@@ -319,7 +325,8 @@ namespace kOS.Safe.Persistence
                     {
                         return false;
                     }
-                } else
+                }
+                else
                 {
                     if (!CopyFileToDirectory(pair.Value as VolumeFile, destination, verifyFreeSpace))
                     {

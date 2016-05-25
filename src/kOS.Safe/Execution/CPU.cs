@@ -131,7 +131,8 @@ namespace kOS.Safe.Execution
             else if (sourceVolume.Open(path) == null)
             {
                 SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
-            } else
+            }
+            else
             {
                 var bootContext = "program";
 

@@ -359,11 +359,16 @@ namespace kOS.Function
                 VolumeItem volumeItem = volume.Open(path) as VolumeFile;
                 VolumeFile volumeFile = null;
 
-                if (volumeItem == null) {
+                if (volumeItem == null)
+                {
                     volumeFile = volume.CreateFile(path);
-                } else if (volumeItem is VolumeDirectory) {
+                }
+                else if (volumeItem is VolumeDirectory)
+                {
                     throw new KOSFileException("Can't append to file: path points to a directory");
-                } else {
+                }
+                else
+                {
                     volumeFile = volumeItem as VolumeFile;
                 }
 
@@ -466,11 +471,16 @@ namespace kOS.Function
 
             kOSProcessor processor;
 
-            if (processorTagOrVolume is Volume) {
+            if (processorTagOrVolume is Volume)
+            {
                 processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
-            } else if (processorTagOrVolume is string || processorTagOrVolume is StringValue) {
+            }
+            else if (processorTagOrVolume is string || processorTagOrVolume is StringValue)
+            {
                 processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume.ToString());
-            } else {
+            }
+            else
+            {
                 throw new KOSInvalidArgumentException("processor", "processorId", "String or Volume expected");
             }
 

@@ -20,7 +20,8 @@ namespace kOS.Safe.Persistence
             }
         }
 
-        public string Extension {
+        public string Extension
+        {
             get
             {
                 return Path.Extension;

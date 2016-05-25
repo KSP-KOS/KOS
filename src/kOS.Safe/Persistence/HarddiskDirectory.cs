@@ -64,7 +64,8 @@ namespace kOS.Safe.Persistence
             try
             {
                 items.Add(name, directory);
-            } catch (ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 throw new KOSPersistenceException("Already exists: " + name);
             }
@@ -77,10 +78,12 @@ namespace kOS.Safe.Persistence
             if (!items.ContainsKey(name))
             {
                 return CreateFile(name, fileContent);
-            } else if (items[name] is VolumeDirectory)
+            }
+            else if (items[name] is VolumeDirectory)
             {
                 throw new KOSPersistenceException("Can't save file over a directory: " + name);
-            } else
+            }
+            else
             {
                 items[name] = new FileContent(fileContent.Bytes.Clone() as byte[]);
 
@@ -134,7 +137,8 @@ namespace kOS.Safe.Persistence
                 if (create)
                 {
                     CreateDirectory(subdirectory);
-                } else
+                }
+                else
                 {
                     return null;
                 }
@@ -170,7 +174,8 @@ namespace kOS.Safe.Persistence
         }
 
         public override int Size {
-            get {
+            get
+            {
                 return List().Aggregate(0, (acc, x) => acc + x.Value.Size);
             }
         }
@@ -182,7 +187,8 @@ namespace kOS.Safe.Persistence
             if (item is FileContent)
             {
                 return new HarddiskFile(this, name);
-            } else if (item is HarddiskDirectory)
+            }
+            else if (item is HarddiskDirectory)
             {
                 return item as HarddiskDirectory;
             }
