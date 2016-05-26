@@ -2079,14 +2079,7 @@ namespace kOS.Safe.Compilation.KS
             }
 
              // Concat Rule
-            tok = scanner.Scan(TokenType.FILEIDENT); // Terminal Rule: FILEIDENT
-            n = node.CreateNode(tok, tok.ToString() );
-            node.Token.UpdateRange(tok);
-            node.Nodes.Add(n);
-            if (tok.Type != TokenType.FILEIDENT) {
-                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.FILEIDENT.ToString(), 0x1001, tok));
-                return;
-            }
+            Parseexpr(node); // NonTerminal Rule: expr
 
              // Concat Rule
             tok = scanner.LookAhead(TokenType.BRACKETOPEN); // Option Rule

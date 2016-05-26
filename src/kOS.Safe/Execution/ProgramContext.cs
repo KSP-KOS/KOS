@@ -9,6 +9,7 @@ namespace kOS.Safe.Execution
     {
         private readonly Dictionary<string, bool> flyByWire;
         private readonly ProgramBuilder builder;
+        private readonly Dictionary<string, int> fileMap;
 
         public List<Opcode> Program { get; set; }
         public int InstructionPointer { get; set; }
@@ -35,6 +36,7 @@ namespace kOS.Safe.Execution
             TriggersToInsert = new List<int>();
             builder = interpreterContext ? new ProgramBuilderInterpreter() : new ProgramBuilder();
             flyByWire = new Dictionary<string, bool>();
+            fileMap  = new Dictionary<string, int>();
         }
 
         public ProgramContext(bool interpreterContext, List<Opcode> program) : this(interpreterContext)
@@ -49,13 +51,36 @@ namespace kOS.Safe.Execution
             UpdateProgram(newProgram);
         }
 
-        public int AddObjectParts(IEnumerable<CodePart> parts)
+        public int AddObjectParts(IEnumerable<CodePart> parts, string objectFileID)
         {
             Guid objectFileId = builder.AddObjectFile(parts);
             List<Opcode> newProgram = builder.BuildProgram();
             int entryPointAddress = builder.GetObjectFileEntryPointAddress(objectFileId);
             UpdateProgram(newProgram);
             return entryPointAddress;
+        }
+        
+        private void UpdateFileMap(string fileID, int entryPoint)
+        {
+            fileMap[fileID] = entryPoint;
+        }
+        
+        /// <summary>
+        /// Return the entry point into the program context where this
+        /// filename was already inserted into the system before.
+        /// If it hasn't been inserted before, returns a negative number
+        /// as a flag indicating this fact.  fileID should be a string that
+        /// will be fully unique for each file (the fully qualified
+        /// path name, for example).
+        /// </summary>
+        /// <param name="fileID"></param>
+        /// <returns>entry point or -1 if not present</returns>
+        public int GetAlreadyCompiledEntryPoint(string fileID)
+        {
+            if (fileMap.ContainsKey(fileID))
+                return fileMap[fileID];
+            else
+                return -1;
         }
 
         private void UpdateProgram(List<Opcode> newProgram)

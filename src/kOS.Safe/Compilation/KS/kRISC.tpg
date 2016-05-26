@@ -189,7 +189,7 @@ copy_stmt      -> COPY expr (FROM | TO) expr EOI;
 rename_stmt    -> RENAME (VOLUME | FILE)? expr TO expr EOI;
 delete_stmt    -> DELETE expr (FROM expr)? EOI;
 edit_stmt      -> EDIT expr EOI;
-run_stmt       -> RUN (ONCE)? FILEIDENT (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
+run_stmt       -> RUN (ONCE)? expr (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
 compile_stmt   -> COMPILE expr (TO expr)? EOI;
 list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt    -> REBOOT EOI;

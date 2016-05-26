@@ -36,6 +36,7 @@ namespace kOS.Safe.Compilation.KS
         private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
+        private string boilerplateLoadAndRunEntryLabel;
 
         private enum StorageModifier {
             /// <summary>The storage will definitely be at the localmost scope.</summary>
@@ -45,6 +46,7 @@ namespace kOS.Safe.Compilation.KS
             /// <summary>The storage will be whatever scope it happens to find the first hit, or global if not found.</summary>
             LAZYGLOBAL
         };
+        
         // Because the Compiler object can be re-used, with its Compile()
         // method called a second time, we can't rely on the constructor or C#'s rules about default
         // variable values to guarantee these are all set properly.  They might be leftover values
@@ -59,6 +61,7 @@ namespace kOS.Safe.Compilation.KS
             startLineNum = 1;
             lastLine = 0;
             lastColumn = 0;
+            boilerplateLoadAndRunEntryLabel = "not-set-yet";
             breakList.Clear();
             returnList.Clear();
             triggerKeepNames.Clear();
@@ -395,9 +398,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
-                    break;
-                case TokenType.run_stmt:
-                    PreProcessRunStatement(node);
                     break;
             }
         }
@@ -780,88 +780,6 @@ namespace kOS.Safe.Compilation.KS
             return node;
         }
 
-        private void PreProcessRunStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (options.LoadProgramsInSameAddressSpace)
-            {
-                int progNameIndex = 1;
-                if (node.Nodes[1].Token.Type == TokenType.ONCE)
-                {
-                    ++progNameIndex;
-                }
-                bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
-                if (!hasOn)
-                {
-                    string subprogramName = node.Nodes[progNameIndex].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
-                    if (!context.Subprograms.Contains(subprogramName)) // which it uses to decide how many of these blocks to make,
-                    {                                                   // which is why we can't defer run filenames until runtime like we can with the others.
-                        Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
-                        // Function code
-                        currentCodeSection = subprogramObject.FunctionCode;
-                        // verify if the program has been loaded
-                        Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        // Becuse of Cpu.SaveAndClearPointers(), the subprogram's pointer identifier won't
-                        // exist in this program context until it has been compiled once.  If it does exist,
-                        // then skip the compiling step and just run the code that's already there:
-                        AddOpcode(new OpcodeExists());
-                        // branch to where the compiler loads the code:
-                        OpcodeBranchIfFalse branchToLoad = new OpcodeBranchIfFalse();
-                        AddOpcode(branchToLoad);
-                        // Now the top of the stack should be the argument pushed by
-                        // VisitRunStatement that flags if there was a 'once' keyword:
-                        // If there was no 'once', then branch to where the already
-                        // loaded code gets run, even though it's been run before:
-                        OpcodeBranchIfFalse branchToRun = new OpcodeBranchIfFalse();
-                        AddOpcode(branchToRun);
-                        // If it falls through to here, that means the code was already
-                        // loaded, AND the 'once' keyword was present in the instance
-                        // where this loading function got called, so just do nothing
-                        // and return.
-                        AddOpcode(new OpcodePush(0));
-                        AddOpcode(new OpcodeReturn(0));
-                        // if it wasn't then load it now:
-                        // First throw away the 'once' argument since it doesn't matter when
-                        // we're going to be compiling regardless:
-                        OpcodePop firstOpcodeOfLoadSection = new OpcodePop();
-                        AddOpcode(firstOpcodeOfLoadSection);
-                        branchToLoad.DestinationLabel = firstOpcodeOfLoadSection.Label;
-                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                        AddOpcode(new OpcodePush(subprogramObject.SubprogramName));
-                        AddOpcode(new OpcodePush(null)); // The output filename - only used for compile-to-file rather than for running.
-                        AddOpcode(new OpcodeCall("load()"));
-                        AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
-                        // store the address of the program in the pointer variable
-                        // (the load() function pushes the address onto the stack)
-                        AddOpcode(new OpcodeStore());
-                        // call the program
-                        Opcode callOpcode = AddOpcode(new OpcodeCall(subprogramObject.PointerIdentifier));
-                        // set the call opcode as the destination of the previous branch
-                        branchToRun.DestinationLabel = callOpcode.Label;
-                        // return to the caller address, after adding a dummy return val:
-
-                        // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
-                        // a function declaration.  But in principle we could have programs return exit codes
-                        // using the same architecture, and in fact that is why this dummy return value is needed,
-                        // because OpcodeReturn now expects such a return value to exist and throws an exception when it
-                        // does not.
-                        // If an EXIT command was implemented, it would maybe allow an exit code that can be read here:
-                        AddOpcode(new OpcodePop()); // for now: throw away return code from subprogram.
-                        AddOpcode(new OpcodePush(0)); // Replace it with new dummy return code.
-                        AddOpcode(new OpcodeReturn(0)); // return that.
-
-                        // set the function start label
-                        subprogramObject.FunctionLabel = functionStart.Label;
-
-                        // Initialization code
-                        currentCodeSection = subprogramObject.InitializationCode;
-                        // removed pointer initialization since it overwrote any existing values when loading ksm files.
-                    }
-                }
-            }
-        }
-
         private void PushTriggerKeepName(string newLabel)
         {
             triggerKeepNames.Add(newLabel);
@@ -1041,6 +959,81 @@ namespace kOS.Safe.Compilation.KS
                           TraverseScopeBranch(childNode);
                     break;                    
             }
+        }
+        
+        private string GetBoilerplateLoadAndRunEntryPoint()
+        {
+            if (boilerplateLoadAndRunEntryLabel != "not-set-yet")
+                return boilerplateLoadAndRunEntryLabel;
+            
+            // Build the boilerplate function and return the entry point to it:
+            // ----------------------------------------------------------------
+            
+            List<Opcode> prevCurrentCodeSection = currentCodeSection; // for restoring it later down at the bottom.
+
+            // This boilerplate needs to be inserted into the functions section of the program:
+            Subprogram subprogramObject = context.Subprograms.GetSubprogram("boilerplate-load-and-run-func");
+            currentCodeSection = subprogramObject.FunctionCode;            
+
+            boilerplateLoadAndRunEntryLabel = GetNextLabel(false);
+            AddOpcode(new OpcodePushScope(-999,0)); // hardcoded dummy scope ID, the parent scope is the global.
+
+            // High level kerboscript function calls flip the argument orders for us, but
+            // low level kRISC does not so the parameters have to be read in stack order:
+            
+            // store parameter 2 in a local name:
+            AddOpcode(new OpcodePush("$runonce"));
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(new OpcodeStoreLocal());
+
+            // store parameter 1 in a local name:
+            AddOpcode(new OpcodePush("$filename"));
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(new OpcodeStoreLocal());
+            
+            // Unconditionally call load() no matter what.  load() will abort and return
+            // early if the program was already compiled, and tell us that on the stack:
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+            AddOpcode(new OpcodePush("$filename"));
+            AddOpcode(new OpcodeEval());
+            AddOpcode(new OpcodePush(true)); // the flag that tells load() to abort early if it's already loaded:
+            AddOpcode(new OpcodePush(null));
+            AddOpcode(new OpcodeCall("load()"));
+
+            // Stack now has the 2 return values of load():
+            //    Topmost value is a boolean flag for whether or not the program was already loaded.
+            //    Second-from-top value is the entry point into the program.
+
+            // If load() didn't claim the program was already loaded, or if we aren't operating
+            // in "once" mode, then jump to the part where we call the loaded program, else
+            // fall through to a dummy do-nothing return for the "run once, but it already ran" case:
+            Opcode branchFromOne = new OpcodeBranchIfFalse();
+            AddOpcode(branchFromOne);
+            AddOpcode(new OpcodePush("$runonce"));
+            Opcode branchFromTwo = new OpcodeBranchIfFalse();
+            AddOpcode(branchFromTwo);
+            AddOpcode(new OpcodePush(0));   // ---+-- The dummy do-nothing return.
+            AddOpcode(new OpcodeReturn(1)); // ---'
+            
+            // Actually call the Program from its entry Point, which is now the thing left on top
+            // of the stack from the second return value of load():
+            Opcode branchTo = new OpcodePush("$entrypoint");
+            AddOpcode(branchTo);
+            AddOpcode(new OpcodeSwap());
+            AddOpcode(new OpcodeStoreLocal());
+            AddOpcode(new OpcodeCall("$entrypoint"));
+            
+            AddOpcode(new OpcodePop());
+            AddOpcode(new OpcodePush(0));
+            AddOpcode(new OpcodeReturn(1));
+
+            branchFromOne.DestinationLabel = branchTo.Label;
+            branchFromTwo.DestinationLabel = branchTo.Label;
+
+            // Reset to wherever it was compiling before we switched it into the functions section:
+            currentCodeSection = prevCurrentCodeSection;
+            
+            return boilerplateLoadAndRunEntryLabel;
         }
 
         private void VisitNode(ParseNode node)
@@ -2884,11 +2877,9 @@ namespace kOS.Safe.Compilation.KS
             // PreprocessRunStatement() gets to it:
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
-                string subprogramName = node.Nodes[progNameIndex].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
-                if (context.Subprograms.Contains(subprogramName))
-                {
-                    AddOpcode(new OpcodePush(hasOnce)); // tell that routine whether or not to skip the run when already compiled.
-                }
+                AddOpcode(new OpcodePush(hasOnce));
+                VisitNode(node.Nodes[progNameIndex]); // put program name on stack.
+                AddOpcode(new OpcodeEval(true));
             }
 
             if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
@@ -2902,13 +2893,8 @@ namespace kOS.Safe.Compilation.KS
 
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
-                string subprogramName = node.Nodes[progNameIndex].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
-                if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
-                {
-                    Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
-                    AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
-                    AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
-                }
+                AddOpcode(new OpcodeCall(null)).DestinationLabel = GetBoilerplateLoadAndRunEntryPoint();
+                AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
             }
             else
             {
@@ -2940,6 +2926,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // for the load() function.
             VisitNode(node.Nodes[1]);
+            AddOpcode(new OpcodePush(false));
             if (node.Nodes.Count > 3)
             {
                 // It has a "TO outputfile" clause:
