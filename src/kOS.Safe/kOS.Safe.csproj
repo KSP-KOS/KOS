@@ -65,6 +65,9 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
+    <Compile Include="Exceptions\KOSObsoletionException.cs" />
+    <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
     <Compile Include="Exceptions\KOSYouShouldNeverSeeThisException.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
@@ -130,7 +133,6 @@
     <Compile Include="Exceptions\KOSNotInvokableException.cs" />
     <Compile Include="Exceptions\KOSOnceInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
-    <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
     <Compile Include="Exceptions\KOSBadJumpException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSDuplicateKeyException.cs" />
@@ -143,13 +145,11 @@
     <Compile Include="Exceptions\KOSCommandInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
-    <Compile Include="Exceptions\KOSDeprecationException.cs" />
     <Compile Include="Exceptions\KOSException.cs" />
     <Compile Include="Exceptions\KOSInvalidFieldValueException.cs" />
     <Compile Include="Exceptions\KOSLongTriggerException.cs" />
     <Compile Include="Exceptions\KOSLookupFailException.cs" />
     <Compile Include="Exceptions\KOSParseException.cs" />
-    <Compile Include="Exceptions\KOSPatchesDeprecationException.cs" />
     <Compile Include="Exceptions\KOSPersistenceException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSReturnInvalidHereException.cs" />
