@@ -120,8 +120,8 @@ namespace kOS.Function
                 pathName = fileName.ToString();
 
             shared.Logger.LogWarningAndScreen(
-                string.Format( "WARNING: DELETE {0} {1} is deprecated as of kOS v1.0.0.  Use DELETEPATH(\"{2}\") instead.",
-                              fileName.ToString(), (volumeId == null ? "" : ("FROM " + volumeId.ToString())), pathName));
+                string.Format( "WARNING: DELETE {0}{1} is deprecated as of kOS v1.0.0.  Use DELETEPATH(\"{2}\") instead.",
+                              fileName.ToString(), (volumeId == null ? "" : (" FROM " + volumeId.ToString())), pathName));
 
             // Redirect into a call to the deletepath function, so as to keep all
             // the file logic there in one unified location.  This is slightly slow,
