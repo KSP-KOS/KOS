@@ -13,6 +13,7 @@ Addon Reference
     Kerbal Alarm Clock <addons/KAC>
     Infernal Robotics <addons/IR>
     DMagic Orbital Science <addons/OrbitalScience>
+    Trajectories <addons/Trajectories>
 
 To help KOS scripts identify whether or not certain mod is installed and available following suffixed functions were introduced in version 0.17
 
@@ -38,3 +39,8 @@ Returns True if mod Kerbal Alarm Clock is installed and available to KOS.
 ------------------------
 
 Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft. See more :doc:`here <addons/IR>`.
+
+``ADDONS:TR:AVAILABLE``
+------------------------
+
+Returns True if a compatible version of the mod Trajectories is installed. See more :doc:`here <addons/Trajectories>`.
