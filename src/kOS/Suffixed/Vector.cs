@@ -109,6 +109,11 @@ namespace kOS.Suffixed
             return new Vector3((float)X, (float)Y, (float)Z);
         }
 
+        public Vector SwapYZ() // Used for KSP APIs that swap Y and Z
+        {
+            return new Vector(X, Z, Y);
+        }
+
         public override string ToString()
         {
             return "V(" + X + ", " + Y + ", " + Z + ")";
