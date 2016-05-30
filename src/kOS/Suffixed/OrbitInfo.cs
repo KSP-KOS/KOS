@@ -4,6 +4,7 @@ using System;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
 using kOS.Safe;
+using kOS.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -38,13 +39,17 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             orbit = new Orbit();
-            orbit.UpdateFromStateVectors(pos.SwapYZ(), vel.SwapYZ(), body, when);
+            orbit.UpdateFromStateVectors(Utils.SwapYZ(pos), Utils.SwapYZ(vel), body, when);
+            Debug.Log("UpdateFromStateVectors body: " + body);
+            Debug.Log("UpdateFromStateVectors when: " + when);
             // fix from MJ for perfectly circular orbits
             if (double.IsNaN(orbit.argumentOfPeriapsis))
             {
                 Debug.Log("fixing NaN argumentOfPeriapsis for orbit from UpdateFromStateVectors");
-                Vector3d vectorToAN = Quaternion.AngleAxis((float)orbit.LAN, Planetarium.up) * Planetarium.right;
-                double cosArgumentOfPeriapsis = Vector3d.Dot(vectorToAN, orbit.eccVec) / (vectorToAN.magnitude * orbit.eccVec.magnitude);
+                Vector3d vectorToAN = Quaternion.AngleAxis(-(float)orbit.LAN, Planetarium.up) * Planetarium.right;
+                Vector3d vectorToPe = Utils.SwapYZ(orbit.eccVec);
+
+                double cosArgumentOfPeriapsis = Vector3d.Dot(vectorToAN, vectorToPe) / (vectorToAN.magnitude * vectorToPe.magnitude);
                 if(cosArgumentOfPeriapsis > 1) {
                     orbit.argumentOfPeriapsis = 0;
                 } else if (cosArgumentOfPeriapsis < -1) {
@@ -53,7 +58,7 @@ namespace kOS.Suffixed
                     orbit.argumentOfPeriapsis = Math.Acos(cosArgumentOfPeriapsis);
                 }
             }
-            name = "<unnamed>";
+            name = "<user defined>";
         }
 
         private void InitializeSuffixes()

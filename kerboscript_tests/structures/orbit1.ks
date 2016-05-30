@@ -7,21 +7,21 @@
 // creates a keosynchronous orbit of an object directly above the equatorial coordinates of
 // KSC and checks the position at the current time and 1/4 way around the orbit.
 
+set sidereal_day to 5*3600 + 59*60 + 9.4.
+
 // x0, v0 are what we use to build the orbit
 set x0 to latlng(0, -75.08333333333333333332):position - ship:body:position.
-set x0:mag to 3463334.06.
+set x0:mag to (sqrt(kerbin:mu) * sidereal_day / (2 * constant:pi))^(2/3).  // 3463331.36.
 set v0 to vcrs(kerbin:angularvel, x0).
 set v0:mag to sqrt(kerbin:mu / x0:mag).
 
-set keosynch to orbit(x0, v0, "kerbin", TIME:SECONDS).
+set keosynch to orbit(x0, v0, kerbin, time:seconds).
 
 print "sma    : " + keosynch:semimajoraxis.
 print "ecc    : " + keosynch:eccentricity.
 print "lan    : " + keosynch:lan.
 print "arg    : " + keosynch:argumentofperiapsis.
 print "period : " + keosynch:period.
-
-set sidereal_day to 5*3600 + 59*60 + 9.4.
 
 // x1, v1 should recover the same, while x2, v2 should be 1/4 around the orbit
 set x1 to keosynch:positionat(time:seconds) - ship:body:position.
@@ -35,6 +35,8 @@ print "x2 : " + x2:mag.
 print "v2 : " + v2:mag.
 
 // some handy vectors for debugging in case something goes wrong.
+set xvec0 to vecdraw(ship:body:position, x0, rgb(0,0,1), "x0", 1.0, true, 0.2).
+set vvec0 to vecdraw(ship:body:position + x0, 1000 * v0, rgb(0,0,1), "v0", 1.0, true, 0.2).
 set xvec1 to vecdraw(ship:body:position, x1, rgb(1,0,0), "x1", 1.0, true, 0.2).
 set vvec1 to vecdraw(ship:body:position + x1, 1000 * v1, rgb(1,0,0), "v1", 1.0, true, 0.2).
 set xvec2 to vecdraw(ship:body:position, x2, rgb(0,1,0), "x2", 1.0, true, 0.2).
@@ -48,21 +50,21 @@ if abs(keosynch:period - sidereal_day) > 1
 if abs(keosynch:eccentricity) > 0.000001
   exit.
 
-if abs(keosynch:semimajoraxis - 3463334.06) > 0.1
+if abs(keosynch:semimajoraxis - 3463331.36) > 0.1
   exit.
 
-if abs(x0:mag - 3463334.06) > 0.1
+if abs(x0:mag - 3463331.36) > 0.1
   exit.
-if abs(x1:mag - 3463334.06) > 0.1
+if abs(x1:mag - 3463331.36) > 0.1
   exit.
-if abs(x2:mag - 3463334.06) > 0.1
+if abs(x2:mag - 3463331.36) > 0.1
   exit.
 
-if abs(v0:mag - 1009.80) > 0.1
+if abs(v0:mag - 1009.81) > 0.1
   exit.
-if abs(v1:mag - 1009.80) > 0.1
+if abs(v1:mag - 1009.81) > 0.1
   exit.
-if abs(v2:mag - 1009.80) > 0.1
+if abs(v2:mag - 1009.81) > 0.1
   exit.
 
 if (x1 - x0):mag > 1
@@ -72,11 +74,11 @@ if (v1 - v0):mag > 1
   exit.
 
 // x2 should point in the v1 direction
-if abs(3463334.06 - vdot(x2, v1:normalized)) > 0.1
+if abs(3463331.36 - vdot(x2, v1:normalized)) > 0.1
   exit.
 
 // v2 should point in the -x1 direction
-if abs(1009.80 - vdot(v2, -x1:normalized)) > 0.1
+if abs(1009.81 - vdot(v2, -x1:normalized)) > 0.1
   exit.
 
 // all vectors should be normal to the angular vel of kerbin's rotation

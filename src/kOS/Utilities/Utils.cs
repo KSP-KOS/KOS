@@ -41,6 +41,21 @@ namespace kOS.Utilities
             return radians * 180 / Math.PI;
         }
 
+        public static Vector3d SwapYZ(Vector3d vector)
+        {
+            return new Vector3d(vector.x, vector.z, vector.y);
+        }
+
+        public static Vector3 SwapYZ(Vector3 vector)
+        {
+            return new Vector3(vector.x, vector.z, vector.y);
+        }
+
+        public static Vector SwapYZ(Vector vector)
+        {
+            return new Vector(vector.X, vector.Z, vector.Y);
+        }
+
         public static bool IsValidVector(Vector3d vector)
         {
             return IsValidNumber(vector.x) &&

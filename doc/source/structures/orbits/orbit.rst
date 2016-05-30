@@ -25,13 +25,13 @@ Creation
 
     :parameter x: (vector) position at time t
     :parameter v: (vetor) velocity at time t
-    :parameter body: (String) central body of orbit
+    :parameter body: (CelstialBody) central body of orbit
     :parameter t: (scalar) universal time
     :return: :struct:`Orbit`
 
     This creates a new orbit around a body given the position and velocity at a given time::
 
-        SET o TO ORBIT( x, v, "kerbin", TIME:SECONDS ).
+        SET o TO ORBIT( x, v, kerbin, TIME:SECONDS ).
 
     Here, a new :struct:`Orbit` called ``o`` is created.
 

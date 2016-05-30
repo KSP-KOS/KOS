@@ -172,11 +172,13 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             var when = GetTimeSpan(PopValueAssert(shared));
-            string bodyName = PopValueAssert(shared).ToString();
+            var body = (BodyTarget) PopValueAssert(shared);
+            if (body == null)
+                throw new KOSInvalidArgumentException("orbit", "body", "no body found");
             Vector vel = GetVector(PopValueAssert(shared));
             Vector pos = GetVector(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            var result = new OrbitInfo(pos, vel, VesselUtils.GetBodyByName(bodyName), when.ToUnixStyleTime(), shared);
+            var result = new OrbitInfo(pos, vel, body.Body, when.ToUnixStyleTime(), shared);
             ReturnValue = result;
         }
     }
