@@ -40,12 +40,9 @@ namespace kOS.Suffixed
             Shared = sharedObj;
             orbit = new Orbit();
             orbit.UpdateFromStateVectors(Utils.SwapYZ(pos), Utils.SwapYZ(vel), body, when);
-            Debug.Log("UpdateFromStateVectors body: " + body);
-            Debug.Log("UpdateFromStateVectors when: " + when);
             // fix from MJ for perfectly circular orbits
             if (double.IsNaN(orbit.argumentOfPeriapsis))
             {
-                Debug.Log("fixing NaN argumentOfPeriapsis for orbit from UpdateFromStateVectors");
                 Vector3d vectorToAN = Quaternion.AngleAxis(-(float)orbit.LAN, Planetarium.up) * Planetarium.right;
                 Vector3d vectorToPe = Utils.SwapYZ(orbit.eccVec);
 
