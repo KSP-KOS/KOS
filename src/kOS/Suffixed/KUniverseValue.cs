@@ -51,6 +51,7 @@ namespace kOS.Suffixed
         {
             if (CanRevertToLaunch())
             {
+                shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToLaunch();
             }
             else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
@@ -61,6 +62,7 @@ namespace kOS.Suffixed
             if (CanRevvertToEditor())
             {
                 EditorFacility fac = ShipConstruction.ShipType;
+                shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToPrelaunch(fac);
             }
             else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
@@ -85,6 +87,7 @@ namespace kOS.Suffixed
                         fac = EditorFacility.None;
                         break;
                 }
+                shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToPrelaunch(fac);
             }
             else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTO", "When revert is disabled", "When revert is enabled");
@@ -218,6 +221,7 @@ namespace kOS.Suffixed
                 {
                     throw new KOSException("Error loading the quicksave file, the save file does not exist.");
                 }
+                shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 try
                 {
                     SaveGame("kos-backup-quicksave");
@@ -317,6 +321,7 @@ namespace kOS.Suffixed
             preFlightCheck.AddTest(new NoControlSources(manifest));
             preFlightCheck.AddTest(new LaunchSiteClear(launchSiteName, HighLogic.CurrentGame));
             preFlightCheck.RunTests();
+            shared.Cpu.GetCurrentOpcode().AbortProgram = true;
             SafeHouse.Logger.Log("Craft waiting for preflight checks!");
         }
     }
