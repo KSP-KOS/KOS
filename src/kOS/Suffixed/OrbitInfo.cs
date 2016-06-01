@@ -39,6 +39,11 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             orbit = new Orbit();
+            // FIXME: there is a bug here in translating betwee ship-local and body-centered coordinate systems, if you
+            // are below the body.inverseRotationAltitude when you try to compute an orbit.  you may be off by a rotation.
+            // uncertain of the exact incantations to fix.  workaround is to get yourself into orbit first before trying
+            // to compute orbits from this function.  mechjeb also has this bug, but nobody has reported it or fixed it.
+            // it should mostly troll people who are doing orbital computation testing while on the launchpad (sometimes).
             orbit.UpdateFromStateVectors(Utils.SwapYZ(pos - body.GetPosition()), Utils.SwapYZ(vel), body.Body, when);
             if (double.IsNaN(orbit.LAN))
             {
