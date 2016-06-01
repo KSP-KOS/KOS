@@ -23,17 +23,24 @@ Creation
 
 .. function:: ORBIT(x, v, body, t)
 
-    :parameter x: (vector) position at time t
+    :parameter x: (vector) position at time t in the :ref:`ship-center-raw-rotation <ship-raw>` frame
     :parameter v: (vetor) velocity at time t
     :parameter body: (CelstialBody) central body of orbit
     :parameter t: (scalar) universal time
     :return: :struct:`Orbit`
 
-    This creates a new orbit around a body given the position and velocity at a given time::
+    This creates a new user defined orbit (for predictive/calculation purposes) around a body given the position and velocity
+    at a given time.  The vectors are in the ref:`ship-center-raw-rotation <ship-raw>` frame.  This makes it easy to
+    recover (or perturb) an orbit based on a given position and velocity:
 
-        SET o TO ORBIT( x, v, kerbin, TIME:SECONDS ).
+        SET t TO TIME:SECONDS + 100.
+        SET o TO ORBIT( obt:velocityat(t), obt:positionat(t), body, t ).
 
-    Here, a new :struct:`Orbit` called ``o`` is created.
+    Here, a new :struct:`Orbit` called ``o`` is created that should be very nearly equal to the current orbit.
+
+    To create an orbit based on the position (r) and velocity (v) from the center of the body a translation is required:
+
+        SET o TO ORBIT( r + body:position, v, body, TIME:SECONDS ).
 
 Structure
 ---------

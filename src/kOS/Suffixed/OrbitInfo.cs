@@ -35,12 +35,17 @@ namespace kOS.Suffixed
             name = "<unnamed>";
         }
 
-        public OrbitInfo(Vector pos, Vector vel, CelestialBody body, double when, SharedObjects sharedObj) : this()
+        public OrbitInfo(Vector pos, Vector vel, BodyTarget body, double when, SharedObjects sharedObj) : this()
         {
             Shared = sharedObj;
             orbit = new Orbit();
-            orbit.UpdateFromStateVectors(Utils.SwapYZ(pos), Utils.SwapYZ(vel), body, when);
-            // fix from MJ for perfectly circular orbits
+            orbit.UpdateFromStateVectors(Utils.SwapYZ(pos - body.GetPosition()), Utils.SwapYZ(vel), body.Body, when);
+            if (double.IsNaN(orbit.LAN))
+            {
+                // not sure if this matters, but avoids annoying NaN issues in KOS with perfectly equatorial orbits
+                orbit.LAN = 0;
+            }
+            // fix from MJ for perfectly circular orbits (not sure if any of the precision here matters)
             if (double.IsNaN(orbit.argumentOfPeriapsis))
             {
                 Vector3d vectorToAN = Quaternion.AngleAxis(-(float)orbit.LAN, Planetarium.up) * Planetarium.right;
@@ -52,7 +57,7 @@ namespace kOS.Suffixed
                 } else if (cosArgumentOfPeriapsis < -1) {
                     orbit.argumentOfPeriapsis = 180;
                 } else {
-                    orbit.argumentOfPeriapsis = Math.Acos(cosArgumentOfPeriapsis);
+                    orbit.argumentOfPeriapsis = Math.Acos(cosArgumentOfPeriapsis) * 180 / Math.PI;;
                 }
             }
             name = "<user defined>";

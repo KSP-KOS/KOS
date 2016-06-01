@@ -178,7 +178,7 @@ namespace kOS.Function
             Vector vel = GetVector(PopValueAssert(shared));
             Vector pos = GetVector(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            var result = new OrbitInfo(pos, vel, body.Body, when.ToUnixStyleTime(), shared);
+            var result = new OrbitInfo(pos, vel, body, when.ToUnixStyleTime(), shared);
             ReturnValue = result;
         }
     }
