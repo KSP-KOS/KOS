@@ -34,7 +34,7 @@ Creation
     recover (or perturb) an orbit based on a given position and velocity:
 
         SET t TO TIME:SECONDS + 100.
-        SET o TO ORBIT( obt:velocityat(t), obt:positionat(t), body, t ).
+        SET o TO ORBIT( obt:velocityat(t):orbit, obt:positionat(t), body, t ).
 
     Here, a new :struct:`Orbit` called ``o`` is created that should be very nearly equal to the current orbit.
 
