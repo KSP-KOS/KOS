@@ -23,6 +23,7 @@ using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
 using kOS.Safe.Communication;
+using kOS.Safe.Function;
 
 namespace kOS.Module
 {

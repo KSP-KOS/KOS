@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\SafeBindingBase.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
@@ -174,6 +175,8 @@
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
+    <Compile Include="Function\SafeFunctionBase.cs" />
+    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\IFunctionManager.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IUpdateObserver.cs" />
@@ -205,6 +208,7 @@
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
+    <Compile Include="Utilities\AssemblyWalkAttribute.cs" />
     <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
@@ -284,7 +288,5 @@
   </Target>
   -->
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Communication\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
