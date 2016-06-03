@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
+    <Compile Include="AddOns\kOSAddonAttribute.cs" />
+    <Compile Include="AddOns\AddonManager.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRControlGroup.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRHandler.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRServoWrapper.cs" />

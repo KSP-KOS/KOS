@@ -15,6 +15,7 @@ namespace kOS
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
         public TransferManager TransferManager { get; set; }
+        public AddOns.AddonManager AddonManager { get; set; }
 
         public SharedObjects()
         {
