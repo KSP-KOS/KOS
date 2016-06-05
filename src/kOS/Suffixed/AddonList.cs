@@ -22,6 +22,7 @@ namespace kOS.Suffixed
             AddSuffix("RT", new Suffix<Addon>(() => new AddOns.RemoteTech.Addon(shared)));
             AddSuffix("AGX", new Suffix<Addon>(() => new AddOns.ActionGroupsExtended.Addon(shared)));
             AddSuffix("IR", new Suffix<Addon>(() => new AddOns.InfernalRobotics.Addon(shared)));
+            AddSuffix("TR", new Suffix<Addon>(() => new AddOns.TrajectoriesAddon.Addon(shared)));
         }
 
         public override string ToString()
