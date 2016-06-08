@@ -36,13 +36,16 @@ namespace kOS.Safe.Utilities
 
         public override string ToString()
         {
+            string format = "AssemblyWalkAttribute({0})";
             if (AttributeType != null)
-                return AttributeType.FullName;
+                return string.Format(format, AttributeType.FullName);
             if (InterfaceType != null)
-                return InterfaceType.FullName;
+                return string.Format(format, InterfaceType.FullName);
             if (InherritedType != null)
-                return InherritedType.FullName;
-            return "StaticWalk";
+                return string.Format(format, InherritedType.FullName);
+            if (!string.IsNullOrEmpty(StaticWalkMethod))
+                return string.Format(format, StaticWalkMethod);
+            return string.Format(format, "<None>");
         }
 
         public static void Walk()
@@ -119,6 +122,7 @@ namespace kOS.Safe.Utilities
                     {
                         if (attr.AttributeType != null)
                         {
+                            // the register method should support parameters of <AttributeType> and Type
                             if (CheckMethodParameters(type, attr.StaticRegisterMethod, attr.AttributeType, typeof(Type)))
                             {
                                 AllWalkAttributes.Add(attr, type);
@@ -135,7 +139,8 @@ namespace kOS.Safe.Utilities
                         }
                         else if (attr.InherritedType != null || attr.InterfaceType != null)
                         {
-                            if (CheckMethodParameters(type, attr.StaticRegisterMethod, attr.AttributeType, typeof(Type)))
+                            // the register method should support only a parameter of Type
+                            if (CheckMethodParameters(type, attr.StaticRegisterMethod, typeof(Type)))
                             {
                                 AllWalkAttributes.Add(attr, type);
                                 SafeHouse.Logger.SuperVerbose(string.Format("Add attribute on type {0}", type.Name));
@@ -151,6 +156,7 @@ namespace kOS.Safe.Utilities
                     }
                     else if (!string.IsNullOrEmpty(attr.StaticWalkMethod))
                     {
+                        // the static walk method should accept no parameters
                         if (CheckMethodParameters(type, attr.StaticWalkMethod))
                         {
                             AllWalkAttributes.Add(attr, type);
@@ -189,11 +195,12 @@ namespace kOS.Safe.Utilities
                     {
                         WalkAssembly(assembly);
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         string message = "Error while loading assembly: " + assembly.FullName + ", skipping assembly.";
                         SafeHouse.Logger.LogError(message);
                         Debug.AddNagMessage(Debug.NagType.NAGFOREVER, message);
+                        SafeHouse.Logger.LogError(string.Format("Exception: {0}\nStack Trace:\n{1}", ex.Message, ex.StackTrace));
                     }
                 }
             }
@@ -277,15 +284,6 @@ namespace kOS.Safe.Utilities
                                     managerRegisterMethod.Invoke(null, new[] { type });
                                     walkAttribute.LoadedCount++;
                                 }
-                                else
-                                {
-                                    string message = string.Format("Attribute {0} found on type {1}, but type does not implement the required interface {2}",
-                                        walkAttribute.AttributeType.Name,
-                                        type.Name,
-                                        walkAttribute.InterfaceType.Name);
-                                    SafeHouse.Logger.LogError(message);
-                                    Debug.AddNagMessage(Debug.NagType.NAGONCE, message);
-                                }
                             }
                             else if (walkAttribute.InherritedType != null)
                             {
@@ -293,14 +291,6 @@ namespace kOS.Safe.Utilities
                                 {
                                     managerRegisterMethod.Invoke(null, new[] { type });
                                     walkAttribute.LoadedCount++;
-                                }
-                                else
-                                {
-                                    string message = string.Format("Attribute {0} found on type {1}, but type does not inherrit from the required type {2}",
-                                        walkAttribute.AttributeType.Name,
-                                        type.Name,
-                                        walkAttribute.InherritedType.Name);
-                                    SafeHouse.Logger.LogError(message);
                                 }
                             }
                         }
