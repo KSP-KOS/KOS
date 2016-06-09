@@ -29,6 +29,9 @@ namespace kOS.Safe.Utilities
         public static readonly Dictionary<AssemblyWalkAttribute, Type> AllWalkAttributes = new Dictionary<AssemblyWalkAttribute, Type>();
         public static readonly Dictionary<Type, Type> AttributesToWalk = new Dictionary<Type, Type>();
 
+        private const string toStringFormat = "AssemblyWalkAttribute({0})";
+        private const string assemblyLoadErrorFormat = "Error while loading assembly: {0}, skipping assembly.\nFull path: {1}";
+
         public AssemblyWalkAttribute()
         {
             LoadedCount = 0;
@@ -36,16 +39,15 @@ namespace kOS.Safe.Utilities
 
         public override string ToString()
         {
-            string format = "AssemblyWalkAttribute({0})";
             if (AttributeType != null)
-                return string.Format(format, AttributeType.FullName);
+                return string.Format(toStringFormat, AttributeType.FullName);
             if (InterfaceType != null)
-                return string.Format(format, InterfaceType.FullName);
+                return string.Format(toStringFormat, InterfaceType.FullName);
             if (InherritedType != null)
-                return string.Format(format, InherritedType.FullName);
+                return string.Format(toStringFormat, InherritedType.FullName);
             if (!string.IsNullOrEmpty(StaticWalkMethod))
-                return string.Format(format, StaticWalkMethod);
-            return string.Format(format, "<None>");
+                return string.Format(toStringFormat, StaticWalkMethod);
+            return string.Format(toStringFormat, "<None>");
         }
 
         public static void Walk()
@@ -74,7 +76,7 @@ namespace kOS.Safe.Utilities
                     }
                     catch
                     {
-                        SafeHouse.Logger.LogWarning("Error while loading assembly: " + assembly.FullName + ", skipping assembly.");
+                        SafeHouse.Logger.LogWarning(string.Format(assemblyLoadErrorFormat, assembly.FullName, assembly.Location));
                     }
                 }
             }
@@ -91,11 +93,6 @@ namespace kOS.Safe.Utilities
                 if (parameters.Length != parameterTypes.Length)
                 {
                     return false;
-                }
-                // We don't need to check the parameter types if there are no parameters.
-                if (parameters.Length == 0)
-                {
-                    return true;
                 }
                 // Check the type of each parameter to make sure they can be assigned properly
                 for (int i = 0; i < parameters.Length; i++)
@@ -197,7 +194,7 @@ namespace kOS.Safe.Utilities
                     }
                     catch (Exception ex)
                     {
-                        string message = "Error while loading assembly: " + assembly.FullName + ", skipping assembly.";
+                        string message = string.Format(assemblyLoadErrorFormat, assembly.FullName, assembly.Location);
                         SafeHouse.Logger.LogError(message);
                         Debug.AddNagMessage(Debug.NagType.NAGFOREVER, message);
                         SafeHouse.Logger.LogError(string.Format("Exception: {0}\nStack Trace:\n{1}", ex.Message, ex.StackTrace));

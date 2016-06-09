@@ -2,7 +2,7 @@ kOS 3rd Party Addon Framework
 *****************************
 
 #How To Implement an Addon
-* The Addon should be in a separate assembly separate from kOS and from the mod
+* The Addon should be in its own assembly/project, separate from kOS and from the mod
   you are trying to interact with.  kOS is functionally indifferent to the final
   file location, however you should follow normal practices to avoid conflicts
   and make it easy for users to install.
@@ -26,9 +26,8 @@ kOS 3rd Party Addon Framework
 * You may add additional kOS Structures, and then expose them using suffixes
   on your central Addon class.
 * All new structures, including your Addon, must be decorated with a
-  `[KOSNomenclature("kOS Name here")]` attribute, identifying it's "kOS Name"
-  (the string value returned by the `typename` suffix in kOS, and used by the
-  `istype` suffix in kOS).
+  `[KOSNomenclature(kosname)]` attribute, where `kosname` is the unique friendly
+  name returned by the `typename` suffix.
 
 #Discouraged Options
 While it is possible for you to provide your own bindings and functions, this is
