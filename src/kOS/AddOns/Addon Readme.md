@@ -26,8 +26,9 @@ kOS 3rd Party Addon Framework
 * You may add additional kOS Structures, and then expose them using suffixes
   on your central Addon class.
 * All new structures, including your Addon, must be decorated with a
-  `[KOSNomenclature]` attribute, identifying it's "kOS Name" (the value returned
-  by the `typename` suffix).
+  `[KOSNomenclature("kOS Name here")]` attribute, identifying it's "kOS Name"
+  (the string value returned by the `typename` suffix in kOS, and used by the
+  `istype` suffix in kOS).
 
 #Discouraged Options
 While it is possible for you to provide your own bindings and functions, this is
