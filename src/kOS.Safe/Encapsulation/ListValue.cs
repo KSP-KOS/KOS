@@ -52,23 +52,6 @@ namespace kOS.Safe.Encapsulation
             get { return Collection[index]; }
             set { Collection[index] = value; }
         }
-            
-        public override Dump Dump()
-        {
-            var result = new DumpWithHeader
-            {
-                Header = "LIST of " + Collection.Count() + " items:"
-            };
-            
-            // This conversion is needed because TerminalFormatter.WriteIndented() demands to only
-            // work with exactly List<object> and bombs out on List<Structure>'s:
-            List<object> list = new List<object>();
-            foreach (object entry in Collection)
-                list.Add(entry);
-            
-            result.Add(kOS.Safe.Dump.Items, list);
-            return result;
-        }
 
         public override void LoadDump(Dump dump)
         {
