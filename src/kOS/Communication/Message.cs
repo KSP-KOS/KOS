@@ -13,18 +13,20 @@ namespace kOS.Communication
         public const string DumpVessel = "vessel";
         public const string DumpProcessor = "processor";
 
-        public VesselTarget Vessel { get; set; }
+        public string Vessel { get; set; }
         public string Processor { get; set; }
 
         public static Message Create(object content, double sentAt, double receivedAt, VesselTarget sender, string processor)
         {
             if (content is SerializableStructure)
             {
-                return new Message(new SafeSerializationMgr().Dump(content as SerializableStructure), sentAt, receivedAt, sender);
-            } else if (content is PrimitiveStructure)
+                return new Message(new SafeSerializationMgr(null).Dump(content as SerializableStructure), sentAt, receivedAt, sender);
+            }
+            else if (content is PrimitiveStructure)
             {
                 return new Message(content as PrimitiveStructure, sentAt, receivedAt, sender);
-            } else
+            }
+            else
             {
                 throw new KOSCommunicationException("Only serializable types and primitives can be sent in a message");
             }
@@ -38,13 +40,13 @@ namespace kOS.Communication
         public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender;
+            Vessel = sender.GetGuid().ToString();
         }
 
         public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender;
+            Vessel = sender.GetGuid().ToString();
         }
 
         public override Dump Dump()
@@ -60,7 +62,7 @@ namespace kOS.Communication
         {
             base.LoadDump(dump);
 
-            Vessel = dump[DumpVessel] as VesselTarget;
+            Vessel = dump[DumpVessel] as string;
         }
     }
 }

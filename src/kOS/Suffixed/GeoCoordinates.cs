@@ -11,7 +11,7 @@ namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("GeoCoordinates")]
     [kOS.Safe.Utilities.KOSNomenclature("LatLng", CSharpToKOS = false)]
-    public class GeoCoordinates : SerializableStructure
+    public class GeoCoordinates : SerializableStructure, IHasSharedObjects
     {
         private static string DumpLat = "lat";
         private static string DumpLng = "lng";

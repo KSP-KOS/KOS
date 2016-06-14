@@ -35,8 +35,6 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :meth:`RESETPIDS()`                  none                      Called to call `RESET` on all steering PID loops.
     :attr:`SHOWFACINGVECTORS`            :struct:`boolean`         Enable/disable display of ship facing, target, and world coordinates vectors.
     :attr:`SHOWANGULARVECTORS`           :struct:`boolean`         Enable/disable display of angular rotation vectors
-    :attr:`SHOWTHRUSTVECTORS`            :struct:`boolean`         Enable/disable display of engine thrust vectors
-    :attr:`SHOWRCSVECTORS`               :struct:`boolean`         Enable/disable display of rcs thrust vectors
     :attr:`SHOWSTEERINGSTATS`            :struct:`boolean`         Enable/disable printing of the steering information on the terminal
     :attr:`WRITECSVFILES`                :struct:`boolean`         Enable/disable logging steering to csv files.
     :attr:`PITCHTS`                      :struct:`scalar` (s)      Settling time for the pitch torque calculation.
@@ -54,6 +52,11 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`YAWTORQUEFACTOR`              :struct:`scalar`          Multiplicative adjustment to yaw torque (calculated)
     :attr:`ROLLTORQUEFACTOR`             :struct:`scalar`          Multiplicative adjustment to roll torque (calculated)
     ==================================== ========================= =============
+
+.. warning::
+    .. versionadded:: v0.20.1
+        The suffixes ``SHOWRCSVECTORS`` and ``SHOWTHRUSTVECTORS`` were
+        deprecated with the move to using stock torque calculation with KSP 1.1.
 
 .. attribute:: SteeringManager:PITCHPID
 
@@ -119,20 +122,6 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :access: Get/Set
 
     Setting this suffix to true will cause the steering manager to display graphical vectors (see :struct:`VecDraw`) representing the current and target angular velocities in the pitch, yaw, and roll directions.  Setting to false will hide the vectors, as will disabling locked steering.
-
-.. attribute:: SteeringManager:SHOWTHRUSTVECTORS
-
-    :type: :ref:`boolean <boolean>`
-    :access: Get/Set
-
-    Setting this suffix to true will cause the steering manager to display graphical vectors (see :struct:`VecDraw`) representing the thrust and torque for each active engine.  Setting to false will hide the vectors, as will disabling locked steering.
-
-.. attribute:: SteeringManager:SHOWRCSVECTORS
-
-    :type: :ref:`boolean <boolean>`
-    :access: Get/Set
-
-    Setting this suffix to true will cause the steering manager to display graphical vectors (see :struct:`VecDraw`) representing the thrust and torque for each active RCS block.  Setting to false will hide the vectors, as will disabling locked steering.
 
 .. attribute:: SteeringManager:SHOWSTEERINGSTATS
 

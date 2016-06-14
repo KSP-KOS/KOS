@@ -194,9 +194,9 @@ namespace kOS.Screen
             if (imageLoader.isDone && imageLoader.size == 0) allTexturesFound = false;
         }
         
-        public void OpenPopupEditor( Volume v, string fName )
+        public void OpenPopupEditor(Volume v, GlobalPath path)
         {
-            popupEditor.AttachTo(this, v, fName );
+            popupEditor.AttachTo(this, v, path);
             popupEditor.Open();
         }
         
@@ -250,7 +250,8 @@ namespace kOS.Screen
             cameraManager = CameraManager.Instance;
             cameraManager.enabled = false;
 
-            InputLockManager.SetControlLock(CONTROL_LOCKOUT);
+            // Exclude the TARGETING ControlType so that we can set the target vessel with the terminal open.
+            InputLockManager.SetControlLock(ControlTypes.All & ~ControlTypes.TARGETING, CONTROL_LOCKOUT);
 
             // Prevent editor keys from being pressed while typing
             EditorLogic editor = EditorLogic.fetch;

@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
+using kOS.Safe.Exceptions;
 
 namespace kOS.AddOns.InfernalRobotics
 {
@@ -9,11 +10,13 @@ namespace kOS.AddOns.InfernalRobotics
     {
         private readonly IRWrapper.IServo servo;
         private readonly SharedObjects shared;
+        private readonly PartValue partValue;
 
         public IRServoWrapper(IRWrapper.IServo init, SharedObjects shared)
         {
             servo = init;
             this.shared = shared;
+            this.partValue = GetPart();
             InitializeSuffixes();
         }
 
@@ -47,46 +50,53 @@ namespace kOS.AddOns.InfernalRobotics
 
             AddSuffix("MOVETO", new TwoArgsSuffix<ScalarValue, ScalarValue>(MoveTo));
 
-            AddSuffix("PART", new Suffix<PartValue>(GetPart));
+            AddSuffix("PART", new Suffix<PartValue>(() => this.partValue));
         }
 
         
         public void MoveRight()
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.MoveRight();
         }
 
         public void MoveLeft()
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.MoveLeft();
         }
 
         public void MoveCenter()
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.MoveCenter();
         }
 
         public void MoveNextPreset()
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.MoveNextPreset();
         }
 
         public void MovePrevPreset()
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.MovePrevPreset();
         }
 
         public void Stop()
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.Stop();
         }
 
         public void MoveTo(ScalarValue position, ScalarValue speed)
         {
+            partValue.ThrowIfNotCPUVessel();
             servo.MoveTo(position, speed);
         }
 
-        public PartValue GetPart()
+        private PartValue GetPart()
         {
             var v = shared.Vessel;
 

@@ -24,6 +24,27 @@ release.
 
 ****
 
+Changes in 0.20.1
+-----------------
+
+This release is just a bug fix release for the most part, with only just
+one new feature:
+
+3-axis Gimbal Disabling
+:::::::::::::::::::::::
+
+You can now selectively choose which of the 3-axes of an engine gimbal you want
+to lock, rather than having to lock the entire gimbal or none of it.
+
+(See suffixes "PITCH", "YAW", and "ROLL" of the
+:ref:`gimbal documentation <gimbal>`.)
+
+Changes in 0.20.0
+-----------------
+
+This release is functionally identical to v0.19.3, it is recompiled against the
+KSP 1.1 release binaries (build 1230)
+
 Changes in 0.19.3
 -----------------
 

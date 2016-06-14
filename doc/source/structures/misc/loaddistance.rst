@@ -1,4 +1,4 @@
-.. loaddistance:
+.. _loaddistance:
 
 Vessel Load Distance
 ====================

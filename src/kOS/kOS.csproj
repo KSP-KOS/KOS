@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
+    <Compile Include="AddOns\kOSAddonAttribute.cs" />
+    <Compile Include="AddOns\AddonManager.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRControlGroup.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRHandler.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRServoWrapper.cs" />
@@ -79,15 +81,14 @@
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
-    <Compile Include="Binding\SteeringManager.cs" />
-    <Compile Include="Binding\SteeringManagerProvider.cs" />
+    <Compile Include="Control\SteeringManager.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
+    <Compile Include="Control\IFlightControlParameter.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
-    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
+    <Compile Include="Module\kOSVesselModule.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -105,6 +107,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Sound\SoundMaker.cs" />
+    <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
