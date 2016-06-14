@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
+using kOS.Safe.Exceptions;
 using System.Collections.Generic;
 
 namespace kOS.AddOns.InfernalRobotics
@@ -65,33 +66,46 @@ namespace kOS.AddOns.InfernalRobotics
                 return new VesselTarget(shared.Vessel, shared); //user should not be able to get here anyway, but to avoid null will return shared.Vessel
         }
 
+        public void ThrowIfNotCPUVessel()
+        {
+            VesselTarget vt = GetVessel();
+            if (vt.Vessel.id != shared.Vessel.id)
+                throw new KOSWrongCPUVesselException();
+        }
+
         public void MoveRight()
         {
+            ThrowIfNotCPUVessel();
             cg.MoveRight();
         }
 
         public void MoveLeft()
         {
+            ThrowIfNotCPUVessel();
             cg.MoveLeft();
         }
 
         public void MoveCenter()
         {
+            ThrowIfNotCPUVessel();
             cg.MoveCenter();
         }
 
         public void MoveNextPreset()
         {
+            ThrowIfNotCPUVessel();
             cg.MoveNextPreset();
         }
 
         public void MovePrevPreset()
         {
+            ThrowIfNotCPUVessel();
             cg.MovePrevPreset();
         }
 
         public void Stop()
         {
+            ThrowIfNotCPUVessel();
             cg.Stop();
         }
     }
