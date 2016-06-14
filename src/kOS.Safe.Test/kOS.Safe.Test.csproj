@@ -101,13 +101,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Serialization\" />
-    <Folder Include="Communication\" />
-    <Folder Include="Persistence\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="ProfilingSessions\Session20160127_233127.sdps" />
     <Content Include="ProfilingSessions\Session20160127_233506.sdps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
 </Project>

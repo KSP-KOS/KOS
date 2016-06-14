@@ -75,7 +75,7 @@ namespace kOS.Safe.Persistence
                 }
                 else if (fileSystemInfo is FileInfo)
                 {
-                    VolumePath filePath = VolumePath.FromString(fileSystemInfo.FullName.Substring(ArchiveFolder.Length));
+                    VolumePath filePath = VolumePath.FromString(fileSystemInfo.FullName.Substring(ArchiveFolder.Length).Replace(Path.DirectorySeparatorChar, VolumePath.PathSeparator));
                     return new ArchiveFile(this, fileSystemInfo as FileInfo, filePath);
                 }
                 else {
