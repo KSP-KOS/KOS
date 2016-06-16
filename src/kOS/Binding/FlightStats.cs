@@ -1,3 +1,5 @@
+﻿using kOS.Module;
+using kOS.Control;
 ﻿using kOS.Safe.Binding;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -26,7 +28,7 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddSetter("SHIPNAME", value => shared.Vessel.vesselName = value.ToString());
 
-            shared.BindingMgr.AddGetter("STEERINGMANAGER", () => SteeringManagerProvider.GetInstance(shared));
+            shared.BindingMgr.AddGetter("STEERINGMANAGER", () => (SteeringManager)kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering"));
 
             shared.BindingMgr.AddGetter("NEXTNODE", () =>
             {

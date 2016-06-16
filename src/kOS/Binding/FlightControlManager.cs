@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Math = System.Math;
+using kOS.Control;
+using kOS.Module;
 
 namespace kOS.Binding
 {
@@ -188,7 +190,6 @@ namespace kOS.Binding
 
             UnBind();
             flightControls.Remove(currentVessel.rootPart.flightID);
-            SteeringManagerProvider.RemoveInstance(currentVessel);
         }
 
         private bool VesselIsValid(Vessel vessel)
@@ -371,7 +372,6 @@ namespace kOS.Binding
             private object value;
             private bool enabled;
             private readonly SharedObjects shared;
-            private SteeringManager steeringManager;
 
             public FlightCtrlParam(string name, SharedObjects sharedObjects)
             {
@@ -383,20 +383,45 @@ namespace kOS.Binding
                 Enabled = false;
                 value = null;
 
-                if (string.Equals(name, "steering", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    steeringManager = SteeringManagerProvider.GetInstance(sharedObjects);
-                }
 
                 HookEvents();
             }
 
             private void HookEvents()
             {
-                binding.AddGetter(name, () => value);
-                binding.AddSetter(name, val => value = val);
+                binding.AddGetter(name, () => getValue());
+                binding.AddSetter(name, val => setValue(val));
             }
 
+            private object getValue()
+            {
+                if (name == "throttle")
+                {
+                    if (Enabled) return value;
+                    return shared.Vessel.ctrlState.mainThrottle;
+                }
+                else if (name == "steering")
+                {
+                    return kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering").GetValue();
+                }
+                else
+                {
+                    return value;
+                }
+            }
+
+            private void setValue(object val)
+            {
+                if (name == "steering")
+                {
+                    IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
+                    if (param != null) param.UpdateValue(val, shared);
+                }
+                else
+                {
+                    value = val;
+                }
+            }
 
             public bool Enabled
             {
@@ -405,16 +430,28 @@ namespace kOS.Binding
                 {
                     SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
-                    enabled = value;
-                    if (steeringManager != null)
+                    if (enabled != value)
                     {
-                        if (enabled) steeringManager.EnableControl(shared);
-                        else steeringManager.DisableControl();
-                        //steeringManager.Enabled = enabled;
-                    }
-                    if (RemoteTechHook.IsAvailable(control.Vessel.id))
-                    {
-                        HandleRemoteTechPilot();
+
+                        enabled = value;
+                        if (name == "steering")
+                        {
+                            SafeHouse.Logger.Log("FlightCtrlParam: toggle steering parameter");
+                            IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
+                            if (enabled)
+                            {
+                                param.EnableControl(shared);
+                            }
+                            else
+                            {
+                                param.DisableControl(shared);
+                            }
+                            return;
+                        }
+                        if (RemoteTechHook.IsAvailable(control.Vessel.id))
+                        {
+                            HandleRemoteTechPilot();
+                        }
                     }
                 }
             }
@@ -523,16 +560,14 @@ namespace kOS.Binding
 
             private void SteerByWire(FlightCtrlState c)
             {
-                if (!Enabled) return;
-                if (steeringManager.Enabled)
+                IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
+                if (Enabled)
                 {
-                    steeringManager.Value = value;
-                    steeringManager.OnFlyByWire(c);
+                    if (!param.Enabled) param.EnableControl(shared);
                 }
                 else
                 {
-                    Enabled = false;
-                    ClearValue();
+                    if (param.Enabled && param.ControlPartId == shared.KSPPart.flightID) param.DisableControl(shared);
                 }
             }
 
@@ -588,21 +623,11 @@ namespace kOS.Binding
             public void Dispose()
             {
                 Enabled = false;
-                if (steeringManager != null)
-                {
-                    SteeringManagerProvider.RemoveInstance(shared.Vessel);
-                    steeringManager = null;
-                }
             }
 
             public void UpdateFlightControl(Vessel vessel)
             {
                 control = GetControllerByVessel(vessel);
-                if (steeringManager != null)
-                {
-                    steeringManager = SteeringManagerProvider.SwapInstance(shared, steeringManager);
-                    steeringManager.Update(vessel);
-                }
             }
             
             public override string ToString() // added to aid in debugging.

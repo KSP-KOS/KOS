@@ -11,12 +11,10 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Addon")]
     public abstract class Addon : Structure
     {
-        protected readonly string addonName;
         protected readonly SharedObjects shared;
-
-        protected Addon(string name, SharedObjects shared)
+        
+        protected Addon(SharedObjects shared)
         {
-            addonName = name;
             this.shared = shared;
             InitializeSuffixes();
         }
@@ -30,7 +28,7 @@ namespace kOS.Suffixed
        
         public override string ToString()
         {
-            return string.Format("{0} Addon, name = " + addonName, base.ToString());
+            return string.Format("Addon({0})", Safe.Utilities.KOSNomenclature.GetKOSName(this.GetType()));
         }
     }
 }

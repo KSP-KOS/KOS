@@ -1,6 +1,34 @@
 kOS Mod Changelog
 =================
 
+# v0.20.1 KSP 1.1.2 and bug repair
+
+The biggest reason for this release is to handle two game-breaking
+problems caused by recent alterations in the API that kOS hadn't
+adapted to correctly yet.
+
+The "remit" of this release is purely to fix a few bugs, and patch up
+a few things where KSP 1.1 had changes we didn't catch.  Mostly,
+that's cases where previously working code in kOS had now become a
+bug, but it also includes a few other bug fixes not related to KSP 1.1.
+
+But any new features (rather than bug fixes) in the pipeline not directly
+related to that "remit" are not in this release.
+
+### BREAKING CHANGES
+* `STEERINGMANAGER:SHOWRCSVECTORS` and `STEERINGMANAGER:SHOWENGINEVECTORS` are now obsolete and will throw an error.
+
+### BUG FIXES
+* Infinitely growing mass:  Realism Overhaul users could not use kOS anymore, because kOS was re-adding its small module mass to the part again and again each physics tick.  Even though the mass of kOS is small, adding it to the part 25 times a second quickly made the vessel grow too massive to do anything with.  The bug was not caught earlier because it only happened if kOS was added to parts other than the parts kOS ships with (i.e. by using ModuleManager), and those parts also had other mass-affecting modules on them.  Although discovered in Realism Overhaul, the problem could have been affecting any users who used kOS in that same fashion.  The cause was traced to an incorrect use of the new mass API by kOS and has been fixed. (https://github.com/KSP-KOS/KOS/pull/1644).
+* "SET TARGET TO FOO." while the terminal is open was failing.  Now it works.  (The kOS terminal locks out all other inputs so your keypresses don't affect the ship, but as of KSP 1.1 the "all" input lock it was using to do so also includes the ability to set target, which it didn't before.) (https://github.com/KSP-KOS/KOS/pull/1636)
+* Incorrect value for MeanAnomalyAtEpoch fixed.  It was multiplying the value by the conversion factor for radians-to-degrees twice, rather than just once.  (https://github.com/KSP-KOS/KOS/pull/1642)
+* GeoCoordinates were not serializing properly.  Now they are. (https://github.com/KSP-KOS/KOS/pull/1615).
+* Finally fully obsoleted the years-old suffixes for trying to do antenna range the old way (before we just relied on Remote Tech to do antenna work for us).  (https://github.com/KSP-KOS/KOS/pull/1607).
+* Bug fixes for catching a few more cases where staging or decoupling part of the craft away was still confusing SteeringManager into trying to lock out, or take control of, the wrong half of the craft.  (https://github.com/KSP-KOS/KOS/pull/1544).
+
+### NEW FEATURES
+* KSP 1.1 now allows you to lock the gimbals for the three pitch/yaw/roll axes individually on engines, as 3 different settings, rather than just lock the whole gimbal for all directions.  kOS now lets you access this ability (https://github.com/KSP-KOS/KOS/pull/1622).
+
 # v0.20.0 KSP 1.1 Hype!
 
 This release is functionally identical to v0.19.3, it is recompiled against the

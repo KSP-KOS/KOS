@@ -59,11 +59,11 @@ Terminal and game environment
 
 .. global:: REBOOT
 
-    Reboots the kOS module.
+    Stops the script here, and reboots the kOS module.
 
 .. global:: SHUTDOWN
 
-    Causes kOS module to shutdown.
+    Stops the script here, and causes kOS module to turn the power off.
 
 GUI display tools
 ------------------

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation
 {
     public class CodePart
     {
-        public CodePart(string fromFile = "")
+        public CodePart()
         {
             FunctionsCode = new List<Opcode>(); 
             InitializationCode = new List<Opcode>();
@@ -25,18 +26,18 @@ namespace kOS.Safe.Compilation
             return mergedCode;
         }
 
-        public void AssignSourceName(string sourceName)
+        public void AssignSourceName(GlobalPath filePath)
         {
-            AssignSourceNameToSection(sourceName.ToLower(), FunctionsCode);
-            AssignSourceNameToSection(sourceName.ToLower(), InitializationCode);
-            AssignSourceNameToSection(sourceName.ToLower(), MainCode);
+            AssignSourcePathToSection(filePath, FunctionsCode);
+            AssignSourcePathToSection(filePath, InitializationCode);
+            AssignSourcePathToSection(filePath, MainCode);
         }
 
-        private void AssignSourceNameToSection(string sourceName, IEnumerable<Opcode> section)
+        private void AssignSourcePathToSection(GlobalPath filePath, IEnumerable<Opcode> section)
         {
             foreach (Opcode opcode in section)
             {
-                opcode.SourceName = string.Intern(sourceName.ToLower()); // Intern ensures we don't waste space storing the filename again and again per opcode.
+                opcode.SourcePath = filePath;
             }
         }
 

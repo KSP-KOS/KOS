@@ -193,6 +193,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.directive:
                     Value = Evaldirective(tree, paramlist);
                     break;
+                case TokenType.empty_stmt:
+                    Value = Evalempty_stmt(tree, paramlist);
+                    break;
                 case TokenType.set_stmt:
                     Value = Evalset_stmt(tree, paramlist);
                     break;
@@ -310,6 +313,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.expr:
                     Value = Evalexpr(tree, paramlist);
                     break;
+                case TokenType.or_expr:
+                    Value = Evalor_expr(tree, paramlist);
+                    break;
                 case TokenType.and_expr:
                     Value = Evaland_expr(tree, paramlist);
                     break;
@@ -399,6 +405,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evaldirective(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalempty_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
@@ -672,6 +685,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalexpr(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalor_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

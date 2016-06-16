@@ -1,31 +1,15 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using System.Linq;
-using kOS.Safe.Persistence;
+using kOS.Safe.Encapsulation;
 
-namespace kOS.Safe.Encapsulation
+namespace kOS.Safe.Persistence
 {
     [kOS.Safe.Utilities.KOSNomenclature("VolumeFile")]
-    public abstract class VolumeFile : Structure
+    public abstract class VolumeFile : VolumeItem
     {
-        public string Name { get; private set; }
-
-        public abstract int Size { get; }
-
-        public string Extension
+        protected VolumeFile(Volume volume, VolumePath path) : base(volume, path)
         {
-            get
-            {
-                var fileParts = Name.Split('.');
-
-                return fileParts.Length > 1 ? fileParts.Last() : string.Empty;
-            }
-        }
-
-        protected VolumeFile(string name)
-        {
-            Name = name;
-
             InitializeSuffixes();
         }
 
@@ -40,7 +24,7 @@ namespace kOS.Safe.Encapsulation
 
         public bool WriteLn(string content)
         {
-            return Write(content + FileContent.NEW_LINE);
+            return Write(content + FileContent.NewLine);
         }
 
         public abstract void Clear();
@@ -52,10 +36,6 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<StringValue>(() => Name));
-            AddSuffix("SIZE", new Suffix<ScalarIntValue>(() => new ScalarIntValue(Size)));
-            AddSuffix("EXTENSION", new Suffix<StringValue>(() => Extension));
-
             AddSuffix("READALL", new Suffix<FileContent>(ReadAll));
             AddSuffix("WRITE", new OneArgsSuffix<BooleanValue, Structure>(str => WriteObject(str)));
             AddSuffix("WRITELN", new OneArgsSuffix<BooleanValue, StringValue>(str => new BooleanValue(WriteLn(str))));

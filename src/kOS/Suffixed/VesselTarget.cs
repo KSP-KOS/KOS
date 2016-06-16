@@ -435,16 +435,17 @@ namespace kOS.Suffixed
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<ScalarValue>(() => Vessel.verticalSpeed));
             AddSuffix("GROUNDSPEED", new Suffix<ScalarValue>(GetHorizontalSrfSpeed));
-            AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
+            AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSObsoletionException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
             AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<StringValue>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<StringValue>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
-            AddSuffix("TERMVELOCITY", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
+            AddSuffix("TERMVELOCITY", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereObsoletionException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
             AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<ScalarValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<BooleanValue>(() => Vessel.loaded));
             AddSuffix("UNPACKED", new Suffix<BooleanValue>(() => !Vessel.packed));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
+            AddSuffix("CONTROLPART", new Suffix<PartValue>(() => PartValueFactory.Construct(GetControlPart(), Shared)));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Vessel.GetWetMass(), "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
@@ -462,6 +463,13 @@ namespace kOS.Suffixed
             AddSuffix("CREWCAPACITY", new NoArgsSuffix<ScalarValue>(GetCrewCapacity));
             AddSuffix("CONNECTION", new NoArgsSuffix<VesselConnection>(() => new VesselConnection(Vessel, Shared)));
             AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => GetMessages()));
+        }
+
+        public global::Part GetControlPart()
+        {
+            global::Part res = Vessel.GetReferenceTransformPart(); //this can actually be null
+            if (res != null) { return res; } 
+            else { return Vessel.rootPart; } //the root part is used as reference in that case
         }
 
         public ScalarValue GetCrewCapacity() {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
+using System;
 
 namespace kOS.Utilities
 {
@@ -6,7 +7,10 @@ namespace kOS.Utilities
     {
         public static float CalculateCurrentMass(this Part part)
         {
-            return part.HasPhysics() ? part.mass + part.GetResourceMass() : 0;
+            // rb mass is one physics tick behind.  Use part.GetPhysicslessChildMass() if the
+            // delay becomes a significant problem, but this should be good 99% of the time.
+            // Default to zero if the rigid body is not yet updated, or the part is physics-less
+            return part.HasPhysics() && part.rb != null ? part.rb.mass : 0;
         }
 
         public static bool HasPhysics(this Part part)
@@ -24,14 +28,17 @@ namespace kOS.Utilities
 
         public static float GetDryMass(this Part part)
         {
-            return !part.HasPhysics() ? 0 : part.mass;
+            // this will technically have an oportunity to return a negative wet mass
+            // if the part is physics-less, but that option is intended for small part
+            // to help with the physics calculation, not tanks of fuel.
+            return part.CalculateCurrentMass() - part.resourceMass;
         }
 
         public static float GetWetMass(this Part part)
         {
-            if (!part.HasPhysics()) return 0;
-
-            float mass = part.mass;
+            // See the note above regarding negative dry mass, the wet mass may net to
+            // zero in the same case.  Again, highly unlikely.
+            float mass = part.GetDryMass();
 
             for (int index = 0; index < part.Resources.Count; ++index)
             {

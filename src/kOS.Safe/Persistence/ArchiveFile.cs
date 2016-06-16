@@ -1,16 +1,17 @@
-﻿using kOS.Safe.Persistence;
-using System;
+﻿using System;
 using System.IO;
 
-namespace kOS.Safe.Encapsulation
+namespace kOS.Safe.Persistence
 {
     [kOS.Safe.Utilities.KOSNomenclature("VolumeFile", KOSToCSharp = false)]
     public class ArchiveFile : VolumeFile
     {
         private readonly FileInfo fileInfo;
+
         public override int Size { get { fileInfo.Refresh(); return (int)fileInfo.Length; } }
 
-        public ArchiveFile(FileInfo fileInfo) : base(fileInfo.Name)
+        public ArchiveFile(Archive archive, FileInfo fileInfo, VolumePath path)
+            : base(archive, path)
         {
             this.fileInfo = fileInfo;
         }

@@ -163,7 +163,7 @@ namespace kOS.Safe.Compilation
                     }
                     else
                         newOp = new OpcodePush(destinationIndex);
-                    newOp.SourceName = opcode.SourceName;
+                    newOp.SourcePath = opcode.SourcePath;
                     newOp.SourceLine = opcode.SourceLine;
                     newOp.SourceColumn = opcode.SourceColumn;
                     newOp.Label = opcode.Label;

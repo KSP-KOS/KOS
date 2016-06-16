@@ -606,6 +606,21 @@ always exclusively use local variables made with a declare statement
 in the body of the function, and never use global variables for
 something that you intended to be different per recursive call.
 
+Anonymous functions
+-------------------
+
+You can make :ref:`Anonymous functions <anonymous_functions>` in kerboscript
+by simply leaving off the function keyword and the name of the function,
+and just using the curly braces (``{``, ``}``) around some statements.
+When the compiler sees a standalone set of curly braces like this being used
+in the context of an *expression* (rather than as a standalone statement),
+then it will compile the contents of the braces as a function, meaning that
+the keywords ``parameter`` and ``return`` will work as expected inside them.
+Then it will leave a :struct:`KOSDelegate` of the function behind as the
+value of the expression, which can then be assigned to a variable, or
+passed as an argument, etc.  The full details of what this means, and how
+to use it, is :ref:`explained elsewhere <anonymous_functions>`.
+
 User Function Gotchas
 ---------------------
 

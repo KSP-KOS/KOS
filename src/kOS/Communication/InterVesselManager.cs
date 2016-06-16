@@ -43,7 +43,7 @@ namespace kOS.Communication
 
                     Dump queueDump = ConfigNodeFormatter.Instance.FromConfigNode(queueNode);
 
-                    MessageQueue queue = new SafeSerializationMgr().CreateFromDump(queueDump) as MessageQueue;
+                    MessageQueue queue = new SafeSerializationMgr(null).CreateFromDump(queueDump) as MessageQueue;
 
                     if (queue.Count() > 0)
                     {
@@ -63,7 +63,7 @@ namespace kOS.Communication
                     ConfigNode vesselEntry = new ConfigNode(VesselQueue);
                     vesselEntry.AddValue(Id, id);
 
-                    ConfigNode queueNode = ConfigNodeFormatter.Instance.ToConfigNode(new SafeSerializationMgr().Dump(vesselQueues[id]));
+                    ConfigNode queueNode = ConfigNodeFormatter.Instance.ToConfigNode(new SafeSerializationMgr(null).Dump(vesselQueues[id]));
                     queueNode.name = MessageQueue;
                     vesselEntry.AddNode(queueNode);
 

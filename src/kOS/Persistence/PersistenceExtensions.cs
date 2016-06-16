@@ -7,9 +7,15 @@ using System.Text;
 
 namespace kOS.Persistence
 {
+
+    /// <summary>
+    /// Persistence extensions needed to store Harddisks in KSP saves files. Perhaps one day we could use serialization instead
+    /// and simplify all of this (and make it unit testable too).
+    /// </summary>
     public static class PersistenceExtensions
     {
-        private const string FILENAME_VALUE_STRING = "filename";
+        private const string FilenameValueString = "filename";
+        private const string DirnameValueString = "dirname";
 
         public static Harddisk ToHardDisk(this ConfigNode configNode)
         {
@@ -22,32 +28,62 @@ namespace kOS.Persistence
             if (configNode.HasValue("volumeName"))
                 toReturn.Name = configNode.GetValue("volumeName");
 
-            foreach (ConfigNode fileNode in configNode.GetNodes("file"))
-            {
-                toReturn.Save(fileNode.ToHarddiskFile(toReturn));
-            }
+            toReturn.RootHarddiskDirectory = configNode.ToHarddiskDirectory(toReturn, VolumePath.EMPTY);
+
             return toReturn;
         }
 
-        public static HarddiskFile ToHarddiskFile(this ConfigNode configNode, Harddisk harddisk)
+        private static HarddiskDirectory ToHarddiskDirectory(this ConfigNode configNode, Harddisk harddisk, VolumePath path)
         {
-            var filename = configNode.GetValue(FILENAME_VALUE_STRING);
+            HarddiskDirectory directory = new HarddiskDirectory(harddisk, path);
 
-            FileContent fileContent = Decode(configNode.GetValue("line"));
-            harddisk.Save(filename, fileContent);
-            return new HarddiskFile(harddisk, filename);
+            foreach (ConfigNode fileNode in configNode.GetNodes("file"))
+            {
+                directory.CreateFile(fileNode.GetValue(FilenameValueString), fileNode.ToHarddiskFile(harddisk, directory));
+            }
+
+            foreach (ConfigNode dirNode in configNode.GetNodes("directory"))
+            {
+                string dirName = dirNode.GetValue(DirnameValueString);
+
+                directory.CreateDirectory(dirName, dirNode.ToHarddiskDirectory(harddisk, VolumePath.FromString(dirName, path)));
+            }
+
+            return directory;
+        }
+
+        public static FileContent ToHarddiskFile(this ConfigNode configNode, Harddisk harddisk, HarddiskDirectory directory)
+        {
+            return Decode(configNode.GetValue("line"));
         }
 
         public static ConfigNode ToConfigNode(this Harddisk harddisk, string nodeName)
         {
-            var node = new ConfigNode(nodeName);
+            var node = harddisk.RootHarddiskDirectory.ToConfigNode(nodeName);
             node.AddValue("capacity", harddisk.Capacity);
             node.AddValue("volumeName", harddisk.Name);
 
-            foreach (VolumeFile volumeFile in harddisk.FileList.Values)
+            return node;
+        }
+
+        public static ConfigNode ToConfigNode(this HarddiskDirectory directory, string nodeName)
+        {
+            ConfigNode node = new ConfigNode(nodeName);
+            node.AddValue(DirnameValueString, directory.Name);
+
+            foreach (VolumeItem item in directory)
             {
-                var file = (HarddiskFile) volumeFile;
-                node.AddNode(file.ToConfigNode("file"));
+                if (item is HarddiskDirectory)
+                {
+                    HarddiskDirectory dir = item as HarddiskDirectory;
+                    node.AddNode(dir.ToConfigNode("directory"));
+                }
+
+                if (item is HarddiskFile)
+                {
+                    HarddiskFile file = item as HarddiskFile;
+                    node.AddNode(file.ToConfigNode("file"));
+                }
             }
 
             return node;
@@ -56,7 +92,7 @@ namespace kOS.Persistence
         public static ConfigNode ToConfigNode(this HarddiskFile file, string nodeName)
         {
             var node = new ConfigNode(nodeName);
-            node.AddValue(FILENAME_VALUE_STRING, file.Name);
+            node.AddValue(FilenameValueString, file.Name);
 
             FileContent content = file.ReadAll();
 

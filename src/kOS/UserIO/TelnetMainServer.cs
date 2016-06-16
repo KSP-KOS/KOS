@@ -77,7 +77,7 @@ namespace kOS.UserIO
             {
                 PluginConfiguration savedPermissions = PluginConfiguration.CreateForType<TelnetMainServer>();
                 savedPermissions.load();
-                return (bool)(savedPermissions["PermanentListenPermission"]);
+                return savedPermissions.GetValue<bool>("PermanentListenPermission");
             }
             catch (Exception ex)
             {
@@ -120,7 +120,7 @@ namespace kOS.UserIO
             {
                 PluginConfiguration savedPermissions = PluginConfiguration.CreateForType<TelnetMainServer>();
                 savedPermissions.load();
-                return (bool)(savedPermissions["PermanentRealIPPermission"]);
+                return savedPermissions.GetValue<bool>("PermanentRealIPPermission");
             }
             catch (Exception ex)
             {
