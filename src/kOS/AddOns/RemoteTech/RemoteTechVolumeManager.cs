@@ -27,7 +27,7 @@ namespace kOS.AddOns.RemoteTech
             {
                 return volume;
             }
-            throw new KOSException("Volume is out of range");
+            throw new Safe.Exceptions.KOSVolumeOutOfRangeException();
         }
 
         // check the range on the current volume without calling GetVolumeWithRangeCheck
