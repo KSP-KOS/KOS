@@ -199,20 +199,22 @@ namespace kOS.Binding
 
         public void SelectAutopilotMode(object autopilotMode)
         {
-            if (autopilotMode is Direction)
+            autopilotMode = Safe.Encapsulation.Structure.FromPrimitiveWithAssert(autopilotMode);
+            if ((autopilotMode is Safe.Encapsulation.StringValue))
+            {
+                SelectAutopilotMode(autopilotMode.ToString());
+            }
+            else if (autopilotMode is Direction)
             {
                 //TODO: implment use of direction subclasses.
-                throw new Safe.Exceptions.KOSException(
+                throw new KOSException(
                     string.Format("Cannot set SAS mode to a direction. Should use the name of the mode (as string, e.g. \"PROGRADE\", not PROGRADE) for SASMODE. Alternatively, can use LOCK STEERING TO Direction instead of using SAS"));
             }
             else
             {
-                if (!((autopilotMode is kOS.Safe.Encapsulation.StringValue) || (autopilotMode is string)))
-                {
-                    throw new KOSWrongControlValueTypeException(
-                      "SASMODE", autopilotMode.GetType().Name, "name of the SAS mode (as string)");
-                }
-                SelectAutopilotMode((string)autopilotMode); }
+                throw new KOSWrongControlValueTypeException(
+                  "SASMODE", KOSNomenclature.GetKOSName(autopilotMode.GetType()), "name of the SAS mode (as string)");
+            }
         }
 
         public void SelectAutopilotMode(VesselAutopilot.AutopilotMode autopilotMode)
@@ -222,16 +224,16 @@ namespace kOS.Binding
                 if (!currentVessel.Autopilot.CanSetMode(autopilotMode))
                 {
                     // throw an exception if the mode is not available
-                    throw new Safe.Exceptions.KOSException(
+                    throw new KOSSituationallyInvalidException(
                         string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
                 }
                 currentVessel.Autopilot.SetMode(autopilotMode);
                 //currentVessel.Autopilot.Enable();
                 // change the autopilot indicator
-                ((Module.kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
+                ((kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
                 if (RemoteTechHook.IsAvailable(currentVessel.id))
                 {
-                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
+                    //Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
                     // TODO: figure out how to make RemoteTech allow the built in autopilot control.  This may require modification to RemoteTech itself.
                 }
             }
