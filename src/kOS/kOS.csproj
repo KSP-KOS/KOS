@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
+    <Compile Include="AddOns\kOSAddonAttribute.cs" />
+    <Compile Include="AddOns\AddonManager.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRControlGroup.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRHandler.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRServoWrapper.cs" />
@@ -87,7 +89,6 @@
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
-    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />

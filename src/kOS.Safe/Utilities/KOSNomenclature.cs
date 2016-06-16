@@ -20,9 +20,9 @@ namespace kOS.Safe.Utilities
     /// being necessary.  There should be only one copy of its data, globally, across
     /// the entire process.
     /// </summary>
+    [AssemblyWalk(InherritedType = typeof(Structure), StaticRegisterMethod = "PopulateType")]
     public class KOSNomenclature
     {
-        private static HashSet<Assembly> seenAssemblies = new HashSet<Assembly>();
         private static Dictionary<string,Type> kosToCSharpMap = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<Type,string> cSharpToKosMap = new Dictionary<Type, string>();
 
@@ -38,92 +38,77 @@ namespace kOS.Safe.Utilities
             "* then you need to fix this.                  *\n" +
             "***********************************************\n";
 
+        private static bool ShowNagHeader = true;
+
         // Neither public nor private because a static constructore can't be called explicitly anyway.
         static KOSNomenclature()
         {
         }
-        
-        public static void PopulateMapping(params Assembly[] assemblies)
+
+        /// <summary>
+        /// Populate the nomenclature dictionaries based on the given type, which inherits
+        /// from Structure.  This method is automatically called by the AssemblyWalkAttribute
+        /// </summary>
+        /// <param name="t">A type inheriting from Structure</param>
+        public static void PopulateType(Type t)
         {
-            foreach (Assembly a in assemblies)
+            object[] attribs = t.GetCustomAttributes(typeof(KOSNomenclatureAttribute), false);
+            foreach (object obj in attribs)
             {
-                // Ensure an Assembly is never run through this twice in the life of the program:
-                if (seenAssemblies.Contains(a))
-                    continue;
+                KOSNomenclatureAttribute attrib = obj as KOSNomenclatureAttribute;
+                if (attrib == null)
+                    continue; // hypothetically impossible since GetCustomAttributes explicitly asked for only attributes of this type.
 
-                PopulateOneAssemblyMapping(a);
-                seenAssemblies.Add(a);
-            }
-        }
-
-        private static void PopulateOneAssemblyMapping(Assembly assembly)
-        {
-            // A bit slow, but only executes this once during the life of the program:
-            IEnumerable<Type> allStructureTypes = assembly.GetTypes().Where( t => t.IsSubclassOf(typeof(Structure)) || t == typeof(Structure) );
-
-            // The nomenclature mapping data is contained in KOSNomenclatureAttributes that are attached to the classes:
-            foreach (Type t in allStructureTypes)
-            {
-                object[] attribs = t.GetCustomAttributes(typeof(KOSNomenclatureAttribute), false);
-                foreach (object obj in attribs)
+                try
                 {
-                    KOSNomenclatureAttribute attrib = obj as KOSNomenclatureAttribute;
-                    if (attrib == null)
-                        continue; // hypothetically impossible since GetCustomAttributes explicitly asked for only attributes of this type.
-                    
-                    try
-                    {
-                        if (attrib.CSharpToKOS)
-                            cSharpToKosMap.Add(t, attrib.KOSName);
-                    }
-                    catch (ArgumentException)
-                    {
-                        // There can be a many-to-one map (given two different C# types, they both return the same KOS type), but
-                        // not a one-to-many map (given one C# type, it has two kOS types it tries to return).
-                        string msg = "kOS developer error: name clash in KOSNomenclature: two mappings from C# class " + t.FullName + " found.";
-                        Debug.AddNagMessage(Debug.NagType.NAGFOREVER, msg);
-                    }
-                    
-                    try
-                    {
-                        if (attrib.KOSToCSharp)
-                             kosToCSharpMap.Add(attrib.KOSName, t);
-                    }
-                    catch (ArgumentException)
-                    {
-                        // There can be a many-to-one map (given two different kos types, they both return the same C# type), but
-                        // not a one-to-many map (given one kos type, it has two C# types it tries to return).
-                        string msg = "kOS developer error: name clash in KOSNomenclature: two mappings from KOS name " + attrib.KOSName + " found.";
-                        Debug.AddNagMessage(Debug.NagType.NAGFOREVER, msg);
-                    }
+                    if (attrib.CSharpToKOS)
+                        cSharpToKosMap.Add(t, attrib.KOSName);
+                }
+                catch (ArgumentException)
+                {
+                    // There can be a many-to-one map (given two different C# types, they both return the same KOS type), but
+                    // not a one-to-many map (given one C# type, it has two kOS types it tries to return).
+                    string msg = "kOS developer error: name clash in KOSNomenclature: two mappings from C# class " + t.FullName + " found.";
+                    Debug.AddNagMessage(Debug.NagType.NAGFOREVER, msg);
+                }
+
+                try
+                {
+                    if (attrib.KOSToCSharp)
+                        kosToCSharpMap.Add(attrib.KOSName, t);
+                }
+                catch (ArgumentException)
+                {
+                    // There can be a many-to-one map (given two different kos types, they both return the same C# type), but
+                    // not a one-to-many map (given one kos type, it has two C# types it tries to return).
+                    string msg = "kOS developer error: name clash in KOSNomenclature: two mappings from KOS name " + attrib.KOSName + " found.";
+                    Debug.AddNagMessage(Debug.NagType.NAGFOREVER, msg);
                 }
             }
-            
-            NagCheck(allStructureTypes);
+            NagCheck(t);
         }
-        
+
         /// <summary>
         /// Report nag message on terminal if there is a C# type derived from kOS.Safe.Encapsulated.Structure
         /// which was not given a KOSNomenclatureAttribute to work from.  All Structure derivatives will need
         /// to be given at least one KOS name by being given such an attribute.
         /// </summary>
-        private static void NagCheck(IEnumerable<Type> checkTypes)
+        private static void NagCheck(Type t)
         {
             StringBuilder message = new StringBuilder();
-
-            foreach (Type t in checkTypes)
+            if (!cSharpToKosMap.ContainsKey(t))
             {
-                if (! cSharpToKosMap.ContainsKey(t))
+                if (ShowNagHeader)
                 {
-                    if (message.Length == 0)
-                        message.Append(NagHeader);
-                    else
-                        message.Append("\n");
-
-                    message.Append("\"" + t.FullName + "\"");
+                    // show the nag header only once, with the first type.
+                    message.Append(NagHeader);
+                    ShowNagHeader = false;
                 }
+                else
+                    message.Append("\n");
+
+                message.Append("\"" + t.FullName + "\"");
             }
-            
             if (message.Length > 0)
             {
                 SafeHouse.Logger.Log(message.ToString());

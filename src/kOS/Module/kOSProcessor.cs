@@ -23,6 +23,7 @@ using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
 using kOS.Safe.Communication;
+using kOS.Safe.Function;
 
 namespace kOS.Module
 {
@@ -361,6 +362,7 @@ namespace kOS.Module
             shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
             shared.SoundMaker = Sound.SoundMaker.Instance;
+            shared.AddonManager = new AddOns.AddonManager(shared);
 
             // Make the window that is going to correspond to this kOS part:
             var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));
