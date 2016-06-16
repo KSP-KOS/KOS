@@ -231,10 +231,10 @@ namespace kOS.Utilities
             return "None";
         }
 
-               public static KSPActionParam makeActionParam(bool state) // just use this to when you need to call action that requires bool input for direction
+        public static KSPActionParam makeActionParam(bool state) // just use this to when you need to call action that requires bool input for direction
         {
-            if (state){ return new KSPActionParam(0, KSPActionType.Activate); }
-            else { return new KSPActionParam(0, KSPActionType.Deactivate);}
+            if (state) { return new KSPActionParam(0, KSPActionType.Activate); }
+            else { return new KSPActionParam(0, KSPActionType.Deactivate); }
         }
 
         public static void LandingLegsCtrl(Vessel vessel, bool state)
@@ -248,7 +248,9 @@ namespace kOS.Utilities
                 {
                     var gear = p.Modules[gd.baseModuleIndex] as ModuleWheelBase;
                     if ((gear != null) && (gear.wheelType == WheelType.LEG)) // identify leg
-                    {gd.ActionToggle(makeActionParam(state)); }
+                    {
+                        gd.ActionToggle(makeActionParam(state));
+                    }
                 }
             }
         }
@@ -259,7 +261,26 @@ namespace kOS.Utilities
 
             foreach (var p in vessel.parts)
             {
-                if (p.Modules.OfType<ModuleLandingLeg>().Any()) //Legacy
+                var gearlist = p.FindModulesImplementing<ModuleWheelBase>();
+                if (gearlist.Count > 0)
+                {
+                    foreach (var gear in gearlist)
+                    {
+                        if (gear.wheelType == WheelType.LEG)
+                        {
+                            atLeastOneLeg = true;
+                            var geardeploy = p.FindModulesImplementing<ModuleWheels.ModuleWheelDeployment>();
+                            foreach (var gd in geardeploy)
+                            {
+                                if ((p.Modules[gd.baseModuleIndex] == gear) && (gd.fsm.CurrentState != gd.st_deployed)) //state string is unreliable - may be just empty
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (p.Modules.OfType<ModuleLandingLeg>().Any()) //Legacy
                 {
                     atLeastOneLeg = true;
 
@@ -268,24 +289,6 @@ namespace kOS.Utilities
                     if (legs.Any(l => l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED)))
                     {
                         return false;
-                    }
-                }
-               var gearlist = p.FindModulesImplementing<ModuleWheelBase>();
-                if (gearlist.Count>0)
-                {
-                    foreach (var gear in gearlist)
-                    {
-                        if (gear.wheelType == WheelType.LEG)
-                        {
-                            atLeastOneLeg = true;
-                            var geardeploy = p.FindModulesImplementing<ModuleWheels.ModuleWheelDeployment>();
-                            foreach (var gd in geardeploy) {
-                                if ((p.Modules[gd.baseModuleIndex]==gear)&&(gd.fsm.CurrentState!=gd.st_deployed)) //state string is unreliable - may be just empty
-                                {
-                                    return false;
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -393,7 +396,8 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
                 {
-                    if (state) { c.Extend(); }else { c.Retract(); }
+                    if (state) { c.Extend(); }
+                    else { c.Retract(); }
                 }
             }
         }
@@ -431,19 +435,20 @@ namespace kOS.Utilities
                     {
                         foreach (var c in cl)
                         {
-
-                            if (state) { c.Activate(); } else { c.Shutdown(); } //fixed radiators
+                            //fixed radiators
+                            if (state) { c.Activate(); }
+                            else { c.Shutdown(); } 
                         }
                     }
                     else
                     {
                         foreach (var dr in drl)
                         {
-
-                            if (state) { dr.Extend(); } else { dr.Retract(); } //deployable radiators
+                            //deployable radiators
+                            if (state) { dr.Extend(); }
+                            else { dr.Retract(); }
                         }
                     }
-
                 }
             }
         }
@@ -475,14 +480,14 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<RetractableLadder>())
                 {
-                    if (state) { c.Extend(); } else { c.Retract(); }
+                    if (state) { c.Extend(); }
+                    else { c.Retract(); }
                 }
             }
         }
 
         public static object GetBayStatus(Vessel vessel)
         {
-            
             foreach (var p in vessel.parts)
             {
                 foreach (var c in p.FindModulesImplementing<ModuleCargoBay>())
@@ -490,8 +495,12 @@ namespace kOS.Utilities
                     var m = p.Modules[c.DeployModuleIndex] as ModuleAnimateGeneric; //apparently, it's referenced by the number
                     if (m != null) //bays have ModuleAnimateGeneric, fairings have their own, but they all use ModuleCargoBay
                     {// if (m.GetScalar != c.closedPosition)
-                          if  (m.animSwitch == (c.closedPosition != 0))
-                        { return true; } } //even one open bay may be critical, therefore return true if any found
+                        if (m.animSwitch == (c.closedPosition != 0))
+                        {
+                            //even one open bay may be critical, therefore return true if any found
+                            return true;
+                        }
+                    }
                 }
             }
 
@@ -500,7 +509,6 @@ namespace kOS.Utilities
 
         public static void BayCtrl(Vessel vessel, bool state)
         {
-
             foreach (var p in vessel.parts)
             {
                 foreach (var c in p.FindModulesImplementing<ModuleCargoBay>())
@@ -509,10 +517,14 @@ namespace kOS.Utilities
                     if (m != null)
                     {
                         if ((m.animSwitch == (c.closedPosition == 0))) //closed/closing
-                            {if (state) { m.Toggle(); } } //open
+                        {
+                            if (state) { m.Toggle(); } //open
+                        }
                         else //open/opening
-                        { if (!state) { m.Toggle(); } }// close
-                    } 
+                        {
+                            if (!state) { m.Toggle(); } //close
+                        }
+                    }
                 }
             }
         }
@@ -524,7 +536,8 @@ namespace kOS.Utilities
             foreach (var p in vessel.parts)
             {
                 foreach (var c in p.FindModulesImplementing<ModuleAnimationGroup>())
-                {if (c.moduleType == "Drill") //drill animation module
+                {
+                    if (c.moduleType == "Drill") //drill animation module
                     {
                         atLeastOneDrill = true;
 
@@ -534,8 +547,8 @@ namespace kOS.Utilities
                             return false;
                         }
                     }
-                    }
                 }
+            }
             return atLeastOneDrill;
         }
 
@@ -547,10 +560,8 @@ namespace kOS.Utilities
                 {
                     if (c.moduleType == "Drill") //drill animation module
                     {
-                        if (state) { c.DeployModule(); } else
-                        {
-                            c.RetractModule(); 
-                        }
+                        if (state) { c.DeployModule(); }
+                        else { c.RetractModule(); }
                     }
                 }
             }
@@ -584,13 +595,16 @@ namespace kOS.Utilities
         {
             foreach (var p in vessel.parts)
             {
+                //call activate on both modules
                 foreach (var c in p.FindModulesImplementing<ModuleResourceHarvester>())
                 {
-                    if (state) {c.StartResourceConverter(); }else { c.StopResourceConverter(); }
+                    if (state) { c.StartResourceConverter(); }
+                    else { c.StopResourceConverter(); }
                 }
                 foreach (var c in p.FindModulesImplementing<ModuleAsteroidDrill>())
                 {
-                    if (state) { c.StartResourceConverter(); } else { c.StopResourceConverter(); } //call activate on both madules
+                    if (state) { c.StartResourceConverter(); }
+                    else { c.StopResourceConverter(); }
                 }
             }
         }
@@ -624,7 +638,8 @@ namespace kOS.Utilities
                 {
                     if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID)))
                     {
-                        if (state) { c.StartResourceConverter(); } else { c.StopResourceConverter(); }
+                        if (state) { c.StartResourceConverter(); }
+                        else { c.StopResourceConverter(); }
                     }
                 }
             }
@@ -637,7 +652,7 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleResourceConverter>())
                 {
-                    if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID))) 
+                    if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID)))
                     {
                         if (c.IsActivated)
                         {
@@ -659,7 +674,8 @@ namespace kOS.Utilities
                 {
                     if ((c.ConverterName.Contains(convID)) || (c.StartActionName.Contains(convID)) || (c.StopActionName.Contains(convID)))
                     {
-                        if (state) { c.StartResourceConverter(); } else { c.StopResourceConverter(); }
+                        if (state) { c.StartResourceConverter(); }
+                        else { c.StopResourceConverter(); }
                     }
                 }
             }
@@ -692,7 +708,8 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleResourceIntake>())
                 {
-                    if (state) { c.Activate(); }else { c.Deactivate(); }
+                    if (state) { c.Activate(); }
+                    else { c.Deactivate(); }
                 }
             }
         }
@@ -753,13 +770,14 @@ namespace kOS.Utilities
 
             return thrust;
         }
+
         public static Direction GetFacing(Vessel vessel)
         {
             var vesselRotation = vessel.ReferenceTransform.rotation;
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
         }
-        
+
         public static Direction GetFacing(CelestialBody body)
         {
             var bodyRotation = body.transform.rotation;

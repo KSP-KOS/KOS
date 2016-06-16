@@ -51,7 +51,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode(value));
             shared.BindingMgr.AddGetter("SASMODE", () => GetAutopilotModeName());
             shared.BindingMgr.AddSetter("NAVMODE", value => SetNavMode(value));
-            shared.BindingMgr.AddGetter("NAVMODE", () => getNavModeName());
+            shared.BindingMgr.AddGetter("NAVMODE", () => GetNavModeName());
         }
 
 
@@ -298,17 +298,17 @@ namespace kOS.Binding
             }
         }
 
-        public string getNavModeName()
+        public string GetNavModeName()
         {
-            return getNavMode().ToString().ToUpper();
+            return GetNavMode().ToString().ToUpper();
         }
 
 
-        public FlightGlobals.SpeedDisplayModes getNavMode()
+        public FlightGlobals.SpeedDisplayModes GetNavMode()
         {
             if (Shared.Vessel != FlightGlobals.ActiveVessel)
             {
-                throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
+                throw new KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
             }
             return FlightGlobals.speedDisplayMode;
         }   
@@ -320,19 +320,20 @@ namespace kOS.Binding
 
         public void SetNavMode(object navMode)
         {
-            if (!((navMode is kOS.Safe.Encapsulation.StringValue) || (navMode is string)))
+            navMode = Safe.Encapsulation.Structure.FromPrimitiveWithAssert(navMode);
+            if (!(navMode is Safe.Encapsulation.StringValue))
             {
                 throw new KOSWrongControlValueTypeException(
-                  "NAVMODE", navMode.GetType().Name, "string (\"ORBIT\", \"SURFACE\" or \"TARGET\")");
+                  "NAVMODE", KOSNomenclature.GetKOSName(navMode.GetType()), "string (\"ORBIT\", \"SURFACE\" or \"TARGET\")");
             }
-            SetNavMode((string)navMode);
+            SetNavMode(navMode.ToString());
         }
 
         public void SetNavMode(string navMode)
         {
             if (Shared.Vessel != FlightGlobals.ActiveVessel)
             {
-                throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
+                throw new KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
             }
             // handle a null/empty value in case of an unset command or setting to empty string to clear.
             if (string.IsNullOrEmpty(navMode))
@@ -352,7 +353,7 @@ namespace kOS.Binding
                         break;
                     case "target":
                         if(FlightGlobals.fetch.VesselTarget== null) {
-                            throw new Safe.Exceptions.KOSException("Cannot set navigation mode: there is no target");
+                            throw new KOSException("Cannot set navigation mode: there is no target");
                         }
                         SetNavMode(FlightGlobals.SpeedDisplayModes.Target);
                         break;
