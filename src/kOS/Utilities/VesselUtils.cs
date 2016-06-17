@@ -321,7 +321,6 @@ namespace kOS.Utilities
             if (!vessel.mainBody.atmosphere || !state) return;
             foreach (var p in vessel.parts)
             {
-                if (!p.Modules.OfType<ModuleParachute>().Any()) continue;
                 foreach (var c in p.FindModulesImplementing<ModuleParachute>())
                 {
                     if (c.deploymentState == ModuleParachute.deploymentStates.STOWED)
@@ -335,13 +334,11 @@ namespace kOS.Utilities
 
         public static object GetChuteSafeStatus(Vessel vessel) // returns false only if there are chutes to be safely deployed
         {
-
             foreach (var p in vessel.parts)
             {
                 foreach (var c in p.FindModulesImplementing<ModuleParachute>())
                 {
-
-                    if ((c.deploymentState == ModuleParachute.deploymentStates.STOWED)&&(c.deploymentSafeState==ModuleParachute.deploymentSafeStates.SAFE))
+                    if ((c.deploymentState == ModuleParachute.deploymentStates.STOWED) && (c.deploymentSafeState == ModuleParachute.deploymentSafeStates.SAFE))
                     {
                         // If just one chute can be safely deployed return false
                         return false;
@@ -357,11 +354,9 @@ namespace kOS.Utilities
             if (!vessel.mainBody.atmosphere || !state) return;
             foreach (var p in vessel.parts)
             {
-                if (!p.Modules.OfType<ModuleParachute>().Any()) continue;
                 foreach (var c in p.FindModulesImplementing<ModuleParachute>())
                 {
                     if ((c.deploymentState == ModuleParachute.deploymentStates.STOWED) && (c.deploymentSafeState == ModuleParachute.deploymentSafeStates.SAFE))
-                    //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
                     {
                         c.DeployAction(null);
                     }
@@ -412,7 +407,7 @@ namespace kOS.Utilities
                 {
                     atLeastOneRadiator = true;
 
-                    if (! c.IsCooling)
+                    if (!c.IsCooling)
                     {
                         // If just one radiator is not deployed/activated return false
                         return false;
@@ -437,7 +432,7 @@ namespace kOS.Utilities
                         {
                             //fixed radiators
                             if (state) { c.Activate(); }
-                            else { c.Shutdown(); } 
+                            else { c.Shutdown(); }
                         }
                     }
                     else
