@@ -16,6 +16,7 @@ namespace kOS.AddOns.TrajectoriesAddon
         private static MethodInfo trCorrectedDirection = null;
         private static MethodInfo trPlannedDirection = null;
         private static MethodInfo trSetTarget = null;
+        private static PropertyInfo trAlwaysUpdate = null;
 
         private static void init()
         {
@@ -54,6 +55,19 @@ namespace kOS.AddOns.TrajectoriesAddon
             if (trSetTarget == null)
             {
                 Debug.Log("[kOS] Trajectories.API.setTarget method is null.");
+                wrapped = false;
+                return;
+            }
+            trAlwaysUpdate = trajectoriesAPIType.GetProperty("alwaysUpdate");
+            if (trAlwaysUpdate == null)
+            {
+                wrapped = false;
+                return;
+            }
+            trAlwaysUpdate.SetValue(null, true, null);
+            if ((bool)trAlwaysUpdate.GetValue(null, null) == false)
+            {
+                Debug.Log("[kOS] Trajectories.API.alwaysUpdate was not set.");
                 wrapped = false;
                 return;
             }
