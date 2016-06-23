@@ -142,7 +142,8 @@ These are the generic properties every PART has. You can obtain a list of values
     the "control from" setting other than to pick another part and set it
     to that part instead.
 
-    WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+    .. warning::
+        This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. attribute:: Part:STAGE
 
