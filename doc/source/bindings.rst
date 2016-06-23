@@ -142,7 +142,7 @@ which triggers the next stage.
 NextNode
 --------
 
-Get-only. ``nextnode`` returns the next planned maneuver :struct:`node` in the SHIP's flight plan.  Will throw an exception if
+Get-only. ``nextnode`` returns the next planned maneuver :struct:`ManeuverNode` in the SHIP's flight plan.  Will throw an exception if
 no node exists, or if called on a ship that is not the active vessel.
 
 .. _hasnode:
@@ -150,7 +150,7 @@ no node exists, or if called on a ship that is not the active vessel.
 HasNode
 --------
 
-Get-only. ``hasnode`` returns true if there is a planned maneuver :struct:`node` in the SHIP's flight plan.  This will always return
+Get-only. ``hasnode`` returns true if there is a planned maneuver :struct:`ManeuverNode` in the SHIP's flight plan.  This will always return
 false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.
 
 Resource Types
@@ -238,63 +238,58 @@ return an object :ref:`of type Orbit <orbit>`.  (i.e. to obtain the name
 of the planet the encounter is with, you can do:
 ``print ENCOUNTER:BODY:NAME.``, for example.).
 
-BOOLEAN TOGGLE FIELDS:
-----------------------
+BOOLEAN TOGGLE FLAGS:
+---------------------
 
-These are variables that behave like boolean flags. They can be True or
-False, and can be set or toggled
-using the "ON" and "OFF" and "TOGGLE" commands.
-Many of these are for action group flags.
+These are special :struct:`Boolean` variables that interact with ship systems.
+They can be ``True`` or ``False``, and can be set or toggled using the ``ON``,
+``OFF``, and ``TOGGLE`` :ref:`commands <toggle>`.  Many of these are for stock
+action groups, while others are specific to kOS.
 
-**NOTE ABOUT STOCK/AGX ACTION GROUP FLAGS:** If the boolean flag is for a stock or AGX action
-group, be aware that each time the
-user presses the action group keypress, it *toggles* the action group,
-so you might need to check for both
-the change in state from false to true AND the change in state from true
-to false to see if the key was hit.
-Setting a value to these flags will result in actions triggered only if the value is changed.
+.. seealso::
 
-**NOTE ABOUT kOS CUSTOM ACTION GROUP FLAGS:** If the boolean flag is for a kOS action
-group, be aware that the value of the flag represents the actual state of the parts of the particular type
-(most of them will always return false if no corresponding parts found) 
-and is neither guaranteed to change immediately when a value is set, nor prevents the actions happening
-when the value is set to its current value (if the parts are in different states). 
-Setting the values to these fields will trigger all the corresponding parts that have different state than the one being set. 
+    :ref:`stock-boolean-flags`
+        Stock action groups are independent of actual part state and must be
+        toggled to have an effect.
+
+    :ref:`kos-boolean-flags`
+        Pseudo-action groups added by kOS which are dependent on actual part
+        state and may still affect parts if set to the current value.
 
 
-===================================================================  ==========   =========   ========= ===============
-Variable Name                                                         Can Read     Can Set     Source    Description
-===================================================================  ==========   =========   ========= ===============
-`SAS <commands/flight/systems.html#global:SAS>`__                     yes          yes          stock     (Same as "SAS" indicator on the navball.)
-`RCS <commands/flight/systems.html#global:RCS>`__                     yes          yes          stock     (Same as "RCS" indicator on the navball.)
-`GEAR <commands/flight/systems.html#global:GEAR>`__                   yes          yes          stock     Is the GEAR enabled right now? (Note, since it may be true with all or most gear retracted, you may want to set it off and back on to guarantee everything is deployed).
-`LIGHTS <commands/flight/systems.html#global:LIGHTS>`__               yes          yes          stock     Are the lights on? (like the "U" key in manual flight)
-`BRAKES <commands/flight/systems.html#global:BRAKES>`__               yes          yes          stock     Are the brakes on?
-`ABORT <commands/flight/systems.html#global:ABORT>`__                 yes          yes          stock     Abort Action Group.
-`LEGS <commands/flight/systems.html#global:LEGS>`__                   yes          yes          kOS       Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)
-`CHUTES <commands/flight/systems.html#global:CHUTES>`__               yes          yes          kOS       Are the parachutes deployed? (Deploys all chutes when set to true)
-`CHUTESSAFE <commands/flight/systems.html#global:CHUTESSAFE>`__       yes          yes          kOS       Are the parachutes that are safe to deploy deployed? (Deploys all chutes that are currently safe to deploy when set to true)
-`PANELS <commands/flight/systems.html#global:PANELS>`__               yes          yes          kOS       Are the solar panels extended? (Deploys/retracts all the solar panels when set)
-`RADIATORS <commands/flight/systems.html#global:RADIATORS>`__         yes          yes          kOS       Are the radiators extended/active? (Deploys and activates/retracts and deactivates all the radiators when set)
-`LADDERS <commands/flight/systems.html#global:LADDERS>`__             yes          yes          kOS       Are the ladders extended? (Deploys/retracts all the extendable ladders when set)
-`BAYS <commands/flight/systems.html#global:BAYS>`__                   yes          yes          kOS       Are any payload/service bays open? (Opens/closes all the payload and service bays when set)
-`INTAKES <commands/flight/systems.html#global:INTAKES>`__             yes          yes          kOS       Are the air intakes open? (Opens/closes all the intakes when set)
-`DRILLSDEPLOY <commands/flight/systems.html#global:DRILLSDEPLOY>`__   yes          yes          kOS       Are the resource drills deployed? (Deploys/retracts all the drills when set)
-`DRILLS <commands/flight/systems.html#global:DRILLS>`__               yes          yes          kOS       Are any resource drills mining? (Starts/stops all the drills when set)
-`FUELCELLS <commands/flight/systems.html#global:FUELCELLS>`__         yes          yes          kOS       Are any fuel cells active? (Starts/stops all the fuel cells when set)
-`ISRU <commands/flight/systems.html#global:ISRU>`__                   yes          yes          kOS       Are any ISRU converters active? (Starts/stops all the ISRU converters when set)
-AG1                                                                   yes          yes          stock     Action Group 1.
-AG2                                                                   yes          yes          stock     Action Group 2.
-AG3                                                                   yes          yes          stock     Action Group 3.
-AG4                                                                   yes          yes          stock     Action Group 4.
-AG5                                                                   yes          yes          stock     Action Group 5.
-AG6                                                                   yes          yes          stock     Action Group 6.
-AG7                                                                   yes          yes          stock     Action Group 7.
-AG8                                                                   yes          yes          stock     Action Group 8.
-AG9                                                                   yes          yes          stock     Action Group 9.
-AG10                                                                  yes          yes          stock     Action Group 10.
-`AGn <addons/AGX.html>`__                                             yes          yes          AGX       If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.
-===================================================================  ==========   =========   ========= ===============
+=============================  ==========   =========   ========= =============================================
+Variable Name                   Can Read     Can Set     Source    What it manages
+=============================  ==========   =========   ========= =============================================
+:global:`SAS`                   yes          yes          stock     SAS action group
+:global:`RCS`                   yes          yes          stock     RCS thrusters action group
+:global:`GEAR`                  yes          yes          stock     Landing gear action group
+:global:`LIGHTS`                yes          yes          stock     Lights action group
+:global:`BRAKES`                yes          yes          stock     Brakes action group
+:global:`ABORT`                 yes          yes          stock     Abort action group
+:global:`LEGS`                  yes          yes          kOS       The extended state of all landing legs
+:global:`CHUTES`                yes          yes          kOS       The armed state of all parachutes
+:global:`CHUTESSAFE`            yes          yes          kOS       The armed state of all "safe" parachutes
+:global:`PANELS`                yes          yes          kOS       The deployed state of solar panels
+:global:`RADIATORS`             yes          yes          kOS       The deployed state of radiators
+:global:`LADDERS`               yes          yes          kOS       The extended state of ladders
+:global:`BAYS`                  yes          yes          kOS       The opened state of payload/service bays
+:global:`INTAKES`               yes          yes          kOS       The opened state of all  intakes
+:global:`DEPLOYDRILLS`          yes          yes          kOS       The deployment state of all drills
+:global:`DRILLS`                yes          yes          kOS       The running state of all drills
+:global:`FUELCELLS`             yes          yes          kOS       The running state of all fuel cells
+:global:`ISRU`                  yes          yes          kOS       The running state of all resource converters
+:any:`AG1 <AG1 ... AG10>`       yes          yes          stock     Action Group 1.
+:any:`AG2 <AG1 ... AG10>`       yes          yes          stock     Action Group 2.
+:any:`AG3 <AG1 ... AG10>`       yes          yes          stock     Action Group 3.
+:any:`AG4 <AG1 ... AG10>`       yes          yes          stock     Action Group 4.
+:any:`AG5 <AG1 ... AG10>`       yes          yes          stock     Action Group 5.
+:any:`AG6 <AG1 ... AG10>`       yes          yes          stock     Action Group 6.
+:any:`AG7 <AG1 ... AG10>`       yes          yes          stock     Action Group 7.
+:any:`AG8 <AG1 ... AG10>`       yes          yes          stock     Action Group 8.
+:any:`AG9 <AG1 ... AG10>`       yes          yes          stock     Action Group 9.
+:any:`AG10 <AG1 ... AG10>`      yes          yes          stock     Action Group 10.
+:ref:`AGn <AGX>`                yes          yes          AGX       ActionGroupsExtended action groups
+=============================  ==========   =========   ========= =============================================
 
 Flight Control
 --------------
