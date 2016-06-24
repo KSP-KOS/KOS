@@ -17,112 +17,140 @@ Represents a :struct:`kOSProcessor` hard disk or the archive.
           - Description
 
         * - :attr:`FREESPACE`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Free space left on the volume
 
         * - :attr:`CAPACITY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Total space on the volume
 
         * - :attr:`NAME`
-          - :ref:`String`
-          - Volume name
+          - :struct:`String`
+          - Get or set volume name
 
         * - :attr:`RENAMEABLE`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - True if the name can be changed
+
+        * - :attr:`ROOT`
+          - :struct:`VolumeDirectory`
+          - Volume's root directory
 
         * - :attr:`FILES`
           - :struct:`Lexicon`
-          - Lexicon of all files on the volume
+          - Lexicon of all files and directories on the volume
 
         * - :attr:`POWERREQUIREMENT`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Amount of power consumed when this volume is set as the current volume
 
-        * - :meth:`EXISTS(filename)`
-          - :ref:`boolean <boolean>`
-          - Returns true if the given file exists
+        * - :meth:`EXISTS(path)`
+          - :struct:`Boolean`
+          - Returns true if the given file or directory exists
 
-        * - :meth:`CREATE(filename)`
+        * - :meth:`CREATE(path)`
           - :struct:`VolumeFile`
           - Creates a file
 
-        * - :meth:`OPEN(filename)`
-          - :struct:`VolumeFile`
-          - Opens a file
+        * - :meth:`CREATEDIR(path)`
+          - :struct:`VolumeDirectory`
+          - Creates a directory
 
-        * - :meth:`DELETE(filename)`
-          - :ref:`boolean <boolean>`
-          - Deletes a file
+        * - :meth:`OPEN(path)`
+          - :struct:`VolumeItem` or :struct:`Boolean`
+          - Opens a file or directory
+
+        * - :meth:`DELETE(path)`
+          - :struct:`Boolean`
+          - Deletes a file or directory
 
 .. attribute:: Volume:FREESPACE
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Free space left on the volume
 
 .. attribute:: Volume:CAPACITY
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Total space on the volume
 
 .. attribute:: Volume:NAME
 
-    :type: :ref:`String`
-    :access: Get only
+    :type: :struct:`String`
+    :access: Get and Set
 
-    Volume name. This name can be used instead of the volumeId with some :ref:`file and volume-related commands<files>`
+    Gets or sets volume name. This name can be used instead of the volumeId with some :ref:`file and volume-related commands<files>`
 
 .. attribute:: Volume:RENAMEABLE
 
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
     True if the name of this volume can be changed. Currently only the name of the archive can't be changed.
 
-
 .. attribute:: Volume:FILES
 
-    :type: :struct:`Lexicon` of :struct:`VolumeFile`
+    :type: :struct:`Lexicon` of :struct:`VolumeItem`
     :access: Get only
 
-    List of files on this volume. Keys are the names of all files on this volume and values are the associated :struct:`VolumeFile` structures.
+    List of files and directories on this volume. Keys are the names of all items on this volume and values are the associated :struct:`VolumeItem` structures.
 
+.. attribute:: Volume:ROOT
+
+    :type: :struct:`VolumeDirectory`
+    :access: Get only
+
+    Returns volume's root directory
 
 .. attribute:: Volume:POWERREQUIREMENT
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     Amount of power consumed when this volume is set as the current volume
 
+.. method:: Volume:EXISTS(path)
 
-.. method:: Volume:EXISTS(filename)
+    :return: :struct:`Boolean`
 
-    :return: :ref:`boolean <boolean>`
+    Returns true if the given file or directory exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
+    Use ``Volume:FILES:HASKEY(name)`` to perform a strict check.
 
-    Returns true if the given file exists. This will also return true when the given file does not exist, but there is a file with the same name and `.ks` or `.ksm` extension added.
-    Use ``Volume:FILES:HASKEY(filename)`` to perform a strict check.
+    Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
 
-.. method:: Volume:OPEN(filename)
+.. method:: Volume:OPEN(path)
+
+    :return: :struct:`VolumeItem` or :struct:`Boolean` false
+
+    Opens the file or directory pointed to by the given path and returns :struct:`VolumeItem`. It will return a boolean false if the given file or directory does not exist.
+
+    Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+
+.. method:: Volume:CREATE(path)
 
     :return: :struct:`VolumeFile`
 
-    Opens the file with the given name and returns :struct:`VolumeFile`. It will fail if the file doesn't exist.
+    Creates a file under the given path and returns :struct:`VolumeFile`. It will fail if the file already exists.
 
-.. method:: Volume:CREATE(filename)
+    Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
 
-    :return: :struct:`VolumeFile`
+.. method:: Volume:CREATEDIR(path)
 
-    Creates a file with the given name and returns :struct:`VolumeFile`. It will fail if the file already exists.
+    :return: :struct:`VolumeDirectory`
 
-.. method:: Volume:DELETE(filename)
+    Creates a directory under the given path and returns :struct:`VolumeDirectory`. It will fail if the directory already exists.
+
+    Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
+
+.. method:: Volume:DELETE(path)
 
     :return: boolean
 
-    Deletes the given file. It will return true if file was successfully deleted and false otherwise.
+    Deletes the given file or directory (recursively). It will return true if the given item was successfully deleted and false otherwise.
+
+    Paths passed as the argument to this command should not contain a volume id or name and should not be relative.
 

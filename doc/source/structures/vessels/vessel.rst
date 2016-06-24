@@ -60,6 +60,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`ISDEAD`                        :struct:`Boolean`               True if the vessel refers to a ship that has gone away.
     :attr:`PATCHES`                       :struct:`List`                  :struct:`Orbit` patches
     :attr:`ROOTPART`                      :struct:`Part`                  Root :struct:`Part` of this vessel
+    :attr:`CONTROLPART`                   :struct:`Part`                  Control reference :struct:`Part` of this vessel
     :attr:`PARTS`                         :struct:`List`                  all :struct:`Parts <Part>`
     :attr:`DOCKINGPORTS`                  :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
     :attr:`ELEMENTS`                      :struct:`List`                  all :struct:`Elements <Element>`
@@ -260,7 +261,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     (Normal SI units would use kilograms, but in KSP all masses use a
     1000x scaling factor.)
 
-    **Justification for radians here:** 
+    **Justification for radians here:**
     Unlike the trigonometry functions in kOS, this value uses radians
     rather than degrees.  The convention of always expressing angular
     momentum using a formula that assumes you're using radians is a very
@@ -270,7 +271,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     helpful formulae about angular momentum.  This is why kOS doesn't
     use degrees here.  (That an backward compatibility for old scripts.
     It's been like this for quite a while.).
-    
+
     .. note::
 
         .. versionchanged:: 0.15.4
@@ -355,6 +356,19 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     The ROOTPART is usually the first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.
+
+.. attribute:: Vessel:CONTROLPART
+
+    :type: :struct:`Part`
+    :access: Get only
+
+    Returns the :struct:`Part` serving as the control reference, relative to
+    which the directions (as displayed on the navball and returned in
+    :attr:`FACING`) are determined. A part may be set as the control reference
+    part by "Control From Here" action or :meth:`PART:CONTROLFROM` command
+    (available for parts of specific types).  **NOTE:** It is possible for this
+    to return unexpected values if the root part of the vessel cannot serve as a
+    control reference, and the control has not been directly selected.
 
 .. attribute:: Vessel:PARTS
 

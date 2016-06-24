@@ -266,7 +266,7 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return new SafeSerializationMgr().ToString(this);
+            return new SafeSerializationMgr(null).ToString(this);
         }
 
         public override Dump Dump()

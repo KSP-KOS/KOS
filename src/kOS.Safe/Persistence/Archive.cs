@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Persistence
 {
@@ -11,138 +12,194 @@ namespace kOS.Safe.Persistence
     public class Archive : Volume
     {
         public const string ArchiveName = "Archive";
+        public ArchiveDirectory RootArchiveDirectory { get; private set; }
 
-        private static string ArchiveFolder
-        {
-            get { return SafeHouse.ArchiveFolder; }
+        private static string ArchiveFolder { get; set; }
+
+        public override VolumeDirectory Root {
+            get {
+                return RootArchiveDirectory;
+            }
         }
 
-        public Archive()
+        public Archive(string archiveFolder)
+        {
+            ArchiveFolder = Path.GetFullPath(archiveFolder).TrimEnd(VolumePath.PathSeparator);
+            CreateArchiveDirectory();
+            Renameable = false;
+            InitializeName(ArchiveName);
+
+            RootArchiveDirectory = new ArchiveDirectory(this, VolumePath.EMPTY);
+        }
+
+        private void CreateArchiveDirectory()
         {
             Directory.CreateDirectory(ArchiveFolder);
-            Renameable = false;
-            Name = ArchiveName;
         }
 
-        public override float RequiredPower()
+        public string GetArchivePath(VolumePath path)
         {
-            const int MULTIPLIER = 5;
-            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
+            if (path.PointsOutside)
+            {
+                throw new KOSInvalidPathException("Path refers to parent directory", path.ToString());
+            }
 
-            return POWER_REQUIRED;
+            string mergedPath = ArchiveFolder;
+
+            foreach (string segment in path.Segments)
+            {
+                mergedPath = Path.Combine(mergedPath, segment);
+            }
+
+            return mergedPath;
         }
 
-        public override VolumeFile Open(string name, bool ksmDefault = false)
+        public override void Clear()
+        {
+            if (Directory.Exists(ArchiveFolder))
+            {
+                Directory.Delete(ArchiveFolder, true);
+            }
+
+            Directory.CreateDirectory(ArchiveFolder);
+        }
+
+        public override VolumeItem Open(VolumePath path, bool ksmDefault = false)
         {
             try
             {
-                var fileInfo = FileSearch(name, ksmDefault);
-                if (fileInfo == null)
-                {
+                var fileSystemInfo = Search(path, ksmDefault);
+
+                if (fileSystemInfo == null) {
                     return null;
                 }
-
-                return new ArchiveFile(fileInfo);
+                else if (fileSystemInfo is FileInfo)
+                {
+                    VolumePath filePath = VolumePath.FromString(fileSystemInfo.FullName.Substring(ArchiveFolder.Length).Replace(Path.DirectorySeparatorChar, VolumePath.PathSeparator));
+                    return new ArchiveFile(this, fileSystemInfo as FileInfo, filePath);
+                }
+                else {
+                    // we can use 'path' here, default extensions are not added to directories
+                    return new ArchiveDirectory(this, path);
+                }
             }
             catch (Exception e)
             {
-                SafeHouse.Logger.Log(e);
-                return null;
+                throw new KOSPersistenceException("Could not open path: " + path, e);
             }
         }
 
-        public override bool Delete(string name)
+        public override VolumeDirectory CreateDirectory(VolumePath path)
         {
-            var fullPath = FileSearch(name);
-            if (fullPath == null)
+            string archivePath = GetArchivePath(path);
+
+            if (Directory.Exists(archivePath))
+            {
+                throw new KOSPersistenceException("Already exists: " + path);
+            }
+
+            try
+            {
+                Directory.CreateDirectory(archivePath);
+            }
+            catch (IOException)
+            {
+                throw new KOSPersistenceException("Could not create directory: " + path);
+            }
+
+            return new ArchiveDirectory(this, path);
+        }
+
+        public override VolumeFile CreateFile(VolumePath path)
+        {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't create a file over root directory");
+            }
+
+            string archivePath = GetArchivePath(path);
+
+            if (File.Exists(archivePath))
+            {
+                throw new KOSPersistenceException("Already exists: " + path);
+            }
+
+            try
+            {
+                Directory.CreateDirectory(GetArchivePath(path.GetParent()));
+            }
+            catch (IOException)
+            {
+                throw new KOSPersistenceException("Parent directory for path does not exist: " + path.ToString());
+            }
+
+            try
+            {
+                File.Create(archivePath).Dispose();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw new KOSPersistenceException("Could not create file: " + path);
+            }
+
+            return Open(path) as VolumeFile;
+        }
+
+        public override bool Exists(VolumePath path, bool ksmDefault = false)
+        {
+            return Search(path, ksmDefault) != null;
+        }
+
+        public override bool Delete(VolumePath path, bool ksmDefault = false)
+        {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't delete root directory");
+            }
+
+            var fileSystemInfo = Search(path, ksmDefault);
+
+            if (fileSystemInfo == null)
             {
                 return false;
             }
-            File.Delete(fullPath.FullName);
+            else if (fileSystemInfo is FileInfo)
+            {
+                File.Delete(fileSystemInfo.FullName);
+            }
+            else
+            {
+                Directory.Delete(fileSystemInfo.FullName, true);
+            }
+
             return true;
         }
 
-        public override bool RenameFile(string name, string newName)
-        {
-            try
-            {
-                var fullSourcePath = FileSearch(name);
-                if (fullSourcePath == null)
-                {
-                    return false;
-                }
-
-                string destinationPath = string.Format(ArchiveFolder + newName);
-                if (!Path.HasExtension(newName))
-                {
-                    destinationPath += fullSourcePath.Extension;
-                }
-
-                File.Move(fullSourcePath.FullName, destinationPath);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public override VolumeFile Create(string name)
-        {
-            string filePath = Path.Combine(ArchiveFolder, name);
-            if (File.Exists(filePath))
-            {
-                throw new KOSFileException("File already exists: " + name);
-            }
-
-            using (File.Create(filePath))
-            {
-                // Do Nothing
-            }
-
-            return new ArchiveFile(FileSearch(name));
-        }
-
-        public override VolumeFile Save(string name, FileContent content)
+        public override VolumeFile SaveFile(VolumePath path, FileContent content, bool verifyFreeSpace = true)
         {
             Directory.CreateDirectory(ArchiveFolder);
 
+            string archivePath = GetArchivePath(path);
+            if (Directory.Exists(archivePath))
+            {
+                throw new KOSPersistenceException("Can't save file over a directory: " + path);
+            }
+
+            string parentPath = Directory.GetParent(archivePath).FullName;
+
+            if (!Directory.Exists(parentPath))
+            {
+                Directory.CreateDirectory(parentPath);
+            }
+
             byte[] fileBody = ConvertToWindowsNewlines(content.Bytes);
 
-            using (var outfile = new BinaryWriter(File.Open(Path.Combine(ArchiveFolder, name), FileMode.Create)))
+            using (var outfile = new BinaryWriter(File.Open(archivePath, FileMode.Create)))
             {
                 outfile.Write(fileBody);
             }
 
-            return new ArchiveFile(FileSearch(name));
-        }
-
-        public override Dictionary<string, VolumeFile> FileList
-        {
-            get
-            {
-                var listFiles = Directory.GetFiles(ArchiveFolder);
-                var filterHid = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.Hidden) != 0);
-                var filterSys = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.System) != 0);
-
-                var visFiles = listFiles.Except(filterSys).Except(filterHid);
-                var kosFiles = visFiles.Except(Directory.GetFiles(ArchiveFolder, ".*"));
-                return kosFiles.Select(file => new FileInfo(file)).Select(sysFileInfo => new ArchiveFile(sysFileInfo)).
-                    Cast<VolumeFile>().ToDictionary(f => f.Name, f => f);
-            }
-        }
-
-        public override long Size
-        {
-            get
-            {
-                return FileList.Values.Sum(i => i.Size);
-            }
-        }
-
-        public override bool Exists(string name)
-        {
-            return FileSearch(name) != null;
+            return Open(path) as VolumeFile;
         }
 
         public static byte[] ConvertToWindowsNewlines(byte[] bytes)
@@ -175,19 +232,34 @@ namespace kOS.Safe.Persistence
             return bytes;
         }
 
+        public override float RequiredPower()
+        {
+            const int MULTIPLIER = 5;
+            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
+
+            return POWER_REQUIRED;
+        }
+
         /// <summary>
         /// Get the file from the OS.
         /// </summary>
         /// <param name="name">filename to look for</param>
         /// <param name="ksmDefault">if true, it prefers to use the KSM filename over the KS.  The default is to prefer KS.</param>
         /// <returns>the full fileinfo of the filename if found</returns>
-        private FileInfo FileSearch(string name, bool ksmDefault = false)
+        private FileSystemInfo Search(VolumePath volumePath, bool ksmDefault)
         {
-            var path = Path.Combine(ArchiveFolder, name);
+            var path = GetArchivePath(volumePath);
+
+            if (Directory.Exists(path))
+            {
+                return new DirectoryInfo(path);
+            }
+
             if (File.Exists(path))
             {
                 return new FileInfo(path);
             }
+
             var kerboscriptFile = new FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
             var kosMlFile = new FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
 

@@ -1,7 +1,7 @@
 .. _volumefile:
 
 VolumeFile
-================
+==========
 
 File name and size information. You can obtain a list of values of type VolumeFile using the :ref:`LIST FILES <list command>` command.
 
@@ -15,16 +15,10 @@ File name and size information. You can obtain a list of values of type VolumeFi
           - Type
           - Description
 
+        * - All suffixes of :struct:`VolumeItem`
+          -
+          - :struct:`VolumeFile` objects are a type of :struct:`VolumeItem`
 
-        * - :attr:`NAME`
-          - :struct:`String`
-          - Name of the file including extension
-        * - :attr:`EXTENSION`
-          - :struct:`String`
-          - File extension
-        * - :attr:`SIZE`
-          - :ref:`scalar <scalar>` (bytes)
-          - Size of the file
         * - :meth:`READALL`
           - :struct:`FileContent`
           - Reads file contents
@@ -37,28 +31,6 @@ File name and size information. You can obtain a list of values of type VolumeFi
         * - :meth:`CLEAR`
           - None
           - Clears this file
-
-
-.. attribute:: VolumeFile:NAME
-
-    :access: Get only
-    :type: :struct:`String`
-
-    name of the file, including its file extension.
-
-.. attribute:: VolumeFile:EXTENSION
-
-    :access: Get only
-    :type: :struct:`String`
-
-    File extension (part of the filename after the last dot).
-
-.. attribute:: VolumeFile:SIZE
-
-    :access: Get only
-    :type: :ref:`scalar <scalar>`
-
-    size of the file, in bytes.
 
 
 .. method:: VolumeFile:READALL

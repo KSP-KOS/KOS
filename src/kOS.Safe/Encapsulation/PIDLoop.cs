@@ -132,34 +132,36 @@ namespace kOS.Safe.Encapsulation
             if (LastSampleTime < sampleTime)
             {
                 double dt = sampleTime - LastSampleTime;
-                if (dt < 1)
+                if (Ki != 0)
                 {
-                    if (Ki != 0)
+                    if (ExtraUnwind)
                     {
-                        if (ExtraUnwind)
+                        if (Math.Sign(error) != Math.Sign(ErrorSum))
                         {
-                            if (Math.Sign(error) != Math.Sign(ErrorSum))
+                            if (!unWinding)
                             {
-                                if (!unWinding)
-                                {
-                                    Ki *= 2;
-                                    unWinding = true;
-                                }
-                            }
-                            else if (unWinding)
-                            {
-                                Ki /= 2;
-                                unWinding = false;
+                                Ki *= 2;
+                                unWinding = true;
                             }
                         }
-                        iTerm = ITerm + error * dt * Ki;
+                        else if (unWinding)
+                        {
+                            Ki /= 2;
+                            unWinding = false;
+                        }
                     }
-                    ChangeRate = (input - Input) / dt;
-                    if (Kd != 0)
-                    {
-                        dTerm = -ChangeRate * Kd;
-                    }
+                    iTerm = ITerm + error * dt * Ki;
                 }
+                ChangeRate = (input - Input) / dt;
+                if (Kd != 0)
+                {
+                    dTerm = -ChangeRate * Kd;
+                }
+            }
+            else
+            {
+                dTerm = DTerm;
+                iTerm = ITerm;
             }
             Output = pTerm + iTerm + dTerm;
             if (Output > MaxOutput)
@@ -192,6 +194,7 @@ namespace kOS.Safe.Encapsulation
         public void ResetI()
         {
             ErrorSum = 0;
+            ITerm = 0;
             LastSampleTime = double.MaxValue;
         }
 
