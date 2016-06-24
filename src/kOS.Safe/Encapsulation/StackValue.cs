@@ -33,18 +33,6 @@ namespace kOS.Safe.Encapsulation
             InnerEnumerable.Push(val);
         }
 
-        public override Dump Dump()
-        {
-            var result = new DumpWithHeader
-            {
-                Header = "STACK of " + InnerEnumerable.Count() + " items:"
-            };
-
-            result.Add(kOS.Safe.Dump.Items, InnerEnumerable.Cast<object>().ToList());
-
-            return result;
-        }
-
         public override void LoadDump(Dump dump)
         {
             InnerEnumerable.Clear();
@@ -58,7 +46,6 @@ namespace kOS.Safe.Encapsulation
                 InnerEnumerable.Push((T)Structure.FromPrimitive(item));
             }
         }
-
 
         private void StackInitializeSuffixes()
         {

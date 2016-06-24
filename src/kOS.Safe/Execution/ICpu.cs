@@ -43,6 +43,7 @@ namespace kOS.Safe.Execution
         bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
+        Opcode GetCurrentOpcode();
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
         int InstructionsThisUpdate { get; }

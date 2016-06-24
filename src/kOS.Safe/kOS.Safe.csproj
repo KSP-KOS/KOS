@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\SafeBindingBase.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
+    <Compile Include="Exceptions\KOSVolumeOutOfRangeException.cs" />
     <Compile Include="Exceptions\KOSYouShouldNeverSeeThisException.cs" />
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
@@ -174,6 +176,8 @@
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
+    <Compile Include="Function\SafeFunctionBase.cs" />
+    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\IFunctionManager.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IUpdateObserver.cs" />
@@ -205,6 +209,7 @@
     <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
+    <Compile Include="Utilities\AssemblyWalkAttribute.cs" />
     <Compile Include="Utilities\CpuUtility.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
@@ -238,6 +243,7 @@
     <Compile Include="Serialization\IDumper.cs" />
     <Compile Include="Communication\GenericMessageQueue.cs" />
     <Compile Include="Exceptions\KOSCommunicationException.cs" />
+    <Compile Include="Encapsulation\UniqueSetValue.cs" />
     <Compile Include="Persistence\GlobalPath.cs" />
     <Compile Include="Persistence\VolumePath.cs" />
     <Compile Include="Exceptions\KOSInvalidPathException.cs" />
@@ -284,7 +290,5 @@
   </Target>
   -->
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Communication\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

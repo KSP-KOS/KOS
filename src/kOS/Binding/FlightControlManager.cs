@@ -1,4 +1,4 @@
-﻿using kOS.AddOns.RemoteTech;
+using kOS.AddOns.RemoteTech;
 using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
 using kOS.Safe.Exceptions;
@@ -48,8 +48,10 @@ namespace kOS.Binding
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
 
-            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode((string)value));
-            shared.BindingMgr.AddGetter("SASMODE", () => currentVessel.Autopilot.Mode.ToString().ToUpper());
+            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode(value));
+            shared.BindingMgr.AddGetter("SASMODE", () => GetAutopilotModeName());
+            shared.BindingMgr.AddSetter("NAVMODE", value => SetNavMode(value));
+            shared.BindingMgr.AddGetter("NAVMODE", () => GetNavModeName());
         }
 
 
@@ -197,11 +199,22 @@ namespace kOS.Binding
 
         public void SelectAutopilotMode(object autopilotMode)
         {
-            if (autopilotMode is Direction)
+            autopilotMode = Safe.Encapsulation.Structure.FromPrimitiveWithAssert(autopilotMode);
+            if ((autopilotMode is Safe.Encapsulation.StringValue))
+            {
+                SelectAutopilotMode(autopilotMode.ToString());
+            }
+            else if (autopilotMode is Direction)
             {
                 //TODO: implment use of direction subclasses.
+                throw new KOSException(
+                    string.Format("Cannot set SAS mode to a direction. Should use the name of the mode (as string, e.g. \"PROGRADE\", not PROGRADE) for SASMODE. Alternatively, can use LOCK STEERING TO Direction instead of using SAS"));
             }
-            else SelectAutopilotMode((string)autopilotMode);
+            else
+            {
+                throw new KOSWrongControlValueTypeException(
+                  "SASMODE", KOSNomenclature.GetKOSName(autopilotMode.GetType()), "name of the SAS mode (as string)");
+            }
         }
 
         public void SelectAutopilotMode(VesselAutopilot.AutopilotMode autopilotMode)
@@ -211,19 +224,28 @@ namespace kOS.Binding
                 if (!currentVessel.Autopilot.CanSetMode(autopilotMode))
                 {
                     // throw an exception if the mode is not available
-                    throw new Safe.Exceptions.KOSException(
+                    throw new KOSSituationallyInvalidException(
                         string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
                 }
                 currentVessel.Autopilot.SetMode(autopilotMode);
                 //currentVessel.Autopilot.Enable();
                 // change the autopilot indicator
-                ((Module.kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
+                ((kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
                 if (RemoteTechHook.IsAvailable(currentVessel.id))
                 {
-                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
+                    //Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
                     // TODO: figure out how to make RemoteTech allow the built in autopilot control.  This may require modification to RemoteTech itself.
                 }
             }
+        }
+
+        public string GetAutopilotModeName()
+        {
+            // TODO: As of KSP 1.1.2, RadialIn and RadialOut are still swapped.  Check if still true in future versions.
+            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialOut) { return "RADIALIN"; }
+            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialIn) { return "RADIALOUT"; }
+
+            return currentVessel.Autopilot.Mode.ToString().ToUpper();
         }
 
         public void SelectAutopilotMode(string autopilotMode)
@@ -271,9 +293,76 @@ namespace kOS.Binding
                         SelectAutopilotMode(VesselAutopilot.AutopilotMode.StabilityAssist);
                         break;
                     default:
-                        // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
+                        // If the mode is not recognised, throw an exception rather than continuing or using a default setting
                         throw new KOSException(
                             string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
+                }
+            }
+        }
+
+        public string GetNavModeName()
+        {
+            return GetNavMode().ToString().ToUpper();
+        }
+
+
+        public FlightGlobals.SpeedDisplayModes GetNavMode()
+        {
+            if (Shared.Vessel != FlightGlobals.ActiveVessel)
+            {
+                throw new KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
+            }
+            return FlightGlobals.speedDisplayMode;
+        }   
+
+        public void SetNavMode(FlightGlobals.SpeedDisplayModes navMode)
+        {
+            FlightGlobals.SetSpeedMode(navMode);
+        }
+
+        public void SetNavMode(object navMode)
+        {
+            navMode = Safe.Encapsulation.Structure.FromPrimitiveWithAssert(navMode);
+            if (!(navMode is Safe.Encapsulation.StringValue))
+            {
+                throw new KOSWrongControlValueTypeException(
+                  "NAVMODE", KOSNomenclature.GetKOSName(navMode.GetType()), "string (\"ORBIT\", \"SURFACE\" or \"TARGET\")");
+            }
+            SetNavMode(navMode.ToString());
+        }
+
+        public void SetNavMode(string navMode)
+        {
+            if (Shared.Vessel != FlightGlobals.ActiveVessel)
+            {
+                throw new KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
+            }
+            // handle a null/empty value in case of an unset command or setting to empty string to clear.
+            if (string.IsNullOrEmpty(navMode))
+            {
+                SetNavMode(FlightGlobals.SpeedDisplayModes.Orbit);
+            }
+            else
+            {
+                // determine the navigation mode to use
+                switch (navMode.ToLower())
+                {
+                    case "orbit":
+                        SetNavMode(FlightGlobals.SpeedDisplayModes.Orbit);
+                        break;
+                    case "surface":
+                        SetNavMode(FlightGlobals.SpeedDisplayModes.Surface);
+                        break;
+                    case "target":
+                        if(FlightGlobals.fetch.VesselTarget== null) {
+                            throw new KOSException("Cannot set navigation mode: there is no target");
+                        }
+                        SetNavMode(FlightGlobals.SpeedDisplayModes.Target);
+                        break;
+                    default:
+                        // If the mode is not recognised, throw an exception rather than continuing or using a default setting
+                        throw new KOSException(
+                            string.Format("kOS does not recognize the navigation mode setting of {0}", navMode));
                 }
             }
         }
