@@ -178,7 +178,7 @@ namespace kOS.AddOns.InfernalRobotics
                     if (apiReady == null || actualServoGroups == null)
                         return false;
 
-                    return (bool) apiReady.GetValue(null, null);
+                    return (bool)apiReady.GetValue(null, null);
                 }
             }
 
@@ -201,7 +201,7 @@ namespace kOS.AddOns.InfernalRobotics
                 try
                 {
                     //iterate each "value" in the dictionary
-                    foreach (var item in (IList) servoGroups)
+                    foreach (var item in (IList)servoGroups)
                     {
                         listToReturn.Add(new IRControlGroup(item));
                     }
@@ -264,36 +264,36 @@ namespace kOS.AddOns.InfernalRobotics
 
             public string Name
             {
-                get { return (string) nameProperty.GetValue(actualControlGroup, null); }
+                get { return (string)nameProperty.GetValue(actualControlGroup, null); }
                 set { nameProperty.SetValue(actualControlGroup, value, null); }
             }
 
             public Vessel Vessel
             {
-                get { return vesselProperty != null ? (Vessel) vesselProperty.GetValue(actualControlGroup, null) : null; }
+                get { return vesselProperty != null ? (Vessel)vesselProperty.GetValue(actualControlGroup, null) : null; }
             }
 
             public string ForwardKey
             {
-                get { return (string) forwardKeyProperty.GetValue(actualControlGroup, null); }
+                get { return (string)forwardKeyProperty.GetValue(actualControlGroup, null); }
                 set { forwardKeyProperty.SetValue(actualControlGroup, value, null); }
             }
 
             public string ReverseKey
             {
-                get { return (string) reverseKeyProperty.GetValue(actualControlGroup, null); }
+                get { return (string)reverseKeyProperty.GetValue(actualControlGroup, null); }
                 set { reverseKeyProperty.SetValue(actualControlGroup, value, null); }
             }
 
             public float Speed
             {
-                get { return (float) speedProperty.GetValue(actualControlGroup, null); }
+                get { return (float)speedProperty.GetValue(actualControlGroup, null); }
                 set { speedProperty.SetValue(actualControlGroup, value, null); }
             }
 
             public bool Expanded
             {
-                get { return (bool) expandedProperty.GetValue(actualControlGroup, null); }
+                get { return (bool)expandedProperty.GetValue(actualControlGroup, null); }
                 set { expandedProperty.SetValue(actualControlGroup, value, null); }
             }
 
@@ -347,7 +347,7 @@ namespace kOS.AddOns.InfernalRobotics
                 try
                 {
                     //iterate each "value" in the dictionary
-                    foreach (var item in (IList) actualServos)
+                    foreach (var item in (IList)actualServos)
                     {
                         listToReturn.Add(new IRServo(item));
                     }
@@ -450,21 +450,20 @@ namespace kOS.AddOns.InfernalRobotics
 
             private readonly object actualServo;
 
-
             public string Name
             {
-                get { return (string) nameProperty.GetValue(actualServo, null); }
+                get { return (string)nameProperty.GetValue(actualServo, null); }
                 set { nameProperty.SetValue(actualServo, value, null); }
             }
 
             public uint UID
             {
-                get { return (uint) UIDProperty.GetValue(actualServo, null); }
+                get { return (uint)UIDProperty.GetValue(actualServo, null); }
             }
 
             public Part HostPart
             {
-                get { return (Part) HostPartProperty.GetValue(actualServo, null); }
+                get { return (Part)HostPartProperty.GetValue(actualServo, null); }
             }
 
             public bool Highlight
@@ -475,73 +474,73 @@ namespace kOS.AddOns.InfernalRobotics
 
             public float Position
             {
-                get { return (float) positionProperty.GetValue(actualServoMechanism, null); }
+                get { return (float)positionProperty.GetValue(actualServoMechanism, null); }
             }
 
             public float MinConfigPosition
             {
-                get { return (float) minConfigPositionProperty.GetValue(actualServoMechanism, null); }
+                get { return (float)minConfigPositionProperty.GetValue(actualServoMechanism, null); }
             }
 
             public float MaxConfigPosition
             {
-                get { return (float) maxConfigPositionProperty.GetValue(actualServoMechanism, null); }
+                get { return (float)maxConfigPositionProperty.GetValue(actualServoMechanism, null); }
             }
 
             public float MinPosition
             {
-                get { return (float) minPositionProperty.GetValue(actualServoMechanism, null); }
+                get { return (float)minPositionProperty.GetValue(actualServoMechanism, null); }
                 set { minPositionProperty.SetValue(actualServoMechanism, value, null); }
             }
 
             public float MaxPosition
             {
-                get { return (float) maxPositionProperty.GetValue(actualServoMechanism, null); }
+                get { return (float)maxPositionProperty.GetValue(actualServoMechanism, null); }
                 set { maxPositionProperty.SetValue(actualServoMechanism, value, null); }
             }
 
             public float ConfigSpeed
             {
-                get { return (float) configSpeedProperty.GetValue(actualServoMotor, null); }
+                get { return (float)configSpeedProperty.GetValue(actualServoMotor, null); }
             }
 
             public float Speed
             {
-                get { return (float) speedProperty.GetValue(actualServoMotor, null); }
+                get { return (float)speedProperty.GetValue(actualServoMotor, null); }
                 set { speedProperty.SetValue(actualServoMotor, value, null); }
             }
 
             public float CurrentSpeed
             {
-                get { return (float) currentSpeedProperty.GetValue(actualServoMotor, null); }
+                get { return (float)currentSpeedProperty.GetValue(actualServoMotor, null); }
                 set { currentSpeedProperty.SetValue(actualServoMotor, value, null); }
             }
 
             public float Acceleration
             {
-                get { return (float) accelerationProperty.GetValue(actualServoMotor, null); }
+                get { return (float)accelerationProperty.GetValue(actualServoMotor, null); }
                 set { accelerationProperty.SetValue(actualServoMotor, value, null); }
             }
 
             public bool IsMoving
             {
-                get { return (bool) isMovingProperty.GetValue(actualServoMechanism, null); }
+                get { return (bool)isMovingProperty.GetValue(actualServoMechanism, null); }
             }
 
             public bool IsFreeMoving
             {
-                get { return (bool) isFreeMovingProperty.GetValue(actualServoMechanism, null); }
+                get { return (bool)isFreeMovingProperty.GetValue(actualServoMechanism, null); }
             }
 
             public bool IsLocked
             {
-                get { return (bool) isLockedProperty.GetValue(actualServoMechanism, null); }
+                get { return (bool)isLockedProperty.GetValue(actualServoMechanism, null); }
                 set { isLockedProperty.SetValue(actualServoMechanism, value, null); }
             }
 
             public bool IsAxisInverted
             {
-                get { return (bool) isAxisInvertedProperty.GetValue(actualServoMotor, null); }
+                get { return (bool)isAxisInvertedProperty.GetValue(actualServoMotor, null); }
                 set { isAxisInvertedProperty.SetValue(actualServoMotor, value, null); }
             }
 

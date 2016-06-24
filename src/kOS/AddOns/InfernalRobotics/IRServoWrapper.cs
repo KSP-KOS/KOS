@@ -1,7 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
-using kOS.Safe.Exceptions;
 
 namespace kOS.AddOns.InfernalRobotics
 {
@@ -53,7 +52,6 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("PART", new Suffix<PartValue>(() => this.partValue));
         }
 
-        
         public void MoveRight()
         {
             partValue.ThrowIfNotCPUVessel();
@@ -100,10 +98,10 @@ namespace kOS.AddOns.InfernalRobotics
         {
             var p = servo.HostPart;
 
-            if(!p)
+            if (!p)
                 shared.Logger.LogError("Cannot find Infernal Robotics part with UID: " + servo.UID);
 
-            return p != null ? new PartValue (p, shared) : null;
+            return p != null ? new PartValue(p, shared) : null;
         }
     }
 }
