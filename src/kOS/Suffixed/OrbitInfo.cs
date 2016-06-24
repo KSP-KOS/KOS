@@ -39,32 +39,7 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             orbit = new Orbit();
-            // FIXME: there is a bug here in translating betwee ship-local and body-centered coordinate systems, if you
-            // are below the body.inverseRotationAltitude when you try to compute an orbit.  you may be off by a rotation.
-            // uncertain of the exact incantations to fix.  workaround is to get yourself into orbit first before trying
-            // to compute orbits from this function.  mechjeb also has this bug, but nobody has reported it or fixed it.
-            // it should mostly troll people who are doing orbital computation testing while on the launchpad (sometimes).
             orbit.UpdateFromStateVectors(Utils.SwapYZ(pos - body.GetPosition()), Utils.SwapYZ(vel), body.Body, when);
-            if (double.IsNaN(orbit.LAN))
-            {
-                // not sure if this matters, but avoids annoying NaN issues in KOS with perfectly equatorial orbits
-                orbit.LAN = 0;
-            }
-            // fix from MJ for perfectly circular orbits (not sure if any of the precision here matters)
-            if (double.IsNaN(orbit.argumentOfPeriapsis))
-            {
-                Vector3d vectorToAN = Quaternion.AngleAxis(-(float)orbit.LAN, Planetarium.up) * Planetarium.right;
-                Vector3d vectorToPe = Utils.SwapYZ(orbit.eccVec);
-
-                double cosArgumentOfPeriapsis = Vector3d.Dot(vectorToAN, vectorToPe) / (vectorToAN.magnitude * vectorToPe.magnitude);
-                if(cosArgumentOfPeriapsis > 1) {
-                    orbit.argumentOfPeriapsis = 0;
-                } else if (cosArgumentOfPeriapsis < -1) {
-                    orbit.argumentOfPeriapsis = 180;
-                } else {
-                    orbit.argumentOfPeriapsis = Math.Acos(cosArgumentOfPeriapsis) * 180 / Math.PI;;
-                }
-            }
             name = "<user defined>";
         }
 
