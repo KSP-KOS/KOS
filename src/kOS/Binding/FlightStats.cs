@@ -1,11 +1,13 @@
 ﻿using kOS.Module;
 using kOS.Control;
-﻿using kOS.Safe.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
 using UnityEngine;
+using kOS.Safe.Encapsulation;
+using System.Linq;
 
 namespace kOS.Binding
 {
@@ -35,7 +37,7 @@ namespace kOS.Binding
                 var vessel = shared.Vessel;
                 if (vessel.patchedConicSolver == null)
                     throw new KOSSituationallyInvalidException(
-                        "A KSP limitation makes it impossible to access the manuever nodes of this vessel at this time. " +
+                        "A KSP limitation makes it impossible to access the maneuver nodes of this vessel at this time. " +
                         "(perhaps it's not the active vessel?)");
                 if (vessel.patchedConicSolver.maneuverNodes.Count == 0)
                     throw new KOSSituationallyInvalidException("No maneuver nodes present!");
@@ -49,6 +51,7 @@ namespace kOS.Binding
                     return false; // Since there is no solver, there can be no node.
                 return vessel.patchedConicSolver.maneuverNodes.Count > 0;
             });
+            shared.BindingMgr.AddGetter("ALLNODES", () => GetAllNodes(shared));
 
             // These are now considered shortcuts to SHIP:suffix
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
@@ -64,6 +67,15 @@ namespace kOS.Binding
             if (! suffix.HasValue)
                 suffix.Invoke(shared.Cpu);
             return suffix.Value;
+        }
+
+        public ListValue<Node> GetAllNodes(SharedObjects shared)
+        {
+            var vessel = shared.Vessel;
+            if (vessel.patchedConicSolver == null || vessel.patchedConicSolver.maneuverNodes.Count == 0)
+                return new ListValue<Node>();
+            var ret = new ListValue<Node>(vessel.patchedConicSolver.maneuverNodes.Select(e => Node.FromExisting(vessel, e, shared)));
+            return ret;
         }
     }
 }
