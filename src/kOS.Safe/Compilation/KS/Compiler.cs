@@ -61,7 +61,6 @@ namespace kOS.Safe.Compilation.KS
             startLineNum = 1;
             lastLine = 0;
             lastColumn = 0;
-            boilerplateLoadAndRunEntryLabel = "not-set-yet";
             breakList.Clear();
             returnList.Clear();
             triggerKeepNames.Clear();
@@ -76,6 +75,10 @@ namespace kOS.Safe.Compilation.KS
             forcedNextLabel = String.Empty;
             scopeStack.Clear();
             scopeMap.Clear();
+
+            // Zero-th instruction of the loader/runner that will have to be built by something
+            // outside of Compiler.cs (probably ProgramBuilder.cs - look there to find it).
+            boilerplateLoadAndRunEntryLabel = "@LR00";
         }
 
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
@@ -961,81 +964,6 @@ namespace kOS.Safe.Compilation.KS
             }
         }
         
-        private string GetBoilerplateLoadAndRunEntryPoint()
-        {
-            if (boilerplateLoadAndRunEntryLabel != "not-set-yet")
-                return boilerplateLoadAndRunEntryLabel;
-            
-            // Build the boilerplate function and return the entry point to it:
-            // ----------------------------------------------------------------
-            
-            List<Opcode> prevCurrentCodeSection = currentCodeSection; // for restoring it later down at the bottom.
-
-            // This boilerplate needs to be inserted into the functions section of the program:
-            Subprogram subprogramObject = context.Subprograms.GetSubprogram("boilerplate-load-and-run-func");
-            currentCodeSection = subprogramObject.FunctionCode;            
-
-            boilerplateLoadAndRunEntryLabel = GetNextLabel(false);
-            AddOpcode(new OpcodePushScope(-999,0)); // hardcoded dummy scope ID, the parent scope is the global.
-
-            // High level kerboscript function calls flip the argument orders for us, but
-            // low level kRISC does not so the parameters have to be read in stack order:
-            
-            // store parameter 2 in a local name:
-            AddOpcode(new OpcodePush("$runonce"));
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(new OpcodeStoreLocal());
-
-            // store parameter 1 in a local name:
-            AddOpcode(new OpcodePush("$filename"));
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(new OpcodeStoreLocal());
-            
-            // Unconditionally call load() no matter what.  load() will abort and return
-            // early if the program was already compiled, and tell us that on the stack:
-            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            AddOpcode(new OpcodePush("$filename"));
-            AddOpcode(new OpcodeEval());
-            AddOpcode(new OpcodePush(true)); // the flag that tells load() to abort early if it's already loaded:
-            AddOpcode(new OpcodePush(null));
-            AddOpcode(new OpcodeCall("load()"));
-
-            // Stack now has the 2 return values of load():
-            //    Topmost value is a boolean flag for whether or not the program was already loaded.
-            //    Second-from-top value is the entry point into the program.
-
-            // If load() didn't claim the program was already loaded, or if we aren't operating
-            // in "once" mode, then jump to the part where we call the loaded program, else
-            // fall through to a dummy do-nothing return for the "run once, but it already ran" case:
-            Opcode branchFromOne = new OpcodeBranchIfFalse();
-            AddOpcode(branchFromOne);
-            AddOpcode(new OpcodePush("$runonce"));
-            Opcode branchFromTwo = new OpcodeBranchIfFalse();
-            AddOpcode(branchFromTwo);
-            AddOpcode(new OpcodePush(0));   // ---+-- The dummy do-nothing return.
-            AddOpcode(new OpcodeReturn(1)); // ---'
-            
-            // Actually call the Program from its entry Point, which is now the thing left on top
-            // of the stack from the second return value of load():
-            Opcode branchTo = new OpcodePush("$entrypoint");
-            AddOpcode(branchTo);
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(new OpcodeStoreLocal());
-            AddOpcode(new OpcodeCall("$entrypoint"));
-            
-            AddOpcode(new OpcodePop());
-            AddOpcode(new OpcodePush(0));
-            AddOpcode(new OpcodeReturn(1));
-
-            branchFromOne.DestinationLabel = branchTo.Label;
-            branchFromTwo.DestinationLabel = branchTo.Label;
-
-            // Reset to wherever it was compiling before we switched it into the functions section:
-            currentCodeSection = prevCurrentCodeSection;
-            
-            return boilerplateLoadAndRunEntryLabel;
-        }
-
         private void VisitNode(ParseNode node)
         {
             lastNode = node;
@@ -1129,6 +1057,8 @@ namespace kOS.Safe.Compilation.KS
                     VisitEditStatement(node);
                     break;
                 case TokenType.run_stmt:
+                case TokenType.runpath_stmt:
+                case TokenType.runoncepath_stmt:
                     VisitRunStatement(node);
                     break;
                 case TokenType.compile_stmt:
@@ -2841,15 +2771,59 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
 
+        /// <summary>
+        /// This one rule handles run_stmt, runpath_stmt, and runoncepath_stmt's.
+        /// They're all nearly the same thing, but with slightly different syntaces.
+        /// </summary>
+        /// <param name="node"></param>
         private void VisitRunStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            int volumeIndex = 3;
-            int argListIndex = 3;
-            int progNameIndex = 1;
-            bool hasOnce = false;
+            TokenType stmt_type = node.Nodes[0].Token.Type;
+            
+            // The slightly different versions of this same statememnt have the important
+            // nodes at different indeces.  Other than that, they're pretty much the same.
+            // So start by just getting the indeces of where the important parts are:
+            int volumeIndex;
+            int argListIndex;
+            int progNameIndex;
+            bool hasOnce;
+            if (stmt_type == TokenType.RUN)
+            {
+                // RUN FILEIDENT BRACKETOPEN arglist? BRACKETCLOSE (ON expr)? EOI
+                // 0th 1st       2nd         3rd      4th          5th 6th    7th 
+                hasOnce = false;  // for now.  Will change later if it's present.              
+                progNameIndex = 1;
+                argListIndex = 3;
+                volumeIndex = 3; // if argList is missing.  Will increment later if argList is present.
+            }
+            else if (stmt_type == TokenType.RUNPATH)
+            {
+                // RUNPATH BRACKETOPEN expr (COMMA arglist)? BRACKETCLOSE EOI
+                // 0th     1st         2nd   3rd   4th       5th          6th
+                hasOnce = false;
+                progNameIndex = 2;
+                argListIndex = 4;
+                volumeIndex = -99; //archaic syntax we're not supporting anymore.
+            }
+            else if (stmt_type == TokenType.RUNONCEPATH)
+            {
+                // RUNONCEPATH BRACKETOPEN expr (COMMA arglist)? BRACKETCLOSE EOI
+                // 0th         1st         2nd   3rd   4th       5th          6th
+                hasOnce = true;
+                progNameIndex = 2;
+                argListIndex = 4;
+                volumeIndex = -99; //archaic syntax we're not supporting anymore.
+            }
+            else
+            {
+                // This "cannot happen".  It's here to remove warnings about using unintialized values.
+                throw new KOSYouShouldNeverSeeThisException("kRISC.tpg file does not agree with VisitRunStatement() in Compiler.cs.");
+            }
+
             if (node.Nodes[1].Token.Type == TokenType.ONCE)
             {
+                // If a ONCE keyword is inserted after the RUN, then shift everything one step forward:
                 hasOnce = true;
                 ++volumeIndex;
                 ++argListIndex;
@@ -2893,7 +2867,7 @@ namespace kOS.Safe.Compilation.KS
 
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
-                AddOpcode(new OpcodeCall(null)).DestinationLabel = GetBoilerplateLoadAndRunEntryPoint();
+                AddOpcode(new OpcodeCall(null)).DestinationLabel = boilerplateLoadAndRunEntryLabel;
                 AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
             }
             else
@@ -2907,7 +2881,7 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[progNameIndex]);
 
                 // volume where program should be executed (null means local)
-                if (volumeIndex < node.Nodes.Count)
+                if (volumeIndex >= 0 && volumeIndex < node.Nodes.Count)
                     VisitNode(node.Nodes[volumeIndex]);
                 else
                     AddOpcode(new OpcodePush(null));

@@ -289,6 +289,12 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.run_stmt:
                     Value = Evalrun_stmt(tree, paramlist);
                     break;
+                case TokenType.runpath_stmt:
+                    Value = Evalrunpath_stmt(tree, paramlist);
+                    break;
+                case TokenType.runoncepath_stmt:
+                    Value = Evalrunoncepath_stmt(tree, paramlist);
+                    break;
                 case TokenType.compile_stmt:
                     Value = Evalcompile_stmt(tree, paramlist);
                     break;
@@ -629,6 +635,20 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalrun_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalrunpath_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalrunoncepath_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
