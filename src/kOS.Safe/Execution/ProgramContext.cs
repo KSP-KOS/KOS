@@ -53,10 +53,11 @@ namespace kOS.Safe.Execution
 
         public int AddObjectParts(IEnumerable<CodePart> parts, string objectFileID)
         {
-            Guid objectFileId = builder.AddObjectFile(parts);
+            Guid objectFileGuid = builder.AddObjectFile(parts);
             List<Opcode> newProgram = builder.BuildProgram();
-            int entryPointAddress = builder.GetObjectFileEntryPointAddress(objectFileId);
+            int entryPointAddress = builder.GetObjectFileEntryPointAddress(objectFileGuid);
             UpdateProgram(newProgram);
+            UpdateFileMap(objectFileID, entryPointAddress);
             return entryPointAddress;
         }
         

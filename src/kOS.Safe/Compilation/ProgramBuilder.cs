@@ -133,6 +133,7 @@ namespace kOS.Safe.Compilation
             boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel});
             Opcode branchFromTwo = new OpcodeBranchIfFalse() {Label = nextLabel};
             boilerplate.Add(branchFromTwo);
+            boilerplate.Add(new OpcodePop() {Label = nextLabel}); // onsume the entry point that load() returned. We won't be calling it.
             boilerplate.Add(new OpcodePush(0) {Label = nextLabel});   // ---+-- The dummy do-nothing return.
             boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel}); // ---'
             
