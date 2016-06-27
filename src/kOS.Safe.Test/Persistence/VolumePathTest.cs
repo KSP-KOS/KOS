@@ -74,6 +74,28 @@ namespace kOS.Safe.Test.Persistence
         {
             VolumePath.FromString("/../test/test/test");
         }
+
+        [Test]
+        public void CanCombinePaths()
+        {
+            VolumePath path = VolumePath.FromString("/test");
+            VolumePath combined = path.Combine("sub1", "sub2");
+            VolumePath combined2 = path.Combine("..");
+
+            Assert.AreEqual(3, combined.Depth);
+            Assert.AreEqual(0, combined2.Depth);
+        }
+
+        [Test]
+        public void CanCombinePathsThatContainSlashes()
+        {
+            VolumePath path = VolumePath.FromString("/test");
+            VolumePath combined = path.Combine("sub1/sub2");
+            VolumePath combined2 = path.Combine("sub1/..");
+
+            Assert.AreEqual(3, combined.Depth);
+            Assert.AreEqual(1, combined2.Depth);
+        }
     }
 }
 

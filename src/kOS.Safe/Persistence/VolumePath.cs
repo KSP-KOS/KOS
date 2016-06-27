@@ -111,7 +111,9 @@ namespace kOS.Safe.Persistence
 
         public VolumePath Combine(params string[] segments)
         {
-            return new VolumePath(Segments.Concat(segments));
+            var parsedSegments = segments.SelectMany((segment) => GetSegmentsFromString(segment));
+
+            return new VolumePath(Segments.Concat(parsedSegments));
         }
 
         public static VolumePath FromString(string pathString, VolumePath basePath)
