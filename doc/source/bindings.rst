@@ -142,16 +142,17 @@ which triggers the next stage.
 NextNode
 --------
 
-Get-only. ``nextnode`` returns the next planned maneuver :struct:`ManeuverNode` in the SHIP's flight plan.  Will throw an exception if
-no node exists, or if called on a ship that is not the active vessel.
-
-.. _hasnode:
+See the :global:`NEXTNODE` documentation.
 
 HasNode
+-------
+
+See the :global:`HASNODE` documentation.
+
+AllNodes
 --------
 
-Get-only. ``hasnode`` returns true if there is a planned maneuver :struct:`ManeuverNode` in the SHIP's flight plan.  This will always return
-false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.
+See the :global:`ALLNODES` documentation.
 
 Resource Types
 --------------

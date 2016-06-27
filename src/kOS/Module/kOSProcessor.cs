@@ -121,7 +121,10 @@ namespace kOS.Module
         }
 
         public GlobalPath BootFilePath {
-            get {
+            get
+            {
+                if (string.IsNullOrEmpty(bootFile) || bootFile.Equals("None", StringComparison.OrdinalIgnoreCase))
+                    return null;
                 return bootDirectoryPath.Combine(bootFile);
             }
         }
