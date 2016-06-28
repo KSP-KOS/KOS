@@ -277,7 +277,12 @@ namespace kOS.Function
                 throw new KOSFileException("No filename to load was given.");
 
             GlobalPath path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
-            
+            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
+
+            VolumeFile file = volume.Open(path, !justCompiling) as VolumeFile; // if running, look for KSM first.  If compiling look for KS first.
+            if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", path));
+            path = GlobalPath.FromVolumePath(file.Path, shared.VolumeMgr.GetVolumeId(volume));
+
             if (skipIfAlreadyCompiled && !justCompiling)
             {
                 var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
@@ -296,10 +301,6 @@ namespace kOS.Function
                     return;
                 }
             }
-            Volume volume = shared.VolumeMgr.GetVolumeFromPath(path);
-
-            VolumeFile file = volume.Open(path, !justCompiling) as VolumeFile; // if running, look for KSM first.  If compiling look for KS first.
-            if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", path));
 
             FileContent fileContent = file.ReadAll();
 
