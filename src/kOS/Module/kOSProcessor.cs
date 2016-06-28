@@ -391,8 +391,9 @@ namespace kOS.Module
                     HardDisk.Name = Tag;
                 }
 
+                var path = BootFilePath;
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
-                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !SafeHouse.Config.StartOnArchive)
+                if (vessel.situation == Vessel.Situations.PRELAUNCH && path != null && !SafeHouse.Config.StartOnArchive)
                 {
                     var bootVolumeFile = Archive.Open(BootFilePath) as VolumeFile;
                     if (bootVolumeFile != null)
@@ -818,19 +819,28 @@ namespace kOS.Module
         {
             switch (ProcessorMode)
             {
-            case ProcessorModes.READY:
-                shared.VolumeMgr.SwitchTo(SafeHouse.Config.StartOnArchive ? (Volume)Archive : HardDisk);
-                if (shared.Cpu != null) shared.Cpu.Boot();
-                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
-                if (shared.Window != null) shared.Window.IsPowered = true;
-                break;
+                case ProcessorModes.READY:
+                    if (SafeHouse.Config.StartOnArchive)
+                    {
+                        shared.VolumeMgr.SwitchTo(Archive);
+                        bootDirectoryPath = GlobalPath.FromVolumePath(VolumePath.FromString(BootDirectoryName), Archive.ArchiveName);
+                    }
+                    else
+                    {
+                        shared.VolumeMgr.SwitchTo(HardDisk);
+                        bootDirectoryPath = shared.VolumeMgr.GlobalPathFromObject(HardDisk);
+                    }
+                    if (shared.Cpu != null) shared.Cpu.Boot();
+                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                    if (shared.Window != null) shared.Window.IsPowered = true;
+                    break;
 
-            case ProcessorModes.OFF:
-            case ProcessorModes.STARVED:
-                if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
-                if (shared.Window != null) shared.Window.IsPowered = false;
-                if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
-                break;
+                case ProcessorModes.OFF:
+                case ProcessorModes.STARVED:
+                    if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                    if (shared.Window != null) shared.Window.IsPowered = false;
+                    if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
+                    break;
             }
 
         }
