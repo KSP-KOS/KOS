@@ -244,6 +244,14 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            // NOTE: The built-in load() function actually ends up returning
+            // two things on the stack: on top is a boolean for whether the program
+            // was already loaded, and under that is an integer for where to jump to
+            // to call it.  The load() function is NOT meant to be called directly from
+            // a user script.
+            // (unless it's being called in compile-only mode, in which case it
+            // returns the default dummy zero on the stack like everything else does).
+
             bool defaultOutput = false;
             bool justCompiling = false; // is this load() happening to compile, or to run?
             GlobalPath outPath = null;
@@ -258,6 +266,9 @@ namespace kOS.Function
                     outPath = shared.VolumeMgr.GlobalPathFromObject(outputArg);
             }
 
+            object skipAlreadyObject = PopValueAssert(shared, false);
+            bool skipIfAlreadyCompiled = (skipAlreadyObject is bool) ? (bool)skipAlreadyObject : false;
+
             object pathObject = PopValueAssert(shared, true);
 
             AssertArgBottomAndConsume(shared);
@@ -270,6 +281,26 @@ namespace kOS.Function
 
             VolumeFile file = volume.Open(path, !justCompiling) as VolumeFile; // if running, look for KSM first.  If compiling look for KS first.
             if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", path));
+            path = GlobalPath.FromVolumePath(file.Path, shared.VolumeMgr.GetVolumeId(volume));
+
+            if (skipIfAlreadyCompiled && !justCompiling)
+            {
+                var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
+                int programAddress = programContext.GetAlreadyCompiledEntryPoint(path.ToString());
+                if (programAddress >= 0)
+                {
+                    // TODO - The check could also have some dependancy on whether the file content changed on
+                    //     disk since last time, but that would also mean having to have a way to clear out the old
+                    //     copy of the compiled file from the program context, which right now doesn't exist. (Without
+                    //     that, doing something like a loop that re-wrote a file and re-ran it 100 times would leave
+                    //     100 old dead copies of the compiled opcodes in memory, only the lastmost copy being really used.)
+                    
+                    // We're done here.  Skip the compile.  Point the caller at the already-compiled version.
+                    shared.Cpu.PushStack(programAddress);
+                    this.ReturnValue = true; // tell caller that it already existed.
+                    return;
+                }
+            }
 
             FileContent fileContent = file.ReadAll();
 
@@ -311,9 +342,10 @@ namespace kOS.Function
                     {
                         parts = shared.ScriptHandler.Compile(path, 1, fileContent.String, "program", options);
                     }
-                    int programAddress = programContext.AddObjectParts(parts);
+                    int programAddress = programContext.AddObjectParts(parts, path.ToString());
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);
+                    this.ReturnValue = false; // did not already exist.
                 }
                 shared.Cpu.StopCompileStopwatch();
             }

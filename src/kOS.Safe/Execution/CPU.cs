@@ -146,12 +146,13 @@ namespace kOS.Safe.Execution
                 };
 
                 shared.ScriptHandler.ClearContext(bootContext);
-                List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
+                BootGlobalPath bootPath = new BootGlobalPath(bootCommand);
+                List<CodePart> parts = shared.ScriptHandler.Compile(bootPath,
                     1, bootCommand, bootContext, options);
 
                 IProgramContext programContext = SwitchToProgramContext();
                 programContext.Silent = true;
-                programContext.AddParts(parts);
+                programContext.AddObjectParts(parts, bootPath.ToString());
             }
         }
 

@@ -56,6 +56,8 @@ FILE         -> @"\bfile\b";
 DELETE       -> @"\bdelete\b";
 EDIT         -> @"\bedit\b";
 RUN          -> @"\brun\b";
+RUNPATH      -> @"\brunpath\b";
+RUNONCEPATH  -> @"\brunoncepath\b";
 ONCE         -> @"\bonce\b";
 COMPILE      -> @"\bcompile\b";
 LIST         -> @"\blist\b";
@@ -122,6 +124,8 @@ instruction -> empty_stmt |
                delete_stmt |
                edit_stmt |
                run_stmt |
+               runpath_stmt |
+               runoncepath_stmt |
                compile_stmt |
                list_stmt |
                reboot_stmt |
@@ -189,7 +193,9 @@ copy_stmt      -> COPY expr (FROM | TO) expr EOI;
 rename_stmt    -> RENAME (VOLUME | FILE)? expr TO expr EOI;
 delete_stmt    -> DELETE expr (FROM expr)? EOI;
 edit_stmt      -> EDIT expr EOI;
-run_stmt       -> RUN (ONCE)? FILEIDENT (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
+run_stmt       -> RUN (ONCE)? (FILEIDENT|STRING) (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
+runpath_stmt   -> RUNPATH BRACKETOPEN expr (COMMA arglist)? BRACKETCLOSE EOI;
+runoncepath_stmt -> RUNONCEPATH BRACKETOPEN expr (COMMA arglist)? BRACKETCLOSE EOI;
 compile_stmt   -> COMPILE expr (TO expr)? EOI;
 list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt    -> REBOOT EOI;
