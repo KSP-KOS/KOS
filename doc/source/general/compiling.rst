@@ -14,11 +14,11 @@ When you run your Kerboscript programs, behind the scenes they get compiled into
 
 The commands you actually write when you say something like ``SET X TO 1.0.`` are really a euphemism for these "machine language" opcodes under the surface.
 
-When you try to "RUN" your script, the first thing that kOS does is transform your script into this ancient and arcane "machine language" form, storing it in its memory, and from then on it runs using that.
+When you try to run your script, the first thing that kOS does is transform your script into this ancient and arcane "machine language" form, storing it in its memory, and from then on it runs using that.
 
 This process of transforming your script into Machine Language, or "ML" is called "Compiling".
 
-The "RUN" command does this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.
+The "RUN" and "RUNPATH" commands do this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.
 
 Why Do I Care?
 ~~~~~~~~~~~~~~
@@ -33,7 +33,7 @@ So, given that the compiled "ML" codes are the only thing your program really ne
 
 And THAT is the purpose of the COMPILE command.
 
-It does some, but not all, of the compiling work that the RUN command does, and then stores the results in a file that you can run instead of running the original script.
+It does some, but not all, of the compiling work that the RUN (or RUNPATH) command does, and then stores the results in a file that you can run instead of running the original script.
 
 The output of the COMPILE command is a file in what we call KSM format.
 
@@ -48,13 +48,13 @@ Let's say that you have 3 programs your probe needs, called:
 -  myprog2.ks
 -  myprog3.ks
 
-And that myprog1 calls myprog2 and myprog3, and you normall would call the progam this way::
+And that myprog1 calls myprog2 and myprog3, and you normally would call the progam this way::
 
     SWITCH TO 1.
     COPY myprog1 from ARCHIVE.
     COPY myprog2 from ARCHIVE.
     COPY myprog3 from ARCHIVE.
-    RUN myprog1(1,2,"hello").
+    RUNPATH(myprog1, 1, 2, "hello").
 
 Then you can put just the compiled KSM versions of them on your vessel and run it this way::
 
@@ -70,18 +70,25 @@ Then you can put just the compiled KSM versions of them on your vessel and run i
     COPY myprog2.ksm to 1.
 
     SWITCH TO 1.
-    RUN myprog1(1,2,"hello").
+    RUNPATH(myprog1, 1, 2, "hello").
 
 Default File Naming Conventions
 -------------------------------
 
-When you have both a .ks and a .ksm file, the RUN command allows you to specify which one you meant explicitly, like so::
+When you have both a .ks and a .ksm file, the RUN (or RUNPATH) command allows you to specify which one you meant explicitly, like so::
 
+    RUNPATH("myprog1.ks").
+    // or this alternate way to say it:
     RUN myprog1.ks.
+
+    RUNPATH("myprog1.ksm").
+    // or this alternate way to say it:
     RUM myprog1.ksm.
 
 But if you just leave the file extension off, and do this::
 
+    RUNPATH("myprog1").
+    // or this alternate way to say it:
     RUN myprog1.
 
 Then the RUN command will first try to run a file called "myprog1.ksm" and if it cannot find such a file, then it will try to run one called "myprog1.ks".

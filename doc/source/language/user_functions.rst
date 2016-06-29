@@ -112,25 +112,26 @@ programs.  At the top of your main script you can then "run" the
 other scripts containing the library of functions to get them
 compiled into memory.
 
-Using RUN ONCE
---------------
+Using RUN ONCE or RUNONCEPATH
+-----------------------------
 
 If you want to load a library of functions that ALSO perform some
 initialization mainline code, but you only want the mainline code
 to execute once when the library is first loaded, rather than 
 every time a subprogram runs your library, then use the 'once'
-keyword with the run command as follows::
+keyword with the RUN command, or the RUNONCEPATH command, as
+follows::
 
     // This will run mylib1 3 times, re-running the mainline code in it:`
     run mylib1.
     run mylib1.
-    run mylib1.
+    runpath("mylib1"). // just the same thing as 'run mylib1', really.
 
     // This will run mylib2 only one time, ignoring the additional
     // instances:
     run once mylib2.
     run once mylib2. // mylib2 was already run, will not be run again.
-    run once mylib2. // mylib2 was already run, will not be run again.
+    runoncepath("mylib2") // mylib2 was already run, will not be run again.
 
 Example:  Let's say you want to have a library that keeps a counter
 and always returns the next number up every time it's called.  You
@@ -152,7 +153,7 @@ another sub-program includes the library in its code.  So you have this:
 **subprogram, which ALSO calls counterlib:** ::
 
     // subprogram
-    run once counterlib.
+    runoncepath("counterlib"). // same as 'run once counterlib.'
 
     print "subprogram: next counter ID = " + counter_next().
     print "subprogram: next counter ID = " + counter_next().

@@ -125,7 +125,7 @@ Paths and bareword arguments
 
 .. warning::
 
-  kOS has historically always allowed to skip quotes around file names in certain
+  kOS has historically always allowed you to omit quotes for file names in certain
   cases. Although it is still possible (explanation below) we recommend against
   it now. kOS 1.0 has introduced directory support and as a result the number of
   cases in which omitting quotes would be fine is less than before. Paths like
@@ -248,6 +248,7 @@ Files and directories
         :ref:`movepath(frompath, topath) <movepath>`,
         :ref:`copypath(frompath, topath) <copypath>` and
         :ref:`deletepath(path) <deletepath>`.
+        :ref:`runpath(path) <runpath>`.
 
 LIST
 ~~~~
@@ -397,33 +398,131 @@ Example::
 Miscellaneous
 -------------
 
+
+.. _running:
+
+RUN "program".
+~~~~~~~~~~~~~~
+
+When you want to run another kerboscript program, you can do so
+with one of these 3 variations of the :code:`RUN` command:
+
+- ``RUNPATH(`` *program_file* *[* ``,`` *comma-separated-arguments*. *]* ``).``
+- ``RUNONCEPATH(`` *program_file* *[* ``,`` *comma-separated-arguments*. *]* ``).``
+- ``RUN`` *[* ``ONCE`` *]* *program_file that must be a bare word or literal string in quotes* *[* ``(`` *comma-separated-arguments* ``)``.
+
+All of these 3 variations run the specified file as a program, optionally passing
+information to the program in the form of a comma-separated list of arguments.
+
+.. note::
+
+    .. versionchanged:: 1.0.0
+
+        The ``RUNPATH`` and ``RUNONCEPATH`` functions were added in
+        version 1.0.0.  Previously, only the more limited ``RUN`` 
+        command existed.
+
+You should prefer RUNPATH over RUN
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``RUN`` command is older, and less powerful than the newer ``RUNPATH`` (or
+``RUNONCEPATH``) functions, and is kept around mostly for backward compatibility.
+See below for what this difference is and how they work:
+
+*(Due to a parsing ambiguity issue, it was impossible to make ``RUN`` work with
+any arbitrary exression as the filename without changing its syntax a little in
+a way that would break every old kOS script.  Therefore it was deemed better to
+just add a new function that uses the new syntax instead of changing the syntax of
+``RUN``.)*
+
+.. _runpath:
+.. _runoncepath:
+
+RUNPATH and RUNONCEPATH
+^^^^^^^^^^^^^^^^^^^^^^^
+
+(The ``RUNPATH`` or ``RUNONCEPATH`` functions are identical to each other
+except for what is described below under the heading "The ONCE Keyword".)
+
+``RUNPATH`` or ``RUNONCEPATH`` take a list of arguments, the first of
+which is the filename of the program to run, and must evaluate to a
+string.  Any additional arguments after that are optional, and are
+passed in to the program as its parameters it can read::
+
+    RUNPATH( "myfile.ks" ). // Run a program called myfile.ks.
+    RUNPATH( "myfile" ). // Run a program called myfile, where kOS will guess
+                         // the filename extension you meant, and probably
+                         // pick ".ks" for you.
+    RUNPATH( "myfile.ks", 1, 2 ). // Run a program called myfile.ks, and
+                                  // pass in the values 1 and 2 as its first
+                                  // two parameters.
+
+``RUNPATH`` or ``RUNONCEPATH`` can also work with any expression for the
+filename as long as it results in a string::
+
+    SET file_base to "prog_num_".
+    SET file_num to 3.
+    SET file_ending to ".ks".
+    RUNPATH( file_base + file_num + file_ending, 1, 2 ).
+        // The above has the same effect as if you had done:
+        RUNPATH("prog_num_3.ks", 1, 2).
+
+.. _run:
+
+RUN
+^^^
+
+On the other hand, the older ``RUN`` command is only capable of
+using hard-coded program names that were known at the time you wrote
+the script, and expressed as a simple bare word or literal string in
+quotes.  For example, you can do this::
+
+    RUN "myfile.ks".
+    RUN myfile.ks. // or this works too.
+
+But you can't do this::
+
+    SET filename_variable TO "myfile.ks".
+    RUN filename_variable. // Error: a file called "filename_variable" not found.
+
+    RUN "my" + "file" + ".ks".  // Syntax error - a single literal string expected,
+                                // not an expression that returns a string.
+
+(The above techniques would work with the ``RUNONCE`` command.)
+
+Once upon a time this limitation was built into kOS - kOS had to know the names
+of every program you're going to invoke and it had to know them when it was
+compiling your script, before your script began executing the first statement.
+Thus it couldn't come from an expression evaluated at run-time.
+
+For ``RUN``, if you wish to pass arguments to the program, you may
+optionally add a set of parentheses with an argument list to the
+end of the syntax, like so::
+
+    // All 3 of these work:
+    RUN myfile(1,2,3).
+    RUN myfile.ks(1,2,3).
+    RUM "myfile.ks"(1,2,3).
+
 .. _run_once:
 
-RUN [ONCE] <PATH>.
-~~~~~~~~~~~~~~~~~~
+THE "ONCE" KEYWORD
+^^^^^^^^^^^^^^^^^^
 
-Runs the specified file as a program, optionally passing information to the
-program in the form of a comma-separated list of arguments in parentheses.
+If the ``RUNONCEPATH`` function is used instead of the ``RUNPATH`` function, or
+the optional ``ONCE`` keyword is added to the ``RUN`` command, it means the run
+will not actually occur if the program has already been run once during the
+current program context.  This is intended mostly for loading library program
+files that may have mainline code in them for initialization purposes that you
+don't want to get run a second time just because you use the library in two
+different subprograms.
 
-If the optional ``ONCE`` keyword is used after the word ``RUN``, it means
-the run will not actually occur if the program has already been run once
-during the current program context.  This is intended mostly for loading library
-program files that may have mainline code in them for initialization purposes
-that you don't want to get run a second time just because you use the library
-in two different subprograms.
-
-``RUN ONCE`` means "Run unless it's already been run, in which case skip it."
+``RUN ONCE`` and ``RUNONCEPATH`` mean "Run unless it's already been run, in which
+case skip it."
 
 .. note::
 
     *Limitations on file names used for programs*
-
-    All file names used as program names with the ``run`` command must be
-    valid identifiers.  They can not contain spaces or special characters. For
-    example, you can't have a program named ``this is my-file.ks``.  This rule
-    does not necessarily apply to other filenames such as log files.  However
-    to use a filename that contains spaces, you will have to put quotes around
-    it.
 
     On case-sensitive filesystems typically found on Linux and Mac, you should
     name program files used with the ``run`` command entirely with
@@ -433,45 +532,62 @@ in two different subprograms.
 Arguments
 ^^^^^^^^^
 
--  <PATH>: File to run.
--  comma-separated-args: a list of values to pass into the program.
+Although the syntax is a bit different for ``RUN`` versus
+``RUNPATH`` (and ``RUNONCEPATH``), all 3 techniquies allow you to
+pass arguments into the program that it sees as its main script
+:ref:`parameter <declare_parameter>` values.
 
-Example::
+The following commands do equivalent things::
 
-    RUN AutoLaunch.ks.
-    RUN AutoLaunch.ksm.
-    RUN AutoLaunch.      // runs AutoLaunch.ksm if available, else runs AutoLaunch.ks.
-    RUN AutoLaunch( 75000, true, "hello" ).
-    RUN AutoLaunch.ks( 75000, true, "hello" ).
-    RUN AutoLaunch.ksm( 75000, true, "hello" ).
+    RUN "AutoLaunch.ks"( 75000, true, "hello" ).
+    RUNPATH("AutoLaunch.ksm", 75000, true, "hello" ).
 
-    RUN ONCE myLibrary. // run myLibrary unless it's been run already.
+In both of the above examples, had the program "AutoLaunch.ks"
+started with these lines::
 
-The program that is reading the arguments sees them in the variables it
-mentions in :ref:`DECLARE PARAMETER`.
+    // AutoLaunch.ks program file:
+    parameter final_alt, do_countdown, message.
+    //
+    // rest of program not shown...
+    //
 
-Important exceptions to the usual filename rules for RUN
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Then inside AutoLaunch.ks, ``final_alt`` would be ``75000``,
+and ``do_countdown`` would be ``true``, and ``message``
+would be ``"hello"``.
 
-The RUN command does not allow the same sorts of generic open-ended
-filenames that the other
-file commands allow. This is very important.
+Full path information is allowed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-RUN only works when the filename is a bareword filename. It cannot use expression filenames::
+You are allowed to use directory path information
+in the string filename you are running (even with
+the older ``RUN`` command)::
 
-    RUN "ProgName"   // THIS WILL FAIL.  Run needs a bareword filename.
-    SET ProgName to "MyProgram".
-    RUN ProgName     // THIS WILL FAIL also.  It will attempt to run a file
-                     // called "ProgName.ksm" or "ProgName.ks", when it sees this,
-                     // rather than "MyProgram".
+    // Absolute path names are allowed.
+    RUN "0:/archive_lib/myfile.ks".
+    RUN ONCE "0:/archive_lib/myfile.ks".
+    RUNPATH("0:/archive_lib/myfile.ks").
+    RUNONCEPATH("0:/archive_lib/myfile.ks").
 
-The reasons for the exception to how filenames work for the RUN command are
-too complex to go into in large detail here. Here's the short version: While
-the kOS system does defer the majority of the work of actually compiling
-subprogram scripts until run-time, it still has to generate some header info
-about them at compile time, and the filename has to be set in stone at that
-time. Changing this would require a large re-write of some of the architecture
-of the virtual machine.
+    // Relative path names are also allowed.
+    RUN "../dir1/myfile.ks"(arg1, arg2).
+    RUNPATH("../dir1/myfile.ks", arg1, arg2).
+
+Automatic guessing of full filename
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For all 3 types of run command (``RUN``, ``RUNPATH``, and ``RUNONCEPATH``),
+the following filename "guess" rules are used when the filename given is
+incomplete:
+
+- 1: If no path information was present in the filename, then assume the
+  file is in the current directory (that's pretty much standard for all
+  filename commands).
+
+- 2: Assume if no filename extension such as ".ks" or ".ksm" was given,
+  and there is no file found that lacks an extension in the way the
+  filename was given, then first try to find a file with the ".ksm"
+  extension appeneded to it, and if that file is not found then try
+  to find a file with the ".ks" extension appended to it.
 
 LOG TEXT TO PATH
 ~~~~~~~~~~~~~~~~
@@ -507,8 +623,9 @@ Pre-compiles a script into an :ref:`Kerboscript ML Exceutable
 image <compiling>` that can be used
 instead of executing the program script directly.
 
-The RUN command (elsewhere on this page) can work with either \*.ks
-script files or \*.ksm compiled files.
+The RUN, RUNPATH, or RUNONCEPATH commands (mentioned elsewhere
+on this page) can work with either \*.ks script files or \*.ksm
+compiled files.
 
 The full details of this process are long and complex enough to be
 placed on a separate page.

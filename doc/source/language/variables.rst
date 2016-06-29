@@ -193,7 +193,7 @@ Optional Parameters (defaulted parameters)
 ::::::::::::::::::::::::::::::::::::::::::
 
 If you wish, you may make some of the parameters of a program or a user
-function optional by defaulting them to a starting value with the ``IS`` keyword, as follows:
+function optional by defaulting them to a starting value with the ``IS`` keyword, as follows::
 
     // Imagine this is a file called MYPROG
 
@@ -206,6 +206,7 @@ function optional by defaulting them to a starting value with the ``IS`` keyword
     run MYPROG(1,2).         // prints "1, 2, 0, cheese".
     run MYPROG(1,2,3).       // prints "1, 2, 3, cheese".
     run MYPROG(1,2,3,"hi").  // prints "1, 2, 3, hi".
+    runpath(MYPROG,1,2,3,"hi").  // also prints "1, 2, 3, hi".
 
 Whenever arguments are missing, the system always makes up the difference by
 using defaults for the lastmost parameters until the correct number have been

@@ -86,6 +86,10 @@ And you will see the program run, showing the text on the screen like so.
 
 .. figure:: /_images/tutorials/quickstart/hello_world1.png
 
+Note, you can also type ``RUNPATH("hello")`` instead of ``RUN HELLO``.  The
+commands are slightly different but should have the same effect.  You can
+learn about the specific difference between them later.
+
 Step 7: Okay, but where is this program?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -231,7 +235,7 @@ Okay now go back into your *text editor of choice* and append a few more lines t
 Save this file to hellolaunch.ks again, and re-copy it to your vessel that should still be sitting on the launchpad, then run it, like so::
 
     COPY HELLOLAUNCH FROM 0.
-    RUN HELLOLAUNCH.
+    RUN HELLOLAUNCH. // You could also say RUNPATH("hellolaunch") here.
 
 .. figure:: /_images/tutorials/quickstart/example_2_2.png
     :width: 80 %
@@ -295,7 +299,7 @@ Again, copy this and run it, like before. If your craft crashed in the previous 
 
     SWITCH TO 1. // should be the default already, but just in case.
     COPY HELLOLAUNCH FROM 0.
-    RUN HELLOLAUNCH.
+    RUN HELLOLAUNCH. // You could also say RUNPATH("hellolaunch") here.
 
 .. figure:: /_images/tutorials/quickstart/example_2_3.png
     :width: 80 %
