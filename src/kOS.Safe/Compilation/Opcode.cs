@@ -1870,10 +1870,27 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "eval"; } }
         public override ByteCode Code { get { return ByteCode.EVAL; } }
+        private bool barewordOkay;
+        
+        public OpcodeEval()
+        {
+            barewordOkay = false;
+        }
+        
+        /// <summary>
+        /// Eval top thing on the stack and replace it with its dereferenced
+        /// value.  If you want to allow bare words like filenames then set argument bareOkay to true
+        /// when constructing.
+        /// </summary>
+        /// <param name="bareOkay"></param>
+        public OpcodeEval(bool bareOkay)
+        {
+            barewordOkay = bareOkay;
+        }
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PushStack(cpu.PopValueEncapsulated());
+            cpu.PushStack(cpu.PopValueEncapsulated(barewordOkay));
         }
     }
 
