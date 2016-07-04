@@ -197,10 +197,10 @@ Structure
     :type: :ref:`scalar <scalar>`
     :access: Get only
 
-    `mean anomaly`_  in degrees. Even though orbital parameters are
+    `mean anomaly`_  in degrees at orbit epoch. Even though orbital parameters are
     traditionally done in radians, in keeping with the kOS standard
     of making everything into degrees, they are given as degrees by
-    kOS.
+    kOS. Orbit epoch is a complex term, refer to `#1665<https://github.com/KSP-KOS/KOS/issues/1665>`_ for details. 
 
 
 .. attribute:: Orbit:TRANSITION
