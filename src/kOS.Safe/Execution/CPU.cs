@@ -121,7 +121,7 @@ namespace kOS.Safe.Execution
 
             if (!shared.Processor.CheckCanBoot()) return;
 
-            GlobalPath path = shared.Processor.BootFilePath;
+            VolumePath path = shared.Processor.BootFilePath;
             // Check to make sure the boot file name is valid, and then that the boot file exists.
             if (path == null)
             {
@@ -129,8 +129,13 @@ namespace kOS.Safe.Execution
             }
             else
             {
-                Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(path);
-                if (sourceVolume.Open(path) == null)
+                // Boot is only called once right after turning the processor on,
+                // the volume cannot yet have been changed from that set based on
+                // Config.StartOnArchive, and Processor.CheckCanBoot() has already
+                // handled the range check for the archive.
+                Volume sourceVolume = shared.VolumeMgr.CurrentVolume;
+                var file = shared.VolumeMgr.CurrentVolume.Open(path);
+                if (file == null)
                 {
                     SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
                 }
@@ -138,7 +143,7 @@ namespace kOS.Safe.Execution
                 {
                     var bootContext = "program";
 
-                    string bootCommand = string.Format("run {0}.", path.Name);
+                    string bootCommand = string.Format("run \"{0}\".", file.Path);
 
                     var options = new CompilerOptions
                     {

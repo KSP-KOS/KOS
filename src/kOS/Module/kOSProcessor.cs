@@ -62,11 +62,9 @@ namespace kOS.Module
         private const int PROCESSOR_HARD_CAP = 655360;
 
         private const string BootDirectoryName = "boot";
-        private GlobalPath bootDirectoryPath = GlobalPath.FromVolumePath(VolumePath.FromString(BootDirectoryName),
-            Archive.ArchiveName);
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene = UI_Scene.Editor)]
-        public string bootFile = "boot.ks";
+        public string bootFile = "None";
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 1024;
@@ -120,12 +118,12 @@ namespace kOS.Module
             ProcessorMode = ProcessorModes.READY;
         }
 
-        public GlobalPath BootFilePath {
+        public VolumePath BootFilePath {
             get
             {
                 if (string.IsNullOrEmpty(bootFile) || bootFile.Equals("None", StringComparison.OrdinalIgnoreCase))
                     return null;
-                return bootDirectoryPath.Combine(bootFile);
+                return VolumePath.FromString(bootFile);
             }
         }
 
@@ -298,15 +296,100 @@ namespace kOS.Module
             BaseField field = Fields["bootFile"];
             var options = (UI_ChooseOption)field.uiControlEditor;
 
-            var bootFiles = new List<string>();
+            var bootFiles = new List<VolumePath>();
 
-            bootFiles.Add("None");
             bootFiles.AddRange(BootDirectoryFiles());
 
             //no need to show the control if there are no available boot files
             options.controlEnabled = bootFiles.Count > 1;
             field.guiActiveEditor = bootFiles.Count > 1;
-            options.options = bootFiles.ToArray();
+            var availableOptions = bootFiles.Select(e => e.ToString()).ToList();
+            var availableDisplays = bootFiles.Select(e => e.Name).ToList();
+
+            availableOptions.Insert(0, "None");
+            availableDisplays.Insert(0, "None");
+
+            var bootFilePath = BootFilePath; // store the selected path temporarily
+            if (bootFilePath != null && !bootFiles.Contains(bootFilePath))
+            {
+                // if the path is not null ("None", null, or empty) and if it isn't in list of files
+                var archive = new Archive(SafeHouse.ArchiveFolder);
+                var file = archive.Open(bootFilePath) as VolumeFile;  // try to open the file as saved
+                if (file != null)
+                {
+                    // store the boot file information
+                    bootFile = file.Path.ToString();
+                    availableOptions.Insert(1, file.Path.ToString());
+                    availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
+                }
+                else
+                {
+                    // check the same file name, but in the boot directory.
+                    var path = VolumePath.FromString(BootDirectoryName).Combine(bootFilePath.Name);
+                    file = archive.Open(path) as VolumeFile; // try to open the new path
+                    if (file != null)
+                    {
+                        // store the boot file information
+                        SafeHouse.Logger.LogError("bootfile: " + bootFile);
+                        bootFile = file.Path.ToString();
+                        if (!bootFiles.Contains(file.Path))
+                        {
+                            // this shouldn't be the case, unless the file got saved with another extension
+                            availableOptions.Insert(1, bootFile);
+                            availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
+                        }
+                    }
+                    else
+                    {
+                        // try the file name without "boot" prefix
+                        var name = bootFilePath.Name;
+                        if (name.StartsWith("boot", StringComparison.OrdinalIgnoreCase) && name.Length > 4)
+                        {
+                            // strip the boot prefix and try that file name
+                            name = name.Substring(4);
+                            path = VolumePath.FromString(BootDirectoryName).Combine(name);
+                            file = archive.Open(path) as VolumeFile;  // try to open the new path
+                            if (file != null)
+                            {
+                                // store the boot file information
+                                bootFile = file.Path.ToString();
+                                if (!bootFiles.Contains(file.Path))
+                                {
+                                    // this shouldn't be the case, unless the file got saved with another extension
+                                    availableOptions.Insert(1, bootFile);
+                                    availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
+                                }
+                            }
+                            else
+                            {
+                                // try the file name without "boot_" prefix
+                                if (name.StartsWith("_", StringComparison.OrdinalIgnoreCase) && name.Length > 1)
+                                {
+                                    // only need to strip "_" here
+                                    name = name.Substring(1);
+                                    path = VolumePath.FromString(BootDirectoryName).Combine(name);
+                                    file = archive.Open(path) as VolumeFile;  // try to open the new path
+                                    if (file != null)
+                                    {
+                                        // store the boot file information
+                                        bootFile = file.Path.ToString();
+                                        if (!bootFiles.Contains(file.Path))
+                                        {
+                                            // this shouldn't be the case, unless the file got saved with another extension
+                                            availableOptions.Insert(1, bootFile);
+                                            availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            SafeHouse.Logger.SuperVerbose("bootFile: " + bootFile);
+
+            options.options = availableOptions.ToArray();
+            options.display = availableDisplays.ToArray();
 
             //populate diskSpaceUI selector
             diskSpaceUI = diskSpace.ToString();
@@ -319,13 +402,15 @@ namespace kOS.Module
             options.options = sizeOptions;
         }
 
-        private IEnumerable<string> BootDirectoryFiles()
+        private IEnumerable<VolumePath> BootDirectoryFiles()
         {
-            var result = new List<string>();
+            var result = new List<VolumePath>();
 
             var archive = new Archive(SafeHouse.ArchiveFolder);
 
-            var bootDirectory = archive.Open(bootDirectoryPath) as VolumeDirectory;
+            var path = VolumePath.FromString(BootDirectoryName);
+
+            var bootDirectory = archive.Open(path) as VolumeDirectory;
 
             if (bootDirectory == null)
             {
@@ -339,7 +424,7 @@ namespace kOS.Module
                 if (pair.Value is VolumeFile && (pair.Value.Extension.Equals(Volume.KERBOSCRIPT_EXTENSION)
                     || pair.Value.Extension.Equals(Volume.KOS_MACHINELANGUAGE_EXTENSION)))
                 {
-                    result.Add(pair.Key);
+                    result.Add(pair.Value.Path);
                 }
             }
 
@@ -398,11 +483,7 @@ namespace kOS.Module
                     var bootVolumeFile = Archive.Open(BootFilePath) as VolumeFile;
                     if (bootVolumeFile != null)
                     {
-                        GlobalPath harddiskPath = GlobalPath.FromVolumePath(
-                            VolumePath.FromString(BootFilePath.Name),
-                            shared.VolumeMgr.GetVolumeRawIdentifier(HardDisk));
-
-                        if (HardDisk.SaveFile(harddiskPath, bootVolumeFile.ReadAll()) == null)
+                        if (HardDisk.SaveFile(BootFilePath, bootVolumeFile.ReadAll()) == null)
                         {
                             // Throwing an exception during InitObjects will break the initialization and won't show
                             // the error to the user.  So we just log the error instead.  At some point in the future
@@ -823,12 +904,10 @@ namespace kOS.Module
                     if (SafeHouse.Config.StartOnArchive)
                     {
                         shared.VolumeMgr.SwitchTo(Archive);
-                        bootDirectoryPath = GlobalPath.FromVolumePath(VolumePath.FromString(BootDirectoryName), Archive.ArchiveName);
                     }
                     else
                     {
                         shared.VolumeMgr.SwitchTo(HardDisk);
-                        bootDirectoryPath = shared.VolumeMgr.GlobalPathFromObject(HardDisk);
                     }
                     if (shared.Cpu != null) shared.Cpu.Boot();
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
