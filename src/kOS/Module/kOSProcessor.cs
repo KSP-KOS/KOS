@@ -315,31 +315,12 @@ namespace kOS.Module
                 // if the path is not null ("None", null, or empty) and if it isn't in list of files
                 var archive = new Archive(SafeHouse.ArchiveFolder);
                 var file = archive.Open(bootFilePath) as VolumeFile;  // try to open the file as saved
-                if (file != null)
-                {
-                    // store the boot file information
-                    bootFile = file.Path.ToString();
-                    availableOptions.Insert(1, file.Path.ToString());
-                    availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
-                }
-                else
+                if (file == null)
                 {
                     // check the same file name, but in the boot directory.
                     var path = VolumePath.FromString(BootDirectoryName).Combine(bootFilePath.Name);
                     file = archive.Open(path) as VolumeFile; // try to open the new path
-                    if (file != null)
-                    {
-                        // store the boot file information
-                        SafeHouse.Logger.LogError("bootfile: " + bootFile);
-                        bootFile = file.Path.ToString();
-                        if (!bootFiles.Contains(file.Path))
-                        {
-                            // this shouldn't be the case, unless the file got saved with another extension
-                            availableOptions.Insert(1, bootFile);
-                            availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
-                        }
-                    }
-                    else
+                    if (file == null)
                     {
                         // try the file name without "boot" prefix
                         var name = bootFilePath.Name;
@@ -349,18 +330,7 @@ namespace kOS.Module
                             name = name.Substring(4);
                             path = VolumePath.FromString(BootDirectoryName).Combine(name);
                             file = archive.Open(path) as VolumeFile;  // try to open the new path
-                            if (file != null)
-                            {
-                                // store the boot file information
-                                bootFile = file.Path.ToString();
-                                if (!bootFiles.Contains(file.Path))
-                                {
-                                    // this shouldn't be the case, unless the file got saved with another extension
-                                    availableOptions.Insert(1, bootFile);
-                                    availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
-                                }
-                            }
-                            else
+                            if (file == null)
                             {
                                 // try the file name without "boot_" prefix
                                 if (name.StartsWith("_", StringComparison.OrdinalIgnoreCase) && name.Length > 1)
@@ -369,20 +339,21 @@ namespace kOS.Module
                                     name = name.Substring(1);
                                     path = VolumePath.FromString(BootDirectoryName).Combine(name);
                                     file = archive.Open(path) as VolumeFile;  // try to open the new path
-                                    if (file != null)
-                                    {
-                                        // store the boot file information
-                                        bootFile = file.Path.ToString();
-                                        if (!bootFiles.Contains(file.Path))
-                                        {
-                                            // this shouldn't be the case, unless the file got saved with another extension
-                                            availableOptions.Insert(1, bootFile);
-                                            availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
-                                        }
-                                    }
                                 }
                             }
                         }
+                    }
+                }
+
+                // now, if we have a file object, use it's values.
+                if (file != null)
+                {
+                    // store the boot file information
+                    bootFile = file.Path.ToString();
+                    if (!bootFiles.Contains(file.Path))
+                    {
+                        availableOptions.Insert(1, bootFile);
+                        availableDisplays.Insert(1, "*" + file.Path.Name); // "*" is indication the file is not normally available
                     }
                 }
             }
