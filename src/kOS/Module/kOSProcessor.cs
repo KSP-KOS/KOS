@@ -329,7 +329,7 @@ namespace kOS.Module
                             // strip the boot prefix and try that file name
                             name = name.Substring(4);
                             path = VolumePath.FromString(BootDirectoryName).Combine(name);
-                            file = archive.Open(path) as VolumeFile;  // try to open the new path
+                            file = name.StartsWith(".") ? null : archive.Open(path) as VolumeFile;  // try to open the new path
                             if (file == null)
                             {
                                 // try the file name without "boot_" prefix
@@ -338,14 +338,14 @@ namespace kOS.Module
                                     // only need to strip "_" here
                                     name = name.Substring(1);
                                     path = VolumePath.FromString(BootDirectoryName).Combine(name);
-                                    file = archive.Open(path) as VolumeFile;  // try to open the new path
+                                    file = name.StartsWith(".") ? null : archive.Open(path) as VolumeFile;  // try to open the new path
                                 }
                             }
                         }
                     }
                 }
 
-                // now, if we have a file object, use it's values.
+                // now, if we have a file object, use its values.
                 if (file != null)
                 {
                     // store the boot file information
