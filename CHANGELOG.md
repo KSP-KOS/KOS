@@ -120,7 +120,7 @@ worked on since the last release.
   (http://hvacengi.github.io/KOS/bindings#allnodes)
 * Several new **pseudo-action-groups** (akin to "panels on", that aren't
   action groups as far as stock KSP is concerned, but kOS treats them like
-  action groups) were added.  (http://hvacengi.github.io/KOS/commands/flight/systems#kos-custom-action-groups)
+  action groups) were added.  (http://hvacengi.github.io/KOS/commands/flight/systems#kos-pseudo-action-groups)
 * Ability to **get/set the navball mode** (surface, orbital, target) with
   the ``NAVMODE`` bound variable:
   i.e. ``SET NAVMODE TO "SURFACE".``.
