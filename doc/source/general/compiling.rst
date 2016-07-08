@@ -18,7 +18,7 @@ When you try to run your script, the first thing that kOS does is transform your
 
 This process of transforming your script into Machine Language, or "ML" is called "Compiling".
 
-The "RUN" and "RUNPATH" commands do this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.
+The ":ref:`RUN`" and ":ref:`RUNPATH`" commands do this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.
 
 Why Do I Care?
 ~~~~~~~~~~~~~~

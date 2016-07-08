@@ -237,7 +237,7 @@ Files and directories
 
         **COPY, RENAME and DELETE are now deprecated**
 
-        Previously you could use the aformentioned commands to manipulate files.
+        Previously you could use the aforementioned commands to manipulate files.
         Currently using them will result in a deprecation message being shown.
         After subdirectories were introduced in kOS 1.0 it was necessary to add
         more flexible commands that could deal with both files and directories.
@@ -419,7 +419,7 @@ information to the program in the form of a comma-separated list of arguments.
     .. versionchanged:: 1.0.0
 
         The ``RUNPATH`` and ``RUNONCEPATH`` functions were added in
-        version 1.0.0.  Previously, only the more limited ``RUN`` 
+        version 1.0.0.  Previously, only the more limited ``RUN``
         command existed.
 
 You should prefer RUNPATH over RUN
@@ -430,7 +430,7 @@ The ``RUN`` command is older, and less powerful than the newer ``RUNPATH`` (or
 See below for what this difference is and how they work:
 
 *(Due to a parsing ambiguity issue, it was impossible to make ``RUN`` work with
-any arbitrary exression as the filename without changing its syntax a little in
+any arbitrary expression as the filename without changing its syntax a little in
 a way that would break every old kOS script.  Therefore it was deemed better to
 just add a new function that uses the new syntax instead of changing the syntax of
 ``RUN``.)*
@@ -533,9 +533,9 @@ Arguments
 ^^^^^^^^^
 
 Although the syntax is a bit different for ``RUN`` versus
-``RUNPATH`` (and ``RUNONCEPATH``), all 3 techniquies allow you to
+``RUNPATH`` (and ``RUNONCEPATH``), all 3 techniques allow you to
 pass arguments into the program that it sees as its main script
-:ref:`parameter <declare_parameter>` values.
+:ref:`parameter <declare parameter>` values.
 
 The following commands do equivalent things::
 
@@ -586,7 +586,7 @@ incomplete:
 - 2: Assume if no filename extension such as ".ks" or ".ksm" was given,
   and there is no file found that lacks an extension in the way the
   filename was given, then first try to find a file with the ".ksm"
-  extension appeneded to it, and if that file is not found then try
+  extension appended to it, and if that file is not found then try
   to find a file with the ".ks" extension appended to it.
 
 LOG TEXT TO PATH
@@ -619,7 +619,7 @@ Arguments:
     argument 2
         Path to the destination file. If the optional argument 2 is missing, it will assume it's the same as argument 1, but with a file extension changed to ``*.ksm``.
 
-Pre-compiles a script into an :ref:`Kerboscript ML Exceutable
+Pre-compiles a script into an :ref:`Kerboscript ML Executable
 image <compiling>` that can be used
 instead of executing the program script directly.
 
