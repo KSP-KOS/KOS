@@ -1,6 +1,166 @@
 kOS Mod Changelog
 =================
 
+# v1.0.0 (for KSP 1.1.3) Hey let's stop calling it Beta.
+
+### About the name:
+
+kOS has been around long enough that we figured it was long overdue
+for us to stop calling it 0.something.  Lots of people are using it,
+and we're worried about backward compatibility enough that we're not
+really treating it like a Beta anymore.  This version contains mostly
+a few things that we knew might break backward compatibility so we'd
+been putting them off for a long time.  A jump to 1.0 seems a good time
+to add those changes.
+
+Of course, it has lots of other changes for whatever else was being 
+worked on since the last release.
+
+### BREAKING CHANGES
+
+* As always, if you use the compiler feature to make KSM files, you should
+  recompile the KSM files when using a new release of kOS or results will
+  be unpredictable.
+* New Subdirectories ability has deprecated several filename commands such
+  as ``delete``, ``copy``, and ``rename``.  They will still work, but will
+  complain with a message every time you use them, as we may be removing
+  them eventually.  The new commands ``deletepath``, ``copypath``, and
+  ``movepath`` described below are meant to replace them.
+* When using a RemoteTech antenna that requires directional aiming,
+  in the past you could aim it at mission control with
+  ``SETFIELD("target", "Mission Control")`` and now you have to
+  say ``SETFIELD("target", "mission-control")`` instead, due to
+  changes in RT's naming schemes.
+
+### NEW FEATURES
+
+* **Subdirectories:** (http://ksp-kos.github.io/KOS_DOC/commands/files.html)
+  You are now able to store subdirectories ("folders") in your volumes,
+  both in the archive and in local volumes.  To accomodate the new feature
+  new versions of the file manipulation commands had to be made (please
+  go over the documentation in the link given above).  In the Archive,
+  which is really your ``Ships/Script/`` directory on your computer,
+  these subdirectories are stored as actual directories in your computer
+  filesystem.  (For example, the file ``0:/dir1/dir2/file.ks`` would be
+  stored at ``Kerbal Space Program/Shipts/Script/dir1/dir2.file.ks`` on
+  your real computer.) In local volumes, they are stored in the persistence.sfs
+  savegame file like usual.
+  (Pull Request discussion record: https://github.com/KSP-KOS/KOS/pull/1567)
+  * Boot subdirectory: (http://ksp-kos.github.io/KOS_DOC/general/volumes.html#special-handling-of-files-in-the-boot-directory)
+    To go with Subdirectories, now you make a subdirectory in your archive
+    called ``boot/``, and put all the candidate boot files there.  When
+    selecting a boot file in the VAB or SPH, the selections are taken from
+    there and need not contain the "boot_" prefix to the filename anymore.
+    Old boot files will be grandfathered in that are named the old way,
+    however.
+  * CORE:BOOTFILENAME is now a full path.  i.e. ``boot/myfile.ks``.
+  * PATH structure now allows you to get information about
+    the new full subdirectories system from your scripts.
+    (http://ksp-kos.github.io/KOS_DOC/structures/volumes_and_files/path.html)
+  * New RUNPATH command now allows any arbitrary string expression to be
+    used as the name of the file to be run.  i.e.
+    ``set basename to "prog". set num to 1. runpath(basename+num, arg1). // same as run prog1(arg1)``.
+    As part of the support for this, programs with a large number of RUN
+    commands (or RUNPATH commands) should now take up a bit less
+    of a memory footprint than they used to in their compiled form
+    (and thus in KSM files too).
+    (http://ksp-kos.github.io/KOS_DOC/commands/files.html#runpath-and-runoncepath)
+* **Communication between scripts** on different CPUs of the same vessel or
+  between different vessels.
+  (http://ksp-kos.github.io/KOS_DOC/commands/communication.html)
+  * A new structure, the ``Message``, contains some arbitrary piece of
+    data you choose (a number, a string, a list collection, etc), and
+    some header information kOS will add to it that describes where it
+    came from, when it was sent, and so on.  What you choose to do
+    with these arbitrary chunks of data is up to you.  kOS only lets
+    you send them.  You design your own protocol for what the data means.
+  * If RemoteTech is installed, a connection is needed to send a message
+    to another vessel (but not to a CPU on the same vessel).  And, the
+    message won't actually show up in the other vessel's queue until the
+    required lightspeed delay.
+  * To handle KSP's inability to have different vessels far away from each
+    other both fully loaded and active, you do have to switch scenes back
+    and forth between distant vessels if you want them to have a conversation
+    back and forth.  Messages that were meant to arrive on a vessel while
+    it wasn't within active loading range will wait in the recever's vessel
+    queue until you switch to it, so you don't have to hurry and switch
+    "in time" to get the message.
+* **Added anonymous functions :**
+  (https://ksp-kos.github.io/KOS_DOC/language/anonymous.html)
+  By placing arbitrary braces containing the body of a function anywhere
+  within the script that an expression is expected, the compiler builds
+  the function code right there and then returns a delegate of it as the
+  value of the expression.
+* **New 3rd-party addon framework** (https://github.com/KSP-KOS/KOS/tree/develop/src/kOS/AddOns/Addon%20Readme.md)
+  allows authors of other KSP mods to add hooks into kOS so that kOS
+  scripts can interface with their mods more directly, without kOS
+  developers having to maintain that code themselves in the kOS
+  repository.
+  (Pull Request discussion record: https://github.com/KSP-KOS/KOS/pull/1667)
+* **allow scripted vessel launches**
+  ``KUNIVERSE:GETCRAFT()``, ``KUNIVERSE:LAUNCHCRAFT()``, ``KUNIVERSE:CRAFTLIST()``,
+  and ``KUNIVERSE:LAUNCHCRAFTFROM()`` allow you to script the changing of scenes
+  and loading of vessels into those scenes.  While this breaks the 4th wall
+  quite a bit (how would an autopilot choose to manufacture an instance of the
+  plane?), it's meant to help with script testing and scripts that try to
+  repeatedly run the same mission unattended.
+  (https://ksp-kos.github.io/KOS_DOC/structures/misc/kuniverse.html)
+* **eta to SOI change:**
+  Added SHIP:OBT:NEXTPATCHETA to get the time to the next orbit patch
+  transition (SOI change).
+  (TODO: NO LINK HERE BECAUSE NO DOCS YET I COULD FIND)
+* **get control-from:**
+  Added ``SHIP:CONTROLPART`` to return the ``Part`` of the vessel that is
+  currently set as its "control from here" part.
+  (http://ksp-kos.github.io/KOS_DOC/structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART)
+* **maneuver nodes as a list:**(
+  New ``ALLNODES`` bound variable that returns a list of all the currently
+  planned manuever nodes (the nodes you could iterate through with
+  ``NEXTNODE``, but rendered into one list structure).
+  (https://ksp-kos.github.io/KOS_DOC/bindings#allnodes)
+* Several new **pseudo-action-groups** (akin to "panels on", that aren't
+  action groups as far as stock KSP is concerned, but kOS treats them like
+  action groups) were added.  (https://ksp-kos.github.io/KOS_DOC/commands/flight/systems#kos-custom-action-groups)
+* Ability to **get/set the navball mode** (surface, orbital, target) with
+  the ``NAVMODE`` bound variable:
+  i.e. ``SET NAVMODE TO "SURFACE".``.
+* **UniqueSet structure.** (https://ksp-kos.github.io/KOS_DOC/structures/collections/uniqueset.html)
+  A collection intended for when all you care about is whether a equivalent
+  object exists or doesn't exist yet in the collection, and everything else
+  (order, etc) doesn't matter.
+
+### BUG FIXES
+
+* In some cases (https://github.com/KSP-KOS/KOS/issues/1661) the program
+  wouldn't stop immediately when you execute a  ``kuniverse`` command that
+  reloads a save or switches scenes.  It would instead finish out the
+  remainder of the IPU instructions in the current physics tick.
+  After the fix, causing a scene change (or reload) automatically stops the
+  program right there since anything it does after that would be moot as
+  the game is about to remove everything it's talking about from memory.
+* If using "Start on archive", with Remote Tech, a misleading "power starved"
+  error was thrown when you reboot a probe that's out of antenna range.
+  (https://github.com/KSP-KOS/KOS/issues/1363)
+* ``unchar("a")`` was apparently broken for a few months and we hadn't noticed.
+  The root cause was that its implementation had to be edited to comply with
+  the change that enforced the VM to only use kOS ``Structure`` types on the
+  stack.  The need for that change had been missed.
+  (https://github.com/KSP-KOS/KOS/issues/1692)
+* Previously Infernal Robotics allowed you to move servos that weren't even
+  on your own vessel and you shouldn't have direct control over.  This has
+  been fixed.  (https://github.com/KSP-KOS/KOS/issues/1540)
+* Refactored previous non-working technique for quicksave/quickload to
+  turn it into something that works.
+  (https://github.com/KSP-KOS/KOS/issues/1372)
+* There were cases where using CTRL-C to abort a program would cause some
+  old cruft to still be leftover in the VM's stack.  This made the system
+  fail to clear out the names of functions that were no longer loaded in
+  memory, making it act like they were still reachable and call-able.
+  (https://github.com/KSP-KOS/KOS/issues/1610)
+* Some types of ``Resource`` didn't contain the ``:DENSITY`` suffix like the
+  documentation claimed they would.
+  (https://github.com/KSP-KOS/KOS/issues/1623)
+
 # v0.20.1 KSP 1.1.2 and bug repair
 
 The biggest reason for this release is to handle two game-breaking
