@@ -34,7 +34,7 @@ worked on since the last release.
 
 ### NEW FEATURES
 
-* **Subdirectories:** (http://ksp-kos.github.io/KOS_DOC/commands/files.html)
+* **Subdirectories:** (http://hvacengi.github.io/KOS/commands/files.html)
   You are now able to store subdirectories ("folders") in your volumes,
   both in the archive and in local volumes.  To accomodate the new feature
   new versions of the file manipulation commands had to be made (please
@@ -46,7 +46,7 @@ worked on since the last release.
   your real computer.) In local volumes, they are stored in the persistence.sfs
   savegame file like usual.
   (Pull Request discussion record: https://github.com/KSP-KOS/KOS/pull/1567)
-  * Boot subdirectory: (http://ksp-kos.github.io/KOS_DOC/general/volumes.html#special-handling-of-files-in-the-boot-directory)
+  * Boot subdirectory: (http://hvacengi.github.io/KOS/general/volumes.html#special-handling-of-files-in-the-boot-directory)
     To go with Subdirectories, now you make a subdirectory in your archive
     called ``boot/``, and put all the candidate boot files there.  When
     selecting a boot file in the VAB or SPH, the selections are taken from
@@ -56,7 +56,7 @@ worked on since the last release.
   * CORE:BOOTFILENAME is now a full path.  i.e. ``boot/myfile.ks``.
   * PATH structure now allows you to get information about
     the new full subdirectories system from your scripts.
-    (http://ksp-kos.github.io/KOS_DOC/structures/volumes_and_files/path.html)
+    (http://hvacengi.github.io/KOS/structures/volumes_and_files/path.html)
   * New RUNPATH command now allows any arbitrary string expression to be
     used as the name of the file to be run.  i.e.
     ``set basename to "prog". set num to 1. runpath(basename+num, arg1). // same as run prog1(arg1)``.
@@ -64,10 +64,10 @@ worked on since the last release.
     commands (or RUNPATH commands) should now take up a bit less
     of a memory footprint than they used to in their compiled form
     (and thus in KSM files too).
-    (http://ksp-kos.github.io/KOS_DOC/commands/files.html#runpath-and-runoncepath)
+    (http://hvacengi.github.io/KOS/commands/files.html#runpath-and-runoncepath)
 * **Communication between scripts** on different CPUs of the same vessel or
   between different vessels.
-  (http://ksp-kos.github.io/KOS_DOC/commands/communication.html)
+  (http://hvacengi.github.io/KOS/commands/communication.html)
   * A new structure, the ``Message``, contains some arbitrary piece of
     data you choose (a number, a string, a list collection, etc), and
     some header information kOS will add to it that describes where it
@@ -86,7 +86,7 @@ worked on since the last release.
     queue until you switch to it, so you don't have to hurry and switch
     "in time" to get the message.
 * **Added anonymous functions :**
-  (https://ksp-kos.github.io/KOS_DOC/language/anonymous.html)
+  (http://hvacengi.github.io/KOS/language/anonymous.html)
   By placing arbitrary braces containing the body of a function anywhere
   within the script that an expression is expected, the compiler builds
   the function code right there and then returns a delegate of it as the
@@ -104,27 +104,27 @@ worked on since the last release.
   quite a bit (how would an autopilot choose to manufacture an instance of the
   plane?), it's meant to help with script testing and scripts that try to
   repeatedly run the same mission unattended.
-  (https://ksp-kos.github.io/KOS_DOC/structures/misc/kuniverse.html)
+  (http://hvacengi.github.io/KOS/structures/misc/kuniverse.html)
 * **eta to SOI change:**
   Added SHIP:OBT:NEXTPATCHETA to get the time to the next orbit patch
   transition (SOI change).
-  (TODO: NO LINK HERE BECAUSE NO DOCS YET I COULD FIND)
+  (http://hvacengi.github.io/KOS/structures/orbits/orbit.html#attribute:ORBIT:NEXTPATCHETA)
 * **get control-from:**
   Added ``SHIP:CONTROLPART`` to return the ``Part`` of the vessel that is
   currently set as its "control from here" part.
-  (http://ksp-kos.github.io/KOS_DOC/structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART)
+  (http://hvacengi.github.io/KOS/structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART)
 * **maneuver nodes as a list:**(
   New ``ALLNODES`` bound variable that returns a list of all the currently
   planned manuever nodes (the nodes you could iterate through with
   ``NEXTNODE``, but rendered into one list structure).
-  (https://ksp-kos.github.io/KOS_DOC/bindings#allnodes)
+  (http://hvacengi.github.io/KOS/bindings#allnodes)
 * Several new **pseudo-action-groups** (akin to "panels on", that aren't
   action groups as far as stock KSP is concerned, but kOS treats them like
-  action groups) were added.  (https://ksp-kos.github.io/KOS_DOC/commands/flight/systems#kos-custom-action-groups)
+  action groups) were added.  (http://hvacengi.github.io/KOS/commands/flight/systems#kos-custom-action-groups)
 * Ability to **get/set the navball mode** (surface, orbital, target) with
   the ``NAVMODE`` bound variable:
   i.e. ``SET NAVMODE TO "SURFACE".``.
-* **UniqueSet structure.** (https://ksp-kos.github.io/KOS_DOC/structures/collections/uniqueset.html)
+* **UniqueSet structure.** (http://hvacengi.github.io/KOS/structures/collections/uniqueset.html)
   A collection intended for when all you care about is whether a equivalent
   object exists or doesn't exist yet in the collection, and everything else
   (order, etc) doesn't matter.
