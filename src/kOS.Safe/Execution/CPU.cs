@@ -121,38 +121,45 @@ namespace kOS.Safe.Execution
 
             if (!shared.Processor.CheckCanBoot()) return;
 
-            GlobalPath path = shared.Processor.BootFilePath;
-            Volume sourceVolume = shared.VolumeMgr.GetVolumeFromPath(path);
+            VolumePath path = shared.Processor.BootFilePath;
             // Check to make sure the boot file name is valid, and then that the boot file exists.
             if (path == null)
             {
                 SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
             }
-            else if (sourceVolume.Open(path) == null)
-            {
-                SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
-            }
             else
             {
-                var bootContext = "program";
-
-                string bootCommand = string.Format("run {0}.", path.Name);
-
-                var options = new CompilerOptions
+                // Boot is only called once right after turning the processor on,
+                // the volume cannot yet have been changed from that set based on
+                // Config.StartOnArchive, and Processor.CheckCanBoot() has already
+                // handled the range check for the archive.
+                Volume sourceVolume = shared.VolumeMgr.CurrentVolume;
+                var file = shared.VolumeMgr.CurrentVolume.Open(path);
+                if (file == null)
                 {
-                    LoadProgramsInSameAddressSpace = true,
-                    FuncManager = shared.FunctionManager,
-                    IsCalledFromRun = false
-                };
+                    SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
+                }
+                else
+                {
+                    var bootContext = "program";
 
-                shared.ScriptHandler.ClearContext(bootContext);
-                BootGlobalPath bootPath = new BootGlobalPath(bootCommand);
-                List<CodePart> parts = shared.ScriptHandler.Compile(bootPath,
-                    1, bootCommand, bootContext, options);
+                    string bootCommand = string.Format("run \"{0}\".", file.Path);
 
-                IProgramContext programContext = SwitchToProgramContext();
-                programContext.Silent = true;
-                programContext.AddObjectParts(parts, bootPath.ToString());
+                    var options = new CompilerOptions
+                    {
+                        LoadProgramsInSameAddressSpace = true,
+                        FuncManager = shared.FunctionManager,
+                        IsCalledFromRun = false
+                    };
+
+                    shared.ScriptHandler.ClearContext(bootContext);
+                    List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
+                        1, bootCommand, bootContext, options);
+
+                    IProgramContext programContext = SwitchToProgramContext();
+                    programContext.Silent = true;
+                    programContext.AddParts(parts);
+                }
             }
         }
 
