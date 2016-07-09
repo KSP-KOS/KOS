@@ -301,8 +301,8 @@ namespace kOS.Module
             bootFiles.AddRange(BootDirectoryFiles());
 
             //no need to show the control if there are no available boot files
-            options.controlEnabled = bootFiles.Count > 1;
-            field.guiActiveEditor = bootFiles.Count > 1;
+            options.controlEnabled = bootFiles.Count >= 1;
+            field.guiActiveEditor = bootFiles.Count >= 1;
             var availableOptions = bootFiles.Select(e => e.ToString()).ToList();
             var availableDisplays = bootFiles.Select(e => e.Name).ToList();
 
