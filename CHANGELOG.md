@@ -28,8 +28,8 @@ worked on since the last release.
   ``movepath`` described below are meant to replace them.
 * When using a RemoteTech antenna that requires directional aiming,
   in the past you could aim it at mission control with
-  ``SETFIELD("target", "Mission Control")`` and now you have to
-  say ``SETFIELD("target", "mission-control")`` instead, due to
+  ``SETFIELD("target", "mission-control")`` and now you have to
+  say ``SETFIELD("target", "Mission Control")`` instead, due to
   changes in RT's naming schemes.
 
 ### NEW FEATURES
