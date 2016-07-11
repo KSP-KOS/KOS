@@ -54,73 +54,66 @@ You can now get information about a
 New RUNPATH command
 ^^^^^^^^^^^^^^^^^^^
 
-:ref:`New RUNPATH command` lest you make the program to run
+:ref:`New RUNPATH command <runpath>` lest you make the program to run
 be a varying expression.
 
-* **Communication between scripts** on different CPUs of the same vessel or
-  between different vessels.
-  (http://hvacengi.github.io/KOS/commands/communication.html)
-  * A new structure, the ``Message``, contains some arbitrary piece of
-    data you choose (a number, a string, a list collection, etc), and
-    some header information kOS will add to it that describes where it
-    came from, when it was sent, and so on.  What you choose to do
-    with these arbitrary chunks of data is up to you.  kOS only lets
-    you send them.  You design your own protocol for what the data means.
-  * If RemoteTech is installed, a connection is needed to send a message
-    to another vessel (but not to a CPU on the same vessel).  And, the
-    message won't actually show up in the other vessel's queue until the
-    required lightspeed delay.
-  * To handle KSP's inability to have different vessels far away from each
-    other both fully loaded and active, you do have to switch scenes back
-    and forth between distant vessels if you want them to have a conversation
-    back and forth.  Messages that were meant to arrive on a vessel while
-    it wasn't within active loading range will wait in the recever's vessel
-    queue until you switch to it, so you don't have to hurry and switch
-    "in time" to get the message.
-* **Added anonymous functions :**
-  (http://hvacengi.github.io/KOS/language/anonymous.html)
-  By placing arbitrary braces containing the body of a function anywhere
-  within the script that an expression is expected, the compiler builds
-  the function code right there and then returns a delegate of it as the
-  value of the expression.
-* **New 3rd-party addon framework** (https://github.com/KSP-KOS/KOS/tree/develop/src/kOS/AddOns/Addon%20Readme.md)
-  allows authors of other KSP mods to add hooks into kOS so that kOS
-  scripts can interface with their mods more directly, without kOS
-  developers having to maintain that code themselves in the kOS
-  repository.
-  (Pull Request discussion record: https://github.com/KSP-KOS/KOS/pull/1667)
-* **allow scripted vessel launches**
-  ``KUNIVERSE:GETCRAFT()``, ``KUNIVERSE:LAUNCHCRAFT()``, ``KUNIVERSE:CRAFTLIST()``,
-  and ``KUNIVERSE:LAUNCHCRAFTFROM()`` allow you to script the changing of scenes
-  and loading of vessels into those scenes.  While this breaks the 4th wall
-  quite a bit (how would an autopilot choose to manufacture an instance of the
-  plane?), it's meant to help with script testing and scripts that try to
-  repeatedly run the same mission unattended.
-  (http://hvacengi.github.io/KOS/structures/misc/kuniverse.html)
-* **eta to SOI change:**
-  Added SHIP:OBT:NEXTPATCHETA to get the time to the next orbit patch
-  transition (SOI change).
-  (http://hvacengi.github.io/KOS/structures/orbits/orbit.html#attribute:ORBIT:NEXTPATCHETA)
-* **get control-from:**
-  Added ``SHIP:CONTROLPART`` to return the ``Part`` of the vessel that is
-  currently set as its "control from here" part.
-  (http://hvacengi.github.io/KOS/structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART)
-* **maneuver nodes as a list:**(
-  New ``ALLNODES`` bound variable that returns a list of all the currently
-  planned manuever nodes (the nodes you could iterate through with
-  ``NEXTNODE``, but rendered into one list structure).
-  (http://hvacengi.github.io/KOS/bindings#allnodes)
-* Several new **pseudo-action-groups** (akin to "panels on", that aren't
-  action groups as far as stock KSP is concerned, but kOS treats them like
-  action groups) were added.  (http://hvacengi.github.io/KOS/commands/flight/systems#kos-pseudo-action-groups)
-* Ability to **get/set the navball mode** (surface, orbital, target) with
-  the ``NAVMODE`` bound variable:
-  i.e. ``SET NAVMODE TO "SURFACE".``.
-* **UniqueSet structure.** (http://hvacengi.github.io/KOS/structures/collections/uniqueset.html)
-  A collection intended for when all you care about is whether a equivalent
-  object exists or doesn't exist yet in the collection, and everything else
-  (order, etc) doesn't matter.
+Communications
+::::::::::::::
 
+:ref:`Communication between scripts <communication>`
+on different CPUs of the same vessel or between different vessels.
+
+Message Structure
+^^^^^^^^^^^^^^^^^
+
+A :ref:`Message structure <message>` added  to be used with
+the new communications system.
+
+Anonymous functions
+:::::::::::::::::::
+
+:ref:`Anonymous functions <anonymous_functions>` now implemented.
+
+Allow scripted vessel launches
+::::::::::::::::::::::::::::::
+
+``GETCRAFT()``, ``LAUNCHCRAFT()``, ``CRAFTLIST()``, ``LAUNCHCRAFTFROM()``
+were added as new suffixes to the :ref:`Kuniverse <kuniverse>` structure.
+
+ETA to SOI change
+:::::::::::::::::
+
+:attr:`ORBIT:NEXTPATCHETA` to get the time to the next orbit patch
+  transition (SOI change).
+
+VESSEL:CONTROLPART
+::::::::::::::::::
+
+:attr:`VESSEL:CONTROLPART` to get the part which has been used
+as the current "control from here".
+
+Maneuver nodes as a list
+:::::::::::::::::::::::::
+
+:global:`ALLNODES` bound variable added.
+
+More pseudo-action-groups
+:::::::::::::::::::::::::
+
+:ref:`Some new Pseudo-Action-Groups added <kos-boolean-flags>` for 
+handling a lot of new groups of parts.
+
+Get Navball Mode
+::::::::::::::::
+
+:global:`NAVMODE` bound variable:
+
+UniqueSet
+:::::::::
+
+Added a :ref:`UniqueSet <uniqueset>` collection for holding a
+generic set of things where order is irrelevant and duplicates are
+guaranteed not to exist.
 
 
 Changes in 0.20.1
