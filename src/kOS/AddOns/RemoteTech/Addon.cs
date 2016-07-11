@@ -6,10 +6,11 @@ using System.Linq;
 
 namespace kOS.AddOns.RemoteTech
 {
+    [kOSAddon("RT")]
     [kOS.Safe.Utilities.KOSNomenclature("RTAddon")]
     public class Addon : Suffixed.Addon
     {
-        public Addon(SharedObjects shared) : base ("RT", shared)
+        public Addon(SharedObjects shared) : base (shared)
         {
             InitializeSuffixes();
         }

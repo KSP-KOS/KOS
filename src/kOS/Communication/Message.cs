@@ -20,11 +20,13 @@ namespace kOS.Communication
         {
             if (content is SerializableStructure)
             {
-                return new Message(new SafeSerializationMgr().Dump(content as SerializableStructure), sentAt, receivedAt, sender);
-            } else if (content is PrimitiveStructure)
+                return new Message(new SafeSerializationMgr(null).Dump(content as SerializableStructure), sentAt, receivedAt, sender);
+            }
+            else if (content is PrimitiveStructure)
             {
                 return new Message(content as PrimitiveStructure, sentAt, receivedAt, sender);
-            } else
+            }
+            else
             {
                 throw new KOSCommunicationException("Only serializable types and primitives can be sent in a message");
             }

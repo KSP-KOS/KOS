@@ -1,7 +1,7 @@
 .. _volumefile:
 
 VolumeFile
-================
+==========
 
 File name and size information. You can obtain a list of values of type VolumeFile using the :ref:`LIST FILES <list command>` command.
 
@@ -15,50 +15,22 @@ File name and size information. You can obtain a list of values of type VolumeFi
           - Type
           - Description
 
+        * - All suffixes of :struct:`VolumeItem`
+          -
+          - :struct:`VolumeFile` objects are a type of :struct:`VolumeItem`
 
-        * - :attr:`NAME`
-          - :struct:`String`
-          - Name of the file including extension
-        * - :attr:`EXTENSION`
-          - :struct:`String`
-          - File extension
-        * - :attr:`SIZE`
-          - :ref:`scalar <scalar>` (bytes)
-          - Size of the file
         * - :meth:`READALL`
           - :struct:`FileContent`
           - Reads file contents
         * - :meth:`WRITE(String|FileContent)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Writes the given string to the file
         * - :meth:`WRITELN(string)`
-          - :struct:`FileContent`
+          - :struct:`Boolean`
           - Writes the given string and a newline to the file
         * - :meth:`CLEAR`
           - None
           - Clears this file
-
-
-.. attribute:: VolumeFile:NAME
-
-    :access: Get only
-    :type: :struct:`String`
-
-    name of the file, including its file extension.
-
-.. attribute:: VolumeFile:EXTENSION
-
-    :access: Get only
-    :type: :struct:`String`
-
-    File extension (part of the filename after the last dot).
-
-.. attribute:: VolumeFile:SIZE
-
-    :access: Get only
-    :type: :ref:`scalar <scalar>`
-
-    size of the file, in bytes.
 
 
 .. method:: VolumeFile:READALL
@@ -69,13 +41,13 @@ File name and size information. You can obtain a list of values of type VolumeFi
 
 .. method:: VolumeFile:WRITE(String|FileContent)
 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Writes the given string or a :struct:`FileContent` to the file. Returns true if successful (lack of space on the :struct:`Volume` can cause a failure).
 
 .. method:: VolumeFile:WRITELN(string)
 
-    :return: :ref:`boolean <boolean>`
+    :return: :struct:`Boolean`
 
     Writes the given string followed by a newline to the file. Returns true if successful.
 

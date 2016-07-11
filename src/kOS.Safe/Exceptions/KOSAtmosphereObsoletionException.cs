@@ -1,8 +1,8 @@
 namespace kOS.Safe.Exceptions
 {
-    public class KOSAtmosphereDeprecationException : KOSDeprecationException
+    public class KOSAtmosphereObsoletionException : KOSObsoletionException
     {
-        public KOSAtmosphereDeprecationException(string version, string oldUsage, string newUsage, string url) : base(version, oldUsage, newUsage, url)
+        public KOSAtmosphereObsoletionException(string version, string oldUsage, string newUsage, string url) : base(version, oldUsage, newUsage, url)
         {
         }
 

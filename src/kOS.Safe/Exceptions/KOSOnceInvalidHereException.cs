@@ -16,14 +16,15 @@ namespace kOS.Safe.Exceptions
         public override string VerboseMessage { get { return VerbosePrefix + APPEND_TEXT;} }
 
         private const string APPEND_TEXT = "\n" + 
-            "The ONCE keyword only works inside\n" +
-            "a program, not from the interpreter\n" +
+            "The RUN ONCE or RUNONCEPATH concept\n" +
+            "does not work from the interpreter\n" +
             "because the interpreter always\n" +
             "recompiles and re-runs the program\n" +
-            "each run.\n";
+            "each run anyway.  'ONCE' only has meaning\n" +
+            "when a program runs another program.\n" ;
 
         public KOSOnceInvalidHereException(LineCol location) :
-            base(location, "ONCE", "from the terminal interpreter", "inside a program" )
+            base(location, "RUN ONCE (or RUNONCEPATH)", "from the terminal interpreter", "inside a program" )
         {
         }
     }

@@ -8,7 +8,8 @@ namespace kOS.Safe.Execution
     public interface IProgramContext
     {
         void AddParts(IEnumerable<CodePart> parts);
-        int AddObjectParts(IEnumerable<CodePart> parts);
+        int AddObjectParts(IEnumerable<CodePart> parts, string objectFilename);
+        int GetAlreadyCompiledEntryPoint(string fileID);
         void ToggleFlyByWire(string paramName, bool enabled);
         List<string> GetCodeFragment(int contextLines);
         List<string> GetCodeFragment(int start, int stop, bool doProfile = false);

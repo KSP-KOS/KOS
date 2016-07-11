@@ -289,7 +289,7 @@ namespace kOS.Function
             string argument = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
             char result = argument.ToCharArray()[0];
-            ReturnValue = ScalarValue.Create(result);
+            ReturnValue = ScalarValue.Create((int)result);
         }
     }
 }

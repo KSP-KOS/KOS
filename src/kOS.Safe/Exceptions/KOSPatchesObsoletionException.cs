@@ -1,13 +1,13 @@
 ﻿namespace kOS.Safe.Exceptions
 {
-    public class KOSPatchesDeprecationException : KOSDeprecationException
+    public class KOSPatchesObsoletionException : KOSObsoletionException
     {
         protected static string OldUsage { get{return "orbit's :PATCHES suffix";}}
         protected static string NewUsage { get{return "the :PATCHES suffix of Vessel, or Orbit's :NEXTPATCH and :HASNEXTPATCH suffixes";}}
         protected static string Version { get{return "v0.15";}}
         protected static string Url { get{return "TODO for v0.15 - Go back and fill in after docs are updated";}}
         
-        public KOSPatchesDeprecationException() : 
+        public KOSPatchesObsoletionException() : 
             base(Version, OldUsage, NewUsage, Url)
         {
         }

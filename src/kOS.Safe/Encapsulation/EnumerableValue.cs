@@ -44,7 +44,7 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return new SafeSerializationMgr().ToString(this);
+            return new SafeSerializationMgr(null).ToString(this);
         }
 
         public override Dump Dump()
@@ -54,12 +54,7 @@ namespace kOS.Safe.Encapsulation
                 Header = label + " of " + InnerEnumerable.Count() + " items:"
             };
 
-            int i = 0;
-            foreach (T item in this)
-            {
-                result.Add(i, item);
-                i++;
-            }
+            result.Add(kOS.Safe.Dump.Items, InnerEnumerable.Cast<object>().ToList());
 
             return result;
         }

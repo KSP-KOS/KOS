@@ -15,8 +15,8 @@ namespace kOS.Safe.Persistence
     public class FileContent : SerializableStructure, IEnumerable<string>
     {
         private static readonly Encoding fileEncoding = Encoding.UTF8;
-        private const string DUMP_CONTENT = "content";
-        public const string NEW_LINE = "\n";
+        private const string DumpContent = "content";
+        public const string NewLine = "\n";
 
         public byte[] Bytes { get; private set; }
         public string String { get { return fileEncoding.GetString(Bytes); } }
@@ -57,14 +57,12 @@ namespace kOS.Safe.Persistence
 
         public override Dump Dump()
         {
-            Dump dump = new Dump { { DUMP_CONTENT, PersistenceUtilities.EncodeBase64(Bytes) } };
-
-            return dump;
+            return new Dump { { DumpContent, PersistenceUtilities.EncodeBase64(Bytes) } };
         }
 
         public override void LoadDump(Dump dump)
         {
-            string contentString = dump[DUMP_CONTENT] as string;
+            string contentString = dump[DumpContent] as string;
 
             if (contentString == null)
             {
@@ -74,9 +72,9 @@ namespace kOS.Safe.Persistence
             Bytes = PersistenceUtilities.DecodeBase64ToBinary(contentString);
         }
 
-        public List<CodePart> AsParts(string name, string prefix)
+        public List<CodePart> AsParts(GlobalPath path, string prefix)
         {
-            return CompiledObject.UnPack(name, prefix, Bytes);
+            return CompiledObject.UnPack(path, prefix, Bytes);
         }
 
         public static byte[] EncodeString(string content)
@@ -104,7 +102,7 @@ namespace kOS.Safe.Persistence
 
         public void WriteLn(string content)
         {
-            Write(content + NEW_LINE);
+            Write(content + NewLine);
         }
 
         public void Clear()
@@ -126,6 +124,16 @@ namespace kOS.Safe.Persistence
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is FileContent && Bytes.Equals((obj as FileContent).Bytes);
+        }
+
+        public override int GetHashCode()
+        {
+            return Bytes.GetHashCode();
         }
 
         public override string ToString()

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using kOS.Safe.Compilation;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Utilities
 {
@@ -80,7 +81,7 @@ namespace kOS.Safe.Utilities
             for (int index = 0; index < codes.Count; index++)
             {
                 codeFragment.Add(string.Format(FORMAT_STR,
-                                               codes[index].SourceName ?? "null",
+                                               codes[index].SourcePath ?? GlobalPath.EMPTY,
                                                codes[index].SourceLine,
                                                codes[index].SourceColumn ,
                                                index,

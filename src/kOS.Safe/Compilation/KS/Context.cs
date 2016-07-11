@@ -1,4 +1,5 @@
 using System;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -9,7 +10,7 @@ namespace kOS.Safe.Compilation.KS
         public SubprogramCollection Subprograms { get; private set; }
         public int NumCompilesSoFar {get; set;}
         public int LabelIndex { get; set; }
-        public string LastSourceName { get; set; }
+        public GlobalPath LastSourcePath { get; set; }
         
         // This has to live inside context because of the fact that more than one program
         // can be compiled into the same memory space.  If it was reset to zero by the
@@ -24,7 +25,7 @@ namespace kOS.Safe.Compilation.KS
             Triggers = new TriggerCollection();
             Subprograms = new SubprogramCollection();
             LabelIndex = 0;
-            LastSourceName = "";
+            LastSourcePath = GlobalPath.EMPTY;
             MaxScopeIdSoFar = 0;
             NumCompilesSoFar = 0;
         }

@@ -12,52 +12,9 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class BindingTimeWarp : Binding
     {
-        private static readonly IList<string> reservedSaveNames = new List<string> { "persistence", "quicksave" };
-
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("KUNIVERSE", () => new KUniverseValue(shared));
-            shared.BindingMgr.AddGetter("QUICKSAVE", () =>
-            {
-                if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickSave) return false;
-                QuickSaveLoad.QuickSave();
-                return true;
-            });
-
-            shared.BindingMgr.AddGetter("QUICKLOAD", () =>
-                {
-                    if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickLoad) return false;
-                    try
-                    {
-                        GamePersistence.LoadGame("quicksave", HighLogic.SaveFolder, true, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        SafeHouse.Logger.Log(ex.Message);
-                        return false;
-                    }
-                    return true;
-                });
-
-            shared.BindingMgr.AddSetter("SAVETO", val =>
-                {
-                    if (reservedSaveNames.Contains(val.ToString().ToLower())) return;
-
-                    Game game = HighLogic.CurrentGame.Updated();
-                    game.startScene = GameScenes.FLIGHT;
-                    GamePersistence.SaveGame(game, val.ToString(), HighLogic.SaveFolder, SaveMode.OVERWRITE);
-                });
-
-            shared.BindingMgr.AddSetter("LOADFROM", val =>
-                {
-                    if (reservedSaveNames.Contains(val.ToString().ToLower())) return;
-
-                    var game = GamePersistence.LoadGame(val.ToString(), HighLogic.SaveFolder, true, false);
-                    if (game == null) return;
-                    if (game.flightState == null) return;
-                    if (!game.compatible) return;
-                    FlightDriver.StartAndFocusVessel(game, game.flightState.activeVesselIdx);
-                });
 
             shared.BindingMgr.AddGetter("WARPMODE", () =>
                 {

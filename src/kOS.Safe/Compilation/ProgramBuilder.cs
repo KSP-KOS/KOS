@@ -45,15 +45,23 @@ namespace kOS.Safe.Compilation
             {
                 var linkedObject = new CodePart();
 
+                // we assume that the first object is the main program and the rest are subprograms/libraries
+                bool isMainProgram = (objectFile == objectFiles.Values.First());
+
+                bool firstPart = true;
                 foreach (var part in objectFile.Parts)
                 {
                     AddInitializationCode(linkedObject, part);
+
+                    // Only do this once on the first pass of the first program:
+                    if (isMainProgram && firstPart)
+                        linkedObject.FunctionsCode.AddRange(BuildBoilerplateLoader());
+
                     linkedObject.FunctionsCode.AddRange(part.FunctionsCode);
                     linkedObject.MainCode.AddRange(part.MainCode);
+                    firstPart = false;
                 }
 
-                // we assume that the first object is the main program and the rest are subprograms/libraries
-                bool isMainProgram = (objectFile == objectFiles.Values.First());
                 // add a jump to the entry point so the execution skips the functions code
                 if (isMainProgram)
                     AddJumpToEntryPoint(linkedObject);
@@ -69,6 +77,82 @@ namespace kOS.Safe.Compilation
             ReplaceLabels(program);
 
             return program;
+        }
+        
+        private int labelCounter;
+        private string labelFormat;
+        private string nextLabel
+        {
+            get
+            {
+                return String.Format(labelFormat, labelCounter++);
+            }
+        }
+
+        protected IEnumerable<Opcode> BuildBoilerplateLoader()
+        {
+            List<Opcode> boilerplate = new List<Opcode>();
+            
+            // First label of the load/runner will be called "@LR00", which is important because that's
+            // what we hardcode all the compiler-built VisitRunStatement's to call out to:
+            labelCounter = 0;
+            labelFormat = "@LR{0:D2}";
+            boilerplate.Add(new OpcodePushScope(-999,0) {Label = nextLabel});
+
+            // High level kerboscript function calls flip the argument orders for us, but
+            // low level kRISC does not so the parameters have to be read in stack order:
+            
+            // store parameter 2 in a local name:
+            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel});
+            boilerplate.Add(new OpcodeSwap() {Label = nextLabel});
+            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel});
+
+            // store parameter 1 in a local name:
+            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel});
+            boilerplate.Add(new OpcodeSwap() {Label = nextLabel});
+            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel});
+            
+            // Unconditionally call load() no matter what.  load() will abort and return
+            // early if the program was already compiled, and tell us that on the stack:
+            boilerplate.Add(new OpcodePush(new kOS.Safe.Execution.KOSArgMarkerType()) {Label = nextLabel});
+            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel});
+            boilerplate.Add(new OpcodeEval() {Label = nextLabel});
+            boilerplate.Add(new OpcodePush(true) {Label = nextLabel}); // the flag that tells load() to abort early if it's already loaded:
+            boilerplate.Add(new OpcodePush(null) {Label = nextLabel});
+            boilerplate.Add(new OpcodeCall("load()") {Label = nextLabel});
+
+            // Stack now has the 2 return values of load():
+            //    Topmost value is a boolean flag for whether or not the program was already loaded.
+            //    Second-from-top value is the entry point into the program.
+
+            // If load() didn't claim the program was already loaded, or if we aren't operating
+            // in "once" mode, then jump to the part where we call the loaded program, else
+            // fall through to a dummy do-nothing return for the "run once, but it already ran" case:
+            Opcode branchFromOne = new OpcodeBranchIfFalse() {Label = nextLabel};
+            boilerplate.Add(branchFromOne);
+            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel});
+            Opcode branchFromTwo = new OpcodeBranchIfFalse() {Label = nextLabel};
+            boilerplate.Add(branchFromTwo);
+            boilerplate.Add(new OpcodePop() {Label = nextLabel}); // onsume the entry point that load() returned. We won't be calling it.
+            boilerplate.Add(new OpcodePush(0) {Label = nextLabel});   // ---+-- The dummy do-nothing return.
+            boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel}); // ---'
+            
+            // Actually call the Program from its entry Point, which is now the thing left on top
+            // of the stack from the second return value of load():
+            Opcode branchTo = new OpcodePush("$entrypoint") {Label = nextLabel};
+            boilerplate.Add(branchTo);
+            boilerplate.Add(new OpcodeSwap() {Label = nextLabel});
+            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel});
+            boilerplate.Add(new OpcodeCall("$entrypoint") {Label = nextLabel});
+            
+            boilerplate.Add(new OpcodePop() {Label = nextLabel});
+            boilerplate.Add(new OpcodePush(0) {Label = nextLabel});
+            boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel});
+
+            branchFromOne.DestinationLabel = branchTo.Label;
+            branchFromTwo.DestinationLabel = branchTo.Label;
+
+            return boilerplate;
         }
 
         protected virtual void AddInitializationCode(CodePart linkedObject, CodePart part)
@@ -163,7 +247,7 @@ namespace kOS.Safe.Compilation
                     }
                     else
                         newOp = new OpcodePush(destinationIndex);
-                    newOp.SourceName = opcode.SourceName;
+                    newOp.SourcePath = opcode.SourcePath;
                     newOp.SourceLine = opcode.SourceLine;
                     newOp.SourceColumn = opcode.SourceColumn;
                     newOp.Label = opcode.Label;

@@ -36,7 +36,7 @@ namespace kOS.Safe.Test.Serialization
 
         private string Serialize(SerializableStructure o)
         {
-            return new SafeSerializationMgr().Serialize(o, TerminalFormatter.Instance, false);
+            return new SafeSerializationMgr(null).Serialize(o, TerminalFormatter.Instance, false);
         }
     }
 }

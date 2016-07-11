@@ -1,4 +1,4 @@
-﻿using kOS.AddOns.RemoteTech;
+using kOS.AddOns.RemoteTech;
 using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
 using kOS.Safe.Exceptions;
@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Math = System.Math;
+using kOS.Control;
+using kOS.Module;
 
 namespace kOS.Binding
 {
@@ -46,8 +48,10 @@ namespace kOS.Binding
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
 
-            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode((string)value));
-            shared.BindingMgr.AddGetter("SASMODE", () => currentVessel.Autopilot.Mode.ToString().ToUpper());
+            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode(value));
+            shared.BindingMgr.AddGetter("SASMODE", () => GetAutopilotModeName());
+            shared.BindingMgr.AddSetter("NAVMODE", value => SetNavMode(value));
+            shared.BindingMgr.AddGetter("NAVMODE", () => GetNavModeName());
         }
 
 
@@ -186,7 +190,6 @@ namespace kOS.Binding
 
             UnBind();
             flightControls.Remove(currentVessel.rootPart.flightID);
-            SteeringManagerProvider.RemoveInstance(currentVessel);
         }
 
         private bool VesselIsValid(Vessel vessel)
@@ -196,11 +199,22 @@ namespace kOS.Binding
 
         public void SelectAutopilotMode(object autopilotMode)
         {
-            if (autopilotMode is Direction)
+            autopilotMode = Safe.Encapsulation.Structure.FromPrimitiveWithAssert(autopilotMode);
+            if ((autopilotMode is Safe.Encapsulation.StringValue))
+            {
+                SelectAutopilotMode(autopilotMode.ToString());
+            }
+            else if (autopilotMode is Direction)
             {
                 //TODO: implment use of direction subclasses.
+                throw new KOSException(
+                    string.Format("Cannot set SAS mode to a direction. Should use the name of the mode (as string, e.g. \"PROGRADE\", not PROGRADE) for SASMODE. Alternatively, can use LOCK STEERING TO Direction instead of using SAS"));
             }
-            else SelectAutopilotMode((string)autopilotMode);
+            else
+            {
+                throw new KOSWrongControlValueTypeException(
+                  "SASMODE", KOSNomenclature.GetKOSName(autopilotMode.GetType()), "name of the SAS mode (as string)");
+            }
         }
 
         public void SelectAutopilotMode(VesselAutopilot.AutopilotMode autopilotMode)
@@ -210,19 +224,28 @@ namespace kOS.Binding
                 if (!currentVessel.Autopilot.CanSetMode(autopilotMode))
                 {
                     // throw an exception if the mode is not available
-                    throw new Safe.Exceptions.KOSException(
+                    throw new KOSSituationallyInvalidException(
                         string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
                 }
                 currentVessel.Autopilot.SetMode(autopilotMode);
                 //currentVessel.Autopilot.Enable();
                 // change the autopilot indicator
-                ((Module.kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
+                ((kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
                 if (RemoteTechHook.IsAvailable(currentVessel.id))
                 {
-                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
+                    //Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
                     // TODO: figure out how to make RemoteTech allow the built in autopilot control.  This may require modification to RemoteTech itself.
                 }
             }
+        }
+
+        public string GetAutopilotModeName()
+        {
+            // TODO: As of KSP 1.1.2, RadialIn and RadialOut are still swapped.  Check if still true in future versions.
+            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialOut) { return "RADIALIN"; }
+            if (currentVessel.Autopilot.Mode == VesselAutopilot.AutopilotMode.RadialIn) { return "RADIALOUT"; }
+
+            return currentVessel.Autopilot.Mode.ToString().ToUpper();
         }
 
         public void SelectAutopilotMode(string autopilotMode)
@@ -270,9 +293,76 @@ namespace kOS.Binding
                         SelectAutopilotMode(VesselAutopilot.AutopilotMode.StabilityAssist);
                         break;
                     default:
-                        // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
+                        // If the mode is not recognised, throw an exception rather than continuing or using a default setting
                         throw new KOSException(
                             string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
+                }
+            }
+        }
+
+        public string GetNavModeName()
+        {
+            return GetNavMode().ToString().ToUpper();
+        }
+
+
+        public FlightGlobals.SpeedDisplayModes GetNavMode()
+        {
+            if (Shared.Vessel != FlightGlobals.ActiveVessel)
+            {
+                throw new KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
+            }
+            return FlightGlobals.speedDisplayMode;
+        }   
+
+        public void SetNavMode(FlightGlobals.SpeedDisplayModes navMode)
+        {
+            FlightGlobals.SetSpeedMode(navMode);
+        }
+
+        public void SetNavMode(object navMode)
+        {
+            navMode = Safe.Encapsulation.Structure.FromPrimitiveWithAssert(navMode);
+            if (!(navMode is Safe.Encapsulation.StringValue))
+            {
+                throw new KOSWrongControlValueTypeException(
+                  "NAVMODE", KOSNomenclature.GetKOSName(navMode.GetType()), "string (\"ORBIT\", \"SURFACE\" or \"TARGET\")");
+            }
+            SetNavMode(navMode.ToString());
+        }
+
+        public void SetNavMode(string navMode)
+        {
+            if (Shared.Vessel != FlightGlobals.ActiveVessel)
+            {
+                throw new KOSSituationallyInvalidException("NAVMODE can only be accessed for the Active Vessel");
+            }
+            // handle a null/empty value in case of an unset command or setting to empty string to clear.
+            if (string.IsNullOrEmpty(navMode))
+            {
+                SetNavMode(FlightGlobals.SpeedDisplayModes.Orbit);
+            }
+            else
+            {
+                // determine the navigation mode to use
+                switch (navMode.ToLower())
+                {
+                    case "orbit":
+                        SetNavMode(FlightGlobals.SpeedDisplayModes.Orbit);
+                        break;
+                    case "surface":
+                        SetNavMode(FlightGlobals.SpeedDisplayModes.Surface);
+                        break;
+                    case "target":
+                        if(FlightGlobals.fetch.VesselTarget== null) {
+                            throw new KOSException("Cannot set navigation mode: there is no target");
+                        }
+                        SetNavMode(FlightGlobals.SpeedDisplayModes.Target);
+                        break;
+                    default:
+                        // If the mode is not recognised, throw an exception rather than continuing or using a default setting
+                        throw new KOSException(
+                            string.Format("kOS does not recognize the navigation mode setting of {0}", navMode));
                 }
             }
         }
@@ -285,7 +375,6 @@ namespace kOS.Binding
             private object value;
             private bool enabled;
             private readonly SharedObjects shared;
-            private SteeringManager steeringManager;
 
             public FlightCtrlParam(string name, SharedObjects sharedObjects)
             {
@@ -297,20 +386,45 @@ namespace kOS.Binding
                 Enabled = false;
                 value = null;
 
-                if (string.Equals(name, "steering", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    steeringManager = SteeringManagerProvider.GetInstance(sharedObjects);
-                }
 
                 HookEvents();
             }
 
             private void HookEvents()
             {
-                binding.AddGetter(name, () => value);
-                binding.AddSetter(name, val => value = val);
+                binding.AddGetter(name, () => getValue());
+                binding.AddSetter(name, val => setValue(val));
             }
 
+            private object getValue()
+            {
+                if (name == "throttle")
+                {
+                    if (Enabled) return value;
+                    return shared.Vessel.ctrlState.mainThrottle;
+                }
+                else if (name == "steering")
+                {
+                    return kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering").GetValue();
+                }
+                else
+                {
+                    return value;
+                }
+            }
+
+            private void setValue(object val)
+            {
+                if (name == "steering")
+                {
+                    IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
+                    if (param != null) param.UpdateValue(val, shared);
+                }
+                else
+                {
+                    value = val;
+                }
+            }
 
             public bool Enabled
             {
@@ -319,16 +433,28 @@ namespace kOS.Binding
                 {
                     SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
-                    enabled = value;
-                    if (steeringManager != null)
+                    if (enabled != value)
                     {
-                        if (enabled) steeringManager.EnableControl(shared);
-                        else steeringManager.DisableControl();
-                        //steeringManager.Enabled = enabled;
-                    }
-                    if (RemoteTechHook.IsAvailable(control.Vessel.id))
-                    {
-                        HandleRemoteTechPilot();
+
+                        enabled = value;
+                        if (name == "steering")
+                        {
+                            SafeHouse.Logger.Log("FlightCtrlParam: toggle steering parameter");
+                            IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
+                            if (enabled)
+                            {
+                                param.EnableControl(shared);
+                            }
+                            else
+                            {
+                                param.DisableControl(shared);
+                            }
+                            return;
+                        }
+                        if (RemoteTechHook.IsAvailable(control.Vessel.id))
+                        {
+                            HandleRemoteTechPilot();
+                        }
                     }
                 }
             }
@@ -437,16 +563,14 @@ namespace kOS.Binding
 
             private void SteerByWire(FlightCtrlState c)
             {
-                if (!Enabled) return;
-                if (steeringManager.Enabled)
+                IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");
+                if (Enabled)
                 {
-                    steeringManager.Value = value;
-                    steeringManager.OnFlyByWire(c);
+                    if (!param.Enabled) param.EnableControl(shared);
                 }
                 else
                 {
-                    Enabled = false;
-                    ClearValue();
+                    if (param.Enabled && param.ControlPartId == shared.KSPPart.flightID) param.DisableControl(shared);
                 }
             }
 
@@ -502,21 +626,11 @@ namespace kOS.Binding
             public void Dispose()
             {
                 Enabled = false;
-                if (steeringManager != null)
-                {
-                    SteeringManagerProvider.RemoveInstance(shared.Vessel);
-                    steeringManager = null;
-                }
             }
 
             public void UpdateFlightControl(Vessel vessel)
             {
                 control = GetControllerByVessel(vessel);
-                if (steeringManager != null)
-                {
-                    steeringManager = SteeringManagerProvider.SwapInstance(shared, steeringManager);
-                    steeringManager.Update(vessel);
-                }
             }
             
             public override string ToString() // added to aid in debugging.

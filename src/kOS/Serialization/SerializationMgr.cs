@@ -12,16 +12,10 @@ namespace kOS.Serialization
     {
         private readonly SharedObjects sharedObjects;
 
-        static SerializationMgr()
+        public SerializationMgr(SharedObjects sharedObjects) : base(sharedObjects)
         {
             SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
         }
-
-        public SerializationMgr(SharedObjects sharedObjects)
-        {
-            this.sharedObjects = sharedObjects;
-        }
-
 
         public override IDumper CreateAndLoad(string typeFullName, Dump data)
         {
@@ -30,6 +24,11 @@ namespace kOS.Serialization
             if (instance is IHasSharedObjects)
             {
                 IHasSharedObjects withSharedObjects = instance as IHasSharedObjects;
+                withSharedObjects.Shared = sharedObjects;
+            }
+            else if (instance is IHasSafeSharedObjects)
+            {
+                IHasSafeSharedObjects withSharedObjects = instance as IHasSafeSharedObjects;
                 withSharedObjects.Shared = sharedObjects;
             }
 

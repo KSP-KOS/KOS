@@ -12,6 +12,12 @@ this example::
     local print_a_thing is myfunc@. // <--- Note the at-sign '@'.
     // print_a_thing is now a KOSDelegate of myfunc.
 
+You also get a `KOSDelegate` when you use the
+:ref:`Anonymous function <anonymous_functions>` syntax like so::
+
+    set del1 to { print "hello, there". }.
+    // del1 is now a KOSDelegate.
+
 A KOSDelegate is a reference to the function that can be used to
 call the function later elsewhere in the code.
 
