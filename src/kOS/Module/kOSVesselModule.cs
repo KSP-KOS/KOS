@@ -216,15 +216,6 @@ namespace kOS.Module
             {
                 parentVessel.OnPreAutopilotUpdate += UpdateAutopilot;
             }
-            GameEvents.onPartCouple.Add(OnDocking);
-        }
-
-        private void OnDocking(GameEvents.FromToAction<Part, Part> data)
-        {
-            if (data.from.vessel == parentVessel)
-            {
-                Destroy(this);
-            }
         }
 
         /// <summary>
@@ -240,7 +231,6 @@ namespace kOS.Module
             {
                 parentVessel.OnPreAutopilotUpdate -= UpdateAutopilot;
             }
-            GameEvents.onPartCouple.Remove(OnDocking);
         }
 
         /// <summary>
