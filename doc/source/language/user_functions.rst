@@ -96,12 +96,12 @@ example::
     }.
 
     // An example of calling it:
-    
+
     print_corner(4,"That's me in the corner").
 
 A declare function command can appear anywhere in a kerboscript program,
 and once its been "parsed" by the compiler, the function can be called
-from anywhere in the program.  
+from anywhere in the program.
 
 The best design pattern is probably to create your library of function
 calls as one or more separate .ks files that contain just function
@@ -112,25 +112,26 @@ programs.  At the top of your main script you can then "run" the
 other scripts containing the library of functions to get them
 compiled into memory.
 
-Using RUN ONCE
---------------
+Using RUN ONCE or RUNONCEPATH
+-----------------------------
 
 If you want to load a library of functions that ALSO perform some
 initialization mainline code, but you only want the mainline code
-to execute once when the library is first loaded, rather than 
+to execute once when the library is first loaded, rather than
 every time a subprogram runs your library, then use the 'once'
-keyword with the run command as follows::
+keyword with the RUN command, or the RUNONCEPATH command, as
+follows::
 
     // This will run mylib1 3 times, re-running the mainline code in it:`
     run mylib1.
     run mylib1.
-    run mylib1.
+    runpath("mylib1"). // just the same thing as 'run mylib1', really.
 
     // This will run mylib2 only one time, ignoring the additional
     // instances:
     run once mylib2.
     run once mylib2. // mylib2 was already run, will not be run again.
-    run once mylib2. // mylib2 was already run, will not be run again.
+    runoncepath("mylib2"). // mylib2 was already run, will not be run again.
 
 Example:  Let's say you want to have a library that keeps a counter
 and always returns the next number up every time it's called.  You
@@ -152,13 +153,13 @@ another sub-program includes the library in its code.  So you have this:
 **subprogram, which ALSO calls counterlib:** ::
 
     // subprogram
-    run once counterlib.
+    runoncepath("counterlib"). // same as 'run once counterlib.'
 
     print "subprogram: next counter ID = " + counter_next().
     print "subprogram: next counter ID = " + counter_next().
     print "subprogram: next counter ID = " + counter_next().
 
-    
+
 **counterlib** ::
 
     // init code:
@@ -180,7 +181,7 @@ The above example prints this::
     subprogram: next counter ID = 4
     subprogram: next counter ID = 5
     subprogram: next counter ID = 6
-    
+
 whereas, had you used just ``run counterlib.`` instead of
 ``run once counterlib.``, then it would have printed this::
 
@@ -193,7 +194,7 @@ whereas, had you used just ``run counterlib.`` instead of
 
 .. highlight:: kerboscript
 
-because ``subprogram`` would have run the mainline code 
+because ``subprogram`` would have run the mainline code
 ``global current_num is 0`` again when it was run inside
 ``subprogram``.
 
@@ -277,7 +278,7 @@ in the ``PARAMETER`` statement, like in the examples below::
 
 Whenever arguments are missing, the system always makes up the difference by
 using defaults for the lastmost parameters until the correct number have been
-padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's 
+padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's
 the last argument, P4, that gets defaulted, but P3 does not.  But if you call
 it with 2 arguments, both P4 and P3 get defaulted.)
 
@@ -331,7 +332,7 @@ get very strange and (seemingly) inexplicable errors.
 
 In the future we may find a way to fix this problem,
 but for right now, just don't do it.
-    
+
 Calling a function without parentheses (please don't)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -344,7 +345,7 @@ parentheses off, as shown below, but this is not recommended::
 
     example_function. // please don't do this, even if it works.
 
-This is a holdover from the fact that functions and locks are 
+This is a holdover from the fact that functions and locks are
 really the same thing, and you need to be able to call a lock
 without the parentheses for old scripts written prior to kOS
 version 0.17.0 to continue working.
@@ -383,7 +384,7 @@ If your function needs to make a local variable, it can do so using
 the :ref:`DECLARE <declare>` command.  Whenever the DECLARE command is
 seen inside a function, the compiler assumes the variable is meant to
 be local to that function's block.  This also works with recursion.
-If you recursively call a function again and again, there will be 
+If you recursively call a function again and again, there will be
 new copies stacked up of all the local variables made with DECLARE,
 but not of the variables implicitly made global without DECLARE.
 
@@ -403,7 +404,7 @@ This is now **illegal** syntax::
 .. warning::
   .. versionadded:: 0.17
     **Breaking Change:** The kerboscript from prior versions
-    of kOS did allow you do make ``declare`` statements 
+    of kOS did allow you do make ``declare`` statements
     without any initializers in them (and in fact you couldn't
     provide an initializer for them in prior versions even if
     you wanted to.)
@@ -446,7 +447,7 @@ RETURN
 examples::
 
     return 3*x.
-    
+
     return.
 
 If your function needs to exit early, and/or if it needs to pass a
@@ -476,7 +477,7 @@ Passing by value
 ----------------
 
 Parameters to user functions in kerboscript are all pass-by-value, with
-an important caveat.  "Pass by value" means that the function is 
+an important caveat.  "Pass by value" means that the function is
 working on a copy of the variable you passed in, rather than the
 original variable.  This matters when the function tries to change the
 value of the parameter, as in this example::
@@ -488,7 +489,7 @@ value of the parameter, as in this example::
 
       print "x has been embiggened to " + x.
     }.
-    
+
     set global_val to 30.
     print global_val.
     embiggen(global_val).
@@ -505,7 +506,7 @@ The above example will print::
 
 .. highlight:: kerboscript
 
-Although the function added 10 to its OWN copy of the parameter, the 
+Although the function added 10 to its OWN copy of the parameter, the
 caller's copy of the parameter remained unchanged.
 
 Important exception to passing by value - structures
@@ -544,7 +545,7 @@ This will give the following result::
 
 .. highlight:: kerboscript
 
-Because a vector is a suffixed structure, it effectively acts as if 
+Because a vector is a suffixed structure, it effectively acts as if
 it was passed in by reference instead of by value, and so when it
 was changed in the function, the caller's original copy is what was
 being changed.
@@ -555,7 +556,7 @@ will find this behavior very familiar.  Only primitives are passed by
 value.  Structures are passed by their reference rather than trying to
 make a deep copy of the object for the function to use.
 
-*This behavior is inherited from the fact that kerboscript is 
+*This behavior is inherited from the fact that kerboscript is
 implemented on top of C#, which is one of several OOP languages that
 work like this.*
 
@@ -640,7 +641,7 @@ the same function, as in the example here::
 
     // A badly designed function, with inconsistency
     // in whether or not it returns a value:
-    // 
+    //
     DECLARE FUNCTION foo {
        DECLARE PARAMETER x.
        IF X < 0 {
@@ -683,8 +684,8 @@ For example::
       return sum / the_list:length.
     }.
 
-The above example contains a typo that causes a global variable to be 
-made where you didn't mean to.  You wanted to say "sum" but said "dum" 
+The above example contains a typo that causes a global variable to be
+made where you didn't mean to.  You wanted to say "sum" but said "dum"
 and instead of that being an error, kerboscript happily said "okay,
 well since you're setting a variable name that doesn't exist yet,
 I'll make it for you implicitly" (and it ends up being a global).
@@ -696,7 +697,7 @@ declaring them first.  Most such languages have provided a way to
 catch the problem, and allow you to instruct the compiler "please
 don't let me do that.  Please force me to declare everything".
 
-The way that is done in kerboscript is by using a ``@LAZYGLOBAL`` 
+The way that is done in kerboscript is by using a ``@LAZYGLOBAL``
 compiler directive, :ref:`as described here <lazyglobal>`.
 
 Had the function above been compiled under a ``@LAZYGLOBAL off.``
@@ -714,4 +715,3 @@ compiler directive, the typo would be noticed::
 
       return sum / the_list:length.
     }.
-
