@@ -168,7 +168,9 @@ namespace kOS.Safe.Compilation
         /// </summary>
         private static Dictionary<object,int> argumentPackFinder;
         
-        private static string previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+        private const string LABEL_INIT = "######"; // bogus value that is ensured to differ from any real value the first time through.
+
+        private static string previousLabel = LABEL_INIT;
 
         /// <summary>
         /// Returns the compiled program's opcodes packed into a tight form, that is a direct
@@ -185,7 +187,7 @@ namespace kOS.Safe.Compilation
             argumentPackLogicalLength = 0; // nothing in the argumentPack yet.
             argumentPackFinder = new Dictionary<object,int>();
             lineMap = new DebugLineMap();
-            previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+            previousLabel = LABEL_INIT;
 
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
@@ -208,6 +210,7 @@ namespace kOS.Safe.Compilation
 
             headBuff.AddRange(truncatedArgumentPack);
 
+            previousLabel = LABEL_INIT;
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
                 CodePart codePart = program[index];                // --'    can print the index in debugging.
@@ -487,8 +490,8 @@ namespace kOS.Safe.Compilation
             int argIndexSize;
             Dictionary<int,object> arguments = ReadArgumentPack(reader, out argIndexSize);
             lineMap = new DebugLineMap();
-            
-            previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+
+            previousLabel = LABEL_INIT;
 
             int codeStart = 0;
             
