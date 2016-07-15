@@ -556,7 +556,6 @@ namespace kOS.Safe.Compilation
             bool sectionEnded = false;
             while (reader.BaseStream.Position < reader.BaseStream.Length && !(sectionEnded))
             {
-                int offsetLocation = (int)(reader.BaseStream.Position) - startPos;
                 
                 byte argTypeId = reader.ReadByte();
                 Type argCSharpType;
