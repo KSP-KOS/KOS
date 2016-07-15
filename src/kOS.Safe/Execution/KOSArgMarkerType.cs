@@ -10,6 +10,13 @@ namespace kOS.Safe.Execution
     /// </summary>
     public class KOSArgMarkerType
     {
+        // all instances of KOSArgMarkerType should be considered identical:
+        public override bool Equals(object o)
+        {
+            return o is KOSArgMarkerType;
+        }
+
+        public override int GetHashCode() { return 0; }
         public override string ToString()
         {
             return "_KOSArgMarker_";
