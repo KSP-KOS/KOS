@@ -6,7 +6,6 @@ using kOS.Suffixed.PartModuleField;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -86,8 +85,10 @@ namespace kOS.AddOns.RemoteTech
                 else
                 {
                     IEnumerable<string> groundStations = api.GetGroundStations();
-                    foreach (var groundStation in groundStations) {
-                        if (guid.Equals(api.GetGroundStationGuid(groundStation))) {
+                    foreach (var groundStation in groundStations)
+                    {
+                        if (guid.Equals(api.GetGroundStationGuid(groundStation)))
+                        {
                             return new StringValue(groundStation);
                         }
                     }
@@ -132,8 +133,10 @@ namespace kOS.AddOns.RemoteTech
                 else
                 {
                     IEnumerable<string> groundStations = api.GetGroundStations();
-                    foreach (var groundStation in groundStations) {
-                        if (targetString.Equals(groundStation)) {
+                    foreach (var groundStation in groundStations)
+                    {
+                        if (targetString.Equals(groundStation))
+                        {
                             return api.GetGroundStationGuid(groundStation);
                         }
                     }
@@ -175,10 +178,9 @@ namespace kOS.AddOns.RemoteTech
                 return targetVessel.Vessel.id;
             }
 
-            throw new KOSInvalidFieldValueException("Acceptable values are: '" + NoTargetString + "', '" + ActiveVesselString +
-                "', name of a ground station, name of a body, name of a vessel, Body, Vessel");
+            throw new KOSInvalidFieldValueException("Acceptable values are: \"" + NoTargetString + "\", \"" + ActiveVesselString +
+                "\", name of a ground station, name of a body, name of a vessel, Body, Vessel");
         }
-
 
         protected override void SetKSPFieldValue(StringValue suffixName, Structure newValue)
         {
@@ -193,6 +195,5 @@ namespace kOS.AddOns.RemoteTech
                 base.SetKSPFieldValue(suffixName, newValue);
             }
         }
-
     }
 }
