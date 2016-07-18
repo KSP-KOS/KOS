@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
@@ -23,8 +24,9 @@ namespace kOS.Module
             BuildLogger();
 
             CheckForLegacyArchive();
-
-            AssemblyWalkAttribute.Walk();
+            
+            var assemblies = AssemblyLoader.loadedAssemblies.Where(a => a.dllName.StartsWith("kOS.") || a.dependencies.Where(d => d.name.Equals("kOS")).Any()).Select(a => a.assembly).ToArray();
+            AssemblyWalkAttribute.Walk(assemblies);
         }
 
         private void BuildEnvironment()
