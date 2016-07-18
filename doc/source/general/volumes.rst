@@ -185,7 +185,7 @@ migration.
         the archive root, and finally it will check the boot directory again
         after stripping :code:`boot` or :code:`boot_` from the beginning of the name.
         Vessels in flight will continue to work with the existing structure, so
-        long as :attr:`CONFIG:ARCH` is set to false.  If:attr:`CONFIG:ARCH` is
+        long as :attr:`CONFIG:ARCH` is set to false.  If :attr:`CONFIG:ARCH` is
         set to true, you will need to leave copies of the originally named boot
         files in your archive root for ships already in flight to access.
 
