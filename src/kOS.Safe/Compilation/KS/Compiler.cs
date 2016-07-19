@@ -1267,10 +1267,18 @@ namespace kOS.Safe.Compilation.KS
                 Opcode skipPastFunctionBody = AddOpcode(new OpcodeBranchJump());
                 string functionStartLabel = GetNextLabel(false);
                 
+                needImplicitReturn = true;
                 nextBraceIsFunction = true;
                 VisitNode(node.Nodes[0]); // the braces of the anonymous function and its contents get compiled in-line here.
                 nextBraceIsFunction = false;
-
+                if (needImplicitReturn)
+                    // needImplicitReturn is unconditionally true here, but it's being used anyway so we'll find this block
+                    // of code later when we search for "all the places using needImplicitReturn" and perform a refactor
+                    // of the logic for adding implicit returns.
+                {
+                    AddOpcode(new OpcodePush(0)); // Functions must push a dummy return val when making implicit returns. Locks already leave an expr atop the stack.
+                    AddOpcode(new OpcodeReturn(0));
+                }
                 Opcode afterFunctionBody = AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionStartLabel);
                 skipPastFunctionBody.DestinationLabel = afterFunctionBody.Label;
             }
