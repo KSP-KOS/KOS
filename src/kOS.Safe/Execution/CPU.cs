@@ -1310,7 +1310,7 @@ namespace kOS.Safe.Execution
             GlobalPath currentSourcePath = currentContext.Program[currentContext.InstructionPointer].SourcePath;
 
             while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                currentContext.Program[currentContext.InstructionPointer].SourcePath == currentSourcePath)
+                   currentSourcePath.Equals(currentContext.Program[currentContext.InstructionPointer].SourcePath))
             {
                 currentContext.InstructionPointer++;
             }

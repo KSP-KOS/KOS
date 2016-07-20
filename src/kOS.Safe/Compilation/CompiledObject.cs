@@ -471,7 +471,8 @@ namespace kOS.Safe.Compilation
         /// Given a packed representation of the program, load it back into program form:
         /// </summary>
         /// <param name="path">path of file (with preceeding "volume:") that the program came from, for runtime error reporting.</param>
-        /// <param name="prefix">prepend this string to all labels in this program.</param>
+        /// <param name="prefix">prepend this string to all labels in this program, with the exception
+        /// of when this program is calling the @LR LoadRunner labels.</param>
         /// <param name="content">the file itself in ony big binary array.</param>
         /// <returns></returns>
         public static List<CodePart> UnPack(GlobalPath path, string prefix, byte[] content)
@@ -529,7 +530,7 @@ namespace kOS.Safe.Compilation
             }
             reader.Close();
 
-            PostReadProcessing(program, path, prefix, lineMap);
+            PostReadProcessing(program, path, lineMap);
                                                   
             return program;
         }
@@ -580,9 +581,8 @@ namespace kOS.Safe.Compilation
         /// </summary>
         /// <param name="program">recently built program parts to re-assign.</param>
         /// <param name="path">path of file (with preceeding volume:) that the compiled code came from, for rutime error reporting purposes.</param>
-        /// <param name="prefix">a string to prepend to the labels in the program.</param>
         /// <param name="lineMap">describes the mapping of line numbers to code locations.</param>
-        private static void PostReadProcessing(IEnumerable<CodePart> program, GlobalPath path, string prefix, DebugLineMap lineMap)
+        private static void PostReadProcessing(IEnumerable<CodePart> program, GlobalPath path, DebugLineMap lineMap)
         {
             //TODO:prefix is never used.
             SortedList<IntRange,int> lineLookup = lineMap.BuildInverseLookup();
@@ -665,7 +665,8 @@ namespace kOS.Safe.Compilation
         /// <param name="reader">binary reader to read from.</param>
         /// <param name="codeStartPos">index into the stream where the first code block in the ML file started,
         /// for calculating indeces.</param>
-        /// <param name="prefix">prefix to prepend to all labels within this program.</param>
+        /// <param name="prefix">prefix to prepend to all labels within this program, with the
+        /// exception of cases where this program is calling the @LR load runner labels.</param>
         /// <param name="arguments">argument dictionary to pull arguments from.</param>
         /// <param name="argIndexSize">number of bytes the argument indeces are packed into.</param>
         /// <returns>list of opcodes generated</returns>
@@ -705,7 +706,11 @@ namespace kOS.Safe.Compilation
                     if (argInfo.NeedReindex)
                     {                                              
                         val = arguments[argIndex];
-                        if ( val is string && ((string)val).StartsWith("@") && (((string)val).Length > 1) )
+                        if (val is string &&
+                            ((string)val).StartsWith("@") &&
+                            (((string)val).Length > 1) &&
+                            !((string)val).StartsWith("@LR") // Do not re-assign calls to the LoadRunner global label that resides outside this KSM file.
+                           )
                         {
                             val = "@" + prefix + "_" + ((string)val).Substring(1);
                         }
