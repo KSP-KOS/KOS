@@ -9,6 +9,11 @@ namespace kOS.Safe.Execution
         {
 
         }
+        
+        public InternalPath(string volumeId) : base(volumeId)
+        {
+
+        }
 
         public abstract string Line(int line);
     }
