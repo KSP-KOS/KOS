@@ -40,7 +40,7 @@ namespace kOS.Function
                     list = shared.Vessel.PartList(listType, shared);
                     break;
                 case "files":
-                    list = ListValue.CreateList(shared.VolumeMgr.CurrentVolume.ListAsLexicon().Values.ToList());
+                    list = ListValue.CreateList(shared.VolumeMgr.CurrentDirectory.ListAsLexicon().Values.ToList());
                     break;
                 case "volumes":
                     list = ListValue.CreateList(shared.VolumeMgr.Volumes.Values.ToList());
