@@ -211,7 +211,7 @@ HASTARGET, HASNODE
 ::::::::::::::::::
 
 :ref:`HASTARGET <hastarget>`.
-:ref:`HASNODE <hasnode>`.
+:global:`HASNODE`.
 
 JOIN
 ::::

@@ -51,8 +51,9 @@ namespace kOS.Safe.Compilation.KS
 
 
              // Concat Rule
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
-            while (tok.Type == TokenType.SET
+            tok = scanner.LookAhead(TokenType.EOI, TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.RUNPATH, TokenType.RUNONCEPATH, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
+            while (tok.Type == TokenType.EOI
+                || tok.Type == TokenType.SET
                 || tok.Type == TokenType.IF
                 || tok.Type == TokenType.UNTIL
                 || tok.Type == TokenType.FROM
@@ -82,6 +83,8 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.DELETE
                 || tok.Type == TokenType.EDIT
                 || tok.Type == TokenType.RUN
+                || tok.Type == TokenType.RUNPATH
+                || tok.Type == TokenType.RUNONCEPATH
                 || tok.Type == TokenType.COMPILE
                 || tok.Type == TokenType.LIST
                 || tok.Type == TokenType.REBOOT
@@ -99,7 +102,7 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.ATSIGN)
             {
                 Parseinstruction(node); // NonTerminal Rule: instruction
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
+            tok = scanner.LookAhead(TokenType.EOI, TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.RUNPATH, TokenType.RUNONCEPATH, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
             }
 
              // Concat Rule
@@ -134,8 +137,9 @@ namespace kOS.Safe.Compilation.KS
             }
 
              // Concat Rule
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
-            while (tok.Type == TokenType.SET
+            tok = scanner.LookAhead(TokenType.EOI, TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.RUNPATH, TokenType.RUNONCEPATH, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
+            while (tok.Type == TokenType.EOI
+                || tok.Type == TokenType.SET
                 || tok.Type == TokenType.IF
                 || tok.Type == TokenType.UNTIL
                 || tok.Type == TokenType.FROM
@@ -165,6 +169,8 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.DELETE
                 || tok.Type == TokenType.EDIT
                 || tok.Type == TokenType.RUN
+                || tok.Type == TokenType.RUNPATH
+                || tok.Type == TokenType.RUNONCEPATH
                 || tok.Type == TokenType.COMPILE
                 || tok.Type == TokenType.LIST
                 || tok.Type == TokenType.REBOOT
@@ -182,7 +188,7 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.ATSIGN)
             {
                 Parseinstruction(node); // NonTerminal Rule: instruction
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
+            tok = scanner.LookAhead(TokenType.EOI, TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.RUNPATH, TokenType.RUNONCEPATH, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // ZeroOrMore Rule
             }
 
              // Concat Rule
@@ -195,20 +201,6 @@ namespace kOS.Safe.Compilation.KS
                 return;
             }
 
-             // Concat Rule
-            tok = scanner.LookAhead(TokenType.EOI); // Option Rule
-            if (tok.Type == TokenType.EOI)
-            {
-                tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.EOI) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
-                    return;
-                }
-            }
-
             parent.Token.UpdateRange(node.Token);
         } // NonTerminalSymbol: instruction_block
 
@@ -219,9 +211,12 @@ namespace kOS.Safe.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.instruction), "instruction");
             parent.Nodes.Add(node);
 
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // Choice Rule
+            tok = scanner.LookAhead(TokenType.EOI, TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.FROM, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.PARAMETER, TokenType.FUNCTION, TokenType.LOCK, TokenType.DECLARE, TokenType.LOCAL, TokenType.GLOBAL, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.RUNPATH, TokenType.RUNONCEPATH, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN); // Choice Rule
             switch (tok.Type)
             { // Choice Rule
+                case TokenType.EOI:
+                    Parseempty_stmt(node); // NonTerminal Rule: empty_stmt
+                    break;
                 case TokenType.SET:
                     Parseset_stmt(node); // NonTerminal Rule: set_stmt
                     break;
@@ -302,6 +297,12 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.RUN:
                     Parserun_stmt(node); // NonTerminal Rule: run_stmt
                     break;
+                case TokenType.RUNPATH:
+                    Parserunpath_stmt(node); // NonTerminal Rule: runpath_stmt
+                    break;
+                case TokenType.RUNONCEPATH:
+                    Parserunoncepath_stmt(node); // NonTerminal Rule: runoncepath_stmt
+                    break;
                 case TokenType.COMPILE:
                     Parsecompile_stmt(node); // NonTerminal Rule: compile_stmt
                     break;
@@ -336,7 +337,7 @@ namespace kOS.Safe.Compilation.KS
                     Parsedirective(node); // NonTerminal Rule: directive
                     break;
                 default:
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected SET, IF, UNTIL, FROM, UNLOCK, PRINT, ON, TOGGLE, WAIT, WHEN, STAGE, CLEARSCREEN, ADD, REMOVE, LOG, BREAK, PRESERVE, PARAMETER, FUNCTION, LOCK, DECLARE, LOCAL, GLOBAL, RETURN, SWITCH, COPY, RENAME, DELETE, EDIT, RUN, COMPILE, LIST, REBOOT, SHUTDOWN, FOR, UNSET, CURLYOPEN, INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, BRACKETOPEN, STRING, or ATSIGN.", 0x0002, tok));
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected EOI, SET, IF, UNTIL, FROM, UNLOCK, PRINT, ON, TOGGLE, WAIT, WHEN, STAGE, CLEARSCREEN, ADD, REMOVE, LOG, BREAK, PRESERVE, PARAMETER, FUNCTION, LOCK, DECLARE, LOCAL, GLOBAL, RETURN, SWITCH, COPY, RENAME, DELETE, EDIT, RUN, RUNPATH, RUNONCEPATH, COMPILE, LIST, REBOOT, SHUTDOWN, FOR, UNSET, CURLYOPEN, INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, BRACKETOPEN, STRING, or ATSIGN.", 0x0002, tok));
                     break;
             } // Choice Rule
 
@@ -398,6 +399,25 @@ namespace kOS.Safe.Compilation.KS
 
             parent.Token.UpdateRange(node.Token);
         } // NonTerminalSymbol: directive
+
+        private void Parseempty_stmt(ParseNode parent) // NonTerminalSymbol: empty_stmt
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.empty_stmt), "empty_stmt");
+            parent.Nodes.Add(node);
+
+            tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.EOI) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
+                return;
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        } // NonTerminalSymbol: empty_stmt
 
         private void Parseset_stmt(ParseNode parent) // NonTerminalSymbol: set_stmt
         {
@@ -471,6 +491,20 @@ namespace kOS.Safe.Compilation.KS
             Parseinstruction(node); // NonTerminal Rule: instruction
 
              // Concat Rule
+            tok = scanner.LookAhead(TokenType.EOI); // Option Rule
+            if (tok.Type == TokenType.EOI)
+            {
+                tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.EOI) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
+                    return;
+                }
+            }
+
+             // Concat Rule
             tok = scanner.LookAhead(TokenType.ELSE); // Option Rule
             if (tok.Type == TokenType.ELSE)
             {
@@ -487,19 +521,19 @@ namespace kOS.Safe.Compilation.KS
 
                  // Concat Rule
                 Parseinstruction(node); // NonTerminal Rule: instruction
-            }
 
-             // Concat Rule
-            tok = scanner.LookAhead(TokenType.EOI); // Option Rule
-            if (tok.Type == TokenType.EOI)
-            {
-                tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.EOI) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
-                    return;
+                 // Concat Rule
+                tok = scanner.LookAhead(TokenType.EOI); // Option Rule
+                if (tok.Type == TokenType.EOI)
+                {
+                    tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.EOI) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
+                        return;
+                    }
                 }
             }
 
@@ -1715,7 +1749,7 @@ namespace kOS.Safe.Compilation.KS
             }
 
              // Concat Rule
-            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING); // Option Rule
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.CURLYOPEN); // Option Rule
             if (tok.Type == TokenType.PLUSMINUS
                 || tok.Type == TokenType.NOT
                 || tok.Type == TokenType.DEFINED
@@ -1725,7 +1759,8 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.IDENTIFIER
                 || tok.Type == TokenType.FILEIDENT
                 || tok.Type == TokenType.BRACKETOPEN
-                || tok.Type == TokenType.STRING)
+                || tok.Type == TokenType.STRING
+                || tok.Type == TokenType.CURLYOPEN)
             {
                 Parseexpr(node); // NonTerminal Rule: expr
             }
@@ -2054,14 +2089,33 @@ namespace kOS.Safe.Compilation.KS
             }
 
              // Concat Rule
-            tok = scanner.Scan(TokenType.FILEIDENT); // Terminal Rule: FILEIDENT
-            n = node.CreateNode(tok, tok.ToString() );
-            node.Token.UpdateRange(tok);
-            node.Nodes.Add(n);
-            if (tok.Type != TokenType.FILEIDENT) {
-                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.FILEIDENT.ToString(), 0x1001, tok));
-                return;
-            }
+            tok = scanner.LookAhead(TokenType.FILEIDENT, TokenType.STRING); // Choice Rule
+            switch (tok.Type)
+            { // Choice Rule
+                case TokenType.FILEIDENT:
+                    tok = scanner.Scan(TokenType.FILEIDENT); // Terminal Rule: FILEIDENT
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.FILEIDENT) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.FILEIDENT.ToString(), 0x1001, tok));
+                        return;
+                    }
+                    break;
+                case TokenType.STRING:
+                    tok = scanner.Scan(TokenType.STRING); // Terminal Rule: STRING
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.STRING) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRING.ToString(), 0x1001, tok));
+                        return;
+                    }
+                    break;
+                default:
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected FILEIDENT or STRING.", 0x0002, tok));
+                    break;
+            } // Choice Rule
 
              // Concat Rule
             tok = scanner.LookAhead(TokenType.BRACKETOPEN); // Option Rule
@@ -2123,6 +2177,152 @@ namespace kOS.Safe.Compilation.KS
 
             parent.Token.UpdateRange(node.Token);
         } // NonTerminalSymbol: run_stmt
+
+        private void Parserunpath_stmt(ParseNode parent) // NonTerminalSymbol: runpath_stmt
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.runpath_stmt), "runpath_stmt");
+            parent.Nodes.Add(node);
+
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.RUNPATH); // Terminal Rule: RUNPATH
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.RUNPATH) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.RUNPATH.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.BRACKETOPEN) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            Parseexpr(node); // NonTerminal Rule: expr
+
+             // Concat Rule
+            tok = scanner.LookAhead(TokenType.COMMA); // Option Rule
+            if (tok.Type == TokenType.COMMA)
+            {
+
+                 // Concat Rule
+                tok = scanner.Scan(TokenType.COMMA); // Terminal Rule: COMMA
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.COMMA) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COMMA.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                 // Concat Rule
+                Parsearglist(node); // NonTerminal Rule: arglist
+            }
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.BRACKETCLOSE) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.EOI) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
+                return;
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        } // NonTerminalSymbol: runpath_stmt
+
+        private void Parserunoncepath_stmt(ParseNode parent) // NonTerminalSymbol: runoncepath_stmt
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.runoncepath_stmt), "runoncepath_stmt");
+            parent.Nodes.Add(node);
+
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.RUNONCEPATH); // Terminal Rule: RUNONCEPATH
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.RUNONCEPATH) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.RUNONCEPATH.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.BRACKETOPEN) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            Parseexpr(node); // NonTerminal Rule: expr
+
+             // Concat Rule
+            tok = scanner.LookAhead(TokenType.COMMA); // Option Rule
+            if (tok.Type == TokenType.COMMA)
+            {
+
+                 // Concat Rule
+                tok = scanner.Scan(TokenType.COMMA); // Terminal Rule: COMMA
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.COMMA) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COMMA.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                 // Concat Rule
+                Parsearglist(node); // NonTerminal Rule: arglist
+            }
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.BRACKETCLOSE) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+                return;
+            }
+
+             // Concat Rule
+            tok = scanner.Scan(TokenType.EOI); // Terminal Rule: EOI
+            n = node.CreateNode(tok, tok.ToString() );
+            node.Token.UpdateRange(tok);
+            node.Nodes.Add(n);
+            if (tok.Type != TokenType.EOI) {
+                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOI.ToString(), 0x1001, tok));
+                return;
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        } // NonTerminalSymbol: runoncepath_stmt
 
         private void Parsecompile_stmt(ParseNode parent) // NonTerminalSymbol: compile_stmt
         {
@@ -2474,6 +2674,39 @@ namespace kOS.Safe.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.expr), "expr");
             parent.Nodes.Add(node);
 
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.CURLYOPEN); // Choice Rule
+            switch (tok.Type)
+            { // Choice Rule
+                case TokenType.PLUSMINUS:
+                case TokenType.NOT:
+                case TokenType.DEFINED:
+                case TokenType.INTEGER:
+                case TokenType.DOUBLE:
+                case TokenType.TRUEFALSE:
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                case TokenType.BRACKETOPEN:
+                case TokenType.STRING:
+                    Parseor_expr(node); // NonTerminal Rule: or_expr
+                    break;
+                case TokenType.CURLYOPEN:
+                    Parseinstruction_block(node); // NonTerminal Rule: instruction_block
+                    break;
+                default:
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected PLUSMINUS, NOT, DEFINED, INTEGER, DOUBLE, TRUEFALSE, IDENTIFIER, FILEIDENT, BRACKETOPEN, STRING, or CURLYOPEN.", 0x0002, tok));
+                    break;
+            } // Choice Rule
+
+            parent.Token.UpdateRange(node.Token);
+        } // NonTerminalSymbol: expr
+
+        private void Parseor_expr(ParseNode parent) // NonTerminalSymbol: or_expr
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.or_expr), "or_expr");
+            parent.Nodes.Add(node);
+
 
              // Concat Rule
             Parseand_expr(node); // NonTerminal Rule: and_expr
@@ -2499,7 +2732,7 @@ namespace kOS.Safe.Compilation.KS
             }
 
             parent.Token.UpdateRange(node.Token);
-        } // NonTerminalSymbol: expr
+        } // NonTerminalSymbol: or_expr
 
         private void Parseand_expr(ParseNode parent) // NonTerminalSymbol: and_expr
         {
@@ -2870,7 +3103,7 @@ namespace kOS.Safe.Compilation.KS
                     }
 
                      // Concat Rule
-                    tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING); // Option Rule
+                    tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.DEFINED, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.CURLYOPEN); // Option Rule
                     if (tok.Type == TokenType.PLUSMINUS
                         || tok.Type == TokenType.NOT
                         || tok.Type == TokenType.DEFINED
@@ -2880,7 +3113,8 @@ namespace kOS.Safe.Compilation.KS
                         || tok.Type == TokenType.IDENTIFIER
                         || tok.Type == TokenType.FILEIDENT
                         || tok.Type == TokenType.BRACKETOPEN
-                        || tok.Type == TokenType.STRING)
+                        || tok.Type == TokenType.STRING
+                        || tok.Type == TokenType.CURLYOPEN)
                     {
                         Parsearglist(node); // NonTerminal Rule: arglist
                     }

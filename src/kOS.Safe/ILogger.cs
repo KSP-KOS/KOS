@@ -8,6 +8,7 @@ namespace kOS.Safe
         void Log(Exception e);
         void SuperVerbose(string s);
         void LogWarning(string s);
+        void LogWarningAndScreen(string s);
         void LogException(Exception exception);
         void LogError(string s);
     }

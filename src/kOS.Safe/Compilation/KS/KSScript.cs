@@ -1,5 +1,6 @@
 using kOS.Safe.Exceptions;
 using System.Collections.Generic;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -17,7 +18,7 @@ namespace kOS.Safe.Compilation.KS
             contexts = new Dictionary<string, Context>();
         }
 
-        public override List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options)
+        public override List<CodePart> Compile(GlobalPath filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options)
         {
             var parts = new List<CodePart>();
             ParseTree parseTree = parser.Parse(scriptText);
@@ -84,12 +85,12 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void AssignSourceId(IEnumerable<CodePart> parts, string fileName)
+        private void AssignSourceId(IEnumerable<CodePart> parts, GlobalPath filePath)
         {
-            currentContext.LastSourceName = fileName;
+            currentContext.LastSourcePath = filePath;
             foreach (CodePart part in parts)
             {
-                part.AssignSourceName(currentContext.LastSourceName);
+                part.AssignSourceName(currentContext.LastSourcePath);
             }
         }
 

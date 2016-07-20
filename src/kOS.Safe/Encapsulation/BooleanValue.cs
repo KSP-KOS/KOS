@@ -5,7 +5,7 @@ using System.Reflection;
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Boolean")]
-    public class BooleanValue : Structure, IConvertible
+    public class BooleanValue : PrimitiveStructure, IConvertible
     {
         private readonly bool internalValue;
 
@@ -20,6 +20,11 @@ namespace kOS.Safe.Encapsulation
         public void InitializeSuffixes()
         {
             // TODO: Add suffixes as needed
+        }
+
+        public override object ToPrimitive()
+        {
+            return Value;
         }
 
         public override string ToString()

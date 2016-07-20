@@ -53,6 +53,7 @@ namespace kOS.Suffixed
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
             AddSuffix("HASNEXTPATCH", new Suffix<BooleanValue>(GetHasNextPatch));
+            AddSuffix("NEXTPATCHETA", new Suffix<ScalarValue>(GetNextPatchETA));
 
             //TODO: Determine if these vectors are different than POSITION and VELOCITY
             AddSuffix("VSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.vel)));
@@ -105,6 +106,19 @@ namespace kOS.Suffixed
         private OrbitInfo GetNextPatch()
         {
             return ! GetHasNextPatch() ? null : new OrbitInfo(orbit.nextPatch,Shared);
+        }
+
+        /// <summary>
+        /// Returns the ETA of when the nextpatch will happen
+        /// </summary>
+        /// <returns>A double representing the ETA in seconds, or a zero if there isn't any.</returns>
+        private ScalarValue GetNextPatchETA()
+        {
+            if (GetHasNextPatch())
+            {
+                return orbit.EndUT - Planetarium.GetUniversalTime();
+            }
+            throw new Safe.Exceptions.KOSSituationallyInvalidException("Cannot get eta to next patch when no additional patches exist.  Try checking the HASNEXTPATCH suffix.");
         }
 
         /// <summary>

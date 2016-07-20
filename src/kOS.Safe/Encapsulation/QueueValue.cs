@@ -28,18 +28,6 @@ namespace kOS.Safe.Encapsulation
             InnerEnumerable.Enqueue(val);
         }
 
-        public override Dump Dump()
-        {
-            var result = new DumpWithHeader
-            {
-                Header = "QUEUE of " + InnerEnumerable.Count() + " items:"
-            };
-
-            result.Add(kOS.Safe.Dump.Items, InnerEnumerable.Cast<object>().ToList());
-
-            return result;
-        }
-
         public override void LoadDump(Dump dump)
         {
             InnerEnumerable.Clear();

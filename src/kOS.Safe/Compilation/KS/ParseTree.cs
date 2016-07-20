@@ -193,6 +193,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.directive:
                     Value = Evaldirective(tree, paramlist);
                     break;
+                case TokenType.empty_stmt:
+                    Value = Evalempty_stmt(tree, paramlist);
+                    break;
                 case TokenType.set_stmt:
                     Value = Evalset_stmt(tree, paramlist);
                     break;
@@ -286,6 +289,12 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.run_stmt:
                     Value = Evalrun_stmt(tree, paramlist);
                     break;
+                case TokenType.runpath_stmt:
+                    Value = Evalrunpath_stmt(tree, paramlist);
+                    break;
+                case TokenType.runoncepath_stmt:
+                    Value = Evalrunoncepath_stmt(tree, paramlist);
+                    break;
                 case TokenType.compile_stmt:
                     Value = Evalcompile_stmt(tree, paramlist);
                     break;
@@ -309,6 +318,9 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.expr:
                     Value = Evalexpr(tree, paramlist);
+                    break;
+                case TokenType.or_expr:
+                    Value = Evalor_expr(tree, paramlist);
                     break;
                 case TokenType.and_expr:
                     Value = Evaland_expr(tree, paramlist);
@@ -399,6 +411,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evaldirective(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalempty_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
@@ -622,6 +641,20 @@ namespace kOS.Safe.Compilation.KS
             return null;
         }
 
+        protected virtual object Evalrunpath_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalrunoncepath_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
         protected virtual object Evalcompile_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
@@ -672,6 +705,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalexpr(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalor_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

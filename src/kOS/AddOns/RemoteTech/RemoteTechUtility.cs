@@ -13,11 +13,13 @@
 
             return waitTotal;
         }
+
         public static double GetInputWaitTime(Vessel vessel)
         {
             if (RemoteTechHook.Instance.HasLocalControl(vessel.id)) return 0d;
             else return GetTotalWaitTime(vessel);
         }
+
         public static bool HasConnectionOrControl(Vessel vessel)
         {
             return RemoteTechHook.Instance.HasAnyConnection(vessel.id) || RemoteTechHook.Instance.HasLocalControl(vessel.id);

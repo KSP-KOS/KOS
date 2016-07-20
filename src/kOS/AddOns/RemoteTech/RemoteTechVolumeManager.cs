@@ -1,6 +1,7 @@
 ﻿using System;
 using kOS.Persistence;
 using kOS.Safe.Persistence;
+using kOS.Safe.Exceptions;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -26,7 +27,7 @@ namespace kOS.AddOns.RemoteTech
             {
                 return volume;
             }
-            throw new Exception("Volume is out of range");
+            throw new Safe.Exceptions.KOSVolumeOutOfRangeException();
         }
 
         // check the range on the current volume without calling GetVolumeWithRangeCheck

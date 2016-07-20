@@ -213,8 +213,7 @@ namespace kOS.Safe.Test.Collections
         public void CopyIsDifferentObject()
         {
             var map = MakeNestedExample();
-            var mapCopy = (SerializableStructure)InvokeDelegate(map, "COPY");
-
+            var mapCopy = (Lexicon)InvokeDelegate(map, "COPY");
 
             var hasKeyFirst = (BooleanValue)InvokeDelegate(map, "HASKEY" , new StringValue("first"));
             Assert.IsTrue(hasKeyFirst);
@@ -272,7 +271,7 @@ namespace kOS.Safe.Test.Collections
             Assert.IsTrue(length == 0);
         }
 
-        private SerializableStructure MakeNestedExample()
+        private Lexicon MakeNestedExample()
         {
             const string OUTER_STRING = "String, outer value";
             
@@ -301,7 +300,7 @@ namespace kOS.Safe.Test.Collections
             return map;
         }
 
-        private Encapsulation.Structure InvokeDelegate(ISuffixed map, string suffixName, params Encapsulation.Structure[] parameters)
+        private Encapsulation.Structure InvokeDelegate(Lexicon map, string suffixName, params Encapsulation.Structure[] parameters)
         {
             ISuffixResult lengthResult = map.GetSuffix(suffixName);
             Assert.IsNotNull(lengthResult);

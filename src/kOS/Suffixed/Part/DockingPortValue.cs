@@ -18,9 +18,9 @@ namespace kOS.Suffixed.Part
 
         private void DockingInitializeSuffixes()
         {
-            AddSuffix("AQUIRERANGE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRERANGE", "ACQUIRERANGE", string.Empty); }));
-            AddSuffix("AQUIREFORCE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIREFORCE", "ACQUIREFORCE", string.Empty); }));
-            AddSuffix("AQUIRETORQUE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRETORQUE", "ACQUIRETORQUE", string.Empty); }));
+            AddSuffix("AQUIRERANGE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSObsoletionException("0.18.0", "AQUIRERANGE", "ACQUIRERANGE", string.Empty); }));
+            AddSuffix("AQUIREFORCE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSObsoletionException("0.18.0", "AQUIREFORCE", "ACQUIREFORCE", string.Empty); }));
+            AddSuffix("AQUIRETORQUE", new Suffix<ScalarValue>(() => { throw new Safe.Exceptions.KOSObsoletionException("0.18.0", "AQUIRETORQUE", "ACQUIRETORQUE", string.Empty); }));
             AddSuffix("ACQUIRERANGE", new Suffix<ScalarValue>(() => module.acquireRange));
             AddSuffix("ACQUIREFORCE", new Suffix<ScalarValue>(() => module.acquireForce));
             AddSuffix("ACQUIRETORQUE", new Suffix<ScalarValue>(() => module.acquireTorque));

@@ -327,20 +327,10 @@ namespace kOS.Safe.Encapsulation
 
         public static object ToPrimitive(object value)
         {
-            var scalarValue = value as ScalarValue;
-            if (scalarValue != null)
+            var primitive = value as PrimitiveStructure;
+            if (primitive != null)
             {
-                return scalarValue.Value;
-            }
-            var booleanValue = value as BooleanValue;
-            if (booleanValue != null)
-            {
-                return booleanValue.Value;
-            }
-            var stringValue = value as StringValue;
-            if (stringValue != null)
-            {
-                return stringValue.ToString();
+                return primitive.ToPrimitive();
             }
 
             return value;

@@ -3,10 +3,11 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
+    [kOSAddon("KAC")]
     [kOS.Safe.Utilities.KOSNomenclature("KACAddon")]
     public class Addon : Suffixed.Addon
     {
-        public Addon(SharedObjects shared) : base ("KAC", shared)
+        public Addon(SharedObjects shared) : base (shared)
         {
             InitializeSuffixes();
         }

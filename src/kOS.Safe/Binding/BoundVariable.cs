@@ -34,6 +34,8 @@ namespace kOS.Safe.Binding
                 // If the delegates supported typing, we could use "Convert" to do this unbox/conversion
                 // all at the same time.  Instead, we pass the primitive value to avoid these conflicts.
                 Set(Structure.ToPrimitive(value));
+                // Because the value was just set, we should not assume that the cache is still valid
+                ClearCache(); 
             }
         }
 

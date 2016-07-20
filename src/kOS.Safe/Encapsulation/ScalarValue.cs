@@ -5,7 +5,7 @@ using System.Reflection;
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Scalar")]
-    abstract public class ScalarValue : Structure, IConvertible, ISerializableValue
+    abstract public class ScalarValue : PrimitiveStructure, IConvertible
     {
         abstract public bool IsInt { get; }
 
@@ -31,6 +31,11 @@ namespace kOS.Safe.Encapsulation
         protected ScalarValue()
         {
             InitializeSuffixes();
+        }
+
+        public override object ToPrimitive ()
+        {
+            return Value;
         }
 
         public void InitializeSuffixes()
