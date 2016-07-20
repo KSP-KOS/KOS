@@ -252,7 +252,7 @@ namespace kOS.Safe.Utilities
                                     }
                                     else if (walkAttribute.InherritedType != null)
                                     {
-                                        if (!type.IsAbstract && walkAttribute.InherritedType.IsAssignableFrom(type))
+                                        if (walkAttribute.InherritedType.IsAssignableFrom(type))
                                         {
                                             managerRegisterMethod.Invoke(null, new[] { attr, type });
                                             walkAttribute.LoadedCount++;
@@ -284,7 +284,7 @@ namespace kOS.Safe.Utilities
                             }
                             else if (walkAttribute.InherritedType != null)
                             {
-                                if (!type.IsAbstract && walkAttribute.InherritedType.IsAssignableFrom(type))
+                                if (walkAttribute.InherritedType.IsAssignableFrom(type))
                                 {
                                     managerRegisterMethod.Invoke(null, new[] { type });
                                     walkAttribute.LoadedCount++;
