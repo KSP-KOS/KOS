@@ -67,6 +67,7 @@
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
+    <Compile Include="Exceptions\KOSInvalidDelegateType.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
     <Compile Include="Exceptions\KOSVolumeOutOfRangeException.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Execution\ProgramContext.cs" />
     <Compile Include="Execution\Stack.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
+    <Compile Include="Execution\TriggerInfo.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />

@@ -1011,14 +1011,38 @@ namespace kOS.Safe.Execution
             return stack.GetLogicalSize();
         }
 
-        public void AddTrigger(int triggerFunctionPointer)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer)
         {
-            currentContext.AddPendingTrigger(triggerFunctionPointer);
+            TriggerInfo triggerRef = new TriggerInfo(triggerFunctionPointer);
+            currentContext.AddPendingTrigger(triggerRef);
+            return triggerRef;
+        }
+
+        public TriggerInfo AddTrigger(UserDelegate del, List<Structure> args)
+        {
+            TriggerInfo callbackRef = new TriggerInfo(del.EntryPoint, args);
+            currentContext.AddPendingTrigger(callbackRef);
+            return callbackRef;
+        }
+
+        public TriggerInfo AddTrigger(UserDelegate del, params Structure[] args)
+        {
+            return AddTrigger(del, new List<Structure>(args));
+        }
+
+        public void AddTrigger(TriggerInfo trigger)
+        {
+            currentContext.AddPendingTrigger(trigger);
         }
 
         public void RemoveTrigger(int triggerFunctionPointer)
         {
-            currentContext.RemoveTrigger(triggerFunctionPointer);
+            currentContext.RemoveTrigger(new TriggerInfo(triggerFunctionPointer));
+        }
+
+        public void RemoveTrigger(TriggerInfo trigger)
+        {
+            currentContext.RemoveTrigger(trigger);
         }
 
         /// <summary>
@@ -1156,7 +1180,7 @@ namespace kOS.Safe.Execution
             int oldCount = currentContext.Program.Count;
 
             int currentInstructionPointer = currentContext.InstructionPointer;
-            var triggersToBeExecuted = new List<int>();
+            var triggersToBeExecuted = new List<TriggerInfo>();
             
             // To ensure triggers execute in the same order in which they
             // got added (thus ensuring the system favors trying the least
@@ -1166,11 +1190,11 @@ namespace kOS.Safe.Execution
             // order used in the loop below:
             for (int index = currentContext.ActiveTriggerCount() - 1 ; index >= 0 ; --index)
             {
-                int triggerPointer = currentContext.GetTriggerByIndex(index);
+                TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
                 
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
                 // will be invalid.  Only execute the trigger if it still exists.
-                if (currentContext.ContainsTrigger(triggerPointer))
+                if (currentContext.ContainsTrigger(trigger))
                 {
                     // Insert a faked function call as if the trigger had been called from just
                     // before whatever opcode was about to get executed, by pusing a context
@@ -1179,13 +1203,18 @@ namespace kOS.Safe.Execution
                     // triggers can't take arguments, most of the messy work of
                     // OpcodeCall.Execute isn't needed:
                     SubroutineContext contextRecord =
-                        new SubroutineContext(currentInstructionPointer, triggerPointer);
+                        new SubroutineContext(currentInstructionPointer, trigger);
                     PushAboveStack(contextRecord);
-                    PushStack(new KOSArgMarkerType()); // to go with the faked function call of zero arguments.
 
-                    triggersToBeExecuted.Add(triggerPointer);
+                    if (trigger.IsCSharpCallback)
+                        for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
+                            PushStack(trigger.Args[argIndex]);
                     
-                    currentInstructionPointer = triggerPointer;
+                    PushStack(new KOSArgMarkerType());
+                    
+                    triggersToBeExecuted.Add(trigger);
+                    
+                    currentInstructionPointer = trigger.EntryPoint;
                     // Triggers can chain in this loop if more than one fire off at once - the second trigger
                     // will look like it was a function that was called from the start of the first trigger.
                     // The third trigger will look like a function that was called from the start of the second, etc.
@@ -1195,8 +1224,10 @@ namespace kOS.Safe.Execution
             // Remove all triggers that will fire.  Any trigger that wants to
             // re-enable itself will do so by returning a boolean true, which
             // will tell OpcodeReturn that it needs to re-add the trigger.
-            foreach (int triggerPointer in triggersToBeExecuted)
-                RemoveTrigger(triggerPointer);
+            foreach (TriggerInfo trigger in triggersToBeExecuted)
+            {
+                RemoveTrigger(trigger);
+            }
 
             currentContext.InstructionPointer = currentInstructionPointer;
         }

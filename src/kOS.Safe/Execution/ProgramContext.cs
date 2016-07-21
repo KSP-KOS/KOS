@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Execution
 {
@@ -17,7 +18,7 @@ namespace kOS.Safe.Execution
         /// <summary>
         /// List of triggers that are currently active
         /// </summary>
-        private List<int> Triggers { get; set; }
+        private List<TriggerInfo> Triggers { get; set; }
         /// <summary>
         /// List of triggers that are *about to become* currently active, but only after
         /// the CPU tells us it's a good safe time to re-insert them.  This delay is done
@@ -25,15 +26,15 @@ namespace kOS.Safe.Execution
         /// code from executing - they don't get re-inserted until back to the mainline
         /// code again.
         /// </summary>
-        private List<int> TriggersToInsert { get; set; }
+        private List<TriggerInfo> TriggersToInsert { get; set; }
         public bool Silent { get; set; }
-
+  
         public ProgramContext(bool interpreterContext)
         {
             Program = new List<Opcode>();
             InstructionPointer = 0;
-            Triggers = new List<int>();
-            TriggersToInsert = new List<int>();
+            Triggers = new List<TriggerInfo>();
+            TriggersToInsert = new List<TriggerInfo>();
             builder = interpreterContext ? new ProgramBuilderInterpreter() : new ProgramBuilder();
             flyByWire = new Dictionary<string, bool>();
             fileMap  = new Dictionary<string, int>();
@@ -153,29 +154,29 @@ namespace kOS.Safe.Execution
         /// Add a trigger to the list of triggers pending insertion.
         /// It will not *finish* inserting it until the CPU tells us it's a good
         /// time to do so, by calling ActivatePendingTriggers().
-        /// It will also refuse to insert a trigger that's already either active
+        /// It will also refuse to insert a WHEN/ON/LOCK trigger that's already either active
         /// or pending insertion to the active list (avoids duplication).
         /// </summary>
-        /// <param name="instructionPointer"></param>
-        public void AddPendingTrigger(int instructionPointer)
+        /// <param name="trigger"></param>
+        public void AddPendingTrigger(TriggerInfo trigger)
         {
             // CntainsTrigger is a sequential walk, but that should be okay
             // because it should be unlikely that there's hundreds of
             // triggers.  There'll be at most tens of them, and even that's
             // unlikely.
-            if (! ContainsTrigger(instructionPointer))
-                TriggersToInsert.Add(instructionPointer);
+            if (! ContainsTrigger(trigger))
+                TriggersToInsert.Add(trigger);
         }
         
         /// <summary>
         /// Remove a trigger from current triggers or pending insertion
         /// triggers or both if need be, so it's not there anymore at all.
         /// </summary>
-        /// <param name="instructionPointer"></param>
-        public void RemoveTrigger(int instructionPointer)
+        /// <param name="trigger"></param>
+        public void RemoveTrigger(TriggerInfo trigger)
         {
-            Triggers.Remove(instructionPointer); // can ignore if it wasn't in the list.
-            TriggersToInsert.Remove(instructionPointer); // can ignore if it wasn't in the list.
+            Triggers.Remove(trigger); // can ignore if it wasn't in the list.
+            TriggersToInsert.Remove(trigger); // can ignore if it wasn't in the list.
         }
         
         /// <summary>
@@ -193,7 +194,7 @@ namespace kOS.Safe.Execution
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public int GetTriggerByIndex(int index)
+        public TriggerInfo GetTriggerByIndex(int index)
         {
             return Triggers[index];
         }
@@ -202,11 +203,11 @@ namespace kOS.Safe.Execution
         /// True if the given trigger's IP is for a trigger that
         /// is currently active, or is about to become active.
         /// </summary>
-        /// <param name="instructionPointer"></param>
+        /// <param name="trigger"></param>
         /// <returns></returns>
-        public bool ContainsTrigger(int instructionPointer)
+        public bool ContainsTrigger(TriggerInfo trigger)
         {
-            return Triggers.Contains(instructionPointer) || TriggersToInsert.Contains(instructionPointer);
+            return Triggers.Contains(trigger) || TriggersToInsert.Contains(trigger);
         }
 
         /// <summary>
@@ -302,6 +303,6 @@ namespace kOS.Safe.Execution
             
             return "\"" + s.Replace("\"","\"\"") + "\"";
         }
-
+        
     }
 }
