@@ -37,31 +37,6 @@ namespace kOS.Safe.Function
             }
         }
 
-        public static void WalkAssemblies()
-        {
-            rawAttributes.Clear();
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                if (!assembly.GlobalAssemblyCache)
-                {
-                    WalkAssembly(assembly);
-                }
-            }
-        }
-
-        public static void WalkAssembly(Assembly assembly)
-        {
-            foreach (Type type in assembly.GetTypes())
-            {
-                var attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
-                if (attr == null) continue;
-                if (!rawAttributes.ContainsKey(attr))
-                {
-                    rawAttributes.Add(attr, type);
-                }
-            }
-        }
-
         public static void RegisterMethod(Attribute attr, Type type)
         {
             var funcAttr = attr as FunctionAttribute;
