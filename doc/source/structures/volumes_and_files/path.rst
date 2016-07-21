@@ -55,7 +55,7 @@ Instances of this structure can be passed as arguments instead of ordinary, stri
           - True if `path` is the parent of this path
         * - :meth:`COMBINE(name1, [name2, ...])`
           - :struct:`Path`
-          - Returns a new path created from this one
+          - Returns a new path created by adding further elements to this one
 
 .. attribute:: Path:VOLUME
 
@@ -141,4 +141,14 @@ Instances of this structure can be passed as arguments instead of ordinary, stri
     :parameter name: :struct:`String` segments to add
     :return: :struct:`Path`
 
-    Will return a new path created by adding segments to this path.
+    Returns a new path that represents the file or directory
+    that would be reached by starting from this path and then
+    appending the path elements given in the list.
+
+    e.g::
+    
+        set p to path("0:/home").
+        set p2 to p:combine("d1", "d2", "file.ks").
+        print p2
+        0:/home/d1/d2/file.ks
+
