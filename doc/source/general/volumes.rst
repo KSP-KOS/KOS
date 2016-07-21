@@ -150,7 +150,7 @@ volume but with the following exceptions:
    choice and edit them directly, and the KOS Mod will see those changes
    in its archive immediately. Files stored in other volumes, on the
    other hand, are stored inside the vessel's data in the persistence
-   file of the saved game and are quite a bit bit harder to edit there.
+   file of the saved game and are quite a bit harder to edit there.
    Editing the files in the Archive directory is allowed and in fact is
    an officially accepted way to use the plugin. Editing the section in
    a persistence file, on the other hand, is a bad idea and probably
@@ -167,7 +167,27 @@ was introduced. If you have at least 1 file in the :code:`boot` directory on
 your Archive volume, you will be presented with the option to choose one of
 those files as a boot script for your kOS CPU.
 
+
 .. image:: http://i.imgur.com/05kp7Sy.jpg
+
+The first time that you load kOS without a directory named
+:code:`boot` in the archive root, kOS will prompt you for automatic
+migration.
+
+.. warning::
+    .. versionadded:: v1.0.0
+        Older versions of kOS used file names starting with the word "boot" to
+        determine which files should be considered as boot files.  When support
+        was added for directories, it made sense to instead use a directory
+        named :code:`boot`.  Care was taken to maximize backwards compatibility:
+        if an existing craft file is opened in the editor, kOS will first look
+        for the saved boot file name in the boot directory, then it will check
+        the archive root, and finally it will check the boot directory again
+        after stripping :code:`boot` or :code:`boot_` from the beginning of the name.
+        Vessels in flight will continue to work with the existing structure, so
+        long as :attr:`CONFIG:ARCH` is set to false.  If :attr:`CONFIG:ARCH` is
+        set to true, you will need to leave copies of the originally named boot
+        files in your archive root for ships already in flight to access.
 
 As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad
 (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU's
@@ -188,4 +208,3 @@ Possible uses for boot scripts:
   * Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.
   * Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)
   * Anything else you can come up with
-
