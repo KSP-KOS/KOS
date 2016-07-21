@@ -25,7 +25,7 @@ namespace kOS.Module
 
             CheckForLegacyArchive();
             
-            var assemblies = AssemblyLoader.loadedAssemblies.Where(a => a.dllName.StartsWith("kOS.") || a.dependencies.Where(d => d.name.Equals("kOS")).Any()).Select(a => a.assembly).ToArray();
+            var assemblies = AssemblyLoader.loadedAssemblies.Where(a => a.dllName.StartsWith("kOS.") || a.dllName.Equals("kOS") || a.dependencies.Where(d => d.name.Equals("kOS")).Any()).Select(a => a.assembly).ToArray();
             AssemblyWalkAttribute.Walk(assemblies);
         }
 
