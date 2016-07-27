@@ -64,12 +64,20 @@ namespace kOS.Safe
             AddSuffix("ISPARENT", new OneArgsSuffix<BooleanValue, PathValue>((p) => Path.IsParent(p.Path)));
             AddSuffix("CHANGENAME", new OneArgsSuffix<PathValue, StringValue>((n) => FromPath(Path.ChangeName(n))));
             AddSuffix("CHANGEEXTENSION", new OneArgsSuffix<PathValue, StringValue>((e) => FromPath(Path.ChangeExtension(e))));
-            AddSuffix("COMBINE", new VarArgsSuffix<PathValue, StringValue>(Combine));
+            AddSuffix("COMBINE", new VarArgsSuffix<PathValue, Structure>(Combine));
+        }
+        public PathValue Combine(params Structure[] segments)
+        {
+            if (segments.All(s => s.GetType() == typeof(StringValue)))
+            {
+                return Combine(segments.Cast<StringValue>().ToArray());
+            }
+            throw new Exceptions.KOSInvalidArgumentException("PATH:COMBINE", "SEGMENTS", "all segments must be strings");
         }
 
         public PathValue Combine(params StringValue[] segments)
         {
-            return FromPath(Path.Combine(segments.Cast<string>().ToArray()));
+            return FromPath(Path.Combine(segments.Select(s => s.ToString()).ToArray()));
         }
 
         public override Dump Dump()

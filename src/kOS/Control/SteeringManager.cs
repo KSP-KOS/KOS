@@ -204,7 +204,7 @@ namespace kOS.Control
         private Vector3d omega = Vector3d.zero; // x: pitch, y: yaw, z: roll
         private Vector3d lastOmega = Vector3d.zero;
         private Vector3d angularAcceleration = Vector3d.zero;
-        private Vector3d momentOfInertia = Vector3d.zero; // x: pitch, z: yaw, y: roll
+        private Vector3d momentOfInertia = Vector3d.zero; // x: pitch, y: yaw, z: roll
         private Vector3d measuredMomentOfInertia = Vector3d.zero;
         private Vector3d measuredTorque = Vector3d.zero;
         private Vector3d controlTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
@@ -606,14 +606,6 @@ namespace kOS.Control
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
         }
 
-        public Transform FindParentTransform(Transform transform, string name, Transform topLevel)
-        {
-            if (transform.parent.name == name) return transform.parent;
-            else if (transform.parent == null) return null;
-            else if (transform.parent == topLevel) return null;
-            else return FindParentTransform(transform.parent, name, topLevel);
-        }
-
         // Update prediction based on PI controls, sets the target angular velocity and the target torque for the vessel
         public void UpdatePredictionPI()
         {
@@ -633,8 +625,8 @@ namespace kOS.Control
 
             // Calculate the maximum allowable angular velocity and apply the limit, something we can stop in a reasonable amount of time
             maxPitchOmega = controlTorque.x * MaxStoppingTime / momentOfInertia.x;
-            maxYawOmega = controlTorque.z * MaxStoppingTime / momentOfInertia.z;
-            maxRollOmega = controlTorque.y * MaxStoppingTime / momentOfInertia.y;
+            maxYawOmega = controlTorque.z * MaxStoppingTime / momentOfInertia.y;
+            maxRollOmega = controlTorque.y * MaxStoppingTime / momentOfInertia.z;
 
             double sampletime = shared.UpdateHandler.CurrentFixedTime;
             // Because the value of phi is already error, we say the input is -error and the setpoint is 0 so the PID has the correct sign
@@ -652,8 +644,8 @@ namespace kOS.Control
 
             // Calculate target torque based on PID
             tgtPitchTorque = pitchPI.Update(sampletime, omega.x, tgtPitchOmega, momentOfInertia.x, controlTorque.x);
-            tgtYawTorque = yawPI.Update(sampletime, omega.y, tgtYawOmega, momentOfInertia.z, controlTorque.z);
-            tgtRollTorque = rollPI.Update(sampletime, omega.z, tgtRollOmega, momentOfInertia.y, controlTorque.y);
+            tgtYawTorque = yawPI.Update(sampletime, omega.y, tgtYawOmega, momentOfInertia.y, controlTorque.z);
+            tgtRollTorque = rollPI.Update(sampletime, omega.z, tgtRollOmega, momentOfInertia.z, controlTorque.y);
 
             //tgtPitchTorque = pitchPI.Update(sampletime, pitchRate.Update(omega.x), tgtPitchOmega, momentOfInertia.x, controlTorque.x);
             //tgtYawTorque = yawPI.Update(sampletime, yawRate.Update(omega.y), tgtYawOmega, momentOfInertia.z, controlTorque.z);
@@ -940,7 +932,7 @@ namespace kOS.Control
             shared.Screen.Print("    Yaw Values:");
             shared.Screen.Print(string.Format("phiYaw: {0}", phiYaw * RadToDeg));
             //shared.Screen.Print(string.Format("phiYaw: {0}", deltaRotation.eulerAngles.y));
-            shared.Screen.Print(string.Format("I yaw: {0}", momentOfInertia.z));
+            shared.Screen.Print(string.Format("I yaw: {0}", momentOfInertia.y));
             shared.Screen.Print(string.Format("torque yaw: {0}", controlTorque.z));
             shared.Screen.Print(string.Format("maxYawOmega: {0}", maxYawOmega));
             shared.Screen.Print(string.Format("tgtYawOmega: {0}", tgtYawOmega));
@@ -950,7 +942,7 @@ namespace kOS.Control
             shared.Screen.Print("    Roll Values:");
             shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * RadToDeg));
             //shared.Screen.Print(string.Format("phiRoll: {0}", deltaRotation.eulerAngles.z));
-            shared.Screen.Print(string.Format("I roll: {0}", momentOfInertia.y));
+            shared.Screen.Print(string.Format("I roll: {0}", momentOfInertia.z));
             shared.Screen.Print(string.Format("torque roll: {0}", controlTorque.y));
             shared.Screen.Print(string.Format("maxRollOmega: {0}", maxRollOmega));
             shared.Screen.Print(string.Format("tgtRollOmega: {0}", tgtRollOmega));
