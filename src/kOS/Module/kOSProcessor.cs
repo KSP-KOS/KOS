@@ -84,14 +84,14 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true)]
         public float additionalCost = 0F;
 
-        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true)]
-        public float additionalMass = 0F;
+        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00")]
+        public float additionalMassGui = 0F;
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
         public float diskSpaceCostFactor = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
-        public float diskSpaceMassFactor = 0.0000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
+        public float diskSpaceMassFactor = 0.0000000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
 
         [KSPField(isPersistant = true, guiActive = false)]
         public int MaxPartId = 100;
@@ -240,11 +240,14 @@ namespace kOS.Module
             return ModifierChangeWhen.FIXED;
         }
 
+        public float additionalMass = 0F;
         private void UpdateCostAndMass()
         {
+            
             float spaceDelta = diskSpace - baseDiskSpace;
             additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
             additionalMass = spaceDelta * diskSpaceMassFactor;
+            additionalMassGui = spaceDelta * diskSpaceMassFactor * 1000;
         }
 
         //implement IPartMassModifier component
