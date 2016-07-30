@@ -69,7 +69,10 @@ File System Lists
 These generate :struct:`lists <List>` about the files in the system:
 
 ``Files``
-    :struct:`List` the :struct:`files <VolumeFile>` on the current Volume. (note below)
+    :struct:`List` the items, both files and subdirectories, on the current Volume at the current
+    directory (you have to use the ``cd("dir")`` command to change directories first if you want
+    to get a list of files under some other location.) (note below) The list contains items of
+    type :struct:`VolumeItem`
 ``Volumes``
     :struct:`List` all the :struct:`volumes <Volume>` that exist.
 
@@ -79,12 +82,17 @@ These generate :struct:`lists <List>` about the files in the system:
 
 Examples::
 
-    LIST.  // Prints the list of files on current volume.
+    LIST.  // Prints the list of files (and subdirectories) on current volume.
     LIST FILES.  // Does the same exact thing, but more explicitly.
     LIST VOLUMES. // which volumes can be seen by this CPU?
-    LIST FILES IN fileList. // fileList is now a LIST() containing file structures.
+    LIST FILES IN fileList. // fileList is now a LIST() containing :struct:`VolumeItem` structures.
 
-The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <VolumeFile>`.
+.. _list files:
+
+The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <VolumeItem>`.
+The file list contains both actual files and subdirectories under the current directory level.  You can use the
+`:isfile` suffix on each element to find out if it's a file or a subdirectory.  If it is a file rather than a
+subdirectory, then it will also have all the suffixes of :struct:`VolumeFile` on it.
 
 Here are some more examples::
 

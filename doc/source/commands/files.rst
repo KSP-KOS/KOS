@@ -253,8 +253,14 @@ Files and directories
 LIST
 ~~~~
 
-Shortcut for :code:`LIST FILES`. Prints the contents (files and directories)
-of the current directory.
+Shows a printed list of the files and subdirectories in
+the current working directory.
+
+This is actually a shorthand for the longer :code:``LIST FILES`` command.
+
+To get the files into a :struct:`LIST` structure you can read in a script (rather
+than just printed to the screen), use the :ref:`list files in ... <list files>`
+command.
 
 CD(PATH)
 ~~~~~~~~
