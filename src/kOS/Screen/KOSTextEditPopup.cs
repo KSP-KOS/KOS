@@ -243,7 +243,6 @@ namespace kOS.Screen
         protected static void DelegateLoadContents(KOSTextEditPopup me)
         {
             VolumeItem item = me.loadingVolume.Open(me.loadingPath);
-            me.loadingPath = GlobalPath.FromVolumePath(item.Path, me.loadingPath.VolumeId);
             if (item == null)
             {
                 me.term.Print("[New File]");
@@ -252,6 +251,7 @@ namespace kOS.Screen
             else if (item is VolumeFile)
             {
                 VolumeFile file = item as VolumeFile;
+                me.loadingPath = GlobalPath.FromVolumePath(item.Path, me.loadingPath.VolumeId);
                 me.contents = file.ReadAll().String;
             }
             else
