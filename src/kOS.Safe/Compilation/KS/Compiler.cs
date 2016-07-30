@@ -2266,7 +2266,9 @@ namespace kOS.Safe.Compilation.KS
             for (int i = node.Nodes.Count - 1 ; i >= 0 ; --i)
             {
                 ParseNode child = node.Nodes[i];
-                if (child.Token.Type != TokenType.declare_function_clause) // functions nested in functions don't count
+
+                // functions nested in functions don't count, nor do anonymous delegates
+                if (child.Token.Type != TokenType.declare_function_clause && child.Token.Type != TokenType.expr)
                 {
                     if (HasParameterStmtNested(child, ref sawMandatoryParam))
                         rememberReturnVal = true;
