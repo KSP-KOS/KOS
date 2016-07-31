@@ -32,6 +32,16 @@ When any :struct:`Orbitable` object returns its :attr:`VELOCITY <Orbitable:VELOC
 
     Returns the surface-frame velocity. Note that this is the surface velocity relative to the surface of the SOI body, not the orbiting object itself. (i.e. Mun:VELOCITY:SURFACE returns the Mun's velocity relative to the surface of its SOI body, Kerbin).
 
+    **Special case instance, the Sun:**: Because the Sun has no parent
+    SoI body that it orbits around (Kerbal Space Program does not
+    simulate the existence of anything outside the one solar system),
+    that means that the Sun's surface velocity is just hardcoded to
+    be the same thing as its orbital velocity.  This may or may not be
+    entirely correct, but the "correct" answer to the question, "What is
+    sun:velocity:surface?" would technically be "I refuse to answer.
+    That's an invalid question." Rather than crash or throw an exception,
+    kOS just returns the same as the orbital velocity in this case.
+
 Examples::
 
     SET VORB TO SHIP:VELOCITY:ORBIT
