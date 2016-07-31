@@ -113,13 +113,11 @@ namespace kOS
                     // as the logic to check if the program needs compiling is implemented as a
                     // separate kRISC function that gets called from the main code.  Therefore to
                     // avoid the same RUN statement giving two nested levels on the call trace,
-                    // only print the firstmost instance of a contiguous part of the call stack that
-                    // comes from the same source line:
+                    // skip the level of the stack trace that passes through the boilerplate
+                    // load runner code:
                     if (index > 0)
                     {
-                        Opcode prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
-                        if (prevOpcode.SourcePath.Equals(thisOpcode.SourcePath) &&
-                            prevOpcode.SourceLine == thisOpcode.SourceLine)
+                        if (thisOpcode.SourcePath == null || thisOpcode.SourcePath.VolumeId.Equals(ProgramBuilder.BuiltInFakeVolumeId))
                         {
                             continue;
                         }
@@ -187,9 +185,11 @@ namespace kOS
 
             Volume vol;
 
-            try {
+            try
+            {
                 vol = Shared.VolumeMgr.GetVolumeFromPath(path);
-            } catch (KOSPersistenceException)
+            }
+            catch (KOSPersistenceException)
             {
                 return returnVal;
             }

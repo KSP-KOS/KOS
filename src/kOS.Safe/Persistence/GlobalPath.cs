@@ -77,7 +77,7 @@ namespace kOS.Safe.Persistence
             return new GlobalPath(VolumeId);
         }
 
-        public static GlobalPath FromVolumePath(VolumePath volumePath, string volumeId)
+        public static GlobalPath FromVolumePath(VolumePath volumePath, object volumeId)
         {
             return new GlobalPath(volumeId, new List<string>(volumePath.Segments));
         }
@@ -131,7 +131,9 @@ namespace kOS.Safe.Persistence
 
         public new GlobalPath Combine(params string[] segments)
         {
-            return new GlobalPath(VolumeId, Segments.Concat(segments));
+            var parsedSegments = segments.SelectMany((segment) => GetSegmentsFromString(segment));
+
+            return new GlobalPath(VolumeId, Segments.Concat(parsedSegments));
         }
 
         /// <summary>
