@@ -46,7 +46,7 @@ public class TriggerInfo
     {
         EntryPoint = entryPoint;
         IsCSharpCallback = isCSharpCallback;
-        ReturnValue = null;
+        ReturnValue = new ScalarIntValue(0);
         CallbackFinished = false;
         Args = new List<Structure>();
     }
@@ -61,7 +61,7 @@ public class TriggerInfo
     {
         EntryPoint = entryPoint;
         IsCSharpCallback = true;
-        ReturnValue = null;
+        ReturnValue = new ScalarIntValue(0);
         CallbackFinished = false;
         Args = args;
     }

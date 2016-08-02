@@ -39,7 +39,7 @@ namespace kOS.Safe.Encapsulation
             // do nothing.
         }
         
-        public override Structure Call()
+        public override Structure CallWithArgsPushedAlready()
         {
             int throwAway = OpcodeCall.StaticExecute(Cpu, true, Name, true);
             // throwAway will be -1 for cases where it's a builtin function.

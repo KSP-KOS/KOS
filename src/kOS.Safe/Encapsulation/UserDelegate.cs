@@ -13,7 +13,13 @@ namespace kOS.Safe.Encapsulation
     public class UserDelegate : KOSDelegate, IUserDelegate
     {
         public IProgramContext ProgContext {get; private set;}
+        
+        /// <summary>
+        /// The entry point to jump to.  Note if it's ever a negative number, then you should not
+        /// call this UserDelegate and instead should treat it as a dummy null delegate.
+        /// </summary>
         public int EntryPoint {get; private set;}
+
         public List<VariableScope> Closure {get; private set;}
         
         /// <summary>
@@ -60,6 +66,27 @@ namespace kOS.Safe.Encapsulation
                                  Cpu, EntryPoint, Closure, base.ToString());
         }
         
+        public override bool Equals(object obj)
+        {
+            UserDelegate other = obj as UserDelegate;
+            if (other == null)
+                return false;
+            return object.Equals(this.ProgContext, other.ProgContext) && this.EntryPoint == other.EntryPoint && object.Equals(this.Closure, other.Closure);
+        }
+        
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked {
+                if (ProgContext != null)
+                    hashCode += 1000000007 * ProgContext.GetHashCode();
+                hashCode += 1000000009 * EntryPoint.GetHashCode();
+                if (Closure != null)
+                    hashCode += 1000000021 * Closure.GetHashCode();
+            }
+            return hashCode;
+        }
+        
         public override void PushUnderArgs()
         {
             // Going to do an indirect call of myself, and indirect calls need
@@ -68,7 +95,7 @@ namespace kOS.Safe.Encapsulation
             Cpu.PushStack(this);
         }
         
-        public override Structure Call()
+        public override Structure CallWithArgsPushedAlready()
         {
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)

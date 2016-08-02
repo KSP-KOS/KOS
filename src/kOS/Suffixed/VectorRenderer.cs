@@ -136,11 +136,11 @@ namespace kOS.Suffixed
         {
             // If a UserDelegate went away, throw away any previous trigger handles we may have been waiting to finish:
             // --------------------------------------------------------------------------------------------------------
-            if (StartDelegate == null)
+            if (StartDelegate == null) // Note: if the user assigns the DoNothingDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 StartTrigger = null;
-            if (VectorDelegate == null)
+            if (VectorDelegate == null) // Note: if the user assigns the DoNothingDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 VectorTrigger = null;
-            if (ColorDelegate == null)
+            if (ColorDelegate == null) // Note: if the user assigns the DoNothingDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 ColorTrigger = null;
             
             // For any trigger handles for delegate calls that were in progress already, if they're now done
@@ -195,14 +195,20 @@ namespace kOS.Suffixed
                    RenderPointCoords();
                }));
             AddSuffix(new[] { "VECUPDATE", "VECTORUPDATE" },
-                      new SetSuffix<UserDelegate>(() => VectorDelegate, value => { VectorDelegate = value; }));
+                      new SetSuffix<UserDelegate>(
+                          () => VectorDelegate ?? new DoNothingDelegate(shared.Cpu), // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { VectorDelegate = (value is DoNothingDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                         ));
             AddSuffix(new[] { "COLOR", "COLOUR" }, new SetSuffix<RgbaColor>(() => Color, value =>
                {
                    Color = value;
                    RenderColor();
                }));
             AddSuffix(new[] { "COLORUPDATE", "COLOURUPDATE" },
-                      new SetSuffix<UserDelegate>(() => ColorDelegate, value => { ColorDelegate = value; }));
+                      new SetSuffix<UserDelegate>(
+                          () => ColorDelegate ?? new DoNothingDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { ColorDelegate = (value is DoNothingDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                         ));
             AddSuffix("SHOW", new SetSuffix<BooleanValue>(() => enable, SetShow));
             AddSuffix("START", new SetSuffix<Vector>(() => new Vector(Start), value =>
             {
@@ -210,7 +216,10 @@ namespace kOS.Suffixed
                 RenderPointCoords();
             }));
             AddSuffix("STARTUPDATE",
-                      new SetSuffix<UserDelegate>(() => StartDelegate, value => { StartDelegate = value; }));
+                      new SetSuffix<UserDelegate>(
+                          () => StartDelegate ?? new DoNothingDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { StartDelegate = (value is DoNothingDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                         ));
             AddSuffix("SCALE", new SetSuffix<ScalarValue>(() => Scale, value =>
             {
                 Scale = value;

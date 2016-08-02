@@ -37,7 +37,7 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeSuffixes()
         {
-            AddSuffix("CALL", new VarArgsSuffix<Structure, Structure>(Call));
+            AddSuffix("CALL", new VarArgsSuffix<Structure, Structure>(CallPassingArgs));
             AddSuffix("BIND", new VarArgsSuffix<KOSDelegate, Structure>(Bind));
         }
 
@@ -46,7 +46,7 @@ namespace kOS.Safe.Encapsulation
             PreBoundArgs.Add(arg);
         }
 
-        public Structure Call(params Structure[] args)
+        public Structure CallPassingArgs(params Structure[] args)
         {
             PushUnderArgs();
             Cpu.PushStack(new KOSArgMarkerType());
@@ -58,7 +58,7 @@ namespace kOS.Safe.Encapsulation
             {
                 Cpu.PushStack(arg);
             }
-            return Call();
+            return CallWithArgsPushedAlready();
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace kOS.Safe.Encapsulation
         /// Assuming the args have been pushed onto the stack already, with
         /// the argbottom marker under them, do the call of this delegate.
         /// </summary>
-        public abstract Structure Call();
+        public abstract Structure CallWithArgsPushedAlready();
 
         /// <summary>
         /// If the derivative class needs to put anything on the stack underneath the

@@ -1435,7 +1435,12 @@ namespace kOS.Safe.Compilation
 
             IUserDelegate userDelegate = functionPointer as IUserDelegate;
             if (userDelegate != null)
-                functionPointer = userDelegate.EntryPoint;
+            {
+                if (userDelegate is DoNothingDelegate)
+                    functionPointer = userDelegate; // still leave it as a delegate as a flag to not call the entry point.
+                else
+                    functionPointer = userDelegate.EntryPoint;
+            }
 
             BuiltinDelegate builtinDel = functionPointer as BuiltinDelegate;
             if (builtinDel != null && (! calledFromKOSDelegateCall) )
@@ -1495,6 +1500,10 @@ namespace kOS.Safe.Compilation
 
                 delegateReturn = result.Value;
             }
+            else if (functionPointer is DoNothingDelegate)
+            {
+                delegateReturn = ((DoNothingDelegate)functionPointer).CallWithArgsPushedAlready();
+            }
             // TODO:erendrake This else if is likely never used anymore
             else if (functionPointer is Delegate)
             {
@@ -1505,7 +1514,7 @@ namespace kOS.Safe.Compilation
                 throw new KOSNotInvokableException(functionPointer);
             }
 
-            if (functionPointer is ISuffixResult)
+            if (functionPointer is ISuffixResult || functionPointer is DoNothingDelegate)
             {
                 if (! (delegateReturn is KOSPassThruReturn))
                     cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.

@@ -263,6 +263,11 @@ namespace kOS.Safe.Execution
                 scope.IsClosure = true;
             return closureList;
         }
+        
+        public IProgramContext GetCurrentContext()
+        {
+            return currentContext;
+        }
 
         /// <summary>
         /// Build a delegate call for the given function entry point, in which it will capture a closure of the current
@@ -1196,28 +1201,39 @@ namespace kOS.Safe.Execution
                 // will be invalid.  Only execute the trigger if it still exists.
                 if (currentContext.ContainsTrigger(trigger))
                 {
-                    // Insert a faked function call as if the trigger had been called from just
-                    // before whatever opcode was about to get executed, by pusing a context
-                    // record like OpcodeCall would do, and moving the IP to the
-                    // first line of the trigger, like OpcodeCall would do.  Because
-                    // triggers can't take arguments, most of the messy work of
-                    // OpcodeCall.Execute isn't needed:
-                    SubroutineContext contextRecord =
-                        new SubroutineContext(currentInstructionPointer, trigger);
-                    PushAboveStack(contextRecord);
+                    if (trigger is DoNothingDelegate)
+                    {
+                        // Don't bother calling it.  Just declare it to be "done" with its default value.
+                        trigger.FinishCallback(new ScalarIntValue(0));
+                        // hypothetically this case shouldn't happen because our own code shouldn't
+                        // be adding triggers for the EmptyDelegate.  This is a fallback case to not
+                        // blow up when we forget to do that check.
+                    }
+                    else
+                    {
+                        // Insert a faked function call as if the trigger had been called from just
+                        // before whatever opcode was about to get executed, by pusing a context
+                        // record like OpcodeCall would do, and moving the IP to the
+                        // first line of the trigger, like OpcodeCall would do.  Because
+                        // triggers can't take arguments, most of the messy work of
+                        // OpcodeCall.Execute isn't needed:
+                        SubroutineContext contextRecord =
+                            new SubroutineContext(currentInstructionPointer, trigger);
+                        PushAboveStack(contextRecord);
 
-                    if (trigger.IsCSharpCallback)
-                        for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
-                            PushStack(trigger.Args[argIndex]);
-                    
-                    PushStack(new KOSArgMarkerType());
-                    
-                    triggersToBeExecuted.Add(trigger);
-                    
-                    currentInstructionPointer = trigger.EntryPoint;
-                    // Triggers can chain in this loop if more than one fire off at once - the second trigger
-                    // will look like it was a function that was called from the start of the first trigger.
-                    // The third trigger will look like a function that was called from the start of the second, etc.
+                        PushStack(new KOSArgMarkerType());
+
+                        if (trigger.IsCSharpCallback)
+                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
+                                PushStack(trigger.Args[argIndex]);
+                        
+                        triggersToBeExecuted.Add(trigger);
+                        
+                        currentInstructionPointer = trigger.EntryPoint;
+                        // Triggers can chain in this loop if more than one fire off at once - the second trigger
+                        // will look like it was a function that was called from the start of the first trigger.
+                        // The third trigger will look like a function that was called from the start of the second, etc.
+                    }
                 }
             }
             

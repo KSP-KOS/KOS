@@ -66,6 +66,7 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Encapsulation\DoNothingDelegate.cs" />
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
     <Compile Include="Exceptions\KOSInvalidDelegateType.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
