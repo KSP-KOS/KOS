@@ -80,7 +80,7 @@ namespace kOS.Suffixed
 
         private ScalarValue CalculateSecond()
         {
-            return span%SECONDS_IN_MINUTE;
+            return (int)Math.Floor(span % SECONDS_IN_MINUTE);
         }
 
         public double ToUnixStyleTime()
