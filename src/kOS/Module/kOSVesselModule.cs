@@ -235,7 +235,16 @@ namespace kOS.Module
                 UnHookStockPilot();
             }
         }
-
+        
+        /// <summary>
+        /// A race condition exists where KSP can load the kOS module onto the vessel
+        /// before it loaded the RemoteTech module.  That makes it so that kOS may not
+        /// see the existence of RT yet when kOS is first initialized.<br/>
+        /// <br/>
+        /// This fixes that case by continually re-querying for RT post-loading, and
+        /// re-initializing kOS's RT-related behaviors if it seems that the RT module
+        /// now exists when it didn't before (or visa versa).
+        /// </summary>
         private void CheckSwapEvents()
         {
             if (RemoteTechHook.IsAvailable(parentVessel.id) != hasRemoteTech)
