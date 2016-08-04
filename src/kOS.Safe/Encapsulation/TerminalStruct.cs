@@ -54,20 +54,23 @@ namespace kOS.Safe.Encapsulation
         
         public int NotifyMeOfResize(IScreenBuffer sb)
         {
-            foreach(UserDelegate watcher in resizeWatchers)
+            foreach (UserDelegate watcher in resizeWatchers)
             {
-                if (!(watcher is DoNothingDelegate))
-                {
-                    List<Structure> argList = new List<Structure>(new Structure[] {(ScalarIntValue)sb.ColumnCount, (ScalarIntValue)sb.RowCount});
-                    
-                    // Normally when you call Shared.Cpu.AddTrigger(), it not only constructs a TriggerInfo, but it
-                    // also immediately inserts it into the execution list to start firing off right away.  We want
-                    // to delay that, so here's an alternate way to construct a TriggerInfo that isn't running yet,
-                    // and isn't attached to the ProgramContext yet, until we choose to add it ourselves later:
-                    TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.EntryPoint, argList);
-                    pendingResizeTriggers.Enqueue(notYetExecutingTrigger);
-                }
+                // If the watcher is dead, take it out of the list, else call it with (cols, rows) as its arguments:
+                
+                if (watcher is DoNothingDelegate) // User passed us a pointless "null" delegate
+                    continue;
+
+                List<Structure> argList = new List<Structure>(new Structure[] {(ScalarIntValue)sb.ColumnCount, (ScalarIntValue)sb.RowCount});
+
+                // Normally when you call Shared.Cpu.AddTrigger(), it not only constructs a TriggerInfo, but it
+                // also immediately inserts it into the execution list to start firing off right away.  We want
+                // to delay that, so here's an alternate way to construct a TriggerInfo that isn't running yet,
+                // that we'll wait until a later step to schedule to run:
+                TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.ProgContext, watcher.EntryPoint, argList);
+                pendingResizeTriggers.Enqueue(notYetExecutingTrigger);
             }
+
             return 0; // being told about the resize allows a resizer to choose to scroll the window.  We won't give that power to the script code.
         }
         
@@ -83,8 +86,26 @@ namespace kOS.Safe.Encapsulation
             if (currentResizeTrigger == null || currentResizeTrigger.CallbackFinished)
             {
                 currentResizeTrigger = pendingResizeTriggers.Dequeue();
-                Shared.Cpu.AddTrigger(currentResizeTrigger);
+
+                // Try calling it again, and by the way any time we notice an attempt
+                // to call it again has failed, then go back and trim our list of
+                // watchers so it won't happen again:
+                if (Shared.Cpu.AddTrigger(currentResizeTrigger) == null)
+                    TrimStaleWatchers();
             }
+        }
+
+        private void TrimStaleWatchers()
+        {
+            // Can't use Linq Where clauses here because UniqueSetValue is our own homemade collection type:
+            
+            List<UserDelegate> deleteUs = new List<UserDelegate>();
+            foreach (UserDelegate watcher in resizeWatchers)
+                if (watcher is DoNothingDelegate || watcher.ProgContext.ContextId != Shared.Cpu.GetCurrentContext().ContextId)
+                    deleteUs.Add(watcher);
+                
+            foreach (UserDelegate deadWatcher in deleteUs)
+                resizeWatchers.Remove(deadWatcher);
         }
 
         protected internal SafeSharedObjects Shared

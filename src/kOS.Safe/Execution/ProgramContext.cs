@@ -15,10 +15,20 @@ namespace kOS.Safe.Execution
         public List<Opcode> Program { get; set; }
         public int InstructionPointer { get; set; }
         
+        // Increments every time we construct a new ProgramContext.
+        private static int globalInstanceCount = 0;
+        
+        /// <summary>Each constructed instance of ProgramContext gets a new ID number.
+        /// That way we can mark other objects with the ID of the ProgramContext
+        /// they go with, without needing to keep references around that would
+        /// prevent disposing the program context.</summary>
+        public int ContextId { get; set; }
+
         /// <summary>
         /// List of triggers that are currently active
         /// </summary>
         private List<TriggerInfo> Triggers { get; set; }
+        
         /// <summary>
         /// List of triggers that are *about to become* currently active, but only after
         /// the CPU tells us it's a good safe time to re-insert them.  This delay is done
@@ -38,11 +48,13 @@ namespace kOS.Safe.Execution
             builder = interpreterContext ? new ProgramBuilderInterpreter() : new ProgramBuilder();
             flyByWire = new Dictionary<string, bool>();
             fileMap  = new Dictionary<string, int>();
+            ContextId = ++globalInstanceCount;
         }
 
         public ProgramContext(bool interpreterContext, List<Opcode> program) : this(interpreterContext)
         {
             Program = program;
+            ContextId = ++globalInstanceCount;
         }
 
         public void AddParts(IEnumerable<CodePart> parts)

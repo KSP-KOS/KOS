@@ -10,6 +10,7 @@ namespace kOS.Safe.Execution
         void AddParts(IEnumerable<CodePart> parts);
         int AddObjectParts(IEnumerable<CodePart> parts, string objectFilename);
         int GetAlreadyCompiledEntryPoint(string fileID);
+        int ContextId { get; set; }
         void ToggleFlyByWire(string paramName, bool enabled);
         List<string> GetCodeFragment(int contextLines);
         List<string> GetCodeFragment(int start, int stop, bool doProfile = false);

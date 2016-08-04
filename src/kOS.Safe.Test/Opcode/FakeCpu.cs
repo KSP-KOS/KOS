@@ -184,7 +184,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void AddTrigger(TriggerInfo trigger)
+        public TriggerInfo AddTrigger(TriggerInfo trigger)
         {
             throw new NotImplementedException();
         }

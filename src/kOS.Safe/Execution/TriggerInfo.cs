@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Execution;
 
 /// <summary>
 /// Holds the information about a trigger, which could be
@@ -30,6 +31,14 @@ public class TriggerInfo
     /// than 1 update to reach the end of the function).
     /// </summary>
     public bool CallbackFinished { get; private set; }
+    /// <summary>
+    /// Describes which program context this Trigger instance is meant to
+    /// be run under.  Triggers should never get run under a different
+    /// program context than they were made for, because that would mean
+    /// the EntryPoint refers to some instruction index from a previous,
+    /// now gone, program.
+    /// </summary>
+    public int ContextId { get; private set; }
 
     /// <summary>
     /// The list of arguments that should be passed in to the trigger (Only if it is
@@ -40,30 +49,36 @@ public class TriggerInfo
     /// <summary>
     /// Make a new trigger for insertion into the trigger list.
     /// </summary>
-    /// <param name="entryPoint">routine that needs to be called when the trigger needs to be invoked.</param>
+    /// <param name="context">The ProgramContext under which this Trigger is meant to run.</param>
+    /// <param name="entryPoint">Address within the program context where the routine starts that
+    /// needs to be called when the trigger needs to be invoked.</param>
     /// <param name="isCSharpCallback">set to true to tell the system this trigger is meant to be a callback</param>
-    public TriggerInfo(int entryPoint, bool isCSharpCallback = false)
+    public TriggerInfo(IProgramContext context, int entryPoint, bool isCSharpCallback = false)
     {
         EntryPoint = entryPoint;
         IsCSharpCallback = isCSharpCallback;
         ReturnValue = new ScalarIntValue(0);
         CallbackFinished = false;
         Args = new List<Structure>();
+        ContextId = context.ContextId;
     }
     
     /// <summary>
     /// Make a new trigger for insertion into the trigger list, which is a callback from C# code.
     /// </summary>
-    /// <param name="entryPoint">routine that needs to be called when the trigger needs to be invoked.</param>
+    /// <param name="context">The ProgramContext under which this Trigger is meant to run.</param>
+    /// <param name="entryPoint">Address within the program context where the routine starts that
+    /// needs to be called when the trigger needs to be invoked.</param>
     /// <param name="args">list of the arguments to pass in to the function.  Note, the existence of
     /// arguments mandates that this is a callback trigger.</param>
-    public TriggerInfo(int entryPoint, List<Structure> args)
+    public TriggerInfo(IProgramContext context, int entryPoint, List<Structure> args)
     {
         EntryPoint = entryPoint;
         IsCSharpCallback = true;
         ReturnValue = new ScalarIntValue(0);
         CallbackFinished = false;
         Args = args;
+        ContextId = context.ContextId;
     }
     
     /// <summary>

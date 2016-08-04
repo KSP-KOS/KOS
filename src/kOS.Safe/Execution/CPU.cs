@@ -1016,33 +1016,117 @@ namespace kOS.Safe.Execution
             return stack.GetLogicalSize();
         }
 
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.  This type of trigger must be a function that
+        /// takes zero parameters and returns a BooleanValue.  If its return is true, it will be
+        /// automatically scheduled to run again by being re-inserted with a new AddTrigger()
+        /// when it finishes.  If its return is false, it won't fire off again.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
+        /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
         public TriggerInfo AddTrigger(int triggerFunctionPointer)
         {
-            TriggerInfo triggerRef = new TriggerInfo(triggerFunctionPointer);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer);
             currentContext.AddPendingTrigger(triggerRef);
             return triggerRef;
         }
 
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.<br/>
+        /// <br/>
+        /// This type of trigger must be a UserDelegate
+        /// function which was created using the CPU's current Program Contect.  If it was created
+        /// using a different program context that the one that is currently executing (i.e. if it's
+        /// a delegate from a program that has ended now), then this method will refuse to insert it
+        /// and it won't run.  In this case a null TriggerInfo will be returned.<br/>
+        /// <br/>
+        /// For "fire and forget" callback hook functions that "return void" and you don't care about
+        /// their return value, you can just ignore whether or not the AddTrigger worked and not care
+        /// about the cases where it silently fails because the program got aborted.  The fact that the
+        /// callback won't execute only matters when you were expecting to read its return value.
+        /// </summary>
+        /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
+        /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
+        /// the progress of the function call: To see if it has had a chance to finish executing yet,
+        /// and to see what its return value was if it has finished.  Will be null if the UserDelegate was
+        /// for an "illegal" program context.  Null returns are used instead of throwing an exception
+        /// because this condition is expected to occur often when a program just ended that had callback hooks
+        /// in it.</returns>
         public TriggerInfo AddTrigger(UserDelegate del, List<Structure> args)
         {
-            TriggerInfo callbackRef = new TriggerInfo(del.EntryPoint, args);
+            if (del.ProgContext != currentContext)
+                return null;
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, args);
             currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }
 
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.<br/>
+        /// <br/>
+        /// This type of trigger must be a UserDelegate
+        /// function which was created using the CPU's current Program Contect.  If it was created
+        /// using a different program context that the one that is currently executing (i.e. if it's
+        /// a delegate from a program that has ended now), then this method will refuse to insert it
+        /// and it won't run.  In this case a null TriggerInfo will be returned.
+        /// <br/>
+        /// For "fire and forget" callback hook functions that "return void" and you don't care about
+        /// their return value, you can just ignore whether or not the AddTrigger worked and not care
+        /// about the cases where it silently fails because the program got aborted.  The fact that the
+        /// callback won't execute only matters when you were expecting to read its return value.
+        /// </summary>
+        /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
+        /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
+        /// the progress of the function call: To see if it has had a chance to finish executing yet,
+        /// and to see what its return value was if it has finished.  Will be null if the UserDelegate was
+        /// for an "illegal" program context.  Null returns are used instead of throwing an exception
+        /// because this condition is expected to occur often when a program is ended that had callback hooks
+        /// in it.</returns>
         public TriggerInfo AddTrigger(UserDelegate del, params Structure[] args)
         {
+            if (del.ProgContext != currentContext)
+                return null;
             return AddTrigger(del, new List<Structure>(args));
         }
 
-        public void AddTrigger(TriggerInfo trigger)
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.<br/>
+        /// <br/>
+        /// This is used for cases where you already built a TriggerInfo yourself and are inserting it,
+        /// or have a handle on a TriggerInfo you got as a return from a previous AddTrigger() call and
+        /// want to re-insert it to schedule another call.<br/>
+        /// If the TriggerInfo you pass in was built for a different ProgramContext than the one that
+        /// is currently running, then this will return null and refuse to do anything.
+        /// </summary>
+        /// <returns>To be in agreement with how the other AddTrigger() methods work, this returns
+        /// a TriggerInfo which is just the same one you passed in.  It will return a null, however,
+        /// in cases where the TriggerInfo you passed in is for a different ProgramContext.</returns>
+        public TriggerInfo AddTrigger(TriggerInfo trigger)
         {
+            if (trigger.ContextId != currentContext.ContextId)
+                return null;
             currentContext.AddPendingTrigger(trigger);
+            return trigger;
         }
 
         public void RemoveTrigger(int triggerFunctionPointer)
         {
-            currentContext.RemoveTrigger(new TriggerInfo(triggerFunctionPointer));
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer));
         }
 
         public void RemoveTrigger(TriggerInfo trigger)

@@ -180,11 +180,23 @@ namespace kOS.Suffixed
             // For those UserDelegates that have been assigned, if there isn't a current UserDelegate call in progress, start a new one:
             // -------------------------------------------------------------------------------------------------------------------------
             if (StartDelegate != null && (StartTrigger == null || StartTrigger.CallbackFinished))
+            {
                 StartTrigger = shared.Cpu.AddTrigger(StartDelegate);
+                if (StartTrigger == null) // StartDelegate must be from a stale ProgramContext.  Stop trying to call it.
+                    StartDelegate = null;
+            }
             if (VectorDelegate != null && (VectorTrigger == null || VectorTrigger.CallbackFinished))
+            {
                 VectorTrigger = shared.Cpu.AddTrigger(VectorDelegate);
+                if (VectorTrigger == null) // StartDelegate must be from a stale ProgramContext.  Stop trying to call it.
+                    VectorDelegate = null;
+            }
             if (ColorDelegate != null && (ColorTrigger == null || ColorTrigger.CallbackFinished))
+            {
                 ColorTrigger = shared.Cpu.AddTrigger(ColorDelegate);
+                if (ColorTrigger == null) // StartDelegate must be from a stale ProgramContext.  Stop trying to call it.
+                    ColorDelegate = null;
+            }
         }
 
         private void InitializeSuffixes()
