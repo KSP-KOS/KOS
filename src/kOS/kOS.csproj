@@ -82,6 +82,8 @@
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Callback\GameEventDispatcher.cs" />
+    <Compile Include="Callback\KOSGameEventDispatcher.cs" />
     <Compile Include="Control\SteeringManager.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
@@ -251,6 +253,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Callback" />
+  </ItemGroup>
 </Project>

@@ -57,6 +57,7 @@
     <Compile Include="Binding\BindingDelgate.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\IBindingManager.cs" />
+    <Compile Include="Callback\IGameEventDispatchManager.cs" />
     <Compile Include="Compilation\Calculator.cs" />
     <Compile Include="Compilation\CalculatorBool.cs" />
     <Compile Include="Compilation\CalculatorScalar.cs" />
@@ -273,7 +274,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Callback" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">

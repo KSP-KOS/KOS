@@ -1,5 +1,6 @@
 using kOS.AddOns.RemoteTech;
 using kOS.Binding;
+using kOS.Callback;
 using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
@@ -424,6 +425,8 @@ namespace kOS.Module
             shared.Cpu = new CPU(shared);
             shared.SoundMaker = Sound.SoundMaker.Instance;
             shared.AddonManager = new AddOns.AddonManager(shared);
+            shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
+            SafeHouse.Logger.Log("eraseme: InitObjects() Just made new shared.GameEventDispatchManager.");            
 
             // Make the window that is going to correspond to this kOS part:
             var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));

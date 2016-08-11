@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Binding;
+using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
@@ -78,7 +79,8 @@ namespace kOS.Safe.Execution
         {
             // break all running programs
             currentContext = null;
-            contexts.Clear();
+            contexts.Clear();            
+            if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
             currentStatus = Status.Running;
             currentTime = 0;
@@ -94,6 +96,7 @@ namespace kOS.Safe.Execution
             if (shared.FunctionManager != null) shared.FunctionManager.Load();
             // load bindings
             if (shared.BindingMgr != null) shared.BindingMgr.Load();
+
             // Booting message
             if (shared.Screen != null)
             {
@@ -177,6 +180,8 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
+            SafeHouse.Logger.Log("eraseme: shared.GameEventDispatchManager is " + (shared.GameEventDispatchManager == null ? "<null>" : "<not null>"));
+            shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)
             {
@@ -192,12 +197,14 @@ namespace kOS.Safe.Execution
                 // remove the last context
                 ProgramContext contextRemove = contexts.Last();
                 contexts.Remove(contextRemove);
+                shared.GameEventDispatchManager.RemoveDispatcherFor(currentContext);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
                 SafeHouse.Logger.Log("Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
                 if (contexts.Any())
                 {
                     currentContext = contexts.Last();
+                    shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
                     currentContext.EnableActiveFlyByWire(shared.BindingMgr);
                     RestorePointers();
                     SafeHouse.Logger.Log("New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
@@ -205,6 +212,7 @@ namespace kOS.Safe.Execution
                 else
                 {
                     currentContext = null;
+                    shared.GameEventDispatchManager.Clear();
                 }
 
                 if (contexts.Count == 1)

@@ -3,6 +3,7 @@ using kOS.Communication;
 using kOS.Binding;
 using kOS.Factories;
 using kOS.Screen;
+using kOS.Callback;
 
 namespace kOS
 {
@@ -16,7 +17,10 @@ namespace kOS
         public TermWindow Window { get; set; }
         public TransferManager TransferManager { get; set; }
         public AddOns.AddonManager AddonManager { get; set; }
-
+        public GameEventDispatchManager DispatchManager
+        {
+            get { return (GameEventDispatchManager)GameEventDispatchManager; }
+        }
         public SharedObjects()
         {
             GameEvents.onVesselDestroy.Add(OnVesselDestroy);
