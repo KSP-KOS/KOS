@@ -89,7 +89,6 @@ namespace kOS.Callback
 
 		private UniqueSetValue<UserDelegate> switchVesselNotifyees = null;
 		private Dictionary<Vessel, UniqueSetValue<UserDelegate>> soiChangeNotifyees = null;
-		private Dictionary<Vessel, UniqueSetValue<UserDelegate>> stageSeparationNotifyees = null;
 		private Dictionary<Part, UniqueSetValue<UserDelegate>> partCoupleNotifyees = null;
 		private Dictionary<Part, UniqueSetValue<UserDelegate>> partUndockNotifyees = null;
 
@@ -104,9 +103,6 @@ namespace kOS.Callback
 
 			if (switchVesselNotifyees != null ) switchVesselNotifyees.Clear();
 			GameEvents.onVesselSwitching.Remove(SendToSwitchVesselNotifyees);
-
-			if (stageSeparationNotifyees != null ) stageSeparationNotifyees.Clear();
-			GameEvents.onStageSeparation.Remove(SendToStageSeparationNotifyees);
 
 			if (partCoupleNotifyees != null ) partCoupleNotifyees.Clear();
 			GameEvents.onPartCouple.Remove(SendToPartCouplingNotifyees);
@@ -193,34 +189,6 @@ namespace kOS.Callback
 			foreach (UserDelegate del in notifyees)
 				if (UserDelgateIsAcceptable(del))
 					Shared.Cpu.AddTrigger(del, new BodyTarget(evt.@from, Shared), new BodyTarget(evt.to, Shared));
-		}
-
-		// Staging:
-		// --------
-		public UniqueSetValue<UserDelegate> GetStageSeparationNotifyees(Vessel ves)
-		{
-			UniqueSetValue<UserDelegate> theList;
-			if (stageSeparationNotifyees == null)
-			    stageSeparationNotifyees = new Dictionary<Vessel, UniqueSetValue<UserDelegate>>();
-			if (!stageSeparationNotifyees.TryGetValue(ves, out theList)) {
-				// This is where we lazy-build it if it's not there yet.
-				theList = new UniqueSetValue<UserDelegate>();
-				stageSeparationNotifyees[ves] = theList;
-				// Now that we know it's likely getting used, activate our own callback hook:
-				GameEvents.onStageSeparation.Add(SendToStageSeparationNotifyees);
-			}
-			return theList;
-		}
-
-		public void SendToStageSeparationNotifyees(EventReport evt)
-		{
-		    Console.WriteLine("eraseme: SendToStageSeparationNotifyees just got called.");
-		    Console.WriteLine("eraseme:    with evt.origin = " + evt.origin.ToString());
-		    Console.WriteLine("eraseme:    with evt.origin.vessel = " + evt.origin.vessel.ToString());
-			UniqueSetValue<UserDelegate> notifyees = GetStageSeparationNotifyees(evt.origin.vessel);
-			foreach (UserDelegate del in notifyees)
-				if (UserDelgateIsAcceptable(del))
-			        Shared.Cpu.AddTrigger(del, PartValueFactory.Construct(evt.origin, Shared), new ScalarIntValue(evt.stage));
 		}
 
 		// PartCouple:
