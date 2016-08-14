@@ -16,13 +16,13 @@ Lists need to be iterated over sometimes, to help with this we have the :ref:`FO
     When no parameters are given, the LIST command is exactly equivalent to the command::
 
         LIST FILES.
-        
+
 2. ``LIST ListKeyword.``
     This variant prints items to the termianl sceen. Depending on the *ListKeyword* used (see below), different values are printed.
-    
+
 3. ``LIST ListKeyword IN YourVariable.``
     This variant takes the items that would otherwise have been printed to the terminal screen, and instead makes a :struct:`List` of them in ``YourVariable``, that you can then iterate over with a :ref:`FOR loop <for>` if you like.
-    
+
 4. ``LIST ListKeyword FROM SomeVessel IN YourVariable.``
     This variant is just like variant (3), except that it gives a list of the items that exist on some other vessel that might not necessarily be the current :ref:`CPU_vessel <cpu vessel>`.
 
@@ -39,7 +39,7 @@ These generate :struct:`lists <List>` that are not dependent on which :struct:`V
 
 ``Bodies``
     :struct:`List` of :struct:`Celestial Bodies <Body>`
-    
+
 ``Targets``
     :struct:`List` of possible target :struct:`Vessels <Vessel>`
 
@@ -91,17 +91,17 @@ Examples::
 
 The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <VolumeItem>`.
 The file list contains both actual files and subdirectories under the current directory level.  You can use the
-`:isfile` suffix on each element to find out if it's a file or a subdirectory.  If it is a file rather than a
+:attr:`VolumeItem:IsFile` suffix on each element to find out if it's a file or a subdirectory.  If it is a file rather than a
 subdirectory, then it will also have all the suffixes of :struct:`VolumeFile` on it.
 
 Here are some more examples::
 
     // Prints the list of all
     // Celestial bodies in the system.
-    LIST BODIES. 
+    LIST BODIES.
 
     // Puts the list of bodies into a variable.
-    LIST BODIES IN bodList. 
+    LIST BODIES IN bodList.
     // Iterate over everything in the list:
     SET totMass to 0.
     FOR bod in bodList {
@@ -109,7 +109,7 @@ Here are some more examples::
     }.
     PRINT "The mass of the whole solar system is " + totMass.
 
-    // Adds variable foo that contains a list of 
+    // Adds variable foo that contains a list of
     // resources for my currently target vessel
     LIST RESOURCES FROM TARGET IN foo.
     FOR res IN foo {
