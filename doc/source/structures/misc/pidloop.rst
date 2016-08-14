@@ -186,7 +186,7 @@ PIDLoop Update Derivation
 
 The internal update method of the :struct:`PIDLoop` structure is the equivalent of the following in kerboscript ::
 
-    // assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined
+    // assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined
     declare function Update {
         declare parameter sampleTime, input.
         set Error to Setpoint - input.
@@ -195,16 +195,13 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
         set DTerm to 0.
         if (LastSampleTime < sampleTime) {
             set dt to sampleTime - LastSampleTime.
-            if dt < 1 {
-                // only calculate integral and derivative if the time
-                // difference is less than one second, and their gain is not 0.
-                if Ki <> 0 {
-                    set ITerm to (ErrorSum + Error) * dt * Ki.
-                }
-                set ChangeRate to (input - LastInput) / dt.
-                if Kd <> 0 {
-                    set DTerm to ChangeRate * Kd.
-                }
+            // only calculate integral and derivative if their gain is not 0.
+            if Ki <> 0 {
+                set ITerm to (ErrorSum + Error * dt) * Ki.
+            }
+            set ChangeRate to (input - LastInput) / dt.
+            if Kd <> 0 {
+                set DTerm to -ChangeRate * Kd.
             }
         }
         set Output to pTerm + iTerm + dTerm.
@@ -214,7 +211,7 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
             if (Ki <> 0) and (LastSampleTime < sampleTime) {
-                set ITerm to Output - Pterm - DTerm.
+                set ITerm to Output - min(Pterm + DTerm, MaxOutput).
             }
         }
         else if Output < MinOutput {
@@ -222,10 +219,11 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
             if (Ki <> 0) and (LastSampleTime < sampleTime) {
-                set ITerm to Output - Pterm - DTerm.
+                set ITerm to Output - max(Pterm + DTerm, MinOutput).
             }
         }
         set LastSampleTime to sampleTime.
+        set LastInput to input.
         if Ki <> 0 set ErrorSum to ITerm / Ki.
         else set ErrorSum to 0.
         return Output.
