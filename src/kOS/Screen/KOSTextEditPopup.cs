@@ -26,7 +26,6 @@ namespace kOS.Screen
         private Rect reloadCoords;
         private Rect resizeButtonCoords;
         private TermWindow term; // The terminal that this popup is attached to.
-        private GlobalPath filePath;
         private GlobalPath loadingPath;
         private Volume volume;
         private Volume loadingVolume;
@@ -145,7 +144,7 @@ namespace kOS.Screen
 
         public void SaveContents()
         {
-            if (volume.SaveFile(filePath, new FileContent(contents)) == null)
+            if (volume.SaveFile(loadingPath, new FileContent(contents)) == null)
             {
                 // For some reason the normal trap that prints exceptions on
                 // the terminal doesn't work here in this part of the code,
@@ -154,7 +153,7 @@ namespace kOS.Screen
                 throw new Exception("File Save Failed from Text Editor.");
             }
             isDirty = false;
-            term.Print("[Saved changes to " + filePath + "]");
+            term.Print("[Saved changes to " + loadingPath + "]");
         }
 
         protected void ReloadContents()
@@ -193,7 +192,7 @@ namespace kOS.Screen
             choices.Add("Cancel");
             actions.Add(DelegateCancel);
 
-            dialog.Invoke(this, "\"" + filePath + "\" has been edited.  Save it before exiting?", choices, actions);
+            dialog.Invoke(this, "\"" + loadingPath + "\" has been edited.  Save it before exiting?", choices, actions);
         }
 
         protected void InvokeDirtySaveLoadDialog()
@@ -207,7 +206,7 @@ namespace kOS.Screen
             choices.Add("Cancel");
             actions.Add(DelegateCancel);
 
-            dialog.Invoke(this, "\"" + filePath + "\" has been edited.  Save before loading \"" + loadingPath.Name + "\"?", choices, actions);
+            dialog.Invoke(this, "\"" + loadingPath + "\" has been edited.  Save before loading \"" + loadingPath.Name + "\"?", choices, actions);
         }
 
         protected void InvokeReloadConfirmDialog()
@@ -219,7 +218,7 @@ namespace kOS.Screen
             choices.Add("No");
             actions.Add(DelegateCancel);
 
-            dialog.Invoke(this, "\"" + filePath + "\" has been edited.  Throw away changes and reload?", choices, actions);
+            dialog.Invoke(this, "\"" + loadingPath + "\" has been edited.  Throw away changes and reload?", choices, actions);
         }
 
         protected static void DelegateSaveExit(KOSTextEditPopup me)
@@ -252,15 +251,15 @@ namespace kOS.Screen
             else if (item is VolumeFile)
             {
                 VolumeFile file = item as VolumeFile;
+                me.loadingPath = GlobalPath.FromVolumePath(item.Path, me.loadingPath.VolumeId);
                 me.contents = file.ReadAll().String;
             }
             else
             {
-                throw new KOSPersistenceException("Path '" + me.filePath + "' points to a directory");
+                throw new KOSPersistenceException("Path '" + me.loadingPath + "' points to a directory");
             }
 
             me.volume = me.loadingVolume;
-            me.filePath = me.loadingPath;
             me.isDirty = false;
         }
 
@@ -521,7 +520,7 @@ namespace kOS.Screen
 
         protected string BuildTitle()
         {
-            return filePath.ToString();
+            return loadingPath.ToString();
         }
     }
 }

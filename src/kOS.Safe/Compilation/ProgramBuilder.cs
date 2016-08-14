@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Compilation.KS;
+using kOS.Safe.Execution;
 
 namespace kOS.Safe.Compilation
 {
     public class ProgramBuilder
     {
         private readonly Dictionary<Guid, ObjectFile> objectFiles = new Dictionary<Guid, ObjectFile>();
+        
+        public static string BuiltInFakeVolumeId { get { return "[built-in]"; } }
 
         /// <summary>
         /// Creates a new ObjectFile with the parts provided
@@ -93,33 +96,35 @@ namespace kOS.Safe.Compilation
         {
             List<Opcode> boilerplate = new List<Opcode>();
             
+            InternalPath path = new BuiltInPath();
+            
             // First label of the load/runner will be called "@LR00", which is important because that's
             // what we hardcode all the compiler-built VisitRunStatement's to call out to:
             labelCounter = 0;
             labelFormat = "@LR{0:D2}";
-            boilerplate.Add(new OpcodePushScope(-999,0) {Label = nextLabel});
+            boilerplate.Add(new OpcodePushScope(-999,0) {Label = nextLabel, SourcePath = path});
 
             // High level kerboscript function calls flip the argument orders for us, but
             // low level kRISC does not so the parameters have to be read in stack order:
             
             // store parameter 2 in a local name:
-            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel});
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel});
+            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
 
             // store parameter 1 in a local name:
-            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel});
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel});
+            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
             
             // Unconditionally call load() no matter what.  load() will abort and return
             // early if the program was already compiled, and tell us that on the stack:
-            boilerplate.Add(new OpcodePush(new kOS.Safe.Execution.KOSArgMarkerType()) {Label = nextLabel});
-            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel});
-            boilerplate.Add(new OpcodeEval() {Label = nextLabel});
-            boilerplate.Add(new OpcodePush(true) {Label = nextLabel}); // the flag that tells load() to abort early if it's already loaded:
-            boilerplate.Add(new OpcodePush(null) {Label = nextLabel});
-            boilerplate.Add(new OpcodeCall("load()") {Label = nextLabel});
+            boilerplate.Add(new OpcodePush(new kOS.Safe.Execution.KOSArgMarkerType()) {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeEval() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodePush(true) {Label = nextLabel, SourcePath = path}); // the flag that tells load() to abort early if it's already loaded:
+            boilerplate.Add(new OpcodePush(null) {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeCall("load()") {Label = nextLabel, SourcePath = path});
 
             // Stack now has the 2 return values of load():
             //    Topmost value is a boolean flag for whether or not the program was already loaded.
@@ -128,33 +133,53 @@ namespace kOS.Safe.Compilation
             // If load() didn't claim the program was already loaded, or if we aren't operating
             // in "once" mode, then jump to the part where we call the loaded program, else
             // fall through to a dummy do-nothing return for the "run once, but it already ran" case:
-            Opcode branchFromOne = new OpcodeBranchIfFalse() {Label = nextLabel};
+            Opcode branchFromOne = new OpcodeBranchIfFalse() {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchFromOne);
-            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel});
-            Opcode branchFromTwo = new OpcodeBranchIfFalse() {Label = nextLabel};
+            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel, SourcePath = path});
+            Opcode branchFromTwo = new OpcodeBranchIfFalse() {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchFromTwo);
-            boilerplate.Add(new OpcodePop() {Label = nextLabel}); // onsume the entry point that load() returned. We won't be calling it.
-            boilerplate.Add(new OpcodePush(0) {Label = nextLabel});   // ---+-- The dummy do-nothing return.
-            boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel}); // ---'
+            boilerplate.Add(new OpcodePop() {Label = nextLabel, SourcePath = path}); // onsume the entry point that load() returned. We won't be calling it.
+            boilerplate.Add(new OpcodePush(0) {Label = nextLabel, SourcePath = path});   // ---+-- The dummy do-nothing return.
+            boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel, SourcePath = path}); // ---'
             
             // Actually call the Program from its entry Point, which is now the thing left on top
             // of the stack from the second return value of load():
-            Opcode branchTo = new OpcodePush("$entrypoint") {Label = nextLabel};
+            Opcode branchTo = new OpcodePush("$entrypoint") {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchTo);
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel});
-            boilerplate.Add(new OpcodeCall("$entrypoint") {Label = nextLabel});
+            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeCall("$entrypoint") {Label = nextLabel, SourcePath = path});
             
-            boilerplate.Add(new OpcodePop() {Label = nextLabel});
-            boilerplate.Add(new OpcodePush(0) {Label = nextLabel});
-            boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel});
+            boilerplate.Add(new OpcodePop() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodePush(0) {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel, SourcePath = path});
 
             branchFromOne.DestinationLabel = branchTo.Label;
             branchFromTwo.DestinationLabel = branchTo.Label;
 
             return boilerplate;
         }
+        
+        protected class BuiltInPath : InternalPath
+        {
+            private string command;
 
+            public BuiltInPath() : base(BuiltInFakeVolumeId)
+            {
+
+            }
+
+            public override string Line(int line)
+            {
+                return command;
+            }
+
+            public override string ToString()
+            {
+                return "[built-in]";
+            }
+        }
+        
         protected virtual void AddInitializationCode(CodePart linkedObject, CodePart part)
         {
             linkedObject.InitializationCode.AddRange(part.InitializationCode);

@@ -128,14 +128,11 @@ namespace kOS.Safe.Test.Persistence
             Assert.AreEqual("othervolume", newPath.VolumeId);
             Assert.AreEqual(1, newPath.Length);
             Assert.AreEqual("abc", newPath.Name);
-        }
 
-        [Test]
-        [ExpectedException(typeof(KOSInvalidPathException))]
-        public void CanFailToCombineSegmentsWithSlashes()
-        {
-            GlobalPath path = GlobalPath.FromString("othervolume:123");
-            path.Combine("456/abc", "789");
+            newPath = path.Combine("sub/abc");
+            Assert.AreEqual("othervolume", newPath.VolumeId);
+            Assert.AreEqual(3, newPath.Length);
+            Assert.AreEqual("abc", newPath.Name);
         }
 
         [Test]
