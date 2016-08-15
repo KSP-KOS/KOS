@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Infernal Robotics &mdash; kOS 0.20.1 documentation</title>
+  <title>Infernal Robotics &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="DMagic Orbital Science" href="OrbitalScience.html"/>
         <link rel="prev" title="Kerbal Alarm Clock" href="KAC.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,7 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Infernal Robotics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Infernal Robotics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="OrbitalScience.html">DMagic Orbital Science</a></li>
 </ul>
 </li>
@@ -134,7 +134,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -162,11 +162,13 @@
 <span id="ir"></span><h1>Infernal Robotics<a class="headerlink" href="#infernal-robotics" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li>Download: <a class="reference external" href="http://kerbal.curseforge.com/ksp-mods/220267">http://kerbal.curseforge.com/ksp-mods/220267</a></li>
-<li>Alternative download: <a class="reference external" href="https://kerbalstuff.com/mod/8/Magic_Smoke_Industries_Infernal_Robotics">https://kerbalstuff.com/mod/8/Magic_Smoke_Industries_Infernal_Robotics</a></li>
-<li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/116064">http://forum.kerbalspaceprogram.com/threads/116064</a></li>
+<li>Alternative download: <a class="reference external" href="https://github.com/MagicSmokeIndustries/InfernalRobotics/releases">https://github.com/MagicSmokeIndustries/InfernalRobotics/releases</a></li>
+<li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/">http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/</a></li>
 </ul>
-<p>Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren&#8217;t possible under stock KSP.
-.. figure:: <a class="reference external" href="http://i.imgur.com/O94LBvF.png">http://i.imgur.com/O94LBvF.png</a></p>
+<p>Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren&#8217;t possible under stock KSP.</p>
+<div class="figure">
+<img alt="http://i.imgur.com/O94LBvF.png" src="http://i.imgur.com/O94LBvF.png" />
+</div>
 <p>Starting version 0.20 of the Infernal Robotics, mod creators introduced API to for easier access to robotic features.</p>
 <p>Access structure IRAddon via <cite>ADDONS:IR</cite>.</p>
 <dl class="structure">
@@ -186,16 +188,20 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRADDON:AVAILABLE" title="IRADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a> (readonly)</td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>boolean</span></a> (readonly)</td>
 <td>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRADDON:GROUPS" title="IRADDON:GROUPS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GROUPS</span></code></a></td>
-<td>List (readonly)</td>
+<td>List of <a class="reference internal" href="#structure:IRCONTROLGROUP" title="IRCONTROLGROUP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRControlGroup</span></code></a></td>
 <td>Lists all  Servo Groups for the Vessel on which CPU runs this command (see details below).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRADDON:ALLSERVOS" title="IRADDON:ALLSERVOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLSERVOS</span></code></a></td>
-<td>List (readonly)</td>
+<td>List of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></code></a></td>
 <td>Lists all  Servos for the Vessel on which CPU runs this command (see details below).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRADDON:PARTSERVOS" title="IRADDON:PARTSERVOS method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSERVOS(Part)</span></code></a></td>
+<td>List of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></code></a></td>
+<td>Lists all Servos for the provided part</td>
 </tr>
 </tbody>
 </table>
@@ -208,7 +214,7 @@ IRAddon:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -231,7 +237,7 @@ IRAddon:<code class="descname">GROUPS</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">List of <a class="reference internal" href="#structure:IRCONTROLGROUP" title="IRCONTROLGROUP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRControlGroup</span></code></a> objects</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:IRCONTROLGROUP" title="IRCONTROLGROUP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRControlGroup</span></code></a> objects</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -254,7 +260,7 @@ IRAddon:<code class="descname">ALLSERVOS</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">List of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></code></a> objects</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></code></a> objects</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -268,6 +274,26 @@ Example of use:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRADDON:PARTSERVOS">
+IRAddon:<code class="descname">PARTSERVOS</code><span class="sig-paren">(</span>part<span class="sig-paren">)</span><a class="headerlink" href="#method:IRADDON:PARTSERVOS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>part</strong> &#8211; <a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> for which to return servos</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></code></a> objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Lists all Servos found on the given <a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>.</p>
 </dd></dl>
 
 <dl class="structure">
@@ -287,23 +313,23 @@ Example of use:</p>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:NAME" title="IRCONTROLGROUP:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 <td>Name of the Control Group</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:SPEED" title="IRCONTROLGROUP:SPEED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SPEED</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Speed multiplier set in the IR UI</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:EXPANDED" title="IRCONTROLGROUP:EXPANDED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXPANDED</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>True if Group is expanded in IR UI</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:FORWARDKEY" title="IRCONTROLGROUP:FORWARDKEY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FORWARDKEY</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 <td>Key assigned to forward movement</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:REVERSEKEY" title="IRCONTROLGROUP:REVERSEKEY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REVERSEKEY</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 <td>Key assigned to reverse movement</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:SERVOS" title="IRCONTROLGROUP:SERVOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SERVOS</span></code></a></td>
@@ -349,7 +375,7 @@ IRControlGroup:<code class="descname">NAME</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -365,7 +391,7 @@ IRControlGroup:<code class="descname">SPEED</code><a class="headerlink" href="#a
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -381,7 +407,7 @@ IRControlGroup:<code class="descname">EXPANDED</code><a class="headerlink" href=
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -397,7 +423,7 @@ IRControlGroup:<code class="descname">FORWARDKEY</code><a class="headerlink" hre
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -413,7 +439,7 @@ IRControlGroup:<code class="descname">REVERSEKEY</code><a class="headerlink" hre
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -565,67 +591,67 @@ IRControlGroup:<code class="descname">STOP</code><span class="sig-paren">(</span
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:NAME" title="IRSERVO:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 <td>Name of the Servo</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:UID" title="IRSERVO:UID attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UID</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (int)</td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a> (int)</td>
 <td>Unique ID of the servo part (part.flightID).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:HIGHLIGHT" title="IRSERVO:HIGHLIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HIGHLIGHT</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a> (set-only)</td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a> (set-only)</td>
 <td>Set Hightlight status of the part.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:POSITION" title="IRSERVO:POSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (readonly)</td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a> (readonly)</td>
 <td>Current position of the servo.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:MINCFGPOSITION" title="IRSERVO:MINCFGPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MINCFGPOSITION</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (readonly)</td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a> (readonly)</td>
 <td>Minimum position for servo as defined by part creator in part.cfg</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:MAXCFGPOSITION" title="IRSERVO:MAXCFGPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXCFGPOSITION</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (readonly)</td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a> (readonly)</td>
 <td>Maximum position for servo as defined by part creator in part.cfg</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:MINPOSITION" title="IRSERVO:MINPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MINPOSITION</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Minimum position for servo, from tweakable.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:MAXPOSITION" title="IRSERVO:MAXPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXPOSITION</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Maximum position for servo, from tweakable.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:CONFIGSPEED" title="IRSERVO:CONFIGSPEED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIGSPEED</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (readonly)</td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a> (readonly)</td>
 <td>Servo movement speed as defined by part creator in part.cfg</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:SPEED" title="IRSERVO:SPEED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SPEED</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Servo speed multiplier, from tweakable.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:CURRENTSPEED" title="IRSERVO:CURRENTSPEED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CURRENTSPEED</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (readonly)</td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a> (readonly)</td>
 <td>Current Servo speed.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:ACCELERATION" title="IRSERVO:ACCELERATION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACCELERATION</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Servo acceleration multiplier, from tweakable.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:ISMOVING" title="IRSERVO:ISMOVING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISMOVING</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a> (readonly)</td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a> (readonly)</td>
 <td>True if Servo is moving</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:ISFREEMOVING" title="IRSERVO:ISFREEMOVING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISFREEMOVING</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a> (readonly)</td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a> (readonly)</td>
 <td>True if Servo is uncontrollable (ex. docking washer)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:LOCKED" title="IRSERVO:LOCKED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOCKED</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Servo&#8217;s locked status, set true to lock servo.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:INVERTED" title="IRSERVO:INVERTED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INVERTED</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Servo&#8217;s inverted status, set true to invert servo&#8217;s axis.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:PART" title="IRSERVO:PART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PART</span></code></a></td>
@@ -671,7 +697,7 @@ IRServo:<code class="descname">NAME</code><a class="headerlink" href="#attribute
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -687,7 +713,7 @@ IRServo:<code class="descname">UID</code><a class="headerlink" href="#attribute:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -703,7 +729,7 @@ IRServo:<code class="descname">HIGHLIGHT</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Set</td>
 </tr>
@@ -719,7 +745,7 @@ IRServo:<code class="descname">POSITION</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -735,7 +761,7 @@ IRServo:<code class="descname">MINCFGPOSITION</code><a class="headerlink" href="
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -751,7 +777,7 @@ IRServo:<code class="descname">MAXCFGPOSITION</code><a class="headerlink" href="
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -767,7 +793,7 @@ IRServo:<code class="descname">MINPOSITION</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -783,7 +809,7 @@ IRServo:<code class="descname">MAXPOSITION</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -799,7 +825,7 @@ IRServo:<code class="descname">CONFIGSPEED</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -815,7 +841,7 @@ IRServo:<code class="descname">SPEED</code><a class="headerlink" href="#attribut
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -831,7 +857,7 @@ IRServo:<code class="descname">CURRENTSPEED</code><a class="headerlink" href="#a
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -847,7 +873,7 @@ IRServo:<code class="descname">ACCELERATION</code><a class="headerlink" href="#a
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -863,7 +889,7 @@ IRServo:<code class="descname">ISMOVING</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -879,7 +905,7 @@ IRServo:<code class="descname">ISFREEMOVING</code><a class="headerlink" href="#a
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
@@ -895,7 +921,7 @@ IRServo:<code class="descname">LOCKED</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -911,7 +937,7 @@ IRServo:<code class="descname">INVERTED</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -1107,7 +1133,7 @@ IRServo:<code class="descname">MOVETO</code><span class="sig-paren">(</span>posi
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

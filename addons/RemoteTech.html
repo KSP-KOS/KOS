@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RemoteTech &mdash; kOS 0.20.1 documentation</title>
+  <title>RemoteTech &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Kerbal Alarm Clock" href="KAC.html"/>
         <link rel="prev" title="Action Groups Extended" href="AGX.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -103,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">RemoteTech</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">RemoteTech</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
@@ -136,7 +136,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -164,7 +164,7 @@
 <span id="id1"></span><h1>RemoteTech<a class="headerlink" href="#remotetech" title="Permalink to this headline">¶</a></h1>
 <p>RemoteTech is a modification for Squad’s &#8220;Kerbal Space Program&#8221; (KSP) which overhauls the unmanned space program. It does this by requiring unmanned vessels have a connection to Kerbal Space Center (KSC) to be able to be controlled. This adds a new layer of difficulty that compensates for the lack of live crew members.</p>
 <ul class="simple">
-<li>Download: <a class="reference external" href="http://kerbalstuff.com/mod/134/RemoteTech">http://kerbalstuff.com/mod/134/RemoteTech</a></li>
+<li>Download: <a class="reference external" href="http://spacedock.info/mod/520/RemoteTech">http://spacedock.info/mod/520/RemoteTech</a></li>
 <li>Sources: <a class="reference external" href="https://github.com/RemoteTechnologiesGroup/RemoteTech">https://github.com/RemoteTechnologiesGroup/RemoteTech</a></li>
 <li>Documentation: <a class="reference external" href="http://remotetechnologiesgroup.github.io/RemoteTech/">http://remotetechnologiesgroup.github.io/RemoteTech/</a></li>
 </ul>
@@ -172,17 +172,37 @@
 <h2>Interaction with kOS<a class="headerlink" href="#interaction-with-kos" title="Permalink to this headline">¶</a></h2>
 <p>When you have RemoteTech installed you can only interact with the core&#8217;s terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.</p>
 <p>If you launch a manned craft while using RemoteTech, you are still able to input commands from the terminal even if you do not have a connection to the KSC.  The archive will still be inaccessible without a connection to the KSC.  Under the current implementation, there is no delay when accessing the archive with a local terminal.  This implementation may change in the future to account for delays in reading and writing data over the connection.</p>
+<div class="section" id="antennas">
+<h3>Antennas<a class="headerlink" href="#antennas" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to activate/deactivate RT antennas, as well as set their targets using kOS:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">p</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;mediumDishAntenna&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
-<span class="k">SET</span> <span class="nv">m</span> <span class="ow">to</span> <span class="nv">p</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleRTAntenna&quot;</span><span class="p">).</span>
-<span class="nv">m</span><span class="p">:</span><span class="nv">DOEVENT</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">).</span>
-<span class="nv">m</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;mission-control&quot;</span><span class="p">).</span>
-<span class="c1">// or</span>
-<span class="nv">m</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="nv">mun</span><span class="p">).</span>
-<span class="nv">m</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;minmus&quot;</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">P</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;mediumDishAntenna&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
+<span class="k">SET</span> <span class="nv">M</span> <span class="ow">to</span> <span class="nv">p</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleRTAntenna&quot;</span><span class="p">).</span>
+<span class="nv">M</span><span class="p">:</span><span class="nv">DOEVENT</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">).</span>
+<span class="nv">M</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;Mission Control&quot;</span><span class="p">).</span>
+<span class="nv">M</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="nv">mun</span><span class="p">).</span>
+<span class="nv">M</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="nv">somevessel</span><span class="p">).</span>
+<span class="nv">M</span><span class="p">:</span><span class="nv">SETFIELD</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="s">&quot;minmus&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Acceptable values for <cite>&#8220;target&#8221;</cite> are: <cite>&#8220;no-target&#8221;</cite>, <cite>&#8220;active-vessel&#8221;</cite>, <cite>&#8220;mission-control&#8221;</cite>, a <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a>, a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>, or a string containing the name of a body or vessel.</p>
+<p>Acceptable values for <cite>&#8220;target&#8221;</cite> are:</p>
+<ul class="simple">
+<li><cite>&#8220;no-target&#8221;</cite></li>
+<li><cite>&#8220;active-vessel&#8221;</cite></li>
+<li>a <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a></li>
+<li>a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></li>
+<li>a string containing the name of a body or vessel</li>
+<li>a string containing the name of a ground station (case-sensitive)</li>
+</ul>
+<p>You can use <a class="reference internal" href="#method:RTADDON:GROUNDSTATIONS" title="RTADDON:GROUNDSTATIONS method"><code class="xref ks ks-meth docutils literal"><span class="pre">RTADDON:GROUNDSTATIONS</span></code></a> to get a list of all ground stations. The default ground station is called <cite>&#8220;Mission Control&#8221;</cite>.</p>
+</div>
+<div class="section" id="communication">
+<h3>Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<p>When installed RemoteTech will influence <a class="reference internal" href="../commands/communication.html#communication"><span>communication</span></a> between vessels. In order to send a message to another vessel a valid RemoteTech connection will have to exist between them
+and of course messages will arrive to their destination with a proper delay. Documentation of <a class="reference internal" href="../structures/communication/connection.html#structure:CONNECTION" title="CONNECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Connection</span></code></a> class contains further information on how RemoteTech will change the behaviour
+of some of its suffixes.</p>
+</div>
+<div class="section" id="rtaddon">
+<h3>RTAddon<a class="headerlink" href="#rtaddon" title="Permalink to this headline">¶</a></h3>
 <p>Starting version 0.17 of kOS you can access structure RTAddon via <cite>ADDONS:RT</cite>.</p>
 <dl class="structure">
 <dt id="structure:RTADDON">
@@ -201,28 +221,36 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:RTADDON:AVAILABLE" title="RTADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a> (readonly)</td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
 <td>True if RT is installed and RT integration enabled.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:DELAY" title="RTADDON:DELAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">DELAY(vessel)</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Get shortest possible delay to given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:KSCDELAY" title="RTADDON:KSCDELAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">KSCDELAY(vessel)</span></code></a></td>
-<td><a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Get delay from KSC to given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASCONNECTION" title="RTADDON:HASCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASCONNECTION(vessel)</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:ANTENNAHASCONNECTION" title="RTADDON:ANTENNAHASCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">ANTENNAHASCONNECTION(part)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>True if given <a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> has any connection</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:HASCONNECTION" title="RTADDON:HASCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASCONNECTION(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has any connection</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:HASKSCCONNECTION" title="RTADDON:HASKSCCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASKSCCONNECTION(vessel)</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASKSCCONNECTION" title="RTADDON:HASKSCCONNECTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASKSCCONNECTION(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has connection to KSC</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:HASLOCALCONTROL" title="RTADDON:HASLOCALCONTROL method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASLOCALCONTROL(vessel)</span></code></a></td>
-<td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:RTADDON:HASLOCALCONTROL" title="RTADDON:HASLOCALCONTROL method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASLOCALCONTROL(vessel)</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if given <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> has local control</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:GROUNDSTATIONS" title="RTADDON:GROUNDSTATIONS method"><code class="xref ks ks-meth docutils literal"><span class="pre">GROUNDSTATIONS()</span></code></a></td>
+<td><a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Get names of all ground stations</td>
 </tr>
 </tbody>
 </table>
@@ -235,7 +263,7 @@ RTADDON:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -256,7 +284,7 @@ RTAddon:<code class="descname">DELAY</code><span class="sig-paren">(</span>vesse
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a>) seconds</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>) seconds</p>
 </td>
 </tr>
 </tbody>
@@ -276,12 +304,32 @@ RTAddon:<code class="descname">KSCDELAY</code><span class="sig-paren">(</span>ve
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a>) seconds</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>) seconds</p>
 </td>
 </tr>
 </tbody>
 </table>
 <p>Returns delay in seconds from KSC to <cite>vessel</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:RTADDON:ANTENNAHASCONNECTION">
+RTAddon:<code class="descname">ANTENNAHASCONNECTION</code><span class="sig-paren">(</span>part<span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:ANTENNAHASCONNECTION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>part</strong> &#8211; <a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns True if <cite>part</cite> has any connection (including to local command posts).</p>
 </dd></dl>
 
 <dl class="method">
@@ -296,7 +344,7 @@ RTAddon:<code class="descname">HASCONNECTION</code><span class="sig-paren">(</sp
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -316,7 +364,7 @@ RTAddon:<code class="descname">HASKSCCONNECTION</code><span class="sig-paren">(<
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -336,7 +384,7 @@ RTAddon:<code class="descname">HASLOCALCONTROL</code><span class="sig-paren">(</
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -344,6 +392,21 @@ RTAddon:<code class="descname">HASLOCALCONTROL</code><span class="sig-paren">(</
 <p>Returns True if <cite>vessel</cite> has local control (and thus not requiring a RemoteTech connection).</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:RTADDON:GROUNDSTATIONS">
+RTAddon:<code class="descname">GROUNDSTATIONS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:RTADDON:GROUNDSTATIONS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns names of all RT ground stations</p>
+</dd></dl>
+
+</div>
 </div>
 </div>
 
@@ -388,7 +451,7 @@ RTAddon:<code class="descname">HASLOCALCONTROL</code><span class="sig-paren">(</
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

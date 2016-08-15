@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Body &mdash; kOS 0.20.1 documentation</title>
+  <title>Body &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,11 +105,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Body</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Body</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -144,7 +144,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -182,7 +182,7 @@
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span class="std std-ref">Orbitable</span></a>, and can use all the terms described for these objects too.</p>
+<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>Orbitable</span></a>, and can use all the terms described for these objects too.</p>
 </div>
 </div>
 <div class="section" id="predefined-celestial-bodies">
@@ -254,43 +254,43 @@
 <tr class="row-even"><td colspan="2">Every Suffix of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:NAME" title="BODY:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:DESCRIPTION" title="BODY:DESCRIPTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DESCRIPTION</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MASS" title="BODY:MASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kg)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kg)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (s)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (s)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:RADIUS" title="BODY:RADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MU" title="BODY:MU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MU</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (<span class="math">\(m^3 s^{−2}\)</span>)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (<span class="math">\(m^3 s^{−2}\)</span>)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></code></a></td>
 <td><a class="reference internal" href="atmosphere.html#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></code></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span class="std std-ref">SHIP-RAW</span></a></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP-RAW</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:GEOPOSITIONOF" title="BODY:GEOPOSITIONOF attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITIONOF</span></code></a></td>
-<td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span class="std std-ref">SHIP-RAW</span></a></td>
+<td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP-RAW</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ALTITUDEOF" title="BODY:ALTITUDEOF attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEOF</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:SOIRADIUS" title="BODY:SOIRADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SOIRADIUS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONANGLE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 </tr>
 </tbody>
 </table>
@@ -389,7 +389,7 @@ Body:<code class="descname">SOIRADIUS</code><a class="headerlink" href="#attribu
 <dt id="attribute:BODY:ROTATIONANGLE">
 Body:<code class="descname">ROTATIONANGLE</code><a class="headerlink" href="#attribute:BODY:ROTATIONANGLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The rotation angle is the number of degrees between the
-<a class="reference internal" href="../../bindings.html#solarprimevector"><span class="std std-ref">Solar Prime Vector</span></a> and the
+<a class="reference internal" href="../../bindings.html#solarprimevector"><span>Solar Prime Vector</span></a> and the
 current positon of the body&#8217;s prime meridian (body longitude
 of zero).</p>
 <p>The value is in constant motion, and once per body&#8217;s day, its
@@ -440,7 +440,7 @@ of zero).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

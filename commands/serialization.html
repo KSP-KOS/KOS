@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Serialization &mdash; kOS 0.20.0 documentation</title>
+  <title>Serialization &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Communication" href="communication.html"/>
         <link rel="prev" title="Terminal and game environment" href="terminalgui.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.0
+                1.0.0
               </div>
             
           
@@ -181,7 +181,7 @@ and still be serializable.</p>
 <p>2. Currently there are 2 functionalities within kOS that use serialization. The first are <a class="reference internal" href="files.html#writejson"><span>WRITEJSON AND READJSON</span></a> commands.
 They allow to transform data structures into JSON objects and store them in a file. The other functionality is <a class="reference internal" href="communication.html#communication"><span>Communication</span></a>.
 It serializes messages currently stored on message queues to ConfigNode (KSP data format) and adds them to KSP save files.</p>
-<p>It is <strong>important</strong> to remember that any data that you supply to <a class="reference internal" href="files.html#writejson"><span>WRITEJSON(OBJECT, FILENAME).</span></a> and <a class="reference internal" href="../structures/communication/connection.html#method:CONNECTION:SENDMESSAGE" title="CONNECTION:SENDMESSAGE method"><code class="xref ks ks-meth docutils literal"><span class="pre">Connection:SENDMESSAGE</span></code></a> must be serializable.</p>
+<p>It is <strong>important</strong> to remember that any data that you supply to <a class="reference internal" href="files.html#writejson"><span>WRITEJSON(OBJECT, PATH)</span></a> and <a class="reference internal" href="../structures/communication/connection.html#method:CONNECTION:SENDMESSAGE" title="CONNECTION:SENDMESSAGE method"><code class="xref ks ks-meth docutils literal"><span class="pre">Connection:SENDMESSAGE</span></code></a> must be serializable.</p>
 </div>
 
 
@@ -225,7 +225,7 @@ It serializes messages currently stored on message queues to ConfigNode (KSP dat
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.0',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

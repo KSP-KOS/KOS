@@ -14,19 +14,18 @@ Maneuver Node
 A planned velocity change along an orbit. These are the nodes that you can set in the KSP user interface. Setting one through kOS will make it appear on the in-game map view, and creating one manually on the in-game map view will cause it to be visible to kOS.
 
 .. warning::
-
     Be aware that a limitation of KSP makes it so that some vessels'
-    manuever node systems cannot be accessed.  KSP appears to limit the
+    maneuver node systems cannot be accessed.  KSP appears to limit the
     maneuver node system to only functioning on the current PLAYER
     vessel, under the presumption that its the only vessel that needs
-    them, as ever other vessel cannot be manuevered. kOS can manuever a
+    them, as ever other vessel cannot be maneuvered. kOS can maneuver a
     vessel that is not the player vessel, but it cannot overcome this
     limitation of the base game that unloads the maneuver node system
-    for other vessels. 
+    for other vessels.
 
     Be aware that the effect this has is that when you try to use some of
     these commands on some vessels, they won't work because those vessels
-    do not have their manuever node system in play.  This is mostly only
+    do not have their maneuver node system in play.  This is mostly only
     going to happen when you try to run a script on a vessel that is not
     the current player active vessel.
 
@@ -49,7 +48,6 @@ Creation
     Once you have a maneuver node in a variable, you use the :global:`ADD` and :global:`REMOVE` commands to attach it to your vessel's flight plan. A kOS CPU can only manipulate the flight plan of its :ref:`CPU vessel <cpu vessel>`.
 
     .. warning::
-
         When *constructing* a new node using the :func:`NODE` function call, you use the universal time (you must add the ETA time to the current time to arrive at the value to pass in), but when using the suffix :attr:`ManeuverNode:ETA`, you do NOT use universal time, instead just giving the number of seconds from now.
 
     Once you have created a node, it's just a hypothetical node that hasn't
@@ -64,39 +62,63 @@ Creation
 
     You should immediately see it appear on the map view when you do this. The :global:`ADD` command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller :attr:`ETA <ManeuverNode:ETA>` time and then :global:`ADD` it.
 
-.. warning::
-
-    As per the warning above at the top of the section, ADD won't work on vessels that are not the active vessel.
+    .. warning::
+        As per the warning above at the top of the section, ADD won't work on vessels that are not the active vessel.
 
 .. global:: REMOVE
 
-    To remove a maneuver node from the flight path of the cur:rent :ref:`CPU vessel <cpu vessel>` (i.e. ``SHIP``), just :global:`REMOVE` it like so::
+    To remove a maneuver node from the flight path of the current :ref:`CPU vessel <cpu vessel>` (i.e. ``SHIP``), just :global:`REMOVE` it like so::
 
         REMOVE myNode.
 
-.. warning::
-
-    As per the warning above at the top of the section, REMOVE won't work on vessels that are not the active vessel.
+    .. warning::
+        As per the warning above at the top of the section, REMOVE won't work on vessels that are not the active vessel.
 
 .. global:: NEXTNODE
 
     :global:`NEXTNODE` is a built-in variable that always refers to the next upcoming node that has been added to your flight plan::
 
-        SET MyNode to :global:`NEXTNODE`.
-        PRINT :global:`NEXTNODE`:PROGRADE.
-        REMOVE :global:`NEXTNODE`.
+        SET MyNode to NEXTNODE.
+        PRINT NEXTNODE:PROGRADE.
+        REMOVE NEXTNODE.
 
     Currently, if you attempt to query :global:`NEXTNODE` and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).
 
-.. warning::
-
-    As per the warning above at the top of the section, NEXTNODE won't work on vessels that are not the active vessel.
-
-    If you need to query whether or not you have a :global:`NEXTNODE`, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check :global:`NEXTNODE` to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real :global:`NEXTNODE`. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.
+    .. warning::
+        As per the warning above at the top of the section, NEXTNODE won't work on vessels that are not the active vessel.
 
     The special identifier :global:`NEXTNODE` is a euphemism for "whichever node is coming up soonest on my flight path". Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this::
 
-        REMOVE :global:`NEXTNODE`.
+        REMOVE NEXTNODE.
+
+.. global:: HASNODE
+
+    :type: :struct:`Boolean`
+    :access: Get only
+
+    Returns true if there is a planned maneuver :struct:`ManeuverNode` in the
+    :ref:`CPU vessel's <cpu vessel>` flight plan.  This will always return
+    false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.
+
+.. global:: ALLNODES
+
+    :type: :struct:`List` of :struct:`ManeuverNode` elements
+    :access: Get only
+
+    Returns a list of all :struct:`ManeuverNode` objects currently on the
+    :ref:`CPU vessel's <cpu vessel>` flight plan.  This list will be empty if
+    no nodes are planned, or if the :ref:`CPU vessel <cpu vessel>` is currently
+    unable to use maneuver nodes.
+
+    .. note::
+        If you store a reference to this list in a variable, the variable's
+        instance will not be automatically updated if you :global:`ADD` or
+        :global:`REMOVE` maneuver nodes to the flight plan.
+
+    .. note::
+        Adding a :struct:`ManeuverNode` to this list, or a reference to this
+        list **will not** add it to the flight plan.  Use the :global:`ADD`
+        command instead.
 
 Structure
 ---------
@@ -213,6 +235,3 @@ Structure
     :type: :struct:`Orbit`
 
     The new orbit patch that will begin starting with the burn of this node, under the assumption that the burn will occur exactly as planned.
-
-
-

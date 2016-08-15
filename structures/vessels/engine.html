@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Engine &mdash; kOS 0.20.1 documentation</title>
+  <title>Engine &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="ETA" href="eta.html"/>
         <link rel="prev" title="Element" href="element.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -107,10 +107,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Engine</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
@@ -126,7 +128,7 @@
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
@@ -159,7 +161,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -187,7 +189,7 @@
             
   <div class="section" id="engine">
 <span id="id1"></span><h1>Engine<a class="headerlink" href="#engine" title="Permalink to this headline">¶</a></h1>
-<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><span class="std std-ref">LIST PARTS</span></a> will be of type Engine. It is also possible to get just the Engine parts by executing <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">ENGINES</span></code>, for example:</p>
+<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST PARTS</span></a> will be of type Engine. It is also possible to get just the Engine parts by executing <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">ENGINES</span></code>, for example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">ENGINES</span> <span class="nv">IN</span> <span class="nv">myVariable</span><span class="p">.</span>
 <span class="k">FOR</span> <span class="nv">eng</span> <span class="nv">IN</span> <span class="nv">myVariable</span> <span class="p">{</span>
     <span class="k">print</span> <span class="s">&quot;An engine exists with ISP = &quot;</span> <span class="o">+</span> <span class="nv">eng</span><span class="p">:</span><span class="nv">ISP</span><span class="p">.</span>
@@ -224,79 +226,79 @@
 <td>Turn engine off</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:THRUSTLIMIT" title="ENGINE:THRUSTLIMIT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">THRUSTLIMIT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (%)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (%)</td>
 <td>Tweaked thrust limit</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:MAXTHRUST" title="ENGINE:MAXTHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXTHRUST</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 <td>Untweaked thrust limit</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:MAXTHRUSTAT" title="ENGINE:MAXTHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">MAXTHRUSTAT(pressure)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 <td>Max thrust at the specified pressure (in standard Kerbin atmospheres).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:THRUST" title="ENGINE:THRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">THRUST</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 <td>Current thrust</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:AVAILABLETHRUST" title="ENGINE:AVAILABLETHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 <td>Available thrust at full throttle accounting for thrust limiter</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:ENGINE:AVAILABLETHRUSTAT" title="ENGINE:AVAILABLETHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">AVAILABLETHRUSTAT(pressure)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 <td>Available thrust at the specified pressure (in standard Kerbin atmospheres).</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:FUELFLOW" title="ENGINE:FUELFLOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FUELFLOW</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (l/s maybe)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (l/s maybe)</td>
 <td>Rate of fuel burn</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:ISP" title="ENGINE:ISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:ISPAT" title="ENGINE:ISPAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">ISPAT(pressure)</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given pressure (in standard Kerbin atmospheres).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:VACUUMISP" title="ENGINE:VACUUMISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VACUUMISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Vacuum <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">specific impulse</a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:VISP" title="ENGINE:VISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Synonym for VACUUMISP</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:SEALEVELISP" title="ENGINE:SEALEVELISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SEALEVELISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at Kerbin sealevel</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:SLISP" title="ENGINE:SLISP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SLISP</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Synonym for SEALEVELISP</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FLAMEOUT</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if no more fuel</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:IGNITION" title="ENGINE:IGNITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IGNITION</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if engine is active</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:ALLOWRESTART" title="ENGINE:ALLOWRESTART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLOWRESTART</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if engine can be reactivated</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:ALLOWSHUTDOWN" title="ENGINE:ALLOWSHUTDOWN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLOWSHUTDOWN</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if engine can be shutdown</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:THROTTLELOCK" title="ENGINE:THROTTLELOCK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">THROTTLELOCK</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if throttle can not be changed</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:MULTIMODE" title="ENGINE:MULTIMODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MULTIMODE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if engine has multiple modes</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:MODES" title="ENGINE:MODES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODES</span></code></a></td>
@@ -304,7 +306,7 @@
 <td>List (string) of the engine modes</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:MODE" title="ENGINE:MODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODE</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 <td>Name of the current mode (only if multiple)</td>
 </tr>
 <tr class="row-even"><td><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEMODE</span></code></td>
@@ -312,15 +314,15 @@
 <td>Switch to another mode (only if multiple)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:PRIMARYMODE" title="ENGINE:PRIMARYMODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PRIMARYMODE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Is the engine in primary mode? (only if multiple)</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:AUTOSWITCH" title="ENGINE:AUTOSWITCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AUTOSWITCH</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Can the engine switch modes automatically? (only if multiple)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:HASGIMBAL" title="ENGINE:HASGIMBAL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASGIMBAL</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Check if engine has gimbal</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:GIMBAL" title="ENGINE:GIMBAL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GIMBAL</span></code></a></td>
@@ -356,7 +358,7 @@ Engine:<code class="descname">THRUSTLIMIT</code><a class="headerlink" href="#att
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (%)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (%)</td>
 </tr>
 </tbody>
 </table>
@@ -386,7 +388,7 @@ Engine:<code class="descname">MAXTHRUST</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 </tr>
 </tbody>
 </table>
@@ -405,7 +407,7 @@ Engine:<code class="descname">MAXTHRUSTAT</code><span class="sig-paren">(</span>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
 </td>
 </tr>
 </tbody>
@@ -422,7 +424,7 @@ Engine:<code class="descname">THRUST</code><a class="headerlink" href="#attribut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 </tr>
 </tbody>
 </table>
@@ -438,7 +440,7 @@ Engine:<code class="descname">AVAILABLETHRUST</code><a class="headerlink" href="
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
 </tr>
 </tbody>
 </table>
@@ -457,7 +459,7 @@ Engine:<code class="descname">AVAILABLETHRUSTAT</code><span class="sig-paren">(<
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
 </td>
 </tr>
 </tbody>
@@ -474,7 +476,7 @@ Engine:<code class="descname">FUELFLOW</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (Liters/s? maybe)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (Liters/s? maybe)</td>
 </tr>
 </tbody>
 </table>
@@ -490,7 +492,7 @@ Engine:<code class="descname">ISP</code><a class="headerlink" href="#attribute:E
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -509,7 +511,7 @@ Engine:<code class="descname">ISPAT</code><span class="sig-paren">(</span>pressu
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -526,7 +528,7 @@ Engine:<code class="descname">VACUUMISP</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -542,7 +544,7 @@ Engine:<code class="descname">VISP</code><a class="headerlink" href="#attribute:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -558,7 +560,7 @@ Engine:<code class="descname">SEALEVELISP</code><a class="headerlink" href="#att
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -574,7 +576,7 @@ Engine:<code class="descname">SLISP</code><a class="headerlink" href="#attribute
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -590,7 +592,7 @@ Engine:<code class="descname">FLAMEOUT</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -606,7 +608,7 @@ Engine:<code class="descname">IGNITION</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -622,7 +624,7 @@ Engine:<code class="descname">ALLOWRESTART</code><a class="headerlink" href="#at
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -638,7 +640,7 @@ Engine:<code class="descname">ALLOWSHUTDOWN</code><a class="headerlink" href="#a
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -654,7 +656,7 @@ Engine:<code class="descname">THROTTLELOCK</code><a class="headerlink" href="#at
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -670,7 +672,7 @@ Engine:<code class="descname">MULTIMODE</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -702,7 +704,7 @@ Engine:<code class="descname">MODE</code><a class="headerlink" href="#attribute:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -724,7 +726,7 @@ Engine:<code class="descname">PRIMARYMODE</code><a class="headerlink" href="#att
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -740,7 +742,7 @@ Engine:<code class="descname">AUTOSWITCH</code><a class="headerlink" href="#attr
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -756,7 +758,7 @@ Engine:<code class="descname">HASGIMBAL</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -822,7 +824,7 @@ Engine:<code class="descname">GIMBAL</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

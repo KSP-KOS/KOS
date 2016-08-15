@@ -8,7 +8,7 @@ Boolean
 
     .. list-table:: Members
         :header-rows: 1
-        :widths: 1 
+        :widths: 1
 
         * - (Boolean values have no suffixes, other than the :struct:`Structure <structure>` suffixes all values have.)
         * -
@@ -65,7 +65,7 @@ check syntax anywhere.  Example::
     // which should cover most "asparagus staging" strategies:
     //
     list engines in englist.
-    for eng in engines {
+    for eng in englist {
 
       // note, eng:flameout is a Boolean value here, being used as the
       // conditional check of this if-statement:

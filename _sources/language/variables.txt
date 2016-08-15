@@ -54,9 +54,9 @@ Detailed Description of the syntax:
    * The statement must begin with either the word ``DECLARE``, ``LOCAL``,
      or ``GLOBAL``.  If it begins with the word ``DECLARE`` it may optionally
      also contain the word ``LOCAL`` or ``GLOBAL`` afterward.  *Note that if
-     neither* ``GLOBAL`` *nor* ``LOCAL`` *is used, the behavior of* 
+     neither* ``GLOBAL`` *nor* ``LOCAL`` *is used, the behavior of*
      ``LOCAL`` *will be assumed implicitly.  Therefore* ``DECLARE LOCAL``
-     *and just* ``DECLARE`` *and just* ``LOCAL`` *mean the same thing.* 
+     *and just* ``DECLARE`` *and just* ``LOCAL`` *mean the same thing.*
    * After that it must contain an identifier.
    * After that it must contain either the word ``TO`` or the word ``IS``,
      which mean the same thing here.
@@ -64,7 +64,7 @@ Detailed Description of the syntax:
      value of the variable.
    * After that it must contain a dot ("period"), like all commands in
      Kerboscript.
-   
+
    ::
 
     // These all do the exact same thing - make a local variable:
@@ -90,7 +90,7 @@ See Scoping:
     important to read the :ref:`section below about scoping. <scope>`
 
 .. note::
-    It is implied that the outermost scope of a program file is 
+    It is implied that the outermost scope of a program file is
     the global scope.  Therefore if you make a LOCAL variable at
     the outermost nesting level of your program it really ends up
     being GLOBAL.  Note that GLOBAL variables are not only shared
@@ -99,7 +99,7 @@ See Scoping:
     versa.
 
 Alternatively, a variable can be implicitly declared by any ``SET`` or
-``LOCK`` statement, however doing so causes the variable to always have 
+``LOCK`` statement, however doing so causes the variable to always have
 global scope.  **The only way to make a variable be local instead of
 global is to declare it explicitly with one of these DECLARE statements**.
 
@@ -115,7 +115,9 @@ Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
 .. versionadded:: 0.17
-    The syntax without the initializer, looking like so::
+    The syntax without the initializer, looking like so
+
+    .. code-block:: kerboscript
 
         DECLARE x. // no initializer like "TO 1."
 
@@ -193,7 +195,7 @@ Optional Parameters (defaulted parameters)
 ::::::::::::::::::::::::::::::::::::::::::
 
 If you wish, you may make some of the parameters of a program or a user
-function optional by defaulting them to a starting value with the ``IS`` keyword, as follows:
+function optional by defaulting them to a starting value with the ``IS`` keyword, as follows::
 
     // Imagine this is a file called MYPROG
 
@@ -206,10 +208,11 @@ function optional by defaulting them to a starting value with the ``IS`` keyword
     run MYPROG(1,2).         // prints "1, 2, 0, cheese".
     run MYPROG(1,2,3).       // prints "1, 2, 3, cheese".
     run MYPROG(1,2,3,"hi").  // prints "1, 2, 3, hi".
+    runpath(MYPROG,1,2,3,"hi").  // also prints "1, 2, 3, hi".
 
 Whenever arguments are missing, the system always makes up the difference by
 using defaults for the lastmost parameters until the correct number have been
-padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's 
+padded.  (So for example, if you call MYFUNC() above with 3 arguments, it's
 the last argument, P4, that gets defaulted, but P3 does not.  But if you call
 it with 2 arguments, both P4 and P3 get defaulted.)
 
@@ -254,7 +257,7 @@ Sets the value of a variable. Implicitly creates a global variable if it doesnâ€
     SET X TO 1.
     SET X TO y*2 - 1.
 
-This follows the :ref:`scoping rules explained below <scope>`.  If the 
+This follows the :ref:`scoping rules explained below <scope>`.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
 
@@ -267,14 +270,14 @@ up, then it won't be created and instead the existing one will be used.
 
     DEFINED identifier
 
-Returns a boolean true or false according to whether or not an 
+Returns a boolean true or false according to whether or not an
 identifier is defined in such a way that you can use it from
 this part of the program.  (i.e. is it declared and is it in scope
 and visible right now)::
 
     // This part prints 'doesn't exist":
     if defined var1 {
-      print "var1 exists". 
+      print "var1 exists".
     } else {
       print "var1 doesn't exist."
     }
@@ -283,7 +286,7 @@ and visible right now)::
 
     // But now it prints that it does exist:
     if defined var1 {
-      print "var1 exists". 
+      print "var1 exists".
     } else {
       print "var1 doesn't exist."
     }
@@ -335,7 +338,7 @@ They are slightly different, as follows:
 When to use GLOBAL
 ::::::::::::::::::
 
-You should use a ``DECLARE GLOBAL`` statement only sparingly.  It 
+You should use a ``DECLARE GLOBAL`` statement only sparingly.  It
 mostly exists so that a function can store values "in the caller"
 for the caller to get its hands on.  It's generally a "sloppy" design
 pattern to use, and it's much better to keep everything local
@@ -356,9 +359,9 @@ Declares that the identifier will refer to an expression that is always re-evalu
 Note that because of how LOCK expressions are in fact implemented as mini
 functions, they cannot have local scope.  A LOCK *always* has global scope.
 
-By default a ``LOCK`` expression is ``GLOBAL`` when made.  This is 
+By default a ``LOCK`` expression is ``GLOBAL`` when made.  This is
 necessary for backward compatibility with older scripts that use
-LOCK STEERING from inside triggers, loops, etc, and expect it to 
+LOCK STEERING from inside triggers, loops, etc, and expect it to
 affect the global steering value.
 
 Calling a LOCK that was created in another file
@@ -427,7 +430,7 @@ Making the lock be local tells the computer that it can make the lock
 disappear when it goes out of scope, and thus it doesn't need to
 hold that "closure" around forever.
 
-The tl;dr version:  It's more efficient for memory.  If you know 
+The tl;dr version:  It's more efficient for memory.  If you know
 for sure that your lock isn't getting used after your current
 section of code is over, make it a local lock.
 
@@ -443,7 +446,7 @@ Toggles a variable between ``TRUE`` or ``FALSE``. If the variable in question st
     TOGGLE SAS. // Toggles SAS on or off.
 
 This follows the same rules as :ref:`SET <set>`, in that if the variable in
-question doesn't already exist, it will end up creating it as a global 
+question doesn't already exist, it will end up creating it as a global
 variable.
 
 .. _on:
@@ -457,7 +460,7 @@ Sets a variable to ``TRUE``. This is useful for the ``RCS`` and ``SAS`` bindings
 
 
 This follows the same rules as :ref:`SET <set>`, in that if the variable in
-question doesn't already exist, it will end up creating it as a global 
+question doesn't already exist, it will end up creating it as a global
 variable.
 
 .. _off:
@@ -470,7 +473,7 @@ Sets a variable to ``FALSE``. This is useful for the ``RCS`` and ``SAS`` binding
     RCS OFF.  // Turns off the RCS
 
 This follows the same rules as :ref:`SET <set>`, in that if the variable in
-question doesn't already exist, it will end up creating it as a global 
+question doesn't already exist, it will end up creating it as a global
 variable.
 
 .. _scope:
@@ -571,7 +574,7 @@ scoping level::
 
 Even when the word 'DECLARE' is left off, the statement can still be
 referred to as a "declare statement".  The word "declare" is implied
-by the use of LOCAL or GLOBAL and you are allowed to leave it off 
+by the use of LOCAL or GLOBAL and you are allowed to leave it off
 merely to reduce verbosity.
 
 Explicit Scoping required for @lazyglobal off
@@ -592,7 +595,7 @@ Locals stated at the global level are global
 Note that if you put a statement at the outermost scope
 of the program, then there is effectively no difference
 between a ``DECLARE LOCAL`` (or just ``LOCAL`` for short)
-and a ``DECLARE GLOBAL`` (or just ``GLOBAL`` for short) statement.  
+and a ``DECLARE GLOBAL`` (or just ``GLOBAL`` for short) statement.
 They are both going to make a variable at global scope because that's
 the scope the program was in when the statement was encountered.
 
@@ -612,7 +615,7 @@ Examples::
     // numbers of some sort:
     FUNCTION calcAverage {
       PARAMETER inputList.
-      
+
       LOCAL sum IS 0. // sum is now local to this function's body.
       FOR val IN inputList {
         SET sum TO sum + val.
@@ -633,7 +636,7 @@ This example will print::
     Inside calcAverage, sum is 30
     average is 10
     but out here where it's global, sum is still -1
-    
+
 .. highlight:: kerboscript
 
 Thus proving that the variable called SUM inside the function is NOT the
@@ -646,7 +649,7 @@ The scoping rules are nested as well.  If you attempt to use a
 variable that doesn't exist in the local scope, the next scope "outside"
 it will be used, and if it doesn't exist there, the next scope "outside"
 that will be used and so on, all the way up to the global scope.  Only
-if the variable isn't found at the global scope either will it be 
+if the variable isn't found at the global scope either will it be
 implicitly created.
 
 .. _trigger_scope:
@@ -678,7 +681,7 @@ Often the fact that you can get an implicit global variable declared
 without intending to can lead to a lot of code maintenance headaches
 down the road.  If you make a typo in a variable name, you end up
 creating a new variable instead of generating an error.  Or you may just
-forget to mark the variable as local when you intended to.  
+forget to mark the variable as local when you intended to.
 
 If you wish to instruct Kerboscript to alter its behavior and
 disable its normal implicit globals, and instead demand that all
@@ -692,7 +695,7 @@ If you place the words::
 
 At the start of your program, you will turn off the compiler's
 lazy global feature and it will require you to explicitly mention
-all variables you use in a declaration somewhere (with the 
+all variables you use in a declaration somewhere (with the
 exception of the built-in variables such as THROTTLE, STEERING,
 SHIP, and so on.)
 
@@ -768,7 +771,7 @@ Example::
     }.
 
 Why ``LAZYGLOBAL OFF``?
-    The rationale behind ``LAZYGLOBAL OFF.`` is to primarily be used in 
+    The rationale behind ``LAZYGLOBAL OFF.`` is to primarily be used in
     cases where you're writing a library of function calls you intend to
     use elsewhere, and want to be careful not to accidentally make
     them dependent on globals outside the function itself.
@@ -789,10 +792,9 @@ History:
     local variables, you have to figure out how this should work with
     the implicit variable declaration feature.
 
-    And all those languages went with the same solution, which 
+    And all those languages went with the same solution, which
     Kerboscript now follows as well.  Because implicit undeclared
     variables are intended to be a nice easy way for new users to
-    ease into programming, they should always default to being 
+    ease into programming, they should always default to being
     global so that people who wish to keep programming that way
     don't need to understand or deal with scope.
-

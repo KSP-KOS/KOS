@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript Syntax Specification &mdash; kOS 0.20.1 documentation</title>
+  <title>KerboScript Syntax Specification &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Flow Control" href="flow.html"/>
         <link rel="prev" title="General Features of the KerboScript Language" href="features.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -99,12 +99,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Language Syntax</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Language Syntax</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="anonymous.html">Anonymous User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html">Delegates (function references)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html#advanced-topics">Advanced topics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html#kinds-of-delegate-no-suffixes">Kinds of Delegate (no suffixes)</a></li>
@@ -139,7 +140,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -287,7 +288,7 @@ language does not require it, as shown below:</p>
 </pre></div>
 </div>
 <p>The usual reason for doing this is to create a
-<a class="reference internal" href="variables.html#scope"><span class="std std-ref">local scope section</span></a> for yourself.
+<a class="reference internal" href="variables.html#scope"><span>local scope section</span></a> for yourself.
 In the above example, there are actually 3 <em>different</em>
 variables called &#8216;x&#8217; - each with a different scope.</p>
 </div>
@@ -364,11 +365,11 @@ DECLARE FUNCTION command, which is structured as follows:</p>
 <blockquote>
 <div><code class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></code> <em>identifier</em> <code class="docutils literal"><span class="pre">{</span></code> <em>statements</em> <code class="docutils literal"><span class="pre">}</span></code> <em>optional dot (.)</em></div></blockquote>
 <p>Functions are a long enough topic as to require a
-<a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">separate documentation page, here.</span></a></p>
+<a class="reference internal" href="user_functions.html#user-functions"><span>separate documentation page, here.</span></a></p>
 </div>
 <div class="section" id="built-in-special-variable-names">
 <h2><a class="toc-backref" href="#id6">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
-<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span class="std std-ref">The full list of reserved variable names is on its own page</span></a>.</p>
+<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span>The full list of reserved variable names is on its own page</span></a>.</p>
 </div>
 <div class="section" id="what-does-not-exist-yet">
 <h2><a class="toc-backref" href="#id7">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
@@ -421,7 +422,7 @@ DECLARE FUNCTION command, which is structured as follows:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

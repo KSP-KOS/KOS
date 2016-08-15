@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KUniverse 4th wall methods &mdash; kOS 0.20.1 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Vessel Load Distance" href="loaddistance.html"/>
         <link rel="prev" title="KOSDelegate" href="kosdelegate.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,7 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
@@ -114,7 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="config.html">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">KUniverse 4th wall methods</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">KUniverse 4th wall methods</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -205,49 +205,79 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANREVERT" title="KUNIVERSE:CANREVERT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CANREVERT</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Get</td>
 <td>Is any revert possible?</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANREVERTTOLAUNCH" title="KUNIVERSE:CANREVERTTOLAUNCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CANREVERTTOLAUNCH</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Get</td>
 <td>Is revert to launch possible?</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANREVERTTOEDITOR" title="KUNIVERSE:CANREVERTTOEDITOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CANREVERTTOEDITOR</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Get</td>
 <td>Is revert to editor possible?</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:REVERTTOLAUNCH" title="KUNIVERSE:REVERTTOLAUNCH method"><code class="xref ks ks-meth docutils literal"><span class="pre">REVERTTOLAUNCH</span></code></a></td>
-<td>none</td>
+<td>None</td>
 <td>Method</td>
 <td>Invoke revert to launch</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:REVERTTOEDITOR" title="KUNIVERSE:REVERTTOEDITOR method"><code class="xref ks ks-meth docutils literal"><span class="pre">REVERTTOEDITOR</span></code></a></td>
-<td>none</td>
+<td>None</td>
 <td>Method</td>
 <td>Invoke revert to editor</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:REVERTTO" title="KUNIVERSE:REVERTTO method"><code class="xref ks ks-meth docutils literal"><span class="pre">REVERTTO(name)</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Method</td>
 <td>Invoke revert to the named editor</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:ORIGINEDITOR" title="KUNIVERSE:ORIGINEDITOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ORIGINEDITOR</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Get</td>
 <td>Returns the name of this vessel&#8217;s editor, &#8220;SPH&#8221; or &#8220;VAB&#8221;.</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANQUICKSAVE" title="KUNIVERSE:CANQUICKSAVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CANQUICKSAVE</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>Get</td>
+<td>Returns true if quicksave is currently enabled and available.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKSAVE" title="KUNIVERSE:QUICKSAVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKSAVE()</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Invoke KSP&#8217;s built in quicksave.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKLOAD" title="KUNIVERSE:QUICKLOAD method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKLOAD()</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Invoke KSP&#8217;s built in quickload.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKSAVETO" title="KUNIVERSE:QUICKSAVETO method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKSAVETO(name)</span></code></a></td>
+<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Method</td>
+<td>Perform quicksave to the save with the given name.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKLOADFROM" title="KUNIVERSE:QUICKLOADFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKLOADFROM(name)</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Perform quickload from the save with the given name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:QUICKSAVELIST" title="KUNIVERSE:QUICKSAVELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">QUICKSAVELIST</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Get</td>
+<td>A list of all quicksave files for this game.</td>
+</tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:HOURSPERDAY" title="KUNIVERSE:HOURSPERDAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HOURSPERDAY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Get</td>
 <td>Number of hours per day (6 or 24) according to your game settings.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:DEBUGLOG" title="KUNIVERSE:DEBUGLOG method"><code class="xref ks ks-meth docutils literal"><span class="pre">DEBUGLOG(message)</span></code></a></td>
-<td>none</td>
+<td>None</td>
 <td>Method</td>
-<td>Causes a <a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a> to append to the Unity debug log file.</td>
+<td>Causes a <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to append to the Unity debug log file.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="KUNIVERSE:DEFAULTLOADDISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTLOADDISTANCE</span></code></a></td>
 <td><a class="reference internal" href="loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></code></a></td>
@@ -260,14 +290,34 @@
 <td>Returns the active vessel, or lets you set the active vessel.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL(vessel)</span></code></a></td>
-<td>n/a</td>
+<td>None</td>
 <td>Method</td>
 <td>Lets you switch active vessels even when the game refuses to allow it.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:FORCEACTIVE" title="KUNIVERSE:FORCEACTIVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></a></td>
-<td>n/a</td>
+<td>None</td>
 <td>Method</td>
 <td>Same as <a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL</span></code></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:GETCRAFT" title="KUNIVERSE:GETCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETCRAFT(name,</span> <span class="pre">editor)</span></code></a></td>
+<td><a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
+<td>Method</td>
+<td>Get the file path for the craft with the given name, saved in the given editor.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFT" title="KUNIVERSE:LAUNCHCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFT(template)</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Launch a new instance of the given craft at it&#8217;s default launch site.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="KUNIVERSE:LAUNCHCRAFTFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFTFROM(template,</span> <span class="pre">site)</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Launch a new instance of the given craft at the given site.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
+<td>Method</td>
+<td>A list of all craft templates in the save specific and stock folders.</td>
 </tr>
 </tbody>
 </table>
@@ -282,7 +332,7 @@ KUniverse:<code class="descname">CANREVERT</code><a class="headerlink" href="#at
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a>.</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -298,7 +348,7 @@ KUniverse:<code class="descname">CANREVERTTOLAUNCH</code><a class="headerlink" h
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a>.</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -314,7 +364,7 @@ KUniverse:<code class="descname">CANREVERTTOEDITOR</code><a class="headerlink" h
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a>.</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -367,7 +417,7 @@ KUniverse:<code class="descname">REVERTTO</code><span class="sig-paren">(</span>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -384,7 +434,7 @@ KUniverse:<code class="descname">ORIGINEDITOR</code><a class="headerlink" href="
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a>.</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -393,8 +443,116 @@ The value is one of:</p>
 <ul class="simple">
 <li>&#8220;SPH&#8221; for things built in the space plane hangar,</li>
 <li>&#8220;VAB&#8221; for things built in the vehicle assembly building.</li>
-<li>&#8220;&#8221; (empty <a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a>) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)</li>
+<li>&#8220;&#8221; (empty <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)</li>
 </ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:CANQUICKSAVE">
+KUniverse:<code class="descname">CANQUICKSAVE</code><a class="headerlink" href="#attribute:KUNIVERSE:CANQUICKSAVE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns true if KSP&#8217;s quicksave feature is enabled and available.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:QUICKSAVE">
+KUniverse:<code class="descname">QUICKSAVE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKSAVE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+<p>Initiate the KSP game&#8217;s quicksave function.  The game will save the current
+state to the default quicksave file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:QUICKLOAD">
+KUniverse:<code class="descname">QUICKLOAD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKLOAD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+<p>Initiate the KSP game&#8217;s quickload function.  The game will load the game
+state from the default quickload file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:QUICKSAVETO">
+KUniverse:<code class="descname">QUICKSAVETO</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKSAVETO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; The name of the save file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Initiate the KSP game&#8217;s quicksave function.  The game will save the current
+state to a quicksave file matching the name parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:QUICKLOADFROM">
+KUniverse:<code class="descname">QUICKLOADFROM</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:QUICKLOADFROM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; The name of the save file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Initiate the KSP game&#8217;s quickload function.  The game will load the game
+state from the quicksave file matching the name parameter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:QUICKSAVELIST">
+KUniverse:<code class="descname">QUICKSAVELIST</code><a class="headerlink" href="#attribute:KUNIVERSE:QUICKSAVELIST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns a list of names of all quicksave file in this KSP game.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -449,7 +607,7 @@ KUniverse:<code class="descname">FORCESETACTIVEVESSEL</code><span class="sig-par
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -469,7 +627,7 @@ KUniverse:<code class="descname">FORCEACTIVE</code><span class="sig-paren">(</sp
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -486,7 +644,7 @@ KUniverse:<code class="descname">HOURSPERDAY</code><a class="headerlink" href="#
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (integer)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> (integer)</td>
 </tr>
 </tbody>
 </table>
@@ -512,6 +670,92 @@ it never changes after that.  Because in the stock game, that
 assumption would be true.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:KUNIVERSE:GETCRAFT">
+KUniverse:<code class="descname">GETCRAFT</code><span class="sig-paren">(</span>name, editor<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:GETCRAFT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> craft name.</li>
+<li><strong>facility</strong> &#8211; <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> editor name.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> matching the given craft name saved from
+the given editor.  Valid values for editor include <code class="docutils literal"><span class="pre">&quot;VAB&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;SPH&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:LAUNCHCRAFT">
+KUniverse:<code class="descname">LAUNCHCRAFT</code><span class="sig-paren">(</span>template<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:LAUNCHCRAFT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>template</strong> &#8211; <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> craft template object.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Launch a new instance of the given <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> from the
+template&#8217;s default launch site.</p>
+<p><strong>NOTE:</strong> The craft will be launched with the KSP default crew assignment,
+as if you had clicked launch from the editor without manually adjusting the
+crew.</p>
+<p><strong>NOTE:</strong> Due to how KSP handles launching a new craft, this will end the
+current program even if the currently active vessel is located within
+physics range of the launch site.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:LAUNCHCRAFTFROM">
+KUniverse:<code class="descname">LAUNCHCRAFTFROM</code><span class="sig-paren">(</span>template, site<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>template</strong> &#8211; <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> craft template object.</li>
+<li><strong>site</strong> &#8211; <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> launch site name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Launch a new instance of the given <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> from the given
+launch site. Valid values for site include <code class="docutils literal"><span class="pre">&quot;RUNWAY&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;LAUNCHPAD&quot;</span></code>.</p>
+<p><strong>NOTE:</strong> The craft will be launched with the KSP default crew assignment,
+as if you had clicked launch from the editor without manually adjusting the
+crew.</p>
+<p><strong>NOTE:</strong> Due to how KSP handles launching a new craft, this will end the
+current program even if the currently active vessel is located within
+physics range of the launch site.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:CRAFTLIST">
+KUniverse:<code class="descname">CRAFTLIST</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:CRAFTLIST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns a list of all <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a> templates stored in the VAB
+and SPH folders of the stock Ships folder and the save specific Ships folder.</p>
+</dd></dl>
+
 <span class="target" id="debuglog"></span><dl class="method">
 <dt id="method:KUNIVERSE:DEBUGLOG">
 KUniverse:<code class="descname">DEBUGLOG</code><span class="sig-paren">(</span>message<span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:DEBUGLOG" title="Permalink to this definition">¶</a></dt>
@@ -520,11 +764,11 @@ KUniverse:<code class="descname">DEBUGLOG</code><span class="sig-paren">(</span>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> &#8211; <a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a> message to append to the log.</li>
+<li><strong>message</strong> &#8211; <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> message to append to the log.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -641,7 +885,7 @@ each OS.  Consult the list below to see where it is on your platform.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Maneuver Node &mdash; kOS 0.20.1 documentation</title>
+  <title>Maneuver Node &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Part" href="part.html"/>
         <link rel="prev" title="kOSProcessor" href="kosprocessor.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -107,6 +107,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
@@ -114,7 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Maneuver Node</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Maneuver Node</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
@@ -128,7 +130,7 @@
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
@@ -161,7 +163,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -203,16 +205,16 @@
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p>Be aware that a limitation of KSP makes it so that some vessels&#8217;
-manuever node systems cannot be accessed.  KSP appears to limit the
+maneuver node systems cannot be accessed.  KSP appears to limit the
 maneuver node system to only functioning on the current PLAYER
 vessel, under the presumption that its the only vessel that needs
-them, as ever other vessel cannot be manuevered. kOS can manuever a
+them, as ever other vessel cannot be maneuvered. kOS can maneuver a
 vessel that is not the player vessel, but it cannot overcome this
 limitation of the base game that unloads the maneuver node system
 for other vessels.</p>
 <p class="last">Be aware that the effect this has is that when you try to use some of
 these commands on some vessels, they won&#8217;t work because those vessels
-do not have their manuever node system in play.  This is mostly only
+do not have their maneuver node system in play.  This is mostly only
 going to happen when you try to run a script on a vessel that is not
 the current player active vessel.</p>
 </div>
@@ -242,7 +244,7 @@ the current player active vessel.</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">myNode</span> <span class="ow">to</span> <span class="nv">NODE</span><span class="p">(</span> <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span><span class="o">+</span><span class="mf">200</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">50</span><span class="p">,</span> <span class="mf">10</span> <span class="p">).</span>
 </pre></div>
 </div>
-<p>Once you have a maneuver node in a variable, you use the <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> and <a class="reference internal" href="#global:REMOVE" title="REMOVE global"><code class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></code></a> commands to attach it to your vessel&#8217;s flight plan. A kOS CPU can only manipulate the flight plan of its <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU vessel</span></a>.</p>
+<p>Once you have a maneuver node in a variable, you use the <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> and <a class="reference internal" href="#global:REMOVE" title="REMOVE global"><code class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></code></a> commands to attach it to your vessel&#8217;s flight plan. A kOS CPU can only manipulate the flight plan of its <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU vessel</span></a>.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">When <em>constructing</em> a new node using the <a class="reference internal" href="#function:NODE" title="NODE function"><code class="xref ks ks-func docutils literal"><span class="pre">NODE</span></code></a> function call, you use the universal time (you must add the ETA time to the current time to arrive at the value to pass in), but when using the suffix <a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ManeuverNode:ETA</span></code></a>, you do NOT use universal time, instead just giving the number of seconds from now.</p>
@@ -254,52 +256,100 @@ been attached to anything yet. To attach a node to the flight path, you must use
 <dl class="global">
 <dt id="global:ADD">
 <code class="descname">ADD</code><a class="headerlink" href="#global:ADD" title="Permalink to this definition">¶</a></dt>
-<dd><p>To put a maneuver node into the flight plan of the current <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU vessel</span></a> (i.e. <code class="docutils literal"><span class="pre">SHIP</span></code>), just <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> it like so:</p>
+<dd><p>To put a maneuver node into the flight plan of the current <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU vessel</span></a> (i.e. <code class="docutils literal"><span class="pre">SHIP</span></code>), just <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> it like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">myNode</span> <span class="ow">to</span> <span class="nv">NODE</span><span class="p">(</span> <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span><span class="o">+</span><span class="mf">200</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">50</span><span class="p">,</span> <span class="mf">10</span> <span class="p">).</span>
 <span class="k">ADD</span> <span class="nv">myNode</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>You should immediately see it appear on the map view when you do this. The <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller <a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></code></a> time and then <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> it.</p>
-</dd></dl>
-
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">As per the warning above at the top of the section, ADD won&#8217;t work on vessels that are not the active vessel.</p>
 </div>
+</dd></dl>
+
 <dl class="global">
 <dt id="global:REMOVE">
 <code class="descname">REMOVE</code><a class="headerlink" href="#global:REMOVE" title="Permalink to this definition">¶</a></dt>
-<dd><p>To remove a maneuver node from the flight path of the cur:rent <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU vessel</span></a> (i.e. <code class="docutils literal"><span class="pre">SHIP</span></code>), just <a class="reference internal" href="#global:REMOVE" title="REMOVE global"><code class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></code></a> it like so:</p>
+<dd><p>To remove a maneuver node from the flight path of the current <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU vessel</span></a> (i.e. <code class="docutils literal"><span class="pre">SHIP</span></code>), just <a class="reference internal" href="#global:REMOVE" title="REMOVE global"><code class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></code></a> it like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">REMOVE</span> <span class="nv">myNode</span><span class="p">.</span>
 </pre></div>
 </div>
-</dd></dl>
-
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">As per the warning above at the top of the section, REMOVE won&#8217;t work on vessels that are not the active vessel.</p>
 </div>
+</dd></dl>
+
 <dl class="global">
 <dt id="global:NEXTNODE">
 <code class="descname">NEXTNODE</code><a class="headerlink" href="#global:NEXTNODE" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><code class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></code></a> is a built-in variable that always refers to the next upcoming node that has been added to your flight plan:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MyNode</span> <span class="ow">to</span> <span class="p">:</span><span class="k">global</span><span class="p">:</span><span class="err">`</span><span class="nv">NEXTNODE</span><span class="err">`</span><span class="p">.</span>
-<span class="k">PRINT</span> <span class="p">:</span><span class="k">global</span><span class="p">:</span><span class="err">`</span><span class="nv">NEXTNODE</span><span class="err">`</span><span class="p">:</span><span class="nv">PROGRADE</span><span class="p">.</span>
-<span class="k">REMOVE</span> <span class="p">:</span><span class="k">global</span><span class="p">:</span><span class="err">`</span><span class="nv">NEXTNODE</span><span class="err">`</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">MyNode</span> <span class="ow">to</span> <span class="nv">NEXTNODE</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">NEXTNODE</span><span class="p">:</span><span class="nv">PROGRADE</span><span class="p">.</span>
+<span class="k">REMOVE</span> <span class="nv">NEXTNODE</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Currently, if you attempt to query <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><code class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></code></a> and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).</p>
-</dd></dl>
-
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>As per the warning above at the top of the section, NEXTNODE won&#8217;t work on vessels that are not the active vessel.</p>
-<p>If you need to query whether or not you have a <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><code class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></code></a>, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><code class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></code></a> to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><code class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></code></a>. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.</p>
+<p class="last">As per the warning above at the top of the section, NEXTNODE won&#8217;t work on vessels that are not the active vessel.</p>
+</div>
 <p>The special identifier <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><code class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></code></a> is a euphemism for &#8220;whichever node is coming up soonest on my flight path&#8221;. Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this:</p>
-<div class="last highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">REMOVE</span> <span class="p">:</span><span class="k">global</span><span class="p">:</span><span class="err">`</span><span class="nv">NEXTNODE</span><span class="err">`</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">REMOVE</span> <span class="nv">NEXTNODE</span><span class="p">.</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:HASNODE">
+<code class="descname">HASNODE</code><a class="headerlink" href="#global:HASNODE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns true if there is a planned maneuver <a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></code></a> in the
+<a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU vessel&#8217;s</span></a> flight plan.  This will always return
+false for the non-active vessel, as access to maneuver nodes is limited to the active vessel.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:ALLNODES">
+<code class="descname">ALLNODES</code><a class="headerlink" href="#global:ALLNODES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></code></a> elements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns a list of all <a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></code></a> objects currently on the
+<a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU vessel&#8217;s</span></a> flight plan.  This list will be empty if
+no nodes are planned, or if the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU vessel</span></a> is currently
+unable to use maneuver nodes.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you store a reference to this list in a variable, the variable&#8217;s
+instance will not be automatically updated if you <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a> or
+<a class="reference internal" href="#global:REMOVE" title="REMOVE global"><code class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></code></a> maneuver nodes to the flight plan.</p>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Adding a <a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></code></a> to this list, or a reference to this
+list <strong>will not</strong> add it to the flight plan.  Use the <a class="reference internal" href="#global:ADD" title="ADD global"><code class="xref ks ks-global docutils literal"><span class="pre">ADD</span></code></a>
+command instead.</p>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
@@ -357,22 +407,22 @@ been attached to anything yet. To attach a node to the flight path, you must use
 <td>Alias for <a class="reference internal" href="#attribute:MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></code></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (s)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (s)</td>
 <td>Get/Set</td>
 <td>Time until this maneuver</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:MANEUVERNODE:PROGRADE" title="MANEUVERNODE:PROGRADE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
 <td>Get/Set</td>
 <td>Delta-V along prograde</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:MANEUVERNODE:RADIALOUT" title="MANEUVERNODE:RADIALOUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RADIALOUT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
 <td>Get/Set</td>
 <td>Delta-V along radial to orbited <a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Body</span></code></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:MANEUVERNODE:NORMAL" title="MANEUVERNODE:NORMAL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NORMAL</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
 <td>Get/Set</td>
 <td>Delta-V along normal to the <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>&#8216;s <a class="reference internal" href="../orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a></td>
 </tr>
@@ -416,7 +466,7 @@ ManeuverNode:<code class="descname">ETA</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -432,7 +482,7 @@ ManeuverNode:<code class="descname">PROGRADE</code><a class="headerlink" href="#
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -448,7 +498,7 @@ ManeuverNode:<code class="descname">RADIALOUT</code><a class="headerlink" href="
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -464,7 +514,7 @@ ManeuverNode:<code class="descname">NORMAL</code><a class="headerlink" href="#at
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -531,7 +581,7 @@ ManeuverNode:<code class="descname">ORBIT</code><a class="headerlink" href="#att
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
