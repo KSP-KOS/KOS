@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript User Functions &mdash; kOS 0.20.1 documentation</title>
+  <title>KerboScript User Functions &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,9 +35,9 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
-        <link rel="next" title="Delegates (function references)" href="delegates.html"/>
+        <link rel="next" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/>
         <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -102,9 +102,10 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">User Functions</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">User Functions</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="anonymous.html">Anonymous User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html">Delegates (function references)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html#advanced-topics">Advanced topics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html#kinds-of-delegate-no-suffixes">Kinds of Delegate (no suffixes)</a></li>
@@ -139,7 +140,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -169,7 +170,7 @@
 <ul class="simple">
 <li><a class="reference internal" href="#help-for-the-new-user-what-is-a-function" id="id3">Help for the new user - What is a Function?</a></li>
 <li><a class="reference internal" href="#declare-function" id="id4">DECLARE FUNCTION</a></li>
-<li><a class="reference internal" href="#using-run-once" id="id5">Using RUN ONCE</a></li>
+<li><a class="reference internal" href="#using-run-once-or-runoncepath" id="id5">Using RUN ONCE or RUNONCEPATH</a></li>
 <li><a class="reference internal" href="#declare-parameter" id="id6">DECLARE PARAMETER</a></li>
 <li><a class="reference internal" href="#calling-a-function" id="id7">Calling a function</a></li>
 <li><a class="reference internal" href="#optional-parameters-parameter-defaults" id="id8">Optional Parameters (parameter defaults)</a><ul>
@@ -191,10 +192,11 @@
 </li>
 <li><a class="reference internal" href="#nesting-functions-inside-functions" id="id19">Nesting functions inside functions</a></li>
 <li><a class="reference internal" href="#recursion" id="id20">Recursion</a></li>
-<li><a class="reference internal" href="#user-function-gotchas" id="id21">User Function Gotchas</a><ul>
-<li><a class="reference internal" href="#calling-program-s-functions-from-the-interpreter" id="id22">Calling program&#8217;s functions from the interpreter</a></li>
-<li><a class="reference internal" href="#inconsistent-returns" id="id23">Inconsistent returns</a></li>
-<li><a class="reference internal" href="#accidentally-using-globals" id="id24">Accidentally using globals</a></li>
+<li><a class="reference internal" href="#anonymous-functions" id="id21">Anonymous functions</a></li>
+<li><a class="reference internal" href="#user-function-gotchas" id="id22">User Function Gotchas</a><ul>
+<li><a class="reference internal" href="#calling-program-s-functions-from-the-interpreter" id="id23">Calling program&#8217;s functions from the interpreter</a></li>
+<li><a class="reference internal" href="#inconsistent-returns" id="id24">Inconsistent returns</a></li>
+<li><a class="reference internal" href="#accidentally-using-globals" id="id25">Accidentally using globals</a></li>
 </ul>
 </li>
 </ul>
@@ -252,7 +254,7 @@ it from inside a program, it will definitely not work properly,
 but the exact error you get will depend on several &#8220;random&#8221;
 factors.  This may be fixed later by a later release, but for
 now, don&#8217;t do it.  For further explanation, see the section entitled
-<a class="reference internal" href="#interpreter-functions"><span class="std std-ref">Functions and the interpreter terminal</span></a></p>
+<a class="reference internal" href="#interpreter-functions"><span>Functions and the interpreter terminal</span></a></p>
 </div>
 </div>
 <div class="section" id="declare-function">
@@ -316,23 +318,24 @@ programs.  At the top of your main script you can then &#8220;run&#8221; the
 other scripts containing the library of functions to get them
 compiled into memory.</p>
 </div>
-<div class="section" id="using-run-once">
-<h2><a class="toc-backref" href="#id5">Using RUN ONCE</a><a class="headerlink" href="#using-run-once" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-run-once-or-runoncepath">
+<h2><a class="toc-backref" href="#id5">Using RUN ONCE or RUNONCEPATH</a><a class="headerlink" href="#using-run-once-or-runoncepath" title="Permalink to this headline">¶</a></h2>
 <p>If you want to load a library of functions that ALSO perform some
 initialization mainline code, but you only want the mainline code
 to execute once when the library is first loaded, rather than
 every time a subprogram runs your library, then use the &#8216;once&#8217;
-keyword with the run command as follows:</p>
+keyword with the RUN command, or the RUNONCEPATH command, as
+follows:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// This will run mylib1 3 times, re-running the mainline code in it:`</span>
 <span class="k">run</span> <span class="nv">mylib1</span><span class="p">.</span>
 <span class="k">run</span> <span class="nv">mylib1</span><span class="p">.</span>
-<span class="k">run</span> <span class="nv">mylib1</span><span class="p">.</span>
+<span class="nv">runpath</span><span class="p">(</span><span class="s">&quot;mylib1&quot;</span><span class="p">).</span> <span class="c1">// just the same thing as &#39;run mylib1&#39;, really.</span>
 
 <span class="c1">// This will run mylib2 only one time, ignoring the additional</span>
 <span class="c1">// instances:</span>
 <span class="k">run</span> <span class="k">once</span> <span class="nv">mylib2</span><span class="p">.</span>
 <span class="k">run</span> <span class="k">once</span> <span class="nv">mylib2</span><span class="p">.</span> <span class="c1">// mylib2 was already run, will not be run again.</span>
-<span class="k">run</span> <span class="k">once</span> <span class="nv">mylib2</span><span class="p">.</span> <span class="c1">// mylib2 was already run, will not be run again.</span>
+<span class="nv">runoncepath</span><span class="p">(</span><span class="s">&quot;mylib2&quot;</span><span class="p">).</span> <span class="c1">// mylib2 was already run, will not be run again.</span>
 </pre></div>
 </div>
 <p>Example:  Let&#8217;s say you want to have a library that keeps a counter
@@ -353,7 +356,7 @@ another sub-program includes the library in its code.  So you have this:</p>
 </div>
 <p><strong>subprogram, which ALSO calls counterlib:</strong></p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// subprogram</span>
-<span class="k">run</span> <span class="k">once</span> <span class="nv">counterlib</span><span class="p">.</span>
+<span class="nv">runoncepath</span><span class="p">(</span><span class="s">&quot;counterlib&quot;</span><span class="p">).</span> <span class="c1">// same as &#39;run once counterlib.&#39;</span>
 
 <span class="k">print</span> <span class="s">&quot;subprogram: next counter ID = &quot;</span> <span class="o">+</span> <span class="nv">counter_next</span><span class="p">().</span>
 <span class="k">print</span> <span class="s">&quot;subprogram: next counter ID = &quot;</span> <span class="o">+</span> <span class="nv">counter_next</span><span class="p">().</span>
@@ -397,7 +400,7 @@ subprogram: next counter ID = 3
 <div class="section" id="declare-parameter">
 <h2><a class="toc-backref" href="#id6">DECLARE PARAMETER</a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>If your function expects to have parameters passed into it, you can
-use the <a class="reference internal" href="variables.html#declare-parameter"><span class="std std-ref">DECLARE PARAMETER</span></a> command to do
+use the <a class="reference internal" href="variables.html#declare-parameter"><span>DECLARE PARAMETER</span></a> command to do
 so.  This is the same command as is used to declare parameters for
 running a whole script.  By putting a DECLARE PARAMETER statement
 inside a function, you tell the kerboscript compiler that you want
@@ -552,7 +555,7 @@ just says <code class="docutils literal"><span class="pre">LOCAL</span> <span cl
 </pre></div>
 </div>
 <p>If your function needs to make a local variable, it can do so using
-the <a class="reference internal" href="variables.html#declare"><span class="std std-ref">DECLARE</span></a> command.  Whenever the DECLARE command is
+the <a class="reference internal" href="variables.html#declare"><span>DECLARE</span></a> command.  Whenever the DECLARE command is
 seen inside a function, the compiler assumes the variable is meant to
 be local to that function&#8217;s block.  This also works with recursion.
 If you recursively call a function again and again, there will be
@@ -561,7 +564,7 @@ but not of the variables implicitly made global without DECLARE.</p>
 <p>An example of using <code class="docutils literal"><span class="pre">local</span></code> for a local variable can be seen in
 the example above, where it is used for the <code class="docutils literal"><span class="pre">row</span></code> and <code class="docutils literal"><span class="pre">col</span></code> variables.</p>
 <p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
-work is found <a class="reference internal" href="variables.html#scope"><span class="std std-ref">on another page</span></a></p>
+work is found <a class="reference internal" href="variables.html#scope"><span>on another page</span></a></p>
 <div class="section" id="initializers-are-now-mandatory-for-the-declare-statement">
 <h3><a class="toc-backref" href="#id14">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
 <p>This is now <strong>illegal</strong> syntax:</p>
@@ -755,17 +758,31 @@ always exclusively use local variables made with a declare statement
 in the body of the function, and never use global variables for
 something that you intended to be different per recursive call.</p>
 </div>
+<div class="section" id="anonymous-functions">
+<h2><a class="toc-backref" href="#id21">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this headline">¶</a></h2>
+<p>You can make <a class="reference internal" href="anonymous.html#anonymous-functions"><span>Anonymous functions</span></a> in kerboscript
+by simply leaving off the function keyword and the name of the function,
+and just using the curly braces (<code class="docutils literal"><span class="pre">{</span></code>, <code class="docutils literal"><span class="pre">}</span></code>) around some statements.
+When the compiler sees a standalone set of curly braces like this being used
+in the context of an <em>expression</em> (rather than as a standalone statement),
+then it will compile the contents of the braces as a function, meaning that
+the keywords <code class="docutils literal"><span class="pre">parameter</span></code> and <code class="docutils literal"><span class="pre">return</span></code> will work as expected inside them.
+Then it will leave a <a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> of the function behind as the
+value of the expression, which can then be assigned to a variable, or
+passed as an argument, etc.  The full details of what this means, and how
+to use it, is <a class="reference internal" href="anonymous.html#anonymous-functions"><span>explained elsewhere</span></a>.</p>
+</div>
 <div class="section" id="user-function-gotchas">
-<h2><a class="toc-backref" href="#id21">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id22">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="calling-program-s-functions-from-the-interpreter">
-<h3><a class="toc-backref" href="#id22">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
-<p>As <a class="reference internal" href="#interpreter-functions"><span class="std std-ref">explained above</span></a>, kOS 0.17.0 does
+<h3><a class="toc-backref" href="#id23">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
+<p>As <a class="reference internal" href="#interpreter-functions"><span>explained above</span></a>, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.</p>
 </div>
 <div class="section" id="inconsistent-returns">
-<h3><a class="toc-backref" href="#id23">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id24">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
 <p>Note that if you sometimes do and sometimes don&#8217;t return a value, from
 the same function, as in the example here:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// A badly designed function, with inconsistency</span>
@@ -795,7 +812,7 @@ a user function, that you <em>always</em> do so in every path through your
 function.</p>
 </div>
 <div class="section" id="accidentally-using-globals">
-<h3><a class="toc-backref" href="#id24">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id25">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to accidentally create global variables
 when you didn&#8217;t meant to, just because you made a typo.</p>
 <p>For example:</p>
@@ -823,7 +840,7 @@ declaring them first.  Most such languages have provided a way to
 catch the problem, and allow you to instruct the compiler &#8220;please
 don&#8217;t let me do that.  Please force me to declare everything&#8221;.</p>
 <p>The way that is done in kerboscript is by using a <code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></code>
-compiler directive, <a class="reference internal" href="variables.html#lazyglobal"><span class="std std-ref">as described here</span></a>.</p>
+compiler directive, <a class="reference internal" href="variables.html#lazyglobal"><span>as described here</span></a>.</p>
 <p>Had the function above been compiled under a <code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span> <span class="pre">off.</span></code>
 compiler directive, the typo would be noticed:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="p">@</span><span class="nv">lazyglobal</span> <span class="nb">off</span><span class="p">.</span>
@@ -851,7 +868,7 @@ compiler directive, the typo would be noticed:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="delegates.html" class="btn btn-neutral float-right" title="Delegates (function references)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="anonymous.html" class="btn btn-neutral float-right" title="Anonymous Functions (A kind of Delegate)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="variables.html" class="btn btn-neutral" title="Variables &amp; Statements" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -885,7 +902,7 @@ compiler directive, the typo would be noticed:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

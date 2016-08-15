@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part &mdash; kOS 0.20.1 documentation</title>
+  <title>Part &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="PartModule" href="partmodule.html"/>
         <link rel="prev" title="Maneuver Node" href="node.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -107,6 +107,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
@@ -115,7 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Part</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
@@ -126,7 +128,7 @@
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
@@ -159,7 +161,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -187,7 +189,7 @@
             
   <div class="section" id="part">
 <span id="id1"></span><h1>Part<a class="headerlink" href="#part" title="Permalink to this headline">¶</a></h1>
-<p>These are the generic properties every PART has. You can obtain a list of values of type Part using the <a class="reference internal" href="../../commands/list.html#list-command"><span class="std std-ref">LIST PARTS command</span></a>.</p>
+<p>These are the generic properties every PART has. You can obtain a list of values of type Part using the <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST PARTS command</span></a>.</p>
 <dl class="structure">
 <dt id="structure:PART">
 <em class="property">structure </em><code class="descname">Part</code><a class="headerlink" href="#structure:PART" title="Permalink to this definition">¶</a></dt>
@@ -206,39 +208,39 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:NAME" title="PART:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Name of this part</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:TITLE" title="PART:TITLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TITLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Title as it appears in KSP</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:MASS" title="PART:MASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Current mass of part and its resources</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:DRYMASS" title="PART:DRYMASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DRYMASS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Mass of part if all resources were empty</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:WETMASS" title="PART:WETMASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WETMASS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Mass of part if all resources were full</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:TAG" title="PART:TAG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Name-tag if assigned by the player</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONTROLFROM</span></code></a></td>
-<td>Void</td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PART:CONTROLFROM" title="PART:CONTROLFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">CONTROLFROM</span></code></a></td>
+<td>None</td>
 <td>Call to control-from to this part</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:STAGE" title="PART:STAGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STAGE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>The stage this is associated with</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:UID" title="PART:UID attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UID</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Unique identifying number of this part</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:ROTATION" title="PART:ROTATION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATION</span></code></a></td>
@@ -258,7 +260,7 @@
 <td>list of the <a class="reference internal" href="resource.html#structure:RESOURCE" title="RESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Resource</span></code></a> in this part</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:TARGETABLE" title="PART:TARGETABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>true if this part can be selected as a target</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:SHIP" title="PART:SHIP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHIP</span></code></a></td>
@@ -271,7 +273,7 @@
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:MODULES" title="PART:MODULES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
-<td>Names (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) of all <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></code></a></td>
+<td>Names (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>) of all <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></code></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:ALLMODULES" title="PART:ALLMODULES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALLMODULES</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
@@ -282,11 +284,11 @@
 <td>Adjacent <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> on this <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:HASPARENT" title="PART:HASPARENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPARENT</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Check if this part has a parent <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PART:HASPHYSICS" title="PART:HASPHYSICS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPHYSICS</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Does this part have mass or drag</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:CHILDREN" title="PART:CHILDREN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHILDREN</span></code></a></td>
@@ -306,7 +308,7 @@ Part:<code class="descname">NAME</code><a class="headerlink" href="#attribute:PA
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -323,7 +325,7 @@ Part:<code class="descname">TITLE</code><a class="headerlink" href="#attribute:P
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -340,13 +342,13 @@ Part:<code class="descname">TAG</code><a class="headerlink" href="#attribute:PAR
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get / Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>The name tag value that may exist on this part if you have given the part a name via the <a class="reference internal" href="../../general/nametag.html#nametag"><span class="std std-ref">name-tag system</span></a>.</p>
-<p>A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference internal" href="../../general/nametag.html#nametag"><span class="std std-ref">name-tag system described here</span></a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
-<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
+<p>The name tag value that may exist on this part if you have given the part a name via the <a class="reference internal" href="../../general/nametag.html#nametag"><span>name-tag system</span></a>.</p>
+<p>A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference internal" href="../../general/nametag.html#nametag"><span>name-tag system described here</span></a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
+<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
 <p>This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not &#8220;on rails&#8221;. vessels that are &#8220;on rails&#8221; do not have their full list of parts entirely populated at the moment:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">PARTS</span> <span class="k">FROM</span> <span class="nv">TARGET</span> <span class="nv">IN</span> <span class="nv">tParts</span><span class="p">.</span>
 
@@ -366,16 +368,16 @@ Part:<code class="descname">TAG</code><a class="headerlink" href="#attribute:PAR
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:PART:CONTROLFROM">
-Part:<code class="descname">CONTROLFROM</code><a class="headerlink" href="#attribute:PART:CONTROLFROM" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="method:PART:CONTROLFROM">
+Part:<code class="descname">CONTROLFROM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:PART:CONTROLFROM" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Callable function only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">void</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
 </tr>
 </tbody>
 </table>
@@ -384,7 +386,10 @@ All vessels must have at least one &#8220;control from&#8221;
 part on them somewhere, which is why there&#8217;s no mechanism for un-setting
 the &#8220;control from&#8221; setting other than to pick another part and set it
 to that part instead.</p>
-<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -396,7 +401,7 @@ Part:<code class="descname">STAGE</code><a class="headerlink" href="#attribute:P
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -412,7 +417,7 @@ Part:<code class="descname">UID</code><a class="headerlink" href="#attribute:PAR
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -476,7 +481,7 @@ Part:<code class="descname">MASS</code><a class="headerlink" href="#attribute:PA
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -492,7 +497,7 @@ Part:<code class="descname">WETMASS</code><a class="headerlink" href="#attribute
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -508,7 +513,7 @@ Part:<code class="descname">DRYMASS</code><a class="headerlink" href="#attribute
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -540,7 +545,7 @@ Part:<code class="descname">TARGETABLE</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -571,7 +576,7 @@ Part:<code class="descname">GETMODULE</code><span class="sig-paren">(</span>name
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) Name of the part module</li>
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>) Name of the part module</li>
 </ul>
 </td>
 </tr>
@@ -618,7 +623,7 @@ Part:<code class="descname">PARENT</code><a class="headerlink" href="#attribute:
 </tr>
 </tbody>
 </table>
-<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">tree of parts</span></a>, this is the part that this part is attached to on the way &#8220;up&#8221; toward the root part.</p>
+<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>tree of parts</span></a>, this is the part that this part is attached to on the way &#8220;up&#8221; toward the root part.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -647,11 +652,11 @@ Part:<code class="descname">HASPARENT</code><a class="headerlink" href="#attribu
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">tree of parts</span></a>, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).</p>
+<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>tree of parts</span></a>, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -667,7 +672,7 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
 </tr>
 </tbody>
 </table>
-<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">tree of parts</span></a>, this is all the parts that are attached as children of this part. It returns a list of zero length when this part is a &#8220;leaf&#8221; of the parts tree.</p>
+<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>tree of parts</span></a>, this is all the parts that are attached as children of this part. It returns a list of zero length when this part is a &#8220;leaf&#8221; of the parts tree.</p>
 </dd></dl>
 
 </div>
@@ -713,7 +718,7 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Reference Frames &mdash; kOS 0.20.1 documentation</title>
+  <title>Reference Frames &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Command Reference" href="../commands.html"/>
         <link rel="prev" title="Geographic Coordinates" href="geocoordinates.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geocoordinates.html">Geographic Coordinates</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Reference Frames</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Reference Frames</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -137,7 +137,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -193,7 +193,7 @@ instead, and Kerbal Space Program is one of them.</p>
 <span class="target" id="ship-raw"></span><span class="target" id="index-0"></span><dl class="object">
 <dt>
 <code class="descname">SHIP-RAW</code></dt>
-<dd><p>The name of the reference frame in which the origin point is <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel (SHIP)</span></a>, and the rotation is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid.</p>
+<dd><p>The name of the reference frame in which the origin point is <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel (SHIP)</span></a>, and the rotation is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid.</p>
 </dd></dl>
 
 <span class="target" id="soi-raw"></span><span class="target" id="index-1"></span><dl class="object">
@@ -227,7 +227,7 @@ instead, and Kerbal Space Program is one of them.</p>
 <div class="section" id="origin-position">
 <h2>Origin Position<a class="headerlink" href="#origin-position" title="Permalink to this headline">¶</a></h2>
 <p>The origin position of the <span class="math">\((x,y,z)\)</span> coordinate grid in <strong>KSP</strong> is also a bit messy. It&#8217;s usually <em>near</em> but not exactly <em>on</em> the current ship. <strong>kOS</strong> performs some conversions for you to make this a bit simpler and keep everything consistent.</p>
-<p>Regardless of where the origin of the underlying <strong>KSP</strong> system is, in <strong>kOS</strong>, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a>.</p>
+<p>Regardless of where the origin of the underlying <strong>KSP</strong> system is, in <strong>kOS</strong>, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a>.</p>
 <p>However, for the sake of VELOCITY, the origin point of all vectors is usually not SHIP, but rather it&#8217;s the SOI body&#8217;s center. This is because if the origin point was the SHIP, then the ship&#8217;s velocity would always be zero in that frame of reference, and that would not be useful.</p>
 <p>The makers of <strong>kOS</strong> are aware that this is not technically a proper frame of reference, because the origin point varies depending on if you&#8217;re getting POSITION or getting VELOCITY. Fixing it at this point would break a lot of existing scripts, however.</p>
 <p>So the rule of thumb is:</p>
@@ -287,7 +287,7 @@ instead, and Kerbal Space Program is one of them.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

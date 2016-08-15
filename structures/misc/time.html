@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Time Span &mdash; kOS 0.20.1 documentation</title>
+  <title>Time Span &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Drawing Vectors on the Screen" href="vecdraw.html"/>
         <link rel="prev" title="Terminal" href="terminal.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,7 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
@@ -122,7 +122,7 @@
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Time Span</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Time Span</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -270,35 +270,35 @@ TIME:SECONDS        // Total Seconds since campaign began
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:TIMESPAN:CLOCK" title="TIMESPAN:CLOCK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CLOCK</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
 <td>&#8220;HH:MM:SS&#8221;</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMESPAN:CALENDAR" title="TIMESPAN:CALENDAR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CALENDAR</span></code></a></td>
-<td><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
 <td>&#8220;Year YYYY, day DDD&#8221;</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:TIMESPAN:SECOND" title="TIMESPAN:SECOND attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SECOND</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (0-59)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (0-59)</td>
 <td>Second-hand number</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMESPAN:MINUTE" title="TIMESPAN:MINUTE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MINUTE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (0-59)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (0-59)</td>
 <td>Minute-hand number</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:TIMESPAN:HOUR" title="TIMESPAN:HOUR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HOUR</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (0-5)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (0-5)</td>
 <td>Hour-hand number</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMESPAN:DAY" title="TIMESPAN:DAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DAY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (1-426)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (1-426)</td>
 <td>Day-hand number</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:TIMESPAN:YEAR" title="TIMESPAN:YEAR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YEAR</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Year-hand number</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:TIMESPAN:SECONDS" title="TIMESPAN:SECONDS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SECONDS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (fractional)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (fractional)</td>
 <td>Total Seconds since Epoch (includes fractional partial seconds)</td>
 </tr>
 </tbody>
@@ -318,7 +318,7 @@ TimeSpan:<code class="descname">CLOCK</code><a class="headerlink" href="#attribu
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -334,7 +334,7 @@ TimeSpan:<code class="descname">CALENDAR</code><a class="headerlink" href="#attr
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -350,7 +350,7 @@ TimeSpan:<code class="descname">SECOND</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (0-59)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (0-59)</td>
 </tr>
 </tbody>
 </table>
@@ -366,7 +366,7 @@ TimeSpan:<code class="descname">MINUTE</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (0-59)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (0-59)</td>
 </tr>
 </tbody>
 </table>
@@ -382,7 +382,7 @@ TimeSpan:<code class="descname">HOUR</code><a class="headerlink" href="#attribut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (0-5) or (0-23)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (0-5) or (0-23)</td>
 </tr>
 </tbody>
 </table>
@@ -398,7 +398,7 @@ TimeSpan:<code class="descname">DAY</code><a class="headerlink" href="#attribute
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (1-426) or (1-356)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (1-426) or (1-356)</td>
 </tr>
 </tbody>
 </table>
@@ -414,7 +414,7 @@ TimeSpan:<code class="descname">YEAR</code><a class="headerlink" href="#attribut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -430,7 +430,7 @@ TimeSpan:<code class="descname">SECONDS</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (float)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (float)</td>
 </tr>
 </tbody>
 </table>
@@ -484,7 +484,7 @@ your campaign).  Can be very precise.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -226,6 +226,25 @@ you are trying to solve.  While Kerboscript is mostly an
 some limited concepts of functional programming style are possible through the use
 of these delegates.
 
+Anonymous functions
+-------------------
+
+Kerboscript also allows you to make a Delegate from an
+:ref:`Anonymous function <anonymous_functions>` (see the link
+for the full description of the syntax and its use), as in this
+example below::
+
+    set add_func to { parameter a,b. return a+b. }.
+    // add_func is now a KOSDelegate of the anonymous function.
+
+When using anonymous functions like this, you don't use the '@'
+character because an anonymous function already *is* a Delegate
+to begin with.
+
+It is technically possible, using anonymous functions, to
+actually make an entire program library out of delegates
+rather than normal functions.
+
 lib_enum in KSLib
 -----------------
 
@@ -333,20 +352,6 @@ correct.  The KOSDelegate suffix ``:bind`` is technically not a proper "curry" b
 it is actually a
 `partial function application <https://en.wikipedia.org/wiki/Partial_application>`__.
 and thus doesn't *require* that you limit it to only one parameter at a time.)
-
-Anonymous functions
--------------------
-
-(If you are a beginner programmer, you can skip this paragraph.)
-
-If you are an experienced programmer who knows of a concept
-called "anonymous functions" in which you can create instant
-delegates as just in-line expressions, you should know that this
-feature is not supported in Kerboscript.  All KOSDelegates must
-start as named functions you declare in the usual way.  The
-anonymous function feature may be added in a future release,
-or it might not, depending on how complex it becomes to add it
-to the language syntax.  
 
 Closures
 --------

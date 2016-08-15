@@ -27,7 +27,7 @@ Creation
  :func:`Q(x,y,z,rot)`                            Quaternion
  :func:`HEADING(dir,pitch)`                      Compass heading
  :func:`LOOKDIRUP(lookAt,lookUp)`                Looking along vector *lookAt*, rolled so that *lookUp* is upward.
- :func:`ANGLEAXIS(degress,axisVector)`           A rotation that would rotate the universe around an axis
+ :func:`ANGLEAXIS(degrees,axisVector)`           A rotation that would rotate the universe around an axis
  :func:`ROTATEFROMTO(fromVec,toVec)`             A rotation that would go from vectors fromVec to toVec
  :ref:`FACING         <Direction from suffix>`   From SHIP or TARGET
  :ref:`UP             <Direction from suffix>`   From SHIP
@@ -72,7 +72,7 @@ Creation
         LOCK normVec to VCRS(SHIP:BODY:POSITION,SHIP:VELOCITY:ORBIT).  // Cross-product these for a normal vector
         LOCK STEERING TO LOOKDIRUP( normVec, SHIP:BODY:POSITION).
 
-.. function:: ANGLEAXIS(degress,axisVector)
+.. function:: ANGLEAXIS(degrees,axisVector)
 
     A :struct:`Direction` can be created with the ANGLEAXIS function.  It represents a rotation of *degrees* around an axis of *axisVector*.  To know which way a positive or negative number of degrees rotates, remember this is a left-handed coordinate system::
 

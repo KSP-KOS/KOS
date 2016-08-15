@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The KerboScript Language &mdash; kOS 0.20.1 documentation</title>
+  <title>The KerboScript Language &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="index.html"/>
         <link rel="next" title="General Features of the KerboScript Language" href="language/features.html"/>
         <link rel="prev" title="Career Limits" href="general/career_limits.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -96,12 +96,13 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general.html">General</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Language</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Language</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html">User Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/anonymous.html">Anonymous User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html">Delegates (function references)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#advanced-topics">Advanced topics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#kinds-of-delegate-no-suffixes">Kinds of Delegate (no suffixes)</a></li>
@@ -136,7 +137,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -214,7 +215,7 @@
 <li class="toctree-l1"><a class="reference internal" href="language/user_functions.html">User Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#help-for-the-new-user-what-is-a-function">Help for the new user - What is a Function?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-function">DECLARE FUNCTION</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#using-run-once">Using RUN ONCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#using-run-once-or-runoncepath">Using RUN ONCE or RUNONCEPATH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-parameter">DECLARE PARAMETER</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#calling-a-function">Calling a function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#optional-parameters-parameter-defaults">Optional Parameters (parameter defaults)</a></li>
@@ -223,18 +224,26 @@
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#passing-by-value">Passing by value</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#nesting-functions-inside-functions">Nesting functions inside functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#recursion">Recursion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#anonymous-functions">Anonymous functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#user-function-gotchas">User Function Gotchas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="language/anonymous.html">Anonymous User Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language/anonymous.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/anonymous.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/anonymous.html#passing-in-to-other-functions">Passing in to other functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/anonymous.html#lexicon-of-functions">Lexicon of functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/delegates.html">Delegates (function references)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#why">Why?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/delegates.html#anonymous-functions">Anonymous functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#lib-enum-in-kslib">lib_enum in KSLib</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/delegates.html#advanced-topics">Advanced topics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#pre-binding-arguments-with-bind">Pre-binding arguments with :bind</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/delegates.html#anonymous-functions">Anonymous functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/delegates.html#closures">Closures</a></li>
 </ul>
 </li>
@@ -284,7 +293,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>OrbitableVelocity &mdash; kOS 0.20.1 documentation</title>
+  <title>OrbitableVelocity &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Orbits" href="../orbits.html"/>
         <link rel="next" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="prev" title="Orbitable (Vessels and Bodies)" href="orbitable.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,11 +105,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../orbits.html">Orbits</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="orbit.html">Orbit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="orbitable.html">Orbitable (Vessels and Bodies)</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">OrbitableVelocity</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">OrbitableVelocity</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
@@ -143,7 +143,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -227,6 +227,18 @@ OrbitableVelocity:<code class="descname">SURFACE</code><a class="headerlink" hre
 </tbody>
 </table>
 <p>Returns the surface-frame velocity. Note that this is the surface velocity relative to the surface of the SOI body, not the orbiting object itself. (i.e. Mun:VELOCITY:SURFACE returns the Mun&#8217;s velocity relative to the surface of its SOI body, Kerbin).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Special case instance, the Sun:</strong> Because the Sun has no parent
+SoI body that it orbits around (Kerbal Space Program does not
+simulate the existence of anything outside the one solar system),
+that means that the Sun&#8217;s surface velocity is just hardcoded to
+be the same thing as its orbital velocity.  This may or may not be
+entirely correct, but the &#8220;correct&#8221; answer to the question, &#8220;What is
+sun:velocity:surface?&#8221; would technically be &#8220;I refuse to answer.
+That&#8217;s an invalid question.&#8221; Rather than crash or throw an exception,
+kOS just returns the same as the orbital velocity in this case.</p>
+</div>
 </dd></dl>
 
 <p>Examples:</p>
@@ -283,7 +295,7 @@ OrbitableVelocity:<code class="descname">SURFACE</code><a class="headerlink" hre
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

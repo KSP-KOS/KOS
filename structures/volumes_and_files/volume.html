@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Volume &mdash; kOS 0.20.1 documentation</title>
+  <title>Volume &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,10 +35,10 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Volumes and files" href="../volumes_and_files.html"/>
-        <link rel="next" title="VolumeFile" href="volumefile.html"/>
-        <link rel="prev" title="FileContent" href="filecontent.html"/> 
+        <link rel="next" title="VolumeDirectory" href="volumedirectory.html"/>
+        <link rel="prev" title="Path" href="path.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,12 +105,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="filecontent.html">FileContent</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="path.html">Path</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="volumedirectory.html">VolumeDirectory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="volumefile.html">VolumeFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="volumeitem.html">VolumeItem</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
@@ -143,7 +146,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -189,44 +192,52 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUME:FREESPACE" title="VOLUME:FREESPACE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FREESPACE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Free space left on the volume</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VOLUME:CAPACITY" title="VOLUME:CAPACITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Total space on the volume</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUME:NAME" title="VOLUME:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">String</span></a></td>
-<td>Volume name</td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Get or set volume name</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VOLUME:RENAMEABLE" title="VOLUME:RENAMEABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RENAMEABLE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>True if the name can be changed</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUME:FILES" title="VOLUME:FILES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FILES</span></code></a></td>
-<td><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a></td>
-<td>Lexicon of all files on the volume</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUME:ROOT" title="VOLUME:ROOT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROOT</span></code></a></td>
+<td><a class="reference internal" href="volumedirectory.html#structure:VOLUMEDIRECTORY" title="VOLUMEDIRECTORY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeDirectory</span></code></a></td>
+<td>Volume&#8217;s root directory</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOLUME:POWERREQUIREMENT" title="VOLUME:POWERREQUIREMENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POWERREQUIREMENT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOLUME:FILES" title="VOLUME:FILES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FILES</span></code></a></td>
+<td><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a></td>
+<td>Lexicon of all files and directories on the volume</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUME:POWERREQUIREMENT" title="VOLUME:POWERREQUIREMENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POWERREQUIREMENT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Amount of power consumed when this volume is set as the current volume</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VOLUME:EXISTS" title="VOLUME:EXISTS method"><code class="xref ks ks-meth docutils literal"><span class="pre">EXISTS(filename)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
-<td>Returns true if the given file exists</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VOLUME:EXISTS" title="VOLUME:EXISTS method"><code class="xref ks ks-meth docutils literal"><span class="pre">EXISTS(path)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>Returns true if the given file or directory exists</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VOLUME:CREATE" title="VOLUME:CREATE method"><code class="xref ks ks-meth docutils literal"><span class="pre">CREATE(filename)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VOLUME:CREATE" title="VOLUME:CREATE method"><code class="xref ks ks-meth docutils literal"><span class="pre">CREATE(path)</span></code></a></td>
 <td><a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a></td>
 <td>Creates a file</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VOLUME:OPEN" title="VOLUME:OPEN method"><code class="xref ks ks-meth docutils literal"><span class="pre">OPEN(filename)</span></code></a></td>
-<td><a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a></td>
-<td>Opens a file</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VOLUME:CREATEDIR" title="VOLUME:CREATEDIR method"><code class="xref ks ks-meth docutils literal"><span class="pre">CREATEDIR(path)</span></code></a></td>
+<td><a class="reference internal" href="volumedirectory.html#structure:VOLUMEDIRECTORY" title="VOLUMEDIRECTORY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeDirectory</span></code></a></td>
+<td>Creates a directory</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VOLUME:DELETE" title="VOLUME:DELETE method"><code class="xref ks ks-meth docutils literal"><span class="pre">DELETE(filename)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
-<td>Deletes a file</td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VOLUME:OPEN" title="VOLUME:OPEN method"><code class="xref ks ks-meth docutils literal"><span class="pre">OPEN(path)</span></code></a></td>
+<td><a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a> or <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>Opens a file or directory</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VOLUME:DELETE" title="VOLUME:DELETE method"><code class="xref ks ks-meth docutils literal"><span class="pre">DELETE(path)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>Deletes a file or directory</td>
 </tr>
 </tbody>
 </table>
@@ -239,7 +250,7 @@ Volume:<code class="descname">FREESPACE</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -255,7 +266,7 @@ Volume:<code class="descname">CAPACITY</code><a class="headerlink" href="#attrib
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -271,13 +282,13 @@ Volume:<code class="descname">NAME</code><a class="headerlink" href="#attribute:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">String</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get and Set</td>
 </tr>
 </tbody>
 </table>
-<p>Volume name. This name can be used instead of the volumeId with some <a class="reference internal" href="../../commands/files.html#files"><span class="std std-ref">file and volume-related commands</span></a></p>
+<p>Gets or sets volume name. This name can be used instead of the volumeId with some <a class="reference internal" href="../../commands/files.html#files"><span>file and volume-related commands</span></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -287,7 +298,7 @@ Volume:<code class="descname">RENAMEABLE</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -303,13 +314,29 @@ Volume:<code class="descname">FILES</code><a class="headerlink" href="#attribute
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> of <a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> of <a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>List of files on this volume. Keys are the names of all files on this volume and values are the associated <a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a> structures.</p>
+<p>List of files and directories on this volume. Keys are the names of all items on this volume and values are the associated <a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a> structures.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:VOLUME:ROOT">
+Volume:<code class="descname">ROOT</code><a class="headerlink" href="#attribute:VOLUME:ROOT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="volumedirectory.html#structure:VOLUMEDIRECTORY" title="VOLUMEDIRECTORY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeDirectory</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns volume&#8217;s root directory</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -319,7 +346,7 @@ Volume:<code class="descname">POWERREQUIREMENT</code><a class="headerlink" href=
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -330,36 +357,38 @@ Volume:<code class="descname">POWERREQUIREMENT</code><a class="headerlink" href=
 
 <dl class="method">
 <dt id="method:VOLUME:EXISTS">
-Volume:<code class="descname">EXISTS</code><span class="sig-paren">(</span>filename<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:EXISTS" title="Permalink to this definition">¶</a></dt>
+Volume:<code class="descname">EXISTS</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:EXISTS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>Returns true if the given file exists. This will also return true when the given file does not exist, but there is a file with the same name and <cite>.ks</cite> or <cite>.ksm</cite> extension added.
-Use <code class="docutils literal"><span class="pre">Volume:FILES:HASKEY(filename)</span></code> to perform a strict check.</p>
+<p>Returns true if the given file or directory exists. This will also return true when the given file does not exist, but there is a file with the same name and <cite>.ks</cite> or <cite>.ksm</cite> extension added.
+Use <code class="docutils literal"><span class="pre">Volume:FILES:HASKEY(name)</span></code> to perform a strict check.</p>
+<p>Paths passed as the argument to this command should not contain a volume id or name and should not be relative.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="method:VOLUME:OPEN">
-Volume:<code class="descname">OPEN</code><span class="sig-paren">(</span>filename<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:OPEN" title="Permalink to this definition">¶</a></dt>
+Volume:<code class="descname">OPEN</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:OPEN" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a> or <a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> false</td>
 </tr>
 </tbody>
 </table>
-<p>Opens the file with the given name and returns <a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a>. It will fail if the file doesn&#8217;t exist.</p>
+<p>Opens the file or directory pointed to by the given path and returns <a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a>. It will return a boolean false if the given file or directory does not exist.</p>
+<p>Paths passed as the argument to this command should not contain a volume id or name and should not be relative.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="method:VOLUME:CREATE">
-Volume:<code class="descname">CREATE</code><span class="sig-paren">(</span>filename<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:CREATE" title="Permalink to this definition">¶</a></dt>
+Volume:<code class="descname">CREATE</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:CREATE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -368,12 +397,28 @@ Volume:<code class="descname">CREATE</code><span class="sig-paren">(</span>filen
 </tr>
 </tbody>
 </table>
-<p>Creates a file with the given name and returns <a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a>. It will fail if the file already exists.</p>
+<p>Creates a file under the given path and returns <a class="reference internal" href="volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a>. It will fail if the file already exists.</p>
+<p>Paths passed as the argument to this command should not contain a volume id or name and should not be relative.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:VOLUME:CREATEDIR">
+Volume:<code class="descname">CREATEDIR</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:CREATEDIR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="volumedirectory.html#structure:VOLUMEDIRECTORY" title="VOLUMEDIRECTORY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeDirectory</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Creates a directory under the given path and returns <a class="reference internal" href="volumedirectory.html#structure:VOLUMEDIRECTORY" title="VOLUMEDIRECTORY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeDirectory</span></code></a>. It will fail if the directory already exists.</p>
+<p>Paths passed as the argument to this command should not contain a volume id or name and should not be relative.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="method:VOLUME:DELETE">
-Volume:<code class="descname">DELETE</code><span class="sig-paren">(</span>filename<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:DELETE" title="Permalink to this definition">¶</a></dt>
+Volume:<code class="descname">DELETE</code><span class="sig-paren">(</span>path<span class="sig-paren">)</span><a class="headerlink" href="#method:VOLUME:DELETE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -382,7 +427,8 @@ Volume:<code class="descname">DELETE</code><span class="sig-paren">(</span>filen
 </tr>
 </tbody>
 </table>
-<p>Deletes the given file. It will return true if file was successfully deleted and false otherwise.</p>
+<p>Deletes the given file or directory (recursively). It will return true if the given item was successfully deleted and false otherwise.</p>
+<p>Paths passed as the argument to this command should not contain a volume id or name and should not be relative.</p>
 </dd></dl>
 
 </div>
@@ -394,10 +440,10 @@ Volume:<code class="descname">DELETE</code><span class="sig-paren">(</span>filen
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="volumefile.html" class="btn btn-neutral float-right" title="VolumeFile" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="volumedirectory.html" class="btn btn-neutral float-right" title="VolumeDirectory" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="filecontent.html" class="btn btn-neutral" title="FileContent" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="path.html" class="btn btn-neutral" title="Path" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -428,7 +474,7 @@ Volume:<code class="descname">DELETE</code><span class="sig-paren">(</span>filen
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ScienceExperimentModule &mdash; kOS 0.20.1 documentation</title>
+  <title>ScienceExperimentModule &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Sensor" href="sensor.html"/>
         <link rel="prev" title="ScienceData" href="sciencedatavalue.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -107,6 +107,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alt.html">ALT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
@@ -119,14 +121,14 @@
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource.html">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">ScienceExperimentModule</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vessel.html">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
@@ -159,7 +161,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -211,7 +213,7 @@ to perform all science-related tasks without any manual intervention:</p>
 science parts might not be compatible with it. One notable example is SCANsat. Even though
 SCANsat parts look and behave very similarly to stock science experiments under the hood
 they work very differently. Other mods can cause problems as well, please test them before use.</p>
-<p><a class="reference internal" href="../../addons/OrbitalScience.html#orbitalscience"><span class="std std-ref">DMagic Orbital Science</span></a> has dedicated support in kOS and should work
+<p><a class="reference internal" href="../../addons/OrbitalScience.html#orbitalscience"><span>DMagic Orbital Science</span></a> has dedicated support in kOS and should work
 properly.</p>
 <dl class="structure">
 <dt id="structure:SCIENCEEXPERIMENTMODULE">
@@ -250,19 +252,19 @@ properly.</p>
 <td>Discard the data</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="SCIENCEEXPERIMENTMODULE:INOPERABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INOPERABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Is this experiment inoperable</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="SCIENCEEXPERIMENTMODULE:RERUNNABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RERUNNABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Can this experiment be run multiple times</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="SCIENCEEXPERIMENTMODULE:DEPLOYED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEPLOYED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Is this experiment deployed</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="SCIENCEEXPERIMENTMODULE:HASDATA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASDATA</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Does the experiment have scientific data</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DATA" title="SCIENCEEXPERIMENTMODULE:DATA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DATA</span></code></a></td>
@@ -312,7 +314,7 @@ ScienceExperimentModule:<code class="descname">INOPERABLE</code><a class="header
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -328,7 +330,7 @@ ScienceExperimentModule:<code class="descname">RERUNNABLE</code><a class="header
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -344,7 +346,7 @@ ScienceExperimentModule:<code class="descname">DEPLOYED</code><a class="headerli
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -360,7 +362,7 @@ ScienceExperimentModule:<code class="descname">HASDATA</code><a class="headerlin
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -426,7 +428,7 @@ ScienceExperimentModule:<code class="descname">DATA</code><a class="headerlink" 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

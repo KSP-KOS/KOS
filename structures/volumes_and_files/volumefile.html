@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>VolumeFile &mdash; kOS 0.20.1 documentation</title>
+  <title>VolumeFile &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,10 +35,10 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Volumes and files" href="../volumes_and_files.html"/>
-        <link rel="next" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="prev" title="Volume" href="volume.html"/> 
+        <link rel="next" title="VolumeItem" href="volumeitem.html"/>
+        <link rel="prev" title="VolumeDirectory" href="volumedirectory.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,12 +105,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="filecontent.html">FileContent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="path.html">Path</a></li>
 <li class="toctree-l3"><a class="reference internal" href="volume.html">Volume</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">VolumeFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="volumedirectory.html">VolumeDirectory</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">VolumeFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="volumeitem.html">VolumeItem</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
@@ -143,7 +146,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -171,7 +174,7 @@
             
   <div class="section" id="volumefile">
 <span id="id1"></span><h1>VolumeFile<a class="headerlink" href="#volumefile" title="Permalink to this headline">¶</a></h1>
-<p>File name and size information. You can obtain a list of values of type VolumeFile using the <a class="reference internal" href="../../commands/list.html#list-command"><span class="std std-ref">LIST FILES</span></a> command.</p>
+<p>File name and size information. You can obtain a list of values of type VolumeFile using the <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST FILES</span></a> command.</p>
 <dl class="structure">
 <dt id="structure:VOLUMEFILE">
 <em class="property">structure </em><code class="descname">VolumeFile</code><a class="headerlink" href="#structure:VOLUMEFILE" title="Permalink to this definition">¶</a></dt>
@@ -189,17 +192,9 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUMEFILE:NAME" title="VOLUMEFILE:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>Name of the file including extension</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VOLUMEFILE:EXTENSION" title="VOLUMEFILE:EXTENSION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXTENSION</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td>File extension</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VOLUMEFILE:SIZE" title="VOLUMEFILE:SIZE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SIZE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (bytes)</td>
-<td>Size of the file</td>
+<tr class="row-even"><td>All suffixes of <a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a> objects are a type of <a class="reference internal" href="volumeitem.html#structure:VOLUMEITEM" title="VOLUMEITEM structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeItem</span></code></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:VOLUMEFILE:READALL" title="VOLUMEFILE:READALL method"><code class="xref ks ks-meth docutils literal"><span class="pre">READALL</span></code></a></td>
 <td><a class="reference internal" href="filecontent.html#structure:FILECONTENT" title="FILECONTENT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">FileContent</span></code></a></td>
@@ -219,54 +214,6 @@
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:VOLUMEFILE:NAME">
-VolumeFile:<code class="descname">NAME</code><a class="headerlink" href="#attribute:VOLUMEFILE:NAME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>name of the file, including its file extension.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:VOLUMEFILE:EXTENSION">
-VolumeFile:<code class="descname">EXTENSION</code><a class="headerlink" href="#attribute:VOLUMEFILE:EXTENSION" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-</tr>
-</tbody>
-</table>
-<p>File extension (part of the filename after the last dot).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:VOLUMEFILE:SIZE">
-VolumeFile:<code class="descname">SIZE</code><a class="headerlink" href="#attribute:VOLUMEFILE:SIZE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
-</tr>
-</tbody>
-</table>
-<p>size of the file, in bytes.</p>
 </dd></dl>
 
 <dl class="method">
@@ -334,10 +281,10 @@ VolumeFile:<code class="descname">CLEAR</code><span class="sig-paren">(</span><s
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vessels.html" class="btn btn-neutral float-right" title="Vessels and Parts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="volumeitem.html" class="btn btn-neutral float-right" title="VolumeItem" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="volume.html" class="btn btn-neutral" title="Volume" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="volumedirectory.html" class="btn btn-neutral" title="VolumeDirectory" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -368,7 +315,7 @@ VolumeFile:<code class="descname">CLEAR</code><span class="sig-paren">(</span><s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PIDLoop &mdash; kOS 0.20.1 documentation</title>
+  <title>PIDLoop &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Resource Transfer" href="resource_transfer.html"/>
         <link rel="prev" title="Vessel Load Distance" href="loaddistance.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -105,7 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
@@ -117,7 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">PIDLoop</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">PIDLoop</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -585,7 +585,7 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
 <div class="section" id="pidloop-update-derivation">
 <h2>PIDLoop Update Derivation<a class="headerlink" href="#pidloop-update-derivation" title="Permalink to this headline">¶</a></h2>
 <p>The internal update method of the <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></code></a> structure is the equivalent of the following in kerboscript</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// assume that the terms LastInput, LastSampleTime, ErrorSum, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined</span>
 <span class="k">declare</span> <span class="kd">function</span> <span class="nv">Update</span> <span class="p">{</span>
     <span class="k">declare</span> <span class="kd">parameter</span> <span class="nv">sampleTime</span><span class="p">,</span> <span class="nv">input</span><span class="p">.</span>
     <span class="k">set</span> <span class="nv">Error</span> <span class="ow">to</span> <span class="nv">Setpoint</span> <span class="o">-</span> <span class="nv">input</span><span class="p">.</span>
@@ -594,16 +594,13 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
     <span class="k">set</span> <span class="nv">DTerm</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
     <span class="k">if</span> <span class="p">(</span><span class="nv">LastSampleTime</span> <span class="o">&lt;</span> <span class="nv">sampleTime</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">set</span> <span class="nv">dt</span> <span class="ow">to</span> <span class="nv">sampleTime</span> <span class="o">-</span> <span class="nv">LastSampleTime</span><span class="p">.</span>
-        <span class="k">if</span> <span class="nv">dt</span> <span class="o">&lt;</span> <span class="mf">1</span> <span class="p">{</span>
-            <span class="c1">// only calculate integral and derivative if the time</span>
-            <span class="c1">// difference is less than one second, and their gain is not 0.</span>
-            <span class="k">if</span> <span class="nv">Ki</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span> <span class="p">{</span>
-                <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">ErrorSum</span> <span class="o">+</span> <span class="nv">Error</span><span class="p">)</span> <span class="o">*</span> <span class="nv">dt</span> <span class="o">*</span> <span class="nv">Ki</span><span class="p">.</span>
-            <span class="p">}</span>
-            <span class="k">set</span> <span class="nv">ChangeRate</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">input</span> <span class="o">-</span> <span class="nv">LastInput</span><span class="p">)</span> <span class="o">/</span> <span class="nv">dt</span><span class="p">.</span>
-            <span class="k">if</span> <span class="nv">Kd</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span> <span class="p">{</span>
-                <span class="k">set</span> <span class="nv">DTerm</span> <span class="ow">to</span> <span class="nv">ChangeRate</span> <span class="o">*</span> <span class="nv">Kd</span><span class="p">.</span>
-            <span class="p">}</span>
+        <span class="c1">// only calculate integral and derivative if their gain is not 0.</span>
+        <span class="k">if</span> <span class="nv">Ki</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span> <span class="p">{</span>
+            <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">ErrorSum</span> <span class="o">+</span> <span class="nv">Error</span> <span class="o">*</span> <span class="nv">dt</span><span class="p">)</span> <span class="o">*</span> <span class="nv">Ki</span><span class="p">.</span>
+        <span class="p">}</span>
+        <span class="k">set</span> <span class="nv">ChangeRate</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">input</span> <span class="o">-</span> <span class="nv">LastInput</span><span class="p">)</span> <span class="o">/</span> <span class="nv">dt</span><span class="p">.</span>
+        <span class="k">if</span> <span class="nv">Kd</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span> <span class="p">{</span>
+            <span class="k">set</span> <span class="nv">DTerm</span> <span class="ow">to</span> <span class="o">-</span><span class="nv">ChangeRate</span> <span class="o">*</span> <span class="nv">Kd</span><span class="p">.</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">set</span> <span class="nv">Output</span> <span class="ow">to</span> <span class="nv">pTerm</span> <span class="o">+</span> <span class="nv">iTerm</span> <span class="o">+</span> <span class="nv">dTerm</span><span class="p">.</span>
@@ -613,7 +610,7 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
         <span class="c1">// adjust the value of ITerm as well to prevent the value</span>
         <span class="c1">// from winding up out of control.</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">Ki</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">LastSampleTime</span> <span class="o">&lt;</span> <span class="nv">sampleTime</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="nv">Output</span> <span class="o">-</span> <span class="nv">Pterm</span> <span class="o">-</span> <span class="nv">DTerm</span><span class="p">.</span>
+            <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="nv">Output</span> <span class="o">-</span> <span class="nv">min</span><span class="p">(</span><span class="nv">Pterm</span> <span class="o">+</span> <span class="nv">DTerm</span><span class="p">,</span> <span class="nv">MaxOutput</span><span class="p">).</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nv">Output</span> <span class="o">&lt;</span> <span class="nv">MinOutput</span> <span class="p">{</span>
@@ -621,10 +618,11 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
         <span class="c1">// adjust the value of ITerm as well to prevent the value</span>
         <span class="c1">// from winding up out of control.</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">Ki</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nv">LastSampleTime</span> <span class="o">&lt;</span> <span class="nv">sampleTime</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="nv">Output</span> <span class="o">-</span> <span class="nv">Pterm</span> <span class="o">-</span> <span class="nv">DTerm</span><span class="p">.</span>
+            <span class="k">set</span> <span class="nv">ITerm</span> <span class="ow">to</span> <span class="nv">Output</span> <span class="o">-</span> <span class="nv">max</span><span class="p">(</span><span class="nv">Pterm</span> <span class="o">+</span> <span class="nv">DTerm</span><span class="p">,</span> <span class="nv">MinOutput</span><span class="p">).</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">set</span> <span class="nv">LastSampleTime</span> <span class="ow">to</span> <span class="nv">sampleTime</span><span class="p">.</span>
+    <span class="k">set</span> <span class="nv">LastInput</span> <span class="ow">to</span> <span class="nv">input</span><span class="p">.</span>
     <span class="k">if</span> <span class="nv">Ki</span> <span class="o">&lt;&gt;</span> <span class="mf">0</span> <span class="k">set</span> <span class="nv">ErrorSum</span> <span class="ow">to</span> <span class="nv">ITerm</span> <span class="o">/</span> <span class="nv">Ki</span><span class="p">.</span>
     <span class="k">else</span> <span class="k">set</span> <span class="nv">ErrorSum</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
     <span class="k">return</span> <span class="nv">Output</span><span class="p">.</span>
@@ -675,7 +673,7 @@ PIDLoop:<code class="descname">UPDATE</code><span class="sig-paren">(</span>time
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

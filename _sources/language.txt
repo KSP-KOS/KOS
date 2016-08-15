@@ -11,4 +11,5 @@ The **KerboScript** Language
     Flow Control                     <language/flow>
     Variables                        <language/variables>
     User Functions                   <language/user_functions>
+    Anonymous User Functions         <language/anonymous>
     Delegates (function references)  <language/delegates>

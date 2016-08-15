@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript Machine Code &mdash; kOS 0.20.1 documentation</title>
+  <title>KerboScript Machine Code &mdash; kOS 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="The Name Tag System" href="nametag.html"/>
         <link rel="prev" title="Files and Volumes" href="volumes.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.0
               </div>
             
           
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Machine Code</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Machine Code</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
@@ -142,7 +142,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -181,9 +181,9 @@
 <h2><a class="toc-backref" href="#id1">Compiling to a KSM File</a><a class="headerlink" href="#compiling-to-a-ksm-file" title="Permalink to this headline">¶</a></h2>
 <p>When you run your Kerboscript programs, behind the scenes they get compiled into a form in memory that runs much smoother but at the same time is quite hard for a Kerbal to read and understand. The actual computer hardware built by your friends at Compotronix incorporated actually run the program using these tiny instructions called &#8220;opcodes&#8221;. In the early days of room-sized computers before we were able to get them down to the compact size of just a meter or so across, all programmers had to use this difficult system, referred to as &#8220;machine language&#8221;. Ah, those were heady days, but they were hard.</p>
 <p>The commands you actually write when you say something like <code class="docutils literal"><span class="pre">SET</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.0.</span></code> are really a euphemism for these &#8220;machine language&#8221; opcodes under the surface.</p>
-<p>When you try to &#8220;RUN&#8221; your script, the first thing that kOS does is transform your script into this ancient and arcane &#8220;machine language&#8221; form, storing it in its memory, and from then on it runs using that.</p>
+<p>When you try to run your script, the first thing that kOS does is transform your script into this ancient and arcane &#8220;machine language&#8221; form, storing it in its memory, and from then on it runs using that.</p>
 <p>This process of transforming your script into Machine Language, or &#8220;ML&#8221; is called &#8220;Compiling&#8221;.</p>
-<p>The &#8220;RUN&#8221; command does this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.</p>
+<p>The &#8220;<a class="reference internal" href="../commands/files.html#run"><span>RUN</span></a>&#8221; and &#8220;<a class="reference internal" href="../commands/files.html#runpath"><span>RUNPATH and RUNONCEPATH</span></a>&#8221; commands do this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.</p>
 <div class="section" id="why-do-i-care">
 <h3>Why Do I Care?<a class="headerlink" href="#why-do-i-care" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
@@ -193,7 +193,7 @@
 <p>The reason it matters is this: Although once it&#8217;s loaded into memory and running, these opcodes actually have a lot of baggage and take up a lot of space, when they&#8217;re stored passively on the disk not doing anything, they can be smaller than your script programs are. For one thing, they don&#8217;t care about your comments (only other Kerbals reading your script do), and they don&#8217;t care about your indenting (only other Kerbals reading your script do).</p>
 <p>So, given that the compiled &#8220;ML&#8221; codes are the only thing your program really needs to be run, why not just store THAT instead of storing the entire script, and then you can put the ML files on your remote probes instead of putting the larger script files on them.</p>
 <p>And THAT is the purpose of the COMPILE command.</p>
-<p>It does some, but not all, of the compiling work that the RUN command does, and then stores the results in a file that you can run instead of running the original script.</p>
+<p>It does some, but not all, of the compiling work that the RUN (or RUNPATH) command does, and then stores the results in a file that you can run instead of running the original script.</p>
 <p>The output of the COMPILE command is a file in what we call KSM format.</p>
 <p>KSM stands for &#8220;KerboScript Machine code&#8221;, and it has nearly the same information the program will have when it&#8217;s loaded and running, minus a few extra steps about relocating it in memory.</p>
 </div>
@@ -206,12 +206,12 @@
 <li>myprog2.ks</li>
 <li>myprog3.ks</li>
 </ul>
-<p>And that myprog1 calls myprog2 and myprog3, and you normall would call the progam this way:</p>
+<p>And that myprog1 calls myprog2 and myprog3, and you normally would call the progam this way:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">COPY</span> <span class="nv">myprog1</span> <span class="k">from</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
 <span class="k">COPY</span> <span class="nv">myprog2</span> <span class="k">from</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
 <span class="k">COPY</span> <span class="nv">myprog3</span> <span class="k">from</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
-<span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="s">&quot;hello&quot;</span><span class="p">).</span>
+<span class="nv">RUNPATH</span><span class="p">(</span><span class="nv">myprog1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Then you can put just the compiled KSM versions of them on your vessel and run it this way:</p>
@@ -227,19 +227,26 @@
 <span class="k">COPY</span> <span class="nv">myprog2</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
 
 <span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
-<span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="s">&quot;hello&quot;</span><span class="p">).</span>
+<span class="nv">RUNPATH</span><span class="p">(</span><span class="nv">myprog1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="default-file-naming-conventions">
 <h2><a class="toc-backref" href="#id3">Default File Naming Conventions</a><a class="headerlink" href="#default-file-naming-conventions" title="Permalink to this headline">¶</a></h2>
-<p>When you have both a .ks and a .ksm file, the RUN command allows you to specify which one you meant explicitly, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span>
+<p>When you have both a .ks and a .ksm file, the RUN (or RUNPATH) command allows you to specify which one you meant explicitly, like so:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1.ks&quot;</span><span class="p">).</span>
+<span class="c1">// or this alternate way to say it:</span>
+<span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span>
+
+<span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1.ksm&quot;</span><span class="p">).</span>
+<span class="c1">// or this alternate way to say it:</span>
 <span class="nv">RUM</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ksm</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>But if you just leave the file extension off, and do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1&quot;</span><span class="p">).</span>
+<span class="c1">// or this alternate way to say it:</span>
+<span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Then the RUN command will first try to run a file called &#8220;myprog1.ksm&#8221; and if it cannot find such a file, then it will try to run one called &#8220;myprog1.ks&#8221;.</p>
@@ -300,7 +307,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
