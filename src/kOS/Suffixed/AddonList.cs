@@ -4,7 +4,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
-    [kOS.Safe.Utilities.KOSNomenclature("Addons")]
+    [Safe.Utilities.KOSNomenclature("Addons")]
     public class AddonList : Structure
     {
         private readonly SharedObjects shared;
@@ -18,15 +18,35 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("KAC", new Suffix<Addon>(() => new AddOns.KerbalAlarmClock.Addon(shared)));
-            AddSuffix("RT", new Suffix<Addon>(() => new AddOns.RemoteTech.Addon(shared)));
-            AddSuffix("AGX", new Suffix<Addon>(() => new AddOns.ActionGroupsExtended.Addon(shared)));
-            AddSuffix("IR", new Suffix<Addon>(() => new AddOns.InfernalRobotics.Addon(shared)));
+            foreach (string id in shared.AddonManager.AllAddons.Keys)
+            {
+                AddSuffix(id, new Suffix<Addon>(() => shared.AddonManager.AllAddons[id]));
+            }
+            AddSuffix("AVAILABLE", new OneArgsSuffix<BooleanValue, StringValue>(CheckAddonAvailable));
+            AddSuffix("HASADDON", new OneArgsSuffix<BooleanValue, StringValue>(CheckHasAddon));
         }
 
         public override string ToString()
         {
             return string.Format("{0} AddonList", base.ToString());
+        }
+
+        public BooleanValue CheckAddonAvailable(StringValue value)
+        {
+            if (!string.IsNullOrEmpty(value) && shared.AddonManager.AllAddons.ContainsKey(value))
+            {
+                return shared.AddonManager.AllAddons[value].Available();
+            }
+            return BooleanValue.False;
+        }
+
+        public BooleanValue CheckHasAddon(StringValue value)
+        {
+            if (!string.IsNullOrEmpty(value) && shared.AddonManager.AllAddons.ContainsKey(value))
+            {
+                return BooleanValue.True;
+            }
+            return BooleanValue.False;
         }
     }
 }

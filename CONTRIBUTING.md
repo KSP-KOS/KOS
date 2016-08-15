@@ -152,7 +152,8 @@ Setting Up Your Environment
 
 2. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
-3. Copy `Unity-Engine.dll` and `Assembly-Csharp.dll` from `$KSP/KSP_Data/Managed`
+3. Copy `Assembly-CSharp.dll`, `Assembly-CSharp-firstpass.dll`, `KSPUtil.dll`,
+  `UnityEngine.dll` and `UnityEngine.UI.dll` from `$KSP/KSP_Data/Managed`
   into `$KOS/Resources`.  If you do not have a copy of KSP locally, you may
   download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 

@@ -297,19 +297,19 @@ namespace kOS.Control
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
             AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
                 },
                 value =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
                 }));
             AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
                 },
                 value =>
                 {
-                    throw new Safe.Exceptions.KOSDeprecationException("v1.0.0", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
+                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
                 }));
             AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<BooleanValue>(() => ShowSteeringStats, value => ShowSteeringStats = value));
             AddSuffix("WRITECSVFILES", new SetSuffix<BooleanValue>(() => WriteCSVFiles, value => WriteCSVFiles = value));
@@ -529,9 +529,11 @@ namespace kOS.Control
                 angularAcceleration = new Vector3d(angularAcceleration.x, angularAcceleration.z, angularAcceleration.y);
             }
             
-            // TODO: This is a temporary fix for the Moment of Inertial  This can be removed after the next KSP release.
-            //momentOfInertia = shared.Vessel.MOI;
-            momentOfInertia = FindMoI();
+            // TODO: If stock vessel.MOI stops being so weird, we might be able to change the following line
+            // into this instead.  (See the comment on FindMOI()'s header):
+            //      momentOfInertia = shared.Vessel.MOI;
+            momentOfInertia = FindMoI(); 
+
             adjustTorque = Vector3d.zero;
             measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
 
@@ -609,7 +611,15 @@ namespace kOS.Control
         }
 
         #region TEMPORARY MOI CALCULATION
-        // TODO: This is a temporary fix for the Moment of Inertial  This can be removed after the next KSP release.
+        /// <summary>
+        /// This is a replacement for the stock API Property "vessel.MOI", which seems buggy when used
+        /// with "control from here" on parts other than the default control part.
+        /// <br/>
+        /// Right now the stock Moment of Inertia Property returns values in inconsistent reference frames that
+        /// don't make sense when used with "control from here".  (It doesn't merely rotate the reference frame, as one
+        /// would expect "control from here" to do.)
+        /// </summary>   
+        /// TODO: Check this again after each KSP stock release to see if it's been changed or not.
         public Vector3 FindMoI()
         {
             var tensor = Matrix4x4.zero;

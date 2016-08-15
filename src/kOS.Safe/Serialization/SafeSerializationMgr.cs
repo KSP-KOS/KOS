@@ -3,39 +3,55 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using System.Linq;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Serialization
 {
     public class SafeSerializationMgr
     {
         public static string TYPE_KEY = "$type";
+        private static HashSet<string> assemblies = new HashSet<string>();
 
-        public static bool IsValue(object serialized)
+        private readonly SafeSharedObjects safeSharedObjects;
+
+        public SafeSerializationMgr(SafeSharedObjects sharedObjects)
         {
-            return serialized.GetType().IsPrimitive || serialized is string;
+            this.safeSharedObjects = sharedObjects;
         }
 
-        public static bool IsEncapsulatedValue(object serialized)
+        public static void AddAssembly(string assembly)
         {
-            return serialized is ISerializableValue;
+            assemblies.Add(assembly);
+        }
+
+        public static bool IsSerializablePrimitive(object serialized)
+        {
+            return serialized.GetType().IsPrimitive || serialized is string || IsPrimitiveStructure(serialized);
+        }
+
+        public static bool IsPrimitiveStructure(object serialized)
+        {
+            return serialized is PrimitiveStructure;
         }
 
         private object DumpValue(object value, bool includeType)
         {
-            var valueDumper = value as SerializableStructure;
+            var valueDumper = value as IDumper;
 
             if (valueDumper != null) {
                 return Dump(valueDumper, includeType);
+            } else if (value is Dump) {
+                return value;
             } else if (value is List<object>) {
                 return (value as List<object>).Select((v) => DumpValue(v, includeType)).ToList();
-            } else if (IsEncapsulatedValue(value) || IsValue(value)) {
+            } else if (IsSerializablePrimitive(value)) {
                 return Structure.ToPrimitive(value);
             } else {
                 return value.ToString();
             }
         }
 
-        public Dump Dump(SerializableStructure dumper, bool includeType = true)
+        public Dump Dump(IDumper dumper, bool includeType = true)
         {
             var dump = dumper.Dump();
 
@@ -54,7 +70,7 @@ namespace kOS.Safe.Serialization
             return dump;
         }
 
-        public string Serialize(SerializableStructure serialized, IFormatWriter formatter, bool includeType = true)
+        public string Serialize(IDumper serialized, IFormatWriter formatter, bool includeType = true)
         {
             return formatter.Write(Dump(serialized, includeType));
         }
@@ -73,9 +89,10 @@ namespace kOS.Safe.Serialization
             return value;
         }
 
-        public SerializableStructure CreateFromDump(Dump dump)
+        public IDumper CreateFromDump(Dump dump)
         {
             var data = new Dump();
+
             foreach (KeyValuePair<object, object> entry in dump)
             {
                 if (entry.Key.Equals(TYPE_KEY))
@@ -83,43 +100,63 @@ namespace kOS.Safe.Serialization
                     continue;
                 }
 
-                data [entry.Key] = CreateValue (entry.Value);
+                data[entry.Key] = CreateValue(entry.Value);
             }
 
-            string typeFullName = dump[TYPE_KEY] as string;
-
-            if (String.IsNullOrEmpty(typeFullName))
+            if (!dump.ContainsKey(TYPE_KEY))
             {
                 throw new KOSSerializationException("Type information missing");
             }
 
-            return CreateInstance(typeFullName, data);
+            string typeFullName = dump[TYPE_KEY] as string;
+
+            return CreateAndLoad(typeFullName, data);
         }
 
-        public virtual SerializableStructure CreateInstance(string typeFullName, Dump data)
+        public virtual IDumper CreateAndLoad(string typeFullName, Dump data)
         {
-            var deserializedType = Type.GetType(typeFullName);
-
-            if (deserializedType == null)
-            {
-                throw new KOSSerializationException("Unrecognized type: " + typeFullName);
-            }
-
-            SerializableStructure instance = Activator.CreateInstance(deserializedType) as SerializableStructure;
+            IDumper instance = CreateInstance(typeFullName);
 
             instance.LoadDump(data);
 
             return instance;
         }
 
-        public SerializableStructure Deserialize(string input, IFormatReader formatter)
+        public virtual IDumper CreateInstance(string typeFullName)
+        {
+            var deserializedType = Type.GetType(typeFullName);
+
+            if (deserializedType == null)
+            {
+                foreach (string assembly in assemblies)
+                {
+                    deserializedType = Type.GetType(typeFullName + ", " + assembly);
+                    if (deserializedType != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            IDumper instance = Activator.CreateInstance(deserializedType) as IDumper;
+
+            if (instance is IHasSafeSharedObjects)
+            {
+                IHasSafeSharedObjects withSharedObjects = instance as IHasSafeSharedObjects;
+                withSharedObjects.Shared = safeSharedObjects;
+            }
+
+            return instance;
+        }
+
+        public IDumper Deserialize(string input, IFormatReader formatter)
         {
             Dump dump = formatter.Read(input);
 
             return dump == null ? null : CreateFromDump(dump);
         }
 
-        public string ToString(SerializableStructure dumper)
+        public string ToString(IDumper dumper)
         {
             return Serialize(dumper, TerminalFormatter.Instance, false);
         }

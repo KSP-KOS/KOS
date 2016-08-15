@@ -7,6 +7,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Compilation
 {
@@ -231,7 +232,7 @@ namespace kOS.Safe.Compilation
 
         public string Label {get{return label;} set {label = value;} }
         public virtual string DestinationLabel {get;set;}
-        public string SourceName;
+        public GlobalPath SourcePath;
 
         public short SourceLine { get; set; } // line number in the source code that this was compiled from.
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
@@ -381,8 +382,8 @@ namespace kOS.Safe.Compilation
             //
             // Reflection: A good way to make a simple idea look messier than it really is.
             //
-            var attributes1 = new List<Attribute>(a1.PropertyInfo.GetCustomAttributes(true) as Attribute[]);
-            var attributes2 = new List<Attribute>(a2.PropertyInfo.GetCustomAttributes(true) as Attribute[]);
+            var attributes1 = a1.PropertyInfo.GetCustomAttributes(true).Cast<Attribute>().ToList();
+            var attributes2 = a2.PropertyInfo.GetCustomAttributes(true).Cast<Attribute>().ToList();
             var f1 = (MLField) attributes1.First(a => a is MLField);
             var f2 = (MLField) attributes2.First(a => a is MLField);
             return (f1.Ordering < f2.Ordering) ? -1 : (f1.Ordering > f2.Ordering) ? 1 : 0;
@@ -651,7 +652,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                throw new KOSDeprecationException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
+                throw new KOSObsoletionException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
             }
         }
     }
@@ -1869,10 +1870,27 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "eval"; } }
         public override ByteCode Code { get { return ByteCode.EVAL; } }
+        private bool barewordOkay;
+        
+        public OpcodeEval()
+        {
+            barewordOkay = false;
+        }
+        
+        /// <summary>
+        /// Eval top thing on the stack and replace it with its dereferenced
+        /// value.  If you want to allow bare words like filenames then set argument bareOkay to true
+        /// when constructing.
+        /// </summary>
+        /// <param name="bareOkay"></param>
+        public OpcodeEval(bool bareOkay)
+        {
+            barewordOkay = bareOkay;
+        }
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PushStack(cpu.PopValueEncapsulated());
+            cpu.PushStack(cpu.PopValueEncapsulated(barewordOkay));
         }
     }
 

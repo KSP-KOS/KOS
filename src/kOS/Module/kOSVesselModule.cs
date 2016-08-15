@@ -18,6 +18,8 @@ namespace kOS.Module
     {
         private bool initialized = false;
         private Vessel parentVessel;
+        private bool hasRemoteTech = false;
+
         public Guid ID
         {
             get
@@ -115,6 +117,7 @@ namespace kOS.Module
                 {
                     UpdateParameterState();
                 }
+                CheckSwapEvents();
             }
         }
 
@@ -210,20 +213,11 @@ namespace kOS.Module
         {
             if (RemoteTechHook.IsAvailable(parentVessel.id))
             {
-                RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, UpdateAutopilot);
+                HookRemoteTechPilot();
             }
             else
             {
-                parentVessel.OnPreAutopilotUpdate += UpdateAutopilot;
-            }
-            GameEvents.onPartCouple.Add(OnDocking);
-        }
-
-        private void OnDocking(GameEvents.FromToAction<Part, Part> data)
-        {
-            if (data.from.vessel == parentVessel)
-            {
-                Destroy(this);
+                HookStockPilot();
             }
         }
 
@@ -232,15 +226,62 @@ namespace kOS.Module
         /// </summary>
         private void UnHookEvents()
         {
-            if (RemoteTechHook.IsAvailable(parentVessel.id))
+            if (hasRemoteTech)
             {
-                RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, UpdateAutopilot);
+                UnHookRemoteTechPilot();
             }
             else
             {
-                parentVessel.OnPreAutopilotUpdate -= UpdateAutopilot;
+                UnHookStockPilot();
             }
-            GameEvents.onPartCouple.Remove(OnDocking);
+        }
+        
+        /// <summary>
+        /// A race condition exists where KSP can load the kOS module onto the vessel
+        /// before it loaded the RemoteTech module.  That makes it so that kOS may not
+        /// see the existence of RT yet when kOS is first initialized.<br/>
+        /// <br/>
+        /// This fixes that case by continually re-querying for RT post-loading, and
+        /// re-initializing kOS's RT-related behaviors if it seems that the RT module
+        /// now exists when it didn't before (or visa versa).
+        /// </summary>
+        private void CheckSwapEvents()
+        {
+            if (RemoteTechHook.IsAvailable(parentVessel.id) != hasRemoteTech)
+            {
+                if (hasRemoteTech)
+                {
+                    UnHookRemoteTechPilot();
+                    HookStockPilot();
+                }
+                else
+                {
+                    UnHookStockPilot();
+                    HookRemoteTechPilot();
+                }
+            }
+        }
+
+        private void HookRemoteTechPilot()
+        {
+            RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
+            hasRemoteTech = true;
+        }
+
+        private void UnHookRemoteTechPilot()
+        {
+            RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
+        }
+
+        private void HookStockPilot()
+        {
+            parentVessel.OnPreAutopilotUpdate += HandleOnPreAutopilotUpdate;
+            hasRemoteTech = false;
+        }
+
+        private void UnHookStockPilot()
+        {
+            parentVessel.OnPreAutopilotUpdate -= HandleOnPreAutopilotUpdate;
         }
 
         /// <summary>
@@ -270,6 +311,16 @@ namespace kOS.Module
                     }
                 }
             }
+        }
+
+        private void HandleRemoteTechSanctionedPilot(FlightCtrlState c)
+        {
+            UpdateAutopilot(c);
+        }
+
+        private void HandleOnPreAutopilotUpdate(FlightCtrlState c)
+        {
+            UpdateAutopilot(c);
         }
 
         /// <summary>

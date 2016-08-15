@@ -4,7 +4,7 @@ namespace kOS.Safe.Screen
 {
     public interface ITermWindow
     {
-        void OpenPopupEditor( Volume v, string fName );
+        void OpenPopupEditor(Volume v, GlobalPath path);
         void Open();
         void Close();
         void Toggle();

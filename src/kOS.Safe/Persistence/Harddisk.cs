@@ -3,141 +3,127 @@ using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Persistence
 {
     [kOS.Safe.Utilities.KOSNomenclature("LocalVolume")]
     public sealed class Harddisk : Volume
     {
-        private readonly Dictionary<string, FileContent> files;
+        public HarddiskDirectory RootHarddiskDirectory { get; set; }
 
-        public override Dictionary<string, VolumeFile> FileList
-        {
+        public override VolumeDirectory Root {
             get
             {
-                return files.ToDictionary(arg => arg.Key, arg => (VolumeFile)new HarddiskFile(this, arg.Key));
-            }
-        }
-
-        public override long Size
-        {
-            get
-            {
-                return files.Values.Sum(x => x.Size);
+                return RootHarddiskDirectory;
             }
         }
 
         public Harddisk(int size)
         {
             Capacity = size;
-            files = new Dictionary<string, FileContent>(StringComparer.OrdinalIgnoreCase);
+            RootHarddiskDirectory = new HarddiskDirectory(this, VolumePath.EMPTY);
         }
 
-        public FileContent GetFileContent(string name)
+        public override void Clear()
         {
-            if (!files.ContainsKey(name))
+            RootHarddiskDirectory.Clear();
+        }
+
+        private HarddiskDirectory ParentDirectoryForPath(VolumePath path, bool create = false)
+        {
+            HarddiskDirectory directory = RootHarddiskDirectory;
+            if (path.Depth > 0)
             {
-                throw new KOSFileException("File does not exist: " + name);
-            }
-
-            return files[name];
-        }
-
-        public override VolumeFile Open(string name, bool ksmDefault = false)
-        {
-            return FileSearch(name, ksmDefault);
-        }
-
-        public override bool Delete(string name)
-        {
-            var fullPath = FileSearch(name);
-            if (fullPath == null)
-            {
-                return false;
-            }
-            return files.Remove(fullPath.Name);
-        }
-
-        public override bool RenameFile(string name, string newName)
-        {
-            VolumeFile file = Open(name);
-            if (file != null)
-            {
-                // Add the original file content under the new name
-                files.Add(newName, files[file.Name]);
-                // Then remove the old file content under the old name
-                files.Remove(file.Name);
-                return true;
-            }
-            return false;
-        }
-
-        public override VolumeFile Create(string name)
-        {
-            SafeHouse.Logger.Log("Creating file on harddisk " + name);
-
-            if (files.ContainsKey(name))
-            {
-                throw new KOSFileException("File already exists: " + name);
-            }
-
-            files[name] = new FileContent();
-
-            SafeHouse.Logger.Log("Created file on harddisk " + name);
-
-            return new HarddiskFile(this, name);
-        }
-
-        public override VolumeFile Save(string name, FileContent content)
-        {
-            if (!IsRoomFor(name, content))
-            {
-                return null;
-            }
-
-            files[name] = content;
-
-            return new HarddiskFile(this, name);
-        }
-
-        public override bool Exists(string name)
-        {
-            return FileSearch(name) != null;
-        }
-
-        private VolumeFile FileSearch(string name, bool ksmDefault = false)
-        {
-            if (files.ContainsKey(name))
-            {
-                return new HarddiskFile(this, name);
+                return RootHarddiskDirectory.GetSubdirectory(path.GetParent(), create);
             }
             else
             {
-                var kerboscriptFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
-                var kosMlFilename = PersistenceUtilities.CookedFilename(name, KOS_MACHINELANGUAGE_EXTENSION, true);
-                bool kerboscriptFileExists = files.ContainsKey(kerboscriptFilename);
-                bool kosMlFileExists = files.ContainsKey(kosMlFilename);
-                if (kerboscriptFileExists && kosMlFileExists)
+                throw new Exception("This directory does not have a parent");
+            }
+        }
+
+        public override VolumeItem Open(VolumePath path, bool ksmDefault = false)
+        {
+            if (path.Depth == 0) {
+                return Root;
+            }
+
+            HarddiskDirectory directory = ParentDirectoryForPath(path);
+
+            return directory == null ? null : directory.Open(path.Name, ksmDefault);
+        }
+
+        public override VolumeDirectory CreateDirectory(VolumePath path)
+        {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't create a directory over root directory");
+            }
+
+            HarddiskDirectory directory = ParentDirectoryForPath(path, true);
+
+            return directory.CreateDirectory(path.Name);
+        }
+
+        public override VolumeFile CreateFile(VolumePath path)
+        {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't create a file over root directory");
+            }
+
+            HarddiskDirectory directory = ParentDirectoryForPath(path, true);
+
+            return directory.CreateFile(path.Name);
+        }
+
+        public override bool Exists(VolumePath path, bool ksmDefault = false)
+        {
+            if (path.Depth == 0)
+            {
+                return true;
+            }
+
+            HarddiskDirectory directory = ParentDirectoryForPath(path);
+
+            if (directory == null)
+            {
+                return false;
+            }
+
+            return directory.Exists(path.Name, ksmDefault);
+        }
+
+        public override bool Delete(VolumePath path, bool ksmDefault = false)
+        {
+            if (path.Depth == 0)
+            {
+                throw new KOSPersistenceException("Can't delete root directory");
+            }
+
+            HarddiskDirectory directory = ParentDirectoryForPath(path);
+
+            return directory.Delete(path.Name, ksmDefault);
+        }
+
+        public override VolumeFile SaveFile(VolumePath path, FileContent content, bool verifyFreeSpace = true)
+        {
+            try
+            {
+                if (verifyFreeSpace && !IsRoomFor(path, content))
                 {
-                    if (ksmDefault)
-                    {
-                        return new HarddiskFile(this, kosMlFilename);
-                    }
-                    else
-                    {
-                        return new HarddiskFile(this, kerboscriptFilename);
-                    }
-                }
-                if (kerboscriptFileExists)
-                {
-                    return new HarddiskFile(this, kerboscriptFilename);
-                }
-                if (kosMlFileExists)
-                {
-                    return new HarddiskFile(this, kosMlFilename);
+                    return null;
                 }
             }
-            return null;
+            catch (KOSPersistenceException)
+            {
+                throw new KOSPersistenceException("Can't save file over a directory: " + path);
+            }
+
+            HarddiskDirectory directory = ParentDirectoryForPath(path, true);
+
+            return directory.Save(path.Name, content) as VolumeFile;
         }
     }
 }

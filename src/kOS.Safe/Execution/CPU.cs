@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Debug = kOS.Safe.Utilities.Debug;
+using kOS.Safe.Persistence;
 
 namespace kOS.Safe.Execution
 {
@@ -24,7 +25,7 @@ namespace kOS.Safe.Execution
         private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
-        private readonly SharedObjects shared;
+        private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private VariableScope savedPointers;
@@ -63,7 +64,7 @@ namespace kOS.Safe.Execution
         
         public List<string> ProfileResult { get; private set; }
 
-        public CPU(SharedObjects shared)
+        public CPU(SafeSharedObjects shared)
         {
             this.shared = shared;
             this.shared.Cpu = this;
@@ -120,30 +121,45 @@ namespace kOS.Safe.Execution
 
             if (!shared.Processor.CheckCanBoot()) return;
 
-            string filename = shared.Processor.BootFilename;
+            VolumePath path = shared.Processor.BootFilePath;
             // Check to make sure the boot file name is valid, and then that the boot file exists.
-            if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
-            else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-            else if (shared.VolumeMgr.CurrentVolume.Open(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
+            if (path == null)
+            {
+                SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
+            }
             else
             {
-                var bootContext = "program";
-                string bootCommand = string.Format("run {0}.", filename);
-
-                var options = new CompilerOptions
+                // Boot is only called once right after turning the processor on,
+                // the volume cannot yet have been changed from that set based on
+                // Config.StartOnArchive, and Processor.CheckCanBoot() has already
+                // handled the range check for the archive.
+                Volume sourceVolume = shared.VolumeMgr.CurrentVolume;
+                var file = shared.VolumeMgr.CurrentVolume.Open(path);
+                if (file == null)
                 {
-                    LoadProgramsInSameAddressSpace = true,
-                    FuncManager = shared.FunctionManager,
-                    IsCalledFromRun = false
-                };
+                    SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
+                }
+                else
+                {
+                    var bootContext = "program";
 
-                shared.ScriptHandler.ClearContext(bootContext);
-                List<CodePart> parts = shared.ScriptHandler.Compile(
-                    "sys:boot", 1, bootCommand, bootContext, options);
+                    string bootCommand = string.Format("run \"{0}\".", file.Path);
 
-                IProgramContext programContext = SwitchToProgramContext();
-                programContext.Silent = true;
-                programContext.AddParts(parts);
+                    var options = new CompilerOptions
+                    {
+                        LoadProgramsInSameAddressSpace = true,
+                        FuncManager = shared.FunctionManager,
+                        IsCalledFromRun = false
+                    };
+
+                    shared.ScriptHandler.ClearContext(bootContext);
+                    List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
+                        1, bootCommand, bootContext, options);
+
+                    IProgramContext programContext = SwitchToProgramContext();
+                    programContext.Silent = true;
+                    programContext.AddParts(parts);
+                }
             }
         }
 
@@ -371,6 +387,7 @@ namespace kOS.Safe.Execution
                     shared.Screen.Print("Program aborted.");
                     shared.BindingMgr.UnBindAll();
                     PrintStatistics();
+                    stack.Clear();
                 }
                 else
                 {
@@ -381,6 +398,7 @@ namespace kOS.Safe.Execution
                         shared.Screen.Print("Program ended.");
                         shared.BindingMgr.UnBindAll();
                         PrintStatistics();
+                        stack.Clear();
                     }
                 }
             }
@@ -413,11 +431,32 @@ namespace kOS.Safe.Execution
         {
             if (userDelegate.ProgContext != currentContext)
             {
-                throw new KOSInvalidDelegateContextException(
-                    (currentContext == contexts[0] ? "the interpreter" : "a program"),
-                    (currentContext == contexts[0] ? "a program" : "the interpreter")
-                    );
-            }
+                string currentContextName;
+                if (currentContext == contexts[0])
+                {
+                    currentContextName = "the interpreter";
+                }
+                else
+                {
+                    currentContextName = "a program";
+                }
+
+                string delegateContextName;
+                if (userDelegate.ProgContext == contexts[0])
+                {
+                    delegateContextName = "the interpreter";
+                }
+                else if (currentContext == contexts[0])
+                {
+                    delegateContextName = "a program";
+                }
+                else
+                {
+                    delegateContextName = "a different program from a previous run";
+                }
+
+                throw new KOSInvalidDelegateContextException(currentContextName, delegateContextName);
+           }
         }
 
         /// <summary>
@@ -1268,10 +1307,10 @@ namespace kOS.Safe.Execution
         {
             if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
-            string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
+            GlobalPath currentSourcePath = currentContext.Program[currentContext.InstructionPointer].SourcePath;
 
             while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                   currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
+                   currentSourcePath.Equals(currentContext.Program[currentContext.InstructionPointer].SourcePath))
             {
                 currentContext.InstructionPointer++;
             }
@@ -1364,6 +1403,26 @@ namespace kOS.Safe.Execution
         public void StopCompileStopwatch()
         {
             compileWatch.Stop();
+        }
+
+        private class BootGlobalPath : InternalPath
+        {
+            private string command;
+
+            public BootGlobalPath(string command) : base()
+            {
+                this.command = command;
+            }
+
+            public override string Line(int line)
+            {
+                return command;
+            }
+
+            public override string ToString()
+            {
+                return "[Boot sequence]";
+            }
         }
     }
 }

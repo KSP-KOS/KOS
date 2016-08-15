@@ -10,7 +10,7 @@ addons:
 
 env:
   global:
-  - KSP_VERSION="1.1.2"
+  - KSP_VERSION="1.1.3"
 
 # Pre-shared token for pushing notifications to slack chat
 notifications:
@@ -29,15 +29,3 @@ script:
 # Cleanup the downloaded resources
 after_script:
 - chmod +x .ci/travis/after_script.sh && ./.ci/travis/after_script.sh
-
-before_deploy:
-- mkdir src/kOS/bin/dist 
-- tar -zcvf src/kOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz src/kOS/bin/Release/kOS*.dll
-
-deploy:
-  provider: s3
-  access_key_id: "AKIAINHSGTBU5O3DKV2Q"
-  secret_access_key: "$S3_DEPLOY_SECRET"
-  bucket: "kos-artifacts"
-  skip_cleanup: true
-  local_dir: "src/kOS/bin/dist/"

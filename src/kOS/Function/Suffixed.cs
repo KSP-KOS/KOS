@@ -226,6 +226,20 @@ namespace kOS.Function
         }
     }
 
+    [Function("uniqueset")]
+    public class FunctionSet : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+            AssertArgBottomAndConsume(shared);
+            var setValue = new UniqueSetValue(argArray.ToList());
+            ReturnValue = setValue;
+        }
+    }
+
     [Function("range")]
     public class FunctionRange : FunctionBase
     {

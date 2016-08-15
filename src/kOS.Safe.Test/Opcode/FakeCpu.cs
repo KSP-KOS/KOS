@@ -249,5 +249,10 @@ namespace kOS.Safe.Test.Opcode
         {
             throw new NotImplementedException();
         }
+
+        public Compilation.Opcode GetCurrentOpcode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
