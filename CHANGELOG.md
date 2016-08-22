@@ -1,6 +1,26 @@
 kOS Mod Changelog
 =================
 
+# v1.0.0 (for KSP 1.1.3) Hey let's stop calling it Beta.
+
+### BREAKING CHANGES
+
+// MERGE CONFLICT EXPECTED HERE
+// ============================
+// NOTE TO WHOMEVER MERGES THIS!  I fully expect this will
+// cause a merge conflict with the other PR that edits the
+// changelog.  When you see the conflict, just append the following
+// bullet point to the rest of the list of breaking changes, and
+// remove this comment entirely.
+
+* Previously the Y and Z axes of SUN:VELOCITY:ORBIT were swapped.
+  (https://github.com/KSP-KOS/KOS/issues/1764)
+  This has been fixed so it is now the same as for any other body,
+  however scripts might exist that had previously been swapping them
+  back to compensate for this, and if there were they would now break
+  since that swapping is no longer needed.
+
+
 # v0.20.1 KSP 1.1.2 and bug repair
 
 The biggest reason for this release is to handle two game-breaking

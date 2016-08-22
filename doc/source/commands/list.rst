@@ -16,13 +16,13 @@ Lists need to be iterated over sometimes, to help with this we have the :ref:`FO
     When no parameters are given, the LIST command is exactly equivalent to the command::
 
         LIST FILES.
-        
+
 2. ``LIST ListKeyword.``
     This variant prints items to the termianl sceen. Depending on the *ListKeyword* used (see below), different values are printed.
-    
+
 3. ``LIST ListKeyword IN YourVariable.``
     This variant takes the items that would otherwise have been printed to the terminal screen, and instead makes a :struct:`List` of them in ``YourVariable``, that you can then iterate over with a :ref:`FOR loop <for>` if you like.
-    
+
 4. ``LIST ListKeyword FROM SomeVessel IN YourVariable.``
     This variant is just like variant (3), except that it gives a list of the items that exist on some other vessel that might not necessarily be the current :ref:`CPU_vessel <cpu vessel>`.
 
@@ -39,7 +39,7 @@ These generate :struct:`lists <List>` that are not dependent on which :struct:`V
 
 ``Bodies``
     :struct:`List` of :struct:`Celestial Bodies <Body>`
-    
+
 ``Targets``
     :struct:`List` of possible target :struct:`Vessels <Vessel>`
 
@@ -69,7 +69,10 @@ File System Lists
 These generate :struct:`lists <List>` about the files in the system:
 
 ``Files``
-    :struct:`List` the :struct:`files <VolumeFile>` on the current Volume. (note below)
+    :struct:`List` the items, both files and subdirectories, on the current Volume at the current
+    directory (you have to use the ``cd("dir")`` command to change directories first if you want
+    to get a list of files under some other location.) (note below) The list contains items of
+    type :struct:`VolumeItem`
 ``Volumes``
     :struct:`List` all the :struct:`volumes <Volume>` that exist.
 
@@ -79,21 +82,26 @@ These generate :struct:`lists <List>` about the files in the system:
 
 Examples::
 
-    LIST.  // Prints the list of files on current volume.
+    LIST.  // Prints the list of files (and subdirectories) on current volume.
     LIST FILES.  // Does the same exact thing, but more explicitly.
     LIST VOLUMES. // which volumes can be seen by this CPU?
-    LIST FILES IN fileList. // fileList is now a LIST() containing file structures.
+    LIST FILES IN fileList. // fileList is now a LIST() containing :struct:`VolumeItem` structures.
 
-The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <VolumeFile>`.
+.. _list files:
+
+The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <VolumeItem>`.
+The file list contains both actual files and subdirectories under the current directory level.  You can use the
+:attr:`VolumeItem:IsFile` suffix on each element to find out if it's a file or a subdirectory.  If it is a file rather than a
+subdirectory, then it will also have all the suffixes of :struct:`VolumeFile` on it.
 
 Here are some more examples::
 
     // Prints the list of all
     // Celestial bodies in the system.
-    LIST BODIES. 
+    LIST BODIES.
 
     // Puts the list of bodies into a variable.
-    LIST BODIES IN bodList. 
+    LIST BODIES IN bodList.
     // Iterate over everything in the list:
     SET totMass to 0.
     FOR bod in bodList {
@@ -101,7 +109,7 @@ Here are some more examples::
     }.
     PRINT "The mass of the whole solar system is " + totMass.
 
-    // Adds variable foo that contains a list of 
+    // Adds variable foo that contains a list of
     // resources for my currently target vessel
     LIST RESOURCES FROM TARGET IN foo.
     FOR res IN foo {
