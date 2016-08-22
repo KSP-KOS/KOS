@@ -46,7 +46,7 @@ namespace kOS.Suffixed
             AddSuffix("MINUTE", new Suffix<ScalarValue>(CalculateMinute));
             AddSuffix("SECOND", new Suffix<ScalarValue>(CalculateSecond));
             AddSuffix("SECONDS", new Suffix<ScalarValue>(() => span));
-            AddSuffix("CLOCK", new Suffix<StringValue>(() => string.Format("{0:00}:{1:00}:{2:00}", CalculateHour(), CalculateMinute(), CalculateSecond())));
+            AddSuffix("CLOCK", new Suffix<StringValue>(() => string.Format("{0:00}:{1:00}:{2:00}", (int)CalculateHour(), (int)CalculateMinute(), (int)CalculateSecond())));
             AddSuffix("CALENDAR", new Suffix<StringValue>(() => "Year " + CalculateYear() + ", day " + CalculateDay()));
         }
 
