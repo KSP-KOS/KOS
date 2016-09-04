@@ -125,7 +125,7 @@ namespace kOS.Utilities
 
         private static Vessel TryGetVesselByName(string name, Vessel origin)
         {
-            return FlightGlobals.Vessels.FirstOrDefault(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
+            return FlightGlobals.Vessels.FirstOrDefault(v => v.vesselName.ToUpper() == name.ToUpper());
         }
 
         public static CelestialBody GetBodyByName(string name)
@@ -144,11 +144,11 @@ namespace kOS.Utilities
             return vessel;
         }
 
-        public static void SetTarget(IKOSTargetable val)
+        public static void SetTarget(IKOSTargetable val, Vessel currentVessel)
         {
             if (val.Target != null)
             {
-                SetTarget(val.Target);
+                SetTarget(val.Target, currentVessel);
             }
             else
             {
@@ -156,8 +156,13 @@ namespace kOS.Utilities
             }
         }
 
-        public static void SetTarget(ITargetable val)
+        public static void SetTarget(ITargetable val, Vessel currentVessel)
         {
+            if (val is Vessel && val == currentVessel)
+                throw new kOS.Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to itself.");
+            else if (val is ITargetable && ((ITargetable)val).GetVessel() == currentVessel)
+                throw new kOS.Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a part of itself.");
+            
             FlightGlobals.fetch.SetVesselTarget(val);
         }
 
