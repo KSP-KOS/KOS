@@ -74,7 +74,7 @@ namespace kOS.Safe.Compilation
         ADDTRIGGER     = 0x53,
         REMOVETRIGGER  = 0x54,
         WAIT           = 0x55,
-        ENDWAIT        = 0x56,
+        // Removing ENDWAIT, 0x56 may be reused in a future version
         GETMETHOD      = 0x57,
         STORELOCAL     = 0x58,
         STOREGLOBAL    = 0x59,
@@ -241,6 +241,9 @@ namespace kOS.Safe.Compilation
 
         public bool AbortProgram { get; set; }
         public bool AbortContext { get; set; }
+        public bool IsYielding { get; protected set; } // allows the cpu to know if the opcode is yielding (waiting) to know if it should call Execute or CheckYield
+
+        public Func<ICpu, bool> YieldFinishedDelegate { get; protected set; }
         
         public virtual void Execute(ICpu cpu)
         {
@@ -256,6 +259,7 @@ namespace kOS.Safe.Compilation
             DeltaInstructionPointer = 1;
             AbortProgram = false;
             AbortContext = false;
+            IsYielding = false;
         }
         
         /// <summary>
@@ -460,6 +464,47 @@ namespace kOS.Safe.Compilation
         protected Structure PopStructureAssertEncapsulated(ICpu cpu, bool barewordOkay = false)
         {
             return Structure.FromPrimitiveWithAssert(PopValueAssert(cpu, barewordOkay));
+        }
+
+        public void YieldProgram(ICpu cpu, Func<ICpu, bool> isFinishedDelegate)
+        {
+            if (isFinishedDelegate != null)
+            {
+                YieldFinishedDelegate = isFinishedDelegate;
+                BeginYield();
+                cpu.StartWait(0);
+            }
+        }
+
+        public void CheckYield(ICpu cpu)
+        {
+            if (YieldFinishedDelegate != null)
+            {
+                if (YieldFinishedDelegate.Invoke(cpu))
+                {
+                    EndYield();
+                }
+                else
+                {
+                    cpu.StartWait(0);
+                }
+            }
+            else
+            {
+                throw new KOSException("Error checking yielded Opcode: YieldFinishedDelegate is null");
+            }
+        }
+
+        protected virtual void BeginYield()
+        {
+            DeltaInstructionPointer = 0;
+            IsYielding = true;
+        }
+
+        protected virtual void EndYield()
+        {
+            DeltaInstructionPointer = 1;
+            IsYielding = false;
         }
     }
 
@@ -2136,37 +2181,24 @@ namespace kOS.Safe.Compilation
             // remaining time on the wait.  There can be more than one place where
             // a wait was pending.  So instead track the pending time inside the
             // opcode itself, by having the opcode store its timestamp when it is
-            // meant to end, and checking it each time.
+            // meant to end, and then yield.  The end time is then checked inside
+            // of CheckWaitTime
             if (endTime < 0) // initial time being executed.
             {
                 double arg = Convert.ToDouble(cpu.PopValue());
                 endTime = cpu.StartWait(arg);
-                DeltaInstructionPointer = 0; // stay here next time.
-            }
-            else if (cpu.SessionTime < endTime) // It's in the midst of an already running wait, and it's not expired yet.
-            {
-                cpu.StartWait(0); // kick back to wait mode again.
-                DeltaInstructionPointer = 0; // stay here next time, to test this again.
-            }
-            else // It was in an already running wait, and the wait just expired.
-            {
-                endTime = -1; // reset in case this is called again in a loop.
-                DeltaInstructionPointer = 1; // okay now move on.
+                YieldProgram(cpu, CheckWaitTime);
             }
         }
-    }
 
-    // TODO: Does this Opcode even need to exist?  What's the point?  You can't execute it while you're stuck inside
-    // a wait so.... when was anyone ever expecting it to happen?  Discuss if it can just be removed.  Nothing in
-    // the compiler currently builds any code that uses it:
-    public class OpcodeEndWait : Opcode
-    {
-        protected override string Name { get { return "endwait"; } }
-        public override ByteCode Code { get { return ByteCode.ENDWAIT; } }
-
-        public override void Execute(ICpu cpu)
+        public bool CheckWaitTime(ICpu cpu)
         {
-            cpu.EndWait();
+            if (cpu.SessionTime > endTime)
+            {
+                endTime = -1; // reset in case this is called again in a loop.
+                return true;
+            }
+            return false;
         }
     }
 

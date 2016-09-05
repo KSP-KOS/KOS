@@ -191,5 +191,13 @@ namespace kOS.Safe.Function
             }
             return funcName;
         }
+
+        protected void YieldProgram(SafeSharedObjects shared, Func<SafeSharedObjects, bool> isFinishedDelegate)
+        {
+            // setup the yield using an anonymous function so that the scope is tied to this specific call
+            // which prevents a potential issue if the function is called both in mainline code and in
+            // trigger code (though a potential conflict still exists if the exact same opcode is executed).
+            shared.Cpu.GetCurrentOpcode().YieldProgram(shared.Cpu, cpu => isFinishedDelegate(shared));
+        }
     }
 }

@@ -1258,7 +1258,10 @@ namespace kOS.Safe.Execution
                 opcode.AbortContext = false;
                 opcode.AbortProgram = false;
 
-                opcode.Execute(this);
+                if (opcode.IsYielding)
+                    opcode.CheckYield(this);
+                else
+                    opcode.Execute(this);
 
                 if (doProfiling)
                 {
