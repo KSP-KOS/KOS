@@ -261,7 +261,7 @@ Structure
 .. _true anomaly: http://en.wikipedia.org/wiki/True_anomaly
 .. _mean anomaly: http://en.wikipedia.org/wiki/Mean_anomaly
 
-Both ``:NEXTPATCH`` and ``:HASNEXTPATCH`` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's :ORBIT suffix <node>, and then look at **it's** ``:NEXTPATCH` and ``:HASNEXTPATCH``.
+Both ``:NEXTPATCH`` and ``:HASNEXTPATCH`` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's ``:ORBIT`` suffix <node>, and then look at **its** ``:NEXTPATCH`` and ``:HASNEXTPATCH``.
 
 Deprecated Suffix
 -----------------
