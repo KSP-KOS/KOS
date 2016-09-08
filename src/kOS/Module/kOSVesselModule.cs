@@ -19,7 +19,9 @@ namespace kOS.Module
         private bool initialized = false;
         private Vessel parentVessel;
         private bool hasRemoteTech = false;
-        private int counterRemoteTechRefresh = 0;
+        /// <summary>How often to re-attempt the remote tech hook, expressed as a number of physics updates</summary>
+        private const int RemoteTechRehookPeriod = 25;
+        private int counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
 
         public Guid ID
         {
@@ -263,7 +265,7 @@ namespace kOS.Module
             }
             if (hasRemoteTech)
             {
-                if (++counterRemoteTechRefresh > 25)
+                if (++counterRemoteTechRefresh > RemoteTechRehookPeriod)
                 {
                     counterRemoteTechRefresh = 0;
                     HookRemoteTechPilot();
