@@ -282,7 +282,7 @@ namespace kOS.Module
         private void UnHookRemoteTechPilot()
         {
             RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
-            counterRemoteTechRefresh = 0;
+            counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
         }
 
         private void HookStockPilot()
