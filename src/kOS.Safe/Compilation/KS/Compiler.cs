@@ -253,6 +253,8 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.for_stmt:
                 case TokenType.on_stmt:
                 case TokenType.when_stmt:
+                case TokenType.declare_identifier_clause:
+                case TokenType.expr:
                 case TokenType.declare_function_clause:
                     foreach (ParseNode childNode in node.Nodes)
                         IterateUserFunctions(childNode, action);
