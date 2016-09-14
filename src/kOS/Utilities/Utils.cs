@@ -275,5 +275,60 @@ namespace kOS.Utilities
                 parent = null;
             return parent;
         }
+
+        /// <summary>
+        /// Determines if a given case insensitive name corresponds with a defined resource, and
+        /// outputs the case sensitive name for easy access from Squad's lists.
+        /// </summary>
+        /// <param name="insensitiveName">case insensitive name</param>
+        /// <param name="fixedName">output case sensitive name</param>
+        /// <returns>true if a matching resource definition is found</returns>
+        public static bool IsResource(string insensitiveName, out string fixedName)
+        {
+            // eliminate enumerators, use index based access
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            foreach (var def in defs)
+                //for (int i = 0; i < defs.Count; ++i)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                //var def = defs[i];
+                if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
+                {
+                    fixedName = def.name;
+                    return true;
+                }
+            }
+            fixedName = insensitiveName;
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a given case insensitive name corresponds with a defined resource, and
+        /// outputs the resource id for easy access from Squad's lists.
+        /// </summary>
+        /// <param name="insensitiveName">case insensitive name</param>
+        /// <param name="foundId">output id of the found resource, zero if none found</param>
+        /// <returns>true if a matching resource definition is found</returns>
+        public static bool IsResource(string insensitiveName, out int foundId)
+        {
+            // eliminate enumerators, use index based access
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            // TODO: Check to see if this gets switched to a list that supports indexes
+            foreach (var def in defs)
+            //for (int i = 0; i < defs.Count; ++i)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                //var def = defs[i];
+                if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
+                {
+                    foundId = def.id;
+                    return true;
+                }
+            }
+            foundId = 0;
+            return false;
+        }
     }
 }

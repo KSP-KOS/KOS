@@ -48,7 +48,20 @@ namespace kOS.Execution
         public static PartResourceDefinition ParseResource(string resourceName)
         {
             var resourceDefs = PartResourceLibrary.Instance.resourceDefinitions;
-            var resourceInfo = resourceDefs.FirstOrDefault(rd => string.Equals(rd.name, resourceName, StringComparison.CurrentCultureIgnoreCase));
+            PartResourceDefinition resourceInfo = null;
+            // elliminate enumerator, loop through the list instead
+            // TODO: Check to see if this gets switched to a list that supports indexes
+            foreach (var def in resourceDefs)
+            //for (int i = 0; i < defs.Count; ++i)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                //var def = defs[i];
+                if (def.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase))
+                {
+                    resourceInfo = def;
+                }
+            }
             return resourceInfo;
         }
 

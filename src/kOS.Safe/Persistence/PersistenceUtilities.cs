@@ -169,7 +169,7 @@ namespace kOS.Safe.Persistence
                 // result of this swap on writing:
                 returnValue = returnValue.Replace('/',',');
 
-                SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
+                //SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
 
                 return returnValue;
             }

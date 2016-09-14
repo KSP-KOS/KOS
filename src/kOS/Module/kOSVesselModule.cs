@@ -47,8 +47,9 @@ namespace kOS.Module
         /// by KSP after the VesselModule has been attached to the parent Vessel.  We use it to store
         /// the parent Vessel and track the kOSVesselModule instances.
         /// </summary>
-        public override void OnAwake()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
