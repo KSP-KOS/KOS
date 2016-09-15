@@ -726,9 +726,16 @@ namespace kOS.Screen {
 		}
 
 		internal static Type getType(string name) {
-			return AssemblyLoader.loadedAssemblies
-				.SelectMany(a => a.assembly.GetExportedTypes())
-				.SingleOrDefault(t => t.FullName == name);
+			foreach (AssemblyLoader.LoadedAssembly assembly in AssemblyLoader.loadedAssemblies) {
+				try {
+					var type = assembly.assembly.GetExportedTypes().SingleOrDefault(t => t.FullName == name);
+					if (type != null) {
+						return type;
+					}
+				} catch (InvalidOperationException) {
+				}
+			}
+			return null;
 		}
 
 		internal static PropertyInfo getProperty(Type type, string name) {
