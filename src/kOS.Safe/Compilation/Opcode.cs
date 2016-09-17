@@ -215,6 +215,11 @@ namespace kOS.Safe.Compilation
             "+-------------------------------------------------------------------------+\n";
 
         public int Id { get { return id; } }
+        /// <summary>
+        /// How far to jump to the next opcode.  1 is typical (just go to the next opcode),
+        /// but in the case of jump and branch statements, it can be other numbers.  This will
+        /// be ignored if the CPU has been put into a yield state with CPU.YieldProgram().
+        /// </summary>
         public int DeltaInstructionPointer { get; protected set; }
         public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
         
@@ -241,9 +246,6 @@ namespace kOS.Safe.Compilation
 
         public bool AbortProgram { get; set; }
         public bool AbortContext { get; set; }
-        public bool IsYielding { get; protected set; } // allows the cpu to know if the opcode is yielding (waiting) to know if it should call Execute or CheckYield
-
-        public Func<ICpu, bool> YieldFinishedDelegate { get; protected set; }
         
         public virtual void Execute(ICpu cpu)
         {
@@ -259,7 +261,6 @@ namespace kOS.Safe.Compilation
             DeltaInstructionPointer = 1;
             AbortProgram = false;
             AbortContext = false;
-            IsYielding = false;
         }
         
         /// <summary>
@@ -466,46 +467,6 @@ namespace kOS.Safe.Compilation
             return Structure.FromPrimitiveWithAssert(PopValueAssert(cpu, barewordOkay));
         }
 
-        public void YieldProgram(ICpu cpu, Func<ICpu, bool> isFinishedDelegate)
-        {
-            if (isFinishedDelegate != null)
-            {
-                YieldFinishedDelegate = isFinishedDelegate;
-                BeginYield();
-                cpu.StartWait(0);
-            }
-        }
-
-        public void CheckYield(ICpu cpu)
-        {
-            if (YieldFinishedDelegate != null)
-            {
-                if (YieldFinishedDelegate.Invoke(cpu))
-                {
-                    EndYield();
-                }
-                else
-                {
-                    cpu.StartWait(0);
-                }
-            }
-            else
-            {
-                throw new KOSException("Error checking yielded Opcode: YieldFinishedDelegate is null");
-            }
-        }
-
-        protected virtual void BeginYield()
-        {
-            DeltaInstructionPointer = 0;
-            IsYielding = true;
-        }
-
-        protected virtual void EndYield()
-        {
-            DeltaInstructionPointer = 1;
-            IsYielding = false;
-        }
     }
 
     public abstract class BinaryOpcode : Opcode
@@ -2172,33 +2133,11 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "wait"; } }
         public override ByteCode Code { get { return ByteCode.WAIT; } }
-        private double endTime = -1d;
 
         public override void Execute(ICpu cpu)
         {
-            // Wait model is: Because waits can occur in triggers as well as in
-            // mainline code, the CPU can't be the one to be tracking the
-            // remaining time on the wait.  There can be more than one place where
-            // a wait was pending.  So instead track the pending time inside the
-            // opcode itself, by having the opcode store its timestamp when it is
-            // meant to end, and then yield.  The end time is then checked inside
-            // of CheckWaitTime
-            if (endTime < 0) // initial time being executed.
-            {
-                double arg = Convert.ToDouble(cpu.PopValue());
-                endTime = cpu.StartWait(arg);
-                YieldProgram(cpu, CheckWaitTime);
-            }
-        }
-
-        public bool CheckWaitTime(ICpu cpu)
-        {
-            if (cpu.SessionTime > endTime)
-            {
-                endTime = -1; // reset in case this is called again in a loop.
-                return true;
-            }
-            return false;
+            double arg = Convert.ToDouble(cpu.PopValue());
+            cpu.YieldProgram(new YieldFinishedGameTimer(arg));
         }
     }
 
