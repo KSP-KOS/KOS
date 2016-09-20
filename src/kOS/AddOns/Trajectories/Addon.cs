@@ -2,14 +2,16 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
+using kOS.Utilities;
 using UnityEngine;
 
 namespace kOS.AddOns.TrajectoriesAddon
 {
-    [kOS.Safe.Utilities.KOSNomenclature("TRAddon")]
+    [kOSAddon("TR")]
+    [Safe.Utilities.KOSNomenclature("TRAddon")]
     public class Addon : Suffixed.Addon
     {
-        public Addon(SharedObjects shared) : base("TR", shared)
+        public Addon(SharedObjects shared) : base(shared)
         {
             InitializeSuffixes();
         }
@@ -23,7 +25,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             AddSuffix("SETTARGET", new OneArgsSuffix<GeoCoordinates>(setTarget, "Set correctedVect target."));
         }
 
-        private kOS.Suffixed.GeoCoordinates impactPos()
+        private GeoCoordinates impactPos()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
             {
@@ -37,12 +39,8 @@ namespace kOS.AddOns.TrajectoriesAddon
                 {
                     var worldImpactPos = (Vector3d)impactVect + body.position;
                     var lat = body.GetLatitude(worldImpactPos);
-                    var lng = body.GetLongitude(worldImpactPos);
-                    while (lng < -180)
-                        lng += 360;
-                    while (lng > 180)
-                        lng -= 360;
-                    return new kOS.Suffixed.GeoCoordinates(shared, lat, lng);
+                    var lng = Utils.DegreeFix(body.GetLongitude(worldImpactPos), -180);
+                    return new GeoCoordinates(shared, lat, lng);
                 }
                 else {
                     throw new KOSException("Impact position is not available. Remember to check addons:tr:hasImpact");
