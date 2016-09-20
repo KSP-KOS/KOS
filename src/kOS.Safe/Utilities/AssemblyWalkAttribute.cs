@@ -13,7 +13,7 @@ namespace kOS.Safe.Utilities
     /// in the currently loaded assemblies (excluding the GAC) will be checked for this attribute,
     /// and then a 2nd time for the type conditions of each AssemblyWalkAttribute found. Each Type
     /// matching a condition of the attribute will be passed to the StaticRegisterMethod. Optionally,
-    /// defining StaticWalkMethod will let the manager walk the assemblies itself, allowing for mor
+    /// defining StaticWalkMethod will let the manager walk the assemblies itself, allowing for more
     /// complicated conditions
     /// </summary>
     [AttributeUsage((AttributeTargets.Class | AttributeTargets.Struct), Inherited = false, AllowMultiple = false)]
@@ -53,14 +53,20 @@ namespace kOS.Safe.Utilities
         public static void Walk()
         {
             SafeHouse.Logger.Log("AssemblyWalkAttribute begin walking");
-            LoadWalkAttributes();
-            WalkAllAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            Walk(assemblies);
         }
 
-        public static void LoadWalkAttributes()
+        public static void Walk(Assembly[] assemblies)
         {
-            AllWalkAttributes.Clear();
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            SafeHouse.Logger.Log("AssemblyWalkAttribute begin walking");
+            LoadWalkAttributes(assemblies);
+            WalkAssemblies(assemblies);
+        }
+
+        public static void LoadWalkAttributes(Assembly[] assemblies)
+        {
+            SafeHouse.Logger.SuperVerbose("Begin loading AssemblyWalkAttributes.");
             foreach (Assembly assembly in assemblies)
             {
                 // Don't check the assembly if it's in the GAC.
@@ -179,10 +185,9 @@ namespace kOS.Safe.Utilities
             }
         }
 
-        public static void WalkAllAssemblies()
+        public static void WalkAssemblies(Assembly[] assemblies)
         {
             SafeHouse.Logger.SuperVerbose("Begin walking assemblies.");
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly assembly in assemblies)
             {
                 if (!assembly.GlobalAssemblyCache)
@@ -196,7 +201,7 @@ namespace kOS.Safe.Utilities
                     {
                         string message = string.Format(assemblyLoadErrorFormat, assembly.FullName, assembly.Location);
                         SafeHouse.Logger.LogError(message);
-                        Debug.AddNagMessage(Debug.NagType.NAGFOREVER, message);
+                        Debug.AddNagMessage(Debug.NagType.NAGONCE, message);
                         SafeHouse.Logger.LogError(string.Format("Exception: {0}\nStack Trace:\n{1}", ex.Message, ex.StackTrace));
                     }
                 }
@@ -252,7 +257,7 @@ namespace kOS.Safe.Utilities
                                     }
                                     else if (walkAttribute.InherritedType != null)
                                     {
-                                        if (!type.IsAbstract && walkAttribute.InherritedType.IsAssignableFrom(type))
+                                        if (walkAttribute.InherritedType.IsAssignableFrom(type))
                                         {
                                             managerRegisterMethod.Invoke(null, new[] { attr, type });
                                             walkAttribute.LoadedCount++;
@@ -284,7 +289,7 @@ namespace kOS.Safe.Utilities
                             }
                             else if (walkAttribute.InherritedType != null)
                             {
-                                if (!type.IsAbstract && walkAttribute.InherritedType.IsAssignableFrom(type))
+                                if (walkAttribute.InherritedType.IsAssignableFrom(type))
                                 {
                                     managerRegisterMethod.Invoke(null, new[] { type });
                                     walkAttribute.LoadedCount++;

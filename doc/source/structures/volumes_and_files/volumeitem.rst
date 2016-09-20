@@ -26,7 +26,7 @@ Contains suffixes common to :struct:`files <VolumeFile>` and :struct:`directorie
           - :struct:`Scalar`
           - Size of the file
         * - :attr:`ISFILE`
-          - :struct:`Scalar`
+          - :struct:`Boolean`
           - Size of the file
 
 .. attribute:: VolumeItem:NAME

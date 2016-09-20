@@ -246,10 +246,16 @@ namespace kOS.Utilities
             // When we can't use body.orbit, then manually perform the work that (probably) body.orbit.GetVel()
             // is doing itself.  This isn't DRY, but SQUAD made it impossible to be DRY when they didn't implement
             // the algorithm for the Sun so we have to repeat it again ourselves:
-            
+
+            // If we assume this happens when the body is the sun, then the sun's body is the
+            // reference frame of the SOI's rotation            
             CelestialBody soiBody = shared.Vessel.mainBody;
             if (soiBody.orbit != null)
-                return soiBody.orbit.GetFrameVel();
+            {
+                Vector3d wonkyAxesVel = soiBody.orbit.GetFrameVel();
+                Vector3d correctedVel = new Vector3d(wonkyAxesVel.x, wonkyAxesVel.z, wonkyAxesVel.y); // have to swap axes because KSP API is weird.
+                return -correctedVel; // invert direction because the above gives vel of my body rel to sun, and I want vel of sun rel to my body.
+            }
             return (-1)*shared.Vessel.obt_velocity;
         }
 

@@ -322,7 +322,9 @@ namespace kOS.Function
                 // or to a file to save:
                 if (justCompiling)
                 {
-                    List<CodePart> compileParts = shared.ScriptHandler.Compile(path, 1, fileContent.String, String.Empty, options);
+                    // since we've already read the file content, use the volume from outPath instead of the source path
+                    volume = shared.VolumeMgr.GetVolumeFromPath(outPath);
+                    List<CodePart> compileParts = shared.ScriptHandler.Compile(path, 1, fileContent.String, string.Empty, options);
                     VolumeFile written = volume.SaveFile(outPath, new FileContent(compileParts));
                     if (written == null)
                     {

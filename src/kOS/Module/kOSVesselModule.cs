@@ -18,6 +18,11 @@ namespace kOS.Module
     {
         private bool initialized = false;
         private Vessel parentVessel;
+        private bool hasRemoteTech = false;
+        /// <summary>How often to re-attempt the remote tech hook, expressed as a number of physics updates</summary>
+        private const int RemoteTechRehookPeriod = 25;
+        private int counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
+
         public Guid ID
         {
             get
@@ -44,16 +49,16 @@ namespace kOS.Module
         /// </summary>
         public override void OnAwake()
         {
-            if (kOS.Safe.Utilities.SafeHouse.Logger != null)
+            if (SafeHouse.Logger != null)
             {
-                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
+                SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
                 parentVessel = GetComponent<Vessel>();
                 if (parentVessel != null)
                 {
                     allInstances[ID] = this;
                     AddDefaultParameters();
                 }
-                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.name, ID));
+                SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.vesselName, ID));
             }
         }
 
@@ -64,7 +69,7 @@ namespace kOS.Module
         /// </summary>
         public void Start()
         {
-            kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.name, ID));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.vesselName, ID));
             HarvestParts();
             HookEvents();
             initialized = true;
@@ -76,9 +81,9 @@ namespace kOS.Module
         /// </summary>
         public void OnDestroy()
         {
-            if (kOS.Safe.Utilities.SafeHouse.Logger != null)
+            if (SafeHouse.Logger != null)
             {
-                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
+                SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
                 UnHookEvents();
                 ClearParts();
                 if (parentVessel != null && allInstances.ContainsKey(ID))
@@ -115,6 +120,7 @@ namespace kOS.Module
                 {
                     UpdateParameterState();
                 }
+                CheckSwapEvents();
             }
         }
 
@@ -210,11 +216,11 @@ namespace kOS.Module
         {
             if (RemoteTechHook.IsAvailable(parentVessel.id))
             {
-                RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, UpdateAutopilot);
+                HookRemoteTechPilot();
             }
             else
             {
-                parentVessel.OnPreAutopilotUpdate += UpdateAutopilot;
+                HookStockPilot();
             }
         }
 
@@ -223,14 +229,71 @@ namespace kOS.Module
         /// </summary>
         private void UnHookEvents()
         {
-            if (RemoteTechHook.IsAvailable(parentVessel.id))
+            if (hasRemoteTech)
             {
-                RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, UpdateAutopilot);
+                UnHookRemoteTechPilot();
             }
             else
             {
-                parentVessel.OnPreAutopilotUpdate -= UpdateAutopilot;
+                UnHookStockPilot();
             }
+        }
+        
+        /// <summary>
+        /// A race condition exists where KSP can load the kOS module onto the vessel
+        /// before it loaded the RemoteTech module.  That makes it so that kOS may not
+        /// see the existence of RT yet when kOS is first initialized.<br/>
+        /// <br/>
+        /// This fixes that case by continually re-querying for RT post-loading, and
+        /// re-initializing kOS's RT-related behaviors if it seems that the RT module
+        /// now exists when it didn't before (or visa versa).
+        /// </summary>
+        private void CheckSwapEvents()
+        {
+            if (RemoteTechHook.IsAvailable(parentVessel.id) != hasRemoteTech)
+            {
+                if (hasRemoteTech)
+                {
+                    UnHookRemoteTechPilot();
+                    HookStockPilot();
+                }
+                else
+                {
+                    UnHookStockPilot();
+                    HookRemoteTechPilot();
+                }
+            }
+            if (hasRemoteTech)
+            {
+                if (++counterRemoteTechRefresh > RemoteTechRehookPeriod)
+                {
+                    counterRemoteTechRefresh = 0;
+                    HookRemoteTechPilot();
+                }
+            }
+        }
+
+        private void HookRemoteTechPilot()
+        {
+            RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
+            hasRemoteTech = true;
+        }
+
+        private void UnHookRemoteTechPilot()
+        {
+            RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
+            counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
+        }
+
+        private void HookStockPilot()
+        {
+            parentVessel.OnPreAutopilotUpdate += HandleOnPreAutopilotUpdate;
+            hasRemoteTech = false;
+        }
+
+        private void UnHookStockPilot()
+        {
+            parentVessel.OnPreAutopilotUpdate -= HandleOnPreAutopilotUpdate;
         }
 
         /// <summary>
@@ -262,6 +325,16 @@ namespace kOS.Module
             }
         }
 
+        private void HandleRemoteTechSanctionedPilot(FlightCtrlState c)
+        {
+            UpdateAutopilot(c);
+        }
+
+        private void HandleOnPreAutopilotUpdate(FlightCtrlState c)
+        {
+            UpdateAutopilot(c);
+        }
+
         /// <summary>
         /// Adds an IFlightControlParameter to the reference dictionary, and throws an error if it already exists.
         /// </summary>
@@ -284,7 +357,7 @@ namespace kOS.Module
         {
             name = name.ToLower();
             if (!flightControlParameters.ContainsKey(name))
-                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.name, name));
+                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.vesselName, name));
             return flightControlParameters[name];
         }
 

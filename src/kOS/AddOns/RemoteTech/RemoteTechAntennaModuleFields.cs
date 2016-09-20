@@ -4,20 +4,14 @@ using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Suffixed.PartModuleField;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace kOS.AddOns.RemoteTech
 {
     [kOS.Safe.Utilities.KOSNomenclature("RTAddonAntennaModule")]
     public class RemoteTechAntennaModuleFields : PartModuleFields
     {
-        // those Guids are hardcoded in RemoteTech
-        public const string NoTargetGuid = "00000000000000000000000000000000";
-
-        public const string ActiveVesselGuid = "35b89a0d664c43c6bec8d0840afc97b2";
-        public const string MissionControlGuid = "5105f5a9d62841c6ad4b21154e8fc488";
-
         public const string RTAntennaModule = "ModuleRTAntenna";
         public const string RTOriginalField = "RTAntennaTarget";
         public const string RTTargetField = "target";
@@ -77,26 +71,32 @@ namespace kOS.AddOns.RemoteTech
         {
             if (Equals(suffixName, new StringValue(RTTargetField)))
             {
-                BaseField field = GetField(RTOriginalField);
-                Guid guid = (Guid)field.GetValue(partModule);
-                string guidString = guid.ToString("N");
+                var api = RemoteTechHook.Instance;
+                Guid guid = api.GetAntennaTarget(partModule.part);
 
-                if (guidString.Equals(NoTargetGuid))
+                if (guid.Equals(api.GetNoTargetGuid()))
                 {
                     return new StringValue(NoTargetString);
                 }
-                else if (guidString.Equals(ActiveVesselGuid))
+                else if (guid.Equals(api.GetActiveVesselGuid()))
                 {
                     return new StringValue(ActiveVesselString);
                 }
-                else if (guidString.Equals(MissionControlGuid))
+                else
                 {
-                    return new StringValue(MissionControlString);
+                    IEnumerable<string> groundStations = api.GetGroundStations();
+                    foreach (var groundStation in groundStations)
+                    {
+                        if (guid.Equals(api.GetGroundStationGuid(groundStation)))
+                        {
+                            return new StringValue(groundStation);
+                        }
+                    }
                 }
 
                 foreach (var body in FlightGlobals.Bodies)
                 {
-                    if (CelestialBodyGuid(body).Equals(guid))
+                    if (api.GetCelestialBodyGuid(body).Equals(guid))
                     {
                         return new BodyTarget(body, shared);
                     }
@@ -118,28 +118,33 @@ namespace kOS.AddOns.RemoteTech
 
         private Guid GetTargetGuid(Structure target)
         {
-            var str = target as StringValue;
-            if (str != null)
+            var api = RemoteTechHook.Instance;
+            if (target is StringValue)
             {
-                string targetString = str;
+                string targetString = target.ToString();
                 if (targetString.Equals(NoTargetString, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return new Guid(NoTargetGuid);
+                    return api.GetNoTargetGuid();
                 }
                 else if (targetString.Equals(ActiveVesselString, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return new Guid(ActiveVesselGuid);
-                }
-                else if (targetString.Equals(MissionControlString, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return new Guid(MissionControlGuid);
+                    return api.GetActiveVesselGuid();
                 }
                 else
                 {
-                    var body = FlightGlobals.Bodies.FirstOrDefault(b => b.bodyName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase));
+                    IEnumerable<string> groundStations = api.GetGroundStations();
+                    foreach (var groundStation in groundStations)
+                    {
+                        if (targetString.Equals(groundStation))
+                        {
+                            return api.GetGroundStationGuid(groundStation);
+                        }
+                    }
+
+                    var body = FlightGlobals.Bodies.Where(b => b.bodyName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                     if (body != null)
                     {
-                        return CelestialBodyGuid(body);
+                        return api.GetCelestialBodyGuid(body);
                     }
                     else
                     {
@@ -159,7 +164,7 @@ namespace kOS.AddOns.RemoteTech
             else if (target is BodyTarget)
             {
                 BodyTarget targetBody = (BodyTarget)target;
-                return CelestialBodyGuid(targetBody.Body);
+                return api.GetCelestialBodyGuid(targetBody.Body);
             }
             else if (target is VesselTarget)
             {
@@ -173,10 +178,9 @@ namespace kOS.AddOns.RemoteTech
                 return targetVessel.Vessel.id;
             }
 
-            throw new KOSInvalidFieldValueException("'" + NoTargetString + "', '" + ActiveVesselString + "', '" + MissionControlString +
-                "', Body or Vessel expected");
+            throw new KOSInvalidFieldValueException("Acceptable values are: \"" + NoTargetString + "\", \"" + ActiveVesselString +
+                "\", name of a ground station, name of a body, name of a vessel, Body, Vessel");
         }
-
 
         protected override void SetKSPFieldValue(StringValue suffixName, Structure newValue)
         {
@@ -184,25 +188,12 @@ namespace kOS.AddOns.RemoteTech
             {
                 Guid guid = GetTargetGuid(newValue);
 
-                BaseField field = GetField(RTOriginalField);
-                field.SetValue(guid, partModule);
+                RemoteTechHook.Instance.SetAntennaTarget(partModule.part, guid);
             }
             else
             {
                 base.SetKSPFieldValue(suffixName, newValue);
             }
-        }
-
-        // taken from RemoteTech's RTUtil
-        public static Guid CelestialBodyGuid(CelestialBody cb)
-        {
-            char[] name = cb.GetName().ToCharArray();
-            var s = new StringBuilder();
-            for (int i = 0; i < 16; i++)
-            {
-                s.Append(((short)name[i % name.Length]).ToString("x"));
-            }
-            return new Guid(s.ToString());
         }
     }
 }

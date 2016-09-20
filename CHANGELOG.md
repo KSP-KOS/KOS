@@ -31,6 +31,12 @@ worked on since the last release.
   ``SETFIELD("target", "mission-control")`` and now you have to
   say ``SETFIELD("target", "Mission Control")`` instead, due to
   changes in RT's naming schemes.
+* Previously the Y and Z axes of SUN:VELOCITY:ORBIT were swapped.
+  (https://github.com/KSP-KOS/KOS/issues/1764)
+  This has been fixed so it is now the same as for any other body,
+  however scripts might exist that had previously been swapping them
+  back to compensate for this, and if there were they would now break
+  since that swapping is no longer needed.
 
 ### NEW FEATURES
 
