@@ -238,42 +238,71 @@ namespace kOS.Safe.Compilation.KS
         
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
         {
+            bool doChildren = true;
+            bool doInvoke = false;
             switch (node.Token.Type)
             {
-                // Statements that can have other statements nested inside them need to be
-                // recursed through to search for instances of the special statements
-                // we are looking for here:
+                // Any statement which might have another statement nested inside
+                // it should be recursed into to check if that other statement
+                // might be a lock, or a user function (anonymous or named).
                 //
-                case TokenType.Start:
-                case TokenType.instruction_block:
-                case TokenType.instruction:
-                case TokenType.if_stmt:
-                case TokenType.fromloop_stmt:
-                case TokenType.until_stmt:
-                case TokenType.for_stmt:
-                case TokenType.on_stmt:
-                case TokenType.when_stmt:
-                case TokenType.declare_identifier_clause:
-                case TokenType.expr:
-                case TokenType.declare_function_clause:
-                    foreach (ParseNode childNode in node.Nodes)
-                        IterateUserFunctions(childNode, action);
-                    break;
+                // We assume by default a node should be recursed into unless explicitly
+                // told otherwise here.  Doing it this way around is the safer default
+                // because of what happens when we fail to mention a part of speech here.
+                // If we fail to recurse when we should have, that can be fatal as it makes
+                // the compiler produce wrong code.  But if we do recurse when we didn't have
+                // to, that just wastes a bit of CPU time, which isn't as bad.
+                //
+                case TokenType.onoff_trailer:
+                case TokenType.stage_stmt:
+                case TokenType.clear_stmt:
+                case TokenType.break_stmt:
+                case TokenType.preserve_stmt:
+                case TokenType.run_stmt:
+                case TokenType.compile_stmt:
+                case TokenType.list_stmt:
+                case TokenType.reboot_stmt:
+                case TokenType.shutdown_stmt:
+                case TokenType.unset_stmt:
+                case TokenType.sci_number:
+                case TokenType.number:
+                case TokenType.INTEGER:
+                case TokenType.DOUBLE:
+                case TokenType.PLUSMINUS:
+                case TokenType.MULT:
+                case TokenType.DIV:
+                case TokenType.POWER:
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                case TokenType.STRING:
+                case TokenType.TRUEFALSE:
+                case TokenType.COMPARATOR:
+                case TokenType.AND:
+                case TokenType.OR:
+                case TokenType.directive:
+                    doChildren = false;
+                    break;                
 
                 // These are the statements we're searching for to work on here:
                 //
-                case TokenType.declare_stmt: // for DECLARE FUNCTION's
-                    // for catching functions nested inside functions, or locks nested inside functions:
-                    // Depth-first: Walk my children first, then iterate through me.  Thus the functions nested inside
-                    // me have already been compiled before I start compiling my own code.  This allows my code to make
-                    // forward-calls into my nested functions, because they've been compiled and we know where they live
-                    // in memory now.
-                    foreach (ParseNode childNode in node.Nodes)
-                        IterateUserFunctions(childNode, action);                    
-
-                    action.Invoke(node);
+                case TokenType.declare_stmt: // for DECLARE FUNCTION's.
+                case TokenType.instruction_block: // just in case it's an anon function's body
+                    doInvoke = true;
                     break;
+                default:
+                    break;
+
             }
+            // for catching functions nested inside functions, or locks nested inside functions:
+            // Depth-first: Walk my children first, then iterate through me.  Thus the functions nested inside
+            // me have already been compiled before I start compiling my own code.  This allows my code to make
+            // forward-calls into my nested functions, because they've been compiled and we know where they live
+            // in memory now.
+            if (doChildren)
+                foreach (ParseNode childNode in node.Nodes)
+                    IterateUserFunctions(childNode, action);
+            if (doInvoke)
+                action.Invoke(node);
         }
 
         /// <summary>
