@@ -22,7 +22,7 @@ namespace kOS.Binding
                 var targetable = val as IKOSTargetable;
                 if (targetable != null)
                 {
-                    VesselUtils.SetTarget(targetable);
+                    VesselUtils.SetTarget(targetable, shared.Vessel);
                     return;
                 }
 
@@ -31,14 +31,14 @@ namespace kOS.Binding
                     var body = VesselUtils.GetBodyByName(val.ToString());
                     if (body != null)
                     {
-                        VesselUtils.SetTarget(body);
+                        VesselUtils.SetTarget(body, shared.Vessel);
                         return;
                     }
 
                     var vessel = VesselUtils.GetVesselByName(val.ToString(), shared.Vessel);
                     if (vessel != null)
                     {
-                        VesselUtils.SetTarget(vessel);
+                        VesselUtils.SetTarget(vessel, shared.Vessel);
                         return;
                     }
                 }
