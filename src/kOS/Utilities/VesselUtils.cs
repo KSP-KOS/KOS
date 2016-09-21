@@ -125,12 +125,12 @@ namespace kOS.Utilities
 
         private static Vessel TryGetVesselByName(string name, Vessel origin)
         {
-            return FlightGlobals.Vessels.FirstOrDefault(v => v.vesselName.ToUpper() == name.ToUpper());
+            return FlightGlobals.Vessels.FirstOrDefault(v => v.vesselName.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public static CelestialBody GetBodyByName(string name)
         {
-            return FlightGlobals.fetch.bodies.FirstOrDefault(body => name.ToUpper() == body.name.ToUpper());
+            return FlightGlobals.fetch.bodies.FirstOrDefault(body => body.name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public static Vessel GetVesselByName(string name, Vessel origin)
