@@ -67,6 +67,7 @@
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
+    <Compile Include="Exceptions\KOSInvalidTargetException.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
     <Compile Include="Exceptions\KOSVolumeOutOfRangeException.cs" />
