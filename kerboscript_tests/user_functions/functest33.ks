@@ -1,5 +1,5 @@
 // Testing that anon functions can have locks in them.
-// (Test added in response to issue #1801).
+// (Test added in response to issue #1784 and #1801).
 
 // Tests that the compiler will properly recurse into
 // all the weird places an anon function might be,
