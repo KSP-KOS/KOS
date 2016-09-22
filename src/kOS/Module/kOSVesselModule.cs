@@ -19,6 +19,9 @@ namespace kOS.Module
         private bool initialized = false;
         private Vessel parentVessel;
         private bool hasRemoteTech = false;
+        /// <summary>How often to re-attempt the remote tech hook, expressed as a number of physics updates</summary>
+        private const int RemoteTechRehookPeriod = 25;
+        private int counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
 
         public Guid ID
         {
@@ -46,16 +49,16 @@ namespace kOS.Module
         /// </summary>
         public override void OnAwake()
         {
-            if (kOS.Safe.Utilities.SafeHouse.Logger != null)
+            if (SafeHouse.Logger != null)
             {
-                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
+                SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
                 parentVessel = GetComponent<Vessel>();
                 if (parentVessel != null)
                 {
                     allInstances[ID] = this;
                     AddDefaultParameters();
                 }
-                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.name, ID));
+                SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.vesselName, ID));
             }
         }
 
@@ -66,7 +69,7 @@ namespace kOS.Module
         /// </summary>
         public void Start()
         {
-            kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.name, ID));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.vesselName, ID));
             HarvestParts();
             HookEvents();
             initialized = true;
@@ -78,9 +81,9 @@ namespace kOS.Module
         /// </summary>
         public void OnDestroy()
         {
-            if (kOS.Safe.Utilities.SafeHouse.Logger != null)
+            if (SafeHouse.Logger != null)
             {
-                kOS.Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
+                SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
                 UnHookEvents();
                 ClearParts();
                 if (parentVessel != null && allInstances.ContainsKey(ID))
@@ -260,6 +263,14 @@ namespace kOS.Module
                     HookRemoteTechPilot();
                 }
             }
+            if (hasRemoteTech)
+            {
+                if (++counterRemoteTechRefresh > RemoteTechRehookPeriod)
+                {
+                    counterRemoteTechRefresh = 0;
+                    HookRemoteTechPilot();
+                }
+            }
         }
 
         private void HookRemoteTechPilot()
@@ -271,6 +282,7 @@ namespace kOS.Module
         private void UnHookRemoteTechPilot()
         {
             RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
+            counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
         }
 
         private void HookStockPilot()
@@ -345,7 +357,7 @@ namespace kOS.Module
         {
             name = name.ToLower();
             if (!flightControlParameters.ContainsKey(name))
-                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.name, name));
+                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.vesselName, name));
             return flightControlParameters[name];
         }
 
