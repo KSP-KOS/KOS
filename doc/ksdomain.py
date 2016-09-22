@@ -58,9 +58,11 @@ class KOSObject(ObjectDescription):
         if indextext:
             # sphinx 1.4.0+ requires 5 elements
             if version_info > (1, 4, 0, '', 0):
-                self.indexnode['entries'].append(('single', indextext, targetname, '', None))
+                self.indexnode['entries'].append(('single', indextext,
+                                                  targetname, '', None))
             else:
-                self.indexnode['entries'].append(('single', indextext, targetname, ''))
+                self.indexnode['entries'].append(('single', indextext,
+                                                  targetname, ''))
 
 class KOSGlobal(KOSObject):
     doc_field_types = [
