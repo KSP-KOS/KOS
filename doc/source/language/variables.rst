@@ -114,14 +114,14 @@ global is to declare it explicitly with one of these DECLARE statements**.
 Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
-.. versionadded:: 0.17
-    The syntax without the initializer, looking like so
-
-    .. code-block:: kerboscript
-
-        DECLARE x. // no initializer like "TO 1."
-
-    is **no longer legal syntax**.
+.. note::
+    .. versionadded:: 0.17
+        The syntax without the initializer, looking like so:
+    
+        .. code-block:: kerboscript
+        
+            DECLARE x. // no initializer like "TO 1."
+        is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
@@ -234,8 +234,9 @@ expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.
 
-.. versionadded:: 0.18.3
-   Optional Parameters were added as a new feature in kOS 0.18.3
+.. note::
+    .. versionadded:: 0.18.3
+        Optional Parameters were added as a new feature in kOS 0.18.3
 
 
 

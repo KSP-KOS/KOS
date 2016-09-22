@@ -40,7 +40,7 @@ Help for the new user - What is a Function?
     but the exact error you get will depend on several "random"
     factors.  This may be fixed later by a later release, but for
     now, don't do it.  For further explanation, see the section entitled
-    :ref:`Functions and the interpreter terminal <interpreter functions>`
+    :ref:`Functions and the interpreter terminal <interpreter functions>`.
 
 .. _declare function:
 
@@ -71,7 +71,7 @@ although it is allowed.
 It is best to just leave all the optional keywords of and merely say
 ``function`` by itself.
 
-example::
+Example::
 
     // Print the string you pass in, in one of the 4 corners
     // of the terminal:
@@ -301,8 +301,9 @@ expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.
 
-.. versionadded:: 0.18.3
-   Optional Parameters were added as a new feature in kOS 0.18.3
+.. note::
+    .. versionadded:: 0.18.3
+        Optional Parameters were added as a new feature in kOS 0.18.3
 
 
 
@@ -392,7 +393,7 @@ An example of using ``local`` for a local variable can be seen in
 the example above, where it is used for the ``row`` and ``col`` variables.
 
 A more in-depth explanation of kerboscript's scoping rules and how they
-work is found :ref:`on another page <scope>`
+work is found :ref:`on another page <scope>`.
 
 Initializers are now mandatory for the DECLARE statement
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,7 +408,7 @@ This is now **illegal** syntax::
     of kOS did allow you do make ``declare`` statements
     without any initializers in them (and in fact you couldn't
     provide an initializer for them in prior versions even if
-    you wanted to.)
+    you wanted to).
 
 In order to avoid the issue of having uninitialized variables in
 kerboscript, any declare statement *requires* the use of the
@@ -444,7 +445,7 @@ RETURN
 
 ``return`` *expression(optional)* *dot(mandatory)*
 
-examples::
+Examples::
 
     return 3*x.
 
@@ -458,7 +459,7 @@ typed with late binding.  You cannot declare the expected return
 type for the function, and it's up to you to ensure that all possible
 returned values are useful and meaningful.
 
-example::
+Example::
 
     // Note, in this example, the keyword 'declare' is
     // spelled out explicitly.  You can choose to do so
@@ -694,8 +695,8 @@ When you are writing libraries of code for yourself to call, this can
 really be annoying.  And it's a very common problem with "sloppy"
 declaration languages that allow you to use variable names without
 declaring them first.  Most such languages have provided a way to
-catch the problem, and allow you to instruct the compiler "please
-don't let me do that.  Please force me to declare everything".
+catch the problem, and allow you to instruct the compiler, "Please
+don't let me do that.  Please force me to declare everything."
 
 The way that is done in kerboscript is by using a ``@LAZYGLOBAL``
 compiler directive, :ref:`as described here <lazyglobal>`.

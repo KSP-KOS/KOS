@@ -3,9 +3,10 @@
 Anonymous Functions (A kind of Delegate)
 ========================================
 
-.. versionadded:: 1.0.0
-   The anonymous function feature described on
-   this page did not exist prior to kOS 1.0.0
+.. note::
+    .. versionadded:: 1.0.0
+        The anonymous function feature described on
+        this page did not exist prior to kOS 1.0.0
 
 .. contents:: Contents
     :local:

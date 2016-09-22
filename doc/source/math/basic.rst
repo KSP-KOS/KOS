@@ -63,11 +63,22 @@ constants about the universe that you may find handy in your math operations.
 
 .. global:: Constant:PI
 
-    Ratio of circumference of a circle to its diameter
+    Ratio of circumference of a circle to its diameter, 3.14159265...
+    
+    ::
+
+        SET diameter to 10.
+        PRINT "circumference is:".
+        PRINT constant:pi * diameter.
 
 .. global:: Constant:C
 
     Speed of light in a vacuum, in meters per second.
+    
+    ::
+
+        PRINT "Light goes this fast:".
+        PRINT constant:c.
 
     .. note::
         In Kerbal Space Program, all physics motion is purely Newtonian.
@@ -88,6 +99,11 @@ constants about the universe that you may find handy in your math operations.
     If you have a pressure measurement expressed in atmospheres of pressure,
     you can multiply it by this to get the equivalent in kiloPascals
     (kiloNewtons per square meter).
+    
+    ::
+
+        PRINT "1 atm is:".
+        PRINT 1 * constant:AtmToKPa + "kPa.".
 
 .. global:: Constant:KPaToATM
 
@@ -96,6 +112,11 @@ constants about the universe that you may find handy in your math operations.
     If you have a pressure measurement expressed in kiloPascals (kiloNewtons
     per square meter), you can multiply it by this to get the equivalent
     in atmospheres.
+
+    ::
+
+        PRINT "100 kPa is:".
+        PRINT 100 * constant:KPaToATM + "atmospheres".
 
 .. global:: Constant:DegToRad
 
@@ -107,6 +128,11 @@ constants about the universe that you may find handy in your math operations.
     pre-recorded as a constant number and thus no division is performed
     at runtime.
 
+    ::
+
+        PRINT "A right angle is:".
+        PRINT 90 * constant:DegToRad + "radians".
+
 .. global:: Constant:RadToDeg
 
     A conversion constant.
@@ -116,6 +142,11 @@ constants about the universe that you may find handy in your math operations.
     the same thing as saying ``180 / constant:pi``, except the result is
     pre-recorded as a constant number and thus no division is performed
     at runtime.
+
+    ::
+
+        PRINT "A radian is:".
+        PRINT 1 * constant:RadToDeg + "degrees".
 
 .. _math functions:
 .. index:: Mathematical Functions
