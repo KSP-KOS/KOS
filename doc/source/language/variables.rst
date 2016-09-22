@@ -121,6 +121,7 @@ Initializer required in DECLARE
         .. code-block:: kerboscript
         
             DECLARE x. // no initializer like "TO 1."
+        
         is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
