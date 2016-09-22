@@ -52,6 +52,8 @@ Creation
     best to not use the Q() function unless Quaternions are something
     you already understand.
 
+    ::
+
         SET myDir TO Q( x, y, z, w ).
 
 .. _heading:
@@ -139,13 +141,13 @@ Structure
      :attr:`YAW`              :struct:`scalar` (deg)  Rotation around :math:`y` axis
      :attr:`ROLL`             :struct:`scalar` (deg)  Rotation around :math:`z` axis
      :attr:`FOREVECTOR`       :struct:`Vector`        This Direction's forward vector (z axis after rotation).
-     VECTOR                   :struct:`Vector`        Alias synonym for :attr:`FOREVECTOR`
+     ``VECTOR``               :struct:`Vector`        Alias synonym for :attr:`FOREVECTOR`
      :attr:`TOPVECTOR`        :struct:`Vector`        This Direction's top vector (y axis after rotation).
-     UPVECTOR                 :struct:`Vector`        Alias synonym for :attr:`TOPVECTOR`
+     ``UPVECTOR``             :struct:`Vector`        Alias synonym for :attr:`TOPVECTOR`
      :attr:`STARVECTOR`       :struct:`Vector`        This Direction's starboard vector (z axis after rotation).
-     RIGHTVECTOR              :struct:`Vector`        Alias synonym for :attr:`STARVECTOR`
+     ``RIGHTVECTOR``          :struct:`Vector`        Alias synonym for :attr:`STARVECTOR`
      :attr:`INVERSE`          :struct:`Direction`     The inverse of this direction.
-     :attr:`unary minus`      :struct:`Direction`     Using the negation operator "-" on a Direction does the same thing as using the :INVERSE suffix on it.
+     ``-`` (unary minus)      :struct:`Direction`     Using the negation operator ``-`` on a Direction does the same thing as using the :INVERSE suffix on it.
     ========================= ======================= ================================
 
     The :struct:`Direction` object exists primarily to enable automated steering. You can initialize a :struct:`Direction` using a :struct:`Vector` or a ``Rotation``. :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. So for example, a :struct:`Direction` pointing along the :math:`x` axis might be represented as ``R(0,90,0)``, meaning the initial :math:`z`-axis direction was rotated *90 degrees* around the :math:`y` axis.
@@ -158,7 +160,7 @@ Structure
 
     What this means is that if you try to ``ROLL`` and ``YAW`` in the same tuple, like so: ``R(0,45,45)``, you'll end up **rolling first and then yawing**, which might not be what you expected. There is little that can be done to change this as it's the native way things are represented in the underlying **Unity engine**.
 
-    Also, if you are going to manipulate directions a lot, it's important to note how **KSP**'s `native coord system works <ref_frame>`_.
+    Also, if you are going to manipulate directions a lot, it's important to note how **KSP**'s `native coordinate system works <ref_frame>`_.
 
 .. attribute:: Direction:PITCH
 
@@ -211,12 +213,6 @@ Structure
     
     :struct: Gives a `Direction` with the opposite rotation around its axes.
     
-
-.. note:: **The difference between a :struct:`Direction` and a ``Vector``**
-
-    ``Vector`` and a :struct:`Direction` can be represented with the exact same amount of information: a tuple of 3 floating point numbers. So you might wonder why it is that a ``Vector`` can hold information about the magnitude of the line segment, while a :struct:`Direction` cannot, given that both have the same amount of information. The answer is that a :struct:`Direction` does contain one thing a ``Vector`` does not. A :struct:`Direction` knows which way is "up", while a ``Vector`` does not. If you tell **kOS** to ``LOCK STEERING`` to a ``Vector``, it will be able to point the nose of the vessel in the correct direction, but won't know which way you want the roof of the craft rotated to. This works fine for axial symmetrical rockets but can be a problem for airplanes.
-
-
 Operations and Methods
 ----------------------
 
@@ -224,18 +220,23 @@ You can use math operations on :struct:`Direction` objects as well. The next exa
 
 Supported Direction Operators:
 
-    **Direction Multiplied by Direction** ``Dir1 * Dir2`` - This operator returns the result of rotating Dir2 by the rotation of Dir1.  Note that the order of operations matters here.  ``Dir1*Dir2`` is not the same as ``Dir2*Dir1``.  Example::
+:Direction Multiplied by Direction:
+    ``Dir1 * Dir2`` - This operator returns the result of rotating Dir2 by the rotation of Dir1.  Note that the order of operations matters here.  ``Dir1*Dir2`` is not the same as ``Dir2*Dir1``.  Example::
 
         // A direction pointing along compass heading 330, by rotating NORTH by 30 degrees around UP axis:
         SET newDir TO ANGLEAXIS(30,SHIP:UP) * NORTH.
 
-    **Direction Multiplied by Vector** ``Dir * Vec`` - This operator returns the result of rotating the vector by Dir::
+:Direction Multiplied by Vector:
+    ``Dir * Vec`` - This operator returns the result of rotating the vector by Dir::
 
         // What would the velocity of your ship be if it was angled 20 degrees to your left?
         SET Vel to ANGLEAXIS(-20,SHIP:TOPVECTOR) * SHIP:VELOCITY:ORBIT.
         // At this point Vel:MAG and SHIP:VELOCITY:MAG should be the same, but they don't point the same way
 
-    **Direction Added to Direction** ``Dir1 + Dir2`` - This operator is less reliable because its exact behavior depends on the order of operations of the UnityEngine's X Y and Z axis rotations, and it can result in gimbal lock.  It's supposed to perform a Euler rotation of one direction by another, but it's preferred to use Dir*Dir instead, as that doesn't experience gimbal lock, and does not require that you know the exact transformation order of Unity.
+:Direction Added to Direction:
+    ``Dir1 + Dir2`` - This operator is less reliable because its exact behavior depends on the order of operations of the UnityEngine's X Y and Z axis rotations, and it can result in gimbal lock.
+
+    It's supposed to perform a Euler rotation of one direction by another, but it's preferred to use ``Dir*Dir`` instead, as that doesn't experience gimbal lock, and does not require that you know the exact transformation order of Unity.
 
 For vector operations, you may use the ``:VECTOR`` suffix in combination with the regular vector methods::
 
@@ -245,9 +246,9 @@ For vector operations, you may use the ``:VECTOR`` suffix in combination with th
 Vectors and Directions
 ----------------------
 
-There are some consequences when converting from a :struct:`Direction` to a ``Vector`` and vice versa which should not be overlooked.
+There are some consequences when converting from a :struct:`Direction` to a :struct:`Vector` and vice versa which should not be overlooked.
 
-A ``Vector`` and a :struct:`Direction` can be represented with the exact same amount of information: a tuple of 3 floating point numbers. So you might wonder why it is that a ``Vector`` can hold information about the magnitude of the line segment, while a :struct:`Direction` cannot, given that both have the same amount of information. The answer is that a :struct:`Direction` does contain one thing a ``Vector`` does not. A :struct:`Direction` knows which way is "up", while a ``Vector`` does not. If you tell **kOS** to ``LOCK STEERING`` to a ``Vector``, it will be able to point the nose of the vessel in the correct direction, but won't know which way you want the roof of the craft rotated to. This works fine for axial symmetrical rockets but can be a problem for airplanes.
+A :struct:`Vector` and a :struct:`Direction` can be represented with the exact same amount of information: a tuple of 3 floating point numbers. So you might wonder why it is that a :struct:`Vector` can hold information about the magnitude of the line segment, while a :struct:`Direction` cannot, given that both have the same amount of information. The answer is that a :struct:`Direction` does contain one thing a :struct:`Vector` does not. A :struct:`Direction` knows which way is "up", while a :struct:`Vector` does not. If you tell **kOS** to ``LOCK STEERING`` to a :struct:`Vector`, it will be able to point the nose of the vessel in the correct direction, but won't know which way you want the roof of the craft rotated to. This works fine for axial symmetrical rockets but can be a problem for airplanes.
 
 Therefore if you do this::
 

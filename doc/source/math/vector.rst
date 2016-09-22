@@ -140,18 +140,18 @@ Structure
 Operations and Methods
 ----------------------
 
-============================================================= =============
-Method / Operator                                              Return Type    
-============================================================= =============
- :ref:`* (asterisk) <Vector *>`                               :struct:`scalar` or :struct:`Vector` 
- :ref:`+ (plus)     <Vector +->`                              :struct:`Vector`
- :ref:`- (minus)    <Vector +->`                              :struct:`Vector`
- :ref:`- (unary)    <Vector +->`                              :struct:`Vector`
- :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`  :struct:`scalar`
- :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                     :struct:`Vector`
- :func:`VANG`, :func:`VECTORANGLE`                            :struct:`scalar` (deg)
- :func:`VXCL`, :func:`VECTOREXCLUDE`                          :struct:`Vector`
-============================================================= =============
+======================================================================== =============
+Method / Operator                                                         Return Type    
+======================================================================== =============
+ :ref:`* (asterisk) <Vector *>`                                          :struct:`scalar` or :struct:`Vector` 
+ :ref:`+ (plus)     <Vector +->`                                         :struct:`Vector`
+ :ref:`- (minus)    <Vector +->`                                         :struct:`Vector`
+ :ref:`- (unary)    <Vector +->`                                         :struct:`Vector`
+ :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* (asterisk) <Vector *>`  :struct:`scalar`
+ :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                                :struct:`Vector`
+ :func:`VANG`, :func:`VECTORANGLE`                                       :struct:`scalar` (deg)
+ :func:`VXCL`, :func:`VECTOREXCLUDE`                                     :struct:`Vector`
+======================================================================== =============
 
 .. index:: vector multiplication
 .. _Vector *:
