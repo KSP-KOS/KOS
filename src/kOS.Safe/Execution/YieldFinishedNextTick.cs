@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Safe.Execution
+﻿namespace kOS.Safe.Execution
 {
     /// <summary>
     /// A kind of YieldFinishedDetector for when you want to wait literaly just
@@ -11,7 +9,7 @@ namespace kOS.Safe.Execution
         public override void Begin(SafeSharedObjects shared)
         {
         }
-        
+
         public override bool IsFinished()
         {
             return true;

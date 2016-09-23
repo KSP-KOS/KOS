@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Safe.Execution
+﻿namespace kOS.Safe.Execution
 {
     /// <summary>
     /// A kind of YieldFinishedDetector for use when you just want a 'dumb' timer
@@ -15,7 +13,7 @@ namespace kOS.Safe.Execution
     {
         private SafeSharedObjects shared;
         private double endTime;
-        
+
         /// <summary>
         /// Make a new timer that will expire after the given number of seconds
         /// have passed in game-clock time (not real-world time).
@@ -28,7 +26,7 @@ namespace kOS.Safe.Execution
             // It will be added to current time in the Begin() method to get the real endTime.
             endTime = duration;
         }
-        
+
         /// <summary>
         /// Need to track the shared object in order to query current game time.  The timer
         /// starts "counting" from where the clock was when the CPU calls this (which it does
@@ -40,7 +38,7 @@ namespace kOS.Safe.Execution
             this.shared = shared;
             endTime += shared.UpdateHandler.CurrentFixedTime;
         }
-        
+
         /// <summary>
         /// Return true if the timer ran out, or false if the timer has not run out.
         /// </summary>

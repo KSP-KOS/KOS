@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Safe.Execution
+﻿namespace kOS.Safe.Execution
 {
     /// <summary>
     /// When telling kOS's CPU that it should yield, using the CPU.YieldProgram() method,
@@ -30,8 +28,8 @@ namespace kOS.Safe.Execution
         // used for tracking by the CPU - don't mess with it.  It ensures that
         // All yields must at least wait for the next tick, even the ones that
         // return true immediately.
-        public double creationTimeStamp {get; set;}
-        
+        public double creationTimeStamp { get; set; }
+
         /// <summary>
         /// When the CPU starts the yield, it will call Begin to tell you the shared
         /// objects handle in case you need some information from it, and to let you
