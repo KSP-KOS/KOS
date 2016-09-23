@@ -18,15 +18,12 @@ at first.
     based on the Unity game engine) uses a **LEFT-handed** coordinate
     system.  kOS inherits this behavior from KSP.
 
-In all the reference frames mentioned below, the orientation of 
-the axes is **left-handed**. This means that if you imagine opening your
-palm and pointing your fingers down the x-axis, then curling your fingers
-in the direction of the y-axis, then sticking your thumb up, that the
-direction in which your thumb must be pointing is the direction of the
-z-axis **if and only if** you used your left hand to perform those steps.
-(If you do those steps with your right hand, you get a z-axis in the
-opposite direction and that is known as a **right handed** coordinate
-system).
+In all the reference frames mentioned below, the orientation of the axes is
+**left-handed**. What does that mean? If you open your **left** palm and point
+your fingers along the x-axis, then curl your fingers in the direction of the
+y-axis and stick out your thumb, your thumb will be pointing along the z-axis.
+(If you do those steps with your right hand, you will get a z-axis in the
+opposite direction and that is known as a **right handed** coordinate system).
 
 This is an important thing to keep in mind, as most mathematics
 and physics textbooks tend to draw examples using a right handed

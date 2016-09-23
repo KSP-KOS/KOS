@@ -77,8 +77,9 @@ constants about the universe that you may find handy in your math operations.
     
     ::
 
-        PRINT "Light goes this fast:".
-        PRINT constant:c.
+        SET speed to SHIP:VELOCITY:ORBIT:MAG.
+        SET percentOfLight to (speed / constant:c) * 100.
+        PRINT "We're going " + percentOfLight + "% of lightspeed!"
 
     .. note::
         In Kerbal Space Program, all physics motion is purely Newtonian.

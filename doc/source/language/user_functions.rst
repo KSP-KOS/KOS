@@ -16,13 +16,13 @@ Help for the new user - What is a Function?
     In programming terminology, there is a commonly used feature of
     many programming languages that works as follows:
 
-    1. Create a chunk of program instructions that you don't intend to execute YET.
-    2. Later, when executing other parts of the program, do the following:
+    - 1. Create a chunk of program instructions that you don't intend to execute YET.
+    - 2. Later, when executing other parts of the program, do the following:
 
-       A. Remember the current location in the program.
-       B. Jump to the previously created chunk of code from (1) above.
-       C. Run the instructions there.
-       D. Return to where you remembered from (2.A) and continue from there.
+        - A. Remember the current location in the program.
+        - B. Jump to the previously created chunk of code from (1) above.
+        - C. Run the instructions there.
+        - D. Return to where you remembered from (2.A) and continue from there.
 
     This feature goes by many different names, with slightly different
     precise meanings: *Subroutines*, *Procedures*, *Functions*, etc.

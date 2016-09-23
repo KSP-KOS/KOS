@@ -71,7 +71,7 @@ Or "What the heck does 'attempted to push NaN onto the stack' mean?".
 kOS does not have a numeric type designed to deal with 
 *imaginary numbers* or *complex numbers*.  Therefore, for
 example, if you attempted to perform ``sqrt(-4)``, you would get
-a "NaN error", rather than the irrational number ``2i``.  "NaN" stands
+a "NaN error", rather than the imaginary number ``2i``.  "NaN" stands
 for "Not a Number" and it means the system is incapable of storing the
 correct answer.  Another example of where you will get a "NaN error"
 is if you attempt to perform ``arcsin(1.01)``, since there is no such
