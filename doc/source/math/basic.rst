@@ -104,7 +104,7 @@ constants about the universe that you may find handy in your math operations.
     ::
 
         PRINT "1 atm is:".
-        PRINT 1 * constant:AtmToKPa + "kPa.".
+        PRINT 1 * constant:AtmToKPa + " kPa.".
 
 .. global:: Constant:KPaToATM
 
@@ -117,7 +117,7 @@ constants about the universe that you may find handy in your math operations.
     ::
 
         PRINT "100 kPa is:".
-        PRINT 100 * constant:KPaToATM + "atmospheres".
+        PRINT 100 * constant:KPaToATM + " atmospheres".
 
 .. global:: Constant:DegToRad
 
@@ -132,7 +132,7 @@ constants about the universe that you may find handy in your math operations.
     ::
 
         PRINT "A right angle is:".
-        PRINT 90 * constant:DegToRad + "radians".
+        PRINT 90 * constant:DegToRad + " radians".
 
 .. global:: Constant:RadToDeg
 
@@ -147,7 +147,7 @@ constants about the universe that you may find handy in your math operations.
     ::
 
         PRINT "A radian is:".
-        PRINT 1 * constant:RadToDeg + "degrees".
+        PRINT 1 * constant:RadToDeg + " degrees".
 
 .. _math functions:
 .. index:: Mathematical Functions
