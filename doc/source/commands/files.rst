@@ -12,6 +12,8 @@ documentation.
     :depth: 2
 
 
+.. _directories:
+
 Understanding directories
 -----------------------------------
 

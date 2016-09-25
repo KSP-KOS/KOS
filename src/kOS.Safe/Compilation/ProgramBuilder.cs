@@ -250,7 +250,7 @@ namespace kOS.Safe.Compilation
                     labels.Add(program[index].Label, index);
                 }
             }
-
+ 
             // replace destination labels with the corresponding index
             for (int index = 0; index < program.Count; index++)
             {
