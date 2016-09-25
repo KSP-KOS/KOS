@@ -119,7 +119,7 @@ Example Usage
     PRINT spot:LNG.                 // Print 20
     
     PRINT spot:DISTANCE.            // Print distance from vessel to x
-    
+                                    // (same altitude is presumed)
     PRINT spot:HEADING.             // Print the heading to the point
     PRINT spot:BEARING.             // Print the heading to the point
                                     // relative to vessel heading
