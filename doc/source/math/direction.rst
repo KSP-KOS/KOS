@@ -243,12 +243,10 @@ For vector operations, you may use the ``:VECTOR`` suffix in combination with th
     SET dir TO SHIP:UP.
     SET newdir TO VCRS(SHIP:PROGRADE:VECTOR, dir:VECTOR)
 
-Vectors and Directions
-----------------------
+The Difference Between Vectors and Directions
+---------------------------------------------
 
 There are some consequences when converting from a :struct:`Direction` to a :struct:`Vector` and vice versa which should not be overlooked.
-
-.. note:: **The difference between a :struct:`Direction` and a :struct:`Vector`**
 
     A :struct:`Vector` and a :struct:`Direction` can be represented with the exact same amount of information: a tuple of 3 floating point numbers. So you might wonder why it is that a :struct:`Vector` can hold information about the magnitude of the line segment, while a :struct:`Direction` cannot, given that both have the same amount of information. The answer is that a :struct:`Direction` does contain one thing a :struct:`Vector` does not. A :struct:`Direction` knows which way is "up", while a :struct:`Vector` does not. If you tell **kOS** to ``LOCK STEERING`` to a :struct:`Vector`, it will be able to point the nose of the vessel in the correct direction, but won't know which way you want the roof of the craft rotated to. This works fine for axial symmetrical rockets but can be a problem for airplanes.
 
