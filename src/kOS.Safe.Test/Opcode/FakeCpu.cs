@@ -179,16 +179,6 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public double StartWait(double waitTime)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndWait()
-        {
-            throw new NotImplementedException();
-        }
-
         public void CallBuiltinFunction(string functionName)
         {
             throw new NotImplementedException();
@@ -197,6 +187,11 @@ namespace kOS.Safe.Test.Opcode
         public bool BuiltInExists(string functionName)
         {
             throw new NotImplementedException();
+        }
+        
+        public void YieldProgram(YieldFinishedDetector yieldTracker)
+        {
+            throw new NotImplementedException();            
         }
 
         public void BreakExecution(bool manual)

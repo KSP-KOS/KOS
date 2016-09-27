@@ -127,6 +127,7 @@ namespace kOS.Function
             if (StageManager.CanSeparate && shared.Vessel.isActiveVessel)
             {
                 StageManager.ActivateNextStage();
+                shared.Cpu.YieldProgram(new YieldFinishedNextTick());
             }
             else if (!StageManager.CanSeparate)
             {
