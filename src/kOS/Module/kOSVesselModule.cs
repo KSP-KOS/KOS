@@ -68,7 +68,7 @@ namespace kOS.Module
         /// KSP after Awake.  All parts should be added to the vessel now, so it is safe to walk the
         /// parts tree to find the attached kOSProcessor modules.
         /// </summary>
-        public void Start()
+        protected override void OnStart()
         {
             SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.vesselName, ID));
             HarvestParts();
