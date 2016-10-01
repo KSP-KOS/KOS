@@ -139,7 +139,7 @@ Suffixes
     (Any experienced player of KSP should be aware of what the difference
     between physics warp and "time warp" (rails) is.  In "physics" warp,
     all the normal things work, and the game simulates the entire physics
-    engine with longer coarser delta-T time steps to achive a faster
+    engine with longer coarser delta-T time steps to achieve a faster
     simulation rate.  In "rails" warp, many of the calculations are not
     working, the vessel is not controllable, and the game calculates 
     positions of objects based on the Keplerian elliptical parameters only.)
@@ -243,11 +243,11 @@ Suffixes
     :type: :struct:`Boolean`
 
     When you have just changed the warp speed, the game takes time to
-    "catch up" and achive the new desired speed.  (i.e. if you change your
+    "catch up" and achieve the new desired speed.  (i.e. if you change your
     rate from 100x up to 1000x, and you look at the screen, you will see
     the numbers in the display saying things like "Warp 123x" then "Warp 344x"
     then "Warp 432x", etc.  There are several "ticks" during which the warp
-    hasn't yet achived the desired 1000x level.)  This can take a "long"
+    hasn't yet achieved the desired 1000x level.)  This can take a "long"
     time in computer terms to happen.
 
     You can query this value to find out whether or not the actual warp
