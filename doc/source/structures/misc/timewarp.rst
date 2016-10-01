@@ -156,7 +156,8 @@ Suffixes
     :attr:`WARP` is 3.
 
     If you set either :attr:`WARP` or :attr:`RATE`, the other will change
-    along with it to agree with it.
+    along with it to agree with it.  (See the full explanation in
+    :attr:`RATE` below).
 
 .. attribute:: TimeWarp:RATE
 
@@ -170,10 +171,41 @@ Suffixes
     the game to "catch up" and achieve the desired warp rate.  You can
     query this value to find out what the current rate is the game is
     operating under during this physics tick.  It often takes almost
-    a whole second of game time to finally arrive at the desired rate.
+    a whole second of game time to finally arrive at the destination rate.
+
+    When you ``set`` the ``:RATE`` equal to a new value, then
+    instead of directly setting the rate to that value, kOS will
+    set the :attr:`WARP` to whatever value it would need to have
+    to end up with that rate.  The rate itself won't change right
+    away.  For example, the following two commands are equivalent::
+
+        // This will eventually give you a rate of 100, after several
+        // update ticks have passed, but not right away:
+        set kuniverse:timewarp:warp to 4.
+
+        // This will *also* do the same thing, and not set the rate
+        // to 100 right away, but instead tells kOS indirectly
+        // to set the WARP to 4, so as to target a destination
+        // rate of 100.
+        set kuniverse:timewarp:rate to 100.
+
+    If you set the rate to a value that isn't on the allowed list
+    that the KSP game interface normally lets you pick, then kOS
+    will pick whichever :attr:`WARP` value will get you closest
+    to the requested rate.  For example::
+
+        // If you do any of these, then the effect is the same:
+        set kuniverse:timewarp:rate to 89.
+        set kuniverse:timewarp:rate to 145.
+        set kuniverse:timewarp:rate to 100.
+        // Because the game only allows permanent rates of 1,5,10,50,100,1000, etc.
+        // A rate of 100 was the closest match it could allow.
+
+    Note, the game is actually capable of warping at arbitrary rates
+    in between these values, and it does so temporarily when transitioning
+    to a new warp rate, but it doesn't allow you to hold the rate at those
+    in-between values indefintiely.
     
-    If you set either :attr:`WARP` or :attr:`RATE`, the other will change
-    along with it to agree with it.
 
 .. attribute:: TimeWarp:WARPTO
 
