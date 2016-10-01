@@ -153,7 +153,7 @@ Suffixes
     :attr:`RAILSRATELIST` and :attr:`PHYSICSRATELIST`, this is the number
     on the lefthand side of those tables.  (i.e. if
     :attr:`MODE` is "RAILS" and :attr:`RATE` is 50, then that means
-    :attr:`WARP` is 3.
+    :attr:`WARP` is 3.)
 
     If you set either :attr:`WARP` or :attr:`RATE`, the other will change
     along with it to agree with it.  (See the full explanation in
