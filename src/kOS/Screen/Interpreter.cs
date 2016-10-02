@@ -157,6 +157,12 @@ namespace kOS.Screen
             }
         }
 
+        public bool isWaitingForCommand()
+        {
+            IProgramContext context = ((CPU)Shared.Cpu).GetInterpreterContext();
+            return context.Program[context.InstructionPointer] is OpcodeEOF;
+        }
+
         public void SetInputLock(bool isLocked)
         {
             locked = isLocked;

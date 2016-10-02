@@ -6,6 +6,7 @@ namespace kOS.Safe.Encapsulation
     public class TerminalStruct : Structure
     {
         private readonly SafeSharedObjects shared;
+        private TerminalInput terminalInput = null;
 
         // Some sanity values to prevent the terminal display from getting garbled up:
         // They may have to change after experimentation.
@@ -72,6 +73,14 @@ namespace kOS.Safe.Encapsulation
                                                                     MAXCHARPIXELS,
                                                                     2,
                                                                     "Character height on in-game terminal screen in pixels"));
+            AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
+        }
+        
+        public TerminalInput GetTerminalInputInstance()
+        {
+            if (terminalInput == null)
+                terminalInput = new TerminalInput(shared);
+            return terminalInput;
         }
         
         public override string ToString()

@@ -625,21 +625,36 @@ namespace kOS.Screen
 
         void Type(char ch)
         {
-            if (shared != null && shared.Interpreter != null)
+            if (shared != null)
             {
-                shared.Interpreter.Type(ch);
-                if (IsOpen && keyClickEnabled)
-                    shared.SoundMaker.BeginSound("click");
+                if (shared.Interpreter != null && shared.Interpreter.isWaitingForCommand())
+                {
+                    shared.Interpreter.Type(ch);
+                    if (IsOpen && keyClickEnabled)
+                         shared.SoundMaker.BeginSound("click");
+                }
+                else 
+                {
+                    shared.Screen.CharInputQueue.Enqueue(ch);
+                }
             }
         }
 
         void SpecialKey(char key)
         {
-            if (shared != null && shared.Interpreter != null)
+            if (shared != null)
             {
-                bool wasUsed = shared.Interpreter.SpecialKey(key);
-                if (IsOpen && keyClickEnabled && wasUsed)
-                    shared.SoundMaker.BeginSound("click");
+                if (shared.Interpreter != null && 
+                    (shared.Interpreter.isWaitingForCommand() || (key == (char)UnicodeCommand.BREAK)))
+                {
+                    bool wasUsed = shared.Interpreter.SpecialKey(key);
+                    if (IsOpen && keyClickEnabled && wasUsed)
+                        shared.SoundMaker.BeginSound("click");
+                }
+                else
+                {
+                    shared.Screen.CharInputQueue.Enqueue(key);
+                }
             }
         }
         

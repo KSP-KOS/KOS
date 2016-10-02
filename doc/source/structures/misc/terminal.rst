@@ -59,6 +59,11 @@ Structure
 	  - get and set
 	  - Height of a character cell in pixels.
 
+        * - :attr:`INPUT`
+	  - :struct:`TerminalInput`
+	  - get
+	  - Used to read user's input into the terminal.
+
 .. attribute:: Terminal:WIDTH
 
     :access: Get/Set
@@ -172,3 +177,11 @@ Structure
     Warning: Features related to the in-game terminal GUI may change
     when KSP 1.1 comes out, as we may redesign some of the user
     interface.
+
+.. attribute:: Terminal:INPUT
+
+    :access: Get
+    :type: :struct:`TerminalInput`
+
+    This gives you a :struct:`TerminalInput` structure, which can be
+    used to read user's input into the kOS terminal.
