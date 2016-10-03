@@ -641,7 +641,7 @@ namespace kOS.Screen
                 {
                     shared.Screen.CharInputQueue.Enqueue(ch);
                 }
-                if (IsOpen && keyClickEnabled)
+                if (IsOpen && keyClickEnabled && doQueuing)
                     shared.SoundMaker.BeginSound("click");
             }
         }
@@ -662,7 +662,7 @@ namespace kOS.Screen
                     shared.Screen.CharInputQueue.Enqueue(key);
                     wasUsed = true;
                 }
-                if (IsOpen && keyClickEnabled && wasUsed)
+                if (IsOpen && keyClickEnabled && wasUsed && doQueuing)
                     shared.SoundMaker.BeginSound("click");
             }
         }
