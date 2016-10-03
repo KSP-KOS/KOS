@@ -157,7 +157,7 @@ namespace kOS.Screen
             }
         }
 
-        public bool isWaitingForCommand()
+        public bool IsWaitingForCommand()
         {
             IProgramContext context = ((CPU)Shared.Cpu).GetInterpreterContext();
             return context.Program[context.InstructionPointer] is OpcodeEOF;
