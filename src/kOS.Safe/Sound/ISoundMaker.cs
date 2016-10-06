@@ -13,14 +13,6 @@ namespace kOS.Safe.Sound
     public interface ISoundMaker
     {
         /// <summary>
-        /// Load the given sound file into the set of sounds the soundmaker knows how to play,
-        /// giving it a name to refer to it in the future.
-        /// </summary>
-        /// <param name="soundName">name to refer to this sound in the future.</param>
-        /// <param name="soundFileURL">URL of where to obtain the sound clip file from.</param>
-        void LoadSound(string soundName, string soundFileURL);
-        
-        /// <summary>
         /// Attempt to play the given sound clip by its name.  Note that
         /// it is impossible to play the same sound clip multiple times on
         /// top of itself, with the system ISoundMaker is using.  Therefore
@@ -29,9 +21,27 @@ namespace kOS.Safe.Sound
         /// This call is non-blocking.  It will only begin the sound and let it
         /// play in the background, returning immediately.  It will not wait for
         /// the sound clip to finish playing.
-        /// </summary>
+        /// Begin a sound without messing with its duration or frequency.
+        /// This should only be used with sound samples that have finite
+        /// duration encoded into them, like sound files, and not with
+        /// ProceduralSoundWave sounds that emit the generated wave
+        /// forever until told to stop.        /// </summary>
         /// <param name="soundName">string that was given to LoadSound() earlier</param>
         /// <returns>True if the sound has begun playing.  False if it has to wait.</returns>
-        bool BeginSound(string soundName);        
+        bool BeginSound(string soundName, float volume = 1f);
+
+        /// <summary>
+        /// Begin a single note from a sound source and specify its parameters.
+        /// If using a ProceduralSoundWave sound, it must be played with this variant
+        /// of BeginSound (not the simpler variant) because those wave generators
+        /// have no specified end time and just emit the wave forever. (Thus the sound
+        /// would never stop if you told it to play out the whole "clip".)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="frequency"></param>
+        /// <param name="duration"></param>
+        /// <param name="volume"></param>
+        /// <returns></returns>
+        bool BeginSound(string name, float frequency, float duration, float volume = 1f);
     }
 }

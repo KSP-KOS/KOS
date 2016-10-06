@@ -399,7 +399,7 @@ namespace kOS.Screen
             }
             else
             {
-                if (!beepSource.clip.isReadyToPlay || beepSource.isPlaying)
+                if (beepSource.isPlaying)
                     return false; // prev beep sound still is happening.
                 
                 // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:

@@ -106,6 +106,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sound\NoiseSoundWave.cs" />
+    <Compile Include="Sound\ProceduralSoundWave.cs" />
+    <Compile Include="Sound\PulseSoundWave.cs" />
+    <Compile Include="Sound\SinSoundWave.cs" />
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
