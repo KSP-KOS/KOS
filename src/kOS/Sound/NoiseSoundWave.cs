@@ -26,13 +26,10 @@ namespace kOS.Sound
         
         public override float SampleFunction(float t)
         {
-            // This noise generator is still pretty bad.  You can still
-            // hear the 'tone' hidden inside the noise.  I'll work on this
-            // more after I get the rest of the system working.
-            if (t < halfSamplePeriod)
-                return (float)(-1 + 2*(rand.NextDouble()*rand.NextDouble()));
-            else
-                return (float)(1 - 2*(rand.NextDouble()*rand.NextDouble()));
+            // Use a Sine wave to limit the amplitude of the
+            // random noise samples, so the sample has a
+            // detectable pitch to it:
+            return (float)(Math.Sin(t)*rand.NextDouble());
         }
     }
 }

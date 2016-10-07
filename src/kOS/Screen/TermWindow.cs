@@ -629,7 +629,7 @@ namespace kOS.Screen
             {
                 shared.Interpreter.Type(ch);
                 if (IsOpen && keyClickEnabled)
-                    shared.SoundMaker.BeginSound("click");
+                    shared.SoundMaker.BeginFileSound("click");
             }
         }
 
@@ -639,7 +639,7 @@ namespace kOS.Screen
             {
                 bool wasUsed = shared.Interpreter.SpecialKey(key);
                 if (IsOpen && keyClickEnabled && wasUsed)
-                    shared.SoundMaker.BeginSound("click");
+                    shared.SoundMaker.BeginFileSound("click");
             }
         }
         

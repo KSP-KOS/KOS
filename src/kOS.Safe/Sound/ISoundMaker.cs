@@ -28,7 +28,7 @@ namespace kOS.Safe.Sound
         /// forever until told to stop.        /// </summary>
         /// <param name="soundName">string that was given to LoadSound() earlier</param>
         /// <returns>True if the sound has begun playing.  False if it has to wait.</returns>
-        bool BeginSound(string soundName, float volume = 1f);
+        bool BeginFileSound(string soundName, float volume = 1f);
 
         /// <summary>
         /// Begin a single note from a sound source and specify its parameters.
@@ -37,11 +37,12 @@ namespace kOS.Safe.Sound
         /// have no specified end time and just emit the wave forever. (Thus the sound
         /// would never stop if you told it to play out the whole "clip".)
         /// </summary>
+        /// <param name="voiceNum">which voice to play it on</param>
         /// <param name="name"></param>
         /// <param name="frequency"></param>
         /// <param name="duration"></param>
         /// <param name="volume"></param>
         /// <returns></returns>
-        bool BeginSound(string name, float frequency, float duration, float volume = 1f);
+        bool BeginProceduralSound(int voiceNum, string name, float frequency, float duration, float volume = 1f);
     }
 }

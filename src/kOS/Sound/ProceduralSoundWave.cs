@@ -5,11 +5,16 @@ using System;
 namespace kOS.Sound
 {
     /// <summary>
-    /// Creates arbitrary audio wave data and populates a "clip" with it.
+    /// Creates an arbitrary audio wave reference example note and populates an AudioClip with it.
     /// <br/>
-    /// Note it can't literally be an AudioClip because AudioClip is a sealed class.
+    /// These are used with the SoundMaker class to provide a means to do crude FM wave sounds.
     /// <br/>
-    /// Rather it's a MonoBehaviour that includes an AudioClip inside it.
+    /// Each of the "FM wave generators" in the kOS computer's "audio chip" is a derived class
+    /// of this.
+    /// <br/>
+    /// To make a new FM wave type, just inherit from this class and override SampleFunction
+    /// with your own mathematical function that describes the sound wave in the time domain.
+    /// The base class should populate the audio clip for you from that.
     /// </summary>
     public abstract class ProceduralSoundWave
     {
@@ -25,15 +30,17 @@ namespace kOS.Sound
         /// </summary>
         protected float SampleVolume {get; set;}
         
-        /// <summary>How many periods worth of data are encoded within the sample from 0..SampleRange</summary>
+        /// <summary>How many periods worth of sound wave peaks are encoded within the sample from 0..SampleRange.
+        /// This effectively sets the base frequency of the sound reference sample.  (The
+        /// sample is assumed to be 1 second long, and have this many repeats of the wave pattern in it.)
+        /// </summary>
         public int Periods {get; set;}
         
         /// <summary>Defines the valid domain range of values for t over which
-        /// SampleFunction will be called.  That range will be
-        /// [0..SamplePeriod), You'll want this to also be the
-        /// range of values for t that defines one single period of the
-        /// output note.  For example if you are making a sine wave
-        /// generator, you will want this to be 2*pi.</summary>
+        /// SampleFunction() will get called.  That range will be
+        /// [0..SamplePeriod), This is the range of values that
+        /// represents one period of the wave.  (For example, it would be
+        /// 2*pi for a trig function.)  The default is 1.0f.</summary>
         protected float SampleRange {get; set;}
 
         /// <summary>
@@ -49,6 +56,16 @@ namespace kOS.Sound
         /// </summary>
         public AudioClip Clip {get; set;}
 
+        /// <summary>
+        /// Important: when making a derivative of ProceduralSoundWave, put
+        /// your initializations of important things inside InitSettings(),
+        /// not in your constructor.  Instead make your constructor call
+        /// the base constructor and do nothing else.  The base constructor
+        /// will call your InitSettings() for you.  This is important
+        /// because you need to populate your settings BEFORE the base constructor
+        /// tries to call GenerateClip().  If you populated your settings inside your
+        /// own constructor, that would be too late.
+        /// </summary>
         public ProceduralSoundWave()
         {            
             sampleRate = AudioSettings.outputSampleRate;
@@ -76,9 +93,9 @@ namespace kOS.Sound
         }
         
         /// <summary>
-        /// Override this in your subclass to make a wave generator of 
+        /// Override this in your derived class to make a wave generator of 
         /// whatever type you like.  It should be a time-domain picture of
-        /// the sound wave, outputting values from -1 to +1 for a given time t.
+        /// the sound wave over one wave period, outputting values from -1 to +1 for a given time t.
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
@@ -87,7 +104,12 @@ namespace kOS.Sound
             return 0;
         }
         
-        protected void GenerateClip()
+        /// <summary>
+        /// Generates the AudioClip (happens as part of the constructor).<br/>
+        /// It does this by querying your SampleFunction() to build a reference
+        /// wave in memory.
+        /// </summary>
+        private void GenerateClip()
         {
             float[] dataBuffer;
             int channels = 1; //let's assume mono for now.
@@ -97,48 +119,14 @@ namespace kOS.Sound
             dataBuffer = new float[AudioSettings.outputSampleRate * channels];
             FillBuffer(dataBuffer, channels);            
             Clip.SetData(dataBuffer, 0);
-
-            Console.WriteLine("==== GenerateClip(), sample dump for {0} =====", waveName); // eraseme
-            for( int i = 0; i < dataBuffer.Length; ++i) //eraseme
-            { // eraseme
-                Console.WriteLine("[{0:D5}] = {1}", i, dataBuffer[i]); // eraseme
-            } // eraseme
         }
 
         /// <summary>
-        /// Whenever a MonoBehaviour with an OnAudioFilterRead is present in the scene,
-        /// any audio data sample chunk gets filtered through OnAudioFilterRead() on its way
-        /// into the AudioSource for playing.  Thus objects in the game get to edit the
-        /// audio being played before it goes out.  (i.e. imagine a mask that when you
-        /// wear it adds static to everything you speak.)<br/>
-        /// <br/>
-        /// If there is no audio effect happening yet, then this is still called, but it starts with a
-        /// "silent" sample (a sample of all zeros) for OnAudioFilterRead to "edit".<br/>
-        /// <br/>
-        /// Thus you can "edit" the input audio samples by adding your wave to them
-        /// and end up emitting your own new procedural sound from scratch.
-        /// This is the technique used here.
+        /// The workhorse under the hood for GenerateClip().
         /// </summary>
-        /// <param name="sampleData">input sample chunk to "edit".  Changing
-        /// the values in this array will cause new sound to appear.  Unity has
-        /// a thread that asks for the next "chunk" of sample data this way every
-        /// so often, but there is no guarantee that it will ask for the same
-        /// uniform sized chunk every time this is called.</param>
-        /// <param name="numChannels">the input sample can come in stereo channels.
-        /// If it does, then the format is you get in sampleData packs all the channels'
-        /// samples together.. i.e.
-        ///    sampleData[0] = sample 0 of channel 0,
-        ///    sampleData[1] = sample 0 of channel 1,
-        ///    sampleData[2] = sample 1 of channel 0,
-        ///    sampleData[3] = sample 1 of channel 1,
-        ///    sampleData[4] = sample 2 of channel 0,
-        ///    sampleData[5] = sample 2 of channel 1
-        /// etc...
-        /// </param>
-        /// 
-        /// TODO: Completely replace the above comment - it's out-dated.
-        /// 
-        public void FillBuffer(float[] sampleData, int numChannels)
+        /// <param name="sampleData"></param>
+        /// <param name="numChannels"></param>
+        private void FillBuffer(float[] sampleData, int numChannels)
         {
             float phaseInc = Periods*SampleRange/(float)sampleRate; // increment phase this far per sample point.
             float sample;
