@@ -649,22 +649,20 @@ the same function, as in the example here::
          RETURN. // no return value.
        } ELSE {
          RETURN "hello". // a string return value
-       }.
-    }.
+       }
+    }
 
 Then the kerboscript compiler is not clever enough to detect this
-and warn you about it.  The internal stack will not get corrupted
-by this error, as some experienced programmers might expect upon
-hearing this (because secretly all kerboscript user functions
-return a value even if it's never used, so there's universally
-always something to pop off the stack even for the empty return
-statements.) However, you will still have to deal with the fact
-that the calling program might be getting nulls back some of the
-time if you make this programming error.
+and warn you about it.  However, the internal stack will not get
+corrupted by this error, as some experienced programmers might
+expect upon hearing this (because secretly all kerboscript user
+functions return a value of zero if they never gave an explicit 
+return value, so there's universally always something to pop off
+the stack even for the empty return statements.) 
 
-In general, make sure that if you *sometimes* return a value from
-a user function, that you *always* do so in every path through your
-function.
+In general, it's still a good idea to make sure that if you
+*sometimes* return a value from a user function, that you
+*always* do so in every path through your function.
 
 Accidentally using globals
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
