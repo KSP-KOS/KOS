@@ -384,29 +384,29 @@ made, can't be changed easily.*)
     
     ::
     
-    function mysquarefunc { parameter a. return a*a. }
-    set x to mysquarefunc@.
-    set y to x:call(5). // y is now 25.
+       function mysquarefunc { parameter a. return a*a. }
+       set x to mysquarefunc@.
+       set y to x:call(5). // y is now 25.
 
 - You **can** make a delegate of a built-in function provided by kOS
   itself, provided it isn't a structure suffix.
 
     ::
 
-    set r to round@.
-    set s to sqrt@.
-    print "square root of 7, to the nearest 2 places is: " + r:call(s:call(7), 2).
+       set r to round@.
+       set s to sqrt@.
+       print "square root of 7, to the nearest 2 places is: " + r:call(s:call(7), 2).
 
 - You **cannot** make a delegate of a suffix of a structure (*yet?*)
   in Kerboscript.
 
     ::
 
-    //
-    // WON'T WORK, WILL GIVE ERROR:
-    //
-    set altpos to latlng(10,20):altitudeposition@. // altitudeposition is a suffix of geoposition.
-    print "altpos at altitude 1000 is " + altpos:call(1000).
+       //
+       // WON'T WORK, WILL GIVE ERROR:
+       //
+       set altpos to latlng(10,20):altitudeposition@. // altitudeposition is a suffix of geoposition.
+       print "altpos at altitude 1000 is " + altpos:call(1000).
 
   However, if you like you can make your own user function that is a
   wrapper around a structure suffix call, and make a delegate of **that**.
