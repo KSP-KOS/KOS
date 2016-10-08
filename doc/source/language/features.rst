@@ -66,10 +66,11 @@ Structures are variables that contain more than one piece of information. For ex
     PRINT "The Mun's periapsis altitude is: " + MUN:PERIAPSIS.
     PRINT "The ship's surface velocity is: " + SHIP:VELOCITY:SURFACE.
 
-.. versionadded:: 0.19.0
-    As of kOS version 0.19.0, in fact ALL values a script can see are
-    now a kind of :struct:`Structure <structure>`, even basic primitive
-    types such as Boolean and Scalar.
+.. note::
+    .. versionadded:: 0.19.0
+        As of kOS version 0.19.0, in fact ALL values a script can see are
+        now a kind of :struct:`Structure <structure>`, even basic primitive
+        types such as Boolean and Scalar.
 
 
 Many structures also let you set a specific component of them, for example::
@@ -166,7 +167,7 @@ programming.
 But if you are an experienced programmer you might not like this
 behavior, and there are good arguments for why you might want to
 disable it.  If you wish to do so, a syntax exists to do so called
-:ref:``NOLAZYGLOBAL``.
+:ref:`@LAZYGLOBAL OFF <lazyglobal>`.
 
 .. _feature functions:
 

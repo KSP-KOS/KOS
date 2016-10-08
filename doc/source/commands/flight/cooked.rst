@@ -217,10 +217,11 @@ When the program ends, these automatically unlock as well, which means that to c
 Tuning cooked steering
 ----------------------
 
-.. versionadded:: 0.18.0
-    Version 0.18 of kOS completely gutted the internals of the old steering
-    system and replaced them with the system described below.  Anything
-    said below this point is pertinent to version 0.18 and higher only.
+.. note::
+    .. versionadded:: 0.18.0
+        Version 0.18 of kOS completely gutted the internals of the old steering
+        system and replaced them with the system described below.  Anything
+        said below this point is pertinent to version 0.18 and higher only.
 
 While cooked steering tries to come balanced to perform decently without user
 interaction, there are some instances where you may need to help tune the
