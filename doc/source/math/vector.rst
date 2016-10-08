@@ -124,7 +124,9 @@ Structure
     :access: Get/Set
 
     GET:
-        The vector rendered into a :ref:`Direction <direction>` (see note at the bottom of this page about information loss when doing this).
+        The vector rendered into a :ref:`Direction <direction>` (see
+        :ref:`note in the Directions documentation <vectors_vs_directions>`
+        about information loss when doing this).
 
     SET:
         Tells the vector to keep its magnitude as it is but point in a new direction, adjusting its :math:`(x,y,z)` numbers accordingly.

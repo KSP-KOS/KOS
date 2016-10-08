@@ -242,6 +242,8 @@ For vector operations, you may use the ``:VECTOR`` suffix in combination with th
     SET dir TO SHIP:UP.
     SET newdir TO VCRS(SHIP:PROGRADE:VECTOR, dir:VECTOR)
 
+.. _vectors_vs_directions:
+
 Vectors and Directions
 ----------------------
 
