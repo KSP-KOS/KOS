@@ -7,6 +7,10 @@ Infernal Robotics
 - Alternative download: https://github.com/MagicSmokeIndustries/InfernalRobotics/releases
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/
 
+Infernal Robotics might not be installed on your copy of the game.
+Your script can test whether or not it's installed by using
+the boolean expression ``addons:available("ir")``.
+
 Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren't possible under stock KSP.
 
 .. figure:: http://i.imgur.com/O94LBvF.png
@@ -20,7 +24,7 @@ Access structure IRAddon via `ADDONS:IR`.
     ===================================== ==================================== =============
      Suffix                                Type                                 Description
     ===================================== ==================================== =============
-     :attr:`AVAILABLE`                     :ref:`boolean <boolean>` (readonly)  Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.
+     :attr:`AVAILABLE`                     :ref:`boolean <boolean>` (readonly)  Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.  It is better to use ``addons:available("rt")``.
      :attr:`GROUPS`                        List of :struct:`IRControlGroup`     Lists all  Servo Groups for the Vessel on which CPU runs this command (see details below).
      :attr:`ALLSERVOS`                     List of :struct:`IRServo`            Lists all  Servos for the Vessel on which CPU runs this command (see details below).
      :meth:`PARTSERVOS(Part)`              List of :struct:`IRServo`            Lists all Servos for the provided part
@@ -32,6 +36,10 @@ Access structure IRAddon via `ADDONS:IR`.
 
     :type: :struct:`Boolean`
     :access: Get only
+
+    Please note, that if IR isn't even installed, then attempting to call
+    ``ADDONS:IR:AVAILABLE`` will throw an error.  It is better to first
+    call ``ADDONS:AVAILABLE("IR")`` to find out if the plugin even exists.
 
     Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.
     Example of use::

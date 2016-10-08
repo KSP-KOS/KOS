@@ -7,6 +7,10 @@ Kerbal Alarm Clock
 - Alternative download https://kerbalstuff.com/mod/231/Kerbal%20Alarm%20Clock
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/threads/24786
 
+You can find out if Kerbal Alarm Clock addon is available in the
+current game installation by usng the boolean expression
+``addons:available("KAC")``.
+
 The Kerbal Alarm Clock is a plugin that allows you to create reminder alarms at future periods to help you manage your flights and not warp past important times.
 
 .. figure:: http://triggerau.github.io/KerbalAlarmClock/images/KACForumPic.png
@@ -20,7 +24,7 @@ Access structure KACAddon via `ADDONS:KAC`.
     ===================================== ========================= =============
      Suffix                                Type                      Description
     ===================================== ========================= =============
-     :attr:`AVAILABLE`                     bool(readonly)            True if KAC is installed and KAC integration enabled.
+     :attr:`AVAILABLE`                     bool(readonly)            True if KAC is installed and KAC integration enabled.  It is better to use ``addons:available("KAC")`` for this purpose.
      :meth:`ALARMS()`                      List                      List all alarms
     ===================================== ========================= =============
 
@@ -30,6 +34,11 @@ Access structure KACAddon via `ADDONS:KAC`.
 
     :type: bool
     :access: Get only
+
+    It is better to use ``ADDONS:AVAILABLE("KAC")`` first to discover if
+    KAC is installed, because if you call the suffix ``:AVAILABLE``
+    of KAC, and KAC isn't even installed, then the script will throw
+    an error and crash.
 
     True if KAC is installed and KAC integration enabled.
     Example of use::
