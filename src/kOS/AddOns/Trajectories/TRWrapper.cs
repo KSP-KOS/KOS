@@ -1,10 +1,8 @@
 ﻿using kOS.Safe.Encapsulation;
 using System;
-using System.Collections;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-
 
 namespace kOS.AddOns.TrajectoriesAddon
 {
@@ -73,22 +71,27 @@ namespace kOS.AddOns.TrajectoriesAddon
             }
             wrapped = true;
         }
-        public static Vector3? impactVector()
+
+        public static Vector3? ImpactVector()
         {
-            return (Vector3?)trGetImpactPosition.Invoke(null, new object[] {});
+            return (Vector3?)trGetImpactPosition.Invoke(null, new object[] { });
         }
-        public static Vector3 correctedDirection()
+
+        public static Vector3 CorrectedDirection()
         {
-            return (Vector3)trCorrectedDirection.Invoke(null, new object[] {});
+            return (Vector3)trCorrectedDirection.Invoke(null, new object[] { });
         }
-        public static Vector3 plannedDirection()
+
+        public static Vector3 PlannedDirection()
         {
             return (Vector3)trPlannedDirection.Invoke(null, new object[] { });
         }
-        public static void setTarget(double lat, double lon, double alt)
+
+        public static void SetTarget(double lat, double lon, double alt)
         {
-            trSetTarget.Invoke(null, new object[] {lat,lon,alt});
+            trSetTarget.Invoke(null, new object[] { lat, lon, alt });
         }
+
         public static BooleanValue Wrapped()
         {
             if (wrapped != null)

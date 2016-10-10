@@ -18,23 +18,23 @@ namespace kOS.AddOns.TrajectoriesAddon
 
         private void InitializeSuffixes()
         {
-            AddSuffix("IMPACTPOS", new Suffix<GeoCoordinates>(impactPos, "Get impact position coordinates."));
-            AddSuffix("HASIMPACT", new Suffix<BooleanValue>(hasImpact, "Check whether Trajectories has predicted an impact position for the current vessel."));
-            AddSuffix("CORRECTEDVECT", new Suffix<Vector>(correctedDirection, "PlannedVect somewhat corrected to glide ship towards target."));
-            AddSuffix("PLANNEDVECT", new Suffix<Vector>(plannedDirection, "Direction to point to follow predicted trajectory."));
-            AddSuffix("SETTARGET", new OneArgsSuffix<GeoCoordinates>(setTarget, "Set correctedVect target."));
+            AddSuffix("IMPACTPOS", new Suffix<GeoCoordinates>(ImpactPos, "Get impact position coordinates."));
+            AddSuffix("HASIMPACT", new Suffix<BooleanValue>(HasImpact, "Check whether Trajectories has predicted an impact position for the current vessel."));
+            AddSuffix(new string[] { "CORRECTEDVEC", "CORRECTEDVECTOR" }, new Suffix<Vector>(CorrectedVector, "Offset plus PlannedVect, somewhat corrected to glide ship towards target."));
+            AddSuffix(new string[] { "PLANNEDVEC", "PLANNEDVECTOR" }, new Suffix<Vector>(PlannedVector, "Vector at which to point to follow predicted trajectory."));
+            AddSuffix("SETTARGET", new OneArgsSuffix<GeoCoordinates>(SetTarget, "Set correctedVect target."));
         }
 
-        private GeoCoordinates impactPos()
+        private GeoCoordinates ImpactPos()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
             {
                 throw new KOSException("You may only call addons:TR:impactPos from the active vessel. Always check addons:tr:hasImpact");
             }
-            if (Available() == true)
+            if (Available())
             {
                 CelestialBody body = shared.Vessel.orbit.referenceBody;
-                Vector3? impactVect = TRWrapper.impactVector();
+                Vector3? impactVect = TRWrapper.ImpactVector();
                 if (impactVect != null)
                 {
                     var worldImpactPos = (Vector3d)impactVect + body.position;
@@ -42,80 +42,67 @@ namespace kOS.AddOns.TrajectoriesAddon
                     var lng = Utils.DegreeFix(body.GetLongitude(worldImpactPos), -180);
                     return new GeoCoordinates(shared, lat, lng);
                 }
-                else {
+                else
+                {
                     throw new KOSException("Impact position is not available. Remember to check addons:tr:hasImpact");
                 }
             }
-            else
-            {
-                throw new KOSUnavailableAddonException("impactPos", "Trajectories");
-            }
+            throw new KOSUnavailableAddonException("IMPACTPOS", "Trajectories");
         }
-        private BooleanValue hasImpact()
+
+        private BooleanValue HasImpact()
         {
-            if (Available() == true)
+            if (Available())
             {
-                if (shared.Vessel != FlightGlobals.ActiveVessel || TRWrapper.impactVector() == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return shared.Vessel == FlightGlobals.ActiveVessel && TRWrapper.ImpactVector().HasValue;
             }
-            else
-            {
-                throw new KOSUnavailableAddonException("hasImpact", "Trajectories");
-            }
+            throw new KOSUnavailableAddonException("HASIMPACT", "Trajectories");
         }
-        private Vector correctedDirection()
+
+        private Vector CorrectedVector()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
             {
                 throw new KOSException("You may only call addons:TR:correctedVect from the active vessel. Always check addons:tr:hasImpact");
             }
-            if (Available() == true)
+            if (Available())
             {
-                Vector3 vect = TRWrapper.correctedDirection();
+                Vector3 vect = TRWrapper.CorrectedDirection();
                 return new Vector(vect.x, vect.y, vect.z);
             }
-            else
-            {
-                throw new KOSUnavailableAddonException("correctedDirection", "Trajectories");
-            }
+            throw new KOSUnavailableAddonException("CORRECTEDDIRECTION", "Trajectories");
         }
-        private Vector plannedDirection()
+
+        private Vector PlannedVector()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
             {
                 throw new KOSException("You may only call addons:TR:plannedVect from the active vessel. Always check addons:tr:hasImpact");
             }
-            if (Available() == true)
+            if (Available())
             {
-                Vector3 vect = TRWrapper.plannedDirection();
+                Vector3 vect = TRWrapper.PlannedDirection();
                 return new Vector(vect.x, vect.y, vect.z);
             }
-            else
-            {
-                throw new KOSUnavailableAddonException("plannedDirection", "Trajectories");
-            }
+            throw new KOSUnavailableAddonException("PLANNEDDIRECTION", "Trajectories");
         }
-        private void setTarget(GeoCoordinates target)
+
+        private void SetTarget(GeoCoordinates target)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
             {
                 throw new KOSException("You may only call addons:TR:setTarget from the active vessel. Always check addons:tr:hasImpact");
             }
-            if (Available() == true)
+            if (Available())
             {
-                TRWrapper.setTarget(target.Latitude, target.Longitude, target.GetTerrainAltitude());
+                TRWrapper.SetTarget(target.Latitude, target.Longitude, target.GetTerrainAltitude());
             }
             else
             {
-                throw new KOSUnavailableAddonException("hasImpact", "Trajectories");
+                throw new KOSUnavailableAddonException("SETTARGET", "Trajectories");
             }
         }
+
         public override BooleanValue Available()
         {
             return TRWrapper.Wrapped();
