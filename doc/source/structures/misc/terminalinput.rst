@@ -8,6 +8,10 @@ You can read the user's keyboard input into the kOS terminal
 using this structure.  You obtain this structure by calling
 :attr:`Terminal:INPUT`.
 
+.. contents:: CONTENTS
+    :local:
+    :depth: 2
+
 Input is buffered
 -----------------
 
@@ -17,7 +21,10 @@ character per second, and the user types faster than 1
 character per second, then the letters they typed "in between"
 your reads are not lost.  It just takes time for your
 program to catch up to the backlog and finish processing them
-all.)
+all.)  This buffer is active for the entire duration of the
+program, which means that you must clear the buffer using
+:meth:`TerminalInput:CLEAR` if you need to ensure that the
+contents are in response to a prompt.
 
 Input is blocking
 -----------------
@@ -27,7 +34,8 @@ none available (because the user hasn't typed anything
 yet for you to read), then your program will pause and
 get stuck there until the user presses a key.  If you want
 to check first to find out if a key is available before
-you read it, use the :attr:`HASCHAR` suffix described below.
+you read it, use the :attr:`HASCHAR<TerminalInput:HASCHAR>`
+suffix described below.
 
 Detecting special keys
 ----------------------
@@ -42,7 +50,7 @@ module).  You can see some of these code names and use them
 to test against your input characters.  Some of the
 suffixes to :struct:`TerminalInput` are for this purpose.
 
-example::
+Example::
 
     set ch to terminal:input:getchar().
 
@@ -80,25 +88,25 @@ Structure
         :header-rows: 1
         :widths: 2 1 1 4
 
-	* - Suffix
-	  - Type
-	  - Get/Set
-	  - Description
+        * - Suffix
+          - Type
+          - Get/Set
+          - Description
 
-        * - :attr:`GETCHAR`
-	  - :struct:`String`
-	  - Get
-	  - (Blocking) I/O to read the next character of terminal input.
+        * - :meth:`GETCHAR`
+          - :struct:`String`
+          - Get
+          - (Blocking) I/O to read the next character of terminal input.
 
         * - :attr:`HASCHAR`
-	  - :struct:`Boolean`
-	  - Get
-	  - True if there is at least 1 character of input waiting.
+          - :struct:`Boolean`
+          - Get
+          - True if there is at least 1 character of input waiting.
 
-        * - :attr:`CLEAR`
-	  - n/a (void)
-	  - n/a
-	  - Call this method to throw away all waiting input characters, flushing the input queue.
+        * - :meth:`CLEAR`
+          - None
+          - Method Call
+          - Call this method to throw away all waiting input characters, flushing the input queue.
 
         * - :attr:`BACKSPACE`
           - :struct:`String`
@@ -160,10 +168,10 @@ Structure
           - Get
           - A string for testing if the character read is the PageDown key.
 
-.. attribute:: TerminalInput:GETCHAR
+.. method:: TerminalInput:GETCHAR
 
     :access: Get (Method call)
-    :type: :struct:`String`
+    :return: :struct:`String`
 
     Read the next character of terminal input.  If the user hasn't typed
     anything in that is still waiting to be read, then this will "block"
@@ -183,9 +191,9 @@ Structure
     :type: :struct:`Boolean`
 
     True if there is at least 1 character of input waiting.  If this is
-    false then that would mean that an attempt to call :attr:`GETCHAR`
+    false then that would mean that an attempt to call :meth:`GETCHAR<TerminalInput:GETCHAR>`
     would block and wait for user input.  If this is true then an attempt
-    to call :attr:`GETCHAR` would return immediately with an answer.
+    to call :meth:`GETCHAR<TerminalInput:GETCHAR>` would return immediately with an answer.
 
     You can simulate non-blocking I/O like so::
 
@@ -194,10 +202,10 @@ Structure
           process_one_char(terminal:input:getchar()).
         }
 
-.. attribute:: TerminalInput:CLEAR
+.. method:: TerminalInput:CLEAR
 
     :access: Get (method call)
-    :type: n/a (void)
+    :return: None
 
     Call this method to throw away all waiting input characters, flushing
     the input queue.
@@ -283,4 +291,3 @@ Structure
     :type: :struct:`String`
 
     A string for testing if the character read is the PageDown key.
-

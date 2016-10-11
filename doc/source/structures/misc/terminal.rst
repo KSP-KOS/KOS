@@ -19,58 +19,58 @@ Structure
         :header-rows: 1
         :widths: 2 1 1 4
 
-	* - Suffix
-	  - Type
-	  - Get/Set
-	  - Description
+        * - Suffix
+          - Type
+          - Get/Set
+          - Description
 
         * - :attr:`WIDTH`
-	  - :ref:`scalar <scalar>`
-	  - get and set
-	  - Terminal width in characters
+          - :struct:`Scalar`
+          - get and set
+          - Terminal width in characters
 
         * - :attr:`HEIGHT`
-	  - :ref:`scalar <scalar>`
-	  - get and set
-	  - Terminal height in characters
+          - :struct:`Scalar`
+          - get and set
+          - Terminal height in characters
 
         * - :attr:`REVERSE`
-	  - :ref:`Boolean <boolean>`
-	  - get and set
-	  - Determines if the screen is displayed with foreground and background colors swapped.
+          - :struct:`Boolean`
+          - get and set
+          - Determines if the screen is displayed with foreground and background colors swapped.
 
         * - :attr:`VISUALBEEP`
-	  - :ref:`Boolean <boolean>`
-	  - get and set
-	  - Turns beeps into silent visual screen flashes instead.
+          - :struct:`Boolean`
+          - get and set
+          - Turns beeps into silent visual screen flashes instead.
 
         * - :attr:`BRIGHTNESS`
-	  - :ref:`Scalar <scalar>`
-	  - get and set
-	  - Adjusts brightness slider of the terminal between 0.0 (min) and 1.0 (max).
+          - :struct:`Scalar`
+          - get and set
+          - Adjusts brightness slider of the terminal between 0.0 (min) and 1.0 (max).
 
         * - :attr:`CHARWIDTH`
-	  - :ref:`Scalar <scalar>`
-	  - get and set
-	  - Width of a character cell in pixels.
+          - :struct:`Scalar`
+          - get and set
+          - Width of a character cell in pixels.
 
         * - :attr:`CHARHEIGHT`
-	  - :ref:`Scalar <scalar>`
-	  - get and set
-	  - Height of a character cell in pixels.
+          - :struct:`Scalar`
+          - get and set
+          - Height of a character cell in pixels.
 
         * - :attr:`INPUT`
-	  - :struct:`TerminalInput`
-	  - get
-	  - Used to read user's input into the terminal.
+          - :struct:`TerminalInput`
+          - get
+          - Used to read user's input into the terminal.
 
 .. attribute:: Terminal:WIDTH
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`.
+    :type: :struct:`Scalar`.
 
     If you read the width it will return a number of character cells wide the terminal
-    is.  If you set this value, it will cause the terminal to resize. 
+    is.  If you set this value, it will cause the terminal to resize.
     If there's multiple terminals connected to the same CPU part via telnet clients,
     then kOS will attempt to keep them all the same size, and one terminal being resized
     will resize them all.  (caveat: Some terminal types cannot be resized from the
@@ -82,10 +82,10 @@ Structure
 .. attribute:: Terminal:HEIGHT
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>`.
+    :type: :struct:`Scalar`.
 
     If you read the width it will return a number of character cells tall the terminal
-    is.  If you set this value, it will cause the terminal to resize. 
+    is.  If you set this value, it will cause the terminal to resize.
     If there's multiple terminals connected to the same CPU part via telnet clients,
     then kOS will attempt to keep them all the same size, and one terminal being resized
     will resize them all.  (caveat: Some terminal types cannot be resized from the
@@ -97,7 +97,7 @@ Structure
 .. attribute:: Terminal:REVERSE
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`.
+    :type: :struct:`Boolean`.
 
     If true, then the terminal window is currently set to show
     the whole screen in reversed color - swapping the background
@@ -113,7 +113,7 @@ Structure
 .. attribute:: Terminal:VISUALBEEP
 
     :access: Get/Set
-    :type: :ref:`Boolean <boolean>`.
+    :type: :struct:`Boolean`.
 
     If true, then the terminal window is currently set to show any
     BEEP characters by silently flashing the screen for a moment
@@ -140,7 +140,7 @@ Structure
 .. attribute:: Terminal:BRIGHTNESS
 
     :access: Get/Set
-    :type: :ref:`Scalar <scalar>`
+    :type: :struct:`Scalar`
 
     The same thing as the brightness slider on the terminal GUI.
     The values range from 0.0 (minimum) to 1.0 (maximum).  At
@@ -153,7 +153,7 @@ Structure
 .. attribute:: Terminal:CHARWIDTH
 
     :access: Get/Set
-    :type: :ref:`Scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Width of a character cell in the display terminal, in pixels.
     The value is forced to remain in the range [4..24] and be
@@ -163,11 +163,11 @@ Structure
     Warning: Features related to the in-game terminal GUI may change
     when KSP 1.1 comes out, as we may redesign some of the user
     interface.
-    
+
 .. attribute:: Terminal:CHARHEIGHT
 
     :access: Get/Set
-    :type: :ref:`Scalar <scalar>`
+    :type: :struct:`Scalar`
 
     Height of a character cell in the display terminal, in pixels.
     The value is forced to remain in the range [4..24] and be
