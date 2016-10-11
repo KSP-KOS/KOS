@@ -39,7 +39,7 @@ namespace kOS.Suffixed
             AddSuffix("MODE", new SetSuffix<StringValue>(GetModeAsString,SetModeAsString));
             AddSuffix("WARP", new SetSuffix<ScalarIntValue>(GetWarp,SetWarp));
             AddSuffix("WARPTO", new OneArgsSuffix<ScalarValue>(WarpTo));
-            AddSuffix("CANCELWARPTO", new NoArgsVoidSuffix(CancelWarpTo));
+            AddSuffix("CANCELWARP", new NoArgsVoidSuffix(CancelWarp));
             AddSuffix("PHYSICSDELTAT", new Suffix<ScalarValue>(GetDeltaT));
             AddSuffix("ISSETTLED", new Suffix<BooleanValue>(IsWarpSettled));
         }
@@ -171,16 +171,17 @@ namespace kOS.Suffixed
             TimeWarp.fetch.WarpTo(timeStamp.GetDoubleValue());
         }
 
-        public void CancelWarpTo()
+        public void CancelWarp()
         {
             TimeWarp.fetch.CancelAutoWarp();
+            SetWarp(0);
         }
         
         // Return which of the two rates arrays is to be used for the given mode:
         private float[] GetRateArrayForMode(TimeWarp.Modes whichMode)
         {
             float [] rateArray;
-            switch (TimeWarp.WarpMode)
+            switch (whichMode)
             {
                 case TimeWarp.Modes.HIGH:
                     rateArray = TimeWarp.fetch.warpRates;
