@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KUniverse 4th wall methods &mdash; kOS 1.0.0 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Vessel Load Distance" href="loaddistance.html"/>
         <link rel="prev" title="KOSDelegate" href="kosdelegate.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -124,7 +124,9 @@
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
 </ul>
 </li>
@@ -284,37 +286,42 @@
 <td>Get</td>
 <td>Returns the set of default load and pack distances for the game.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="KUNIVERSE:ACTIVEVESSEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESSEL</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:TIMEWARP" title="KUNIVERSE:TIMEWARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TIMEWARP</span></code></a></td>
+<td><a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a></td>
+<td>Get</td>
+<td>Returns a value you can use to manipulate Kerbal Space Program&#8217;s time warp.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="KUNIVERSE:ACTIVEVESSEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESSEL</span></code></a></td>
 <td><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 <td>Get/Set</td>
 <td>Returns the active vessel, or lets you set the active vessel.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL(vessel)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL(vessel)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Lets you switch active vessels even when the game refuses to allow it.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:FORCEACTIVE" title="KUNIVERSE:FORCEACTIVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:FORCEACTIVE" title="KUNIVERSE:FORCEACTIVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Same as <a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:GETCRAFT" title="KUNIVERSE:GETCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETCRAFT(name,</span> <span class="pre">editor)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:GETCRAFT" title="KUNIVERSE:GETCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETCRAFT(name,</span> <span class="pre">editor)</span></code></a></td>
 <td><a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
 <td>Method</td>
 <td>Get the file path for the craft with the given name, saved in the given editor.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFT" title="KUNIVERSE:LAUNCHCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFT(template)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFT" title="KUNIVERSE:LAUNCHCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFT(template)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Launch a new instance of the given craft at it&#8217;s default launch site.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="KUNIVERSE:LAUNCHCRAFTFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFTFROM(template,</span> <span class="pre">site)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="KUNIVERSE:LAUNCHCRAFTFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFTFROM(template,</span> <span class="pre">site)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Launch a new instance of the given craft at the given site.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
 <td>Method</td>
 <td>A list of all craft templates in the save specific and stock folders.</td>
@@ -577,6 +584,25 @@ vessels in that scene to inherit these new default values, forgetting the
 values they may have had before.</p>
 <p>(To affect the value on a vessel already existing in the current scene
 you have to use the :LOADDISTANCE suffix of the Vessel structure.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:TIMEWARP">
+KUniverse:<code class="descname">TIMEWARP</code><a class="headerlink" href="#attribute:KUNIVERSE:TIMEWARP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the <a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a> structure that you can use to manipulate
+Kerbal Space Program&#8217;s time warping features.   See the documentation
+on <a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a> for more details.</p>
+<p>example: <code class="docutils literal"><span class="pre">set</span> <span class="pre">kuniverse:timewarp:rate</span> <span class="pre">to</span> <span class="pre">50.</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -885,7 +911,7 @@ each OS.  Consult the list below to see where it is on your platform.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

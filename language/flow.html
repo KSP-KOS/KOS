@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Flow Control &mdash; kOS 1.0.0 documentation</title>
+  <title>Flow Control &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Variables &amp; Statements" href="variables.html"/>
         <link rel="prev" title="KerboScript Syntax Specification" href="syntax.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -248,7 +248,7 @@ name used already exists in local scope, then the lock command creates
 a lock function that only lasts as long as the current scope and then
 becomes unreachable after that.  If the variable name used does not exist
 in local scope, then LOCK will create it as a global variable, unless
-&#64;NOLAZYGLOBAL is set to off, in which case it will be an error.</p>
+<code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></code> is set to off, in which case it will be an error.</p>
 <p>Note that a LOCK expression is extremely similar to a user function.
 Every time you read the value of the &#8220;variable&#8221;, it executes the expression
 again.</p>
@@ -473,7 +473,7 @@ one to use for more wordy headers when you have to split it up across lines.</p>
 <p>If we assume that AAAA, BBBB, CCCC, and DDDD are placeholders referring
 to the actual script syntax, then in the generic case, the following
 is how all FROM loops work:</p>
-<p>FROM LOOP:</p>
+<p><code class="docutils literal"><span class="pre">FROM</span></code> loop:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="p">{</span> <span class="nv">AAAA</span> <span class="p">}</span> <span class="k">UNTIL</span> <span class="nv">BBBB</span> <span class="k">STEP</span> <span class="p">{</span> <span class="nv">CCCC</span> <span class="p">}</span> <span class="k">DO</span> <span class="p">{</span> <span class="nv">DDDD</span> <span class="p">}</span>
 </pre></div>
 </div>
@@ -836,7 +836,7 @@ program that created it exits, even if it has not occurred yet.</p>
 <p>To alter this, a new ability was added in kOS 0.19.3 and above to
 have triggers simply <a class="reference internal" href="#trigger-return"><span>return a true or false value</span></a>
 to determine if they wish to be preserved.</p>
-<p>But prior to kOS 0.19.3 the only way to do it in kerboscript was
+<p>But prior to kOS 0.19.3, the only way to do it in kerboscript was
 with the <code class="docutils literal"><span class="pre">PRESERVE</span></code> keyword, which will likely remain in
 kerboscript for quite some time because it has a lot of backward
 compatibility legacy.</p>
@@ -956,7 +956,7 @@ overriding the effect of the <code class="docutils literal"><span class="pre">PR
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

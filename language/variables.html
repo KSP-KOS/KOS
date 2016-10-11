@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Variables &amp; Statements &mdash; kOS 1.0.0 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="KerboScript User Functions" href="user_functions.html"/>
         <link rel="prev" title="Flow Control" href="flow.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -313,12 +313,15 @@ be referred to as a &#8220;declare statement&#8221;, even though the word
 </div>
 <div class="section" id="initializer-required-in-declare">
 <h3><a class="toc-backref" href="#id11">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this headline">¶</a></h3>
-<div class="versionadded">
-<p><span class="versionmodified">New in version 0.17: </span>The syntax without the initializer, looking like so</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.17: </span>The syntax without the initializer, looking like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// no initializer like &quot;TO 1.&quot;</span>
 </pre></div>
 </div>
 <p>is <strong>no longer legal syntax</strong>.</p>
+</div>
 </div>
 <p>Kerboscript now requires the use of the initializer clause (the &#8220;TO&#8221;
 keyword) after the identifier name so as to make it impossible for
@@ -413,8 +416,11 @@ it with 2 arguments, both P4 and P3 get defaulted.)</p>
 expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.</p>
-<div class="versionadded">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
 <p><span class="versionmodified">New in version 0.18.3: </span>Optional Parameters were added as a new feature in kOS 0.18.3</p>
+</div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -684,7 +690,11 @@ the variables.</p>
 <p>The DECLARE keyword and the LOCK keyword have some default
 presumed scoping behaviors:</p>
 <p><code class="docutils literal"><span class="pre">DECLARE</span></code> Is assumed to always be LOCAL when not otherwise specified.</p>
-<p><code class="docutils literal"><span class="pre">FUNCTION</span></code> Is assumed to always be LOCAL when not otherwise specified.</p>
+<p><code class="docutils literal"><span class="pre">FUNCTION</span></code> Must always be LOCAL.  Declaring it as global has no effect,
+so the only way to make it be global is to declare it while at outermost
+scope.  This is because functions always remember their closures, and
+so to declare a function as global while it holds closure information
+about local variables would be contradictory.</p>
 <p><code class="docutils literal"><span class="pre">PARAMETER</span></code> Cannot be anything but LOCAL to the location it&#8217;s mentioned.
 It is an error to attempt to declare a parameter with the GLOBAL keyword.</p>
 <p><code class="docutils literal"><span class="pre">LOCK</span></code> Is assumed to always be GLOBAL when not otherwise specified.
@@ -695,7 +705,8 @@ controls such as LOCK STEERING and LOCK THROTTLE work.</p>
 <h3><a class="toc-backref" href="#id27">Explicit scoping keywords</a><a class="headerlink" href="#explicit-scoping-keywords" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal"><span class="pre">DECLARE</span></code>, <code class="docutils literal"><span class="pre">FUNCTION</span></code>, and <code class="docutils literal"><span class="pre">LOCK</span></code> commands can be given
 explicit <code class="docutils literal"><span class="pre">GLOBAL</span></code> or <code class="docutils literal"><span class="pre">LOCAL</span></code> keywords to define their intended
-scoping level:</p>
+scoping level (however in the case of functions, <code class="docutils literal"><span class="pre">GLOBAL</span></code> will be
+igorned, see above under &#8216;Presumed defaults&#8217;.):</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//</span>
 <span class="c1">// These are all synonymous with each other:</span>
 <span class="c1">//</span>
@@ -964,7 +975,7 @@ don&#8217;t need to understand or deal with scope.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Kerbal Alarm Clock &mdash; kOS 1.0.0 documentation</title>
+  <title>Kerbal Alarm Clock &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Infernal Robotics" href="IR.html"/>
         <link rel="prev" title="RemoteTech" href="RemoteTech.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -167,20 +167,23 @@
 <li>Alternative download <a class="reference external" href="https://kerbalstuff.com/mod/231/Kerbal%20Alarm%20Clock">https://kerbalstuff.com/mod/231/Kerbal%20Alarm%20Clock</a></li>
 <li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/24786">http://forum.kerbalspaceprogram.com/threads/24786</a></li>
 </ul>
+<p>You can find out if Kerbal Alarm Clock addon is available in the
+current game installation by usng the boolean expression
+<code class="docutils literal"><span class="pre">addons:available(&quot;KAC&quot;)</span></code>.</p>
 <p>The Kerbal Alarm Clock is a plugin that allows you to create reminder alarms at future periods to help you manage your flights and not warp past important times.</p>
 <div class="figure">
 <img alt="http://triggerau.github.io/KerbalAlarmClock/images/KACForumPic.png" src="http://triggerau.github.io/KerbalAlarmClock/images/KACForumPic.png" />
 </div>
 <p>Creator of the KAC provides API for integration with other mods. In KOS we provide limited access to KAC alarms via following structure and functions.</p>
-<p>Access structure KACAddon via <cite>ADDONS:KAC</cite>.</p>
+<p>Access structure KACAddon via <code class="docutils literal"><span class="pre">ADDONS:KAC</span></code>.</p>
 <dl class="structure">
 <dt id="structure:KACADDON">
 <em class="property">structure </em><code class="descname">KACAddon</code><a class="headerlink" href="#structure:KACADDON" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="32%" />
-<col width="22%" />
-<col width="47%" />
+<col width="20%" />
+<col width="14%" />
+<col width="66%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -191,7 +194,7 @@
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:KACADDON:AVAILABLE" title="KACADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
 <td>bool(readonly)</td>
-<td>True if KAC is installed and KAC integration enabled.</td>
+<td>True if KAC is installed and KAC integration enabled.  It is better to use <code class="docutils literal"><span class="pre">addons:available(&quot;KAC&quot;)</span></code> for this purpose.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:KACADDON:ALARMS" title="KACADDON:ALARMS method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALARMS()</span></code></a></td>
 <td>List</td>
@@ -214,6 +217,8 @@ KACAddon:<code class="descname">AVAILABLE</code><a class="headerlink" href="#att
 </tr>
 </tbody>
 </table>
+<p>It is better to use <code class="docutils literal"><span class="pre">ADDONS:AVAILABLE(&quot;KAC&quot;)</span></code> first to discover if
+KAC is installed.</p>
 <p>True if KAC is installed and KAC integration enabled.
 Example of use:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">ADDONS</span><span class="p">:</span><span class="nv">KAC</span><span class="p">:</span><span class="nv">AVAILABLE</span>
@@ -603,7 +608,7 @@ Otherwise returns <a class="reference internal" href="../structures/collections/
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

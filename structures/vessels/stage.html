@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Stage &mdash; kOS 1.0.0 documentation</title>
+  <title>Stage &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Vessel" href="vessel.html"/>
         <link rel="prev" title="Sensor" href="sensor.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -194,13 +194,80 @@
 <p><em>Contents</em></p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="xref ks ks-global docutils literal"><span class="pre">EXAMPLE</span></code></li>
-<li><a class="reference internal" href="#structure:STAGE" title="STAGE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Stage</span></code></a></li>
+<li><a class="reference internal" href="#stagingexample"><span>Staging Example</span></a></li>
+<li><a class="reference internal" href="#stagefunction"><span>Staging Function</span></a></li>
+<li><a class="reference internal" href="#stagestructure"><span>Staging Structure</span></a></li>
 </ul>
 </div></blockquote>
-<p>You access the current stage for the vessel the kOS core is attached to with the STAGE: command.</p>
-<div class="section" id="structure">
-<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="staging-example">
+<span id="stagingexample"></span><h2>Staging Example<a class="headerlink" href="#staging-example" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>A very simple auto-stager using <a class="reference internal" href="#attribute:STAGE:READY" title="STAGE:READY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">:READY</span></code></a></p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LIST</span> <span class="nv">ENGINES</span> <span class="nv">IN</span> <span class="nv">elist</span><span class="p">.</span>
+
+<span class="k">UNTIL</span> <span class="nb">false</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Stage: &quot;</span> <span class="o">+</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">NUMBER</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">).</span>
+    <span class="k">FOR</span> <span class="nv">e</span> <span class="nv">IN</span> <span class="nv">elist</span> <span class="p">{</span>
+        <span class="k">IF</span> <span class="nv">e</span><span class="p">:</span><span class="nv">FLAMEOUT</span> <span class="p">{</span>
+            <span class="k">STAGE</span><span class="p">.</span>
+            <span class="k">PRINT</span> <span class="s">&quot;STAGING!&quot;</span> <span class="k">AT</span> <span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">).</span>
+
+            <span class="k">UNTIL</span> <span class="k">STAGE</span><span class="p">:</span><span class="nv">READY</span> <span class="p">{</span>
+                <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span>
+            <span class="p">}</span>
+
+            <span class="k">LIST</span> <span class="nv">ENGINES</span> <span class="nv">IN</span> <span class="nv">elist</span><span class="p">.</span>
+            <span class="k">CLEARSCREEN</span><span class="p">.</span>
+            <span class="k">BREAK</span><span class="p">.</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="stage-function">
+<span id="stagefunction"></span><h2>Stage Function<a class="headerlink" href="#stage-function" title="Permalink to this headline">¶</a></h2>
+<dl class="global">
+<dt id="global:STAGE">
+<code class="descname">Stage</code><a class="headerlink" href="#global:STAGE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p>Activates the next stage if the cpu vessel is the active vessel.  This will
+trigger engines, decouplers, and any other parts that would normally be
+triggered by manually staging.  The default equivalent key binding is the
+space bar.  As with other parameter-less functions, both <code class="docutils literal"><span class="pre">STAGE.</span></code> and
+<code class="docutils literal"><span class="pre">STAGE().</span></code> are acceptable ways to call the function.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 1.0.1: </span>The stage function will automatically pause execution until the next
+tick.  This is because some of the results of the staging event take
+effect immediately, while others do not update until the next time
+that physics are calculated.  Calling <code class="docutils literal"><span class="pre">STAGE.</span></code> is essentially
+equivalent to:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">STAGE</span><span class="p">.</span>
+<span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Calling the <a class="reference internal" href="#global:STAGE" title="STAGE global"><code class="xref ks ks-global docutils literal"><span class="pre">Stage</span></code></a> function on a vessel other than the active
+vessel will throw an exception.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="stage-structure">
+<span id="stagestructure"></span><h2>Stage Structure<a class="headerlink" href="#stage-structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
 <dt id="structure:STAGE">
 <em class="property">structure </em><code class="descname">Stage</code><a class="headerlink" href="#structure:STAGE" title="Permalink to this definition">¶</a></dt>
@@ -221,12 +288,12 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:READY" title="STAGE:READY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">READY</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Get only</td>
 <td>Is the craft ready to activate the next stage.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STAGE:NUMBER" title="STAGE:NUMBER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NUMBER</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Get only</td>
 <td>The current stage number for the craft</td>
 </tr>
@@ -251,15 +318,13 @@ Stage:<code class="descname">READY</code><a class="headerlink" href="#attribute:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first">Get only</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></p>
-<p class="last">Kerbal Space Program enforces a small delay between staging commands, this is to allow the last staging command to complete. This bool value will let you know if kOS can activate the next stage.</p>
-</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 </tr>
 </tbody>
 </table>
+<p>Kerbal Space Program enforces a small delay between staging commands, this is to allow the last staging command to complete. This bool value will let you know if kOS can activate the next stage.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -271,7 +336,7 @@ Stage:<code class="descname">NUMBER</code><a class="headerlink" href="#attribute
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -358,7 +423,7 @@ if it will be reference repeatedly.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

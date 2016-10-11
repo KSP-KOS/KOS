@@ -31,49 +31,49 @@ Structure
           - Description
 
         * - :attr:`NAME`
-          - :ref:`string <string>`
+          - :struct:`String`
           - name of this orbit
         * - :attr:`APOAPSIS`
-          - :ref:`scalar <scalar>` (m)
+          - :struct:`Scalar` (m)
           - Maximum altitude
         * - :attr:`PERIAPSIS`
-          - :ref:`scalar <scalar>` (m)
+          - :struct:`Scalar` (m)
           - Minimum altitude
         * - :attr:`BODY`
           - :struct:`Body`
           - Focal body of orbit
         * - :attr:`PERIOD`
-          - :ref:`scalar <scalar>` (s)
+          - :struct:`Scalar` (s)
           - `orbital period`_
         * - :attr:`INCLINATION`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
           - `orbital inclination`_
         * - :attr:`ECCENTRICITY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `orbital eccentricity`_
         * - :attr:`SEMIMAJORAXIS`
-          - :ref:`scalar <scalar>` (m)
+          - :struct:`Scalar` (m)
           - `semi-major axis`_
         * - :attr:`SEMIMINORAXIS`
-          - :ref:`scalar <scalar>` (m)
+          - :struct:`Scalar` (m)
           - `semi-minor axis`_
         * - :attr:`LAN`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
           - Same as :attr:`LONGITUDEOFASCENDINGNODE`
         * - :attr:`LONGITUDEOFASCENDINGNODE`
-          - :ref:`scalar <scalar>` (deg)
+          - :struct:`Scalar` (deg)
           - Longitude of the ascending node
         * - :attr:`ARGUMENTOFPERIAPSIS`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `argument of periapsis`_
         * - :attr:`TRUEANOMALY`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `true anomaly`_ in degrees (not radians)
         * - :attr:`MEANANOMALYATEPOCH`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - `mean anomaly`_ in degrees (not radians)
         * - :attr:`TRANSITION`
-          - :ref:`string <string>`
+          - :struct:`String`
           - :ref:`Transition from this orbit <transitions>`
         * - :attr:`POSITION`
           - :struct:`Vector`
@@ -88,26 +88,26 @@ Structure
           - :struct:`Scalar`
           - ETA to next :struct:`Orbit`
         * - :attr:`HASNEXTPATCH`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Has a next :struct:`Orbit`
 
 .. attribute:: Orbit:NAME
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     a name for this orbit.
 
 .. attribute:: Orbit:APOAPSIS
 
-    :type: :ref:`scalar <scalar>` (m)
+    :type: :struct:`Scalar` (m)
     :access: Get only
 
     The max altitude expected to be reached.
 
 .. attribute:: Orbit:PERIAPSIS
 
-    :type: :ref:`scalar <scalar>` (m)
+    :type: :struct:`Scalar` (m)
     :access: Get only
 
     The min altitude expected to be reached.
@@ -121,35 +121,35 @@ Structure
 
 .. attribute:: Orbit:PERIOD
 
-    :type: :ref:`scalar <scalar>` (seconds)
+    :type: :struct:`Scalar` (seconds)
     :access: Get only
 
     `orbital period`_
 
 .. attribute:: Orbit:INCLINATION
 
-    :type: :ref:`scalar <scalar>` (degree)
+    :type: :struct:`Scalar` (degree)
     :access: Get only
 
     `orbital inclination`_
 
 .. attribute:: Orbit:ECCENTRICITY
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     `orbital eccentricity`_
 
 .. attribute:: Orbit:SEMIMAJORAXIS
 
-    :type: :ref:`scalar <scalar>` (m)
+    :type: :struct:`Scalar` (m)
     :access: Get only
 
     `semi-major axis`_
 
 .. attribute:: Orbit:SEMIMINORAXIS
 
-    :type: :ref:`scalar <scalar>` (m)
+    :type: :struct:`Scalar` (m)
     :access: Get only
 
     `semi-minor axis`_
@@ -160,7 +160,7 @@ Structure
 
 .. attribute:: Orbit:LONGITUDEOFASCENDINGNODE
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
     The Longitude of the ascening node is the "celestial longitude" where
@@ -177,14 +177,14 @@ Structure
 
 .. attribute:: Orbit:ARGUMENTOFPERIAPSIS
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     `argument of periapsis`_
 
 .. attribute:: Orbit:TRUEANOMALY
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     `true anomaly`_ in degrees.  Even though orbital parameters are
@@ -194,7 +194,7 @@ Structure
 
 .. attribute:: Orbit:MEANANOMALYATEPOCH
 
-    :type: :ref:`scalar <scalar>`
+    :type: :struct:`Scalar`
     :access: Get only
 
     `mean anomaly`_  in degrees. Even though orbital parameters are
@@ -205,7 +205,7 @@ Structure
 
 .. attribute:: Orbit:TRANSITION
 
-    :type: :ref:`string <string>`
+    :type: :struct:`String`
     :access: Get only
 
     Describes the way in which this orbit will end and become a different orbit, with a value taken :ref:`from this list <transitions>`.
@@ -229,7 +229,7 @@ Structure
     :type: :struct:`Orbit`
     :access: Get only
 
-    When this orbit has a transition to another orbit coming up, this suffix returns the next Orbit patch after this one. For example, when escaping from a Mun orbit into a Kerbin orbit from which you will escape and hit a Solar orbit, then the current orbit's ``:NEXTPATCH`` will show the Kerbin orbit, and ``:NEXTPATCH:NEXTPATCH`` will show the solar orbit. The number of patches into the future that you can peek depends on your conic patches setting in your **Kerbal Space Program** Settings.cfg file.
+    When this orbit has a transition to another orbit coming up, this suffix returns the next Orbit patch after this one. For example, when escaping from a Mun orbit into a Kerbin orbit from which you will escape and hit a Solar orbit, then the current orbit's :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will show the Kerbin orbit, and ``:NEXTPATCH:NEXTPATCH`` will show the solar orbit. The number of patches into the future that you can peek depends on your conic patches setting in your **Kerbal Space Program** Settings.cfg file.
 
 .. attribute:: Orbit:NEXTPATCHETA
 
@@ -238,17 +238,17 @@ Structure
 
     When this orbit has a transition to another orbit coming up, this suffix
     returns the eta to that transition.  This is different from the value
-    provided by the :struct:`ETA` ``TRANSITION`` suffix as it is not limited
+    provided by the :attr:`ETA:TRANSITION` suffix as it is not limited
     to the patch following the current orbit, but rather may be chained to
     multiple patch transitions.  The number of patches depends on your conic
     patches setting in your **Kerbal Space Program** Settings.cfg file.
 
 .. attribute:: Orbit:HASNEXTPATCH
 
-    :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
     :access: Get only
 
-    If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then ``HASNEXTPATCH`` will be false.
+    If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will return a valid patch, this is true. If :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` will not return a valid patch because there are no transitions occurring in the future, then :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH` will be false.
 
 
 
@@ -261,7 +261,7 @@ Structure
 .. _true anomaly: http://en.wikipedia.org/wiki/True_anomaly
 .. _mean anomaly: http://en.wikipedia.org/wiki/Mean_anomaly
 
-Both ``:NEXTPATCH`` and ``:HASNEXTPATCH`` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's :ORBIT suffix <node>, and then look at **it's** ``:NEXTPATCH` and ``:HASNEXTPATCH``.
+Both :attr:`NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH>` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's :attr:`:ORBIT <ManeuverNode:ORBIT>` suffix, and then look at **its** :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`:HASNEXTPATCH <Orbit:HASNEXTPATCH>`.
 
 Deprecated Suffix
 -----------------

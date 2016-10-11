@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript User Functions &mdash; kOS 1.0.0 documentation</title>
+  <title>KerboScript User Functions &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/>
         <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -231,7 +231,7 @@ many programming languages that works as follows:</p>
 </ol>
 </li>
 <li><ol class="first upperalpha" start="4">
-<li>Return to where you remembered from (A) and continue from there.</li>
+<li>Return to where you remembered from (2.A) and continue from there.</li>
 </ol>
 </li>
 </ul>
@@ -254,7 +254,7 @@ it from inside a program, it will definitely not work properly,
 but the exact error you get will depend on several &#8220;random&#8221;
 factors.  This may be fixed later by a later release, but for
 now, don&#8217;t do it.  For further explanation, see the section entitled
-<a class="reference internal" href="#interpreter-functions"><span>Functions and the interpreter terminal</span></a></p>
+<a class="reference internal" href="#interpreter-functions"><span>Functions and the interpreter terminal</span></a>.</p>
 </div>
 </div>
 <div class="section" id="declare-function">
@@ -278,7 +278,7 @@ they are declared when the explicit local scope keyword is missing.</p>
 although it is allowed.</p>
 <p>It is best to just leave all the optional keywords of and merely say
 <code class="docutils literal"><span class="pre">function</span></code> by itself.</p>
-<p>example:</p>
+<p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Print the string you pass in, in one of the 4 corners</span>
 <span class="c1">// of the terminal:</span>
 <span class="c1">//   mode = 1 for upper-left, 2 for upper-right, 3</span>
@@ -486,8 +486,11 @@ it with 2 arguments, both P4 and P3 get defaulted.)</p>
 expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.</p>
-<div class="versionadded">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
 <p><span class="versionmodified">New in version 0.18.3: </span>Optional Parameters were added as a new feature in kOS 0.18.3</p>
+</div>
 </div>
 </div>
 <div class="section" id="functions-and-the-terminal-interpreter">
@@ -564,7 +567,7 @@ but not of the variables implicitly made global without DECLARE.</p>
 <p>An example of using <code class="docutils literal"><span class="pre">local</span></code> for a local variable can be seen in
 the example above, where it is used for the <code class="docutils literal"><span class="pre">row</span></code> and <code class="docutils literal"><span class="pre">col</span></code> variables.</p>
 <p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
-work is found <a class="reference internal" href="variables.html#scope"><span>on another page</span></a></p>
+work is found <a class="reference internal" href="variables.html#scope"><span>on another page</span></a>.</p>
 <div class="section" id="initializers-are-now-mandatory-for-the-declare-statement">
 <h3><a class="toc-backref" href="#id14">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
 <p>This is now <strong>illegal</strong> syntax:</p>
@@ -578,7 +581,7 @@ work is found <a class="reference internal" href="variables.html#scope"><span>on
 of kOS did allow you do make <code class="docutils literal"><span class="pre">declare</span></code> statements
 without any initializers in them (and in fact you couldn&#8217;t
 provide an initializer for them in prior versions even if
-you wanted to.)</p>
+you wanted to).</p>
 </div>
 </div>
 <p>In order to avoid the issue of having uninitialized variables in
@@ -612,7 +615,7 @@ be made (and that new <code class="docutils literal"><span class="pre">x</span><
 <div class="section" id="return">
 <span id="id2"></span><h2><a class="toc-backref" href="#id16">RETURN</a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">return</span></code> <em>expression(optional)</em> <em>dot(mandatory)</em></p>
-<p>examples:</p>
+<p>Examples:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="mf">3</span><span class="o">*</span><span class="nv">x</span><span class="p">.</span>
 
 <span class="k">return</span><span class="p">.</span>
@@ -625,7 +628,7 @@ to the caller.  Note that functions in kerboscript are very weakly
 typed with late binding.  You cannot declare the expected return
 type for the function, and it&#8217;s up to you to ensure that all possible
 returned values are useful and meaningful.</p>
-<p>example:</p>
+<p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Note, in this example, the keyword &#39;declare&#39; is</span>
 <span class="c1">// spelled out explicitly.  You can choose to do so</span>
 <span class="c1">// if you wish.  It&#39;s up to you what you aesthetically</span>
@@ -794,22 +797,20 @@ the same function, as in the example here:</p>
      <span class="k">RETURN</span><span class="p">.</span> <span class="c1">// no return value.</span>
    <span class="p">}</span> <span class="k">ELSE</span> <span class="p">{</span>
      <span class="k">RETURN</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="c1">// a string return value</span>
-   <span class="p">}.</span>
-<span class="p">}.</span>
+   <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Then the kerboscript compiler is not clever enough to detect this
-and warn you about it.  The internal stack will not get corrupted
-by this error, as some experienced programmers might expect upon
-hearing this (because secretly all kerboscript user functions
-return a value even if it&#8217;s never used, so there&#8217;s universally
-always something to pop off the stack even for the empty return
-statements.) However, you will still have to deal with the fact
-that the calling program might be getting nulls back some of the
-time if you make this programming error.</p>
-<p>In general, make sure that if you <em>sometimes</em> return a value from
-a user function, that you <em>always</em> do so in every path through your
-function.</p>
+and warn you about it.  However, the internal stack will not get
+corrupted by this error, as some experienced programmers might
+expect upon hearing this (because secretly all kerboscript user
+functions return a value of zero if they never gave an explicit
+return value, so there&#8217;s universally always something to pop off
+the stack even for the empty return statements.)</p>
+<p>In general, it&#8217;s still a good idea to make sure that if you
+<em>sometimes</em> return a value from a user function, that you
+<em>always</em> do so in every path through your function.</p>
 </div>
 <div class="section" id="accidentally-using-globals">
 <h3><a class="toc-backref" href="#id25">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
@@ -837,8 +838,8 @@ I&#8217;ll make it for you implicitly&#8221; (and it ends up being a global).</p
 really be annoying.  And it&#8217;s a very common problem with &#8220;sloppy&#8221;
 declaration languages that allow you to use variable names without
 declaring them first.  Most such languages have provided a way to
-catch the problem, and allow you to instruct the compiler &#8220;please
-don&#8217;t let me do that.  Please force me to declare everything&#8221;.</p>
+catch the problem, and allow you to instruct the compiler, &#8220;Please
+don&#8217;t let me do that.  Please force me to declare everything.&#8221;</p>
 <p>The way that is done in kerboscript is by using a <code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></code>
 compiler directive, <a class="reference internal" href="variables.html#lazyglobal"><span>as described here</span></a>.</p>
 <p>Had the function above been compiled under a <code class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span> <span class="pre">off.</span></code>
@@ -902,7 +903,7 @@ compiler directive, the typo would be noticed:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -5,44 +5,74 @@ Stage
 
 *Contents*
 
-    - :global:`EXAMPLE`
-    - :struct:`Stage`
+    - :ref:`Staging Example <stagingExample>`
+    - :ref:`Staging Function <StageFunction>`
+    - :ref:`Staging Structure <stageStructure>`
 
-You access the current stage for the vessel the kOS core is attached to with the STAGE: command.
+.. _StagingExample:
 
-.. global::EXAMPLE	
-	
-	
-    A very simple auto-stager using :READY
-	
-	LIST ENGINES IN elist.
+Staging Example
+---------------
 
-	UNTIL false {
-	    PRINT "Stage: " + STAGE:NUMBER AT (0,0).
-		FOR e IN elist {
-			IF e:FLAMEOUT {
-				STAGE.
-				PRINT "STAGING!" AT (0,0).
-				
-				UNTIL STAGE:READY {	} 
-				
-				LIST ENGINES IN elist.
-				CLEARSCREEN.
-				BREAK.    
-			}
-		}
-	}
 
-.. global::NUMBER
+    A very simple auto-stager using :attr:`:READY <stage:ready>`
+    ::
 
-	Every craft has a current stage, and that stage is represented by a number, this is it!
-	
-.. global::RESOURCES
-    
-	
-	
-Structure
----------
+        LIST ENGINES IN elist.
+
+        UNTIL false {
+            PRINT "Stage: " + STAGE:NUMBER AT (0,0).
+            FOR e IN elist {
+                IF e:FLAMEOUT {
+                    STAGE.
+                    PRINT "STAGING!" AT (0,0).
+
+                    UNTIL STAGE:READY {
+                        WAIT 0.
+                    }
+
+                    LIST ENGINES IN elist.
+                    CLEARSCREEN.
+                    BREAK.
+                }
+            }
+        }
+
+.. _StageFunction:
+
+Stage Function
+--------------
+
+.. global:: Stage
+
+    :return: None
+
+    Activates the next stage if the cpu vessel is the active vessel.  This will
+    trigger engines, decouplers, and any other parts that would normally be
+    triggered by manually staging.  The default equivalent key binding is the
+    space bar.  As with other parameter-less functions, both ``STAGE.`` and
+    ``STAGE().`` are acceptable ways to call the function.
+
+    .. note::
+        .. versionchanged:: 1.0.1
+
+            The stage function will automatically pause execution until the next
+            tick.  This is because some of the results of the staging event take
+            effect immediately, while others do not update until the next time
+            that physics are calculated.  Calling ``STAGE.`` is essentially
+            equivalent to::
+
+                STAGE.
+                WAIT 0.
+
+    .. warning::
+        Calling the :global:`Stage` function on a vessel other than the active
+        vessel will throw an exception.
+
+.. _StageStructure:
+
+Stage Structure
+---------------
 
 .. structure:: Stage
 
@@ -56,11 +86,11 @@ Structure
           - Description
 
         * - :attr:`READY`
-          - :ref:`Boolean <boolean>`
+          - :struct:`Boolean`
           - Get only
           - Is the craft ready to activate the next stage.
         * - :attr:`NUMBER`
-          - :ref:`scalar <scalar>`
+          - :struct:`Scalar`
           - Get only
           - The current stage number for the craft
         * - :attr:`RESOURCES`
@@ -75,15 +105,15 @@ Structure
 .. attribute:: Stage:READY
 
     :access: Get only
-    :type: :ref:`Boolean <boolean>`
+    :type: :struct:`Boolean`
 
-	Kerbal Space Program enforces a small delay between staging commands, this is to allow the last staging command to complete. This bool value will let you know if kOS can activate the next stage.
+    Kerbal Space Program enforces a small delay between staging commands, this is to allow the last staging command to complete. This bool value will let you know if kOS can activate the next stage.
 
 .. attribute:: Stage:NUMBER
 
     :access: Get only
-    :type: :ref:`scalar <scalar>`
-	
+    :type: :struct:`Scalar`
+
     Every craft has a current stage, and that stage is represented by a number, this is it!
 
 .. attribute:: Stage:Resources

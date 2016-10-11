@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RemoteTech &mdash; kOS 1.0.0 documentation</title>
+  <title>RemoteTech &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Kerbal Alarm Clock" href="KAC.html"/>
         <link rel="prev" title="Action Groups Extended" href="AGX.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -168,6 +168,9 @@
 <li>Sources: <a class="reference external" href="https://github.com/RemoteTechnologiesGroup/RemoteTech">https://github.com/RemoteTechnologiesGroup/RemoteTech</a></li>
 <li>Documentation: <a class="reference external" href="http://remotetechnologiesgroup.github.io/RemoteTech/">http://remotetechnologiesgroup.github.io/RemoteTech/</a></li>
 </ul>
+<p>You can find out if the RemoteTech addon is available in the
+current game installation by usng the boolean expression
+<code class="docutils literal"><span class="pre">addons:available(&quot;RT&quot;)</span></code>.</p>
 <div class="section" id="interaction-with-kos">
 <h2>Interaction with kOS<a class="headerlink" href="#interaction-with-kos" title="Permalink to this headline">¶</a></h2>
 <p>When you have RemoteTech installed you can only interact with the core&#8217;s terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.</p>
@@ -203,15 +206,15 @@ of some of its suffixes.</p>
 </div>
 <div class="section" id="rtaddon">
 <h3>RTAddon<a class="headerlink" href="#rtaddon" title="Permalink to this headline">¶</a></h3>
-<p>Starting version 0.17 of kOS you can access structure RTAddon via <cite>ADDONS:RT</cite>.</p>
+<p>Starting version 0.17 of kOS you can access structure RTAddon via <code class="docutils literal"><span class="pre">ADDONS:RT</span></code>.</p>
 <dl class="structure">
 <dt id="structure:RTADDON">
 <em class="property">structure </em><code class="descname">RTAddon</code><a class="headerlink" href="#structure:RTADDON" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="29%" />
-<col width="29%" />
-<col width="42%" />
+<col width="20%" />
+<col width="20%" />
+<col width="60%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -222,7 +225,7 @@ of some of its suffixes.</p>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:RTADDON:AVAILABLE" title="RTADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
 <td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
-<td>True if RT is installed and RT integration enabled.</td>
+<td>True if RT is installed and RT integration enabled. It is better to use <code class="docutils literal"><span class="pre">addons:available(&quot;IR&quot;)</span></code> for this.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:RTADDON:DELAY" title="RTADDON:DELAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">DELAY(vessel)</span></code></a></td>
 <td><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
@@ -270,6 +273,8 @@ RTADDON:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attr
 </tbody>
 </table>
 <p>True if RT is installed and RT integration enabled.</p>
+<p>It is better to use <code class="docutils literal"><span class="pre">ADDONS:AVAILABLE(&quot;RT&quot;)</span></code> first to discover if
+RemoteTech is installed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -451,7 +456,7 @@ RTAddon:<code class="descname">GROUNDSTATIONS</code><span class="sig-paren">(</s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

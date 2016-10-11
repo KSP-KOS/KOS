@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Delegates (function references) &mdash; kOS 1.0.0 documentation</title>
+  <title>Delegates (function references) &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="prev" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -168,9 +168,12 @@
             
   <div class="section" id="delegates-function-references">
 <span id="delegates"></span><h1>Delegates (function references)<a class="headerlink" href="#delegates-function-references" title="Permalink to this headline">¶</a></h1>
-<div class="versionadded">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
 <p><span class="versionmodified">New in version 0.19.0: </span>The delegate feature described on this page did not exist
 prior to kOS 0.19.0.</p>
+</div>
 </div>
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents</p>
@@ -471,7 +474,7 @@ KOSDelegate, as follows:</p>
 </pre></div>
 </div>
 <p>into just this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_a_to_b</span> <span class="ow">is</span> <span class="nv">draw_a_to_b</span><span class="p">@:</span><span class="nv">bind</span><span class="p">(</span><span class="nv">shipA</span><span class="p">,</span> <span class="nv">shipB</span><span class="p">).</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">draw_a_to_b</span> <span class="ow">is</span> <span class="nv">draw_ship_to_ship</span><span class="p">@:</span><span class="nv">bind</span><span class="p">(</span><span class="nv">shipA</span><span class="p">,</span> <span class="nv">shipB</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>When you use the at-sign(<code class="docutils literal"><span class="pre">&#64;</span></code>), you are returning an object of type
@@ -521,42 +524,48 @@ normally be in <a class="reference internal" href="variables.html#scope"><span>s
 </div>
 <div class="section" id="kinds-of-delegate-no-suffixes">
 <h1>Kinds of Delegate (no suffixes)<a class="headerlink" href="#kinds-of-delegate-no-suffixes" title="Permalink to this headline">¶</a></h1>
-<p>Under the hood, kOS handles several different kinds of &#8216;functions&#8217; and
+<p>Under the hood, kOS handles several different kinds of &#8220;functions&#8221; and
 methods that aren&#8217;t actually implemented the same way.  A <code class="docutils literal"><span class="pre">KOSDelegate</span></code>
 attempts to hide the details of these differences from the user, but
 one difference in particular still stands out.  In kOS version 0.19.0,
 you cannot reliably make a delegate of a suffix just yet.  (<em>This is
 intended as a future feature though.  It&#8217;s been put off because it
-involves decisions that impact the future of the language and once made,
-can&#8217;t be changed easily.</em>)</p>
+involves decisions that impact the future of the language and which, once
+made, can&#8217;t be changed easily.</em>)</p>
 <ul>
 <li><p class="first">You <strong>can</strong> make a delegate of a <a class="reference internal" href="user_functions.html#user-functions"><span>user function</span></a>
-implemented in Kerboscript code.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">mysquarefunc</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">*</span><span class="nv">a</span><span class="p">.</span> <span class="p">}</span>
+implemented in Kerboscript code.</p>
+<blockquote>
+<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">mysquarefunc</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">*</span><span class="nv">a</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">mysquarefunc</span><span class="p">@.</span>
 <span class="k">set</span> <span class="nv">y</span> <span class="ow">to</span> <span class="nv">x</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">5</span><span class="p">).</span> <span class="c1">// y is now 25.</span>
 </pre></div>
 </div>
+</div></blockquote>
 </li>
 <li><p class="first">You <strong>can</strong> make a delegate of a built-in function provided by kOS
-itself, provided it isn&#8217;t a structure suffix.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">r</span> <span class="ow">to</span> <span class="nv">round</span><span class="p">@.</span>
+itself, provided it isn&#8217;t a structure suffix.</p>
+<blockquote>
+<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">r</span> <span class="ow">to</span> <span class="nv">round</span><span class="p">@.</span>
 <span class="k">set</span> <span class="nv">s</span> <span class="ow">to</span> <span class="nv">sqrt</span><span class="p">@.</span>
 <span class="k">print</span> <span class="s">&quot;square root of 7, to the nearest 2 places is: &quot;</span> <span class="o">+</span> <span class="nv">r</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="nv">s</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">7</span><span class="p">),</span> <span class="mf">2</span><span class="p">).</span>
 </pre></div>
 </div>
+</div></blockquote>
 </li>
 <li><p class="first">You <strong>cannot</strong> make a delegate of a suffix of a structure (<em>yet?</em>)
-in Kerboscript.:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//</span>
+in Kerboscript.</p>
+<blockquote>
+<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//</span>
 <span class="c1">// WON&#39;T WORK, WILL GIVE ERROR:</span>
 <span class="c1">//</span>
 <span class="k">set</span> <span class="nv">altpos</span> <span class="ow">to</span> <span class="nv">latlng</span><span class="p">(</span><span class="mf">10</span><span class="p">,</span><span class="mf">20</span><span class="p">):</span><span class="nv">altitudeposition</span><span class="p">@.</span> <span class="c1">// altitudeposition is a suffix of geoposition.</span>
 <span class="k">print</span> <span class="s">&quot;altpos at altitude 1000 is &quot;</span> <span class="o">+</span> <span class="nv">altpos</span><span class="p">:</span><span class="nv">call</span><span class="p">(</span><span class="mf">1000</span><span class="p">).</span>
 </pre></div>
 </div>
+</div></blockquote>
 <p>However, if you like you can make your own user function that is a
-wrapper around a structure suffix call, and make a delegate of THAT.</p>
+wrapper around a structure suffix call, and make a delegate of <strong>that</strong>.</p>
 </li>
 </ul>
 </div>
@@ -602,7 +611,7 @@ wrapper around a structure suffix call, and make a delegate of THAT.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

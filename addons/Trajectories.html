@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Trajectories &mdash; kOS 0.20.1 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+        <link rel="up" title="Addon Reference" href="../addons.html"/>
+        <link rel="next" title="Contribute" href="../contribute.html"/>
+        <link rel="prev" title="DMagic Orbital Science" href="OrbitalScience.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.20.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IR.html">Infernal Robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="OrbitalScience.html">DMagic Orbital Science</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Trajectories</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../addons.html">Addon Reference</a> &raquo;</li>
+      
+    <li>Trajectories</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/addons/Trajectories.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="trajectories">
+<span id="id1"></span><h1>Trajectories<a class="headerlink" href="#trajectories" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Download: <a class="reference external" href="https://github.com/neuoy/KSPTrajectories/releases">https://github.com/neuoy/KSPTrajectories/releases</a></li>
+<li>Forum thread: <a class="reference external" href="http://forum.kerbalspaceprogram.com/index.php?/topic/94368-trajectories">http://forum.kerbalspaceprogram.com/index.php?/topic/94368-trajectories</a></li>
+</ul>
+<p>Trajectories is a mod that displays trajectory predictions, accounting for atmospheric drag, lift, etc.. See the forum thread for more details.</p>
+<p>This addon is not associated with and not supported by the creator of Trajectories.</p>
+<p>The Trajectories API is accessed throgh C# reflection, and is designed for the
+current version. This means that future Trajectories updates may break this
+addon, in which case <code class="docutils literal"><span class="pre">ADDONS:TR:AVAILABLE</span></code> will return false.  It is also
+possible for future versions of Trjectories to remain fully compatible.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">As of this publishing, this is not compatible with the currently released
+version of Trajectories (1.6.3) due to an issue with including the API file.
+This will work if you compile from
+<span class="xref std std-ref">the source</span>
+and future release versions of Trajectories should be supported as well.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Trajectories only predicts the trajectory of the &#8220;Active Vessel,&#8221; which is the vessel with the camera focused on it. <a class="reference internal" href="#attribute:TRADDON:IMPACTPOS" title="TRADDON:IMPACTPOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IMPACTPOS</span></code></a>, <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a>, <a class="reference internal" href="#method:TRADDON:SETTARGET" title="TRADDON:SETTARGET method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETTARGET</span></code></a>, and <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a> will throw exceptions if you try to call them from an inactive vessel or if Trajectories has not calculated an impact position. You should always check if <a class="reference internal" href="#attribute:TRADDON:HASIMPACT" title="TRADDON:HASIMPACT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASIMPACT</span></code></a> is true before accessing these suffixes.</p>
+</div>
+<p>For example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">ADDONS</span><span class="p">:</span><span class="nv">TR</span><span class="p">:</span><span class="nv">AVAILABLE</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nv">ADDONS</span><span class="p">:</span><span class="nv">TR</span><span class="p">:</span><span class="nv">HASIMPACT</span> <span class="p">{</span>
+        <span class="k">PRINT</span> <span class="nv">ADDONS</span><span class="p">:</span><span class="nv">TR</span><span class="p">:</span><span class="nv">IMPACTPOS</span><span class="p">.</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">PRINT</span> <span class="s">&quot;Impact position is not available&quot;</span><span class="p">.</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">PRINT</span> <span class="s">&quot;Trajectories is not available.&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Trajectories does its calculation based on the vessel&#8217;s current orientation. Any tiny change in orientation will change the prediction.</p>
+<p>Accuracy is not guaranteed.</p>
+<p>See this repository for an example of this addon being used to land a rocket on the launch pad: <a class="reference external" href="https://github.com/CalebJ2/kOS-landing-script">https://github.com/CalebJ2/kOS-landing-script</a></p>
+<p>Access structure TRAddon via <code class="docutils literal"><span class="pre">ADDONS:TR</span></code>.</p>
+<dl class="structure">
+<dt id="structure:TRADDON">
+<em class="property">structure </em><code class="descname">TRAddon</code><a class="headerlink" href="#structure:TRADDON" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="26%" />
+<col width="54%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:AVAILABLE" title="TRADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
+<td>True if a compatible Trajectories version is installed.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:HASIMPACT" title="TRADDON:HASIMPACT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASIMPACT</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
+<td>True if Trajectories has calculated an impact position for the current vessel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:IMPACTPOS" title="TRADDON:IMPACTPOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IMPACTPOS</span></code></a></td>
+<td><a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> (readonly)</td>
+<td>Returns a <a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> with the predicted impact position.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a></td>
+<td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
+<td>Vector at which to point to follow predicted trajectory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:PLANNEDVECTOR" title="TRADDON:PLANNEDVECTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVECTOR</span></code></a></td>
+<td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
+<td>Alias for <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:TRADDON:SETTARGET" title="TRADDON:SETTARGET method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETTARGET(position)</span></code></a></td>
+<td>None</td>
+<td>Set Trajectories target.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></td>
+<td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
+<td>Offset plus <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a> to correct path for targeted impact.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:CORRECTEDVECTOR" title="TRADDON:CORRECTEDVECTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVECTOR</span></code></a></td>
+<td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
+<td>Alias for <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:AVAILABLE">
+TRAddon:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attribute:TRADDON:AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if a compatible Trajectories version is installed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:HASIMPACT">
+TRAddon:<code class="descname">HASIMPACT</code><a class="headerlink" href="#attribute:TRADDON:HASIMPACT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if Trajectories has calculated an impact position for the current <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>. You should always check this before using <a class="reference internal" href="#attribute:TRADDON:IMPACTPOS" title="TRADDON:IMPACTPOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">impactPos</span></code></a>, <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">plannedVect</span></code></a>, <a class="reference internal" href="#method:TRADDON:SETTARGET" title="TRADDON:SETTARGET method"><code class="xref ks ks-meth docutils literal"><span class="pre">setTarget</span></code></a>, or <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">correctedVect</span></code></a> to avoid exceptions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:IMPACTPOS">
+TRAddon:<code class="descname">IMPACTPOS</code><a class="headerlink" href="#attribute:TRADDON:IMPACTPOS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Estimated impact position.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:PLANNEDVEC">
+TRAddon:<code class="descname">PLANNEDVEC</code><a class="headerlink" href="#attribute:TRADDON:PLANNEDVEC" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Vector pointing the direction your vessel should face to follow the
+predicted trajectory, based on the angle of attack selected in the
+Trajectories user interface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:PLANNEDVECTOR">
+TRAddon:<code class="descname">PLANNEDVECTOR</code><a class="headerlink" href="#attribute:TRADDON:PLANNEDVECTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Alias for <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:TRADDON:SETTARGET">
+TRAddon:<code class="descname">SETTARGET</code><span class="sig-paren">(</span>position<span class="sig-paren">)</span><a class="headerlink" href="#method:TRADDON:SETTARGET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>position</strong> &#8211; <a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sets the Trajectories target landing position to the given position.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:CORRECTEDVEC">
+TRAddon:<code class="descname">CORRECTEDVEC</code><a class="headerlink" href="#attribute:TRADDON:CORRECTEDVEC" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>A vector that applies an offset to <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a>
+intended to correct the predicted trajectory to impact at the selected
+target position.  This vector does not use any aerodynamic prediction and
+is a very simplistic representation.  Accuracy is not guaranteed, but it
+should at least help determine if you need to pitch the nose up or down.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:CORRECTEDVECTOR">
+TRAddon:<code class="descname">CORRECTEDVECTOR</code><a class="headerlink" href="#attribute:TRADDON:CORRECTEDVECTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Alias for <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../contribute.html" class="btn btn-neutral float-right" title="Contribute" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="OrbitalScience.html" class="btn btn-neutral" title="DMagic Orbital Science" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.20.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

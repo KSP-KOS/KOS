@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Math Functions &mdash; kOS 1.0.0 documentation</title>
+  <title>Basic Math Functions &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Scalar" href="scalar.html"/>
         <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -236,13 +236,23 @@ For the moment, both ways of doing it work.</p>
 <dl class="global">
 <dt id="global:CONSTANT:PI">
 <code class="descname">Constant:PI</code><a class="headerlink" href="#global:CONSTANT:PI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ratio of circumference of a circle to its diameter</p>
+<dd><p>Ratio of circumference of a circle to its diameter, 3.14159265...</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">diameter</span> <span class="ow">to</span> <span class="mf">10</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;circumference is:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">pi</span> <span class="o">*</span> <span class="nv">diameter</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="global">
 <dt id="global:CONSTANT:C">
 <code class="descname">Constant:C</code><a class="headerlink" href="#global:CONSTANT:C" title="Permalink to this definition">¶</a></dt>
 <dd><p>Speed of light in a vacuum, in meters per second.</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">speed</span> <span class="ow">to</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">VELOCITY</span><span class="p">:</span><span class="nv">ORBIT</span><span class="p">:</span><span class="nv">MAG</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">percentOfLight</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">speed</span> <span class="o">/</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">c</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;We&#39;re going &quot;</span> <span class="o">+</span> <span class="nv">percentOfLight</span> <span class="o">+</span> <span class="s">&quot;% of lightspeed!&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">In Kerbal Space Program, all physics motion is purely Newtonian.
@@ -264,6 +274,10 @@ if the probe already has a connection, you can
 <p>If you have a pressure measurement expressed in atmospheres of pressure,
 you can multiply it by this to get the equivalent in kiloPascals
 (kiloNewtons per square meter).</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;1 atm is:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="mf">1</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">AtmToKPa</span> <span class="o">+</span> <span class="s">&quot; kPa.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="global">
@@ -273,6 +287,10 @@ you can multiply it by this to get the equivalent in kiloPascals
 <p>If you have a pressure measurement expressed in kiloPascals (kiloNewtons
 per square meter), you can multiply it by this to get the equivalent
 in atmospheres.</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;100 kPa is:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="mf">100</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">KPaToATM</span> <span class="o">+</span> <span class="s">&quot; atmospheres&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="global">
@@ -284,6 +302,10 @@ this to get the equivalent measure in radians.  It is exactly
 the same thing as saying <code class="docutils literal"><span class="pre">constant:pi</span> <span class="pre">/</span> <span class="pre">180</span></code>, except the result is
 pre-recorded as a constant number and thus no division is performed
 at runtime.</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;A right angle is:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="mf">90</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">DegToRad</span> <span class="o">+</span> <span class="s">&quot; radians&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="global">
@@ -295,6 +317,10 @@ this to get the equivalent measure in degrees.  It is exactly
 the same thing as saying <code class="docutils literal"><span class="pre">180</span> <span class="pre">/</span> <span class="pre">constant:pi</span></code>, except the result is
 pre-recorded as a constant number and thus no division is performed
 at runtime.</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="s">&quot;A radian is:&quot;</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="mf">1</span> <span class="o">*</span> <span class="nv">constant</span><span class="p">:</span><span class="nv">RadToDeg</span> <span class="o">+</span> <span class="s">&quot; degrees&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <span class="target" id="math-functions"></span></div>
@@ -737,7 +763,7 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

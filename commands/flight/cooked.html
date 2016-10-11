@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Cooked Control &mdash; kOS 1.0.0 documentation</title>
+  <title>Cooked Control &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Raw Control" href="raw.html"/>
         <link rel="prev" title="Flight Control" href="../flight.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -107,7 +107,6 @@
 <li class="toctree-l3"><a class="reference internal" href="raw.html">Raw Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pilot.html">Pilot Input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="systems.html">Ship Systems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="warp.html">Time Warping</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../prediction.html">Prediction</a></li>
@@ -243,6 +242,11 @@ LOCK THROTTLE.  See the note in the next section below.</p>
 </pre></div>
 </div>
 </div></blockquote>
+<p><code class="docutils literal"><span class="pre">&quot;kill&quot;</span></code> string</p>
+<blockquote>
+<div>Steering may also be locked to the special string value of <code class="docutils literal"><span class="pre">&quot;kill&quot;</span></code>
+which tells the steering manager to attempt to stop any vessel rotation,
+much like the stock SAS&#8217;s stability assist mode.</div></blockquote>
 </div></blockquote>
 </dd></dl>
 
@@ -379,10 +383,13 @@ you&#8217;re not explicitly trying to get their values.</p>
 </div>
 <div class="section" id="tuning-cooked-steering">
 <span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id4">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this headline">¶</a></h2>
-<div class="versionadded">
-<p><span class="versionmodified">New in version 0.18.0: </span>Version 0.18 of kOS completely gutted the internals of the old steering
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.18.0: </span>This version of kOS completely gutted the internals of the old steering
 system and replaced them with the system described below.  Anything
 said below this point is pertinent to version 0.18 and higher only.</p>
+</div>
 </div>
 <p>While cooked steering tries to come balanced to perform decently without user
 interaction, there are some instances where you may need to help tune the
@@ -692,7 +699,7 @@ or to make your own steering control from scratch using raw steering.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

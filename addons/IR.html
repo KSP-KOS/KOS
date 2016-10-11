@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Infernal Robotics &mdash; kOS 1.0.0 documentation</title>
+  <title>Infernal Robotics &mdash; kOS 1.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="DMagic Orbital Science" href="OrbitalScience.html"/>
         <link rel="prev" title="Kerbal Alarm Clock" href="KAC.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -165,20 +165,23 @@
 <li>Alternative download: <a class="reference external" href="https://github.com/MagicSmokeIndustries/InfernalRobotics/releases">https://github.com/MagicSmokeIndustries/InfernalRobotics/releases</a></li>
 <li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/">http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/</a></li>
 </ul>
+<p>Infernal Robotics might not be installed on your copy of the game.
+Your script can test whether or not it&#8217;s installed by using
+the boolean expression <code class="docutils literal"><span class="pre">addons:available(&quot;ir&quot;)</span></code>.</p>
 <p>Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren&#8217;t possible under stock KSP.</p>
 <div class="figure">
 <img alt="http://i.imgur.com/O94LBvF.png" src="http://i.imgur.com/O94LBvF.png" />
 </div>
 <p>Starting version 0.20 of the Infernal Robotics, mod creators introduced API to for easier access to robotic features.</p>
-<p>Access structure IRAddon via <cite>ADDONS:IR</cite>.</p>
+<p>Access structure IRAddon via <code class="docutils literal"><span class="pre">ADDONS:IR</span></code>.</p>
 <dl class="structure">
 <dt id="structure:IRADDON">
 <em class="property">structure </em><code class="descname">IRAddon</code><a class="headerlink" href="#structure:IRADDON" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="21%" />
-<col width="21%" />
-<col width="58%" />
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -189,7 +192,7 @@
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:IRADDON:AVAILABLE" title="IRADDON:AVAILABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></code></a></td>
 <td><a class="reference internal" href="../structures/misc/boolean.html#boolean"><span>boolean</span></a> (readonly)</td>
-<td>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.</td>
+<td>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.  It is better to use <code class="docutils literal"><span class="pre">addons:available(&quot;rt&quot;)</span></code>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:IRADDON:GROUPS" title="IRADDON:GROUPS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GROUPS</span></code></a></td>
 <td>List of <a class="reference internal" href="#structure:IRCONTROLGROUP" title="IRCONTROLGROUP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">IRControlGroup</span></code></a></td>
@@ -220,6 +223,8 @@ IRAddon:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attr
 </tr>
 </tbody>
 </table>
+<p>It is better to first call <code class="docutils literal"><span class="pre">ADDONS:AVAILABLE(&quot;IR&quot;)</span></code> to find out if the
+plugin exists.</p>
 <p>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.
 Example of use:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nv">ADDONS</span><span class="p">:</span><span class="nv">IR</span><span class="p">:</span><span class="nv">AVAILABLE</span>
@@ -1133,7 +1138,7 @@ IRServo:<code class="descname">MOVETO</code><span class="sig-paren">(</span>posi
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.0',
+            VERSION:'1.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
