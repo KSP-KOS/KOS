@@ -88,5 +88,5 @@ Converting
 
 Converting between SHIP-RAW and SOI-RAW reference frames is a simple matter of moving the origin point by adding or subtracting the ``SHIP:BODY:POSITION`` vector from the coordinate. This works because both frames are using the same axes rotation.
 
--  Any SHIP-RAW vector *minus* ``SHIP:BODY:POSITION`` Gives the vector in SOI-RAW coordinates.
--  Any SOI-RAW vector *plus* ``SHIP:BODY:POSITION`` Gives the vector in SHIP-RAW coordinates.
+-  Any SHIP-RAW position vector *minus* ``SHIP:BODY:POSITION`` Gives the vector in SOI-RAW coordinates.
+-  Any SOI-RAW position vector *plus* ``SHIP:BODY:POSITION`` Gives the vector in SHIP-RAW coordinates.

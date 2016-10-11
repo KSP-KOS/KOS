@@ -54,7 +54,7 @@ of some of its suffixes.
 RTAddon
 ~~~~~~~
 
-Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
+Starting version 0.17 of kOS you can access structure RTAddon via ``ADDONS:RT``.
 
 .. structure:: RTAddon
 
@@ -81,9 +81,7 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
     True if RT is installed and RT integration enabled.
 
     It is better to use ``ADDONS:AVAILABLE("RT")`` first to discover if
-    RemoteTech is installed, because if you call the suffix ``:AVAILABLE``
-    of RT, and RT isn't even installed, then the script will throw
-    an error and crash.
+    RemoteTech is installed.
 
 .. method:: RTAddon:DELAY(vessel)
 

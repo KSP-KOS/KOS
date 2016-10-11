@@ -17,7 +17,7 @@ The Kerbal Alarm Clock is a plugin that allows you to create reminder alarms at 
 
 Creator of the KAC provides API for integration with other mods. In KOS we provide limited access to KAC alarms via following structure and functions.
 
-Access structure KACAddon via `ADDONS:KAC`.
+Access structure KACAddon via ``ADDONS:KAC``.
 
 .. structure:: KACAddon
 
@@ -36,9 +36,7 @@ Access structure KACAddon via `ADDONS:KAC`.
     :access: Get only
 
     It is better to use ``ADDONS:AVAILABLE("KAC")`` first to discover if
-    KAC is installed, because if you call the suffix ``:AVAILABLE``
-    of KAC, and KAC isn't even installed, then the script will throw
-    an error and crash.
+    KAC is installed.
 
     True if KAC is installed and KAC integration enabled.
     Example of use::

@@ -68,6 +68,12 @@ The special LOCK variables for cooked steering
 
             LOCK STEERING TO VCRS(SHIP:VELOCITY:ORBIT, BODY:POSITION).
 
+    ``"kill"`` string
+
+        Steering may also be locked to the special string value of ``"kill"``
+        which tells the steering manager to attempt to stop any vessel rotation,
+        much like the stock SAS's stability assist mode.
+
 Like all ``LOCK`` expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other ``LOCK`` expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other ``LOCK`` expressions only get executed when you try to read the value of the variable. The reason is that the **kOS** computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.
 
 .. warning::
@@ -219,7 +225,7 @@ Tuning cooked steering
 
 .. note::
     .. versionadded:: 0.18.0
-        Version 0.18 of kOS completely gutted the internals of the old steering
+        This version of kOS completely gutted the internals of the old steering
         system and replaced them with the system described below.  Anything
         said below this point is pertinent to version 0.18 and higher only.
 

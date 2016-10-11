@@ -93,7 +93,7 @@ Creation
 
 .. function:: ROTATEFROMTO(fromVec,toVec)
 
-    A :struct:`Direction` can be created with the ROTATEFROMTO function.  It is *one of the infinite number of* rotations that could rotate vector *fromVec* to become vector *toVec* (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase "**infinite number of**".  Because there's no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there's an infinite number of roll angles that could result and all still fit the requirement::
+    A :struct:`Direction` can be created with the ``ROTATEFROMTO`` function.  It is *one of the infinite number of* rotations that could rotate vector *fromVec* to become vector *toVec* (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase "**infinite number of**".  Because there's no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there's an infinite number of roll angles that could result and all still fit the requirement::
 
         SET myDir to ROTATEFROMTO( v1, v2 ).
 
@@ -164,7 +164,7 @@ Structure
 
 .. attribute:: Direction:PITCH
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
 
@@ -172,14 +172,14 @@ Structure
 
 .. attribute:: Direction:YAW
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
     Rotation around the :math:`y` axis.
 
 .. attribute:: Direction:ROLL
 
-    :type: :ref:`scalar <scalar>` (deg)
+    :type: :struct:`Scalar` (deg)
     :access: Get only
 
 
@@ -210,9 +210,9 @@ Structure
 
     :type: :struct:`Direction`
     :access: Get only
-    
+
     :struct: Gives a `Direction` with the opposite rotation around its axes.
-    
+
 Operations and Methods
 ----------------------
 

@@ -80,7 +80,7 @@ name used already exists in local scope, then the lock command creates
 a lock function that only lasts as long as the current scope and then
 becomes unreachable after that.  If the variable name used does not exist
 in local scope, then LOCK will create it as a global variable, unless
-@LAZYGLOBAL is set to off, in which case it will be an error.
+``@LAZYGLOBAL`` is set to off, in which case it will be an error.
 
 Note that a LOCK expression is extremely similar to a user function.
 Every time you read the value of the "variable", it executes the expression
@@ -322,7 +322,7 @@ If we assume that AAAA, BBBB, CCCC, and DDDD are placeholders referring
 to the actual script syntax, then in the generic case, the following
 is how all FROM loops work:
 
-FROM loop::
+``FROM`` loop::
 
     FROM { AAAA } UNTIL BBBB STEP { CCCC } DO { DDDD }
 

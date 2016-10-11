@@ -17,7 +17,7 @@ Infernal Robotics introduces robotics parts to the game, letting you create movi
 
 Starting version 0.20 of the Infernal Robotics, mod creators introduced API to for easier access to robotic features.
 
-Access structure IRAddon via `ADDONS:IR`.
+Access structure IRAddon via ``ADDONS:IR``.
 
 .. structure:: IRAddon
 
@@ -37,9 +37,8 @@ Access structure IRAddon via `ADDONS:IR`.
     :type: :struct:`Boolean`
     :access: Get only
 
-    Please note, that if IR isn't even installed, then attempting to call
-    ``ADDONS:IR:AVAILABLE`` will throw an error.  It is better to first
-    call ``ADDONS:AVAILABLE("IR")`` to find out if the plugin even exists.
+    It is better to first call ``ADDONS:AVAILABLE("IR")`` to find out if the
+    plugin exists.
 
     Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.
     Example of use::
