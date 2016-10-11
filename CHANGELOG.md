@@ -3,14 +3,25 @@ kOS Mod Changelog
 
 # v1.0.1 (for KSP 1.1.3) Let's take some input!
 
+## Why 1.1.3 and not 1.2?
+
+We wanted to get the last bug fixes and new features into the hands of any users
+who might not update KSP to 1.2 right away.  Traditionally there are some mods
+that take a while to update when KSP releases a new version, and many users
+choose to wait for all of their favorite mods to update before upgrading KSP.
+By releasing in conjunction with the update, we can ensure that as many users as
+possible have access to these latest updates.  We will be releasing a version of
+kOS that is compatible with KSP 1.2 as soon as possible after the final build is
+released to the public.
+
 ### BREAKING CHANGES
 
 * As always, if you use the compiler feature to make KSM files, you should
   recompile the KSM files when using a new release of kOS or results will
   be unpredictable.
 * The `stage` command/function now implements the yield behavior, waiting until
-  the next frame to return.  This ensures that all vessel stats are updated
-  together. (https://github.com/KSP-KOS/KOS/pull/1807)
+  the next physics tick to return.  This ensures that all vessel stats are
+  updated together. (https://github.com/KSP-KOS/KOS/pull/1807)
 
 ### NEW FEATURES
 
