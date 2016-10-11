@@ -1,6 +1,66 @@
 kOS Mod Changelog
 =================
 
+# v1.0.1 (for KSP 1.1.3) Let's take some input!
+
+### BREAKING CHANGES
+
+* As always, if you use the compiler feature to make KSM files, you should
+  recompile the KSM files when using a new release of kOS or results will
+  be unpredictable.
+* The `stage` command/function now implements the yield behavior, waiting until
+  the next frame to return.  This ensures that all vessel stats are updated
+  together. (https://github.com/KSP-KOS/KOS/pull/1807)
+
+### NEW FEATURES
+
+* Functions and opcodes can now tell the CPU to yield (wait) based on their own
+  arbitrary logic.  This allows future functions to be "blocking" (preventing
+  further execution) without blocking KSP itself.
+  (https://github.com/KSP-KOS/KOS/issues/1805,
+  https://github.com/KSP-KOS/KOS/pull/1807, and
+  https://github.com/KSP-KOS/KOS/pull/1820)
+* New `timewarp` structure, available on the `kuniverse` bound variable. This
+  structure provides additional information and control over time warp. The old
+  warp bound variables remain in place.
+  (https://github.com/KSP-KOS/KOS/issues/1790 and
+  https://github.com/KSP-KOS/KOS/pull/1820)
+* Introducing a new `terminalinput` structure for keyboard interaction from
+  within scripts!  Currently support is only provided for getting single
+  characters.
+  (https://github.com/KSP-KOS/KOS/pull/1830)
+
+Please check http://ksp-kos.github.io/KOS_DOC/changes.html for more detailed
+explanations for the new features.
+
+### BUG FIXES
+
+* Fix for formatting of `time:clock` to pad zeros
+  (https://github.com/KSP-KOS/KOS/issues/1771 and
+  https://github.com/KSP-KOS/KOS/pull/1772)
+* Fix for not being able to construct a `vessel("foo")` if "foo" is the name of
+  the current vessel (https://github.com/KSP-KOS/KOS/issues/1565 and
+  https://github.com/KSP-KOS/KOS/pull/1802)
+* RemoteTech steering should be fixed.  At worst you may see a 1sec gap with
+  the controls, as we now refresh the steering callback about once per second.
+  (https://github.com/KSP-KOS/KOS/issues/1806 and
+  https://github.com/KSP-KOS/KOS/pull/1809)
+* Named functions defined within anonymous functions will no longer throw an
+  error (https://github.com/KSP-KOS/KOS/issues/1801 and
+  https://github.com/KSP-KOS/KOS/pull/1811)
+* `lock steering` no longer throws an exception inside of an anonymous functions
+  (https://github.com/KSP-KOS/KOS/issues/1784 and
+  https://github.com/KSP-KOS/KOS/pull/1811)
+* Compiled programs that include a large number of named functions should no
+  longer throw an error (https://github.com/KSP-KOS/KOS/issues/1796 and
+  https://github.com/KSP-KOS/KOS/pull/1812)
+* Fixed the first call to `wait` after the cpu boots
+  (https://github.com/KSP-KOS/KOS/issues/1785)
+* Various documentation fixes (https://github.com/KSP-KOS/KOS/pull/1810,
+  https://github.com/KSP-KOS/KOS/pull/1823, and
+  https://github.com/KSP-KOS/KOS/pull/1834)
+
+
 # v1.0.0 (for KSP 1.1.3) Hey let's stop calling it Beta.
 
 ### About the name:
@@ -13,7 +73,7 @@ a few things that we knew might break backward compatibility so we'd
 been putting them off for a long time.  A jump to 1.0 seems a good time
 to add those changes.
 
-Of course, it has lots of other changes for whatever else was being 
+Of course, it has lots of other changes for whatever else was being
 worked on since the last release.
 
 ### BREAKING CHANGES
