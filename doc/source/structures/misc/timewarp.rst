@@ -53,9 +53,13 @@ TimeWarp structure
           - Get/Set
           - The current multiplier timescale rate (i.e. 100 for 100x warp)
         * - :meth:`WARPTO`
-          - none
+          - None
           - Callable method
           - Call to warp forward to a known timestamp.
+        * - :meth:`CANCELWARP`
+          - None
+          - Callable method
+          - Cancel current warping (including :meth:`WARPTO`)
         * - :attr:`PHYSICSDELTAT`
           - :struct:`SCALAR`
           - Get
@@ -221,6 +225,17 @@ Suffixes
 
     Obviously this alters the values of :attr:`WARP<TimeWarp:WARP>` and :attr:`RATE<TimeWarp:RATE>` while
     the warping is happening.
+
+
+.. method:: TimeWarp:CANCELWARP()
+
+    :access: Method
+    :return: None
+
+    Call this method to cancel any active warp.  This will both interupt any
+    current automated warp (such as one using :meth:`WARPTO<TimeWarp:WARPTO>`
+    or the "Warp Here" user interface) and a manual warp setting (as if you had
+    used the ``SET WARP TO 0.`` command).
 
 .. attribute:: TimeWarp:PHYSICSDELTAT
 
