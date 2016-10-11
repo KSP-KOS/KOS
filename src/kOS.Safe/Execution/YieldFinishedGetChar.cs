@@ -10,20 +10,20 @@ namespace kOS.Safe.Execution
     public class YieldFinishedGetChar : YieldFinishedDetector
     {
         private SafeSharedObjects shared;
-        
+
         public override void Begin(SafeSharedObjects shared)
         {
             this.shared = shared;
         }
-        
+
         public override bool IsFinished()
         {
             Queue<char> q = shared.Screen.CharInputQueue;
-            
+
             if (q.Count > 0)
             {
                 char ch = q.Dequeue();
-                
+
                 // Replace the dummy return value the suffix
                 // left atop the stack with the real return value.
                 // Now that we're done waiting, the next Opcode

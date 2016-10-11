@@ -2,7 +2,7 @@
 
 namespace kOS.Safe.Encapsulation
 {
-    [kOS.Safe.Utilities.KOSNomenclature("Terminal")]
+    [Utilities.KOSNomenclature("Terminal")]
     public class TerminalStruct : Structure
     {
         private readonly SafeSharedObjects shared;
@@ -41,21 +41,21 @@ namespace kOS.Safe.Encapsulation
             // TODO: Uncomment the following if IsOpen gets implemented later:
             // AddSuffix("ISOPEN", new SetSuffix<BooleanValue>(() => IsOpen, Isopen = value, "true=open, false=closed.  You can set it to open/close the window."));
             AddSuffix("HEIGHT", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.RowCount,
-                                                         value => Shared.Screen.SetSize(value, Shared.Screen.ColumnCount),
-                                                         MINROWS,
-                                                         MAXROWS,
-                                                         "Get or Set the number of rows on the screen.  Value is limited to the range [" + MINROWS + "," + MAXROWS + "]"));
+                                                                value => Shared.Screen.SetSize(value, Shared.Screen.ColumnCount),
+                                                                MINROWS,
+                                                                MAXROWS,
+                                                                "Get or Set the number of rows on the screen.  Value is limited to the range [" + MINROWS + "," + MAXROWS + "]"));
             AddSuffix("WIDTH", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.ColumnCount,
-                                                        value => Shared.Screen.SetSize(Shared.Screen.RowCount, value),
-                                                        MINCOLUMNS,
-                                                        MAXCOLUMNS,
-                                                        "Get or Set the number of columns on the screen.  Value is limited to the range [" + MINCOLUMNS + "," + MAXCOLUMNS + "]"));
+                                                               value => Shared.Screen.SetSize(Shared.Screen.RowCount, value),
+                                                               MINCOLUMNS,
+                                                               MAXCOLUMNS,
+                                                               "Get or Set the number of columns on the screen.  Value is limited to the range [" + MINCOLUMNS + "," + MAXCOLUMNS + "]"));
             AddSuffix("REVERSE", new SetSuffix<BooleanValue>(() => Shared.Screen.ReverseScreen,
-                                                     value => Shared.Screen.ReverseScreen = value,
-                                                     "Get or set the value of whether or not the terminal is in reversed mode."));
+                                                             value => Shared.Screen.ReverseScreen = value,
+                                                             "Get or set the value of whether or not the terminal is in reversed mode."));
             AddSuffix("VISUALBEEP", new SetSuffix<BooleanValue>(() => Shared.Screen.VisualBeep,
-                                                       value => Shared.Screen.VisualBeep = value,
-                                                       "Get or set the value of whether or not the terminal shows beeps silently with a visual flash."));
+                                                                value => Shared.Screen.VisualBeep = value,
+                                                                "Get or set the value of whether or not the terminal shows beeps silently with a visual flash."));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.Brightness,
                                                                     value => Shared.Screen.Brightness = (float)value,
                                                                     0f,
