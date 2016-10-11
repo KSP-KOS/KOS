@@ -835,7 +835,7 @@ namespace kOS.Screen
                 for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32)
+                    if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
                         ShowCharacterByAscii(c, column, row, reversingScreen,
                                              charWidth, charHeight, screen.Brightness);
                 }

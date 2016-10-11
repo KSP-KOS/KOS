@@ -160,7 +160,10 @@ namespace kOS.Screen
         public bool IsWaitingForCommand()
         {
             IProgramContext context = ((CPU)Shared.Cpu).GetInterpreterContext();
-            return context.Program[context.InstructionPointer] is OpcodeEOF;
+            // If running from a boot script, there will be no interpreter instructions,
+            // only a single OpcodeEOF.  So we check to see if the interpreter is locked,
+            // which is a sign that a sub-program is running.
+            return !locked && context.Program[context.InstructionPointer] is OpcodeEOF;
         }
 
         public void SetInputLock(bool isLocked)
