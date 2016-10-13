@@ -49,14 +49,12 @@ namespace kOS.Execution
         {
             var resourceDefs = PartResourceLibrary.Instance.resourceDefinitions;
             PartResourceDefinition resourceInfo = null;
-            // elliminate enumerator, loop through the list instead
-            // TODO: Check to see if this gets switched to a list that supports indexes
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
             foreach (var def in resourceDefs)
-            //for (int i = 0; i < defs.Count; ++i)
             {
                 // loop through definitions looking for a case insensitive name match,
                 // return true if a match is found
-                //var def = defs[i];
                 if (def.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase))
                 {
                     resourceInfo = def;

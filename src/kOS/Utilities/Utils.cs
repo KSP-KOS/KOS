@@ -285,14 +285,13 @@ namespace kOS.Utilities
         /// <returns>true if a matching resource definition is found</returns>
         public static bool IsResource(string insensitiveName, out string fixedName)
         {
-            // eliminate enumerators, use index based access
             var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
             foreach (var def in defs)
-                //for (int i = 0; i < defs.Count; ++i)
             {
                 // loop through definitions looking for a case insensitive name match,
                 // return true if a match is found
-                //var def = defs[i];
                 if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
                 {
                     fixedName = def.name;
@@ -312,15 +311,13 @@ namespace kOS.Utilities
         /// <returns>true if a matching resource definition is found</returns>
         public static bool IsResource(string insensitiveName, out int foundId)
         {
-            // eliminate enumerators, use index based access
             var defs = PartResourceLibrary.Instance.resourceDefinitions;
-            // TODO: Check to see if this gets switched to a list that supports indexes
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
             foreach (var def in defs)
-            //for (int i = 0; i < defs.Count; ++i)
             {
                 // loop through definitions looking for a case insensitive name match,
                 // return true if a match is found
-                //var def = defs[i];
                 if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
                 {
                     foundId = def.id;

@@ -97,7 +97,7 @@ namespace kOS.Suffixed
             int vstgComp = shared.Vessel.currentStage - 2;
             var parts = shared.Vessel.Parts;
             global::Part part;
-            for (int i = parts.Count; i-- > 0;)
+            for (int i = parts.Count - 1; i >= 0; --i)
             {
                 part = parts[i];
                 if (part.State == PartStates.ACTIVE)
