@@ -15,6 +15,7 @@ namespace kOS.Safe.Screen
         int BeepsPending {get; set;}
         bool ReverseScreen {get; set;}
         bool VisualBeep {get; set;}
+        Queue<char> CharInputQueue { get; }
         int TopRow {get;}
         void SetSize(int rowCount, int columnCount);
         int ScrollVertical(int deltaRows);

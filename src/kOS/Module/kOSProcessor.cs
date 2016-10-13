@@ -880,7 +880,7 @@ namespace kOS.Module
                     {
                         shared.VolumeMgr.SwitchTo(HardDisk);
                     }
-                    if (shared.Cpu != null) shared.Cpu.Boot();
+                    firstUpdate = true; // handle booting the cpu on the next FixedUpdate
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
                     break;

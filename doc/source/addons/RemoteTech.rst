@@ -9,6 +9,9 @@ RemoteTech is a modification for Squad’s "Kerbal Space Program" (KSP) which ov
 - Sources: https://github.com/RemoteTechnologiesGroup/RemoteTech
 - Documentation: http://remotetechnologiesgroup.github.io/RemoteTech/
 
+You can find out if the RemoteTech addon is available in the
+current game installation by usng the boolean expression
+``addons:available("RT")``.
 
 Interaction with kOS
 --------------------
@@ -51,14 +54,14 @@ of some of its suffixes.
 RTAddon
 ~~~~~~~
 
-Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
+Starting version 0.17 of kOS you can access structure RTAddon via ``ADDONS:RT``.
 
 .. structure:: RTAddon
 
     ===================================== ===================================== =============
      Suffix                                Type                                  Description
     ===================================== ===================================== =============
-     :attr:`AVAILABLE`                     :struct:`Boolean` (readonly)          True if RT is installed and RT integration enabled.
+     :attr:`AVAILABLE`                     :struct:`Boolean` (readonly)          True if RT is installed and RT integration enabled. It is better to use ``addons:available("IR")`` for this.
      :meth:`DELAY(vessel)`                 :struct:`Scalar`                      Get shortest possible delay to given :struct:`Vessel`
      :meth:`KSCDELAY(vessel)`              :struct:`Boolean`                     Get delay from KSC to given :struct:`Vessel`
      :meth:`ANTENNAHASCONNECTION(part)`    :struct:`Boolean`                     True if given :struct:`Part` has any connection
@@ -76,6 +79,9 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
     :access: Get only
 
     True if RT is installed and RT integration enabled.
+
+    It is better to use ``ADDONS:AVAILABLE("RT")`` first to discover if
+    RemoteTech is installed.
 
 .. method:: RTAddon:DELAY(vessel)
 

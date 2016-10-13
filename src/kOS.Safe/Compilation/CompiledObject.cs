@@ -297,7 +297,7 @@ namespace kOS.Safe.Compilation
                 else if ( (! string.IsNullOrEmpty(op.Label)) &&
                           (op.Label != expectedLabel) )
                 {
-                    op = new OpcodeLabelReset(op.Label);
+                    op = new OpcodeLabelReset(op.Label) { SourcePath = op.SourcePath, SourceLine = op.SourceLine } ;
                     --index;
                     justInsertedLabel = true;
                 }

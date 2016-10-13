@@ -81,6 +81,10 @@ KUniverse 4th wall methods
           - :struct:`LoadDistance`
           - Get
           - Returns the set of default load and pack distances for the game.
+        * - :attr:`TIMEWARP`
+          - :struct:`TimeWarp`
+          - Get
+          - Returns a value you can use to manipulate Kerbal Space Program's time warp.
         * - :attr:`ACTIVEVESSEL`
           - :struct:`Vessel`
           - Get/Set
@@ -229,6 +233,17 @@ KUniverse 4th wall methods
     (To affect the value on a vessel already existing in the current scene
     you have to use the :LOADDISTANCE suffix of the Vessel structure.)
 
+.. attribute:: KUniverse:TIMEWARP
+
+    :access: Get
+    :type: :struct:`TimeWarp`.
+
+    Returns the :struct:`TimeWarp` structure that you can use to manipulate
+    Kerbal Space Program's time warping features.   See the documentation
+    on :struct:`TimeWarp` for more details.
+    
+    example: ``set kuniverse:timewarp:rate to 50.``
+    
 .. attribute:: KUniverse:ACTIVEVESSEL
 
     :access: Get/Set

@@ -66,7 +66,9 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Encapsulation\TerminalInput.cs" />
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
+    <Compile Include="Exceptions\KOSInvalidTargetException.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
     <Compile Include="Exceptions\KOSVolumeOutOfRangeException.cs" />
@@ -175,6 +177,10 @@
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
+    <Compile Include="Execution\YieldFinishedDetector.cs" />
+    <Compile Include="Execution\YieldFinishedGameTimer.cs" />
+    <Compile Include="Execution\YieldFinishedGetChar.cs" />
+    <Compile Include="Execution\YieldFinishedNextTick.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="Function\SafeFunctionBase.cs" />
     <Compile Include="Function\FunctionManager.cs" />

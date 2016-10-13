@@ -80,7 +80,7 @@ name used already exists in local scope, then the lock command creates
 a lock function that only lasts as long as the current scope and then
 becomes unreachable after that.  If the variable name used does not exist
 in local scope, then LOCK will create it as a global variable, unless
-@NOLAZYGLOBAL is set to off, in which case it will be an error.
+``@LAZYGLOBAL`` is set to off, in which case it will be an error.
 
 Note that a LOCK expression is extremely similar to a user function.
 Every time you read the value of the "variable", it executes the expression
@@ -322,7 +322,7 @@ If we assume that AAAA, BBBB, CCCC, and DDDD are placeholders referring
 to the actual script syntax, then in the generic case, the following
 is how all FROM loops work:
 
-FROM LOOP::
+``FROM`` loop::
 
     FROM { AAAA } UNTIL BBBB STEP { CCCC } DO { DDDD }
 
@@ -717,7 +717,7 @@ To alter this, a new ability was added in kOS 0.19.3 and above to
 have triggers simply :ref:`return a true or false value <trigger_return>`
 to determine if they wish to be preserved.
 
-But prior to kOS 0.19.3 the only way to do it in kerboscript was
+But prior to kOS 0.19.3, the only way to do it in kerboscript was
 with the ``PRESERVE`` keyword, which will likely remain in
 kerboscript for quite some time because it has a lot of backward
 compatibility legacy.
