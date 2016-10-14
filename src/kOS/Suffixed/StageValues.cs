@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KSP.UI.Screens;
+using kOS.Module;
 
 namespace kOS.Suffixed
 {
@@ -13,10 +14,13 @@ namespace kOS.Suffixed
     public class StageValues : Structure
     {
         private readonly SharedObjects shared;
+        private HashSet<global::Part> partHash = new HashSet<global::Part>();
+        private PartSet partSet;
 
         public StageValues(SharedObjects shared)
         {
             this.shared = shared;
+            partSet = new PartSet(partHash);
 
             InitializeSuffixes();
         }
@@ -31,12 +35,11 @@ namespace kOS.Suffixed
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
         {
-            var resources = shared.Vessel.GetActiveResources();
             var toReturn = new ListValue<ActiveResourceValue>();
-
-            foreach (var resource in resources)
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            foreach (var def in defs)
             {
-                toReturn.Add(new ActiveResourceValue(resource, shared));
+                toReturn.Add(new ActiveResourceValue(shared.Vessel, def.id, shared));
             }
 
             return toReturn;
@@ -44,12 +47,11 @@ namespace kOS.Suffixed
 
         private Lexicon GetResourceDictionary()
         {
-            var resources = shared.Vessel.GetActiveResources();
             var toReturn = new Lexicon();
-
-            foreach (var resource in resources)
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            foreach (var def in defs)
             {
-                toReturn.Add(new StringValue(resource.info.name), new ActiveResourceValue(resource, shared));
+                toReturn.Add(new StringValue(def.name), new ActiveResourceValue(shared.Vessel, def.id, shared));
             }
 
             return toReturn;
@@ -57,55 +59,56 @@ namespace kOS.Suffixed
 
         public override ISuffixResult GetSuffix(string suffixName)
         {
-            if (!IsResource(suffixName))
+            string fixedName;
+            if (!Utils.IsResource(suffixName, out fixedName))
             {
                 return base.GetSuffix(suffixName);
             }
 
-            var resourceAmount = GetResourceOfCurrentStage(suffixName);
+            var resourceAmount = GetResourceOfCurrentStage(fixedName);
             return new SuffixResult(ScalarValue.Create(resourceAmount.HasValue ? resourceAmount.Value : 0.0));
-        }
-
-        private bool IsResource(string suffixName)
-        {
-            return PartResourceLibrary.Instance.resourceDefinitions.Any(
-                pr => string.Equals(pr.name, suffixName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private double? GetResourceOfCurrentStage(string resourceName)
         {
-            PartResourceDefinition resourceDef = PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(pr => string.Equals(pr.name, resourceName, StringComparison.CurrentCultureIgnoreCase));
+            PartResourceDefinition resourceDef = PartResourceLibrary.Instance.resourceDefinitions[resourceName];
+
+            double total = 0;
+            double capacity = 0;
 
             if (resourceDef == null)
             {
                 throw new KOSInvalidArgumentException("STAGE", resourceName, "The resource definition could not be found");
             }
 
-            var list = new List<PartResource>();
-            if (resourceDef.resourceFlowMode == ResourceFlowMode.STACK_PRIORITY_SEARCH)
+            CreatePartSet();
+
+            partSet.GetConnectedResourceTotals(resourceDef.id, out total, out capacity, true);
+
+            return Math.Round(total, 2);
+        }
+
+        public void CreatePartSet()
+        {
+            // The following replicates the logic in KSP.UI.Screens.ResourceDisplay.CreateResourceList
+            // We're creating the set every time because it doesn't pay attention to the various events
+            // that would tell us that the old partset is no longer valid.
+            partHash.Clear();
+            int vstgComp = shared.Vessel.currentStage - 2;
+            var parts = shared.Vessel.Parts;
+            global::Part part;
+            for (int i = parts.Count - 1; i >= 0; --i)
             {
-                var engines = VesselUtils.GetListOfActivatedEngines(shared.Vessel);
-                foreach (var engine in engines)
+                part = parts[i];
+                if (part.State == PartStates.ACTIVE)
                 {
-                    engine.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
+                    foreach (var crossPart in part.crossfeedPartSet.GetParts())
+                    {
+                        if (crossPart.inverseStage > vstgComp) partHash.Add(crossPart);
+                    }
                 }
             }
-            else if (resourceDef.resourceFlowMode == ResourceFlowMode.NO_FLOW) {
-                var engines = VesselUtils.GetListOfActivatedEngines(shared.Vessel);
-                foreach (var engine in engines)
-                {
-                    list.AddRange(engine.Resources.GetAll(resourceDef.id));
-                }
-            }
-            else
-            {
-                shared.Vessel.rootPart.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
-            }
-            if (list.Count == 0)
-            {
-                return 0;
-            }
-            return Math.Round(list.GroupBy(e => e.part.flightID).Select(e => e.FirstOrDefault()).Sum(e => e.amount), 2);
+            partSet.RebuildInPlace();
         }
 
         public override string ToString()

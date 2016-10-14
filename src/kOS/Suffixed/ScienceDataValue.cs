@@ -36,7 +36,8 @@ namespace kOS.Suffixed
         {
             ScienceSubject subjectByID = ResearchAndDevelopment.GetSubjectByID(scienceData.subjectID);
 
-            return ResearchAndDevelopment.GetScienceValue(scienceData.dataAmount, subjectByID, scienceData.transmitValue) *
+            // TODO: make sure transmitValue became transmitBonus
+            return ResearchAndDevelopment.GetScienceValue(scienceData.dataAmount, subjectByID, scienceData.transmitBonus) *
                 HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier;
         }
 

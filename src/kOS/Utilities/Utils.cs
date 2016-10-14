@@ -275,5 +275,57 @@ namespace kOS.Utilities
                 parent = null;
             return parent;
         }
+
+        /// <summary>
+        /// Determines if a given case insensitive name corresponds with a defined resource, and
+        /// outputs the case sensitive name for easy access from Squad's lists.
+        /// </summary>
+        /// <param name="insensitiveName">case insensitive name</param>
+        /// <param name="fixedName">output case sensitive name</param>
+        /// <returns>true if a matching resource definition is found</returns>
+        public static bool IsResource(string insensitiveName, out string fixedName)
+        {
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
+            foreach (var def in defs)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
+                {
+                    fixedName = def.name;
+                    return true;
+                }
+            }
+            fixedName = insensitiveName;
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a given case insensitive name corresponds with a defined resource, and
+        /// outputs the resource id for easy access from Squad's lists.
+        /// </summary>
+        /// <param name="insensitiveName">case insensitive name</param>
+        /// <param name="foundId">output id of the found resource, zero if none found</param>
+        /// <returns>true if a matching resource definition is found</returns>
+        public static bool IsResource(string insensitiveName, out int foundId)
+        {
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
+            foreach (var def in defs)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
+                {
+                    foundId = def.id;
+                    return true;
+                }
+            }
+            foundId = 0;
+            return false;
+        }
     }
 }

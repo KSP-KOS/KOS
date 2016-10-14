@@ -18,9 +18,9 @@ namespace kOS.Suffixed.Part
         private void SensorInitializeSuffixes()
         {
             AddSuffix("ACTIVE", new SetSuffix<BooleanValue>(() => sensor.sensorActive, value => sensor.sensorActive = value));
-            AddSuffix("TYPE", new Suffix<StringValue>(() => sensor.sensorType));
+            AddSuffix("TYPE", new Suffix<StringValue>(() => sensor.sensorType.ToString()));
             AddSuffix("DISPLAY", new Suffix<StringValue>(() => sensor.readoutInfo));
-            AddSuffix("POWERCONSUMPTION", new Suffix<ScalarValue>(() => sensor.powerConsumption));
+            AddSuffix("POWERCONSUMPTION", new Suffix<ScalarValue>(GetPowerConsumption));
             AddSuffix("TOGGLE", new NoArgsVoidSuffix(() => sensor.Toggle()));
         }
 
@@ -37,6 +37,15 @@ namespace kOS.Suffixed.Part
                 }
             }
             return toReturn;
+        }
+
+        public ScalarValue GetPowerConsumption()
+        {
+            if (sensor.resHandler != null)
+            {
+                return sensor.resHandler.GetAverageInput();
+            }
+            return 0;
         }
     }
 }

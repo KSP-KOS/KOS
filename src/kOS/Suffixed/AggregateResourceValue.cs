@@ -63,8 +63,10 @@ namespace kOS.Suffixed
             var resources = new Dictionary<string, AggregateResourceValue>();
             foreach (var part in parts)
             {
-                foreach (PartResource resource in part.Resources)
+                PartResource resource;
+                for (int i = 0; i < part.Resources.Count; ++i)
                 {
+                    resource = part.Resources[i];
                     AggregateResourceValue aggregateResourceAmount;
                     if (!resources.TryGetValue(resource.resourceName, out aggregateResourceAmount))
                     {

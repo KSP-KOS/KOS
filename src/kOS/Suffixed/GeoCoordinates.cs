@@ -189,7 +189,7 @@ namespace kOS.Suffixed
 
             var targetWorldCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, GetTerrainAltitude() );
 
-            var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.findWorldCenterOfMass()).normalized;
+            var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.CoMD).normalized;
             var headingQ =
                 Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(Quaternion.LookRotation(vector, up))*
                                    Quaternion.LookRotation(north, up));
@@ -226,7 +226,7 @@ namespace kOS.Suffixed
         public Vector GetAltitudePosition(ScalarValue altitude)
         {
             Vector3d latLongCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, altitude);
-            Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
+            Vector3d hereCoords = Shared.Vessel.CoMD;
             return new Vector(latLongCoords - hereCoords);
         }
 

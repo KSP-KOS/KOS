@@ -37,7 +37,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("STAGE", new Suffix<ScalarValue>(() => Part.inverseStage));
             AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
-            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.transform.position - Shared.Vessel.findWorldCenterOfMass())));
+            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.transform.position - Shared.Vessel.CoMD)));
             AddSuffix("TAG", new SetSuffix<StringValue>(GetTagName, SetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
@@ -152,9 +152,10 @@ namespace kOS.Suffixed.Part
         private ListValue GatherResources(global::Part part)
         {
             var resources = new ListValue();
-            foreach (PartResource resource in part.Resources)
+            // eliminate enumerators, use index based access
+            for (int i = 0; i < part.Resources.Count; i++)
             {
-                resources.Add(new SingleResourceValue(resource));
+                resources.Add(new SingleResourceValue(part.Resources[i]));
             }
             return resources;
         }

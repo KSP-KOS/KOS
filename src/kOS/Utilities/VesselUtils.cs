@@ -10,11 +10,6 @@ namespace kOS.Utilities
 {
     public static class VesselUtils
     {
-        public static bool HasCrewControl(this Vessel vessel)
-        {
-            return vessel.parts.Any(p => p.isControlSource && (p.protoModuleCrew.Any()));
-        }
-
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
             var retList = new List<Part>();
@@ -48,25 +43,23 @@ namespace kOS.Utilities
 
         public static bool TryGetResource(Vessel vessel, string resourceName, out double total)
         {
-            var resourceIsFound = false;
+            int resourceId;
+            var resourceIsFound = Utils.IsResource(resourceName, out resourceId);
             total = 0;
-            PartResourceDefinition resourceDefinition =
-                PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(
-                    rd => rd.name.Equals(resourceName, StringComparison.CurrentCultureIgnoreCase));
-            // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
-            if (resourceDefinition != null)
-                resourceIsFound = true;
-            resourceName = resourceName.ToUpper();
-            foreach (var part in vessel.parts)
+            if (resourceIsFound)
             {
-                foreach (PartResource resource in part.Resources)
+                Part part;
+                PartResource resource;
+                for (int i = 0; i < vessel.Parts.Count; ++i)
                 {
-                    if (resource.resourceName.ToUpper() != resourceName) continue;
-                    resourceIsFound = true;
-                    total += resource.amount;
+                    part = vessel.Parts[i];
+                    resource = part.Resources.Get(resourceId); // returns null if no matching key found
+                    if (resource != null)
+                    {
+                        total += resource.amount;
+                    }
                 }
             }
-
             return resourceIsFound;
         }
 
@@ -205,7 +198,7 @@ namespace kOS.Utilities
             var up = vessel.upAxis;
             var north = GetNorthVector(vessel);
             var vector =
-                Vector3d.Exclude(vessel.upAxis, target.findWorldCenterOfMass() - vessel.findWorldCenterOfMass()).normalized;
+                Vector3d.Exclude(vessel.upAxis, target.CoMD - vessel.CoMD).normalized;
             var headingQ =
                 Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(Quaternion.LookRotation(vector, up)) *
                                    Quaternion.LookRotation(north, up));
@@ -283,17 +276,6 @@ namespace kOS.Utilities
                                 }
                             }
                         }
-                    }
-                }
-                else if (p.Modules.OfType<ModuleLandingLeg>().Any()) //Legacy
-                {
-                    atLeastOneLeg = true;
-
-                    var legs = p.FindModulesImplementing<ModuleLandingLeg>();
-
-                    if (legs.Any(l => l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED)))
-                    {
-                        return false;
                     }
                 }
             }
@@ -379,7 +361,7 @@ namespace kOS.Utilities
                 {
                     atLeastOneSolarPanel = true;
 
-                    if (c.panelState == ModuleDeployableSolarPanel.panelStates.RETRACTED)
+                    if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
                     {
                         // If just one panel is not deployed return false
                         return false;

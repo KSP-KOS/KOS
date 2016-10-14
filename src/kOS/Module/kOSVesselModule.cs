@@ -47,8 +47,9 @@ namespace kOS.Module
         /// by KSP after the VesselModule has been attached to the parent Vessel.  We use it to store
         /// the parent Vessel and track the kOSVesselModule instances.
         /// </summary>
-        public override void OnAwake()
+        protected override void OnAwake()
         {
+            base.OnAwake();
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
@@ -67,7 +68,7 @@ namespace kOS.Module
         /// KSP after Awake.  All parts should be added to the vessel now, so it is safe to walk the
         /// parts tree to find the attached kOSProcessor modules.
         /// </summary>
-        public void Start()
+        protected override void OnStart()
         {
             SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.vesselName, ID));
             HarvestParts();
