@@ -13,6 +13,8 @@ namespace kOS.Safe.Screen
         private int topRow;
         private readonly List<IScreenBufferLine> buffer;
         private readonly List<SubBuffer> subBuffers;
+
+        public Queue<char> CharInputQueue { get; private set; }
         
         public int BeepsPending {get; set;}
         
@@ -64,6 +66,8 @@ namespace kOS.Safe.Screen
             Notifyees = new List<ResizeNotifier>();
 
             subBuffers = new List<SubBuffer>();
+            
+            CharInputQueue = new Queue<char>();
 
             RowCount = DEFAULT_ROWS;
             ColumnCount = DEFAULT_COLUMNS;

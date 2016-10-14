@@ -155,6 +155,7 @@
     <Compile Include="Suffixed\AggregateResourceValue.cs" />
     <Compile Include="Suffixed\SingleResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Suffixed\TimeWarpValue.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\VesselAlt.cs" />
     <Compile Include="Suffixed\VesselEta.cs" />

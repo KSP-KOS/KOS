@@ -510,7 +510,7 @@ namespace kOS.Function
                     throw new KOSArgumentMismatchException(new[] { 1 }, args);
             }
             AssertArgBottomAndConsume(shared);
-            TimeWarp.fetch.WarpTo(ut);
+            TimeWarpValue.Instance.WarpTo(ut);
         }
     }
 

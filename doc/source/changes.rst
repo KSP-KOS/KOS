@@ -24,6 +24,64 @@ release.
 
 ****
 
+Changes in 1.0.1
+----------------
+
+Terminal Input
+::::::::::::::
+
+A new structure :struct:`TerminalInput` is available as a suffix of
+:attr:`Terminal<Terminal:INPUT>`, allowing scripts to respond to user input.
+
+Example::
+
+    terminal:input:clear().
+    print "Press any key to continue...".
+    terminal:input:getchar(). // blocking callback
+    print "Input will be echoed back to you.  Press q to quit".
+    set done to false.
+    until done {
+        if (terminal:input:haschar) {
+            set input to terminal:input:getchar().
+            if input = "q" {
+                set done to true.
+            }
+            else {
+                print "Input read was: " + input + " (ascii " + unchar(input) + ")".
+            }
+        }
+        wait 0.
+    }
+
+Timewarp
+::::::::
+
+The new :struct:`TimeWarp` structure provides better access to information about
+timewarp.  It provides lists of warp rates, information about the physics
+timestep, and can tell you if the warp rate has settled.
+
+Example::
+
+    print kuniverse:timewarp:ratelist. // prints the rates available in the current mode
+    set eta to 150 * 6 * 60 * 60. // 150 days
+    kuniverse:timewarp:warpto(time:seconds + eta).
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 60 * 60.
+    kuniverse:timewarp:cancelwarp().
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    print "rate:    " + kuniverse:timewarp:rate.
+    wait until kuniverse:timewarp:issettled.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    print "rate:    " + kuniverse:timewarp:rate.
+
 Changes in 1.0.0
 ----------------
 
@@ -100,7 +158,7 @@ Maneuver nodes as a list
 More pseudo-action-groups
 :::::::::::::::::::::::::
 
-:ref:`Some new Pseudo-Action-Groups added <kos-boolean-flags>` for 
+:ref:`Some new Pseudo-Action-Groups added <kos-boolean-flags>` for
 handling a lot of new groups of parts.
 
 Get Navball Mode

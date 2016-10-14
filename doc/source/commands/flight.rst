@@ -10,7 +10,6 @@ Flight Control
     flight/raw
     flight/pilot
     flight/systems
-    flight/warp
 
 Unless otherwise stated, all controls that a **kOS** CPU attempts will be done on the :ref:`CPU Vessel <cpu vessel>`. There are three styles of control:
 
