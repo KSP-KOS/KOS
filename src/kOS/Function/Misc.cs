@@ -127,6 +127,7 @@ namespace kOS.Function
             if (StageManager.CanSeparate && shared.Vessel.isActiveVessel)
             {
                 StageManager.ActivateNextStage();
+                shared.Cpu.YieldProgram(new YieldFinishedNextTick());
             }
             else if (!StageManager.CanSeparate)
             {
@@ -491,7 +492,7 @@ namespace kOS.Function
                     throw new KOSArgumentMismatchException(new[] { 1 }, args);
             }
             AssertArgBottomAndConsume(shared);
-            TimeWarp.fetch.WarpTo(ut);
+            TimeWarpValue.Instance.WarpTo(ut);
         }
     }
 

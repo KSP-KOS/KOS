@@ -295,6 +295,8 @@ namespace kOS.Screen
         void OnGUI()
         {
             if (!IsOpen) return;
+            
+            ProcessUnconsumedInput();
 
             if (isLocked) ProcessKeyEvents();
             
@@ -543,7 +545,9 @@ namespace kOS.Screen
         /// <param name="ch">The character, which might be a UnicodeCommand char</param>
         /// <param name="whichTelnet">If this came from a telnet session, which one did it come from?
         /// Set to null in order to say it wasn't from a telnet but was from the interactive GUI</param>
-        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
+        /// <param name="doQueuing">true if the keypress should get queued if we're not ready for it
+        /// right now.  If false, then the keypress will be ignored if we're not ready for it.</param>
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet, bool doQueuing = true)
         {
             // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method:
             switch (inputExpected)
@@ -568,7 +572,7 @@ namespace kOS.Screen
             // bigger task than it may first seem.)
             if (0x0020 <= ch && ch <= 0x007f)
             {
-                 Type(ch);
+                 Type(ch, doQueuing);
             }
             else
             {
@@ -578,13 +582,15 @@ namespace kOS.Screen
                     // maps directly into nicely, otherwise just pass it through to SpecialKey():
 
                     case (char)UnicodeCommand.DELETELEFT:
-                        Type((char)8);
+                    case (char)8:
+                        Type((char)8, doQueuing);
                         break;
                     case (char)UnicodeCommand.STARTNEXTLINE:
-                        Type('\r');
+                    case '\r':
+                        Type('\r', doQueuing);
                         break;
                     case '\t':
-                        Type('\t');
+                        Type('\t', doQueuing);
                         break;
                     case (char)UnicodeCommand.RESIZESCREEN:
                         inputExpected = ExpectNextChar.RESIZEWIDTH;
@@ -615,7 +621,7 @@ namespace kOS.Screen
                     // Typical case is to just let SpecialKey do the work:
                     
                     default:
-                        SpecialKey(ch);
+                        SpecialKey(ch, doQueuing);
                         break;
                 }
             }
@@ -623,23 +629,70 @@ namespace kOS.Screen
             // else ignore it - unimplemented char.
         }
 
-        void Type(char ch)
+        void Type(char ch, bool doQueuing = true)
         {
-            if (shared != null && shared.Interpreter != null)
+            if (shared != null)
             {
-                shared.Interpreter.Type(ch);
-                if (IsOpen && keyClickEnabled)
+                if (shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
+                {
+                    shared.Interpreter.Type(ch);
+                }
+                else if (doQueuing)
+                {
+                    shared.Screen.CharInputQueue.Enqueue(ch);
+                }
+                if (IsOpen && keyClickEnabled && doQueuing)
                     shared.SoundMaker.BeginSound("click");
             }
         }
 
-        void SpecialKey(char key)
+        void SpecialKey(char key, bool doQueuing = true)
         {
-            if (shared != null && shared.Interpreter != null)
+            if (shared != null)
             {
-                bool wasUsed = shared.Interpreter.SpecialKey(key);
-                if (IsOpen && keyClickEnabled && wasUsed)
+                bool wasUsed = false;
+                
+                if (shared.Interpreter != null && 
+                    (shared.Interpreter.IsWaitingForCommand() || (key == (char)UnicodeCommand.BREAK)))
+                {
+                    wasUsed = shared.Interpreter.SpecialKey(key);
+                }
+                else if (doQueuing)
+                {
+                    shared.Screen.CharInputQueue.Enqueue(key);
+                    wasUsed = true;
+                }
+                if (IsOpen && keyClickEnabled && wasUsed && doQueuing)
                     shared.SoundMaker.BeginSound("click");
+            }
+        }
+        
+        /// <summary>
+        /// When the input queue is not empty and the program or command is done such that
+        /// the input cursor is now all the way back to the interpreter awaiting new input,
+        /// send that queue out to the interpreter.  This allows you to type the next command
+        /// blindly while waiting for the previous one to finish.
+        /// This is how people used to terminals would expect things to work.
+        /// </summary>
+        void ProcessUnconsumedInput()
+        {
+            if (shared != null && shared.Interpreter != null && shared.Interpreter.IsWaitingForCommand())
+            {
+                Queue<char> q = shared.Screen.CharInputQueue;
+                
+                while (q.Count > 0 && shared.Interpreter.IsWaitingForCommand())
+                {
+                    // Setting doQueuing to false here just as an
+                    // additional safety measure.  Hypothetically it
+                    // should never re-queue this input because we're
+                    // in the condition where it will consume it right
+                    // away.  But just in case there's some error in
+                    // that logic, we want to avoid an infinite loop here
+                    // (which could happen if we kept re-queuing the
+                    // chars every time we processed one in this loop.)
+                    char key = q.Dequeue();
+                    ProcessOneInputChar(key, null, false);
+                }
             }
         }
         
@@ -782,7 +835,7 @@ namespace kOS.Screen
                 for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32)
+                    if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
                         ShowCharacterByAscii(c, column, row, reversingScreen,
                                              charWidth, charHeight, screen.Brightness);
                 }

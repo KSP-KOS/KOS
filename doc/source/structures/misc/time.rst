@@ -1,6 +1,11 @@
 .. _time:
 .. _timestamp:
 
+(For the documentation on controlling time **warp**,
+please see the :struct:`timewarp` page.  This page is the
+documentation on the structure that holds an individual
+timestamp representing some universal moment in time.)
+
 Time Span
 =========
 

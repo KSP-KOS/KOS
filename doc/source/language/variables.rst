@@ -114,14 +114,15 @@ global is to declare it explicitly with one of these DECLARE statements**.
 Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
-.. versionadded:: 0.17
-    The syntax without the initializer, looking like so
-
-    .. code-block:: kerboscript
-
-        DECLARE x. // no initializer like "TO 1."
-
-    is **no longer legal syntax**.
+.. note::
+    .. versionadded:: 0.17
+        The syntax without the initializer, looking like so:
+    
+        .. code-block:: kerboscript
+        
+            DECLARE x. // no initializer like "TO 1."
+        
+        is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
@@ -234,8 +235,9 @@ expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.
 
-.. versionadded:: 0.18.3
-   Optional Parameters were added as a new feature in kOS 0.18.3
+.. note::
+    .. versionadded:: 0.18.3
+        Optional Parameters were added as a new feature in kOS 0.18.3
 
 
 
@@ -542,7 +544,11 @@ presumed scoping behaviors:
 
 ``DECLARE`` Is assumed to always be LOCAL when not otherwise specified.
 
-``FUNCTION`` Is assumed to always be LOCAL when not otherwise specified.
+``FUNCTION`` Must always be LOCAL.  Declaring it as global has no effect,
+so the only way to make it be global is to declare it while at outermost
+scope.  This is because functions always remember their closures, and
+so to declare a function as global while it holds closure information
+about local variables would be contradictory.
 
 ``PARAMETER`` Cannot be anything but LOCAL to the location it's mentioned.
 It is an error to attempt to declare a parameter with the GLOBAL keyword.
@@ -556,7 +562,8 @@ Explicit scoping keywords
 
 The ``DECLARE``, ``FUNCTION``, and ``LOCK`` commands can be given
 explicit ``GLOBAL`` or ``LOCAL`` keywords to define their intended
-scoping level::
+scoping level (however in the case of functions, ``GLOBAL`` will be
+igorned, see above under 'Presumed defaults'.)::
 
     //
     // These are all synonymous with each other:

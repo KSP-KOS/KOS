@@ -11,15 +11,19 @@ namespace kOS.Safe.Execution
         private const int MAX_STACK_SIZE = 3000;
         private readonly List<object> stack = new List<object>();
         private int stackPointer = -1;
+        private int triggerContextCount = 0;
 
         public void Push(object item)
         {
             ThrowIfInvalid(item);
-
             stackPointer++;
             if (stack.Count < MAX_STACK_SIZE)
             {
                 stack.Insert(stackPointer, ProcessItem(item));
+
+                SubroutineContext sr = item as SubroutineContext;
+                if (sr != null && sr.IsTrigger)
+                    ++triggerContextCount;            
             }
             else
                 // TODO: make an IKOSException for this:
@@ -83,6 +87,13 @@ namespace kOS.Safe.Execution
                 item = stack[stackPointer];
                 stack.RemoveAt(stackPointer);
                 stackPointer--;
+            }
+
+            if (triggerContextCount > 0)
+            {
+                SubroutineContext sr = item as SubroutineContext;
+                if (sr != null && sr.IsTrigger)
+                    --triggerContextCount;
             }
 
             return item;
@@ -149,6 +160,7 @@ namespace kOS.Safe.Execution
         {
             stack.Clear();
             stackPointer = -1;
+            triggerContextCount = 0;
         }
 
         public string Dump()
@@ -203,22 +215,16 @@ namespace kOS.Safe.Execution
         }
         
         /// <summary>
-        /// Check if the call-stack has evidence that we are currently inside
-        /// a trigger.
+        /// This stack tracks all its pushes and pops to know whether or not it
+        /// contains subroutine contexts which are from triggers.  If there are
+        /// any still triggers in the stack, this returns true, else false.  
         /// </summary>
         /// <returns>True if the current call stack indicates that either we are
         /// inside a trigger, or are inside code that was in turn indirectly called
         /// from a trigger.  False if we are in mainline code instead.</returns>
         public bool HasTriggerContexts()
         {
-            for (int index = stackPointer + 1; index < stack.Count; ++index)
-            {
-                SubroutineContext contextRecord = stack[index] as SubroutineContext;
-                if (contextRecord != null)
-                    if (contextRecord.IsTrigger)
-                        return true;
-            }
-            return false;
+            return triggerContextCount > 0;
         }
     }
 }

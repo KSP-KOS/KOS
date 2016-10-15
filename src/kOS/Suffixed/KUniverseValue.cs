@@ -45,6 +45,7 @@ namespace kOS.Suffixed
             AddSuffix("LAUNCHCRAFT", new OneArgsSuffix<CraftTemplate>(LaunchShip));
             AddSuffix("LAUNCHCRAFTFROM", new TwoArgsSuffix<CraftTemplate, StringValue>(LaunchShip));
             AddSuffix("CRAFTLIST", new Suffix<ListValue>(CraftTemplate.GetAllTemplates));
+            AddSuffix("TIMEWARP", new Suffix<TimeWarpValue>(() => TimeWarpValue.Instance));
         }
 
         public void RevertToLaunch()

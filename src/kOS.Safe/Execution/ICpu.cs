@@ -37,11 +37,10 @@ namespace kOS.Safe.Execution
         List<string> ProfileResult { get; }
         void AddTrigger(int triggerFunctionPointer);
         void RemoveTrigger(int triggerFunctionPointer);
-        double StartWait(double waitTime);
-        void EndWait();
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
+        void YieldProgram(YieldFinishedDetector yieldTracker);
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         Opcode GetCurrentOpcode();
         Opcode GetOpcodeAt(int instructionPtr);

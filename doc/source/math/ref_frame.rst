@@ -7,9 +7,9 @@ This page describes the :math:`(x,y,z)` reference frame used for most
 of **kOS**'s vectors. kOS inherits its reference frame mostly from the
 base Kerbal Space Program game itself.  The coordinate system of Kerbal
 Space Program does some strange things that don't make a lot of sense
-at first. For nomenclature, the following terms are used in this
-documentation:
+at first.
 
+.. For nomenclature, the following terms are used in this documentation:
 
 .. _left-handed:
 
@@ -18,15 +18,12 @@ documentation:
     based on the Unity game engine) uses a **LEFT-handed** coordinate
     system.  kOS inherits this behavior from KSP.
 
-In all the reference frames mentioned below, the orientation of 
-the axes is **left-handed**.  This means that if you imagine opening your
-palm and pointing your fingers down the x-axis, then curling your fingers
-in the direction of the y-axis, then sticking your thumb up, that the
-direction your thumb would have to be pointing to accomplish this task
-is the direction of the z-axis **if and only if** you used your left
-hand to perform those steps.  (If you do those steps with your right
-hand, you get a z-axis in the opposite direction and that is known as
-a **right handed** coordinate system).
+In all the reference frames mentioned below, the orientation of the axes is
+**left-handed**. What does that mean? If you open your **left** palm and point
+your fingers along the x-axis, then curl your fingers in the direction of the
+y-axis and stick out your thumb, your thumb will be pointing along the z-axis.
+(If you do those steps with your right hand, you will get a z-axis in the
+opposite direction and that is known as a **right handed** coordinate system).
 
 This is an important thing to keep in mind, as most mathematics
 and physics textbooks tend to draw examples using a right handed
@@ -68,7 +65,7 @@ The X and Z axes of the coordinate grid are then consequently aligned with the e
 
 .. figure:: /_images/reference/math/KSP_body_latlong.png
 
-However, the X and Z axes are hard to predict where they'll exactly be. They keep moving depending on where you are, to the point where it's impossible to get a fix on just which direction they'll point.
+However, it's hard to predict exactly where the X and Z axes will be. They keep moving depending on where you are, to the point where it's impossible to get a fix on just which direction they'll point.
 
 Origin Position
 ---------------
@@ -77,9 +74,9 @@ The origin position of the :math:`(x,y,z)` coordinate grid in **KSP** is also a 
 
 Regardless of where the origin of the underlying **KSP** system is, in **kOS**, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the :ref:`CPU Vessel <cpu vessel>`.
 
-However, for the sake of VELOCITY, the origin point of all vectors is usually not SHIP, but rather it's the SOI body's center. This is because if the origin point was the SHIP, then the ship's velocity would always be zero in that frame of reference, and that would not be useful.
+However, for the sake of VELOCITY, the origin point of all vectors is usually not SHIP, but the SOI body's center. This is because if the origin point was the SHIP, then the ship's velocity would always be zero in that frame of reference, and that would not be useful.
 
-The makers of **kOS** are aware that this is not technically a proper frame of reference, because the origin point varies depending on if you're getting POSITION or getting VELOCITY. Fixing it at this point would break a lot of existing scripts, however.
+(The makers of **kOS** are aware that this is not technically a proper frame of reference, because the origin point varies depending on if you're getting POSITION or getting VELOCITY. Fixing it at this point would break a lot of existing scripts, however.)
 
 So the rule of thumb is:
 
@@ -89,7 +86,7 @@ So the rule of thumb is:
 Converting
 ----------
 
-Converting between SHIP-RAW and SOI-RAW reference frames is a simple matter of adding or subtracting the SHIP:BODY:POSITION vector from the coordinate, to move the origin point. This is because both are using the same axes rotation.
+Converting between SHIP-RAW and SOI-RAW reference frames is a simple matter of moving the origin point by adding or subtracting the ``SHIP:BODY:POSITION`` vector from the coordinate. This works because both frames are using the same axes rotation.
 
--  Any SHIP-RAW vector Minus SHIP:BODY:POSITION Gives the vector in SOI-RAW coordinates.
--  Any SOI-RAW vector Plus SHIP:BODY:POSITION Gives the vector in SHIP-RAW coordinates.
+-  Any SHIP-RAW position vector *minus* ``SHIP:BODY:POSITION`` Gives the vector in SOI-RAW coordinates.
+-  Any SOI-RAW position vector *plus* ``SHIP:BODY:POSITION`` Gives the vector in SHIP-RAW coordinates.

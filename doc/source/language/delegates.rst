@@ -3,9 +3,10 @@
 Delegates (function references)
 ===============================
 
-.. versionadded:: 0.19.0
-   The delegate feature described on this page did not exist
-   prior to kOS 0.19.0.
+.. note::
+    .. versionadded:: 0.19.0
+        The delegate feature described on this page did not exist
+        prior to kOS 0.19.0.
 
 .. contents:: Contents
     :local:
@@ -317,7 +318,7 @@ Note that you can combine the two lines above that looked like this::
 
 into just this::
 
-    local draw_a_to_b is draw_a_to_b@:bind(shipA, shipB).
+    local draw_a_to_b is draw_ship_to_ship@:bind(shipA, shipB).
 
 When you use the at-sign(``@``), you are returning an object of type
 :struct:`KOSDelegate` that can be used in-line right in the expression,
@@ -369,38 +370,44 @@ normally be in :ref:`scope <scope>`.
 Kinds of Delegate (no suffixes)
 ===============================
 
-Under the hood, kOS handles several different kinds of 'functions' and
+Under the hood, kOS handles several different kinds of "functions" and
 methods that aren't actually implemented the same way.  A ``KOSDelegate``
 attempts to hide the details of these differences from the user, but
 one difference in particular still stands out.  In kOS version 0.19.0,
 you cannot reliably make a delegate of a suffix just yet.  (*This is
 intended as a future feature though.  It's been put off because it
-involves decisions that impact the future of the language and once made,
-can't be changed easily.*)
+involves decisions that impact the future of the language and which, once
+made, can't be changed easily.*)
 
 - You **can** make a delegate of a :ref:`user function <user_functions>`
-  implemented in Kerboscript code.::
+  implemented in Kerboscript code.
     
-    function mysquarefunc { parameter a. return a*a. }
-    set x to mysquarefunc@.
-    set y to x:call(5). // y is now 25.
+    ::
+    
+       function mysquarefunc { parameter a. return a*a. }
+       set x to mysquarefunc@.
+       set y to x:call(5). // y is now 25.
 
 - You **can** make a delegate of a built-in function provided by kOS
-  itself, provided it isn't a structure suffix.::
+  itself, provided it isn't a structure suffix.
 
-    set r to round@.
-    set s to sqrt@.
-    print "square root of 7, to the nearest 2 places is: " + r:call(s:call(7), 2).
+    ::
+
+       set r to round@.
+       set s to sqrt@.
+       print "square root of 7, to the nearest 2 places is: " + r:call(s:call(7), 2).
 
 - You **cannot** make a delegate of a suffix of a structure (*yet?*)
-  in Kerboscript.::
+  in Kerboscript.
 
-    //
-    // WON'T WORK, WILL GIVE ERROR:
-    //
-    set altpos to latlng(10,20):altitudeposition@. // altitudeposition is a suffix of geoposition.
-    print "altpos at altitude 1000 is " + altpos:call(1000).
+    ::
+
+       //
+       // WON'T WORK, WILL GIVE ERROR:
+       //
+       set altpos to latlng(10,20):altitudeposition@. // altitudeposition is a suffix of geoposition.
+       print "altpos at altitude 1000 is " + altpos:call(1000).
 
   However, if you like you can make your own user function that is a
-  wrapper around a structure suffix call, and make a delegate of THAT.
+  wrapper around a structure suffix call, and make a delegate of **that**.
 
