@@ -37,7 +37,7 @@ namespace kOS.Suffixed
 
         public override Vector GetPosition()
         {
-            return new Vector(Vessel.findWorldCenterOfMass() - CurrentVessel.findWorldCenterOfMass());
+            return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
         }
 
         public override OrbitableVelocity GetVelocities()
@@ -80,7 +80,7 @@ namespace kOS.Suffixed
                 pos = pos + offset;
             }
 
-            return new Vector(pos - Shared.Vessel.findWorldCenterOfMass()); // Convert to ship-centered frame.
+            return new Vector(pos - Shared.Vessel.CoMD); // Convert to ship-centered frame.
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace kOS.Suffixed
             if (parent != null)
             {
                 Vector3d pos = GetPositionAtUT(timeStamp);
-                surfVel = new Vector(orbVel - parent.getRFrmVel(pos + Shared.Vessel.findWorldCenterOfMass()));
+                surfVel = new Vector(orbVel - parent.getRFrmVel(pos + Shared.Vessel.CoMD));
             }
             else
                 surfVel = new Vector(orbVel.x, orbVel.y, orbVel.z);
@@ -229,7 +229,7 @@ namespace kOS.Suffixed
         // in order to implement the orbit solver later.
         public ScalarValue GetDistance()
         {
-            return Vector3d.Distance(CurrentVessel.findWorldCenterOfMass(), Vessel.findWorldCenterOfMass());
+            return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
         }
 
         public Vessel Vessel { get; private set; }
@@ -436,7 +436,7 @@ namespace kOS.Suffixed
             AddSuffix("VERTICALSPEED", new Suffix<ScalarValue>(() => Vessel.verticalSpeed));
             AddSuffix("GROUNDSPEED", new Suffix<ScalarValue>(GetHorizontalSrfSpeed));
             AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSObsoletionException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
-            AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
+            AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.CoMD)).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<StringValue>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<StringValue>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));

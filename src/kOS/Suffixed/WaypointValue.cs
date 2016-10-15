@@ -28,7 +28,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new NoArgsSuffix<StringValue>(CookedName, "Name of waypoint as it appears on the map and contract"));
             AddSuffix("BODY", new NoArgsSuffix<BodyTarget>(() => new BodyTarget(GetBody(), Shared), "Celestial body the waypoint is attached to"));
             AddSuffix("GEOPOSITION", new NoArgsSuffix<GeoCoordinates>(BuildGeoCoordinates, "the LATLNG of this waypoint"));
-            AddSuffix("POSITION", new NoArgsSuffix<Vector>(() => GetPosition() - new Vector(Shared.Vessel.findWorldCenterOfMass())));
+            AddSuffix("POSITION", new NoArgsSuffix<Vector>(() => GetPosition() - new Vector(Shared.Vessel.CoMD)));
             AddSuffix("ALTITUDE", new NoArgsSuffix<ScalarValue>(BuildSeaLevelAltitude, "Altitude of waypoint above sea level.  Warning, this a point somewhere in the " + "midst of the contract altitude range, not the edge of the altitude range."));
             AddSuffix("AGL", new NoArgsSuffix<ScalarValue>(() => WrappedWaypoint.altitude, "Altitude of waypoint above ground.  Warning, this a point somewhere" + "in the midst of the contract altitude range, not the edge of the altitude range."));
             AddSuffix("NEARSURFACE", new NoArgsSuffix<BooleanValue>(() => WrappedWaypoint.isOnSurface, "True if waypoint is a point near or on the body rather than high in orbit."));

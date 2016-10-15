@@ -497,7 +497,7 @@ namespace kOS.Control
             }
 
             targetRot = Value.Rotation;
-            centerOfMass = shared.Vessel.findWorldCenterOfMass();
+            centerOfMass = shared.Vessel.CoMD;
 
             vesselTransform = shared.Vessel.ReferenceTransform;
             // Found that the default rotation has top pointing forward, forward pointing down, and right pointing starboard.
@@ -589,11 +589,13 @@ namespace kOS.Control
             Vector3d yawControl = Vector3d.zero;
             Vector3d rollControl = Vector3d.zero;
 
+            Vector3 pos;
+            Vector3 neg;
             foreach (var pm in torqueProviders.Keys)
             {
                 var tp = torqueProviders[pm];
-                var torque = tp.GetPotentialTorque();
-                rawTorque += torque;
+                tp.GetPotentialTorque(out pos, out neg);
+                rawTorque += pos;
             }
 
             rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
@@ -738,10 +740,7 @@ namespace kOS.Control
                 yawRatePI.ResetI();
                 rollRatePI.ResetI();
                 Quaternion target = TargetDirection.Rotation * Quaternion.Euler(90, 0, 0);
-                if (Quaternion.Angle(shared.Vessel.Autopilot.SAS.lockedHeading, target) > 15)
-                    shared.Vessel.Autopilot.SAS.LockHeading(target, true);
-                else
-                    shared.Vessel.Autopilot.SAS.lockedHeading = target;
+                shared.Vessel.Autopilot.SAS.LockRotation(target);
             }
             else
             {

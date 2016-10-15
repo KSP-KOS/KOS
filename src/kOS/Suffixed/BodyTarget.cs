@@ -27,7 +27,7 @@ namespace kOS.Suffixed
 
         public override Vector GetPosition()
         {
-            return new Vector(Body.position - Shared.Vessel.findWorldCenterOfMass());
+            return new Vector(Body.position - Shared.Vessel.CoMD);
         }
 
         public override OrbitableVelocity GetVelocities()
@@ -37,7 +37,7 @@ namespace kOS.Suffixed
 
         public override Vector GetPositionAtUT(TimeSpan timeStamp)
         {
-            return new Vector(Body.getPositionAtUT(timeStamp.ToUnixStyleTime()) - Shared.Vessel.findWorldCenterOfMass());
+            return new Vector(Body.getPositionAtUT(timeStamp.ToUnixStyleTime()) - Shared.Vessel.CoMD);
         }
 
         public override OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
@@ -131,7 +131,7 @@ namespace kOS.Suffixed
         /// <returns>The GeoCoordinates under the position.</returns>
         public GeoCoordinates GeoCoordinatesFromPosition(Vector position)
         {
-            Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
+            Vector3d unityWorldPosition = Shared.Vessel.CoMD + position.ToVector3D();
             double lat = Body.GetLatitude(unityWorldPosition);
             double lng = Body.GetLongitude(unityWorldPosition);
             return new GeoCoordinates(Body, Shared, lat, lng);
@@ -144,7 +144,7 @@ namespace kOS.Suffixed
         /// <returns>The altitude above 'sea level'.</returns>
         public ScalarValue AltitudeFromPosition(Vector position)
         {
-            Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
+            Vector3d unityWorldPosition = Shared.Vessel.CoMD + position.ToVector3D();
             return Body.GetAltitude(unityWorldPosition);
         }
 
@@ -165,7 +165,7 @@ namespace kOS.Suffixed
 
         public double GetDistance()
         {
-            return Vector3d.Distance(Shared.Vessel.findWorldCenterOfMass(), Body.position) - Body.Radius;
+            return Vector3d.Distance(Shared.Vessel.CoMD, Body.position) - Body.Radius;
         }
 
         public override ISuffixResult GetSuffix(string suffixName)
