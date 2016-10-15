@@ -26,10 +26,7 @@ namespace kOS.Sound
         
         public override float SampleFunction(float t)
         {
-            // Use a Sine wave to limit the amplitude of the
-            // random noise samples, so the sample has a
-            // detectable pitch to it:
-            return (float)(Math.Sin(t)*rand.NextDouble());
+            return (float)(2*rand.NextDouble()-1);
         }
     }
 }

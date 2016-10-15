@@ -6,9 +6,9 @@ namespace kOS.Sound
     /// <summary>
     /// A variant of ProceduralSoundWave that emits a sine wave.
     /// </summary>
-    public class SinSoundWave : ProceduralSoundWave
+    public class SineSoundWave : ProceduralSoundWave
     {
-        public SinSoundWave(): base()
+        public SineSoundWave(): base()
         {
         }
         

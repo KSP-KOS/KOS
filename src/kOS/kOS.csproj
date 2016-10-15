@@ -107,7 +107,7 @@
     <Compile Include="Sound\ProceduralSoundWave.cs" />
     <Compile Include="Sound\PulseSoundWave.cs" />
     <Compile Include="Sound\SawtoothSoundWave.cs" />
-    <Compile Include="Sound\SinSoundWave.cs" />
+    <Compile Include="Sound\SineSoundWave.cs" />
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Sound\TriangleSoundWave.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />

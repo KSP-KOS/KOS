@@ -34,7 +34,7 @@ namespace kOS.Sound
 
             LoadProceduralSound("noise", new NoiseSoundWave());
             LoadProceduralSound("pulse", new PulseSoundWave());
-            LoadProceduralSound("sin", new SinSoundWave());
+            LoadProceduralSound("sine", new SineSoundWave());
             LoadProceduralSound("triangle", new TriangleSoundWave());
             LoadProceduralSound("sawtooth", new SawtoothSoundWave());
             

@@ -89,7 +89,7 @@ namespace kOS.Sound
         {
             SampleVolume = 1f;
             SampleRange = 1f;
-            Periods = 500;
+            Periods = 1000;
         }
         
         /// <summary>
