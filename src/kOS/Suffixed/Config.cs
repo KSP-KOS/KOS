@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Screen;
 using KSP.IO;
+using kOS.Module;
 
 namespace kOS.Suffixed
 {
@@ -16,48 +16,52 @@ namespace kOS.Suffixed
         private readonly Dictionary<string, ConfigKey> alias;
         private readonly Dictionary<PropId, ConfigKey> properties;
 
-        public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
-        public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
-        public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
-        public bool EnableRTIntegration { get { return GetPropValue<bool>(PropId.EnableRTIntegration); } set { SetPropValue(PropId.EnableRTIntegration, value); } }
-        public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
-        public bool ObeyHideUI { get { return GetPropValue<bool>(PropId.ObeyHideUI); } set { SetPropValue(PropId.ObeyHideUI, value); } }
-        public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
-        public bool AudibleExceptions { get { return GetPropValue<bool>(PropId.AudibleExceptions); } set { SetPropValue(PropId.AudibleExceptions, value); } }
-        public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
+        public int InstructionsPerUpdate { get { return kOSCustomParameters.Instance.instructionsPerUpdate; } set { kOSCustomParameters.Instance.instructionsPerUpdate = value; } }
+        public bool UseCompressedPersistence { get { return kOSCustomParameters.Instance.useCompressedPersistence; } set { kOSCustomParameters.Instance.useCompressedPersistence = value; } }
+        public bool ShowStatistics { get { return kOSCustomParameters.Instance.showStatistics; } set { kOSCustomParameters.Instance.showStatistics = value; } }
+        public bool EnableRTIntegration { get { return kOSCustomParameters.Instance.enableRTIntegration; } set { kOSCustomParameters.Instance.enableRTIntegration = value; } }
+        public bool StartOnArchive { get { return kOSCustomParameters.Instance.startOnArchive; } set { kOSCustomParameters.Instance.startOnArchive = value; } }
+        public bool ObeyHideUI { get { return kOSCustomParameters.Instance.obeyHideUi; } set { kOSCustomParameters.Instance.obeyHideUi = value; } }
+        public bool EnableSafeMode { get { return kOSCustomParameters.Instance.enableSafeMode; } set { kOSCustomParameters.Instance.enableSafeMode = value; } }
+        public bool AudibleExceptions { get { return kOSCustomParameters.Instance.audibleExceptions; } set { kOSCustomParameters.Instance.audibleExceptions = value; } }
+        public bool VerboseExceptions { get { return kOSCustomParameters.Instance.verboseExceptions; } set { kOSCustomParameters.Instance.verboseExceptions = value; } }
         public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
         public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
         public bool TelnetLoopback { get { return GetPropValue<bool>(PropId.TelnetLoopback); } set { SetPropValue(PropId.TelnetLoopback, value); } }        
         public bool UseBlizzyToolbarOnly { get { return GetPropValue<bool>(PropId.UseBlizzyToolbarOnly); } set { SetPropValue(PropId.UseBlizzyToolbarOnly, value); } }
-        public bool DebugEachOpcode { get { return GetPropValue<bool>(PropId.DebugEachOpcode); } set { SetPropValue(PropId.DebugEachOpcode, value); } }
+        public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
 
         private Config()
         {
             keys = new Dictionary<string, ConfigKey>();
             alias = new Dictionary<string, ConfigKey>();
             properties = new Dictionary<PropId, ConfigKey>();
+            InitializeSuffixes();
             BuildValuesDictionary();
             LoadConfig();
             TimeStamp = DateTime.Now;
         }
 
+        private void InitializeSuffixes()
+        {
+            AddSuffix("IPU", new SetSuffix<ScalarValue>(() => InstructionsPerUpdate, value => InstructionsPerUpdate = value));
+            AddSuffix("UCP", new SetSuffix<BooleanValue>(() => UseCompressedPersistence, value => UseCompressedPersistence = value));
+            AddSuffix("STAT", new SetSuffix<BooleanValue>(() => ShowStatistics, value => ShowStatistics = value));
+            AddSuffix("RT", new SetSuffix<BooleanValue>(() => EnableRTIntegration, value => EnableRTIntegration = value));
+            AddSuffix("ARCH", new SetSuffix<BooleanValue>(() => StartOnArchive, value => StartOnArchive = value));
+            AddSuffix("OBEYHIDEUI", new SetSuffix<BooleanValue>(() => ObeyHideUI, value => ObeyHideUI = value));
+            AddSuffix("SAFE", new SetSuffix<BooleanValue>(() => EnableSafeMode, value => EnableSafeMode = value));
+            AddSuffix("AUDIOERR", new SetSuffix<BooleanValue>(() => AudibleExceptions, value => AudibleExceptions = value));
+            AddSuffix("VERBOSE", new SetSuffix<BooleanValue>(() => VerboseExceptions, value => VerboseExceptions = value));
+            AddSuffix("DEBUGEACHOPCODE", new SetSuffix<BooleanValue>(() => DebugEachOpcode, value => DebugEachOpcode = value));
+            AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
+        }
+
         private void BuildValuesDictionary()
         {
-            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 200, 50, 2000, typeof(int)));
-            AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.ObeyHideUI , new ConfigKey("ObeyHideUI", "OBEYHIDEUI", "Obey UI hide (F2 key)", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.AudibleExceptions, new ConfigKey("AudibleExceptions", "AUDIOERR", "Sound effect when KOS gives an error", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
             AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.DebugEachOpcode , new ConfigKey("DebugEachOpcode", "DEBUGEACHOPCODE", "Unholy debug spam used by the kOS developers", false, false, true, typeof(bool)));
-            if(ToolbarManager.ToolbarAvailable)
-                AddConfigKey(PropId.UseBlizzyToolbarOnly, new ConfigKey("UseBlizzyToolbarOnly", "BLIZZY", "Use Blizzy toolbar only. Takes effect on new scene.", false, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -165,7 +169,7 @@ namespace kOS.Suffixed
                 key = alias[suffixName];
             }
 
-            if (key == null) return false;
+            if (key == null) return base.SetSuffix(suffixName, value);
 
             if (value.GetType() == key.ValType)
             {
