@@ -49,12 +49,14 @@ namespace kOS.Module
 
         private static void ShowDialog(MultiOptionDialog dialog)
         {
+            dialogShown = true;
             var popup = PopupDialog.SpawnPopupDialog(dialog, true, HighLogic.UISkin);
             popup.onDestroy.AddListener(new UnityEngine.Events.UnityAction(OnDialogDestroy));
         }
 
         private static void OnDialogDestroy()
         {
+            dialogShown = false;
             if (dialogsToSpawn.Count > 0)
             {
                 var dialog = dialogsToSpawn.Dequeue();
