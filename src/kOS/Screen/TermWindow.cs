@@ -144,15 +144,15 @@ namespace kOS.Screen
         private void LoadFontArray()
         {
             // Calculate image size from the presumption that it is a hardcoded number of char
-            // pictures wide and that each image is square.
+            // pictures wide and that each character is square.
             // Then calculate everything else dynamically from that so that
             // you can experiment with swapping in different font image files and the code
             // will still work without a recompile:
             int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
-            int numRows = fontImage.width / charSourceSize;
+            int numRows = fontImage.height / charSourceSize;
             int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
             
-            // Make it hold all possible ASCII values even though many will be blank pictures:
+            // Make it hold as many characters, as there are in the font image:
             fontArray = new Texture2D[numCharImages];
             
             for (int i = 0 ; i < numCharImages ; ++i)
@@ -835,7 +835,9 @@ namespace kOS.Screen
                 for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
+                    if (c >= fontArray.Length)
+                        c = (char)2;
+                    if (c != 0 && c != 9 && c != 32)
                         ShowCharacterByAscii(c, column, row, reversingScreen,
                                              charWidth, charHeight, screen.Brightness);
                 }
