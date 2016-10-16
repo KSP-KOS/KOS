@@ -120,7 +120,7 @@ namespace kOS.Module
 
         public void CheckMigrateSettings()
         {
-            Safe.Utilities.SafeHouse.Logger.LogError("kOSCustomParameters.CheckMigrateSettings()");
+            Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSCustomParameters.CheckMigrateSettings()");
             if (!migrated)
             {
                 var config = PluginConfiguration.CreateForType<kOSCustomParameters>();

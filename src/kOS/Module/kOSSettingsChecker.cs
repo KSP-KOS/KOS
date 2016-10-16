@@ -27,7 +27,7 @@ namespace kOS.Module
 
         private void CheckSettings()
         {
-            SafeHouse.Logger.LogError("kOSSettingsChecker.CheckSettings()");
+            SafeHouse.Logger.SuperVerbose("kOSSettingsChecker.CheckSettings()");
             HighLogic.CurrentGame.Parameters.CustomParams<kOSCustomParameters>().CheckMigrateSettings();
             Destroy(this);
         }
