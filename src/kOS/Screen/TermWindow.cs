@@ -15,7 +15,7 @@ namespace kOS.Screen
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
         private const string CONTROL_LOCKOUT = "kOSTerminal";
-        private const int FONTIMAGE_CHARS_PER_ROW = 16;
+        private const int FONTIMAGE_CHAR_SIZE = 8;
         
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
@@ -45,7 +45,7 @@ namespace kOS.Screen
         private CameraManager cameraManager;
         private float cursorBlinkTime;
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D [] fontArray;
+        private Texture2D[] fontArray;
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
         private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
@@ -143,38 +143,37 @@ namespace kOS.Screen
         
         private void LoadFontArray()
         {
-            // Calculate image size from the presumption that it is a hardcoded number of char
-            // pictures wide and that each character is square.
+            string[] mappingTxt = System.IO.File.ReadAllLines ("GameData/kOS/GFX/font_mapping.txt");
+            // Calculate image size from the presumption that each character is square of size FONTIMAGE_CHAR_SIZE.
             // Then calculate everything else dynamically from that so that
             // you can experiment with swapping in different font image files and the code
             // will still work without a recompile:
-            int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
-            int numRows = fontImage.height / charSourceSize;
-            int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
+
+            fontArray = new Texture2D[0x10000];
             
-            // Make it hold as many characters, as there are in the font image:
-            fontArray = new Texture2D[numCharImages];
-            
-            for (int i = 0 ; i < numCharImages ; ++i)
+            foreach (string mappingLine in mappingTxt)
             {
+                string[] mappingValues = mappingLine.Split (null);
+                if (mappingValues.Length < 3)
+                    continue;
+                char unicode = (char)(int.Parse (mappingValues [0]));
+                int ty = int.Parse (mappingValues [1]);
+                int tx = int.Parse (mappingValues [2]);
                 // TextureFormat cannot be DXT1 or DXT5 if you want to ever perform a
                 // SetPixel on the texture (which we do).  So we start it off as a ARGB32
                 // first, long enough to perform the SetPixel call, then compress it
                 // afterward into a DXT5:
-                Texture2D charImage = new Texture2D(charSourceSize, charSourceSize, TextureFormat.ARGB32, false);
-
-                int tx = i % FONTIMAGE_CHARS_PER_ROW;
-                int ty = i / FONTIMAGE_CHARS_PER_ROW;
+                Texture2D charImage = new Texture2D(FONTIMAGE_CHAR_SIZE, FONTIMAGE_CHAR_SIZE, TextureFormat.ARGB32, false);
                 
                 // While Unity uses the convention of upside down textures common in
                 // 3D (2D images put orgin at upper-left, 3D uses lower-left), it doesn't seem
                 // to apply this rule to textures loaded from files like the fontImage.
                 // Thus the difference requiring the upside-down Y coord below.
-                charImage.SetPixels(fontImage.GetPixels(tx * charSourceSize, fontImage.height - (ty+1) * charSourceSize, charSourceSize, charSourceSize));
+                charImage.SetPixels(fontImage.GetPixels(tx * FONTIMAGE_CHAR_SIZE, fontImage.height - (ty+1) * FONTIMAGE_CHAR_SIZE, FONTIMAGE_CHAR_SIZE, FONTIMAGE_CHAR_SIZE));
                 charImage.Compress(false);
                 charImage.Apply();
 
-                fontArray[i] = charImage;
+                fontArray[unicode] = charImage;
             }
         }
         
@@ -719,7 +718,6 @@ namespace kOS.Screen
 
         void TerminalGui(int windowId)
         {
-
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
@@ -835,8 +833,12 @@ namespace kOS.Screen
                 for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c >= fontArray.Length)
-                        c = (char)2;
+                    if (fontArray[c] == null)
+                    {
+                        c = (char)0xFFFD;
+                        if (fontArray[c] == null)
+                            break;
+                    }
                     if (c != 0 && c != 9 && c != 32)
                         ShowCharacterByAscii(c, column, row, reversingScreen,
                                              charWidth, charHeight, screen.Brightness);
@@ -850,7 +852,8 @@ namespace kOS.Screen
             
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
+                // use LOWER ONE QUARTER BLOCK (U+2582) as a cursor
+                ShowCharacterByAscii((char)0x2582, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
                                      charWidth, charHeight, screen.Brightness);
             }
             
