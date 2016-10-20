@@ -237,6 +237,15 @@ namespace kOS.Module
         private void HookEvents()
         {
             ConnectivityManager.AddAutopilotHook(parentVessel, UpdateAutopilot);
+
+            // HACK: The following events and their methods are a hack to work around KSP's limitation that
+            // blocks our autopilot from having control of the vessel if out of signal and the setting
+            // "Require Signal for Control" is enabled.  It's very hacky, and my have unexpected results.
+            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
+            {
+                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
+            }
         }
 
         /// <summary>
@@ -245,8 +254,51 @@ namespace kOS.Module
         private void UnHookEvents()
         {
             ConnectivityManager.RemoveAutopilotHook(parentVessel, UpdateAutopilot);
+
+            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
+            {
+                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
+            }
         }
-        
+
+        #region Hack to fix "Require Signal for Control"
+        // TODO: Delete this hack if it ever gets fixed.
+
+        // Note: I am purposfully putting these variable declarations in this region instead of at the
+        // top of the file as our normal convention dictates.  These are specific to the hack and when
+        // we remove the hack the diff will make more sense if we wipe out a single contiguous block.
+        private bool workAroundControllable = false;
+        private CommNet.CommNetParams commNetParams;
+        private System.Reflection.FieldInfo isControllableField;
+
+        private void resetControllable()
+        {
+            if (workAroundControllable && isControllableField != null)
+            {
+                isControllableField.SetValue(parentVessel, false);
+            }
+        }
+
+        private void cacheControllable()
+        {
+            if (commNetParams == null)
+                commNetParams = HighLogic.CurrentGame.Parameters.CustomParams<CommNet.CommNetParams>();
+            if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
+            {
+                // HACK: Get around inability to affect throttle if connection is lost and require
+                if (isControllableField == null)
+                    isControllableField = parentVessel.GetType().GetField("isControllable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                isControllableField.SetValue(parentVessel, true);
+                workAroundControllable = true;
+            }
+            else
+            {
+                workAroundControllable = false;
+            }
+        }
+        #endregion
+
         /// <summary>
         /// A race condition exists where KSP can load the kOS module onto the vessel
         /// before it loaded the RemoteTech module.  That makes it so that kOS may not
