@@ -17,6 +17,14 @@ namespace kOS.Communication
             }
         }
 
+        public bool NeedAutopilotResubscribe
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public double GetDelay(Vessel vessel1, Vessel vessel2)
         {
             return 0;
@@ -45,6 +53,19 @@ namespace kOS.Communication
         public bool HasConnection(Vessel vessel1, Vessel vessel2)
         {
             return true;
+        }
+
+        public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
+        {
+            // removing the callback if not already added doesn't throw an error
+            // but adding it a 2nd time will result in 2 calls.  Remove to be safe.
+            vessel.OnPreAutopilotUpdate -= hook;
+            vessel.OnPreAutopilotUpdate += hook;
+        }
+
+        public void RemoveAutopilotHook(Vessel vessel, FlightInputCallback hook)
+        {
+            vessel.OnPreAutopilotUpdate -= hook;
         }
     }
 }

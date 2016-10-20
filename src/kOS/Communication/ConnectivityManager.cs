@@ -113,6 +113,14 @@ namespace kOS.Communication
             return (IConnectivityManager)Activator.CreateInstance(GetSelectedManagerType());
         }
 
+        public static bool NeedAutopilotResubscribe
+        {
+            get
+            {
+                return Instance.NeedAutopilotResubscribe;
+            }
+        }
+
         public static double GetDelay(Vessel vessel1, Vessel vessel2)
         {
             return Instance.GetDelay(vessel1, vessel2);
@@ -141,6 +149,16 @@ namespace kOS.Communication
         public static bool HasConnection(Vessel vessel1, Vessel vessel2)
         {
             return Instance.HasConnection(vessel1, vessel2);
+        }
+
+        public static void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
+        {
+            Instance.AddAutopilotHook(vessel, hook);
+        }
+
+        public static void RemoveAutopilotHook(Vessel vessel, FlightInputCallback hook)
+        {
+            Instance.RemoveAutopilotHook(vessel, hook);
         }
     }
 }
