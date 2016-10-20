@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using kOS.Communication;
 using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
-using kOS.Screen;
+using System;
+using System.Collections.Generic;
 
-namespace kOS.AddOns.RemoteTech
+namespace kOS.Screen
 {
-    public class RemoteTechInterpreter : Interpreter, IUpdateObserver
+    public class ConnectivityInterpreter : Interpreter, IUpdateObserver
     {
         private readonly List<string> commandQueue = new List<string>();
         private readonly List<string> batchQueue = new List<string>();
@@ -19,8 +19,8 @@ namespace kOS.AddOns.RemoteTech
         private bool deployingBatch;
         private string deploymentMessage;
         private bool signalLossWarning;
-        
-        public RemoteTechInterpreter(SharedObjects shared) : base(shared)
+
+        public ConnectivityInterpreter(SharedObjects shared) : base(shared)
         {
             Shared.UpdateHandler.AddObserver(this);
             CreateProgressBarSubBuffer();
@@ -69,9 +69,9 @@ namespace kOS.AddOns.RemoteTech
             if (!BatchMode) throw new Exception("Batch mode is not active.");
             if (batchQueue.Count == 0) throw new Exception("There are no commands to deploy.");
 
-            waitTotal = RemoteTechUtility.GetInputWaitTime(Shared.Vessel);
+            waitTotal = ConnectivityManager.GetDelayToControl(Shared.Vessel);
             if (double.IsPositiveInfinity(waitTotal)) throw new Exception("No connection available.");
-                
+
             Print("Deploying...");
             BatchMode = false;
             deployingBatch = true;
@@ -97,12 +97,11 @@ namespace kOS.AddOns.RemoteTech
         {
             if (!deploymentInProgress && commandQueue.Count > 0 && !BatchMode)
             {
-                waitTotal = RemoteTechUtility.GetInputWaitTime(Shared.Vessel);
+                waitTotal = ConnectivityManager.GetDelayToControl(Shared.Vessel);
                 StartDeployment();
                 deltaTime = 0; // so the elapsed time is zero in this update
             }
-
-            if (deploymentInProgress)
+            else if (deploymentInProgress)
             {
                 UpdateDeployment(deltaTime);
             }
@@ -110,7 +109,7 @@ namespace kOS.AddOns.RemoteTech
 
         private void UpdateDeployment(double deltaTime)
         {
-            if (!RemoteTechUtility.HasConnectionOrControl(Shared.Vessel))
+            if (!ConnectivityManager.HasControl(Shared.Vessel))
             {
                 if (!signalLossWarning)
                 {
@@ -125,15 +124,14 @@ namespace kOS.AddOns.RemoteTech
                 {
                     if (double.IsPositiveInfinity(waitTotal))
                     {
-                        waitTotal = RemoteTechUtility.GetTotalWaitTime(Shared.Vessel);
+                        waitTotal = ConnectivityManager.GetDelayToControl(Shared.Vessel);
                     }
                     signalLossWarning = false;
                 }
 
                 waitElapsed += Math.Min(deltaTime, waitTotal - waitElapsed);
-                DrawProgressBar(waitElapsed, waitTotal);
 
-                if (waitElapsed == waitTotal)
+                if (waitElapsed >= waitTotal)
                 {
                     if (deployingBatch)
                     {
@@ -159,6 +157,10 @@ namespace kOS.AddOns.RemoteTech
 
                     StopDeployment();
                 }
+                else
+                {
+                    DrawProgressBar(waitElapsed, waitTotal);
+                }
             }
         }
 
@@ -166,9 +168,10 @@ namespace kOS.AddOns.RemoteTech
         {
             if (progressBarSubBuffer.Enabled)
             {
-                var bars = (int)((ColumnCount) * elapsed / total);
+                var bars = Math.Max((int)((ColumnCount) * elapsed / total), 0);
                 var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
                 string statusText = deploymentMessage + new string(' ', ColumnCount - time.Length - deploymentMessage.Length) + time;
+                UnityEngine.Debug.LogError("bars: " + bars.ToString());
                 var barsText = new string('|', bars);
                 DrawStatus(statusText);
                 DrawBars(barsText);
@@ -193,7 +196,7 @@ namespace kOS.AddOns.RemoteTech
             {
                 if (deployingBatch) batchQueue.Clear();
                 else commandQueue.Clear();
-                
+
                 StopDeployment();
                 return true;
             }

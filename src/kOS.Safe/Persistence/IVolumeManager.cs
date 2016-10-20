@@ -18,6 +18,8 @@ namespace kOS.Safe.Persistence
         void Remove(int id);
         void SwitchTo(Volume volume);
         void UpdateVolumes(List<Volume> attachedVolumes);
+        bool CheckCurrentVolumeRange();
+        bool CheckRange(Volume volume);
         string GetVolumeBestIdentifier(Volume volume);
         bool Copy(GlobalPath sourcePath, GlobalPath destinationPath, bool verifyFreeSpace = true);
         bool Move(GlobalPath sourcePath, GlobalPath destinationPath);

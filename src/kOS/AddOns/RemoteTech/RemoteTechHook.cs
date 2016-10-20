@@ -44,8 +44,7 @@ namespace kOS.AddOns.RemoteTech
 
         public static bool IsAvailable()
         {
-            // reading the config is the slowest of the 3 checks, so do it last.
-            return Instance != null && Instance.IsRemoteTechEnabled() && SafeHouse.Config.EnableRTIntegration;
+            return Instance != null && Instance.IsRemoteTechEnabled();
         }
 
         private static IRemoteTechAPIv1 InitializeAPI()

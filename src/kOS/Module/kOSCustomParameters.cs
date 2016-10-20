@@ -39,9 +39,6 @@ namespace kOS.Module
         [GameParameters.CustomParameterUI("Show statistics")]
         public bool showStatistics = false;
 
-        [GameParameters.CustomParameterUI("Enable Remote Tech integration")]
-        public bool enableRTIntegration = true;
-
         [GameParameters.CustomParameterUI("Start on the archive")]
         public bool startOnArchive = false;
 
@@ -164,7 +161,6 @@ namespace kOS.Module
             instructionsPerUpdate = config.GetValue("InstructionsPerUpdate", -1);
             useCompressedPersistence = config.GetValue<bool>("InstructionsPerUpdate");
             showStatistics = config.GetValue<bool>("InstructionsPerUpdate");
-            enableRTIntegration = config.GetValue<bool>("EnableRTIntegration");
             startOnArchive = config.GetValue<bool>("StartOnArchive");
             obeyHideUi = config.GetValue<bool>("ObeyHideUI");
             enableSafeMode = config.GetValue<bool>("AudibleExceptions");

@@ -1,8 +1,5 @@
-using kOS.AddOns.RemoteTech;
 using kOS.Binding;
 using kOS.Execution;
-using kOS.Factories;
-using kOS.Function;
 using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
@@ -22,7 +19,6 @@ using UnityEngine;
 using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
-using kOS.Safe.Communication;
 using kOS.Safe.Function;
 
 namespace kOS.Module
@@ -405,19 +401,17 @@ namespace kOS.Module
         public void InitObjects()
         {
             shared = new SharedObjects();
-            CreateFactory();
 
             shared.Vessel = vessel;
             shared.Processor = this;
             shared.KSPPart = part;
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
-            shared.Interpreter = shared.Factory.CreateInterpreter(shared);
+            shared.Interpreter = new Screen.ConnectivityInterpreter(shared);
             shared.Screen = shared.Interpreter;
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
-            shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
-            shared.ConnectivityMgr = shared.Factory.CreateConnectivityManager();
+            shared.VolumeMgr = new ConnectivityVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
@@ -432,7 +426,7 @@ namespace kOS.Module
             shared.Window.AttachTo(shared);
 
             // initialize archive
-            Archive = shared.Factory.CreateArchive();
+            Archive = new Archive(SafeHouse.ArchiveFolder);
             shared.VolumeMgr.Add(Archive);
 
             Messages = new MessageQueue();
@@ -440,7 +434,7 @@ namespace kOS.Module
             // initialize harddisk
             if (HardDisk == null)
             {
-                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+                HardDisk = new Harddisk(diskSpace);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -532,31 +526,6 @@ namespace kOS.Module
             // So if the caller adds/removes from it, it won't mess with the
             // private list we're internally maintaining:
             return allMyInstances.GetRange(0, allMyInstances.Count);
-        }
-
-        private void CreateFactory()
-        {
-            SafeHouse.Logger.LogWarning("Starting Factory Building");
-            bool isAvailable;
-            try
-            {
-                isAvailable = RemoteTechHook.IsAvailable();
-            }
-            catch
-            {
-                isAvailable = false;
-            }
-
-            if (isAvailable)
-            {
-                SafeHouse.Logger.LogWarning("RemoteTech Factory Building");
-                shared.Factory = new RemoteTechFactory();
-            }
-            else
-            {
-                SafeHouse.Logger.LogWarning("Standard Factory Building");
-                shared.Factory = new StandardFactory();
-            }
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
@@ -783,7 +752,7 @@ namespace kOS.Module
             if (ProcessorMode == ProcessorModes.OFF) return;
 
             double volumePower = 0;
-            if (shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel))
+            if (shared.VolumeMgr.CheckCurrentVolumeRange())
             {
                 // If the current volume is in range, check the capacity and calculate power
                 var volume = shared.VolumeMgr.CurrentVolume;
@@ -918,7 +887,7 @@ namespace kOS.Module
         public bool CheckCanBoot()
         {
             if (shared.VolumeMgr == null) { shared.Logger.Log("No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { shared.Logger.Log(new Safe.Exceptions.KOSVolumeOutOfRangeException("Boot")); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange()) { shared.Logger.LogException(new Safe.Exceptions.KOSVolumeOutOfRangeException("Boot")); }
             else if (shared.VolumeMgr.CurrentVolume == null) { shared.Logger.Log("No current volume"); }
             else if (shared.ScriptHandler == null) { shared.Logger.Log("No script handler"); }
             else

@@ -380,5 +380,16 @@ namespace kOS.Safe.Persistence
 
             return true;
         }
+
+        // check the range on the current volume without calling GetVolumeWithRangeCheck
+        public virtual bool CheckCurrentVolumeRange()
+        {
+            return true;
+        }
+
+        public virtual bool CheckRange(Volume volume)
+        {
+            return true;
+        }
     }
 }

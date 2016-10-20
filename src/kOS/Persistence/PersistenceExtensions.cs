@@ -128,21 +128,6 @@ namespace kOS.Persistence
             }
         }
 
-        public static bool CheckRange(this Volume volume, Vessel vessel)
-        {
-            var archive = volume as RemoteTechArchive;
-            return archive == null || archive.CheckRange(vessel);
-        }
-
-        // Provide a way to check the range limit of the archive without requesting the current volume (which throws an error if not in range)
-        public static bool CheckCurrentVolumeRange(this IVolumeManager volumeManager, Vessel vessel)
-        {
-            var rtManager = volumeManager as RemoteTechVolumeManager;
-            if (rtManager == null)
-                return true;
-            return rtManager.CheckCurrentVolumeRange(vessel);
-        }
-
         private static string EncodeBase64(string input)
         {
             return PersistenceUtilities.EncodeBase64(Encoding.ASCII.GetBytes(input));
