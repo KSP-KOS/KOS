@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Utilities;
+﻿using kOS.Communication;
+using kOS.Safe.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,16 +13,7 @@ namespace kOS.Module
 
         public void Start()
         {
-            CheckSettings();
-        }
-
-        private void CheckSettings(Game game)
-        {
-            CheckSettings();
-        }
-
-        private void CheckSettings(ConfigNode node)
-        {
+            DontDestroyOnLoad(this);
             CheckSettings();
         }
 
@@ -29,10 +21,10 @@ namespace kOS.Module
         {
             SafeHouse.Logger.SuperVerbose("kOSSettingsChecker.CheckSettings()");
             HighLogic.CurrentGame.Parameters.CustomParams<kOSCustomParameters>().CheckMigrateSettings();
-            Destroy(this);
+            HighLogic.CurrentGame.Parameters.CustomParams<kOSConnectivityParameters>().CheckNewManagers();
         }
 
-        // Because rapidly showing dialogs can prevent some from being hidden, we can just queue up
+        // Because rapidly showing dialogs can prevent some from being shown, we can just queue up
         // any dialogs that we want to show.  This also ensures that the first dialog displayed is
         // guaranteed to be the first one queued.
         public static void QueueDialog(MultiOptionDialog dialog)
@@ -61,6 +53,13 @@ namespace kOS.Module
             {
                 var dialog = dialogsToSpawn.Dequeue();
                 ShowDialog(dialog);
+            }
+            else
+            {
+                // Fire the OnGameSettingsApplied event because the dialog windows
+                // potentially changed settings.  If another mod or addon is relying
+                // on those settings, it should be signaled to refresh the values.
+                GameEvents.OnGameSettingsApplied.Fire();
             }
         }
     }

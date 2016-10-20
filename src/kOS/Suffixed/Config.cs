@@ -19,7 +19,6 @@ namespace kOS.Suffixed
         public int InstructionsPerUpdate { get { return kOSCustomParameters.Instance.instructionsPerUpdate; } set { kOSCustomParameters.Instance.instructionsPerUpdate = value; } }
         public bool UseCompressedPersistence { get { return kOSCustomParameters.Instance.useCompressedPersistence; } set { kOSCustomParameters.Instance.useCompressedPersistence = value; } }
         public bool ShowStatistics { get { return kOSCustomParameters.Instance.showStatistics; } set { kOSCustomParameters.Instance.showStatistics = value; } }
-        public bool EnableRTIntegration { get { return kOSCustomParameters.Instance.enableRTIntegration; } set { kOSCustomParameters.Instance.enableRTIntegration = value; } }
         public bool StartOnArchive { get { return kOSCustomParameters.Instance.startOnArchive; } set { kOSCustomParameters.Instance.startOnArchive = value; } }
         public bool ObeyHideUI { get { return kOSCustomParameters.Instance.obeyHideUi; } set { kOSCustomParameters.Instance.obeyHideUi = value; } }
         public bool EnableSafeMode { get { return kOSCustomParameters.Instance.enableSafeMode; } set { kOSCustomParameters.Instance.enableSafeMode = value; } }
@@ -47,7 +46,6 @@ namespace kOS.Suffixed
             AddSuffix("IPU", new SetSuffix<ScalarValue>(() => InstructionsPerUpdate, value => InstructionsPerUpdate = value));
             AddSuffix("UCP", new SetSuffix<BooleanValue>(() => UseCompressedPersistence, value => UseCompressedPersistence = value));
             AddSuffix("STAT", new SetSuffix<BooleanValue>(() => ShowStatistics, value => ShowStatistics = value));
-            AddSuffix("RT", new SetSuffix<BooleanValue>(() => EnableRTIntegration, value => EnableRTIntegration = value));
             AddSuffix("ARCH", new SetSuffix<BooleanValue>(() => StartOnArchive, value => StartOnArchive = value));
             AddSuffix("OBEYHIDEUI", new SetSuffix<BooleanValue>(() => ObeyHideUI, value => ObeyHideUI = value));
             AddSuffix("SAFE", new SetSuffix<BooleanValue>(() => EnableSafeMode, value => EnableSafeMode = value));
