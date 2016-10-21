@@ -55,6 +55,17 @@ namespace kOS.AddOns.KerbalAlarmClock
 
         public static Boolean NeedUpgrade { get; private set; }
 
+        public static Type GetType(string name)
+        {
+            Type type = null;
+            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+            {
+                if (t.FullName == name)
+                    type = t;
+            });
+            return type;
+        }
+
         /// <summary>
         /// This method will set up the KAC object and wrap all the methods/functions
         /// </summary>
@@ -71,10 +82,7 @@ namespace kOS.AddOns.KerbalAlarmClock
             LogFormatted("Attempting to Grab KAC Types...");
 
             //find the base type
-            KACType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "KerbalAlarmClock.KerbalAlarmClock");
+            KACType = GetType("KerbalAlarmClock.KerbalAlarmClock");
 
             if (KACType == null)
             {
@@ -89,10 +97,7 @@ namespace kOS.AddOns.KerbalAlarmClock
             }
             
             //now the Alarm Type
-            KACAlarmType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "KerbalAlarmClock.KACAlarm");
+            KACAlarmType = GetType("KerbalAlarmClock.KACAlarm");
 
             if (KACAlarmType == null)
             {
