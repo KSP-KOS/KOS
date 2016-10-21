@@ -19,10 +19,22 @@ namespace kOS.Module
             }
         }
 
-        public const string MIGRATION_DIALOG_TEXT = "Some kOS settings are now stored in the KSP save file instead " +
-            "of an external file. Telnet settings are still stored in the external file. It appears that you still " +
-            "have valid settings stored in the external file, but that this is either a new save or the save has " +
-            "not yet been migrated.  Would you like to migrate now?";
+        public const string MIGRATION_DIALOG_TEXT = "Some kOS settings are now tracked seperately per-game " +
+            "using the stock settings menu. " +
+            "\n\n" +
+            "You currently seem to have some of these settings stored in kOS's " +
+            "global folder, probably because you were using a previous version of kOS in the past. " +
+            "You can migrate these settings from their global (now unused) location into this game's individual settings if you like. " +
+            "(Note that the telnet server settings are still kept globally, but everything else has moved.)" +
+            "\n\n<color=#ffffff>" +
+            "The new place to adjust the settings in-game is in the <color=#ffff00>\"Difficulty Options\"</color> button " +
+            "of the in-game settings window. (Press <color=#ffff00>ESC</color>, pick <color=#ffff00>Settings</color>, " +
+            "then <color=#ffff00>Difficulty Options</color>, then <color=#ffff00>kOS</color> to reach them now.)" +
+            "\n" +
+            "The settings are there despite them not really being about \"Difficulty\". " +            
+            "That's just the location where KSP allows mods to make custom parameters." +
+            "</color>\n\n" +
+            "Would you like to migrate now?";
 
         [GameParameters.CustomParameterUI("")]
         public bool migrated = false;
@@ -30,37 +42,54 @@ namespace kOS.Module
         [GameParameters.CustomIntParameterUI("")]
         public int version = 0;
 
-        [GameParameters.CustomIntParameterUI("Instructions per update", minValue = 50, maxValue = 2000)]
+        [GameParameters.CustomIntParameterUI("Instructions per update", minValue = 50, maxValue = 2000,
+                                            toolTip = "All CPU's run at a speed that executes this many kRISC opcodes per physics 'tick'.")]
         public int instructionsPerUpdate = 200;
 
-        [GameParameters.CustomParameterUI("Enable compressed storage")]
+        [GameParameters.CustomParameterUI("Enable compressed storage",
+                                         toolTip = "When storing local volumes' data in the saved game, it will be compressed then base64 encoded.")]
         public bool useCompressedPersistence = true;
 
-        [GameParameters.CustomParameterUI("Show statistics")]
+        [GameParameters.CustomParameterUI("Show statistics",
+                                         toolTip = "After the outermost program is finished, you will see some profiling output describing how fast it ran.")]
         public bool showStatistics = false;
 
-        [GameParameters.CustomParameterUI("Enable Remote Tech integration")]
+        [GameParameters.CustomParameterUI("Enable Remote Tech integration",
+                                         toolTip = "kOS will ask Remote Tech (if present) to allow it to have control over vessels that are out of contact.")]
         public bool enableRTIntegration = true;
 
-        [GameParameters.CustomParameterUI("Start on the archive")]
+        [GameParameters.CustomParameterUI("Start on the archive",
+                                         toolTip = "When launching a new ship, or reloading a scene, the default volume will start as 0 instead of 1.")]
         public bool startOnArchive = false;
 
-        [GameParameters.CustomParameterUI("Obey hide UI toggle")]
+        [GameParameters.CustomParameterUI("Obey hide UI toggle",
+                                          toolTip = "When you press the \"Hide UI\" button (F2 in default bindings)\n" +
+                                          "kOS's terminals will hide themselves too.")]
         public bool obeyHideUi = true;
 
-        [GameParameters.CustomParameterUI("Enable safe mode")]
+        [GameParameters.CustomParameterUI("Enable safe mode",
+                                         toolTip = "kOS will throw an error if Infinity or Not-A-Number is the result\n" +
+                                         "of any expression.  This ensures no such values can ever get\n"+
+                                         "passed in to KSP's stock API, which doesn't protect itself against their effects.")]
         public bool enableSafeMode = true;
 
-        [GameParameters.CustomParameterUI("Audible exceptions")]
+        [GameParameters.CustomParameterUI("Audible exceptions",
+                                         toolTip = "When kOS throws an error, you hear a sound effect.")]
         public bool audibleExceptions = true;
 
-        [GameParameters.CustomParameterUI("Verbose exceptions")]
+        [GameParameters.CustomParameterUI("Verbose exceptions",
+                                         toolTip = "When kOS has an error, some error messages have alternative longer\n" +
+                                         "paragraph-length descriptions that this enables.")]
         public bool verboseExceptions = true;
 
-        [GameParameters.CustomParameterUI("Only use Blizzy toolbar")]
+        [GameParameters.CustomParameterUI("Only use Blizzy toolbar", 
+                                         toolTip = "If you have the \"Blizzy Toolbar\" mod installed, only put the kOS\n" +
+                                         "button on it instead of both it and the stock toolbar.")]
         public bool useBlizzyToolbarOnly = false;
 
-        [GameParameters.CustomParameterUI("Debug each opcode")]
+        [GameParameters.CustomParameterUI("Debug each opcode",
+                                         toolTip = "(For mod developers) Spams the Unity log file with a message for every time\n" +
+                                         "an opcode is executed in the virtual machine.  Very laggy.")]
         public bool debugEachOpcode = false;
 
         public override GameParameters.GameMode GameMode
@@ -134,9 +163,9 @@ namespace kOS.Module
                             MIGRATION_DIALOG_TEXT,
                             "kOS",
                             HighLogic.UISkin,
-                            new DialogGUIButton("Yes, migrate settings", MigrateSettingsNormal, true),
-                            new DialogGUIButton("Yes, migrate and prevent future migrations", MigrateSettingsPrevent, true),
-                            new DialogGUIButton("No, start with default settings", () => { migrated = true; }, true)
+                            new DialogGUIButton("Yes: migrate settings", MigrateSettingsNormal, true),
+                            new DialogGUIButton("Yes: migrate settings this one time,\nbut never ask again for this or any other game", MigrateSettingsPrevent, true),
+                            new DialogGUIButton("No: start with new default settings", () => { migrated = true; }, true)
                             ));
                 }
                 else
