@@ -433,7 +433,6 @@ namespace kOS.Binding
 
             private void setValue(object val)
             {
-                SafeHouse.Logger.LogError("Set value " + name + " to " + val.ToString());
                 if (name == "steering")
                 {
                     IFlightControlParameter param = kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("steering");

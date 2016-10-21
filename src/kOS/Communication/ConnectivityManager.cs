@@ -32,10 +32,10 @@ namespace kOS.Communication
                 GameEvents.onGameStatePostLoad.Add(value => { RefreshInstance(); });
                 needEventInit = false;
             }
-            SafeHouse.Logger.LogError("ConnectivityManager.RefreshInstance()");
+            SafeHouse.Logger.SuperVerbose("ConnectivityManager.RefreshInstance()");
             if (myinstance == null || myinstance.GetType() != GetSelectedManagerType())
             {
-                SafeHouse.Logger.LogError("RefreshInstance - change manager");
+                SafeHouse.Logger.SuperVerbose("RefreshInstance - change manager");
                 myinstance = CreateManagerObject();
                 if (myinstance == null || !myinstance.IsEnabled)
                 {

@@ -86,7 +86,7 @@ namespace kOS.Communication
 
         public override void OnLoad(ConfigNode node)
         {
-            Safe.Utilities.SafeHouse.Logger.LogError("kOSConnectivityParameters.OnLoad()");
+            Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSConnectivityParameters.OnLoad()");
             base.OnLoad(node);
             instance = null;
             if (HighLogic.CurrentGame != null || HighLogic.LoadedSceneIsGame)
@@ -159,7 +159,7 @@ namespace kOS.Communication
 
         public void CheckNewManagers()
         {
-            Safe.Utilities.SafeHouse.Logger.LogError("kOSConnectivityParameters.CheckNewManagers()");
+            Safe.Utilities.SafeHouse.Logger.SuperVerbose("kOSConnectivityParameters.CheckNewManagers()");
             var availableConnectivityManagers = ConnectivityManager.GetStringHash();
             var knownHandlers = knownHandlerList.Split(',').ToList();
             if (!availableConnectivityManagers.Contains(connectivityHandler) || !availableConnectivityManagers.IsSubsetOf(knownHandlers))
