@@ -43,23 +43,28 @@ namespace kOS.Module
         public int version = 0;
 
         [GameParameters.CustomIntParameterUI("Instructions per update", minValue = 50, maxValue = 2000,
-                                            toolTip = "All CPU's run at a speed that executes this many kRISC opcodes per physics 'tick'.")]
+                                            toolTip = "All CPU's run at a speed that executes up to\n"+
+                                            "this many kRISC opcodes per physics 'tick'.")]
         public int instructionsPerUpdate = 200;
 
         [GameParameters.CustomParameterUI("Enable compressed storage",
-                                         toolTip = "When storing local volumes' data in the saved game, it will be compressed then base64 encoded.")]
+                                         toolTip = "When storing local volumes' data in the saved game,\n"+
+                                         "it will be compressed then base64 encoded.")]
         public bool useCompressedPersistence = true;
 
         [GameParameters.CustomParameterUI("Show statistics",
-                                         toolTip = "After the outermost program is finished, you will see some profiling output describing how fast it ran.")]
+                                         toolTip = "After the outermost program is finished, you will\n" +
+                                         "see some profiling output describing how fast it ran.")]
         public bool showStatistics = false;
 
         [GameParameters.CustomParameterUI("Enable Remote Tech integration",
-                                         toolTip = "kOS will ask Remote Tech (if present) to allow it to have control over vessels that are out of contact.")]
+                                         toolTip = "kOS will ask Remote Tech (if present) to allow it to\n" +
+                                         "have control over vessels that are out of contact.")]
         public bool enableRTIntegration = true;
 
         [GameParameters.CustomParameterUI("Start on the archive",
-                                         toolTip = "When launching a new ship, or reloading a scene, the default volume will start as 0 instead of 1.")]
+                                         toolTip = "When launching a new ship, or reloading a scene,\n" +
+                                         "the default volume will start as 0 instead of 1.")]
         public bool startOnArchive = false;
 
         [GameParameters.CustomParameterUI("Obey hide UI toggle",
@@ -165,7 +170,8 @@ namespace kOS.Module
                             HighLogic.UISkin,
                             new DialogGUIButton("Yes: migrate settings", MigrateSettingsNormal, true),
                             new DialogGUIButton("Yes: migrate settings this one time,\nbut never ask again for this or any other game", MigrateSettingsPrevent, true),
-                            new DialogGUIButton("No: start with new default settings", () => { migrated = true; }, true)
+                            new DialogGUIButton("No: start with new default settings", DontMigrate, true),
+                            new DialogGUIButton("No: start with new default settings\nand never ask again for this or any other game", DontMigrateAndPrevent, true)
                             ));
                 }
                 else
@@ -196,10 +202,10 @@ namespace kOS.Module
             enableRTIntegration = config.GetValue<bool>("EnableRTIntegration");
             startOnArchive = config.GetValue<bool>("StartOnArchive");
             obeyHideUi = config.GetValue<bool>("ObeyHideUI");
-            enableSafeMode = config.GetValue<bool>("AudibleExceptions");
-            audibleExceptions = config.GetValue<bool>("EnableSafeMode");
+            enableSafeMode = config.GetValue<bool>("EnableSafeMode");
+            audibleExceptions = config.GetValue<bool>("AudibleExceptions");
             verboseExceptions = config.GetValue<bool>("VerboseExceptions");
-            debugEachOpcode = config.GetValue<bool>("UseBlizzyToolbarOnly");
+            debugEachOpcode = config.GetValue<bool>("DebugEachOpcode");
             useBlizzyToolbarOnly = config.GetValue<bool>("UseBlizzyToolbarOnly");
 
             config.SetValue("SettingMigrationComment", "All settings except telnet settings are now stored in the game's save file. Settings stored here will be ignored.");
@@ -208,7 +214,26 @@ namespace kOS.Module
                 config.SetValue("InstructionsPerUpdate", -2); // using -2 so it's different from the default value used above
                 config.SetValue("PreventFutureMigrationComment", "The user selected to prevent future migration notices when loading or creating save files.  Change the IPU value to a positive value to re-enable migrations.");
             }
-            GameSettings.SaveSettings();
+            config.save();
+            migrated = true;
+        }
+
+        public void DontMigrate()
+        {
+            var config = PluginConfiguration.CreateForType<kOSCustomParameters>();
+            config.load();
+            config.SetValue("SettingMigrationComment", "All settings except telnet settings are now stored in the game's save file. Settings stored here will be ignored.");
+            config.save();
+            migrated = true;
+        }
+
+        public void DontMigrateAndPrevent()
+        {
+            var config = PluginConfiguration.CreateForType<kOSCustomParameters>();
+            config.load();
+            config.SetValue("InstructionsPerUpdate", -2); // using -2 so it's different from the default value
+            config.SetValue("SettingMigrationComment", "All settings except telnet settings are now stored in the game's save file. Settings stored here will be ignored.");
+            config.SetValue("PreventFutureMigrationComment", "The user selected to prevent future migration notices when loading or creating save files.  Change the IPU value to a positive value to re-enable migrations.");
             config.save();
             migrated = true;
         }
