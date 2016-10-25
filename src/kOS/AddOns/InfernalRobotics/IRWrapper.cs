@@ -9,6 +9,7 @@ namespace kOS.AddOns.InfernalRobotics
     public class IRWrapper
     {
         private static bool isWrapped;
+        private static bool? hasAssembly = null;
 
         protected internal static Type IRServoControllerType { get; set; }
         protected internal static Type IRControlGroupType { get; set; }
@@ -21,7 +22,7 @@ namespace kOS.AddOns.InfernalRobotics
         internal static IRAPI IRController { get; set; }
         internal static bool AssemblyExists { get { return (IRServoControllerType != null); } }
         internal static bool InstanceExists { get { return (IRController != null); } }
-        internal static bool APIReady { get { return isWrapped && IRController.Ready; } }
+        internal static bool APIReady { get { return hasAssembly.HasValue && hasAssembly.Value && isWrapped && IRController.Ready; } }
 
         internal static Type GetType(string name)
         {
@@ -36,6 +37,22 @@ namespace kOS.AddOns.InfernalRobotics
 
         internal static bool InitWrapper()
         {
+            // Prevent the init function from continuing to initialize if InfernalRobotics is not installed.
+            if (hasAssembly == null)
+            {
+                LogFormatted("Attempting to Grab IR Assembly...");
+                hasAssembly = AssemblyLoader.loadedAssemblies.Any(a => a.dllName.Equals("InfernalRobotics"));
+                if (hasAssembly.Value)
+                    LogFormatted("Found IR Assembly!");
+                else
+                    LogFormatted("Did not find IR Assembly.");
+            }
+            if (!hasAssembly.Value)
+            {
+                isWrapped = false;
+                return isWrapped;
+            }
+
             isWrapped = false;
             ActualServoController = null;
             IRController = null;

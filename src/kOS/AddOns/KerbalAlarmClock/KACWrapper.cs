@@ -46,11 +46,17 @@ namespace kOS.AddOns.KerbalAlarmClock
         /// SET AFTER INIT
         /// </summary>
         private static Boolean _KACWrapped = false;
+        /// <summary>
+        /// Whether the KerbalAlarmClock assembly is loaded by KSP
+        /// 
+        /// SET AFTER FIRST INIT, THEN CONSTANT UNTIL THE NEXT KSP LAUNCH
+        /// </summary>
+        private static bool? hasAssembly = null;
 
         /// <summary>
         /// Whether the object has been wrapped and the APIReady flag is set in the real KAC
         /// </summary>
-        public static Boolean APIReady { get { return _KACWrapped && KAC.APIReady && !NeedUpgrade; } }
+        public static Boolean APIReady { get { return hasAssembly.HasValue && hasAssembly.Value && _KACWrapped && KAC.APIReady && !NeedUpgrade; } }
 
 
         public static Boolean NeedUpgrade { get; private set; }
@@ -73,6 +79,21 @@ namespace kOS.AddOns.KerbalAlarmClock
         /// <returns></returns>
         public static Boolean InitKACWrapper()
         {
+            // Prevent the init function from continuing to initialize if KerbalAlarmClock is not installed.
+            if (hasAssembly == null)
+            {
+                LogFormatted("Attempting to Grab KAC Assembly...");
+                hasAssembly = AssemblyLoader.loadedAssemblies.Any(a => a.dllName.Equals("KerbalAlarmClock"));
+                if (hasAssembly.Value)
+                    LogFormatted("Found KAC Assembly!");
+                else
+                    LogFormatted("Did not find KAC Assembly.");
+            }
+            if (!hasAssembly.Value)
+            {
+                _KACWrapped = false;
+                return _KACWrapped;
+            }
             //if (!_KACWrapped )
             //{
             //reset the internal objects
