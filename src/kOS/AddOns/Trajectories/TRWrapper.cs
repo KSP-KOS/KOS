@@ -1,6 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -16,43 +16,53 @@ namespace kOS.AddOns.TrajectoriesAddon
         private static MethodInfo trSetTarget = null;
         private static PropertyInfo trAlwaysUpdate = null;
 
+        private static Type GetType(string name)
+        {
+            Type type = null;
+            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+            {
+                if (t.FullName == name)
+                    type = t;
+            });
+            return type;
+        }
+
+
         private static void init()
         {
-            trajectoriesAPIType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "Trajectories.API");
+            SafeHouse.Logger.Log("Attempting to Grab Trajectories Assembly...");
+            trajectoriesAPIType = GetType("Trajectories.API");
             if (trajectoriesAPIType == null)
             {
-                Debug.Log("[kOS] Trajectories API Type is null. Trajectories not installed or is wrong version.");
+                SafeHouse.Logger.Log("Trajectories API Type is null. Trajectories not installed or is wrong version.");
                 wrapped = false;
                 return;
             }
             trGetImpactPosition = trajectoriesAPIType.GetMethod("getImpactPosition");
             if (trGetImpactPosition == null)
             {
-                Debug.Log("[kOS] Trajectories.API.getImpactPosition method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.getImpactPosition method is null.");
                 wrapped = false;
                 return;
             }
             trCorrectedDirection = trajectoriesAPIType.GetMethod("correctedDirection");
             if (trCorrectedDirection == null)
             {
-                Debug.Log("[kOS] Trajectories.API.correctedDirection method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.correctedDirection method is null.");
                 wrapped = false;
                 return;
             }
             trPlannedDirection = trajectoriesAPIType.GetMethod("plannedDirection");
             if (trPlannedDirection == null)
             {
-                Debug.Log("[kOS] Trajectories.API.plannedDirection method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.plannedDirection method is null.");
                 wrapped = false;
                 return;
             }
             trSetTarget = trajectoriesAPIType.GetMethod("setTarget");
             if (trSetTarget == null)
             {
-                Debug.Log("[kOS] Trajectories.API.setTarget method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.setTarget method is null.");
                 wrapped = false;
                 return;
             }
@@ -65,7 +75,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             trAlwaysUpdate.SetValue(null, true, null);
             if ((bool)trAlwaysUpdate.GetValue(null, null) == false)
             {
-                Debug.Log("[kOS] Trajectories.API.alwaysUpdate was not set.");
+                SafeHouse.Logger.Log("Trajectories.API.alwaysUpdate was not set.");
                 wrapped = false;
                 return;
             }

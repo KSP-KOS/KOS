@@ -15,8 +15,6 @@ current version. This means that future Trajectories updates may break this
 addon, in which case ``ADDONS:TR:AVAILABLE`` will return false.  It is also
 possible for future versions of Trjectories to remain fully compatible.
 
-
-
 .. note::
 
     Trajectories only predicts the trajectory of the "Active Vessel," which is the vessel with the camera focused on it. :attr:`IMPACTPOS<TRAddon:IMPACTPOS>`, :attr:`PLANNEDVEC<TRAddon:PLANNEDVEC>`, :meth:`SETTARGET<TRAddon:SETTARGET>`, and :attr:`CORRECTEDVEC<TRAddon:CORRECTEDVEC>` will throw exceptions if you try to call them from an inactive vessel or if Trajectories has not calculated an impact position. You should always check if :attr:`HASIMPACT<TRAddon:HASIMPACT>` is true before accessing these suffixes.
