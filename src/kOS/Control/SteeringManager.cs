@@ -21,6 +21,7 @@ namespace kOS.Control
             destination.ShowSteeringStats = origin.ShowSteeringStats;
             destination.WriteCSVFiles = origin.WriteCSVFiles;
             destination.MaxStoppingTime = origin.MaxStoppingTime;
+            destination.RollControlAngleRange = origin.RollControlAngleRange;
 
             destination.pitchPI.Ts = origin.pitchPI.Ts;
             destination.yawPI.Ts = origin.yawPI.Ts;
@@ -145,6 +146,18 @@ namespace kOS.Control
         private double lastSessionTime = double.MaxValue;
 
         public double MaxStoppingTime { get; set; }
+        private double rollControlAngleRange;
+        public double RollControlAngleRange
+        {
+            get
+            {
+                return rollControlAngleRange;
+            }
+            set
+            {
+                rollControlAngleRange = Math.Max(EPSILON, Math.Min(180, value));
+            }
+        }
 
         private double accPitch = 0;
         private double accYaw = 0;
@@ -273,6 +286,7 @@ namespace kOS.Control
             EnableTorqueAdjust = false;
 
             MaxStoppingTime = 2;
+            RollControlAngleRange = 5;
 
             PitchTorqueAdjust = 0;
             YawTorqueAdjust = 0;
@@ -328,6 +342,7 @@ namespace kOS.Control
             AddSuffix("YAWTORQUEFACTOR", new SetSuffix<ScalarValue>(() => YawTorqueFactor, value => YawTorqueFactor = value));
             AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<ScalarValue>(() => RollTorqueFactor, value => RollTorqueFactor = value));
             AddSuffix("AVERAGEDURATION", new Suffix<ScalarValue>(() => AverageDuration.Mean));
+            AddSuffix("ROLLCONTROLANGLERANGE", new Suffix<ScalarValue>(() => AverageDuration.Mean));
 #if DEBUG
             AddSuffix("MOI", new Suffix<Vector>(() => new Vector(momentOfInertia)));
             AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
@@ -715,7 +730,7 @@ namespace kOS.Control
             // Because the value of phi is already error, we say the input is -error and the setpoint is 0 so the PID has the correct sign
             tgtPitchOmega = pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega);
             tgtYawOmega = yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega);
-            if (Math.Abs(phi) > 5 * Math.PI / 180d)
+            if (Math.Abs(phi) > RollControlAngleRange * Math.PI / 180d)
             {
                 tgtRollOmega = 0;
                 rollRatePI.ResetI();
