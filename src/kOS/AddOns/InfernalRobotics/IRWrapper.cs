@@ -9,6 +9,7 @@ namespace kOS.AddOns.InfernalRobotics
     public class IRWrapper
     {
         private static bool isWrapped;
+        private static bool? hasAssembly = null;
 
         protected internal static Type IRServoControllerType { get; set; }
         protected internal static Type IRControlGroupType { get; set; }
@@ -21,19 +22,43 @@ namespace kOS.AddOns.InfernalRobotics
         internal static IRAPI IRController { get; set; }
         internal static bool AssemblyExists { get { return (IRServoControllerType != null); } }
         internal static bool InstanceExists { get { return (IRController != null); } }
-        internal static bool APIReady { get { return isWrapped && IRController.Ready; } }
+        internal static bool APIReady { get { return hasAssembly.HasValue && hasAssembly.Value && isWrapped && IRController.Ready; } }
+
+        internal static Type GetType(string name)
+        {
+            Type type = null;
+            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+            {
+                if (t.FullName == name)
+                    type = t;
+            });
+            return type;
+        }
 
         internal static bool InitWrapper()
         {
+            // Prevent the init function from continuing to initialize if InfernalRobotics is not installed.
+            if (hasAssembly == null)
+            {
+                LogFormatted("Attempting to Grab IR Assembly...");
+                hasAssembly = AssemblyLoader.loadedAssemblies.Any(a => a.dllName.Equals("InfernalRobotics"));
+                if (hasAssembly.Value)
+                    LogFormatted("Found IR Assembly!");
+                else
+                    LogFormatted("Did not find IR Assembly.");
+            }
+            if (!hasAssembly.Value)
+            {
+                isWrapped = false;
+                return isWrapped;
+            }
+
             isWrapped = false;
             ActualServoController = null;
             IRController = null;
             LogFormatted("Attempting to Grab IR Types...");
 
-            IRServoControllerType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Command.ServoController");
+            IRServoControllerType = GetType("InfernalRobotics.Command.ServoController");
 
             if (IRServoControllerType == null)
             {
@@ -42,10 +67,7 @@ namespace kOS.AddOns.InfernalRobotics
 
             LogFormatted("IR Version:{0}", IRServoControllerType.Assembly.GetName().Version.ToString());
 
-            IRServoMechanismType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Control.IMechanism");
+            IRServoMechanismType = GetType("InfernalRobotics.Control.IMechanism");
 
             if (IRServoMechanismType == null)
             {
@@ -53,10 +75,7 @@ namespace kOS.AddOns.InfernalRobotics
                 return false;
             }
 
-            IRServoMotorType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Control.IServoMotor");
+            IRServoMotorType = GetType("InfernalRobotics.Control.IServoMotor");
 
             if (IRServoMotorType == null)
             {
@@ -64,10 +83,7 @@ namespace kOS.AddOns.InfernalRobotics
                 return false;
             }
 
-            IRServoType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Control.IServo");
+            IRServoType = GetType("InfernalRobotics.Control.IServo");
 
             if (IRServoType == null)
             {
@@ -75,10 +91,7 @@ namespace kOS.AddOns.InfernalRobotics
                 return false;
             }
 
-            IRServoPartType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Control.IPart");
+            IRServoPartType = GetType("InfernalRobotics.Control.IPart");
 
             if (IRServoType == null)
             {
@@ -86,10 +99,7 @@ namespace kOS.AddOns.InfernalRobotics
                 return false;
             }
 
-            IRControlGroupType = AssemblyLoader.loadedAssemblies
-                .Select(a => a.assembly.GetExportedTypes())
-                .SelectMany(t => t)
-                .FirstOrDefault(t => t.FullName == "InfernalRobotics.Command.ServoController+ControlGroup");
+            IRControlGroupType = GetType("InfernalRobotics.Command.ServoController+ControlGroup");
 
             if (IRControlGroupType == null)
             {
