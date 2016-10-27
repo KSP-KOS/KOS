@@ -46,62 +46,62 @@ Configuration of kOS
           - Description
 
         * - :attr:`IPU`
-          - :ref:`scalar <scalar>` (integer)
+          - :struct:`Scalar` (integer)
           - 150
           - Instructions per update
         * - :attr:`UCP`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Use compressed persistence
         * - :attr:`STAT`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Print statistics to screen
         * - :attr:`RT`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable RemoteTech2 integration
         * - :attr:`ARCH`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Start on archive (instead of volume 1)
         * - :attr:`OBEYHIDEUI`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True
           - Obey the KSP Hide user interface key (usually mapped to F2).
         * - :attr:`SAFE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable safe mode
         * - :attr:`AUDIOERR`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable sound effect on kOS error
         * - :attr:`VERBOSE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable verbose exceptions
         * - :attr:`TELNET`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - activate the telnet server
         * - :attr:`TPORT`
-          - :ref:`scalar <scalar>` (integer)
+          - :struct:`Scalar` (integer)
           - 5410
           - set the port the telnet server will run on
         * - :attr:`LOOPBACK`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True
           - Force the telnet server to use loopback (127.0.0.1) address
         * - :attr:`DEBUGEACHOPCODE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - false
           - Unholy debug spam used by the kOS developers
 
 .. attribute:: Config:IPU
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>` integer. range = [50,2000]
+    :type: :struct:`Scalar` integer. range = [50,2000]
 
     Configures the ``InstructionsPerUpdate`` setting.
 
@@ -112,7 +112,7 @@ Configuration of kOS
 .. attribute:: Config:UCP
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``useCompressedPersistence`` setting.
 
@@ -121,7 +121,7 @@ Configuration of kOS
 .. attribute:: Config:STAT
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``showStatistics`` setting.
 
@@ -134,7 +134,7 @@ Configuration of kOS
 .. attribute:: Config:RT
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``enableRTIntegration`` setting.
 
@@ -146,7 +146,7 @@ Configuration of kOS
 .. attribute:: Config:ARCH
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``startOnArchive`` setting.
 
@@ -155,7 +155,7 @@ Configuration of kOS
 .. attribute:: Config:OBEYHIDEUI
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``obeyHideUI`` setting.
 
@@ -168,7 +168,7 @@ Configuration of kOS
 .. attribute:: Config:SAFE
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
 
     Configures the ``enableSafeMode`` setting.
@@ -186,7 +186,7 @@ Configuration of kOS
 .. attribute:: Config:AUDIOERR
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``audibleExceptions`` setting.
 
@@ -199,7 +199,7 @@ Configuration of kOS
 .. attribute:: Config:VERBOSE
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``verboseExceptions`` setting.
 
@@ -208,7 +208,7 @@ Configuration of kOS
 .. attribute:: Config:TELNET
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     **GLOBAL SETTING**
 
@@ -234,7 +234,7 @@ Configuration of kOS
 .. attribute:: Config:TPORT
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>` (integer)
+    :type: :struct:`Scalar` (integer)
 
     **GLOBAL SETTING**
 
@@ -250,7 +250,7 @@ Configuration of kOS
 .. attribute:: Config:LOOPBACK
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     **GLOBAL SETTING**
 
@@ -269,7 +269,7 @@ Configuration of kOS
 .. attribute:: Config:DEBUGEACHOPCODE
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     Configures the ``debugEachOpcode`` setting.
 

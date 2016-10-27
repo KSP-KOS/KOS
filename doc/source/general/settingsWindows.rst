@@ -1,7 +1,12 @@
+.. _settingsWindows:
+
+kOS Settings Windows
+====================
+
 .. _applauncher:
 
 kOS Control Panel
-=================
+-----------------
 
 As of kOS v0.15, kOS now makes use of Kerbal Space Program's built-in
 Application Launcher toolbar, to open a config/status panel for kOS.
@@ -33,7 +38,7 @@ Key Notes:
 .. _settingsWindow:
 
 KSP Difficulty Settings Window
-==============================
+------------------------------
 
 .. note::
     .. versionadded:: v1.0.2
