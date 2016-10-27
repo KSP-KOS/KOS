@@ -44,5 +44,9 @@ namespace kOS.Safe.Sound
         /// <param name="volume"></param>
         /// <returns></returns>
         bool BeginProceduralSound(int voiceNum, string name, float frequency, float duration, float volume = 1f);
+
+        IVoice GetVoice(int num);
+        string GetWaveName(int voiceNum);
+        bool SetWave(int num, string waveName);
     }
 }

@@ -212,7 +212,9 @@
     <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
+    <Compile Include="Sound\IProceduralSoundWave.cs" />
     <Compile Include="Sound\ISoundMaker.cs" />
+    <Compile Include="Sound\IVoice.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\AssemblyWalkAttribute.cs" />

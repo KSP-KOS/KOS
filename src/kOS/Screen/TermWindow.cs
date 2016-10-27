@@ -91,7 +91,8 @@ namespace kOS.Screen
         private GUISkin customSkin;
         
         private bool uiGloballyHidden = false;
-        
+
+        private Sound.SoundMaker soundMaker;        
 
         public TermWindow()
         {
@@ -133,6 +134,8 @@ namespace kOS.Screen
 
             GameEvents.onHideUI.Add (OnHideUI);
 			GameEvents.onShowUI.Add (OnShowUI);
+
+			soundMaker = gameObject.AddComponent<kOS.Sound.SoundMaker>();
         }
 
         public void OnDestroy()
@@ -176,6 +179,11 @@ namespace kOS.Screen
 
                 fontArray[i] = charImage;
             }
+        }
+        
+        public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
+        {
+            return soundMaker;
         }
         
         private void LoadAudio()

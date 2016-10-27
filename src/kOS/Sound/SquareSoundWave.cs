@@ -3,13 +3,13 @@
 namespace kOS.Sound
 {
     /// <summary>
-    /// A variant of ProceduralSoundWave that just makes a dumb pulse waveform.
+    /// A variant of ProceduralSoundWave that just makes a dumb square waveform.
     /// </summary>
-    public class PulseSoundWave : ProceduralSoundWave
+    public class SquareSoundWave : ProceduralSoundWave
     {
         /// <summary>
         /// What portion of the total period is spent with
-        /// the pulse wave in its "high" state?  Default is
+        /// the square wave in its "high" state?  Default is
         /// 0.5, meaning half the time it's high, and half
         /// it's low.  Setting it to, say, 0.1f would mean
         /// it spends 90% of it's time in the "low" state and 10%
@@ -17,7 +17,7 @@ namespace kOS.Sound
         /// </summary>
         public float HighPortion {get; set;}
 
-        public PulseSoundWave() : base()
+        public SquareSoundWave() : base()
         {
         }
         

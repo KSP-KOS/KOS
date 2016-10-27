@@ -8,21 +8,16 @@ namespace kOS.Sound
     /// <summary>
     /// SoundMaker is the "unsafe" implementation of ISoundMaker, that has calls into the Unity API.
     /// </summary>
-    [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class SoundMaker : MonoBehaviour, ISoundMaker
-    {
-        private static SoundMaker myself;
-        public static ISoundMaker Instance {get{ return myself;}}
-        
+    {        
         private string kspDirectory = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private Dictionary<string, AudioSource> sounds;
-        private AudioSource[] voices;        
+        private Voice[] voices;
         private Dictionary<string, ProceduralSoundWave> waveGenerators;
         
-        // All kOS PartModules should actually share the single same instance of me:
+        // Each Terminal should hold one instance of me.
         void Awake()
         {
-            myself = this;
             sounds = new Dictionary<string, AudioSource>();
             waveGenerators = new Dictionary<string, ProceduralSoundWave>();
             DontDestroyOnLoad(gameObject);            
@@ -33,7 +28,7 @@ namespace kOS.Sound
             LoadFileSound("error", "file://"+ kspDirectory + "GameData/kOS/GFX/error.wav");
 
             LoadProceduralSound("noise", new NoiseSoundWave());
-            LoadProceduralSound("pulse", new PulseSoundWave());
+            LoadProceduralSound("square", new SquareSoundWave());
             LoadProceduralSound("sine", new SineSoundWave());
             LoadProceduralSound("triangle", new TriangleSoundWave());
             LoadProceduralSound("sawtooth", new SawtoothSoundWave());
@@ -55,6 +50,30 @@ namespace kOS.Sound
             
             sounds[name] = source;
         }
+
+        public IVoice GetVoice(int num)
+        {
+            return voices[num];
+        }
+        
+        public string GetWaveName(int voiceNum)
+        {
+            foreach (string key in waveGenerators.Keys)
+                if (waveGenerators[key] == voices[voiceNum].Waveform)
+                    return key;
+            return "";
+        }
+        
+        public bool SetWave(int num, string waveName)
+        {
+            if (! waveGenerators.ContainsKey(waveName))
+                return false;
+            if (num < 0 || num > waveGenerators.Count)
+                return false;
+                    
+            voices[num].SetWave(waveGenerators[waveName]);
+            return true;
+        }
         
         /// <summary>
         /// Load a sound wave sample that was built procedurally in memory.
@@ -70,12 +89,11 @@ namespace kOS.Sound
         
         public void AddGenericVoices(int howMany)
         {
-            voices = new AudioSource[howMany];
+            voices = new Voice[howMany];
             for (int i = 0; i < howMany ; ++i)
             {
-                AudioSource source = gameObject.AddComponent<AudioSource>();
-                voices[i] = source;
-                source.loop = true;                
+                Voice voice = gameObject.AddComponent<Voice>();
+                voices[i] = voice;
             }
         }
 
@@ -104,7 +122,7 @@ namespace kOS.Sound
         /// to make it fit the given frequency.
         /// </summary>
         /// <param name="voiceNum">a number corresponding to one of the "voices" on the audio "chip".</param>
-        /// <param name="name">a sound name that corresponds to a previous call to LoadProceduraulSound</param>
+        /// <param name="name">a procedural sound wave name that was loaded and prepped ahead of time</param>
         /// <param name="frequency">the note, expressed in Hertz (not musical scales)</param>
         /// <param name="duration">the note's duration, in seconds.</param>
         /// <param name="volume">the note's volume, from 0.0 up to 1.0</param>
@@ -115,24 +133,7 @@ namespace kOS.Sound
             if (! waveGenerators.ContainsKey(name))
                 return false;
 
-            AudioSource source = voices[voiceNum];
-
-            // Attempted to play the same sound while it's already playing,
-            // so stop the previous sound:
-            if (source.isPlaying)
-               source.Stop();
-
-            ProceduralSoundWave waveGen = waveGenerators[name];
-            source.clip = waveGen.Clip;            
-            source.volume = GameSettings.UI_VOLUME * volume;            
-            // Speed up or slow down the playback rate to give the desired frequency:
-            // (AudioSource.pitch is actually just a speed multiplier, not the raw pitch.
-            // For example, AudioSource.pitch of 2.0 means "play the sound twice as
-            // fast by skipping every other sample point.":
-            source.pitch = frequency / waveGen.Periods;
-
-            source.Play();
-            source.SetScheduledEndTime(AudioSettings.dspTime + duration);
+            voices[voiceNum].BeginProceduralSound(waveGenerators[name],frequency,duration,volume);
             return true;
         }
     }

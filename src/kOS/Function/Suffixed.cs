@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
+using kOS.Sound;
 using kOS.Utilities;
 using FinePrint;
 using kOS.Safe;
@@ -287,6 +288,50 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             var lexicon = new Lexicon(argArray.ToList());
             ReturnValue = lexicon;
+        }
+    }
+    
+    [Function("note")]
+    public class FunctionNote : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int argCount = CountRemainingArgs(shared);
+            float vol = 1.0f;
+            float duration = -1f;
+            if (argCount >= 4)
+                vol = (float) GetDouble(PopValueAssert(shared));
+            if (argCount >= 3)
+                duration = (float) GetDouble(PopValueAssert(shared));
+            float keyDownDuration = (float) GetDouble(PopValueAssert(shared));
+            float freq = (float) GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            if (duration < 0)
+                duration = keyDownDuration;
+            
+            ReturnValue = new NoteValue(freq, vol, keyDownDuration, duration);
+        }
+    }
+    
+    [Function("GetVoice")]
+    public class FuncitonNote : FunctionBase
+    {
+        Dictionary<int, VoiceValue> VoiceValues = new Dictionary<int, VoiceValue>();
+        
+        public override void Execute(SharedObjects shared)
+        {
+            int voiceNum = GetInt(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            
+            VoiceValue val;
+            
+            if (VoiceValues.TryGetValue(voiceNum, out val))
+                ReturnValue = val;
+            else
+            {
+                VoiceValues[voiceNum] = new VoiceValue(voiceNum, shared.SoundMaker);
+                ReturnValue = VoiceValues[voiceNum];
+            }
         }
     }
 

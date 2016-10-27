@@ -422,7 +422,6 @@ namespace kOS.Module
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
-            shared.SoundMaker = Sound.SoundMaker.Instance;
             shared.AddonManager = new AddOns.AddonManager(shared);
 
             // Make the window that is going to correspond to this kOS part:
@@ -430,6 +429,7 @@ namespace kOS.Module
             DontDestroyOnLoad(gObj);
             shared.Window = (Screen.TermWindow)gObj.GetComponent(typeof(Screen.TermWindow));
             shared.Window.AttachTo(shared);
+            shared.SoundMaker = shared.Window.GetSoundMaker();
 
             // initialize archive
             Archive = shared.Factory.CreateArchive();

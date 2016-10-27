@@ -106,12 +106,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Sound\NoiseSoundWave.cs" />
+    <Compile Include="Sound\NoteValue.cs" />
     <Compile Include="Sound\ProceduralSoundWave.cs" />
-    <Compile Include="Sound\PulseSoundWave.cs" />
+    <Compile Include="Sound\SquareSoundWave.cs" />
     <Compile Include="Sound\SawtoothSoundWave.cs" />
     <Compile Include="Sound\SineSoundWave.cs" />
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Sound\TriangleSoundWave.cs" />
+    <Compile Include="Sound\Voice.cs" />
+    <Compile Include="Sound\VoiceValue.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
