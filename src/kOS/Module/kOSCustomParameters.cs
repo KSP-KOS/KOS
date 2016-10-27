@@ -1,4 +1,5 @@
 ﻿using KSP.IO;
+using System;
 using System.Reflection;
 
 namespace kOS.Module
@@ -42,10 +43,26 @@ namespace kOS.Module
         [GameParameters.CustomIntParameterUI("")]
         public int version = 0;
 
-        [GameParameters.CustomIntParameterUI("Instructions per update", minValue = 50, maxValue = 2000,
-                                            toolTip = "All CPU's run at a speed that executes up to\n"+
+        // these values constrain and back the InstructionsPerUpdate property so that it is clamped both in the
+        // user interface and when set from within a script.
+        private const int ipuMin = 50;
+        private const int ipuMax = 2000;
+        private int instructionsPerUpdate = 200;
+
+        [GameParameters.CustomIntParameterUI("Instructions per update", minValue = ipuMin, maxValue = ipuMax,
+                                            toolTip = "All CPU's run at a speed that executes up to\n" +
                                             "this many kRISC opcodes per physics 'tick'.")]
-        public int instructionsPerUpdate = 200;
+        public int InstructionsPerUpdate
+        {
+            get
+            {
+                return instructionsPerUpdate;
+            }
+            set
+            {
+                instructionsPerUpdate = Math.Max(ipuMin, Math.Min(ipuMax, value));
+            }
+        }
 
         [GameParameters.CustomParameterUI("Enable compressed storage",
                                          toolTip = "When storing local volumes' data in the saved game,\n"+
@@ -196,7 +213,7 @@ namespace kOS.Module
         {
             var config = PluginConfiguration.CreateForType<kOSCustomParameters>();
             config.load();
-            instructionsPerUpdate = config.GetValue("InstructionsPerUpdate", -1);
+            InstructionsPerUpdate = config.GetValue("InstructionsPerUpdate", -1);
             useCompressedPersistence = config.GetValue<bool>("InstructionsPerUpdate");
             showStatistics = config.GetValue<bool>("InstructionsPerUpdate");
             enableRTIntegration = config.GetValue<bool>("EnableRTIntegration");

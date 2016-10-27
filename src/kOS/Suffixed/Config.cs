@@ -16,7 +16,7 @@ namespace kOS.Suffixed
         private readonly Dictionary<string, ConfigKey> alias;
         private readonly Dictionary<PropId, ConfigKey> properties;
 
-        public int InstructionsPerUpdate { get { return kOSCustomParameters.Instance.instructionsPerUpdate; } set { kOSCustomParameters.Instance.instructionsPerUpdate = value; } }
+        public int InstructionsPerUpdate { get { return kOSCustomParameters.Instance.InstructionsPerUpdate; } set { kOSCustomParameters.Instance.InstructionsPerUpdate = value; } }
         public bool UseCompressedPersistence { get { return kOSCustomParameters.Instance.useCompressedPersistence; } set { kOSCustomParameters.Instance.useCompressedPersistence = value; } }
         public bool ShowStatistics { get { return kOSCustomParameters.Instance.showStatistics; } set { kOSCustomParameters.Instance.showStatistics = value; } }
         public bool EnableRTIntegration { get { return kOSCustomParameters.Instance.enableRTIntegration; } set { kOSCustomParameters.Instance.enableRTIntegration = value; } }
