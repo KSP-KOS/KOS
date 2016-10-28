@@ -304,12 +304,17 @@ namespace kOS.Function
             if (argCount >= 3)
                 duration = (float) GetDouble(PopValueAssert(shared));
             float keyDownDuration = (float) GetDouble(PopValueAssert(shared));
-            float freq = (float) GetDouble(PopValueAssert(shared));
+            object note = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
             if (duration < 0)
                 duration = keyDownDuration;
-            
-            ReturnValue = new NoteValue(freq, vol, keyDownDuration, duration);
+
+            if (note is ScalarValue)
+                ReturnValue = new NoteValue((float)GetDouble(note), vol, keyDownDuration, duration);
+            else if (note is StringValue)
+                ReturnValue = new NoteValue(note.ToString(), vol, keyDownDuration, duration);
+            else
+                ReturnValue = new NoteValue(0f, vol, keyDownDuration, duration);
         }
     }
     
@@ -329,7 +334,7 @@ namespace kOS.Function
                 ReturnValue = val;
             else
             {
-                VoiceValues[voiceNum] = new VoiceValue(voiceNum, shared.SoundMaker);
+                VoiceValues[voiceNum] = new VoiceValue(shared.UpdateHandler, voiceNum, shared.SoundMaker);
                 ReturnValue = VoiceValues[voiceNum];
             }
         }

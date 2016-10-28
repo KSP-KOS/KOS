@@ -82,24 +82,6 @@ namespace kOS.Function
         }
     }
     
-    [Function("playsound")]
-    public class FunctionPlaySound : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            int argCount = CountRemainingArgs(shared);
-            double volume = (argCount >= 5 ? GetDouble(PopValueAssert(shared)) : 1.0);
-            double duration = (argCount >= 4 ? GetDouble(PopValueAssert(shared)) : 0.25);
-            double frequency = (argCount >= 3 ? GetDouble(PopValueAssert(shared)) : 261.625565/*middle C*/);
-            string clipName = (argCount >= 2 ? PopValueAssert(shared).ToString().ToLower() : "sine");
-            int voiceNum = (argCount >= 1 ? GetInt(PopValueAssert(shared)) : 0);
-            AssertArgBottomAndConsume(shared);
-            
-            ReturnValue = shared.SoundMaker.BeginProceduralSound(
-                voiceNum, clipName, (float)frequency, (float)duration, (float)volume);
-        }
-    }
-
     [Function("printat")]
     public class FunctionPrintAt : FunctionBase
     {

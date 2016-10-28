@@ -98,6 +98,11 @@ namespace kOS.Sound
 			needNoteInit = true;
 			return true;
 		}
+		
+		public void Stop()
+		{
+		    source.Stop();
+		}
 
 		public void SetWave(IProceduralSoundWave waveGen)
 		{
@@ -151,7 +156,7 @@ namespace kOS.Sound
 							envelopeVolume = Sustain * (1 - (now - stepStart) / (stepStop - stepStart));
 						} else {
 							// Note is fully over and faded to zero volume: we can stop it entirely now.
-							source.Stop();
+							Stop();
 						}
 
 					}
