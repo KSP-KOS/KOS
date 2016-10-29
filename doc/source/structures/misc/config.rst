@@ -22,9 +22,12 @@ Configuration of kOS
         If your save file has not yet migrated to the new settings storage
         system and an old config file is present, you will be prompted with a
         dialog box offering to migrate the old settings or use the defaults.
-        You may also choose to prevent further attempts to migrate settings,
-        which will instruct kOS to set the ``InstructionsPerUpdate`` to a
-        negative value.
+        You may also choose to prevent further attempts to migrate settings.
+        If you do so, kOS will set the ``InstructionsPerUpdate`` to a
+        negative value in the old config file, as a flag to indicate no
+        further migrations should happen.  (Note the old config file is
+        still actively used for global settings such as the telnet settings,
+        even after you've done this, so don't delete it.)
 
     The options here can also be set by using the :ref:`App Control Panel <applauncher>`
     or the :ref:`kOS section of KSP's Difficulty Settings<settingsWindow>`

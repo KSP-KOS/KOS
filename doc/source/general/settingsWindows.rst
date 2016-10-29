@@ -32,7 +32,7 @@ Key Notes:
 6. Toolbar button, click to toggle the control panel window on and off.
 7. Toggle button to activate or deactivate telnet. See :attr:`Config:TELNET`.
 8. Displays or sets the port that the telnet server will listen on. See :attr:`Config:TPORT`.
-9. Toggle button to enable or disable forcing the telnet to only listen on the local loopback address. See :attr:`Config:LOOPBACK`.
+9. Toggle button to enable or disable forcing the telnet server to only listen on the local loopback address. See :attr:`Config:LOOPBACK`.
 10. When you hover your cursor over a processor it will be highlighted purple.
 
 .. _settingsWindow:
@@ -51,6 +51,14 @@ This settings window is accessible when you first start a new game by clicking
 on "Difficulty Options", or in an existing game by clicking on "Difficulty
 Options" from the in game settings menu (accessed by pressing the :kbd:`Escape`
 key, and then clicking "Settings" from the pop up window).
+
+.. note::
+
+    The only reason these settings are on the difficulty options screen is that
+    it's the only place KSP allows mods like kOS to add a new section of custom
+    settings to the user interface.  **Don't think of it as "cheating" to
+    change them mid-game** because they're **not really difficulty options**,
+    despite the name.
 
 .. list-table:: Difficulty Buttons
     :header-rows: 1
