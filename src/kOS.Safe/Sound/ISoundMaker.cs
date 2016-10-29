@@ -30,21 +30,6 @@ namespace kOS.Safe.Sound
         /// <returns>True if the sound has begun playing.  False if it has to wait.</returns>
         bool BeginFileSound(string soundName, float volume = 1f);
 
-        /// <summary>
-        /// Begin a single note from a sound source and specify its parameters.
-        /// If using a ProceduralSoundWave sound, it must be played with this variant
-        /// of BeginSound (not the simpler variant) because those wave generators
-        /// have no specified end time and just emit the wave forever. (Thus the sound
-        /// would never stop if you told it to play out the whole "clip".)
-        /// </summary>
-        /// <param name="voiceNum">which voice to play it on</param>
-        /// <param name="name"></param>
-        /// <param name="frequency"></param>
-        /// <param name="duration"></param>
-        /// <param name="volume"></param>
-        /// <returns></returns>
-        bool BeginProceduralSound(int voiceNum, string name, float frequency, float duration, float volume = 1f);
-
         IVoice GetVoice(int num);
         string GetWaveName(int voiceNum);
         bool SetWave(int num, string waveName);

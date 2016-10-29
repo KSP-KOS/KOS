@@ -15,6 +15,11 @@ namespace kOS.Sound
         private Voice[] voices;
         private Dictionary<string, ProceduralSoundWave> waveGenerators;
         
+        /// <summary>
+        /// Our pretend hardware limit on a "SKID" chip's number of voices
+        /// </summary>
+        private int hardwareMaxVoices = 10;
+        
         // Each Terminal should hold one instance of me.
         void Awake()
         {
@@ -27,13 +32,19 @@ namespace kOS.Sound
             LoadFileSound("click", "file://"+ kspDirectory + "GameData/kOS/GFX/terminal-click.wav");
             LoadFileSound("error", "file://"+ kspDirectory + "GameData/kOS/GFX/error.wav");
 
+            // This could be expanded later if we felt like it, to include
+            // any sort of "instrument" wave pattern we feel like as a "hardware sound".
+            // Making a different wave pattern is just a matter of defining a new mathematical
+            // function for that sound wave's graph over time.
+            // Implementing sounds that are similar to actual instruments usually means having
+            // to encode a more complex pattern into that function.
             LoadProceduralSound("noise", new NoiseSoundWave());
             LoadProceduralSound("square", new SquareSoundWave());
             LoadProceduralSound("sine", new SineSoundWave());
             LoadProceduralSound("triangle", new TriangleSoundWave());
             LoadProceduralSound("sawtooth", new SawtoothSoundWave());
             
-            AddGenericVoices(4);
+            AddGenericVoices(hardwareMaxVoices);
         }
         
         /// <summary>
@@ -116,25 +127,5 @@ namespace kOS.Sound
             return true;
         }
         
-        /// <summary>
-        /// Begin a single note from a ProceduralSoundWave reference sample.
-        /// You can pass in a frequency and it will "stretch" the reference sample
-        /// to make it fit the given frequency.
-        /// </summary>
-        /// <param name="voiceNum">a number corresponding to one of the "voices" on the audio "chip".</param>
-        /// <param name="name">a procedural sound wave name that was loaded and prepped ahead of time</param>
-        /// <param name="frequency">the note, expressed in Hertz (not musical scales)</param>
-        /// <param name="duration">the note's duration, in seconds.</param>
-        /// <param name="volume">the note's volume, from 0.0 up to 1.0</param>
-        /// <returns>false if the sound name given doesn't seem to be found or it is but it was 
-        /// a sound file not a procedural sound.</returns>
-        public bool BeginProceduralSound(int voiceNum, string name, float frequency, float duration, float volume = 1f)
-        {
-            if (! waveGenerators.ContainsKey(name))
-                return false;
-
-            voices[voiceNum].BeginProceduralSound(waveGenerators[name],frequency,duration,volume);
-            return true;
-        }
     }
 }
