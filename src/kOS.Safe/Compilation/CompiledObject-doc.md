@@ -23,7 +23,7 @@ that loads the file to reconstitute all the "missing" redundant data.
 * **kRISC** The name for @marianoapp's overhaul of kOS that created
 a virtual computer running a virtual assembly code.  For the context
 here, when this document mentions kRISC, it's referring to the
-slightly more high-level way of representing the kRISC code, as 
+slightly more high-level way of representing the kRISC code, as
 C# Collections of the C# type kos.Compilation.Opcode.  For example,
 if you are thinking in terms of List&lt;Opcode&gt;, then you're thinking
 of what this document is calling *kRISC*
@@ -58,12 +58,12 @@ and comments and long variable names, and lets users run code
 on their meager small local volumes with them crunched down into
 the smallest possible form.
 
-Getting rid of wastage from comments and spacing is simple. 
+Getting rid of wastage from comments and spacing is simple.
 Because we're storing the compiled format, they're already gone.
 
 But getting rid of wastage from long variable names is a bit more
 complex.  Because the "CPU" runs the code in a namespace-aware way,
-opcodes refer to values by their variable names (not by their 
+opcodes refer to values by their variable names (not by their
 offset from a stack position or a heap address), and therefore
 variable names cannot be entirely removed from the compiled
 file.  Instead the format tries to "mash down" all the names into
@@ -71,21 +71,30 @@ a form where each stringy operand is only spelled out once, and
 then referred to by index position into a common operand heap
 every time it's mentioned.
 
+**IMPORTANT NOTE:**
+
+As of kOS v1.0.2, the ML file is compressed using the SharpZipLib
+reference that was already included with the project.  This further
+reduces the size of the file without kOS having to create a new
+and unique compression algorithm.  This change does not break
+previously compiled programs however, as the unpack logic is able
+to identify if the file is gzipped.
+
 Future Maintenence for kOS Programmers - adding/editing Opcodes
 ===============================================================
 
 In order to minimize the effort needed to keep the system up
 to date as the kRISC opcodes get more sophisticated and the
 kOS system gets smarter, the system uses a lot of reflection
-techniques to "learn" what it needs to know to read/write 
-the ML file.  This reduces the effort that other kOS 
+techniques to "learn" what it needs to know to read/write
+the ML file.  This reduces the effort that other kOS
 developers have to do to keep the system working, but they do
 need to be aware of a few important things, outlined here.
 
 ### Always test ML compiled code too:
 
 Because of the potential for edits of the kRISC system to
-break this code if things are not adhered to carefully, it 
+break this code if things are not adhered to carefully, it
 should be a policy that any change that affects the language
 syntax, or adds a new opcode, MUST REQUIRE running a test
 in which code using the new feature is run from compiled ML
@@ -141,7 +150,7 @@ Use the [MLField] Attribute to mark what goes in the ML file
 
 Opcodes have a *lot* of fields that are derived on the fly and
 don't really need to be saved in the ML file.  To mark a field
-or property as being something that needs to be saved/loaded 
+or property as being something that needs to be saved/loaded
 when writing out a ML file, give it the [MLField] attribute
 and CompiledObject.cs will automatically use it.
 
@@ -187,7 +196,7 @@ If you are trying to apply [MLField] to a field or property
 that is not one of the types mentioned in
 CompiledObject.InitTypeData(), then you need to edit
 CompiledObject.InitTypeData() to add your new type, and
-also ensure that CompiledObject.WriteSomeBinaryPrimitive() 
+also ensure that CompiledObject.WriteSomeBinaryPrimitive()
 and CompiledObject.ReadSomeBinaryPrimitive()
 both know how to deal with that type.
 
@@ -290,6 +299,18 @@ The Format
 
 *Overview*:
 
+As of kOS v1.0.2, the ML file is automatically stored using gzip compression.
+A file that is stored using gzip compression may be identified using the opening
+file header, which will begin with 4 bytes:
+
+* decimal: [31, 139, 8, 0]
+* hexadecimal: [0x1f, 0x8b, 0x08, 0x00]
+
+The unpack logic checks for this information at the beginning of the file, and
+will decompress the content if necessary.  Files that do not include the gzip
+header information will not be decompressed.  A file that does not open with
+either the gzip header or the ML format described below will throw an error.
+
 The ML file format is a binary file with sections ordered as follows.
 Each section is explained in detail below:
 
@@ -307,7 +328,7 @@ Each section is explained in detail below:
 
     byte 0|byte 1|byte 2|byte 4
     ======|======|======|======
-    'k'   |0x03  |'X'   |'E' 
+    'k'   |0x03  |'X'   |'E'
 
 
 The ML file always begins with a 4-byte "magic number" to identify
@@ -326,7 +347,7 @@ Argument Section (%A)
 
 The Argument Section immediately follows the Magic Number.
 
-The purpose of the argument seciton is to pack together all the 
+The purpose of the argument seciton is to pack together all the
 existing arguments to Opcodes into one place, to avoid duplication
 (i.e. integer zero is only stored once, not the 20 times it appears
 in the script, and the string "throttle" is only stored once, not
@@ -335,14 +356,14 @@ the several times it appears in the script, and so on).
 Note that the only arguments that are packed into the Argument
 Section are those that appear as actual arguments to Opcodes in
 the kRISC assembly language dumps.  "Arguments" which are in
-fact communicated by pushing them onto the stack are not stored 
+fact communicated by pushing them onto the stack are not stored
 this way.  For example, if two numbers are being divided, like so:
 
     push $num1
     push 3.14159
     div
 
-then the arguments *$num* and *3.14159* are arguments to the PUSH 
+then the arguments *$num* and *3.14159* are arguments to the PUSH
 Opcodes, but they are not arguments to the Div Opcode.
 
 ### Argument header: 3 bytes.  "%An"
@@ -355,17 +376,17 @@ Opcodes, but they are not arguments to the Div Opcode.
 					    | 2 = 2-byte addressing (i.e. a ushort).
 					    | 3 = 3-byte addressing.
 					    | 4 = 4-byte addressing (i.e. a uint).
-					    |   .. etc.. 
+					    |   .. etc..
 
 
 The argument section starts with the two-byte code formed by the
-ASCII string "%A" to demark it's start. 
+ASCII string "%A" to demark it's start.
 
 **numArgIndexBytes**
 
 The first byte immediately after the "%A" is the *numArgIndexBytes*,
 a one-byte number that indicates the minimum size of unsigned integer
-needed to index into this argument section itself. 
+needed to index into this argument section itself.
 If *numArgIndexBytes* is '1', it means the Argument Section is under
 256 bytes long, such that you could index into any position within it
 using a mere one-byte unsigned integer.  If *numArgIndexBytes* is '2',
@@ -377,7 +398,7 @@ as that would require an initial kerboscript source file at least 64kB
 long, probably much longer in actuality.
 
 The addressing index into the Argument section starts counting with
-zero being the "%" of the "%A" of the header.  (So the first 
+zero being the "%" of the "%A" of the header.  (So the first
 actual argument, after the 3-byte header, is going to have address index
 0x03).
 
@@ -428,9 +449,9 @@ types supported is this:
 CodePart sections:
 ------------------
 
-After the Argument Section, the CodePart sections are just appended one 
+After the Argument Section, the CodePart sections are just appended one
 after the other.  It will be possible to identify where one stops
-and the next begins because they always begin with a function 
+and the next begins because they always begin with a function
 section marked by '%F', as explained below.
 
 (Remember, the ML file records a *List&lt;CodePart&gt;* structure.)
@@ -458,7 +479,7 @@ sign followed by a letter: "%F" for functions, "%I" for initializations,
 and "%M" for main code.
 
 Note that it is possible to see these strings elsewhere in the file
-as well, as a pure coincidence. Only when the percent-sign '%' is 
+as well, as a pure coincidence. Only when the percent-sign '%' is
 located in the place where an Opcode's ByteCode would go does it
 indicate the start of a new section.
 
@@ -503,7 +524,7 @@ And so on.... for any 'N' of [MLField] properties.
 
 All opcodes start with a single byte that identifies the type of
 Opcode it is.  Each derived subclass of Opcode uses a different
-ByteCode.  The mapping of ByteCode to Opcode can be seen in the 
+ByteCode.  The mapping of ByteCode to Opcode can be seen in the
 definition of the ByteCOde enum in *src/Compilation/Opcode.cs*.
 
 ### Arguments
@@ -586,10 +607,10 @@ an OpcodePush that requires such a reassignment of the label or not.
 To create that "flag", the special opcode *OpcodePushRelocateLater* was
 invented.  An *OpcodePushRelocateLater* is identical to an normal
 *OpcodePush* except that its argument is meant to be relocated upon
-loading the ML file.  By the time the program is actually running, 
+loading the ML file.  By the time the program is actually running,
 all the *OpcodePushRelocateLater* opcodes should have been replaced
-by normal *OpcodePush*'es.  In fact, to enforce this and detect if 
-it's not being adhered to, the Execute() method of 
+by normal *OpcodePush*'es.  In fact, to enforce this and detect if
+it's not being adhered to, the Execute() method of
 *OpcodePushRelocateLater* throws an exception if it's ever called.
 
 ### OpcodeLabelReset
@@ -620,7 +641,7 @@ with the jump between @0253 and @0267 because opcodes @0254 through
 @0266 were inserted into the functions section instead of into the
 main code.)
 
-The problem is that to store the Opcode.Label for *every single* 
+The problem is that to store the Opcode.Label for *every single*
 Opcocde in the ML file would be massively inefficient when most
 of the time they are just consecutive and can be just incremented
 as the ML unpacker reads through the ML file.
@@ -722,7 +743,7 @@ to store indeces into the *Encoded Opcode List*, which
 much like the number of bytes to store indeces into the Argument
 List, depends on the length of that chunk of the ML file.
 
-    byte 0           |byte 1                |byte 2 
+    byte 0           |byte 1                |byte 2
     section delimiter|section type character|Encoded Opcode List index size
     =================|======================|=====================================
     '%'              |'D'                   |a small number stored in 1 byte:
@@ -730,7 +751,7 @@ List, depends on the length of that chunk of the ML file.
 					    | 2 = 2-byte addressing (i.e. a ushort).
 					    | 3 = 3-byte addressing.
 					    | 4 = 4-byte addressing (i.e. a uint).
-					    |   .. etc.. 
+					    |   .. etc..
 
 The addressing index into the Debug Line Numbers section starts
 counting with zero being the "%" of the "%F" of the first Function
@@ -742,7 +763,7 @@ is considered one long contiguous section.  (In other words, the
 numbering doesn't start over again at zero when the next CodePart
 starts a new "%F" header - it keeps counting up.)
 
-### Debug Line Numbers 
+### Debug Line Numbers
 
 The purpose of the section is to store a mapping that looks conceptually
 like this example:
@@ -779,8 +800,8 @@ To encode this into the ML file, the format is:
     2 byte ushort    |  1 byte num ranges  |  N bytes | N bytes ...
     =================|=====================|==========|======== ...
         line number  |   how many ranges   | start    | stop    ... (repeat start/stop for each range given)
-	
-With the start,stop repeated x numbers of times where x is the number 
+
+With the start,stop repeated x numbers of times where x is the number
 given for "how many ranges".  (This does make it impossible
 to store more than 255 discontinuous ranges for one line, but
 that would be a *really* weird compile result.)
@@ -801,13 +822,13 @@ An example bringing it all together
 ===================================
 
 This is a small example of a tiny program that shows it all.  A
-very small example was picked because it's possible to see it all 
+very small example was picked because it's possible to see it all
 at once in one hexdump:
 
 Original Program as ASCII source:
 ---------------------------------
 
-    // This is testcode 
+    // This is testcode
     declare parameter p1,p2.
     run testcode3(5).
     set a to p1 + p2 + b.
@@ -822,63 +843,63 @@ CodePart Number 0 looks like this:
 CodePart 0's .FunctionsCode is a List&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
-    ----                 ----:--- ---- --------------------- 
-    archive/testcode2       3:1   0000 push $program-testcode3* 
-    archive/testcode2       3:1   0001 push 0 
-    archive/testcode2       3:1   0002 eq 
-    archive/testcode2       3:1   0003 br.false 0 
-    archive/testcode2       3:1   0004 push $program-testcode3* 
-    archive/testcode2       3:1   0005 push testcode3 
-    archive/testcode2       3:1   0006 push null 
-    archive/testcode2       3:1   0007 call load() 
-    archive/testcode2       3:1   0008 store 
-    archive/testcode2       3:1   0009 call $program-testcode3* 
-    archive/testcode2       3:1   0010 return 
+    ----                 ----:--- ---- ---------------------
+    archive/testcode2       3:1   0000 push $program-testcode3*
+    archive/testcode2       3:1   0001 push 0
+    archive/testcode2       3:1   0002 eq
+    archive/testcode2       3:1   0003 br.false 0
+    archive/testcode2       3:1   0004 push $program-testcode3*
+    archive/testcode2       3:1   0005 push testcode3
+    archive/testcode2       3:1   0006 push null
+    archive/testcode2       3:1   0007 call load()
+    archive/testcode2       3:1   0008 store
+    archive/testcode2       3:1   0009 call $program-testcode3*
+    archive/testcode2       3:1   0010 return
 
 CodePart 0's .InitializationsCode is a List&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
-    ----                 ----:--- ---- --------------------- 
-    archive/testcode2       3:1   0000 push $program-testcode3* 
-    archive/testcode2       3:1   0001 push 0 
-    archive/testcode2       3:1   0002 store 
+    ----                 ----:--- ---- ---------------------
+    archive/testcode2       3:1   0000 push $program-testcode3*
+    archive/testcode2       3:1   0001 push 0
+    archive/testcode2       3:1   0002 store
 
 CodePart 0's .MainCode is an empty List&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
-    ----                 ----:--- ---- --------------------- 
+    ----                 ----:--- ---- ---------------------
 
 CodePart Number 1 looks like this:
 
 CodePart 1's .FunctionCode is an empty Listx&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
-    ----                 ----:--- ---- --------------------- 
+    ----                 ----:--- ---- ---------------------
 
 CodePart 1's .InitializationsCode is an empty List&lt;Opcode*gt; like this:
 
     File                 Line:Col IP   opcode operand
-    ----                 ----:--- ---- --------------------- 
+    ----                 ----:--- ---- ---------------------
 
 CodePart 1's .MainCode is a List*lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
-    ----                 ----:--- ---- --------------------- 
-    archive/testcode2       2:22  0000 push p2 
-    archive/testcode2       2:22  0001 swap 
-    archive/testcode2       2:22  0002 store 
-    archive/testcode2       2:19  0003 push p1 
-    archive/testcode2       2:19  0004 swap 
-    archive/testcode2       2:19  0005 store 
-    archive/testcode2       3:15  0006 push 5 
+    ----                 ----:--- ---- ---------------------
+    archive/testcode2       2:22  0000 push p2
+    archive/testcode2       2:22  0001 swap
+    archive/testcode2       2:22  0002 store
+    archive/testcode2       2:19  0003 push p1
+    archive/testcode2       2:19  0004 swap
+    archive/testcode2       2:19  0005 store
+    archive/testcode2       3:15  0006 push 5
     archive/testcode2       3:15  0007 call  
-    archive/testcode2       4:5   0008 push $a 
-    archive/testcode2       4:10  0009 push $p1 
-    archive/testcode2       4:15  0010 push $p2 
-    archive/testcode2       4:13  0011 add 
-    archive/testcode2       4:20  0012 push $b 
-    archive/testcode2       4:18  0013 add 
-    archive/testcode2       4:5   0014 store 
+    archive/testcode2       4:5   0008 push $a
+    archive/testcode2       4:10  0009 push $p1
+    archive/testcode2       4:15  0010 push $p2
+    archive/testcode2       4:13  0011 add
+    archive/testcode2       4:20  0012 push $b
+    archive/testcode2       4:18  0013 add
+    archive/testcode2       4:5   0014 store
 
 The result as an ML file:
 -------------------------
@@ -1092,7 +1113,7 @@ in user-land.
 Now the second program loaded into memory uses a prefix of "@NNN_" for its
 labels, in which the NNN refers to the highest instruction that already
 existed in the memory before being loaded.  In the previous example
-where program1 ended on KL_0150 and program2 starts with KL0151, the 
+where program1 ended on KL_0150 and program2 starts with KL0151, the
 new way it will work is for program1 to end with @0150, and program2
 to begin with @150_0001, then @150_0002, then @150_0003, and so on.
 
