@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import re
 
 from docutils import nodes
 from docutils.parsers.rst import directives
 
-from sphinx import addnodes
+from sphinx import addnodes, version_info
 from sphinx.roles import XRefRole
 from sphinx.locale import l_, _
 from sphinx.domains import Domain, ObjType, Index
@@ -55,8 +56,13 @@ class KOSObject(ObjectDescription):
             objects[key] = self.env.docname
         indextext = self.get_index_text(self.objtype, name)
         if indextext:
-            self.indexnode['entries'].append(('single', indextext,
-                                              targetname, ''))
+            # sphinx 1.4.0+ requires 5 elements
+            if version_info > (1, 4, 0, '', 0):
+                self.indexnode['entries'].append(('single', indextext,
+                                                  targetname, '', None))
+            else:
+                self.indexnode['entries'].append(('single', indextext,
+                                                  targetname, ''))
 
 class KOSGlobal(KOSObject):
     doc_field_types = [
@@ -260,8 +266,13 @@ class KOSDomain(Domain):
                                     contnode, target + ' ' + objtype)
 
     def get_objects(self):
-        for (typ, name), docname in self.data['objects'].iteritems():
-            yield name, name, typ, docname, name, 1
+        # iteritems() was renamed to items() in python 3
+        if sys.version_info[0] < 3:
+            for (typ, name), docname in self.data['objects'].iteritems():
+                yield name, name, typ, docname, name, 1
+        else:
+            for (typ, name), docname in self.data['objects'].items():
+                yield name, name, typ, docname, name, 1
 
 def setup(app):
     app.add_domain(KOSDomain)

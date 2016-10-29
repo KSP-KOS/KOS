@@ -1,5 +1,4 @@
 ﻿using kOS.AddOns.RemoteTech;
-using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using System;
@@ -54,7 +53,28 @@ namespace kOS.Persistence
 
         public static FileContent ToHarddiskFile(this ConfigNode configNode, Harddisk harddisk, HarddiskDirectory directory)
         {
-            return Decode(configNode.GetValue("line"));
+            try
+            {
+                string content = null;
+                if (configNode.TryGetValue("ascii", ref content)) // ASCII files just get decoded from the ConfigNode safe representation
+                {
+                    return new FileContent(PersistenceUtilities.DecodeLine(content));
+                }
+                if (configNode.TryGetValue("binary", ref content)) // binary files get decoded from Base64 and gzip
+                {
+                    return new FileContent(PersistenceUtilities.DecodeBase64ToBinary(content));
+                }
+                if (configNode.TryGetValue("line", ref content)) // fall back to legacy logic
+                {
+                    return Decode(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                SafeHouse.Logger.LogError(string.Format("Exception caught loading file information: {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace));
+            }
+            SafeHouse.Logger.LogError(string.Format("Error loading file information from ConfigNode at path {0} on hard disk {1}", directory.Path, harddisk.Name));
+            return new FileContent("");  // if there was an error, just return a blank file.
         }
 
         public static ConfigNode ToConfigNode(this Harddisk harddisk, string nodeName)
@@ -98,17 +118,21 @@ namespace kOS.Persistence
 
             if (content.Category == FileCategory.KSM)
             {
-                node.AddValue("line", PersistenceUtilities.EncodeBase64(content.Bytes));
+                node.AddValue("binary", PersistenceUtilities.EncodeBase64(content.Bytes));
+            }
+            else if (content.Category == FileCategory.BINARY)
+            {
+                node.AddValue("binary", PersistenceUtilities.EncodeBase64(content.Bytes));
             }
             else
             {
                 if (SafeHouse.Config.UseCompressedPersistence)
                 {
-                    node.AddValue("line", EncodeBase64(content.String));
+                    node.AddValue("binary", EncodeBase64(content.String));
                 }
                 else
                 {
-                    node.AddValue("line", PersistenceUtilities.EncodeLine(content.String));
+                    node.AddValue("ascii", PersistenceUtilities.EncodeLine(content.String));
                 }
             }
             return node;
@@ -120,9 +144,8 @@ namespace kOS.Persistence
             {
                 return new FileContent(PersistenceUtilities.DecodeBase64ToBinary(input));
             }
-            catch (FormatException)
+            catch // if there is an exception of any kind decoding, fall back to standard decoding
             {
-                // standard encoding
                 string decodedString = PersistenceUtilities.DecodeLine(input);
                 return new FileContent(decodedString);
             }
