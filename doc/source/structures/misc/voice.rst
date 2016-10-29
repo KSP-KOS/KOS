@@ -16,7 +16,7 @@ documentation with links.
 .. function:: GETVOICE(num)
 
     To access one of the :ref:`voices <skid_voice>` of the
-    :ref:`SKID <skid>` chip, you use the ``GetVoice(n)`` built-in
+    :ref:`SKID <skid>` chip, you use the ``GetVoice(num)`` built-in
     function.
 
     Where ``num`` is the number of the hardware voice you're interested
@@ -24,7 +24,7 @@ documentation with links.
     called 0).
 
 Each voice is capable of playing one note at a time, or a series of 
-notes from a song (a :struct:`List` of :struct:`Note`s), but what
+notes from a song (a :struct:`List` of :struct:`Note`'s), but what
 matters is that one voice can't play two notes at once.  To do that
 you need to use multiple voices.  For simple one-voice situations,
 you probably only need to ever use voice 0.
@@ -154,7 +154,7 @@ you probably only need to ever use voice 0.
     :type: :struct:`string` taken from the list of known waveforms in the hardware.
 
     To select which of the SKID chip's
-    :ref:`waveform generators <skip_waveform>` you want this voice
+    :ref:`waveform generators <skid_waveform>` you want this voice
     to use, set this to the string name of that waveform.  If you
     use a string that isn't one of the ones listed there (i.e.
     "triangle", "noise", "square", etc) then the attempt to set this
@@ -163,7 +163,7 @@ you probably only need to ever use voice 0.
 .. method:: Voice:PLAY(note_or_list)
 
     :access: Call (method)
-    :parameter note_or_list: Either one :struct:`Note` or a :struct:`List` of :struct:`Note`s
+    :parameter note_or_list: Either one :struct:`Note` or a :struct:`List` of :struct:`Note`'s
     :type: n/a (method's return value isn't meaningful)
 
     To cause the SKID chip to actually emit a sound, you need to
@@ -178,7 +178,7 @@ you probably only need to ever use voice 0.
 
     **Play a list of notes** : To play a full list of notes (which
     could even encode an entire song), you can call PLAY, passing it
-    a :struct:`List` of :struct:`Note`s.  It will recognize that it
+    a :struct:`List` of :struct:`Note`'s.  It will recognize that it
     is receiving a list of notes, and begin playing through them
     one at a time, only playing the next note when the previous
     note's ``:DURATION`` is finished::
@@ -246,7 +246,7 @@ you probably only need to ever use voice 0.
     :type: :struct:`scalar` (multiplier of durations of notes)
 
     When the voice is playing a :struct:`Note` or (more usefully) a
-    :struct:`List` of :struct`Note`s, it will stretch or shrink the
+    :struct:`List` of :struct:`Note`'s, it will stretch or shrink the
     durations of those notes by multiplying them by this scaling
     factor.  At 1.0 (the default), that means that when a note 
     *says* it lasts for 1 second, then it really does.  But if 

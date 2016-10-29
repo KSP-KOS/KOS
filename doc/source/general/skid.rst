@@ -90,7 +90,6 @@ patterns.  As of this writing, our engineers have uncovered
 These each produce a slightly different sound.
 
 .. figure:: /_images/general/square.png
-    :width: 80 %
     :alt: Image of a square sound wave.
 
     ``"SQUARE"``: When this ``:WAVE`` setting is used, the
@@ -99,7 +98,6 @@ These each produce a slightly different sound.
     changed the setting.
 
 .. figure:: /_images/general/triangle.png
-    :width: 80 %
     :alt: Image of a triangle sound wave.
 
     ``"TRIANGLE"``: When this ``:WAVE`` setting is used, the
@@ -107,14 +105,12 @@ These each produce a slightly different sound.
     sounding mellow.
 
 .. figure:: /_images/general/sawtooth.png
-    :width: 80 %
     :alt: Image of a sawtooth sound wave.
 
     ``"SAWTOOTH"``: When this ``:WAVE`` setting is used, the
     sound is a little bit like a rasping wasp.
 
 .. figure:: /_images/general/sine.png
-    :width: 80 %
     :alt: Image of a sine sound wave.
 
     ``"SINE"``: When this ``:WAVE`` setting is used, the
@@ -122,7 +118,6 @@ These each produce a slightly different sound.
     seeming a bit quieter because of the smoother edges.
 
 .. figure:: /_images/general/noise.png
-    :width: 80 %
     :alt: Image of a noise sound wave.
 
     ``"NOISE"``: When this ``:WAVE`` setting is used, the
@@ -161,9 +156,9 @@ Attack (a time setting)
     The Attack setting is a time, expressed in seconds (usually
     a fraction of a second), for how long a note takes to
     achieve its full volume in its initial first spike when it
-    is played.  Note that the volume achived at the top of
+    is played.  Note that the volume achieved at the top of
     this spike is the voice's default volume level.
-    This time setting is *Not Modified by :ref:`tempo <skid_tempo>`*,
+    This time setting is not modified by :ref:`tempo <skid_tempo>`,
     because it represents the instrument's physical properties that
     don't change when the song goes faster.
 
@@ -172,11 +167,11 @@ Decay (a time setting)
     a fraction of a second), for how long a note takes to
     drop from its initial spike in volume down to its sustaining
     volume level.
-    This time setting is *Not Modified by :ref:`tempo <skid_tempo>`*,
+    This time setting is not modified by :ref:`tempo <skid_tempo>`,
     because it represents the instrument's physical properties that
     don't change when the song goes faster.
 
-Sustain (a time setting)
+Sustain (a volume setting)
     The Sustain setting is not a time, but a volume multiplier (
     usually some amount less than 1.0 but higher than 0.0).  It
     is the lesser volume level that the note drops to after the spike
@@ -186,13 +181,13 @@ Sustain (a time setting)
     duration of this period of the note varies depending on the note
     being played.
 
-Release
+Release (a time setting)
     The Release setting is a time, expressed in seconds (usually
     a fraction of a second), for how long a note takes to
     fade from its Sustain volume level back down to zero again
     at the end of the note when the sustained duration of the note
     is over.
-    This time setting is *Not Modified by :ref:`tempo <skid_tempo>`*,
+    This time setting is not modified by :ref:`tempo <skid_tempo>`,
     because it represents the instrument's physical properties that
     don't change when the song goes faster.
 
@@ -242,14 +237,14 @@ To do this, you use a string in the following format:
 
 1. Mandatory: First character is the note letter, one of 
    "C","D","E","F","G","A", "B", or "R"(to mean "rest").
-2. Optonal: Followed by an optional character, "#" or "b" for "sharp" or "flat".
-   Note the ASCII characters hash ("#") and lower-case ('b') are
-   used for "sharp" and "flat" in place of the Unicode characters
+2. Optonal: Followed by an optional character, "#" or "b" for "sharp" or
+   "flat".  Note the ASCII characters hash ("#") and lower-case "B" ('b')
+   are used for "sharp" and "flat" in place of the Unicode characters
    U+266F and U+266D (which are the more proper "sharp" and "flat"
    characters, but they are cumbersome to type on most keyboards.)
 3. Mandatory: The last character is a digit indicating which octave
    number (0 through 7) this note is in.  (4 is the "middle" octave
-   that starts with "middle C" on a piano keyboard.0
+   that starts with "middle C" on a piano keyboard.)
 
 Examples:  ``"C4"`` is middle C.  ``"C#4"`` is the C-sharp just one half
 step above middle C.  ``"Db4"`` is the D-flat that is in fact the same
@@ -298,7 +293,7 @@ KeyDownLength (Seconds, modified by :ref:`tempo <skid_tempo>`)
     It's the orange portion of the graph.)
 
 Duration (Seconds, modified by :ref:`tempo <skid_tempo>`)
-    Defines how long you this entire note lasts from the start of its
+    Defines how long this entire note lasts from the start of its
     Attack until the end when the next note can start.  This must be at least
     as long as KeyDownLength (and if it is not, then KeyDownLength will
     be shortened to match the Duration).  When Duration is longer than
@@ -337,7 +332,7 @@ slowing down the tempo.
 
 It should be possible to transcribe sheet music into the note format
 the SKID chip uses, by simply using a note Duration of 0.25 for
-"quarter node", 0.5 for "half note", 1.0 for "whole note", and so on,
+"quarter note", 0.5 for "half note", 1.0 for "whole note", and so on,
 and then setting the chip's Tempo to set how long you mean for a whole
 note to last.
 
@@ -466,8 +461,8 @@ Note()
 
 When asking one of SKID's voices to play a note, you have to specify
 which note you meant, and you do so by constructing a :struct:`Note`
-object using the :ref:`Note()` built-in function, as in this example
-here::
+object using the :ref:`Note() <note>` built-in function, as in this
+example here::
 
     // N1 is a note (also at 440 Hz because that's what "A4" means)
     // that lasts 1 second overall, but only 0.8 seconds of it
@@ -490,7 +485,7 @@ The heart of the Kerboscript interface to the SKID chip is the `Play()`
 suffix method of the :struct:`Voice` object.
 
 You either construct a single :struct:`Note` and tell Play() to play it,
-or you construct a :struct:`List` of :struct:`Note`s and tell Play()
+or you construct a :struct:`List` of :struct:`Note`'s and tell Play()
 to play them.
 
 Examples::

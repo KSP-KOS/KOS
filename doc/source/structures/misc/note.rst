@@ -35,7 +35,7 @@ function:
         in its Release portion of the :ref:`ADSR envelope <skid_envelope>`.)
         If *duration* is not present, then the note cuts off instantly
         at the end of keyDownLength.  If *duration* is present, then
-        the it must be at least greater than or equal to *keyDownLength*,
+        it must be at least greater than or equal to *keyDownLength*,
         or else *keyDownLength* will be shortened to match the duration.
         Note that the value here gets multiplied by the voice's
         ``:TEMPO`` to decide the actual duration in seconds when it gets played.
