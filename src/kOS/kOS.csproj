@@ -79,6 +79,8 @@
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Communication\CommNetConnectivityManager.cs" />
     <Compile Include="Communication\ConnectivityManager.cs" />
+    <Compile Include="Communication\ControlConnection.cs" />
+    <Compile Include="Communication\HomeConnection.cs" />
     <Compile Include="Communication\kOSConnectivityParameters.cs" />
     <Compile Include="Control\SteeringManager.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
