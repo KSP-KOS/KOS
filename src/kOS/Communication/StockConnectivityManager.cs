@@ -45,7 +45,7 @@ namespace kOS.Communication
             return true;
         }
 
-        public bool HasControl(Vessel vessel)
+        public bool HasConnectionToControl(Vessel vessel)
         {
             return true;
         }

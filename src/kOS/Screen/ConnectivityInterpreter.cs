@@ -109,7 +109,7 @@ namespace kOS.Screen
 
         private void UpdateDeployment(double deltaTime)
         {
-            if (!ConnectivityManager.HasControl(Shared.Vessel))
+            if (!ConnectivityManager.HasConnectionToControl(Shared.Vessel))
             {
                 if (!signalLossWarning)
                 {
