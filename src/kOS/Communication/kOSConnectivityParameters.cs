@@ -38,7 +38,11 @@ namespace kOS.Communication
         [GameParameters.CustomStringParameterUI("CONNECTIVITY MANAGER", autoPersistance = false)]
         public string connectivityHandlerTitle = "";
 
-        [GameParameters.CustomParameterUI("Selected")]
+        [GameParameters.CustomParameterUI("Selected", toolTip = "The currently slected manager.  The slider will progress\n" + 
+                                                                "through the list of available managers below, in order.\n" + 
+                                                                "The manager you select will determine how kOS will interact\n" + 
+                                                                "with stock or mod communications networks.  See the communications\n" + 
+                                                                "documentation for details on each manager.")]
         public string connectivityHandler = "StockConnectivityManager";
 
         [GameParameters.CustomStringParameterUI("Available managers", autoPersistance = false)]
