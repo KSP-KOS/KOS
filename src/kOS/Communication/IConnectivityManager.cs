@@ -36,7 +36,8 @@
         /// <summary>
         /// Get the signal delay between the given vessel and the control source.  This control source
         /// may be the "home" discussed in the GetDelayToHome summary, or any other command station
-        /// allowing control of the given vessel.
+        /// allowing control of the given vessel.  The control source may even be the local vessel, if
+        /// it pilot control is valid for the implementation.
         /// </summary>
         /// <param name="vessel"></param>
         /// <returns>The delay in seconds.  If there is no connection, this should return -1</returns>
@@ -52,11 +53,12 @@
 
         /// <summary>
         /// Determine if there is a connection to a control source.  See the comentary in the summary
-        /// of GetDelayToControl
+        /// of GetDelayToControl.  This method is used to determine if terminal input is currently
+        /// allowed.
         /// </summary>
         /// <param name="vessel"></param>
         /// <returns>True if there is a connection, False if no connection is available</returns>
-        bool HasControl(Vessel vessel);
+        bool HasConnectionToControl(Vessel vessel);
 
         /// <summary>
         /// Determine if there is a connection betweeen the two given vessels.

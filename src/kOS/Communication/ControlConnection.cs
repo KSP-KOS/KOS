@@ -17,7 +17,7 @@ namespace kOS.Communication
         {
             get
             {
-                return ConnectivityManager.HasControl(shared.Vessel);
+                return ConnectivityManager.HasConnectionToControl(shared.Vessel);
             }
         }
 

@@ -69,7 +69,7 @@ namespace kOS.AddOns.RemoteTech
             return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
         }
 
-        public bool HasControl(Vessel vessel)
+        public bool HasConnectionToControl(Vessel vessel)
         {
             if (!RemoteTechHook.IsAvailable(vessel.id))
                 return false; // default to no connection if the vessel isn't configured for RT.

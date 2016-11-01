@@ -74,7 +74,7 @@ namespace kOS.Communication
             return vessel.Connection.IsConnectedHome;
         }
 
-        public bool HasControl(Vessel vessel)
+        public bool HasConnectionToControl(Vessel vessel)
         {
             if (!IsEnabled)
                 return true;
@@ -90,7 +90,7 @@ namespace kOS.Communication
                 var net = CommNetNetwork.Instance.CommNet;
                 tempPath = new CommPath();
                 net.FindClosestControlSource(vessel.Connection.Comm, tempPath);
-                return tempPath.signalStrength > 0;
+                return tempPath.signalStrength > 0 || vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED;
             }
             return vessel.Connection.IsConnected || vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED;
         }

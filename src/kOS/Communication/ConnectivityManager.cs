@@ -141,9 +141,9 @@ namespace kOS.Communication
             return Instance.HasConnectionToHome(vessel);
         }
 
-        public static bool HasControl(Vessel vessel)
+        public static bool HasConnectionToControl(Vessel vessel)
         {
-            return Instance.HasControl(vessel);
+            return Instance.HasConnectionToControl(vessel);
         }
 
         public static bool HasConnection(Vessel vessel1, Vessel vessel2)
