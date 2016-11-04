@@ -80,11 +80,12 @@ Key Notes:
 1. All CPU's run at a speed that executes up to this many kRISC opcodes per physics 'tick'. See :attr:`Config:IPU`
 2. When storing local volumes' data in the saved game, it will be compressed then base64 encoded. See :attr:`Config:UCP`
 3. After the outermost program is finished, you will see some profiling output describing how fast it ran. See :attr:`Config:STAT`
-4. kOS will ask Remote Tech (if present) to allow it to have control over vessels that are out of contact. See :attr:`Config:RT`
-5. When launching a new ship, or reloading a scene, the default volume will start as 0 instead of 1. See :attr:`Config:ARCH`
-6. When you press the "Hide UI" button (F2 in default bindings) kOS's terminals will hide themselves too. See :attr:`Config:OBEYHIDEUI`
-7. kOS will throw an error if Infinity or Not-A-Number is the result of any expression.  This ensures no such values can ever get passed in to KSP's stock API, which doesn't protect itself against their effects. See :attr:`Config:SAFE`
-8. When kOS throws an error, you hear a sound effect. See :attr:`Config:AUDIOERR`
-9. When kOS has an error, some error messages have alternative longer paragraph-length descriptions that this enables. See :attr:`Config:VERBOSE`
-10. If you have the "Blizzy Toolbar" mod installed, only put the kOS button on it instead of both it and the stock toolbar.
-11. (For mod developers) Spams the Unity log file with a message for every time an opcode is executed in the virtual machine.  Very laggy. See :attr:`Config:DEBUGEACHOPCODE`
+4. When launching a new ship, or reloading a scene, the default volume will start as 0 instead of 1. See :attr:`Config:ARCH`
+5. When you press the "Hide UI" button (F2 in default bindings) kOS's terminals will hide themselves too. See :attr:`Config:OBEYHIDEUI`
+6. kOS will throw an error if Infinity or Not-A-Number is the result of any expression.  This ensures no such values can ever get passed in to KSP's stock API, which doesn't protect itself against their effects. See :attr:`Config:SAFE`
+7. When kOS throws an error, you hear a sound effect. See :attr:`Config:AUDIOERR`
+8. When kOS has an error, some error messages have alternative longer paragraph-length descriptions that this enables. See :attr:`Config:VERBOSE`
+9. If you have the "Blizzy Toolbar" mod installed, only put the kOS button on it instead of both it and the stock toolbar.
+10. (For mod developers) Spams the Unity log file with a message for every time an opcode is executed in the virtual machine.  Very laggy. See :attr:`Config:DEBUGEACHOPCODE`
+11. :ref:`Connectivity manager<connectivityManagers>` selector
+12. List of all available :ref:`connectivity managers<connectivityManagers>`.
