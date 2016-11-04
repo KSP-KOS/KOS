@@ -394,6 +394,20 @@ TIME is the time since the entire saved game campaign started, in the
 kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
 just started.
 
+.. object:: HOMECONNECTION
+
+    .. seealso::
+
+        :global:`HOMECONNECTION`
+            Globally bound variable for the connection to "home".
+
+.. object:: CONTROLCONNECTION
+
+    .. seealso::
+
+        :global:`CONTROLCONNECTION`
+            Globally bound variable for the connection to a control source.
+
 KUNIVERSE
 ~~~~~~~~~
 

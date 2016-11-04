@@ -204,7 +204,7 @@ which connectivity manager is selected.
 
     Returns a :struct:`Connection` representing the :ref:`CPU Vessel's<cpu vessel>`
     communication line to a control source.  This may be the same as the
-    :global:`HOMECONNECTION`, or it may represent a local connection, or it may
-    represent a connection to a control station.  When using the
+    :global:`HOMECONNECTION`, or it may represent a local crewed command pod,
+    or it may represent a connection to a control station.  When using the
     ``CommNetConnectivityManager`` this should show as connected whenever a vessel
     has partial manned control, or full control.
