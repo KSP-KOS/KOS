@@ -4,6 +4,10 @@ using kOS.Module;
 
 namespace kOS.Communication
 {
+    /// <summary>
+    /// This instance of IConnectivityManager will respect the CommNet settings/logic when
+    /// checking for the current connectivity status.
+    /// </summary>
     public class CommNetConnectivityManager : IConnectivityManager
     {
         private CommPath tempPath = new CommPath();

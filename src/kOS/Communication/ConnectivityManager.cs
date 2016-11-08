@@ -55,9 +55,9 @@ namespace kOS.Communication
         public static List<string> GetStringList()
         {
             var ret = new List<string>();
-            foreach (var t in typeHash)
+            foreach (Type t in typeHash)
             {
-                if (t == typeof(StockConnectivityManager))
+                if (t == typeof(PermitAllConnectivityManager))
                 {
                     ret.Insert(0, t.Name);
                 }
@@ -76,7 +76,7 @@ namespace kOS.Communication
         public static HashSet<string> GetStringHash()
         {
             var ret = new HashSet<string>();
-            foreach (var t in typeHash)
+            foreach (Type t in typeHash)
             {
                 IConnectivityManager test = (IConnectivityManager)Activator.CreateInstance(t);
                 if (test.IsEnabled)
@@ -95,7 +95,7 @@ namespace kOS.Communication
 
         public static Type GetManagerType(string name)
         {
-            foreach (var t in typeHash)
+            foreach (Type t in typeHash)
             {
                 if (t.Name.Equals(name))
                 {
@@ -107,9 +107,9 @@ namespace kOS.Communication
 
         public static IConnectivityManager CreateManagerObject()
         {
-            var t = GetSelectedManagerType();
+            Type t = GetSelectedManagerType();
             if (t == null)
-                return new StockConnectivityManager();
+                return new PermitAllConnectivityManager();
             return (IConnectivityManager)Activator.CreateInstance(GetSelectedManagerType());
         }
 

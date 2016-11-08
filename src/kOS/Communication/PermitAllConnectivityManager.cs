@@ -4,7 +4,11 @@ using kOS.Module;
 
 namespace kOS.Communication
 {
-    public class StockConnectivityManager : IConnectivityManager
+    /// <summary>
+    /// This instance of IConnectivityManager will allways permit connectivity, and will ignore any
+    /// connectivity settings or mods.
+    /// </summary>
+    public class PermitAllConnectivityManager : IConnectivityManager
     {
         /// <summary>
         /// Always returns true, because this manager is always available.

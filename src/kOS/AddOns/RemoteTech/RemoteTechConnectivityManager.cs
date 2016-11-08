@@ -4,6 +4,10 @@ using kOS.Module;
 
 namespace kOS.AddOns.RemoteTech
 {
+    /// <summary>
+    /// This instance of IConnectivityManager will respect the RemoteTech settings/logic when
+    /// checking for the current connectivity status.
+    /// </summary>
     public class RemoteTechConnectivityManager : IConnectivityManager
     {
         private readonly bool hookAvailable;

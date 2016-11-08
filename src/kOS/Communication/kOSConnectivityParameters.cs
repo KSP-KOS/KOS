@@ -33,7 +33,7 @@ namespace kOS.Communication
         public int version = 0;
 
         [GameParameters.CustomStringParameterUI("")]
-        public string knownHandlerList = "StockConnectivityManager";
+        public string knownHandlerList = "PermitAllConnectivityManager";
 
         [GameParameters.CustomStringParameterUI("CONNECTIVITY MANAGER", autoPersistance = false)]
         public string connectivityHandlerTitle = "";

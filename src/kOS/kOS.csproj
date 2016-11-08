@@ -195,7 +195,7 @@
     <Compile Include="Communication\InterVesselManager.cs" />
     <Compile Include="Serialization\ConfigNodeFormatter.cs" />
     <Compile Include="Communication\IConnectivityManager.cs" />
-    <Compile Include="Communication\StockConnectivityManager.cs" />
+    <Compile Include="Communication\PermitAllConnectivityManager.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Serialization\IHasSharedObjects.cs" />

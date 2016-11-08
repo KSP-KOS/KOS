@@ -170,8 +170,8 @@ you want to use.
     currently available (because the required mod isn't installed, or the system
     is disabled in the settings) it will not be shown in lists of available managers.
 
-    StockConnectivityManager
-      This manager will ignore all connectivity limitations.  Connections
+    PermitAllConnectivityManager
+      This manager will permit all connectivity at all times.  Connections
       between vessels, home, and control always show as being connected. This
       is the equivalent of setting ``CONFIG:RT`` to ``False`` under the former
       system. It is possible kOS will be unable to use all features if this
@@ -179,13 +179,27 @@ you want to use.
       another mod or a setting.
     CommNetConnectivityManager
       This manager will use KSP's stock CommNet implementation to monitor
-      connections.  CommNet has limitations on updating connections for vessels
-      which are not the active vessel.  The best way to ensure that a connection
-      is updated is to include a relay antenna on one or both of the vessels.
+      connections.  It will only be available if CommNet is enabled in the KSP
+      difficulty settings.
+
+      .. note::
+
+          CommNet has limitations on updating connections for vessels
+          which are not the active vessel.  The best way to ensure that a connection
+          is updated is to include a relay antenna on one or both of the vessels.
     RemoteTechConnectivityManager
       This manager will use the RemoteTech mod to monitor connections. It will
       only be available if RemoteTech is installed.  You can access more
       detailed information and methods using the :ref:`RemoteTech Addon<remotetech>`
+
+    .. warning::
+
+        Take care when configuring your game for connectivity.  Enabling
+        multiple systems at the same time may result in unexpected behaviors
+        both for the game connectivity itself, and for kOS's connectivity
+        manager.  kOS only supports selecting one connectivity manager at a time
+        and you should ensure that only the corresponding in game connectivity
+        system is enabled.
 
 You can check communication status between vessels by checking the
 :attr:`Vessel:CONNECTION`.  To monitor the status for home and control
@@ -198,7 +212,15 @@ which connectivity manager is selected.
     Returns a :struct:`Connection` representing the :ref:`CPU Vessel's<cpu vessel>`
     communication line to a network "home" node.  This home node may be the KSC
     ground station, or other ground stations added by the CommNet settings or
-    RemoteTech.
+    RemoteTech.  Functionally, this connection may be used to determing if the
+    archive volume is accessible.
+
+    .. warning::
+
+        Attempting to send a message to the "home" connection will result in an
+        error message.  While this connection uses the same structure as when
+        sending inter-vessel and inter-processor messages, message support is
+        not included.
 
 .. global:: CONTROLCONNECTION
 
@@ -207,4 +229,13 @@ which connectivity manager is selected.
     :global:`HOMECONNECTION`, or it may represent a local crewed command pod,
     or it may represent a connection to a control station.  When using the
     ``CommNetConnectivityManager`` this should show as connected whenever a vessel
-    has partial manned control, or full control.
+    has partial manned control, or full control.  Functionally this may be used
+    to determine if terminal input is available, and what the potential signal
+    delay may be for this input.
+
+    .. warning::
+
+        Attempting to send a message to the "control" connection will result in
+        an error message.  While this connection uses the same structure as when
+        sending inter-vessel and inter-processor messages, message support is
+        not included.
