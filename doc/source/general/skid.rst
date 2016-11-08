@@ -237,7 +237,7 @@ To do this, you use a string in the following format:
 
 1. Mandatory: First character is the note letter, one of 
    "C","D","E","F","G","A", "B", or "R"(to mean "rest").
-2. Optonal: Followed by an optional character, "#" or "b" for "sharp" or
+2. Optional: Followed by an optional character, "#" or "b" for "sharp" or
    "flat".  Note the ASCII characters hash ("#") and lower-case "B" ('b')
    are used for "sharp" and "flat" in place of the Unicode characters
    U+266F and U+266D (which are the more proper "sharp" and "flat"
@@ -250,7 +250,7 @@ Examples:  ``"C4"`` is middle C.  ``"C#4"`` is the C-sharp just one half
 step above middle C.  ``"Db4"`` is the D-flat that is in fact the same
 thing as ``"C#4"``.  ``"B3"`` is the B that is just to the left of
 middle C (Note the octave numbering starts with C at the bottom of the
-octave, not A, thus why A3 is adjacent to C4.)
+octave, not A, thus why B3 is adjacent to C4.)
 
 Note that in all cases where you communicate a frequency to the SKID 
 chip using one of these "letter notes", the SKID chip merely converts
