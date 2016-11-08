@@ -11,9 +11,11 @@ namespace kOS.Sound
     /// Holds the information about a single note to be played, maybe as part of a song, or not.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Note")]
+    [kOS.Safe.Utilities.KOSNomenclature("SlideNote", CSharpToKOS = false)]
     public class NoteValue : SerializableStructure
     {
         public float Frequency { get; set; }
+        public float EndFrequency { get; set; }
         public float Volume { get; set; }
         public float KeyDownLength { get; set; }
         public float Duration { get; set; }
@@ -21,15 +23,27 @@ namespace kOS.Sound
         public NoteValue(float freq, float vol, float keyDownLength, float duration)
         {
             this.Frequency = freq;
+            this.EndFrequency = freq;
             this.Volume = vol;
             this.KeyDownLength = keyDownLength;
             this.Duration = duration;
             
             InitializeSuffixes();
         }
+
+        public NoteValue(float freq, float endFreq, float vol, float keyDownLength, float duration) :
+            this(freq, vol, keyDownLength, duration)
+        {
+            this.EndFrequency = endFreq;
+        }
         
         public NoteValue(string letterNote, float vol, float keyDownLength, float duration) : 
             this( LetterToHertz(letterNote), vol, keyDownLength, duration)
+        {
+        }
+
+        public NoteValue(string letterNote, string endLetterNote, float vol, float keyDownLength, float duration) : 
+            this( LetterToHertz(letterNote), LetterToHertz(endLetterNote), vol, keyDownLength, duration)
         {
         }
         
@@ -41,6 +55,7 @@ namespace kOS.Sound
         private void InitializeSuffixes()
         {
             AddSuffix("FREQUENCY", new Suffix<ScalarDoubleValue>(() => Frequency));
+            AddSuffix("ENDFREQUENCY", new Suffix<ScalarDoubleValue>(() => EndFrequency));
             AddSuffix("VOLUME", new Suffix<ScalarDoubleValue>(() => Volume));
             AddSuffix("KEYDOWNLENGTH", new Suffix<ScalarDoubleValue>(() => KeyDownLength));
             AddSuffix("DURATION", new Suffix<ScalarDoubleValue>(() => Duration));
@@ -48,7 +63,10 @@ namespace kOS.Sound
 
         public override string ToString()
         {
-            return String.Format("Note({0},{1},{2},{3})", Frequency, KeyDownLength, Duration, Volume);
+            if (Frequency == EndFrequency)
+                return String.Format("Note({0},{1},{2},{3})", Frequency, KeyDownLength, Duration, Volume);
+            else
+                return String.Format("SlideNote({0},{1},{2},{3},{4})", Frequency, EndFrequency, KeyDownLength, Duration, Volume);
         }
 
         public override Dump Dump()
@@ -58,6 +76,7 @@ namespace kOS.Sound
             result.Header = "NOTE";
 
             result.Add("freq", Frequency);
+            result.Add("endfreq", Frequency);
             result.Add("vol", Volume);
             result.Add("keydown", KeyDownLength);
             result.Add("duration", Duration);
@@ -68,6 +87,7 @@ namespace kOS.Sound
         public override void LoadDump(Dump dump)
         {
             Frequency = Convert.ToSingle(dump["freq"]);
+            EndFrequency = Convert.ToSingle(dump["endfreq"]);
             Volume = Convert.ToSingle(dump["vol"]);
             KeyDownLength = Convert.ToSingle(dump["keydown"]);
             Duration = Convert.ToSingle(dump["duration"]);

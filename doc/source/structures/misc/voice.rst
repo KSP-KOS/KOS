@@ -186,9 +186,9 @@ you probably only need to ever use voice 0.
         SET V0 to GetVoice(0).
         V0:PLAY(
             LIST(
-                NOTE(440,0.5),
-                NOTE(400,0.2),
-                NOTE(410,0.3)
+                NOTE(440, 0.5),
+                NOTE(400, 0.2),
+                SLIDENOTE(410, 350, 0.3)
                 )
             ).
 

@@ -25,7 +25,12 @@ namespace kOS.Sound
         // fields track where it is within the song at the moment:
         private int noteNum;
         private ListValue song;
+        private NoteValue curNote;
         private float noteEndTimeStamp;
+        private float noteStartTimeStamp;
+        /// <summary>Records the total delta frequency the note will experience across its duration
+        /// if it's a slide note (pre-cached for faster calculation during updates)</summary>
+        private float noteFreqTotalChange;
         private float tempo = 1f;
         private bool isPlaying;
         public bool IsPlaying
@@ -87,9 +92,19 @@ namespace kOS.Sound
 
             float now = Time.fixedTime;
             
-            // If still playing prev note, do nothing:
+            // If still playing prev note, do nothing except maybe change
+            // its frequency if it's a slidenote:
             if (now < noteEndTimeStamp)
+            {
+                NoteValue note = song[noteNum] as NoteValue;
+                if (noteFreqTotalChange != 0.0)
+                {
+                    float durationPortion = (now - noteStartTimeStamp) / (noteEndTimeStamp - noteStartTimeStamp);
+                    float newFreq = note.Frequency + durationPortion*noteFreqTotalChange;
+                    voice.ChangeFrequency(newFreq);
+                }
                 return;
+            }
             
             // Increment to next note and start playing it:
             ++noteNum;
@@ -105,11 +120,13 @@ namespace kOS.Sound
             }
             else
             {
-                NoteValue nextNote = song[noteNum] as NoteValue;
-                if (nextNote != null)
+                curNote = song[noteNum] as NoteValue;
+                if (curNote != null)
                 {
-                    noteEndTimeStamp = now + tempo*nextNote.Duration;
-                    voice.BeginProceduralSound(nextNote.Frequency, tempo*nextNote.KeyDownLength, nextNote.Volume);
+                    noteStartTimeStamp = now;
+                    noteEndTimeStamp = now + tempo*curNote.Duration;
+                    noteFreqTotalChange = curNote.EndFrequency - curNote.Frequency;
+                    voice.BeginProceduralSound(curNote.Frequency, tempo*curNote.KeyDownLength, curNote.Volume);
                 }
             }
         }

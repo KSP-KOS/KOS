@@ -291,8 +291,36 @@ namespace kOS.Function
         }
     }
     
-    [Function("note")]
+    [Function("slidenote")]
     public class FunctionNote : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int argCount = CountRemainingArgs(shared);
+            float vol = 1.0f;
+            float duration = -1f;
+            if (argCount >= 5)
+                vol = (float) GetDouble(PopValueAssert(shared));
+            if (argCount >= 4)
+                duration = (float) GetDouble(PopValueAssert(shared));
+            float keyDownDuration = (float) GetDouble(PopValueAssert(shared));
+            object endNote = PopValueAssert(shared);
+            object startNote = PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
+            if (duration < 0)
+                duration = keyDownDuration;
+
+            if (startNote is ScalarValue)
+                ReturnValue = new NoteValue((float)GetDouble(startNote), (float)GetDouble(endNote), vol, keyDownDuration, duration);
+            else if (startNote is StringValue)
+                ReturnValue = new NoteValue(startNote.ToString(), endNote.ToString(), vol, keyDownDuration, duration);
+            else
+                ReturnValue = new NoteValue(0f, vol, keyDownDuration, duration);
+        }
+    }
+    
+    [Function("note")]
+    public class FunctionSlideNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {

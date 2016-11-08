@@ -12,6 +12,7 @@ namespace kOS.Safe.Sound
 		void Stop();
 		void SetWave(IProceduralSoundWave waveGen);
 		void FixedUpdate();
+		void ChangeFrequency(float newFrequency);
 		float Frequency { get; set; }
 		float Volume { get; set; }
 		float Attack { get; set; }

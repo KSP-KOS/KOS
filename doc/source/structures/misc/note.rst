@@ -8,7 +8,7 @@ and for how long.
 All the suffixes of a :struct:`Note` are read-only,
 and you're only ever expected to set them by
 constructing a new Note using the built-in Note()
-function:
+function, or the built-in SlideNote() function:
 
 .. _note:
 
@@ -55,6 +55,54 @@ function:
         SET V1 TO GETVOICE(0).
         V1:PLAY( NOTE(440, 0.2, 0.25, 1) ).
 
+.. _slidenote:
+
+.. function:: SLIDENOTE(frequency, endFrequency, keyDownLength, duration, volume)
+
+    This global function creates a note object that makes a sliding note
+    that changes linearly from the start frequency to the end frequency
+    across the duration of the note.
+
+    where:
+
+    ``frequency``
+        **Mandatory**: This is the frequency the sliding note begins at.
+        If it is a number, then it is the frequency in Hertz.
+        If it is a string, then it's using the letter notation
+        :ref:`described here <skid_letter_frequency>`.
+    ``endFrequency``
+        **Mandatory**: This is the frequency the sliding note ends at.
+        If it is a number, then it is the frequency in Hertz.
+        If it is a string, then it's using the letter notation
+        :ref:`described here <skid_letter_frequency>`.
+    ``keyDownLength``
+        **Mandatory**: Same as the keyDownLength for the :ref:`NOTE() <note>`
+        built-in function.
+    ``duration``
+        **Optional**: Same as the duration for the :ref:`NOTE() <note>`
+        built-in function.  If it is missing it will be the same thing
+        as the keyDownLength.
+    ``volume``
+        **Optional**: Same as the volume for the :ref:`NOTE() <note>`
+        built-in function.
+
+    The note's frequency will change linearly from the starting to
+    the ending frequency over the note's duration.  (For example, If the
+    duration is shorter, but all the other values are the kept the same,
+    that makes the frequency change go faster so it can all fit within the
+    given duration.)
+
+    You can make the note pitch up over time or pitch down over time
+    depending on whether the endFrequency is higher or lower than
+    the initial frequency.
+
+    This is an example of it being used in conjunction with the Voice's
+    PLAY() suffix method::
+
+        SET V1 TO GETVOICE(0).
+        // A fast "whoop" sound that pitches up from 300 Hz to 600 Hz quickly:
+        V1:PLAY( SLIDENOTE(300, 600, 0.2, 0.25, 1) ).
+
 .. structure:: Note
 
     .. list-table:: Members
@@ -67,7 +115,10 @@ function:
 
         * - :FREQUENCY
           - :struct:`scalar`
-          - frequency of the note in Hertz
+          - frequency of the note's start in Hertz
+        * - :ENDFREQUENCY
+          - :struct:`scalar`
+          - If a SLIDENOTE, the frequency of the note's end in Hertz
         * - :KEYDOWNLENGTH
           - :struct:`scalar`
           - time to hold the "synthesizer key" down for

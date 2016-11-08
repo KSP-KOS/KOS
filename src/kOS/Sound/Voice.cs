@@ -183,5 +183,15 @@ namespace kOS.Sound
 			source.Play();
 			needNoteInit = false;
 		}
+		
+		/// <summary>
+		/// Change the frequency of the note in mid-note (for slide effects).
+		/// </summary>
+		/// <param name="newFrequency"></param>
+		public void ChangeFrequency(float newFrequency)
+		{
+		    Frequency = newFrequency;
+		    source.pitch = Frequency / Waveform.Periods;
+		}
 	}
 }

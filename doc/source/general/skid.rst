@@ -278,6 +278,23 @@ Frequency (In Hertz)
     to zero, you end up with a note that is, essentially, a "rest",
     and makes no sound.  The frequency can also be expressed using
     :ref:`musical letter notation <skid_letter_frequency>`.
+    If you define both a Frequency and an EndFrequency, then the
+    Frequency is merely the initial frequency the note starts at.
+
+EndFrequency (In Hertz)
+    The SKID chip can emit "slide" notes where the note's frequency
+    changes smoothly between a start and end frequency over the duration of
+    the note without further intervention from the CPU's program.  To
+    communicate to the chip that this is your intent, you can give it
+    a note which has an EndFrequency value that differs from its
+    Frequency value.  When you do this, the note's normal frequency
+    value is merely its "start" frequency.  The SKID chip will change
+    the note's frequency either upward or downward as needed depending
+    on whether the EndFrequency is higher or lower than the initial
+    frequency of the note.  It will also change the frequency as
+    quickly or slowly as needed to make the frequency reach EndFrequency
+    at exactly the moment the note's Duration runs out.  (So giving it
+    a shorter Duration makes it change frequencies faster).
 
 KeyDownLength (Seconds, modified by :ref:`tempo <skid_tempo>`)
     Defines how long you imagine the "key" on a synthesizer keyboard is
@@ -461,22 +478,28 @@ Note()
 
 When asking one of SKID's voices to play a note, you have to specify
 which note you meant, and you do so by constructing a :struct:`Note`
-object using the :ref:`Note() <note>` built-in function, as in this
-example here::
+object using the :ref:`Note() <note>` built-in function, or the
+:ref:`SlideNote() <slidenote>` built-in function::
 
     // N1 is a note (also at 440 Hz because that's what "A4" means)
     // that lasts 1 second overall, but only 0.8 seconds of it
     // are "key down" time (i.e. the A,D,S part of the ADSR Envelope).
     SET N1 to NOTE("A4", 0.8, 1). 
 
+    // N2 is a note that slides from the A note in one octave to the A note
+    // in the next octave up, over a time span of 0.3 seconds.
+    // (The last 0.05 seconds of which are "release" time you won't hear
+    // if you have the voice's RELEASE value set to zero.):
+    SET N2 to SLIDENOTE("A4", "A5", 0.25, 0.3).
+
 Once a note has been constructed, it's components are not changable.  The
 only way to change the note is to make a new note and use it to overwrite
 the previous note.
 
 For that reason, it's typical not to bother storing the result of a Note()
-constructor in a variable as shown above, and instead just pass it right
-into the `Play()` method, or to make it part of a :struct:`List` of
-notes for making a song.
+or SlideNote() constructor in a variable as shown above, and instead just
+pass it right into the `Play()` method, or to make it part of a
+:struct:`List` of notes for making a song.
 
 Voice:Play()
 ~~~~~~~~~~~~
@@ -493,13 +516,13 @@ Examples::
     SET V0 TO GetVoice(0).
     V0:PLAY( NOTE( 440, 1) ).  // Play one note at 440 Hz for 1 second.
 
-    // Play a 'song' consisting of note, note, rest, note, rest:
+    // Play a 'song' consisting of note, note, rest, sliding note, rest:
     V0:PLAY(
         LIST(
             NOTE("A#4", 0.2,  0.25), // quarter note, of which the last 0.05s is 'release'.
             NOTE("A4",  0.2,  0.25), // quarter note, of which the last 0.05s is 'release'.
             NOTE("R",   0.2,  0.25), // rest
-            NOTE("C5",  0.45, 0.5),  // half note, of which the last 0.05s is 'release'.
+            SLIDENOTE("C5", "F5", 0.45, 0.5), // half note that slides from C5 to F5 as it goes.
             NOTE("R",   0.2,  0.25)  // rest.
         )
     ).
