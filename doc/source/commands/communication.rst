@@ -186,7 +186,8 @@ you want to use.
 
           CommNet has limitations on updating connections for vessels
           which are not the active vessel.  The best way to ensure that a connection
-          is updated is to include a relay antenna on one or both of the vessels.
+          is updated is to include one of the kinds of antenna that can act as
+          a relay on one or both of the vessels.
     RemoteTechConnectivityManager
       This manager will use the RemoteTech mod to monitor connections. It will
       only be available if RemoteTech is installed.  You can access more
@@ -212,7 +213,7 @@ which connectivity manager is selected.
     Returns a :struct:`Connection` representing the :ref:`CPU Vessel's<cpu vessel>`
     communication line to a network "home" node.  This home node may be the KSC
     ground station, or other ground stations added by the CommNet settings or
-    RemoteTech.  Functionally, this connection may be used to determing if the
+    RemoteTech.  Functionally, this connection may be used to determine if the
     archive volume is accessible.
 
     .. warning::
