@@ -6,6 +6,8 @@ using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Persistence;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Zip.Compression;
 
 namespace kOS.Safe.Compilation
 {
@@ -240,7 +242,15 @@ namespace kOS.Safe.Compilation
             everything.AddRange(headBuff);
             everything.AddRange(allCodeBuff);
             everything.AddRange(lineMap.Pack());
-            return everything.ToArray();
+            using (var compressedStream = new MemoryStream())
+            {
+                using (var csStream = new GZipOutputStream(compressedStream))
+                {
+                    csStream.Write(everything.ToArray(), 0, everything.Count);
+                    csStream.Flush();
+                }
+                return compressedStream.ToArray();
+            }
         }
         
         /// <summary>
@@ -481,6 +491,23 @@ namespace kOS.Safe.Compilation
             var reader = new BinaryReader(new MemoryStream(content));
             
             byte[] firstFour = reader.ReadBytes(4);
+            if (firstFour.SequenceEqual(PersistenceUtilities.GzipHeader))
+            {
+                reader.Close();
+
+                var zipStream = new GZipInputStream(new MemoryStream(content));
+                var decompressedStream = new MemoryStream();
+                var buffer = new byte[4096];
+                int read;
+                while ((read = zipStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    decompressedStream.Write(buffer, 0, read);
+                }
+                decompressedStream.Seek(0, SeekOrigin.Begin);
+                reader = new BinaryReader(decompressedStream);
+
+                firstFour = reader.ReadBytes(4);
+            }
             
             if (! firstFour.SequenceEqual(MagicId))
                 throw new Exception("Attempted to read an ML file that doesn't seem to be an ML file");
@@ -514,7 +541,7 @@ namespace kOS.Safe.Compilation
                         // If this is the very first code we've ever encountered in the file, remember its position:
                         if (codeStart == 0)
                             codeStart = (int)(reader.BaseStream.Position - 2); // start is where the ByteCode.DELIMITER of the first section is.
-                        
+
                         program[program.Count-1].FunctionsCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
                         break;
                     case (byte)'I':
@@ -531,7 +558,7 @@ namespace kOS.Safe.Compilation
             reader.Close();
 
             PostReadProcessing(program, path, lineMap);
-                                                  
+
             return program;
         }
         

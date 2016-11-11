@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.Safe.Utilities;
+using kOS.Communication;
 
 namespace kOS.Module
 {
@@ -18,10 +19,9 @@ namespace kOS.Module
     {
         private bool initialized = false;
         private Vessel parentVessel;
-        private bool hasRemoteTech = false;
-        /// <summary>How often to re-attempt the remote tech hook, expressed as a number of physics updates</summary>
-        private const int RemoteTechRehookPeriod = 25;
-        private int counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
+        /// <summary>How often to re-attempt the autopilot hook, expressed as a number of physics updates</summary>
+        private const int autopilotRehookPeriod = 25;
+        private int autopilotRehookCounter = autopilotRehookPeriod - 2; // make sure it starts out ready to trigger soon
 
         public Guid ID
         {
@@ -71,9 +71,20 @@ namespace kOS.Module
         protected override void OnStart()
         {
             SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.vesselName, ID));
-            HarvestParts();
-            HookEvents();
-            initialized = true;
+            // Vessel modules now load when the vessel is not loaded, including when not in the flight
+            // scene.  So we now wait to attach to events and attempt to harvest parts until after
+            // the vessel itself has loaded.
+            if (parentVessel.loaded && parentVessel.vesselType != VesselType.SpaceObject)
+            {
+                HarvestParts();
+                HookEvents();
+                initialized = true;
+            }
+        }
+
+        protected override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
         }
 
         /// <summary>
@@ -85,8 +96,11 @@ namespace kOS.Module
             if (SafeHouse.Logger != null)
             {
                 SafeHouse.Logger.SuperVerbose("kOSVesselModule OnDestroy()!");
-                UnHookEvents();
-                ClearParts();
+                if (initialized)
+                {
+                    UnHookEvents();
+                    ClearParts();
+                }
                 if (parentVessel != null && allInstances.ContainsKey(ID))
                 {
                     allInstances.Remove(ID);
@@ -121,7 +135,14 @@ namespace kOS.Module
                 {
                     UpdateParameterState();
                 }
-                CheckSwapEvents();
+                CheckRehookAutopilot();
+            }
+            else if (parentVessel.loaded && parentVessel.vesselType != VesselType.SpaceObject)
+            {
+                // if not initialized, check to see if the vessel has loaded.  See note in OnStart()
+                HarvestParts();
+                HookEvents();
+                initialized = true;
             }
         }
 
@@ -215,13 +236,15 @@ namespace kOS.Module
         /// </summary>
         private void HookEvents()
         {
-            if (RemoteTechHook.IsAvailable(parentVessel.id))
+            ConnectivityManager.AddAutopilotHook(parentVessel, UpdateAutopilot);
+
+            // HACK: The following events and their methods are a hack to work around KSP's limitation that
+            // blocks our autopilot from having control of the vessel if out of signal and the setting
+            // "Require Signal for Control" is enabled.  It's very hacky, and my have unexpected results.
+            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
             {
-                HookRemoteTechPilot();
-            }
-            else
-            {
-                HookStockPilot();
+                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
             }
         }
 
@@ -230,16 +253,52 @@ namespace kOS.Module
         /// </summary>
         private void UnHookEvents()
         {
-            if (hasRemoteTech)
+            ConnectivityManager.RemoveAutopilotHook(parentVessel, UpdateAutopilot);
+
+            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
             {
-                UnHookRemoteTechPilot();
+                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
+            }
+        }
+
+        #region Hack to fix "Require Signal for Control"
+        // TODO: Delete this hack if it ever gets fixed.
+
+        // Note: I am purposfully putting these variable declarations in this region instead of at the
+        // top of the file as our normal convention dictates.  These are specific to the hack and when
+        // we remove the hack the diff will make more sense if we wipe out a single contiguous block.
+        private bool workAroundControllable = false;
+        private CommNet.CommNetParams commNetParams;
+        private System.Reflection.FieldInfo isControllableField;
+
+        private void resetControllable()
+        {
+            if (workAroundControllable && isControllableField != null)
+            {
+                isControllableField.SetValue(parentVessel, false);
+            }
+        }
+
+        private void cacheControllable()
+        {
+            if (commNetParams == null)
+                commNetParams = HighLogic.CurrentGame.Parameters.CustomParams<CommNet.CommNetParams>();
+            if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
+            {
+                // HACK: Get around inability to affect throttle if connection is lost and require
+                if (isControllableField == null)
+                    isControllableField = parentVessel.GetType().GetField("isControllable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                isControllableField.SetValue(parentVessel, true);
+                workAroundControllable = true;
             }
             else
             {
-                UnHookStockPilot();
+                workAroundControllable = false;
             }
         }
-        
+        #endregion
+
         /// <summary>
         /// A race condition exists where KSP can load the kOS module onto the vessel
         /// before it loaded the RemoteTech module.  That makes it so that kOS may not
@@ -248,53 +307,23 @@ namespace kOS.Module
         /// This fixes that case by continually re-querying for RT post-loading, and
         /// re-initializing kOS's RT-related behaviors if it seems that the RT module
         /// now exists when it didn't before (or visa versa).
+        /// <br/>
+        /// With the update for KSP 1.2, this function was renamed and made more generic
+        /// so that it may support future autopilot connectivity configurations.
         /// </summary>
-        private void CheckSwapEvents()
+        private void CheckRehookAutopilot()
         {
-            if (RemoteTechHook.IsAvailable(parentVessel.id) != hasRemoteTech)
+            if (ConnectivityManager.NeedAutopilotResubscribe)
             {
-                if (hasRemoteTech)
+                if (++autopilotRehookCounter > autopilotRehookPeriod)
                 {
-                    UnHookRemoteTechPilot();
-                    HookStockPilot();
-                }
-                else
-                {
-                    UnHookStockPilot();
-                    HookRemoteTechPilot();
+                    ConnectivityManager.AddAutopilotHook(parentVessel, UpdateAutopilot);
                 }
             }
-            if (hasRemoteTech)
+            else
             {
-                if (++counterRemoteTechRefresh > RemoteTechRehookPeriod)
-                {
-                    counterRemoteTechRefresh = 0;
-                    HookRemoteTechPilot();
-                }
+                autopilotRehookCounter = autopilotRehookPeriod - 2;
             }
-        }
-
-        private void HookRemoteTechPilot()
-        {
-            RemoteTechHook.Instance.AddSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
-            hasRemoteTech = true;
-        }
-
-        private void UnHookRemoteTechPilot()
-        {
-            RemoteTechHook.Instance.RemoveSanctionedPilot(parentVessel.id, HandleRemoteTechSanctionedPilot);
-            counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
-        }
-
-        private void HookStockPilot()
-        {
-            parentVessel.OnPreAutopilotUpdate += HandleOnPreAutopilotUpdate;
-            hasRemoteTech = false;
-        }
-
-        private void UnHookStockPilot()
-        {
-            parentVessel.OnPreAutopilotUpdate -= HandleOnPreAutopilotUpdate;
         }
 
         /// <summary>

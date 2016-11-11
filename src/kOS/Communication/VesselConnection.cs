@@ -29,7 +29,7 @@ namespace kOS.Communication
         {
             get
             {
-                return shared.ConnectivityMgr.GetDelay(shared.Vessel, vessel);
+                return ConnectivityManager.GetDelay(shared.Vessel, vessel);
             }
         }
 

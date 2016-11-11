@@ -6,16 +6,21 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using kOS.Safe.Persistence;
+using kOS.Communication;
 
 namespace kOS.Binding
 {
     [Binding("ksp")]
     public class BindingTimeWarp : Binding
     {
+        private HomeConnection homeConnection;
+        private ControlConnection controlConnection;
+
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("KUNIVERSE", () => new KUniverseValue(shared));
-
+            shared.BindingMgr.AddGetter("HOMECONNECTION", () => homeConnection ?? (homeConnection = new HomeConnection(shared)));
+            shared.BindingMgr.AddGetter("CONTROLCONNECTION", () => controlConnection ?? (controlConnection = new ControlConnection(shared)));
             shared.BindingMgr.AddGetter("WARPMODE", () => TimeWarpValue.Instance.GetModeAsString());
             shared.BindingMgr.AddSetter("WARPMODE", val => TimeWarpValue.Instance.SetModeAsString((StringValue)StringValue.FromPrimitive(val.ToString())));
             shared.BindingMgr.AddGetter("WARP", () => TimeWarpValue.Instance.GetWarp());

@@ -404,6 +404,8 @@ namespace kOS.Screen
 
             CountBeginVertical();
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
+            GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", tooltipLabelStyle);
+            GUILayout.Label("Global VALUES", headingLabelStyle);
             GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
 
             int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
