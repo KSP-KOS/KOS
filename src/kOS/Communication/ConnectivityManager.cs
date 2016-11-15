@@ -11,6 +11,21 @@ namespace kOS.Communication
         private static bool needEventInit = true;
         private static IConnectivityManager myinstance;
 
+        private class RefreshEventSingleton
+        {
+            public static readonly RefreshEventSingleton instance = new RefreshEventSingleton();
+
+            public void Refresh()
+            {
+                RefreshInstance();
+            }
+
+            public void Refresh(ConfigNode node)
+            {
+                RefreshInstance();
+            }
+        }
+
         public static IConnectivityManager Instance
         {
             get
@@ -22,14 +37,15 @@ namespace kOS.Communication
                 return myinstance;
             }
         }
-
+        
+        
         public static void RefreshInstance()
         {
             if (needEventInit)
             {
                 // KSP's events don't support pointing to a static method, so we need to wrap the call
-                GameEvents.OnGameSettingsApplied.Add(() => { RefreshInstance(); });
-                GameEvents.onGameStatePostLoad.Add(value => { RefreshInstance(); });
+                GameEvents.OnGameSettingsApplied.Add(RefreshEventSingleton.instance.Refresh);
+                GameEvents.onGameStatePostLoad.Add(RefreshEventSingleton.instance.Refresh);
                 needEventInit = false;
             }
             SafeHouse.Logger.SuperVerbose("ConnectivityManager.RefreshInstance()");
