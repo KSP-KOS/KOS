@@ -110,7 +110,9 @@ namespace kOS.Sound
                 {
                     // Push the timestamp ahead by the duration of the pause so it will continue what's left of the note
                     // instead of truncating it early:
-                    noteEndTimeStamp += (now - freezeBeganTimestamp);
+                    float freezeDuration = now - freezeBeganTimestamp;
+                    noteStartTimeStamp += freezeDuration;
+                    noteEndTimeStamp += freezeDuration;
                     freezeBeganTimestamp = -1f;
                 }
             }
