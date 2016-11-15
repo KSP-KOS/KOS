@@ -318,7 +318,7 @@ namespace kOS.Function
                 ReturnValue = new NoteValue(0f, vol, keyDownDuration, duration);
         }
     }
-    
+
     [Function("note")]
     public class FunctionSlideNote : FunctionBase
     {
@@ -350,14 +350,14 @@ namespace kOS.Function
     public class FuncitonNote : FunctionBase
     {
         Dictionary<int, VoiceValue> VoiceValues = new Dictionary<int, VoiceValue>();
-        
+
         public override void Execute(SharedObjects shared)
         {
             int voiceNum = GetInt(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            
+
             VoiceValue val;
-            
+
             if (VoiceValues.TryGetValue(voiceNum, out val))
                 ReturnValue = val;
             else

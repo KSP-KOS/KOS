@@ -11,7 +11,7 @@ namespace kOS.Sound
         public TriangleSoundWave(): base()
         {
         }
-                
+
         public override float SampleFunction(float t)
         {
             if (t < 0.5)
@@ -19,6 +19,5 @@ namespace kOS.Sound
             else
                 return -1 + 2*(t-0.5f);
         }
-                                    
     }
 }

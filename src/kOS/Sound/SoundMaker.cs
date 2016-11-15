@@ -9,24 +9,24 @@ namespace kOS.Sound
     /// SoundMaker is the "unsafe" implementation of ISoundMaker, that has calls into the Unity API.
     /// </summary>
     public class SoundMaker : MonoBehaviour, ISoundMaker
-    {        
+    {
         private string kspDirectory = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private Dictionary<string, AudioSource> sounds;
         private Voice[] voices;
         private Dictionary<string, ProceduralSoundWave> waveGenerators;
-        
+
         /// <summary>
         /// Our pretend hardware limit on a "SKID" chip's number of voices
         /// </summary>
         private int hardwareMaxVoices = 10;
-        
+
         // Each Terminal should hold one instance of me.
         void Awake()
         {
             sounds = new Dictionary<string, AudioSource>();
             waveGenerators = new Dictionary<string, ProceduralSoundWave>();
-            DontDestroyOnLoad(gameObject);            
-            
+            DontDestroyOnLoad(gameObject);
+
             // Sound samples coming from sound files:
             LoadFileSound("beep", "file://"+ kspDirectory + "GameData/kOS/GFX/terminal-beep.wav");
             LoadFileSound("click", "file://"+ kspDirectory + "GameData/kOS/GFX/terminal-click.wav");
@@ -43,10 +43,10 @@ namespace kOS.Sound
             LoadProceduralSound("sine", new SineSoundWave());
             LoadProceduralSound("triangle", new TriangleSoundWave());
             LoadProceduralSound("sawtooth", new SawtoothSoundWave());
-            
+
             AddGenericVoices(hardwareMaxVoices);
         }
-        
+
         /// <summary>
         /// Load a fixed sound effect from a file.
         /// </summary>
@@ -55,10 +55,10 @@ namespace kOS.Sound
         public void LoadFileSound(string name, string url)
         {
             WWW fileGetter = new WWW(url);
-            AudioClip clip = fileGetter.audioClip;            
+            AudioClip clip = fileGetter.audioClip;
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.clip = clip;
-            
+
             sounds[name] = source;
         }
 
@@ -66,7 +66,7 @@ namespace kOS.Sound
         {
             return voices[num];
         }
-        
+
         public string GetWaveName(int voiceNum)
         {
             foreach (string key in waveGenerators.Keys)
@@ -74,18 +74,18 @@ namespace kOS.Sound
                     return key;
             return "";
         }
-        
+
         public bool SetWave(int num, string waveName)
         {
             if (! waveGenerators.ContainsKey(waveName))
                 return false;
             if (num < 0 || num > waveGenerators.Count)
                 return false;
-                    
+
             voices[num].SetWave(waveGenerators[waveName]);
             return true;
         }
-        
+
         /// <summary>
         /// Load a sound wave sample that was built procedurally in memory.
         /// These kinds of samples can be stretched later to play at different
@@ -97,7 +97,7 @@ namespace kOS.Sound
         {
             waveGenerators[name] = waveGen;
         }
-        
+
         public void AddGenericVoices(int howMany)
         {
             voices = new Voice[howMany];
@@ -112,20 +112,19 @@ namespace kOS.Sound
         {
             if (! sounds.ContainsKey(name))
                 return false;
-            
+
             // Not allowed to call this on wave generators:
             if (waveGenerators.ContainsKey(name))
                 return false;
-            
+
             AudioSource source = sounds[name];
             if (source.isPlaying)
                 source.Stop();
             source.volume = GameSettings.UI_VOLUME * volume;
-            
+
             // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:
             source.Play();
             return true;
         }
-        
     }
 }

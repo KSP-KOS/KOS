@@ -10,8 +10,9 @@ namespace kOS.Sound
     {
         public SineSoundWave(): base()
         {
+
         }
-        
+
         public override void InitSettings()
         {
             base.InitSettings();
@@ -22,6 +23,5 @@ namespace kOS.Sound
         {
             return Mathf.Sin(t);
         }
-                                    
     }
 }
