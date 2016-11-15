@@ -87,33 +87,39 @@ namespace kOS.Sound
         /// a sound file not a procedural sound.</returns>
         public bool BeginProceduralSound(IProceduralSoundWave waveGen, float frequency, float duration, float volume = 1f)
         {
-            Frequency = frequency;
+            //Frequency = frequency;
             Volume = volume;
             Waveform = waveGen;
             noteAttackStart = Time.fixedTime;
             noteReleaseStart = Time.fixedTime + duration;
             needNoteInit = true;
+            ChangeFrequency(frequency);
             return true;
         }
 
         public bool BeginProceduralSound(float frequency, float duration, float volume = 1f)
         {
-            Frequency = frequency;
+            //Frequency = frequency;
             Volume = volume;
             noteAttackStart = Time.fixedTime;
             noteReleaseStart = Time.fixedTime + duration;
             needNoteInit = true;
+            ChangeFrequency(frequency);
             return true;
         }
 
         public void Stop()
         {
-            source.Stop();
+            source.pitch = 0;
+            source.volume = 0;
+            //source.Stop();
         }
 
         public void SetWave(IProceduralSoundWave waveGen)
         {
             Waveform = waveGen;
+            source.Stop(); // stop the source so that the new wave gets queued up
+            needNoteInit = true; // re-sample the pitch value
         }
 
         /// <summary>
@@ -187,18 +193,12 @@ namespace kOS.Sound
         /// to use the note's values, and then start the note.</summary>
         private void InitNote()
         {
-            // Attempted to play the same sound while it's already playing,
-            // so stop the previous sound:
-            if (source.isPlaying)
-                source.Stop();
-
-            source.clip = (AudioClip)Waveform.Clip;
-            // Speed up or slow down the playback rate to give the desired frequency:
-            // (AudioSource.pitch is actually just a speed multiplier, not the raw pitch.
-            // For example, AudioSource.pitch of 2.0 means "play the sound twice as
-            // fast by skipping every other sample point.":
-            source.pitch = Frequency / Waveform.Periods;
-            source.Play();
+            // Keep playing the same sound if it's already playing.
+            if (!source.isPlaying)
+            {
+                source.clip = (AudioClip)Waveform.Clip;
+                source.Play();
+            }
             needNoteInit = false;
         }
 
@@ -208,6 +208,10 @@ namespace kOS.Sound
         /// <param name="newFrequency"></param>
         public void ChangeFrequency(float newFrequency)
         {
+            // Speed up or slow down the playback rate to give the desired frequency:
+            // (AudioSource.pitch is actually just a speed multiplier, not the raw pitch.
+            // For example, AudioSource.pitch of 2.0 means "play the sound twice as
+            // fast by skipping every other sample point.":
             Frequency = newFrequency;
             source.pitch = Frequency / Waveform.Periods;
         }
