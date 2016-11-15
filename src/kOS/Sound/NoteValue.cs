@@ -19,7 +19,7 @@ namespace kOS.Sound
         public float Volume { get; set; }
         public float KeyDownLength { get; set; }
         public float Duration { get; set; }
-        
+
         public NoteValue(float freq, float vol, float keyDownLength, float duration)
         {
             this.Frequency = freq;
@@ -27,7 +27,7 @@ namespace kOS.Sound
             this.Volume = vol;
             this.KeyDownLength = keyDownLength;
             this.Duration = duration;
-            
+
             InitializeSuffixes();
         }
 
@@ -36,7 +36,7 @@ namespace kOS.Sound
         {
             this.EndFrequency = endFreq;
         }
-        
+
         public NoteValue(string letterNote, float vol, float keyDownLength, float duration) : 
             this( LetterToHertz(letterNote), vol, keyDownLength, duration)
         {
@@ -46,7 +46,7 @@ namespace kOS.Sound
             this( LetterToHertz(letterNote), LetterToHertz(endLetterNote), vol, keyDownLength, duration)
         {
         }
-        
+
         // Dummy default constructor that is necessary for all SerailizableStructure's.
         public NoteValue()
         {
@@ -81,7 +81,7 @@ namespace kOS.Sound
             result.Add("keydown", KeyDownLength);
             result.Add("duration", Duration);
 
-            return result;            
+            return result;
         }
 
         public override void LoadDump(Dump dump)
@@ -109,7 +109,7 @@ namespace kOS.Sound
             int len = letterString.Length;
             if (len < 2 || len > 3)
                 return 0f;
-            
+
             int octave = (int)(letterString[len - 1] - '0');
             string octaveLessNote = letterString.Substring(0,len-1).ToLower();
             double referenceHz;
@@ -120,7 +120,7 @@ namespace kOS.Sound
             }
             return 0f; // bogus when input was garbage
         }
-        
+
         /// <summary>
         /// Lookup table to find the Frequency (Hertz) for a note in the reference octave (octave 4).
         /// Be sure to lowercase the string before passing it in to this lookup table.

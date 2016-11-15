@@ -133,9 +133,9 @@ namespace kOS.Screen
             customSkin = BuildPanelSkin();
 
             GameEvents.onHideUI.Add (OnHideUI);
-			GameEvents.onShowUI.Add (OnShowUI);
+            GameEvents.onShowUI.Add (OnShowUI);
 
-			soundMaker = gameObject.AddComponent<kOS.Sound.SoundMaker>();
+            soundMaker = gameObject.AddComponent<Sound.SoundMaker>();
         }
 
         public void OnDestroy()

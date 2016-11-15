@@ -50,7 +50,7 @@ namespace kOS.Sound
 
             InitalizeSuffixes();
         }
-        
+
         public void InitalizeSuffixes()
         {
             AddSuffix("ATTACK", new SetSuffix<ScalarValue>(() => voice.Attack, value => voice.Attack = value));
@@ -82,16 +82,15 @@ namespace kOS.Sound
             noteNum = -1;
             noteEndTimeStamp = -1f;
             IsPlaying = true;
-
         }
-        
+
         public void KOSUpdate(double deltaTime)
         {
             if (! IsPlaying)
                 return;
 
             float now = Time.fixedTime;
-            
+
             // If still playing prev note, do nothing except maybe change
             // its frequency if it's a slidenote:
             if (now < noteEndTimeStamp)
@@ -105,10 +104,10 @@ namespace kOS.Sound
                 }
                 return;
             }
-            
+
             // Increment to next note and start playing it:
             ++noteNum;
-            if (noteNum > song.Count())
+            if (noteNum >= song.Count())
             {
                 if (loop)
                 {
@@ -130,16 +129,16 @@ namespace kOS.Sound
                 }
             }
         }
-        
+
         public void Dispose()
         {
-            updateHandler.RemoveObserver(this);            
+            updateHandler.RemoveObserver(this);
             voice.Frequency = 0f;
             song = null;
             voice = null;
             maker = null;
         }
-        
+
         public override string ToString()
         {
             return String.Format("Voice({0})", voiceNum);
