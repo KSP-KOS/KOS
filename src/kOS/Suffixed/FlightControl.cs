@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
 using Math = System.Math;
+using kOS.Communication;
 
 namespace kOS.Suffixed
 {
@@ -91,14 +92,7 @@ namespace kOS.Suffixed
             SafeHouse.Logger.Log("FlightControl Unbinding");
             if (!bound) return;
 
-            if (RemoteTechHook.IsAvailable())
-            {
-                RemoteTechHook.Instance.RemoveSanctionedPilot(Vessel.id, OnFlyByWire);
-            }
-            else
-            {
-                Vessel.OnPreAutopilotUpdate -= OnFlyByWire;
-            }
+            ConnectivityManager.RemoveAutopilotHook(Vessel, OnFlyByWire);
             bound = false;
             SafeHouse.Logger.Log("FlightControl Unbound");
         }
@@ -282,17 +276,10 @@ namespace kOS.Suffixed
 
         private void Bind()
         {
-            if (bound) return;
+            if (bound && !ConnectivityManager.NeedAutopilotResubscribe) return;
             SafeHouse.Logger.Log("FlightControl Binding");
 
-            if (RemoteTechHook.IsAvailable(Vessel.id))
-            {
-                RemoteTechHook.Instance.AddSanctionedPilot(Vessel.id, OnFlyByWire);
-            }
-            else
-            {
-                Vessel.OnPreAutopilotUpdate += OnFlyByWire;
-            }
+            ConnectivityManager.AddAutopilotHook(Vessel, OnFlyByWire);
             bound = true;
             SafeHouse.Logger.Log("FlightControl Bound");
         }

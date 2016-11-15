@@ -9,7 +9,6 @@ namespace kOS.Safe.Encapsulation
         int InstructionsPerUpdate { get; set; }
         bool UseCompressedPersistence { get; set; }
         bool ShowStatistics { get; set; }
-        bool EnableRTIntegration { get; set; }
         bool StartOnArchive { get; set; }
         bool ObeyHideUI { get; set; }
         bool EnableSafeMode { get; set; }
