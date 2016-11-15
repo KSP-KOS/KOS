@@ -141,8 +141,7 @@ namespace kOS.Sound
 
                 // Duplicate sample across all channels (i.e. send same mono data to both left and right speaker):
                 for (int channel = 0; channel < numChannels; ++channel)
-                    sampleData[index] += sample;
-                ++index; // incriment outside of the loop in case multiple channels get used
+                    sampleData[++index] += sample;
                 // add to whatever might already be there, which is probably zero.
                 phase = (phase + phaseInc) % SampleRange;
             }
