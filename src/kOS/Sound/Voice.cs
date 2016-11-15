@@ -60,6 +60,17 @@ namespace kOS.Sound
         private bool needNoteInit = false;
 
         private AudioSource source;
+        
+        /// <summary>
+        /// If we notice the game is paused, record the timestamp where the pausing began.
+        /// Also used as a flag - set it to negative to indicate we're not currently paused.
+        /// </summary>
+        private float freezeBeganTimestamp = -1f;
+        
+        /// <summary>
+        /// What the voice volume had been when we began the freeze
+        /// </summary>
+        private float volumeBeforeFreeze = 0f;
 
         public void Awake()
         {
@@ -90,8 +101,8 @@ namespace kOS.Sound
             //Frequency = frequency;
             Volume = volume;
             Waveform = waveGen;
-            noteAttackStart = Time.fixedTime;
-            noteReleaseStart = Time.fixedTime + duration;
+            noteAttackStart = Time.unscaledTime;
+            noteReleaseStart = Time.unscaledTime + duration;
             needNoteInit = true;
             ChangeFrequency(frequency);
             return true;
@@ -101,8 +112,8 @@ namespace kOS.Sound
         {
             //Frequency = frequency;
             Volume = volume;
-            noteAttackStart = Time.fixedTime;
-            noteReleaseStart = Time.fixedTime + duration;
+            noteAttackStart = Time.unscaledTime;
+            noteReleaseStart = Time.unscaledTime + duration;
             needNoteInit = true;
             ChangeFrequency(frequency);
             return true;
@@ -126,8 +137,34 @@ namespace kOS.Sound
         /// Maintains the volume level in accordance to the ADSR envelope rules,
         /// and the note's holding duration.
         /// </summary>
-        public void FixedUpdate()
+        public void Update()
         {
+            // A note about which time clock to use for the notes:
+            // There are several choices for which Unity clock to use to time the notes,
+            // and it's a stylistic choice.  We narrowed it down to these two:
+            //
+            // Time.time
+            //     This is the "in character" time.  In other words, under 4x physics warp
+            //     it moves 4x faster, and in times of high part count lag, it moves slower.
+            //     If we used this to time the notes then songs would go faster or slower with
+            //     the game universe.  While this is correct from a simulation point of view,
+            //     if we think of the SKID chip being an object in the Kerbal's universe,
+            //     it makes for annoying user interfaces.
+            //
+            // Time.unscaledTime
+            //     This is the "out of character" time.  In other words, it moves at the
+            //     same speed whether under physics warp or not.  If you make a song list,
+            //     the song will play at the same tempo regardless of physics warp or game
+            //     lag.
+            //
+            // We decided to go with Time.unscaledTime.
+            //
+            // If you want to see what it's like to move the sound with the physics speed,
+            // you can replace all the instances of Time.unscaledTime with Time.Time within
+            // this file and within the VoiceValue.cs file.
+            // We decided in the end that its better to make the sound seem right to the player
+            // than to make it realistic to the little Kerbals in their fast-moving universe.
+
             if (needNoteInit)
                 InitNote();
 
@@ -137,7 +174,32 @@ namespace kOS.Sound
             if (Waveform == null)
                 return;
 
-            float now = Time.fixedTime;
+            if (Time.timeScale == 0f) // game is paused (i.e. the Escape Menu is up.)
+            {
+                if (freezeBeganTimestamp < 0f) // And we were not previously paused, so starting a new pause here.
+                {
+                    freezeBeganTimestamp = Time.unscaledTime;
+                    volumeBeforeFreeze = source.volume;
+                    source.volume = 0f;
+                }
+                return; // don't do any of the normal work when the game is paused.
+            }
+            else // game is not paused
+            {
+                if (freezeBeganTimestamp >= 0f) // But it had been before, so it's just coming out of pause now.
+                {
+                    // Before we continue, update the timestamp clocks to account for all
+                    // that paused time so notes can continue where they left off:
+                    float freezeDuration = Time.unscaledTime - freezeBeganTimestamp;
+                    noteAttackStart += freezeDuration;
+                    noteReleaseStart += freezeDuration;
+                    freezeBeganTimestamp = -1f;
+                    source.volume = volumeBeforeFreeze;
+                }
+            }
+
+
+            float now = Time.unscaledTime;
             float stepStart = noteAttackStart;
 
             if (now < stepStart)

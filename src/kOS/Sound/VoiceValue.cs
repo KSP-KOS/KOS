@@ -38,6 +38,12 @@ namespace kOS.Sound
             get { return isPlaying; }
             set { isPlaying = value; if (!isPlaying) voice.Stop(); }
         }
+        
+        /// <summary>
+        /// If we notice the game is paused, record the timestamp where the pausing began.
+        /// Also used as a flag - set it to negative to indicate we're not currently paused.
+        /// </summary>
+        private float freezeBeganTimestamp = -1f; 
 
         public VoiceValue(UpdateHandler updateHandler, int voiceNum, ISoundMaker maker)
         {
@@ -89,7 +95,25 @@ namespace kOS.Sound
             if (! IsPlaying)
                 return;
 
-            float now = Time.fixedTime;
+            // Be sure we use the same game clock here as in Voice.cs's Update():  (i.e. unscaledTime vs Time vs fixedTime):
+            float now = Time.unscaledTime;
+            
+            if (Time.timeScale == 0f) // game is frozen (i.e. the Escape Menu is up.)
+            {
+                if (freezeBeganTimestamp < 0f) // And we weren't frozen before so it's the start of a new freeze instance.
+                    freezeBeganTimestamp = now;
+                return; // do none of the rest of this work until the pause is over.
+            }
+            else // game is not frozen.
+            {
+                if (freezeBeganTimestamp >= 0f) // And we were frozen before so we just became unfrozen now
+                {
+                    // Push the timestamp ahead by the duration of the pause so it will continue what's left of the note
+                    // instead of truncating it early:
+                    noteEndTimeStamp += (now - freezeBeganTimestamp);
+                    freezeBeganTimestamp = -1f;
+                }
+            }
 
             // If still playing prev note, do nothing except maybe change
             // its frequency if it's a slidenote:

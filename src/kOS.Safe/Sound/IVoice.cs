@@ -11,7 +11,7 @@ namespace kOS.Safe.Sound
 		bool BeginProceduralSound(float frequency, float duration, float volume = 1f);
 		void Stop();
 		void SetWave(IProceduralSoundWave waveGen);
-		void FixedUpdate();
+		void Update();
 		void ChangeFrequency(float newFrequency);
 		float Frequency { get; set; }
 		float Volume { get; set; }
