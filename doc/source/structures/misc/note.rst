@@ -12,7 +12,7 @@ function, or the built-in SlideNote() function:
 
 .. _note:
 
-.. function:: NOTE(frequency, keyDownLength, duration, volume)
+.. function:: NOTE(frequency, duration, keyDownLength, volume)
 
     This global function creates a note object from the given values.
 
@@ -23,22 +23,30 @@ function, or the built-in SlideNote() function:
         string.  If it is a number, then it is the frequency in Hertz.
         If it is a string, then it's using the letter notation
         :ref:`described here <skid_letter_frequency>`.
-    ``keyDownLength``
-        **Mandatory**: Specifies how long the "synthesizer key" is being
-        held down for for this note.  Note that the value here gets
-        multiplied by the voice's ``:TEMPO`` to decide the actual
-        duration in seconds when it gets played.
     ``duration``
-        **Optional**: If present, it means the actual duration of the note
-        is longer than keyDownLength, and should include some additional
-        time after the key is released (to give the note time to fade
-        in its Release portion of the :ref:`ADSR envelope <skid_envelope>`.)
-        If *duration* is not present, then the note cuts off instantly
-        at the end of keyDownLength.  If *duration* is present, then
-        it must be at least greater than or equal to *keyDownLength*,
-        or else *keyDownLength* will be shortened to match the duration.
+        **Mandatory**: The total amount of time the note takes up before
+        the next note can begin, *including* the small gap between the end
+        of its keyDownLength and the start of the next note.
         Note that the value here gets multiplied by the voice's
         ``:TEMPO`` to decide the actual duration in seconds when it gets played.
+    ``keyDownLength``
+        **Optional**: The amount of time the note takes up before the
+        "synthesizer key" is released.  In terms of the
+        :ref:`ADSR Envelope <skid_envelope>`, this is the portion of
+        the note's time taken up by the Attack, Decay, and Sustain part
+        of the note, but not including the Release part of the note.  In
+        order to hear the note fade away during its Release portion, the
+        keyDownLength must be shorter than the Duration, or else there's
+        no gap of time to fit the release in before the next note starts.
+        By default, if you leave the KeyDownLength off, you get a default
+        KeyDownLength of 90% of the Duration, leaving 10% of the Duration
+        left to hear the "Release" time before the next note starts.
+        If you wish to force the notes to immediately blend from one to the
+        next with no audible gaps between them, then for each note you
+        need to specify a keyDownLength that is equal to the Duration.
+        Note that the value here gets
+        multiplied by the voice's ``:TEMPO`` to decide the actual
+        duration in seconds when it gets played.
     ``volume``
         **Optional**: If present, then the note can be given a different
         volume than the default for the voice it's being played on, to
@@ -57,7 +65,7 @@ function, or the built-in SlideNote() function:
 
 .. _slidenote:
 
-.. function:: SLIDENOTE(frequency, endFrequency, keyDownLength, duration, volume)
+.. function:: SLIDENOTE(frequency, endFrequency, duration, keyDownLength, volume)
 
     This global function creates a note object that makes a sliding note
     that changes linearly from the start frequency to the end frequency
@@ -75,13 +83,13 @@ function, or the built-in SlideNote() function:
         If it is a number, then it is the frequency in Hertz.
         If it is a string, then it's using the letter notation
         :ref:`described here <skid_letter_frequency>`.
-    ``keyDownLength``
-        **Mandatory**: Same as the keyDownLength for the :ref:`NOTE() <note>`
-        built-in function.
     ``duration``
-        **Optional**: Same as the duration for the :ref:`NOTE() <note>`
+        **Mandatory**: Same as the duration for the :ref:`NOTE() <note>`
         built-in function.  If it is missing it will be the same thing
         as the keyDownLength.
+    ``keyDownLength``
+        **Optional**: Same as the keyDownLength for the :ref:`NOTE() <note>`
+        built-in function.
     ``volume``
         **Optional**: Same as the volume for the :ref:`NOTE() <note>`
         built-in function.

@@ -197,10 +197,12 @@ SKID chip are:
 * Attack = 0.0s
 * Decay = 0.0s
 * Sustain = 1.0
-* Release = 0.0s
+* Release = 0.1s
 
-This produces a sound that will suddenly start and suddenly stop in a very
-artificial sounding way.
+This produces a sound that will suddenly start but ever so slightly
+fade at the end rather than dropping off immediately.  There is just
+enough of a Release time to make the listener hear the sound as
+slightly less harsh than a fast cutoff would sound.
 
 It is possible to make the chip describe different shaped envelopes by
 using degenerate values for some of these settings.  For some examples:
@@ -296,30 +298,40 @@ EndFrequency (In Hertz)
     at exactly the moment the note's Duration runs out.  (So giving it
     a shorter Duration makes it change frequencies faster).
 
+Duration (Seconds, modified by :ref:`tempo <skid_tempo>`)
+    Defines how long this entire note lasts from the start of its
+    Attack until the end when the next note can start.  Note that
+    by default, unless you choose to set the KeyDownLength (see
+    next item below) to something other than the default, the note
+    won't quite fill the entire Duration, instead reserving a small
+    sliver of the end of the Duration to represent the gap between
+    this note and the next.
+
 KeyDownLength (Seconds, modified by :ref:`tempo <skid_tempo>`)
     Defines how long you imagine the "key" on a synthesizer keyboard is
     being held down for to produce this note. In terms of the
-    ADSR Envelope, this is the time span counting
-    from the start of the Attack, through  the Decay, and until the
-    end of the Sustain.  Be aware that if you give the SKID chip a note
-    who's KeyDownLength is shorter than the duration of the Attack
-    and the Decay portion of the envelope, then the note will just skip
-    over the Sustain step entirely and move right on to the Release step.
-    (See the diagram for :ref:`ADSR Envelope <skid_envelope>` to see,
-    visually, which portion of the note the KeyDownLength represents.
-    It's the orange portion of the graph.)
+    ADSR Envelope, this is the time span that includes the Attack,
+    Decay, and Sustain portion of the note, but not the Release portion
+    of the note.  The KeyDownLength must be less than or equal
+    to the Duration (see above).  If you try to set a KeyDownLength that
+    exceeds the Duration, it will be shortened to match the Duration.
+    Essentially the Difference between Duration and KeyDownLength is
+    that Duration is how much time the note fills up of the song, and
+    KeyDownLength is how much of that time is spent with the finger
+    holding the "synthesizer key" down.  The time between the end of
+    the KeyDownLength and the end of the Duration is the gap of time
+    from when one key is let go and the next key is begun.  If there 
+    is no such gap, then two adjacent notes of the same frequency would
+    just bleed together into sounding like one continuous note.
+    
+    By default, the KeyDownLength is slightly shorter than the Duration
+    if you don't specify it explicitly.
 
-Duration (Seconds, modified by :ref:`tempo <skid_tempo>`)
-    Defines how long this entire note lasts from the start of its
-    Attack until the end when the next note can start.  This must be at least
-    as long as KeyDownLength (and if it is not, then KeyDownLength will
-    be shortened to match the Duration).  When Duration is longer than
-    KeyDownLength, then the Release portion of the Envelope takes place
-    during the "leftover" time between the end of KeyDownLength and the
-    end of Duration.  In fact, to hear the Release portion of the envelope
-    at all between adjacent notes in a song, you need to set the Duration to
-    the length of time the note takes up, and the KeyDownLength to something
-    a little less than the Duration.
+    The Release portion of the ADSR Envelope occurs entirely within the
+    gap between the end of KeyDownLength and Duration.  If you define
+    the KeyDownLength to last the entire Duration, then you won't hear
+    the Release portion of the note's envelope, because the note will
+    cut off before it has a chance to start the release.
 
 Volume (between 0.0 and 1.0, although it can go higher than 1.0)
     A multiplier for the volume of this one note relative to the overall
