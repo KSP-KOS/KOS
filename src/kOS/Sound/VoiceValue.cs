@@ -66,6 +66,7 @@ namespace kOS.Sound
             AddSuffix("VOLUME", new SetSuffix<ScalarValue>(() => voice.Volume, value => voice.Volume = value));
             AddSuffix("WAVE", new SetSuffix<StringValue>(() => maker.GetWaveName(voiceNum), value => maker.SetWave(voiceNum, value.ToString())));
             AddSuffix("PLAY", new OneArgsSuffix<Structure>(Play));
+            AddSuffix("STOP", new NoArgsVoidSuffix(Stop));
             AddSuffix("LOOP", new SetSuffix<BooleanValue>(() => loop, value => loop = value));
             AddSuffix("ISPLAYING", new SetSuffix<BooleanValue>(() => IsPlaying, value => IsPlaying = value));
             AddSuffix("TEMPO", new SetSuffix<ScalarValue>(() => tempo, value => tempo = (float)value.GetDoubleValue()));
@@ -88,6 +89,16 @@ namespace kOS.Sound
             noteNum = -1;
             noteEndTimeStamp = -1f;
             IsPlaying = true;
+        }
+
+        public void Stop()
+        {
+            IsPlaying = false;
+            // if we only set IsPlaying to false, the note that is currently playing on the underlying voice would
+            // be allowed to finish.  In the case of a song where notes are usually pretty short this would be OK,
+            // but if the user has set a note to play for 60s the effects of calling Stop may not be seen immediately.
+            // So we stop the underlying voice too.
+            voice.Stop();
         }
 
         public void KOSUpdate(double deltaTime)

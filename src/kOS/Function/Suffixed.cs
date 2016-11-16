@@ -349,12 +349,10 @@ namespace kOS.Function
                 ReturnValue = new NoteValue(0f, vol, keyDownDuration, duration);
         }
     }
-    
-    [Function("GetVoice")]
-    public class FuncitonNote : FunctionBase
-    {
-        Dictionary<int, VoiceValue> VoiceValues = new Dictionary<int, VoiceValue>();
 
+    [Function("GetVoice")]
+    public class FunctionGetVoice : FunctionBase
+    {
         public override void Execute(SharedObjects shared)
         {
             int voiceNum = GetInt(PopValueAssert(shared));
@@ -362,13 +360,23 @@ namespace kOS.Function
 
             VoiceValue val;
 
-            if (VoiceValues.TryGetValue(voiceNum, out val))
+            if (shared.AllVoiceValues.TryGetValue(voiceNum, out val))
                 ReturnValue = val;
             else
             {
-                VoiceValues[voiceNum] = new VoiceValue(shared.UpdateHandler, voiceNum, shared.SoundMaker);
-                ReturnValue = VoiceValues[voiceNum];
+                shared.AllVoiceValues[voiceNum] = new VoiceValue(shared.UpdateHandler, voiceNum, shared.SoundMaker);
+                ReturnValue = shared.AllVoiceValues[voiceNum];
             }
+        }
+    }
+
+
+    [Function("StopAllVoices")]
+    public class FunctionStopAllVoices : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            shared.SoundMaker.StopAllVoices();
         }
     }
 

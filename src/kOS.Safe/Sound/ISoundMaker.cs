@@ -31,6 +31,7 @@ namespace kOS.Safe.Sound
         bool BeginFileSound(string soundName, float volume = 1f);
 
         IVoice GetVoice(int num);
+        void StopAllVoices();
         string GetWaveName(int voiceNum);
         bool SetWave(int num, string waveName);
     }

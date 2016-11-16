@@ -958,6 +958,8 @@ namespace kOS.Screen
             NotifyOfScreenResize(shared.Screen);
             shared.Screen.AddResizeNotifier(NotifyOfScreenResize);
             ChangeTitle(CalcualteTitle());
+
+            soundMaker.AttachTo(shared); // Attach the soundMaker also
         }
         
         internal string CalcualteTitle()

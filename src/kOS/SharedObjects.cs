@@ -1,6 +1,8 @@
-﻿using kOS.Execution;
-using kOS.Communication;
+﻿using kOS.Communication;
+using kOS.Execution;
 using kOS.Screen;
+using kOS.Sound;
+using System.Collections.Generic;
 
 namespace kOS
 {
@@ -12,9 +14,11 @@ namespace kOS
         public TermWindow Window { get; set; }
         public TransferManager TransferManager { get; set; }
         public AddOns.AddonManager AddonManager { get; set; }
+        public Dictionary<int, VoiceValue> AllVoiceValues { get; private set; }
 
         public SharedObjects()
         {
+            AllVoiceValues = new Dictionary<int, VoiceValue>();
             GameEvents.onVesselDestroy.Add(OnVesselDestroy);
         }
 

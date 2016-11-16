@@ -14,18 +14,23 @@ namespace kOS.Sound
         private Dictionary<string, AudioSource> sounds;
         private Voice[] voices;
         private Dictionary<string, ProceduralSoundWave> waveGenerators;
+        private SharedObjects shared;
 
         /// <summary>
         /// Our pretend hardware limit on a "SKID" chip's number of voices
         /// </summary>
         private int hardwareMaxVoices = 10;
 
+        public void AttachTo(SharedObjects sharedObj)
+        {
+            shared = sharedObj;
+        }
+
         // Each Terminal should hold one instance of me.
         void Awake()
         {
             sounds = new Dictionary<string, AudioSource>();
             waveGenerators = new Dictionary<string, ProceduralSoundWave>();
-            DontDestroyOnLoad(gameObject);
 
             // Sound samples coming from sound files:
             LoadFileSound("beep", "file://"+ kspDirectory + "GameData/kOS/GFX/terminal-beep.wav");
@@ -47,6 +52,16 @@ namespace kOS.Sound
             AddGenericVoices(hardwareMaxVoices);
         }
 
+        private void Destroy()
+        {
+            if (shared != null)
+            {
+                StopAllVoices();
+                shared.AllVoiceValues.Clear();
+                shared = null;
+            }
+        }
+
         /// <summary>
         /// Load a fixed sound effect from a file.
         /// </summary>
@@ -65,6 +80,22 @@ namespace kOS.Sound
         public IVoice GetVoice(int num)
         {
             return voices[num];
+        }
+
+        public void StopAllVoices()
+        {
+            if (shared != null)
+            {
+                foreach (var key in shared.AllVoiceValues.Keys)
+                {
+                    VoiceValue voiceVal = shared.AllVoiceValues[key];
+                    if (voiceVal != null)
+                    {
+                        // VoiceValue.Stop will also handle stoping the underlying voice for us
+                        voiceVal.Stop();
+                    }
+                }
+            }
         }
 
         public string GetWaveName(int voiceNum)
