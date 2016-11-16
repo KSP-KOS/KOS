@@ -292,23 +292,25 @@ namespace kOS.Function
     }
     
     [Function("slidenote")]
-    public class FunctionNote : FunctionBase
+    public class FunctionSlideNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
             int argCount = CountRemainingArgs(shared);
             float vol = 1.0f;
-            float duration = -1f;
+            float keyDownDuration = -1f;
             if (argCount >= 5)
                 vol = (float) GetDouble(PopValueAssert(shared));
             if (argCount >= 4)
-                duration = (float) GetDouble(PopValueAssert(shared));
-            float keyDownDuration = (float) GetDouble(PopValueAssert(shared));
+                keyDownDuration = (float)GetDouble(PopValueAssert(shared));
+            float duration = (float)GetDouble(PopValueAssert(shared));
             object endNote = PopValueAssert(shared);
             object startNote = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
-            if (duration < 0)
-                duration = keyDownDuration;
+            if (keyDownDuration < 0)
+                keyDownDuration = duration * 0.9f; // default to 90% of the total duration, allowing a short window for the release
+            if (keyDownDuration > duration)
+                keyDownDuration = duration; // clamp keyDown to the total duration
 
             if (startNote is ScalarValue)
                 ReturnValue = new NoteValue((float)GetDouble(startNote), (float)GetDouble(endNote), vol, keyDownDuration, duration);
@@ -320,22 +322,24 @@ namespace kOS.Function
     }
 
     [Function("note")]
-    public class FunctionSlideNote : FunctionBase
+    public class FunctionNote : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
             int argCount = CountRemainingArgs(shared);
             float vol = 1.0f;
-            float duration = -1f;
+            float keyDownDuration = -1f;
             if (argCount >= 4)
                 vol = (float) GetDouble(PopValueAssert(shared));
             if (argCount >= 3)
-                duration = (float) GetDouble(PopValueAssert(shared));
-            float keyDownDuration = (float) GetDouble(PopValueAssert(shared));
+                keyDownDuration = (float)GetDouble(PopValueAssert(shared));
+            float duration = (float)GetDouble(PopValueAssert(shared)); 
             object note = PopValueAssert(shared);
             AssertArgBottomAndConsume(shared);
-            if (duration < 0)
-                duration = keyDownDuration;
+            if (keyDownDuration < 0)
+                keyDownDuration = duration * 0.9f; // default to 90% of the total duration, allowing a short window for the release
+            if (keyDownDuration > duration)
+                keyDownDuration = duration; // clamp keyDown to the total duration
 
             if (note is ScalarValue)
                 ReturnValue = new NoteValue((float)GetDouble(note), vol, keyDownDuration, duration);

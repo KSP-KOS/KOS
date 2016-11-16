@@ -81,7 +81,7 @@ namespace kOS.Sound
             Attack = 0f;
             Decay = 0f;
             Sustain = 1f;
-            Release = 0f;
+            Release = 0.1f;
             Volume = 1f;
         }
 
@@ -94,36 +94,53 @@ namespace kOS.Sound
         /// <param name="frequency">the note, expressed in Hertz (not musical scales)</param>
         /// <param name="duration">the note's duration, in seconds.</param>
         /// <param name="volume">the note's volume, from 0.0 up to 1.0</param>
-        /// <returns>false if the sound name given doesn't seem to be found or it is but it was
-        /// a sound file not a procedural sound.</returns>
+        /// <returns>false if frequency is less than zero, indicating a rest</returns>
         public bool BeginProceduralSound(IProceduralSoundWave waveGen, float frequency, float duration, float volume = 1f)
         {
-            //Frequency = frequency;
-            Volume = volume;
-            Waveform = waveGen;
-            noteAttackStart = Time.unscaledTime;
-            noteReleaseStart = Time.unscaledTime + duration;
-            needNoteInit = true;
-            ChangeFrequency(frequency);
-            return true;
+            SetWave(waveGen); // update the wave even if called for a rest note
+            if (frequency > 0)
+            {
+                Volume = volume;
+                noteAttackStart = Time.unscaledTime;
+                noteReleaseStart = Time.unscaledTime + duration;
+                needNoteInit = true;
+                ChangeFrequency(frequency);
+                return true;
+            }
+            return false;
         }
 
+
+        /// <summary>
+        /// Begin a single note.
+        /// You can pass in a frequency and it will "stretch" the reference sample
+        /// to make it fit the given frequency.
+        /// </summary>
+        /// <param name="frequency">the note, expressed in Hertz (not musical scales)</param>
+        /// <param name="duration">the note's duration, in seconds.</param>
+        /// <param name="volume">the note's volume, from 0.0 up to 1.0</param>
+        /// <returns>false if frequency is less than zero, indicating a rest</returns>
         public bool BeginProceduralSound(float frequency, float duration, float volume = 1f)
         {
-            //Frequency = frequency;
-            Volume = volume;
-            noteAttackStart = Time.unscaledTime;
-            noteReleaseStart = Time.unscaledTime + duration;
-            needNoteInit = true;
-            ChangeFrequency(frequency);
-            return true;
+            if (frequency > 0)
+            {
+                Volume = volume;
+                noteAttackStart = Time.unscaledTime;
+                noteReleaseStart = Time.unscaledTime + duration;
+                needNoteInit = true;
+                ChangeFrequency(frequency);
+                return true;
+            }
+            return false;
         }
 
         public void Stop()
         {
-            source.pitch = 0;
+            // We set the volume to 0 and stop the source instead of changing the pitch
+            // to 0 because technically AudioSource doesn't want a pitch of 0, and this
+            // will close the audio channel entirely preventing sound artifacts.
             source.volume = 0;
-            //source.Stop();
+            source.Stop();
         }
 
         public void SetWave(IProceduralSoundWave waveGen)
