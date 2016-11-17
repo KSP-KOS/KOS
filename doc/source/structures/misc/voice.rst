@@ -11,9 +11,18 @@ here are just ways to access the features of the SKID chip so they won't
 be fully explained on this page, instead just referring to the SKID
 documentation with links.
 
+.. contents:: Contents
+    :local:
+    :depth: 3
+
+Functions
+---------
+
 .. _getvoice:
 
 .. function:: GETVOICE(num)
+
+    :returns: :struct:`Voice`
 
     To access one of the :ref:`voices <skid_voice>` of the
     :ref:`SKID <skid>` chip, you use the ``GetVoice(num)`` built-in
@@ -23,12 +32,22 @@ documentation with links.
     in accessing.  (The numbering starts with the first voice being
     called 0).
 
-Each voice is capable of playing one note at a time, or a series of 
+.. function:: STOPALLVOICES
+
+    :returns: None
+
+    This will stop all voices.  If the voice is scheduled to play additional
+    notes, they will not be played. If the voice in the middle of playing a note,
+    that note will be stopped.
+
+Each voice is capable of playing one note at a time, or a series of
 notes from a song (a :struct:`List` of :struct:`Note`'s), but what
 matters is that one voice can't play two notes at once.  To do that
 you need to use multiple voices.  For simple one-voice situations,
 you probably only need to ever use voice 0.
 
+Structure
+---------
 .. structure:: Voice
 
     .. list-table:: Members
@@ -71,9 +90,14 @@ you probably only need to ever use voice 0.
           - The name for the :ref:`waveform <skid_waveform>` you want this voice to use.
 
         * - :meth:`PLAY(note_or_list)`
-          - n/a (call method only)
+          - None
           - Call
           - The method that actually causes the voice to make some sound.
+
+        * - :meth:`STOP()`
+          - None
+          - Call
+          - Stop playing note on this voice instance.
 
         * - :attr:`LOOP`
           - :struct:`boolean`
@@ -83,7 +107,7 @@ you probably only need to ever use voice 0.
         * - :attr:`ISPLAYING`
           - :struct:`boolean`
           - Get/Set
-          - Get: Is the ``PLAY()`` method still playing? Set: Make it false to abort PLAY().
+          - The playing status of voice.
 
         * - :attr:`TEMPO`
           - :struct:`scalar`
@@ -94,7 +118,7 @@ you probably only need to ever use voice 0.
 .. attribute:: Voice:ATTACK
 
     :access: Get/Set
-    :type: :struct:`Scalar` in seconds
+    :type: :struct:`Scalar` (seconds)
 
     The *Attack* setting of the SKID voice's
     :ref:`ADSR Envelope <skid_envelope>`.  This value is
@@ -103,7 +127,7 @@ you probably only need to ever use voice 0.
 .. attribute:: Voice:DECAY
 
     :access: Get/Set
-    :type: :struct:`Scalar` in seconds
+    :type: :struct:`Scalar` (seconds)
 
     The *Decay* setting of the SKID voice's
     :ref:`ADSR Envelope <skid_envelope>`.  This value is
@@ -112,7 +136,7 @@ you probably only need to ever use voice 0.
 .. attribute:: Voice:SUSTAIN
 
     :access: Get/Set
-    :type: :struct:`Scalar` in the range [0..1] to multiply the volume by.
+    :type: :struct:`Scalar` in the range [0..1]
 
     The *Sustain* setting of the SKID voice's
     :ref:`ADSR Envelope <skid_envelope>`.  Unlike the other
@@ -124,21 +148,21 @@ you probably only need to ever use voice 0.
 .. attribute:: Voice:RELEASE
 
     :access: Get/Set
-    :type: :struct:`Scalar` in seconds
+    :type: :struct:`Scalar` (seconds)
 
     The *Release* setting of the SKID voice's
     :ref:`ADSR Envelope <skid_envelope>`.  This value is
     in seconds (usually a fractional portion of a second).
     Note, that in order for this setting to have any real
     effect, the notes that are being played have to
-    have their ``KeyDownLength`` set to be shorter than their
-    ``Duration``, otherwise the notes will still cut
+    have their :attr:`KeyDownLength<Note:KEYDOWNLENGTH>` set to be shorter than
+    their :attr:`Duration<Note:DURATION`, otherwise the notes will still cut
     off before the Release has a chance to happen.
 
 .. attribute:: Voice:VOLUME
 
     :access: Get/Set
-    :type: :struct:`Scalar` 1.0 = max, 0.0 = silent.
+    :type: :struct:`Scalar`
 
     The "peak" volume of the notes played on this voice, when they
     hit the top of their initial spike in the
@@ -146,12 +170,12 @@ you probably only need to ever use voice 0.
     max value is 1.0, in practice it can often go higher because
     the KSP game setting for User Interface volume is usually only
     at 50%, and in that scenario putting a 1.0 here would put the
-    max at 50%, *really*.
+    max at 50%, *really*.  Setting this value to 0 will silence the voice.
 
 .. attribute:: Voice:WAVE
 
     :access: Get/Set
-    :type: :struct:`string` taken from the list of known waveforms in the hardware.
+    :type: :struct:`string`
 
     To select which of the SKID chip's
     :ref:`waveform generators <skid_waveform>` you want this voice
@@ -164,7 +188,7 @@ you probably only need to ever use voice 0.
 
     :access: Call (method)
     :parameter note_or_list: Either one :struct:`Note` or a :struct:`List` of :struct:`Note`'s
-    :type: n/a (method's return value isn't meaningful)
+    :returns: None
 
     To cause the SKID chip to actually emit a sound, you need to
     use this suffix method.  There are two ways it can be called:
@@ -181,7 +205,7 @@ you probably only need to ever use voice 0.
     a :struct:`List` of :struct:`Note`'s.  It will recognize that it
     is receiving a list of notes, and begin playing through them
     one at a time, only playing the next note when the previous
-    note's ``:DURATION`` is finished::
+    note's :attr:`DURATION<Note:DURATION>` is finished::
 
         SET V0 to GetVoice(0).
         V0:PLAY(
@@ -210,6 +234,15 @@ you probably only need to ever use voice 0.
     Calling PLAY() again on a *different* voice number will not
     abort the previous call to PLAY().  It only aborts the previous
     PLAY() when it's being done on the *same* voice.
+
+.. method:: Voice:STOP()
+
+    :access: Call (method)
+    :returns: None
+
+    Calling this method will tell the voice to stop playing notes.  If there are
+    any notes queued to be played, they will not be played.  If a note is
+    currently being played, that note will be stopped.
 
 .. attribute:: Voice:LOOP
 
@@ -243,20 +276,20 @@ you probably only need to ever use voice 0.
 .. attribute:: Voice:TEMPO
 
     :access: Get/Set
-    :type: :struct:`scalar` (multiplier of durations of notes)
+    :type: :struct:`scalar`
 
     When the voice is playing a :struct:`Note` or (more usefully) a
     :struct:`List` of :struct:`Note`'s, it will stretch or shrink the
     durations of those notes by multiplying them by this scaling
-    factor.  At 1.0 (the default), that means that when a note 
-    *says* it lasts for 1 second, then it really does.  But if 
+    factor.  At 1.0 (the default), that means that when a note
+    *says* it lasts for 1 second, then it really does.  But if
     this tempo was set to, say 1.5, then that would mean that each
     time a note claims it wants to play for 1 second, it would really
     end up playing for 1.5 seconds on this voice.  (or if you set
-    the tempo to 0.5, then all songs will play their notes at double 
+    the tempo to 0.5, then all songs will play their notes at double
     speed (each note only lasting half as long as it "should").)
 
-    In other words, setting this to a value less than 1.0 will 
+    In other words, setting this to a value less than 1.0 will
     speed up the song, and setting it to a value greater than 1.0
     will slow it down (which might be the opposite of what you'd
     expect with it being called "tempo", but what else should
@@ -267,9 +300,10 @@ you probably only need to ever use voice 0.
     It will change the speed in mid-song.)
 
     Be aware that this *only* scales the timings of the :struct:`Note`'s
-    ``:KEYDOWNLENGTH`` and ``:DURATION`` timings.  It does not
+    :attr:`KEYDOWNLENGTH<Note:KEYDOWNLENGTH>` and :attr:`DURATION<Note:DURATION>`
+    timings.  It does not
     affect the timings in the :ref:`ADSR Envelope <skid_envelope>`, as
-    those represent what are meant to be physical properties of the 
+    those represent what are meant to be physical properties of the
     "instrument" the voice is playing on.  This means if you set the
     tempo too fast, it will start cutting off the full duration of the
     "envelope" of the notes, if you are playing the notes with settings
@@ -296,7 +330,7 @@ Type it in (or cut and paste it) to see the system at work::
     song:add(note("b4", 0.25, 0.20)). // lit-
     song:add(note("b4", 0.25, 0.20)). // -tle
     song:add(note("b4", 0.5 , 0.45)). // lamb
-                                  
+
     song:add(note("b4", 0.25, 0.20)). // Ma-
     song:add(note("a4", 0.25, 0.20)). // -ry
     song:add(note("g4", 0.25, 0.20)). // had

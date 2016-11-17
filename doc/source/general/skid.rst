@@ -61,7 +61,7 @@ just electronic bloopity-blopity sounds.
 Frequency Range
 ~~~~~~~~~~~~~~~
 
-The SKID chip appears to be capable of producing sounds in the 
+The SKID chip appears to be capable of producing sounds in the
 range of as low as 1 Hertz (not like you'd ever hear that) and
 as high as up to 14000 Hertz.  Most people can hear higher notes
 than that, but the chip's notes start to get a little distorted
@@ -101,7 +101,7 @@ These each produce a slightly different sound.
     :alt: Image of a triangle sound wave.
 
     ``"TRIANGLE"``: When this ``:WAVE`` setting is used, the
-    sound is sort of halfway between sounding electronic and 
+    sound is sort of halfway between sounding electronic and
     sounding mellow.
 
 .. figure:: /_images/general/sawtooth.png
@@ -237,7 +237,7 @@ specify its frequency using the more familiar
 
 To do this, you use a string in the following format:
 
-1. Mandatory: First character is the note letter, one of 
+1. Mandatory: First character is the note letter, one of
    "C","D","E","F","G","A", "B", or "R"(to mean "rest").
 2. Optional: Followed by an optional character, "#" or "b" for "sharp" or
    "flat".  Note the ASCII characters hash ("#") and lower-case "B" ('b')
@@ -254,10 +254,10 @@ thing as ``"C#4"``.  ``"B3"`` is the B that is just to the left of
 middle C (Note the octave numbering starts with C at the bottom of the
 octave, not A, thus why B3 is adjacent to C4.)
 
-Note that in all cases where you communicate a frequency to the SKID 
+Note that in all cases where you communicate a frequency to the SKID
 chip using one of these "letter notes", the SKID chip merely converts
 these values into their equivalent Hertz value, and forgets the letter
-string you used after that.  Thus if you set a Note's frequency to 
+string you used after that.  Thus if you set a Note's frequency to
 "A4", and then immediately query its Frequency, you'll get 440 back,
 not "A4".
 
@@ -320,10 +320,10 @@ KeyDownLength (Seconds, modified by :ref:`tempo <skid_tempo>`)
     KeyDownLength is how much of that time is spent with the finger
     holding the "synthesizer key" down.  The time between the end of
     the KeyDownLength and the end of the Duration is the gap of time
-    from when one key is let go and the next key is begun.  If there 
+    from when one key is let go and the next key is begun.  If there
     is no such gap, then two adjacent notes of the same frequency would
     just bleed together into sounding like one continuous note.
-    
+
     By default, the KeyDownLength is slightly shorter than the Duration
     if you don't specify it explicitly.
 
@@ -381,7 +381,7 @@ become quite relevant.  The SKID chip will simply play the
 notes it sees in the order they're listed, waiting for one
 note to finish its Duration before the next note is started.
 By changing the Tempo setting, you can speed up the song
-that is in the current note list without changing the 
+that is in the current note list without changing the
 definitions of the individual notes in the song.
 
 Note that any note with a frequency set to zero counts as a
@@ -402,7 +402,7 @@ it should start again with the first note in a list when it
 reaches the last note in the list.  If this flag is true, then it
 will continue playing the song list forever and ever until made to stop.
 
-Note that even a single note counts as a "song" for the purpose of 
+Note that even a single note counts as a "song" for the purpose of
 this looping flag.  Yes, the SKID chip can play the same note over and
 over if that's what you really want.
 
@@ -438,10 +438,10 @@ Kerboscript Interface Synopsis
 ------------------------------
 
 In order that you don't need to send individual bits and bytes to the
-SKID chip, we've added a user interface in the Kerboscript language 
+SKID chip, we've added a user interface in the Kerboscript language
 that interfaces with all these features for you.  Keep the above
 technical specs in mind so you know what the settings you're
-changing do.  
+changing do.
 
 The documentation below is just a quick synopsis of how to use
 the kerboscript interface to SKID.  To really fully exploit it, you
@@ -455,7 +455,7 @@ GetVoice()
 ~~~~~~~~~~
 
 The basic starting point of any Kerboscript program that works with
-the SKID chip is the :ref:`GetVoice() <getvoice>` built-in function.
+the SKID chip is the :func:`GetVoice()` built-in function.
 ``GetVoice(n)``, given any N within the range of 0 through 9 for the
 10 voices in the SKID chip, returns a handle you can use to send
 commands to that voice of the SKID chip.
@@ -472,7 +472,7 @@ Voice object
 ~~~~~~~~~~~~
 
 If you take a moment to look at the documentation for :struct:`Voice`,
-you can see that almost everything it lets you do has a one-to-one 
+you can see that almost everything it lets you do has a one-to-one
 correspondence to the hardware features mentioned above in this document.
 
 All the features of the SKID chip can be set this way, and have a
@@ -490,13 +490,13 @@ Note()
 
 When asking one of SKID's voices to play a note, you have to specify
 which note you meant, and you do so by constructing a :struct:`Note`
-object using the :ref:`Note() <note>` built-in function, or the
-:ref:`SlideNote() <slidenote>` built-in function::
+object using the :func:`Note()` built-in function, or the
+:func:`SlideNote()` built-in function::
 
     // N1 is a note (also at 440 Hz because that's what "A4" means)
     // that lasts 1 second overall, but only 0.8 seconds of it
     // are "key down" time (i.e. the A,D,S part of the ADSR Envelope).
-    SET N1 to NOTE("A4", 0.8, 1). 
+    SET N1 to NOTE("A4", 0.8, 1).
 
     // N2 is a note that slides from the A note in one octave to the A note
     // in the next octave up, over a time span of 0.3 seconds.
@@ -538,4 +538,3 @@ Examples::
             NOTE("R",   0.2,  0.25)  // rest.
         )
     ).
-

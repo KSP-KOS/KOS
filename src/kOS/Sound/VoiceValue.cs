@@ -61,7 +61,7 @@ namespace kOS.Sound
         {
             AddSuffix("ATTACK", new SetSuffix<ScalarValue>(() => voice.Attack, value => voice.Attack = value));
             AddSuffix("DECAY", new SetSuffix<ScalarValue>(() => voice.Decay, value => voice.Decay = value));
-            AddSuffix("SUSTAIN", new SetSuffix<ScalarValue>(() => voice.Sustain, value => voice.Sustain = value));
+            AddSuffix("SUSTAIN", new ClampSetSuffix<ScalarValue>(() => voice.Sustain, value => voice.Sustain = value, 0, 1));
             AddSuffix("RELEASE", new SetSuffix<ScalarValue>(() => voice.Release, value => voice.Release = value));
             AddSuffix("VOLUME", new SetSuffix<ScalarValue>(() => voice.Volume, value => voice.Volume = value));
             AddSuffix("WAVE", new SetSuffix<StringValue>(() => maker.GetWaveName(voiceNum), value => maker.SetWave(voiceNum, value.ToString())));

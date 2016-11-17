@@ -28,7 +28,8 @@ function, or the built-in SlideNote() function:
         the next note can begin, *including* the small gap between the end
         of its keyDownLength and the start of the next note.
         Note that the value here gets multiplied by the voice's
-        ``:TEMPO`` to decide the actual duration in seconds when it gets played.
+        :meth:`TEMPO<Voice:TEMPO>` to decide the actual duration in seconds when
+        it gets played.
     ``keyDownLength``
         **Optional**: The amount of time the note takes up before the
         "synthesizer key" is released.  In terms of the
@@ -45,7 +46,7 @@ function, or the built-in SlideNote() function:
         next with no audible gaps between them, then for each note you
         need to specify a keyDownLength that is equal to the Duration.
         Note that the value here gets
-        multiplied by the voice's ``:TEMPO`` to decide the actual
+        multiplied by the voice's :meth:`TEMPO<Voice:TEMPO>` to decide the actual
         duration in seconds when it gets played.
     ``volume``
         **Optional**: If present, then the note can be given a different
@@ -58,7 +59,7 @@ function, or the built-in SlideNote() function:
         setting).
 
     This is an example of it being used in conjunction with the Voice's
-    PLAY() suffix method::
+    :meth:`PLAY()<Voice:PLAY>` suffix method::
 
         SET V1 TO GETVOICE(0).
         V1:PLAY( NOTE(440, 0.2, 0.25, 1) ).
@@ -84,14 +85,14 @@ function, or the built-in SlideNote() function:
         If it is a string, then it's using the letter notation
         :ref:`described here <skid_letter_frequency>`.
     ``duration``
-        **Mandatory**: Same as the duration for the :ref:`NOTE() <note>`
+        **Mandatory**: Same as the duration for the :func:`NOTE()`
         built-in function.  If it is missing it will be the same thing
         as the keyDownLength.
     ``keyDownLength``
-        **Optional**: Same as the keyDownLength for the :ref:`NOTE() <note>`
+        **Optional**: Same as the keyDownLength for the :func:`NOTE()`
         built-in function.
     ``volume``
-        **Optional**: Same as the volume for the :ref:`NOTE() <note>`
+        **Optional**: Same as the volume for the :func:`NOTE()`
         built-in function.
 
     The note's frequency will change linearly from the starting to
@@ -121,22 +122,61 @@ function, or the built-in SlideNote() function:
           - Type
           - Description
 
-        * - :FREQUENCY
-          - :struct:`scalar`
-          - frequency of the note's start in Hertz
-        * - :ENDFREQUENCY
-          - :struct:`scalar`
-          - If a SLIDENOTE, the frequency of the note's end in Hertz
-        * - :KEYDOWNLENGTH
-          - :struct:`scalar`
+        * - :attr:`FREQUENCY`
+          - :struct:`Scalar`
+          - initial frequency of the note in Hertz
+        * - :attr:`ENDFREQUENCY`
+          - :struct:`Scalar`
+          - final frequency of the note in Hertz
+        * - :attr:`KEYDOWNLENGTH`
+          - :struct:`Scalar`
           - time to hold the "synthesizer key" down for
-        * - :DURATION
-          - :struct:`scalar`
-          - total time of the note including any extra for "Release" time
-        * - :VOLUME
-          - :struct:`scalar`
-          - multiplier for how loud this note is relative to others played on
-            this voice (1.0 means "same volume")
+        * - :attr:`DURATION`
+          - :struct:`Scalar`
+          - total time of the note including
+        * - :attr:`VOLUME`
+          - :struct:`Scalar`
+          - multiplier for how loud this note is relative to others notes
 
-**None of the above suffixes are set-able**.  The only way to set them
-is to construct a new note using the :ref:`Note <note>` function.
+    .. attribute:: FREQUENCY
+
+        :access: Get Only
+        :type: :struct:`Scalar` (Hertz)
+
+        The initial frequency of the note in Hertz.
+
+    .. attribute:: ENDFREQUENCY
+
+        :access: Get Only
+        :type: :struct:`Scalar` (Hertz)
+
+        If the note was created using :func:`SlideNote()` this is the final
+        frequency of the note, in Hertz.  Otherwise the value is identical to
+        :attr:`FREQUENCY`.
+
+    .. attribute:: KEYDOWNLENGTH
+
+        :access: Get Only
+        :type: :struct:`Scalar` (seconds)
+
+        The amount of time that the "synthesizer key" is held down for.  In the
+        :ref:`ADSR Envelope<skid_envelope>` this represents the total of the
+        "attack", "decay", and "sustain" components.
+
+    .. attribute:: DURATION
+
+        :access: Get Only
+        :type: :struct:`Scalar` (seconds)
+
+        The total time of the note, encompassing the entire
+        :ref:`ADSR Envelope<skid_envelope>` including the "release" component.
+
+    .. attribute:: VOLUME
+
+        :access: Get Only
+        :type: :struct:`Scalar`
+
+        The multiplier which effects how loud this note is relative to other
+        notes played on this voice.  Smaller values are quieter an larger values
+        are louder.  While values greater than 1 are allowed, increasing this
+        value excessively may result in audio distortion.
