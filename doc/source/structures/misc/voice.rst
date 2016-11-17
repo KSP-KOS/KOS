@@ -263,7 +263,7 @@ Structure
 
     **Get**: If this voice is currently playing a note or list of notes
     that was previously passed in to the ``PLAY()`` method, then this
-    returns true.  Note that if :attr:`LOOP` is true, then this
+    returns true.  Note that if :attr:`LOOP<Voice:LOOP>` is true, then this
     will never become false unless you set it to become false.
 
     **Set**: If you set this value to FALSE, that will force the voice
