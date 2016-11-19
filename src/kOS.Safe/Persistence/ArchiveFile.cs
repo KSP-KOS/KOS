@@ -33,7 +33,7 @@ namespace kOS.Safe.Persistence
             }
 
             byte[] bytes = Archive.ConvertToWindowsNewlines(content);
-            using (FileStream stream = fileInfo.Open(FileMode.Append, FileAccess.Write))
+            using (FileStream stream = fileInfo.Open(FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
             {
                 stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
