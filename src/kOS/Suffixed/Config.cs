@@ -29,6 +29,7 @@ namespace kOS.Suffixed
         public bool TelnetLoopback { get { return GetPropValue<bool>(PropId.TelnetLoopback); } set { SetPropValue(PropId.TelnetLoopback, value); } }        
         public bool UseBlizzyToolbarOnly { get { return GetPropValue<bool>(PropId.UseBlizzyToolbarOnly); } set { SetPropValue(PropId.UseBlizzyToolbarOnly, value); } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
+        public float Brightness {get { return kOSCustomParameters.Instance.terminalBrightness; } set { kOSCustomParameters.Instance.terminalBrightness = value; } }
 
         private Config()
         {
@@ -53,6 +54,7 @@ namespace kOS.Suffixed
             AddSuffix("VERBOSE", new SetSuffix<BooleanValue>(() => VerboseExceptions, value => VerboseExceptions = value));
             AddSuffix("DEBUGEACHOPCODE", new SetSuffix<BooleanValue>(() => DebugEachOpcode, value => DebugEachOpcode = value));
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
+            AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => Brightness, value => Brightness = value, 0f, 1f, 0.01f));
         }
 
         private void BuildValuesDictionary()
