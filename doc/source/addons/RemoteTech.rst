@@ -16,6 +16,14 @@ current game installation by usng the boolean expression
 Interaction with kOS
 --------------------
 
+.. note::
+
+    .. versionadded:: v1.0.2
+        kOS now supports access to connection informaion from a unified location.
+        See :ref:`Connectivity Managers <connectivityManagers>` for more
+        information. All of the previous implementation as detailed on this page
+        remains supported.
+
 When you have RemoteTech installed you can only interact with the core's terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.
 
 If you launch a manned craft while using RemoteTech, you are still able to input commands from the terminal even if you do not have a connection to the KSC.  The archive will still be inaccessible without a connection to the KSC.  Under the current implementation, there is no delay when accessing the archive with a local terminal.  This implementation may change in the future to account for delays in reading and writing data over the connection.

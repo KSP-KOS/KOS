@@ -64,11 +64,10 @@
     <Compile Include="AddOns\InfernalRobotics\IRWrapper.cs" />
     <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechArchive.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechUtility.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechInterpreter.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechVolumeManager.cs" />
+    <Compile Include="AddOns\Trajectories\Addon.cs" />
+    <Compile Include="AddOns\Trajectories\TRWrapper.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
@@ -78,13 +77,15 @@
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Communication\CommNetConnectivityManager.cs" />
+    <Compile Include="Communication\ConnectivityManager.cs" />
+    <Compile Include="Communication\ControlConnection.cs" />
+    <Compile Include="Communication\HomeConnection.cs" />
+    <Compile Include="Communication\kOSConnectivityParameters.cs" />
     <Compile Include="Control\SteeringManager.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
     <Compile Include="Control\IFlightControlParameter.cs" />
-    <Compile Include="Factories\IFactory.cs" />
-    <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />
@@ -94,16 +95,29 @@
     <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
+    <Compile Include="Module\kOSCustomParameters.cs" />
     <Compile Include="Module\kOSLightModule.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
+    <Compile Include="Module\kOSSettingsChecker.cs" />
     <Compile Include="Module\kOSVesselModule.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
+    <Compile Include="Persistence\ConnectivityVolumeManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sound\NoiseSoundWave.cs" />
+    <Compile Include="Sound\NoteValue.cs" />
+    <Compile Include="Sound\ProceduralSoundWave.cs" />
+    <Compile Include="Sound\SquareSoundWave.cs" />
+    <Compile Include="Sound\SawtoothSoundWave.cs" />
+    <Compile Include="Sound\SineSoundWave.cs" />
+    <Compile Include="Screen\ConnectivityInterpreter.cs" />
     <Compile Include="Sound\SoundMaker.cs" />
+    <Compile Include="Sound\TriangleSoundWave.cs" />
+    <Compile Include="Sound\Voice.cs" />
+    <Compile Include="Sound\VoiceValue.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
@@ -189,8 +203,8 @@
     <Compile Include="Communication\ProcessorManager.cs" />
     <Compile Include="Communication\InterVesselManager.cs" />
     <Compile Include="Serialization\ConfigNodeFormatter.cs" />
-    <Compile Include="Communication\ConnectivityManager.cs" />
-    <Compile Include="Communication\StockConnectivityManager.cs" />
+    <Compile Include="Communication\IConnectivityManager.cs" />
+    <Compile Include="Communication\PermitAllConnectivityManager.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechConnectivityManager.cs" />
     <Compile Include="Serialization\SerializationMgr.cs" />
     <Compile Include="Serialization\IHasSharedObjects.cs" />

@@ -91,7 +91,8 @@ namespace kOS.Screen
         private GUISkin customSkin;
         
         private bool uiGloballyHidden = false;
-        
+
+        private Sound.SoundMaker soundMaker;        
 
         public TermWindow()
         {
@@ -132,7 +133,9 @@ namespace kOS.Screen
             customSkin = BuildPanelSkin();
 
             GameEvents.onHideUI.Add (OnHideUI);
-			GameEvents.onShowUI.Add (OnShowUI);
+            GameEvents.onShowUI.Add (OnShowUI);
+
+            soundMaker = gameObject.AddComponent<Sound.SoundMaker>();
         }
 
         public void OnDestroy()
@@ -176,6 +179,11 @@ namespace kOS.Screen
 
                 fontArray[i] = charImage;
             }
+        }
+        
+        public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
+        {
+            return soundMaker;
         }
         
         private void LoadAudio()
@@ -401,7 +409,7 @@ namespace kOS.Screen
             }
             else
             {
-                if (!beepSource.clip.isReadyToPlay || beepSource.isPlaying)
+                if (beepSource.isPlaying)
                     return false; // prev beep sound still is happening.
                 
                 // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:
@@ -642,7 +650,7 @@ namespace kOS.Screen
                     shared.Screen.CharInputQueue.Enqueue(ch);
                 }
                 if (IsOpen && keyClickEnabled && doQueuing)
-                    shared.SoundMaker.BeginSound("click");
+                    shared.SoundMaker.BeginFileSound("click");
             }
         }
 
@@ -663,7 +671,7 @@ namespace kOS.Screen
                     wasUsed = true;
                 }
                 if (IsOpen && keyClickEnabled && wasUsed && doQueuing)
-                    shared.SoundMaker.BeginSound("click");
+                    shared.SoundMaker.BeginFileSound("click");
             }
         }
         
@@ -950,6 +958,8 @@ namespace kOS.Screen
             NotifyOfScreenResize(shared.Screen);
             shared.Screen.AddResizeNotifier(NotifyOfScreenResize);
             ChangeTitle(CalcualteTitle());
+
+            soundMaker.AttachTo(shared); // Attach the soundMaker also
         }
         
         internal string CalcualteTitle()

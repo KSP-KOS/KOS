@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
+using kOS.Sound;
 using kOS.Utilities;
 using FinePrint;
 using kOS.Safe;
@@ -287,6 +288,95 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             var lexicon = new Lexicon(argArray.ToList());
             ReturnValue = lexicon;
+        }
+    }
+    
+    [Function("slidenote")]
+    public class FunctionSlideNote : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int argCount = CountRemainingArgs(shared);
+            float vol = 1.0f;
+            float keyDownDuration = -1f;
+            if (argCount >= 5)
+                vol = (float) GetDouble(PopValueAssert(shared));
+            if (argCount >= 4)
+                keyDownDuration = (float)GetDouble(PopValueAssert(shared));
+            float duration = (float)GetDouble(PopValueAssert(shared));
+            object endNote = PopValueAssert(shared);
+            object startNote = PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
+            if (keyDownDuration < 0)
+                keyDownDuration = duration * 0.9f; // default to 90% of the total duration, allowing a short window for the release
+            if (keyDownDuration > duration)
+                keyDownDuration = duration; // clamp keyDown to the total duration
+
+            if (startNote is ScalarValue)
+                ReturnValue = new NoteValue((float)GetDouble(startNote), (float)GetDouble(endNote), vol, keyDownDuration, duration);
+            else if (startNote is StringValue)
+                ReturnValue = new NoteValue(startNote.ToString(), endNote.ToString(), vol, keyDownDuration, duration);
+            else
+                ReturnValue = new NoteValue(0f, vol, keyDownDuration, duration);
+        }
+    }
+
+    [Function("note")]
+    public class FunctionNote : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int argCount = CountRemainingArgs(shared);
+            float vol = 1.0f;
+            float keyDownDuration = -1f;
+            if (argCount >= 4)
+                vol = (float) GetDouble(PopValueAssert(shared));
+            if (argCount >= 3)
+                keyDownDuration = (float)GetDouble(PopValueAssert(shared));
+            float duration = (float)GetDouble(PopValueAssert(shared)); 
+            object note = PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
+            if (keyDownDuration < 0)
+                keyDownDuration = duration * 0.9f; // default to 90% of the total duration, allowing a short window for the release
+            if (keyDownDuration > duration)
+                keyDownDuration = duration; // clamp keyDown to the total duration
+
+            if (note is ScalarValue)
+                ReturnValue = new NoteValue((float)GetDouble(note), vol, keyDownDuration, duration);
+            else if (note is StringValue)
+                ReturnValue = new NoteValue(note.ToString(), vol, keyDownDuration, duration);
+            else
+                ReturnValue = new NoteValue(0f, vol, keyDownDuration, duration);
+        }
+    }
+
+    [Function("GetVoice")]
+    public class FunctionGetVoice : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int voiceNum = GetInt(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+
+            VoiceValue val;
+
+            if (shared.AllVoiceValues.TryGetValue(voiceNum, out val))
+                ReturnValue = val;
+            else
+            {
+                shared.AllVoiceValues[voiceNum] = new VoiceValue(shared.UpdateHandler, voiceNum, shared.SoundMaker);
+                ReturnValue = shared.AllVoiceValues[voiceNum];
+            }
+        }
+    }
+
+
+    [Function("StopAllVoices")]
+    public class FunctionStopAllVoices : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            shared.SoundMaker.StopAllVoices();
         }
     }
 

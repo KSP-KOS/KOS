@@ -386,6 +386,7 @@ namespace kOS.Safe.Execution
                     PopFirstContext();
                     shared.Screen.Print("Program aborted.");
                     shared.BindingMgr.UnBindAll();
+                    shared.SoundMaker.StopAllVoices(); // stop voices if execution was manually broken, but not if the program ends normally
                     PrintStatistics();
                     stack.Clear();
                 }
@@ -1139,6 +1140,11 @@ namespace kOS.Safe.Execution
                 {
                     shared.Logger.Log(e);
                     SafeHouse.Logger.Log(stack.Dump());
+                }
+                if (shared.SoundMaker != null)
+                {
+                    // Stop all voices any time there is an error, both at the interpreter and in a program
+                    shared.SoundMaker.StopAllVoices();
                 }
 
                 if (contexts.Count == 1)

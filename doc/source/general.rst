@@ -15,12 +15,14 @@ These topics discuss the interfacing between **kOS** and **Kerbal Space Program*
 
     Game Part           <general/kospartmodule>
 
-    Launcher Panel      <general/applauncher_panel>
+    Settings Windows    <general/settingsWindows>
 
     Telnet Server       <general/telnet>
 
     Files & Volumes     <general/volumes>
     Machine Code        <general/compiling>
+
+    Sound Chip (SKID)   <general/skid>
 
     Name Tags           <general/nametag>
     Parts & PartModules <general/parts_and_partmodules>

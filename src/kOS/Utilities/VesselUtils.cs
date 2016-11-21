@@ -10,13 +10,6 @@ namespace kOS.Utilities
 {
     public static class VesselUtils
     {
-        // TODO: Can we just rememove this method?  It doesn't appear to be referenced anywhere, and the test is more complicated now.
-        public static bool HasCrewControl(this Vessel vessel)
-        {
-            return vessel.parts.Any(p => p.isControlSource == Vessel.ControlLevel.FULL && (p.protoModuleCrew.Any()));
-            //return vessel.CurrentControlLevel == Vessel.ControlLevel.PARTIAL_MANNED || vessel.CurrentControlLevel == Vessel.ControlLevel.FULL; // true for PARTIAL_MANNED, PARTIAL_UNMANNED, and FULL Vessel.controlLevel
-        }
-
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
             var retList = new List<Part>();
