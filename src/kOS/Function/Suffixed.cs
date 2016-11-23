@@ -487,7 +487,19 @@ namespace kOS.Function
             VectorRenderer.ClearAll(shared.UpdateHandler);
         }
     }
-    
+
+    [Function("gui")]
+    public class FunctionWidgets : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int height = GetInt(PopValueAssert(shared));
+            int width = GetInt(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            ReturnValue = new GUIWidgets(width,height,shared);
+        }
+    }
+
     [Function("positionat")]
     public class FunctionPositionAt : FunctionBase
     {

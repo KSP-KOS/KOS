@@ -852,6 +852,7 @@ namespace kOS.Module
                     firstUpdate = true; // handle booting the cpu on the next FixedUpdate
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
+                    foreach (var w in shared.ManagedWindows) w.IsPowered = true;
                     break;
 
                 case ProcessorModes.OFF:
@@ -860,6 +861,7 @@ namespace kOS.Module
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
+                    foreach (var w in shared.ManagedWindows) w.IsPowered = false;
                     break;
             }
 

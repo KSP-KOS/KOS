@@ -107,6 +107,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Screen\GUIWindow.cs" />
     <Compile Include="Sound\NoiseSoundWave.cs" />
     <Compile Include="Sound\NoteValue.cs" />
     <Compile Include="Sound\ProceduralSoundWave.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Suffixed\VesselEta.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
+    <Compile Include="Suffixed\Widgets.cs" />
     <Compile Include="UserIO\TelnetMainServer.cs" />
     <Compile Include="UserIO\TelnetSingletonServer.cs" />
     <Compile Include="UserIO\TelnetWelcomeMenu.cs" />
