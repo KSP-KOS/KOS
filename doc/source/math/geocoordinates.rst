@@ -70,6 +70,14 @@ Structure
           - `Vector` (3D Ship-Raw coords)
 	  - :ref:`scalar <scalar>` (altitude above sea level)
           - Position of a point above (or below) the surface point, by giving the altitude number.
+        * - :attr:`VELOCITY`
+          - :struct:`OrbitableVelocity`
+	  - none
+          - Velocity of the surface at this point (due to the rotation of the planet/moon).
+        * - :attr:`ALTITUDEVELOCITY`
+          - :struct:`OrbitableVelocity`
+	  - :ref:`scalar <scalar>` (altitude above sea level)
+          - Velocity of a point above (or below) the surface point, by giving the altitude number.
 
 .. note::
 
@@ -106,6 +114,29 @@ Structure
 .. attribute:: GeoCoordinates:ALTITUDEPOSITION (altitude)
 
     The ship-raw 3D position above or below the surface of the body, relative to the current ship's Center of mass.  You pass in an altitude number for the altitude above "sea" level of the desired location.
+
+.. attribute:: GeoCoordinates:VELOCITY
+
+    The (linear) velocity of this spot on the surface of the planet/moon, due to the rotation of the
+    body causing that spot to move though space.
+    (For example, on Kerbin at a sea level location, it would be 174.95 m/s eastward, and slightly
+    more at higher terrain spots above sea level.)
+    Note that this is returned as an :struct:`OrbitableVelocity`, meaning it isn't a vector but a
+    pair of vectors, one called ``:orbit`` and one called ``:surface``.  Note that the
+    surface-relative velocity you get from the ``:surface`` suffix isn't always zero like you might
+    intuit because ``:surface`` gives you the velocity relative to the surface reference frame
+    where ``SHIP`` is, which might not be the same latitude/longitude/altitude as where this
+    Geocoordinates is.
+
+.. attribute:: GeoCoordinates:ALTITUDEVELOCITY (altitude)
+
+    This is the same as :attr:`GeoCoordinates:VELOCITY`, except that it lets you specify some
+    altitude other than the surface terrain height.  You specify a (sea-level) altitude,
+    and it will calculate based on a point at that altitude which may be above or below
+    the actual surface at this latitude and longitude.  It will calculate as if you had some
+    point fixed to the ground, like an imaginary tower bolted to the surface, but not at the
+    ground's altitude.  (The body's rotation will impart a larger magnitude linear velocity
+    on a locaton affixed to the body the farther that location is from the body's center).
 
 Example Usage
 -------------
