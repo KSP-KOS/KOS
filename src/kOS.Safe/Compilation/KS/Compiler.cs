@@ -536,7 +536,13 @@ namespace kOS.Safe.Compilation.KS
         /// </summary>
         private string ConcatenateNodes(ParseNode node)
         {
-            return string.Format("{0}{1}{2}", context.NumCompilesSoFar, GetContainingScopeId(node), ConcatenateNodesRecurse(node));
+            LineCol whereNodeIs = GetLineCol(node);
+            return string.Format("{0}L{1}C{2}{3}{4}",
+                                 context.NumCompilesSoFar,
+                                 whereNodeIs.Line,
+                                 whereNodeIs.Column,
+                                 GetContainingScopeId(node),
+                                 ConcatenateNodesRecurse(node));
         }
         
         private string ConcatenateNodesRecurse(ParseNode node)
