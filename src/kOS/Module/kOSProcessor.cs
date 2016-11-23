@@ -547,7 +547,7 @@ namespace kOS.Module
 
         public void Update()
         {
-            if (HighLogic.LoadedScene == GameScenes.EDITOR)
+            if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {

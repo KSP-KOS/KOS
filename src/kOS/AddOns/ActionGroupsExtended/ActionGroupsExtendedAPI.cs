@@ -17,7 +17,7 @@ namespace kOS.AddOns.ActionGroupsExtended
 
         public ActionGroupsExtendedAPI()
         {
-            calledType = System.Type.GetType("ActionGroupsExtended.AGExtExternal, AGExt");
+            calledType = AssemblyLoader.loadedAssemblies.GetTypeByName(typeof(object), "ActionGroupsExtended.AGExtExternal");
         }
 
         /// <summary>
@@ -26,6 +26,10 @@ namespace kOS.AddOns.ActionGroupsExtended
         /// <returns>Is AGX installed?</returns>
         public bool Installed() 
         {
+            if (calledType == null)
+            {
+                return false;
+            }
             try //try-catch is required as the below code returns a NullRef if AGX is not present.
             {
                 return (bool)calledType.InvokeMember("AGXInstalled", BINDINGS, null, null, null);

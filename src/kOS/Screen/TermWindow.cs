@@ -16,16 +16,16 @@ namespace kOS.Screen
     {
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
-        
-        private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+
+        private static string root;
         private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
         private static readonly Color colorAlpha = new Color(1f, 1f, 1f, 0.8f); // slightly less opaque window color when not focused.
         private static readonly Color bgColor = new Color(0.0f, 0.0f, 0.0f, 1.0f); // black background of terminal
         private static readonly Color textColor = new Color(0.4f, 1.0f, 0.2f, 1.0f); // font color on terminal
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f); // font color when power starved.
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.8f); // font color when power starved and not focused.
-        private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
-        private Rect resizeButtonCoords = new Rect(0,0,0,0); // will be resized later.
+        private Rect closeButtonRect;
+        private Rect resizeButtonCoords;
         private GUIStyle tinyToggleStyle;
         private Vector2 resizeOldSize;
         private bool resizeMouseDown;
@@ -44,7 +44,7 @@ namespace kOS.Screen
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
         private float cursorBlinkTime;
-        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D fontImage;
         private Texture2D [] fontArray;
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
@@ -59,15 +59,15 @@ namespace kOS.Screen
         /// <summary>Telnet repaints happen less often than Update()s.  Not every Update() has a telnet repaint happening.
         /// This tells you whether there was one this update.</summary>
         private bool telnetsGotRepainted;
-        
-        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+
+        private Texture2D terminalImage;
+        private Texture2D terminalFrameImage;
+        private Texture2D terminalFrameActiveImage;
+        private Texture2D resizeButtonImage;
+        private Texture2D networkZigZagImage;
+        private Texture2D brightnessButtonImage;
+        private Texture2D fontWidthButtonImage;
+        private Texture2D fontHeightButtonImage;
         private WWW beepURL;
         private AudioSource beepSource;
         private int guiTerminalBeepsPending;
@@ -106,6 +106,22 @@ namespace kOS.Screen
 
         public void Awake()
         {
+            // set dummy rectangles
+            closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
+            resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
+
+            // Load dummy textures
+            fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+
+            root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal_frame.png", ref terminalFrameImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal_frame_active.png", ref terminalFrameActiveImage);

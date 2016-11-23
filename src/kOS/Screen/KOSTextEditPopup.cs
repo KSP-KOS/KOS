@@ -30,7 +30,7 @@ namespace kOS.Screen
         private Volume volume;
         private Volume loadingVolume;
         private string contents = "";
-        private readonly Texture2D resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D resizeImage;
         private bool resizeMouseDown;
         private Vector2 resizeOldSize; // width and height it had when the mouse button went down on the resize button.
         private bool isDirty; // have any edits occurred since last load or save?
@@ -44,7 +44,6 @@ namespace kOS.Screen
             UniqueId = 100; // This is expected to be overridden, but Unity requires that
                             // KosTextEditPopup() be a constructor that takes zero arguments,
                             // so the real WindowId has to be set after construction.
-            WindowRect = new Rect(0, 0, 470, 280); // bogus starting value will be changed later when attaching to a terminal.
         }
 
         public void Freeze(bool newVal)
@@ -54,6 +53,11 @@ namespace kOS.Screen
 
         public void Awake()
         {
+            WindowRect = new Rect(0, 0, 470, 280); // bogus starting value will be changed later when attaching to a terminal.
+
+            // Load dummy textures
+            resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+
             var gObj = new GameObject("texteditConfirm", typeof(DelegateDialog));
             DontDestroyOnLoad(gObj);
             dialog = (DelegateDialog)gObj.GetComponent(typeof(DelegateDialog));
