@@ -951,7 +951,7 @@ namespace kOS.Screen
             
             shared.Screen.CharacterPixelWidth = 8;
             shared.Screen.CharacterPixelHeight = 8;
-            shared.Screen.Brightness = 0.5f;
+            shared.Screen.Brightness = kOSCustomParameters.Instance.terminalBrightness;
             formerCharPixelWidth = shared.Screen.CharacterPixelWidth;
             formerCharPixelHeight = shared.Screen.CharacterPixelHeight;
 
