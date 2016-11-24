@@ -93,6 +93,8 @@ following hierarchy:
     :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally?
     :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
     :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
+    :attr:`HBORDER`                       :struct:`scalar` (pixels)       Left and right column counts for BG image border.
+    :attr:`VBORDER`                       :struct:`scalar` (pixels)       Top and bottom row counts for BG image border.
     ===================================== =============================== =============
 
 .. note::
@@ -106,12 +108,18 @@ following hierarchy:
     ON            The widget is on (eg. button is PRESSED).
     ============= =====================================================
 
-    If set to "", the background will default to the non-ON image and then default to the normal `BG` image.
+    .. image:: /_images/general/9-slice.png
+        :align: right
 
-    The image file is a "9-slice" image, where the top 8 rows of pixels, bottom 8 rows, left and right 15 columns
-    of pixels file are kept static and the pixels between them stretched to make the full size of image required.
+    The image file is a "9-slice" image, where the corners of the image are used as-is, but the pixels
+    between them are stretched to make the full size of image required.
+    The :attr:`VBORDER` attribute defines the top and bottom rows of pixels (default 8), and
+    the :attr:`HBORDER` attribute defines the left and right rows of pixels (default 15).
 
-    The image files are found relative to Ships/Scripts directory and any ".png" extension is optional.
+    The image files are found relative to Ships/Scripts directory and specifying a ".png" extension is optional.
+
+    If set to "", the background will default to the non-ON image and then default to the normal `BG` image,
+    and then default to completely transparent.
 
 .. structure:: Box
 

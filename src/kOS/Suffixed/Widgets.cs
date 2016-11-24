@@ -60,6 +60,9 @@ namespace kOS.Suffixed
 
             AddSuffix("HSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchWidth, value => style.stretchWidth = value));
             AddSuffix("VSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchHeight, value => style.stretchHeight = value));
+
+            AddSuffix("HBORDER", new SetSuffix<ScalarIntValue>(() => style.border.left, value => { style.border.left = value; style.border.right = value; }));
+            AddSuffix("VBORDER", new SetSuffix<ScalarIntValue>(() => style.border.top, value => { style.border.top = value; style.border.bottom = value; }));
             AddSuffix("BG", new SetSuffix<StringValue>(() => "", value => style.normal.background = GetTexture(value)));
             AddSuffix("BG_FOCUSED", new SetSuffix<StringValue>(() => "", value => style.focused.background = GetTexture(value)));
             AddSuffix("BG_ACTIVE", new SetSuffix<StringValue>(() => "", value => style.active.background = GetTexture(value)));
