@@ -125,6 +125,7 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :meth:`ADDLABEL(text)`                :struct:`Label`                 Creates a label in the Box.
     :meth:`ADDBUTTON(text)`               :struct:`Button`                Creates a clickable button in the Box.
+    :meth:`ADDCHECKBOX(text)`             :struct:`Button`                Creates a toggleable button in the Box.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
     :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
@@ -156,7 +157,7 @@ following hierarchy:
 
 .. structure:: Button
 
-    `Button` objects are created inside Box objects via ADDBUTTON method.
+    `Button` objects are created inside Box objects via ADDBUTTON and ADDCHECKBOX methods.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -164,11 +165,16 @@ following hierarchy:
                    Every suffix of :struct:`LABEL`
     -----------------------------------------------------------------------------------
     :attr:`PRESSED`                       :struct:`Boolean`               Has the button been pressed?
+    :meth:`SETTOGGLE`                     :struct:`Boolean`               Set to True to make the button toggle between pressed and not pressed, like a :struct:`CheckBox`.
     ===================================== =============================== =============
 
 .. note::
 
-    The value of :attr:`PRESSED` resets to False as soon as the value is accessed.
+    Unless SETTOGGLE(True) is called, the value of :attr:`PRESSED` resets to False as
+    soon as the value is accessed.
+
+    If the Button is created by the Button:ADDCHECKBOX method, it will have a different visual
+    style and it will start already in toggle mode.
 
 .. structure:: TextField
 

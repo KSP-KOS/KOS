@@ -322,30 +322,51 @@ namespace kOS.Suffixed
     public class Button : Label
     {
         public bool Pressed { get; set; }
+        public bool isToggle { get; set; }
 
         public Button(string text) : base(text)
         {
+            isToggle = false;
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             style = new GUIStyle(theSkin.button);
             RegisterInitializer(InitializeSuffixes);
-            UnityEngine.Debug.Log("BUTTON BORDERS:"+style.border);
+        }
+
+        public static Button NewCheckbox(string text)
+        {
+            var r = new Button(text);
+            r.SetToggleMode(true);
+            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
+            r.style = new GUIStyle(theSkin.toggle);
+            return r;
         }
 
         private void InitializeSuffixes()
         {
             AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => Pressed = value));
+            AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
+        }
+
+        public void SetToggleMode(BooleanValue on)
+        {
+            if (isToggle != on)
+                isToggle = on;
         }
 
         public bool TakePress()
         {
             var r = Pressed;
-            Pressed = false;
+            if (!isToggle) Pressed = false;
             return r;
         }
 
         public override void DoGUI()
         {
-            if (GUILayout.Toggle(Pressed, content, style)) Pressed = true;
+            if (isToggle) {
+                Pressed = GUILayout.Toggle(Pressed, content, style);
+            } else {
+                if (GUILayout.Toggle(Pressed, content, style)) Pressed = true;
+            }
         }
 
         public override string ToString()
@@ -375,6 +396,7 @@ namespace kOS.Suffixed
             AddSuffix("ADDLABEL", new OneArgsSuffix<Label, StringValue>(AddLabel));
             AddSuffix("ADDTEXTFIELD", new OneArgsSuffix<TextField, StringValue>(AddTextField));
             AddSuffix("ADDBUTTON", new OneArgsSuffix<Button, StringValue>(AddButton));
+            AddSuffix("ADDCHECKBOX", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddCheckbox));
             AddSuffix("ADDHSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddHSlider));
             AddSuffix("ADDVSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddVSlider));
             AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
@@ -452,6 +474,14 @@ namespace kOS.Suffixed
         public Button AddButton(StringValue text)
         {
             var w = new Button(text);
+            widgets.Add(w);
+            return w;
+        }
+
+        public Button AddCheckbox(StringValue text, BooleanValue on)
+        {
+            var w = Button.NewCheckbox(text);
+            w.Pressed = on;
             widgets.Add(w);
             return w;
         }
