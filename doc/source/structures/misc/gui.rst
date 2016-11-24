@@ -3,22 +3,15 @@
 Creating GUIs
 =============
 
-    You can create an object that represents a GUI drawn on the
-    user's screen (not in the terminal window). It can have buttons,
-    labels, and the usual GUI elements.
+You can create an object that represents a GUI drawn on the
+user's screen (not in the terminal window). It can have buttons,
+labels, and the usual GUI elements. In combination with a :ref:`boot file <boot>`,
+entirely GUI-driven vessel controls can be developed.
 
-.. function:: GUI(width, height)
+.. figure:: /_images/general/gui-HelloWorld.png
+    :width: 100%
 
-    This creates a new ``GUI`` object that you can then manipulate
-    to build up a GUI::
-
-        SET gui TO GUI(200,100).
-        SET button TO gui:ADDBUTTON("OK").
-        gui:SHOW().
-        UNTIL button:PRESSED WAIT(0.1).
-        gui:HIDE().
-
-    Examples::
+The "Hello World" program::
 
         // "Hello World" program for kOS GUI.
         //
@@ -27,8 +20,7 @@ Creating GUIs
         // Add widgets to the GUI
         LOCAL label TO gui:ADDLABEL("Hello world!").
         SET label:ALIGN TO "CENTER".
-        // Take up spare space.
-        SET label:VSTRETCH TO True.
+        SET label:VSTRETCH TO True. // Take up spare space.
         LOCAL ok TO gui:ADDBUTTON("OK").
         // Show the GUI.
         gui:SHOW().
@@ -38,17 +30,38 @@ Creating GUIs
         // Hide when done (will also hide if power lost).
         gui:HIDE().
 
-    The GUI elements, including the GUI type itself are in the
-    following hiearchy:
+Creating a Window
+-----------------
 
-        :struct:`WIDGET`
-            :struct:`BOX`
-                :struct:`GUI`
-            :struct:`LABEL`
-                :struct:`BUTTON`
-                :struct:`TEXTFIELD`
-            :struct:`SLIDER`
-            :struct:`SPACING`
+.. function:: GUI(width, height)
+
+This creates a new ``GUI`` object that you can then manipulate
+to build up a GUI::
+
+        SET gui TO GUI(200,100).
+        SET button TO gui:ADDBUTTON("OK").
+        gui:SHOW().
+        UNTIL button:PRESSED WAIT(0.1).
+        gui:HIDE().
+
+See the "ADD" functions in the :struct:`BOX` structure for
+the other widgets you can add.
+
+Structure Reference
+-------------------
+
+The GUI elements, including the GUI type itself are in the
+following hierarchy:
+
+- :struct:`WIDGET`
+    - :struct:`BOX`
+        - :struct:`GUI`
+    - :struct:`LABEL`
+        - :struct:`BUTTON`
+        - :struct:`TEXTFIELD`
+    - :struct:`SLIDER`
+    - :struct:`SPACING`
+
 
 .. structure:: GUI
 
@@ -61,7 +74,7 @@ Creating GUIs
     -----------------------------------------------------------------------------------
     :attr:`X`                             :struct:`scalar` (pixels)       X-position of the window. Negative values measure from the right side of the screen.
     :attr:`Y`                             :struct:`scalar` (pixels)       Y-position of the window. Negative values measure from the bottom of the screen.
-
+    ===================================== =============================== =============
 
 .. structure:: Widget
 
@@ -74,13 +87,31 @@ Creating GUIs
     :attr:`PADDING`                       :struct:`scalar` (pixels)       Spacing between the outside of the widget and its contents.
     :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
     :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
-    :meth:`SHOW`                          -                               Show the widget. All except GUI objects are shown by default.
-    :meth:`HIDE`                          -                               Hide the widget.
-    :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widghets stretch horizontally?
-    :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widghets stretch vertically?
-    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file (relative to Scripts directory) to use as the normal background. Currently the borders are fixed at 15 pixels on the sides and 8 pixels top and bottom.
-    :attr:`BG`_*                          :struct:`string`                Other "9-slice" images.
+    :meth:`SHOW`                                                          Show the widget. All except GUI objects are shown by default.
+    :meth:`HIDE`                                                          Hide the widget.
+    :attr:`ENABLED`                       :struct:`Boolean`               Set to False to "grey out" the widget, preventing user interaction.
+    :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally?
+    :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
+    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
     ===================================== =============================== =============
+
+.. note::
+
+    The `BG` attribute comes in 8 flavours: `BG`, `BG_FOCUSED`, `BG_ACTIVE`, `BG_ON`, `BG_FOCUSED_ON`, `BG_ACTIVE_ON`, and `BG_HOVER_ON`.
+
+    ============= =====================================================
+    FOCUSED       The widget has keyboard focus.
+    ACTIVE        The widget is hot (eg. button is being held down).
+    HOVER         The widget is under the mouse.
+    ON            The widget is on (eg. button is PRESSED).
+    ============= =====================================================
+
+    If set to "", the background will default to the non-ON image and then default to the normal `BG` image.
+
+    The image file is a "9-slice" image, where the top 8 rows of pixels, bottom 8 rows, left and right 15 columns
+    of pixels file are kept static and the pixels between them stretched to make the full size of image required.
+
+    The image files are found relative to Ships/Scripts directory and any ".png" extension is optional.
 
 .. structure:: Box
 
@@ -93,8 +124,8 @@ Creating GUIs
                    Every suffix of :struct:`WIDGET`
     -----------------------------------------------------------------------------------
     :meth:`ADDLABEL(text)`                :struct:`Label`                 Creates a label in the Box.
-    :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDBUTTON(text)`               :struct:`Button`                Creates a clickable button in the Box.
+    :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
     :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
     :meth:`ADDHBOX`                       :struct:`Box`                   Creates a nested horizontally-arranged Box in the Box.
@@ -120,7 +151,7 @@ Creating GUIs
     :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT".
     :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the label.
     :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
-    :attr:`TEXTCOLOR`                     :struct:`RgbaColor`             The color of the text on the label.
+    :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
     ===================================== =============================== =============
 
 .. structure:: Button
@@ -137,7 +168,7 @@ Creating GUIs
 
 .. note::
 
-    The value of attr:`PRESSED` resets to False as soon as the value is accessed.
+    The value of :attr:`PRESSED` resets to False as soon as the value is accessed.
 
 .. structure:: TextField
 
@@ -154,7 +185,7 @@ Creating GUIs
 
 .. note::
 
-    The values of attr:`CHANGED` and :attr:`CONFIRMED` reset to False as soon as their value is accessed.
+    The values of :attr:`CHANGED` and :attr:`CONFIRMED` reset to False as soon as their value is accessed.
 
 .. structure:: Slider
 

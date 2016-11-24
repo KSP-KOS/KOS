@@ -26,10 +26,12 @@ namespace kOS.Suffixed
     {
         protected GUIStyle style;
         public bool enabled { get; protected set; }
+        public bool shown { get; protected set; }
 
         public Widget()
         {
             enabled = true;
+            shown = true;
             RegisterInitializer(InitializeSuffixes);
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             style = new GUIStyle(theSkin.box);
@@ -52,6 +54,7 @@ namespace kOS.Suffixed
             AddSuffix("PADDING", new SetSuffix<ScalarIntValue>(() => style.padding.left, value => style.padding = new RectOffset(value, value, value, value)));
             AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => style.fixedWidth, value => style.fixedWidth = value));
             AddSuffix("HEIGHT", new SetSuffix<ScalarValue>(() => style.fixedHeight, value => style.fixedHeight = value));
+            AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => enabled, value => enabled = value));
             AddSuffix("SHOW", new NoArgsVoidSuffix(Show));
             AddSuffix("HIDE", new NoArgsVoidSuffix(Hide));
 
@@ -69,12 +72,12 @@ namespace kOS.Suffixed
 
         virtual public void Show()
         {
-            enabled = true;
+            shown = true;
         }
 
         virtual public void Hide()
         {
-            enabled = false;
+            shown = false;
         }
 
         abstract public void DoGUI();
@@ -455,12 +458,16 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            if (!enabled) return;
+            if (!shown) return;
+            if (!enabled) GUI.enabled = false;
             if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal(style);
             else if (layout == LayoutMode.Vertical) GUILayout.BeginVertical(style);
             for (var i = 0; i < widgets.Count; ++i) {
-                if (widgets[i].enabled) {
+                if (widgets[i].shown) {
+                    var ge = GUI.enabled;
+                    if (ge && !widgets[i].enabled) GUI.enabled = false;
                     widgets[i].DoGUI();
+                    if (ge) GUI.enabled = true;
                     if (layout == LayoutMode.Stack)
                         break;
                 }
