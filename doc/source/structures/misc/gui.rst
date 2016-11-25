@@ -20,7 +20,8 @@ The "Hello World" program::
         // Add widgets to the GUI
         LOCAL label TO gui:ADDLABEL("Hello world!").
         SET label:ALIGN TO "CENTER".
-        SET label:VSTRETCH TO True. // Take up spare space.
+        SET label:HSTRETCH TO True. // Fill horizontally
+        SET label:VSTRETCH TO True. // Take up any spare vertical space.
         LOCAL ok TO gui:ADDBUTTON("OK").
         // Show the GUI.
         gui:SHOW().
@@ -83,15 +84,17 @@ following hierarchy:
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
-    :attr:`MARGIN`                        :struct:`scalar` (pixels)       Spacing between this and other widgets.
-    :attr:`PADDING`                       :struct:`scalar` (pixels)       Spacing between the outside of the widget and its contents.
-    :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
-    :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
     :meth:`SHOW`                                                          Show the widget. All except GUI objects are shown by default.
     :meth:`HIDE`                                                          Hide the widget.
     :attr:`ENABLED`                       :struct:`Boolean`               Set to False to "grey out" the widget, preventing user interaction.
-    :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally?
+    :attr:`HMARGIN`                       :struct:`scalar` (pixels)       Horizontal spacing between this and other widgets.
+    :attr:`VMARGIN`                       :struct:`scalar` (pixels)       Vertical spacing between this and other widgets.
+    :attr:`HPADDING`                      :struct:`scalar` (pixels)       Horizontal spacing between the outside of the widget and its contents.
+    :attr:`VPADDING`                      :struct:`scalar` (pixels)       Vertical spacing between the outside of the widget and its contents.
+    :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally? (default depends on widget subclass)
     :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
+    :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
+    :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
     :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
     :attr:`HBORDER`                       :struct:`scalar` (pixels)       Left and right column counts for BG image border.
     :attr:`VBORDER`                       :struct:`scalar` (pixels)       Top and bottom row counts for BG image border.
@@ -133,7 +136,7 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :meth:`ADDLABEL(text)`                :struct:`Label`                 Creates a label in the Box.
     :meth:`ADDBUTTON(text)`               :struct:`Button`                Creates a clickable button in the Box.
-    :meth:`ADDCHECKBOX(text)`             :struct:`Button`                Creates a toggleable button in the Box.
+    :meth:`ADDCHECKBOX(text,on)`          :struct:`Button`                Creates a toggleable button in the Box, initially checked if on is true.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
     :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
@@ -157,11 +160,15 @@ following hierarchy:
     :attr:`TEXT`                          :struct:`string`                The text on the label. May include some markup. See RICHTEXT below.
     :attr:`IMAGE`                         :struct:`string`                The name of an image for the label. The images are in the Ships/Script directory and ".png" is optional.
     :attr:`TOOLTIP`                       :struct:`string`                A tooltip for the label.
-    :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT".
+    :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
     :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the label.
     :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
     :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
     ===================================== =============================== =============
+
+.. note::
+    The ALIGN attribute will not do anything useful unless either HSTRETCH is set to true or a fixed WIDTH is set,
+    since otherwise it will be exactly the right size to fit the label with no alignment within that space being necessary.
 
 .. structure:: Button
 

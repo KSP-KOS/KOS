@@ -8,6 +8,7 @@ using kOS.Safe.Execution;
 using kOS.Utilities;
 using kOS.Screen;
 using System.IO;
+using System;
 
 /* Usage:
  * 
@@ -22,19 +23,25 @@ using System.IO;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Widget")]
-    abstract public class Widget : Structure
+    abstract public class Widget : Structure, IKOSScopeObserver
     {
-        protected GUIStyle style;
+        abstract protected GUIStyle BaseStyle();
+        private Box parent;
+        private GUIStyle _style;
+        public GUIStyle style { get { return _style == null ? BaseStyle() : _style; } }
+        public GUIStyle setstyle { get { if (_style == null) { _style = new GUIStyle(BaseStyle()); } return _style; } }
+
         public bool enabled { get; protected set; }
         public bool shown { get; protected set; }
 
-        public Widget()
+        public int LinkCount { get; set; }
+
+        public Widget(Box parent)
         {
+            this.parent = parent;
             enabled = true;
             shown = true;
             RegisterInitializer(InitializeSuffixes);
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(theSkin.box);
         }
 
         protected RgbaColor GetStyleRgbaColor()
@@ -45,32 +52,36 @@ namespace kOS.Suffixed
         
         protected void SetStyleRgbaColor(RgbaColor rgba)
         {
-            style.normal.textColor = rgba.Color;
+            setstyle.normal.textColor = rgba.Color;
         }
 
         private void InitializeSuffixes()
         {
-            AddSuffix("MARGIN", new SetSuffix<ScalarIntValue>(() => style.margin.left, value => style.margin = new RectOffset(value, value, value, value)));
-            AddSuffix("PADDING", new SetSuffix<ScalarIntValue>(() => style.padding.left, value => style.padding = new RectOffset(value, value, value, value)));
-            AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => style.fixedWidth, value => style.fixedWidth = value));
-            AddSuffix("HEIGHT", new SetSuffix<ScalarValue>(() => style.fixedHeight, value => style.fixedHeight = value));
+            AddSuffix("HMARGIN", new SetSuffix<ScalarIntValue>(() => style.margin.left, value => { setstyle.margin.left = value; setstyle.margin.right = value; }));
+            AddSuffix("HPADDING", new SetSuffix<ScalarIntValue>(() => style.padding.left, value => { setstyle.padding.left = value; setstyle.padding.right = value; }));
+            AddSuffix("VMARGIN", new SetSuffix<ScalarIntValue>(() => style.margin.top, value => { setstyle.margin.top = value; setstyle.margin.bottom = value; }));
+            AddSuffix("VPADDING", new SetSuffix<ScalarIntValue>(() => style.padding.top, value => { setstyle.padding.top = value; setstyle.padding.bottom = value; }));
+
+            AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => style.fixedWidth, value => setstyle.fixedWidth = value));
+            AddSuffix("HEIGHT", new SetSuffix<ScalarValue>(() => style.fixedHeight, value => setstyle.fixedHeight = value));
             AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => enabled, value => enabled = value));
             AddSuffix("SHOW", new NoArgsVoidSuffix(Show));
             AddSuffix("HIDE", new NoArgsVoidSuffix(Hide));
 
-            AddSuffix("HSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchWidth, value => style.stretchWidth = value));
-            AddSuffix("VSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchHeight, value => style.stretchHeight = value));
+            AddSuffix("HSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchWidth, value => setstyle.stretchWidth = value));
+            AddSuffix("VSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchHeight, value => setstyle.stretchHeight = value));
 
-            AddSuffix("HBORDER", new SetSuffix<ScalarIntValue>(() => style.border.left, value => { style.border.left = value; style.border.right = value; }));
-            AddSuffix("VBORDER", new SetSuffix<ScalarIntValue>(() => style.border.top, value => { style.border.top = value; style.border.bottom = value; }));
-            AddSuffix("BG", new SetSuffix<StringValue>(() => "", value => style.normal.background = GetTexture(value)));
-            AddSuffix("BG_FOCUSED", new SetSuffix<StringValue>(() => "", value => style.focused.background = GetTexture(value)));
-            AddSuffix("BG_ACTIVE", new SetSuffix<StringValue>(() => "", value => style.active.background = GetTexture(value)));
-            AddSuffix("BG_HOVER", new SetSuffix<StringValue>(() => "", value => style.hover.background = GetTexture(value)));
-            AddSuffix("BG_ON", new SetSuffix<StringValue>(() => "", value => style.onNormal.background = GetTexture(value)));
-            AddSuffix("BG_FOCUSED_ON", new SetSuffix<StringValue>(() => "", value => style.onFocused.background = GetTexture(value)));
-            AddSuffix("BG_ACTIVE_ON", new SetSuffix<StringValue>(() => "", value => style.onActive.background = GetTexture(value)));
-            AddSuffix("BG_HOVER_ON", new SetSuffix<StringValue>(() => "", value => style.onHover.background = GetTexture(value)));
+            AddSuffix("HBORDER", new SetSuffix<ScalarIntValue>(() => style.border.left, value => { setstyle.border.left = value; setstyle.border.right = value; }));
+            AddSuffix("VBORDER", new SetSuffix<ScalarIntValue>(() => style.border.top, value => { setstyle.border.top = value; setstyle.border.bottom = value; }));
+
+            AddSuffix("BG", new SetSuffix<StringValue>(() => "", value => setstyle.normal.background = GetTexture(value)));
+            AddSuffix("BG_FOCUSED", new SetSuffix<StringValue>(() => "", value => setstyle.focused.background = GetTexture(value)));
+            AddSuffix("BG_ACTIVE", new SetSuffix<StringValue>(() => "", value => setstyle.active.background = GetTexture(value)));
+            AddSuffix("BG_HOVER", new SetSuffix<StringValue>(() => "", value => setstyle.hover.background = GetTexture(value)));
+            AddSuffix("BG_ON", new SetSuffix<StringValue>(() => "", value => setstyle.onNormal.background = GetTexture(value)));
+            AddSuffix("BG_FOCUSED_ON", new SetSuffix<StringValue>(() => "", value => setstyle.onFocused.background = GetTexture(value)));
+            AddSuffix("BG_ACTIVE_ON", new SetSuffix<StringValue>(() => "", value => setstyle.onActive.background = GetTexture(value)));
+            AddSuffix("BG_HOVER_ON", new SetSuffix<StringValue>(() => "", value => setstyle.onHover.background = GetTexture(value)));
         }
 
         virtual public void Show()
@@ -128,9 +139,10 @@ namespace kOS.Suffixed
             return "WIDGET";
         }
 
-        public override bool Equals(object obj)
+        virtual public void ScopeLost()
         {
-            return false;
+            UnityEngine.Debug.Log("Scope lost on " + this + (parent==null ? " (no parent)" : "(parent is "+parent+")"));
+            if (parent != null) parent.Remove(this);
         }
     }
 
@@ -143,17 +155,18 @@ namespace kOS.Suffixed
         public float max { get; set; }
         protected GUIStyle thumbStyle;
 
-        public Slider(bool h_not_v, float v, float from, float to)
+        public Slider(Box parent, bool h_not_v, float v, float from, float to) : base(parent)
         {
             RegisterInitializer(InitializeSuffixes);
             horizontal = h_not_v;
             value = v;
             min = from;
             max = to;
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(horizontal ? theSkin.horizontalSlider : theSkin.verticalSlider);
-            thumbStyle = new GUIStyle(horizontal ? theSkin.horizontalSliderThumb : theSkin.verticalSliderThumb);
+            if (horizontal) { setstyle.margin.top = 8; setstyle.margin.bottom = 8; } // align better with labels.
+            thumbStyle = new GUIStyle(horizontal ? HighLogic.Skin.horizontalSliderThumb : HighLogic.Skin.verticalSliderThumb);
         }
+
+        protected override GUIStyle BaseStyle() { return horizontal ? HighLogic.Skin.horizontalSlider : HighLogic.Skin.verticalSlider; }
 
         private void InitializeSuffixes()
         {
@@ -165,9 +178,9 @@ namespace kOS.Suffixed
         public override void DoGUI()
         {
             if (horizontal)
-                value = GUILayout.HorizontalSlider(value, min, max, style, thumbStyle, GUILayout.ExpandWidth(true));
+                value = GUILayout.HorizontalSlider(value, min, max, style, thumbStyle);
             else
-                value = GUILayout.VerticalSlider(value, min, max, style, thumbStyle, GUILayout.ExpandWidth(true));
+                value = GUILayout.VerticalSlider(value, min, max, style, thumbStyle);
         }
 
         public override string ToString()
@@ -181,10 +194,15 @@ namespace kOS.Suffixed
     {
         public float amount { get; set; }
 
-        public Spacing(float v)
+        public Spacing(Box parent, float v) : base(parent)
         {
             RegisterInitializer(InitializeSuffixes);
             amount = v;
+        }
+
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.label; // not that changing a spacing style makes any sense.
         }
 
         private void InitializeSuffixes()
@@ -211,12 +229,15 @@ namespace kOS.Suffixed
     {
         public GUIContent content { get; set; }
 
-        public Label(string text)
+        public Label(Box parent, string text) : base(parent)
         {
             RegisterInitializer(InitializeSuffixes);
             content = new GUIContent(text);
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(theSkin.label);
+        }
+
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.label;
         }
 
         private void InitializeSuffixes()
@@ -225,8 +246,8 @@ namespace kOS.Suffixed
             AddSuffix("IMAGE", new SetSuffix<StringValue>(() => "", value => content.image = GetTexture(value)));
             AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => content.tooltip = value));
             AddSuffix("ALIGN", new SetSuffix<StringValue>(GetAlignment, SetAlignment));
-            AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => style.fontSize, value => style.fontSize = value));
-            AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => style.richText, value => style.richText = value));
+            AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => style.fontSize, value => setstyle.fontSize = value));
+            AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => style.richText, value => setstyle.richText = value));
             AddSuffix("TEXTCOLOR", new SetSuffix<RgbaColor>(() => GetStyleRgbaColor(), value => SetStyleRgbaColor(value)));
         }
 
@@ -240,15 +261,15 @@ namespace kOS.Suffixed
         void SetAlignment(StringValue s)
         {
             s = s.ToLower();
-            if (s == "center") style.alignment = TextAnchor.MiddleCenter;
-            else if (s == "right") style.alignment = TextAnchor.MiddleRight;
-            else if (s == "left") style.alignment = TextAnchor.MiddleLeft;
+            if (s == "center") setstyle.alignment = TextAnchor.MiddleCenter;
+            else if (s == "right") setstyle.alignment = TextAnchor.MiddleRight;
+            else if (s == "left") setstyle.alignment = TextAnchor.MiddleLeft;
             else throw new KOSInvalidArgumentException("LABEL", "ALIGNMENT", "expected CENTER, LEFT, or RIGHT, found " + s);
         }
 
         public override void DoGUI()
         {
-            GUILayout.Label(content, style, GUILayout.ExpandWidth(true));
+            GUILayout.Label(content, style);
         }
 
         public override string ToString()
@@ -265,15 +286,18 @@ namespace kOS.Suffixed
 
         static GUIStyle toolTipStyle = null;
 
-        public TextField(string text) : base(text)
+        public TextField(Box parent, string text) : base(parent,text)
         {
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(theSkin.textField);
             if (toolTipStyle == null) {
-                toolTipStyle = new GUIStyle(theSkin.label);
+                toolTipStyle = new GUIStyle(HighLogic.Skin.label);
                 toolTipStyle.normal.textColor = new Color(0.6f, 0.6f, 0.6f, 0.2f);
             }
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.textField;
         }
 
         private void InitializeSuffixes()
@@ -327,20 +351,21 @@ namespace kOS.Suffixed
         public bool Pressed { get; set; }
         public bool isToggle { get; set; }
 
-        public Button(string text) : base(text)
+        public Button(Box parent, string text) : base(parent,text)
         {
             isToggle = false;
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(theSkin.button);
             RegisterInitializer(InitializeSuffixes);
         }
 
-        public static Button NewCheckbox(string text)
+        protected override GUIStyle BaseStyle()
         {
-            var r = new Button(text);
+            return isToggle ? HighLogic.Skin.toggle : HighLogic.Skin.button;
+        }
+
+        public static Button NewCheckbox(Box parent, string text)
+        {
+            var r = new Button(parent,text);
             r.SetToggleMode(true);
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            r.style = new GUIStyle(theSkin.toggle);
             return r;
         }
 
@@ -387,11 +412,16 @@ namespace kOS.Suffixed
 
         public int Count { get { return widgets.Count; } }
 
-        public Box(LayoutMode mode)
+        public Box(Box parent, LayoutMode mode) : base(parent)
         {
             RegisterInitializer(InitializeSuffixes);
             layout = mode;
             widgets = new List<Widget>();
+        }
+
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.box;
         }
 
         private void InitializeSuffixes()
@@ -404,6 +434,8 @@ namespace kOS.Suffixed
             AddSuffix("ADDVSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddVSlider));
             AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
             AddSuffix("ADDVBOX", new Suffix<Box>(AddVBox));
+            AddSuffix("ADDHLAYOUT", new Suffix<Box>(AddHLayout));
+            AddSuffix("ADDVLAYOUT", new Suffix<Box>(AddVLayout));
             AddSuffix("ADDSTACK", new Suffix<Box>(AddStack));
             AddSuffix("ADDSPACING", new OneArgsSuffix<Spacing, ScalarValue>(AddSpace));
             AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(widgets)));
@@ -412,7 +444,8 @@ namespace kOS.Suffixed
 
         public void ShowOnly(Widget toshow)
         {
-            foreach (var w in widgets) {
+            for (var i=0; i<widgets.Count; ++i) {
+                var w = widgets[i];
                 if (w == toshow) w.Show();
                 else w.Hide();
             }
@@ -420,70 +453,98 @@ namespace kOS.Suffixed
 
         public Spacing AddSpace(ScalarValue amount)
         {
-            var w = new Spacing(amount);
+            var w = new Spacing(this, amount);
             widgets.Add(w);
             return w;
         }
 
         public Slider AddHSlider(ScalarValue min, ScalarValue max)
         {
-            var w = new Slider(true, min, min, max);
+            var w = new Slider(this, true, min, min, max);
             widgets.Add(w);
             return w;
         }
 
         public Slider AddVSlider(ScalarValue min, ScalarValue max)
         {
-            var w = new Slider(false, min, min, max);
+            var w = new Slider(this, false, min, min, max);
             widgets.Add(w);
             return w;
         }
 
         public Box AddStack()
         {
-            var w = new Box(Box.LayoutMode.Stack);
+            var w = new Box(this, Box.LayoutMode.Stack);
             widgets.Add(w);
             return w;
         }
 
         public Box AddHBox()
         {
-            var w = new Box(Box.LayoutMode.Horizontal);
+            var w = new Box(this, Box.LayoutMode.Horizontal);
             widgets.Add(w);
             return w;
         }
 
         public Box AddVBox()
         {
-            var w = new Box(Box.LayoutMode.Vertical);
+            var w = new Box(this,Box.LayoutMode.Vertical);
+            widgets.Add(w);
+            return w;
+        }
+
+        void MakeFlat()
+        {
+            setstyle.margin = new RectOffset(0, 0, 0, 0);
+            setstyle.padding = new RectOffset(0, 0, 0, 0);
+            setstyle.normal.background = null;
+        }
+
+        public void Remove(Widget child)
+        {
+            widgets.Remove(child);
+        }
+
+        public Box AddHLayout()
+        {
+            var w = new Box(this, Box.LayoutMode.Horizontal);
+            w.MakeFlat();
+            widgets.Add(w);
+            return w;
+        }
+
+        public Box AddVLayout()
+        {
+            var w = new Box(this, Box.LayoutMode.Vertical);
+            w.MakeFlat();
             widgets.Add(w);
             return w;
         }
 
         public Label AddLabel(StringValue text)
         {
-            var w = new Label(text);
+            var w = new Label(this, text);
             widgets.Add(w);
             return w;
         }
 
         public TextField AddTextField(StringValue text)
         {
-            var w = new TextField(text);
+            var w = new TextField(this, text);
             widgets.Add(w);
             return w;
         }
 
         public Button AddButton(StringValue text)
         {
-            var w = new Button(text);
+            var w = new Button(this, text);
             widgets.Add(w);
             return w;
         }
 
         public Button AddCheckbox(StringValue text, BooleanValue on)
         {
-            var w = Button.NewCheckbox(text);
+            var w = Button.NewCheckbox(this, text);
             w.Pressed = on;
             widgets.Add(w);
             return w;
@@ -516,21 +577,23 @@ namespace kOS.Suffixed
     }
 
     [kOS.Safe.Utilities.KOSNomenclature("GUI")]
-    public class GUIWidgets : Box, IKOSScopeObserver
+    public class GUIWidgets : Box
     {
         private GUIWindow window;
 
-        public GUIWidgets(int width, int height, SharedObjects shared) : base(Box.LayoutMode.Vertical)
+        public GUIWidgets(int width, int height, SharedObjects shared) : base(null,Box.LayoutMode.Vertical)
         {
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(theSkin.window);
-            style.padding.top = style.padding.bottom; // no title area.
-            var go = new GameObject();
+            setstyle.padding.top = style.padding.bottom; // no title area.
+            var go = new GameObject("kOSGUIWindow");
             window = go.AddComponent<GUIWindow>();
             window.AttachTo(width,height,"",shared,this);
             InitializeSuffixes();
         }
 
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.window;
+        }
 
         private void InitializeSuffixes()
         {
@@ -538,11 +601,7 @@ namespace kOS.Suffixed
             AddSuffix("Y", new SetSuffix<ScalarValue>(() => window.GetRect().y, value => window.SetY(value)));
         }
 
-        // Implementation of KOSSCopeObserver interface:
-        // ---------------------------------------------
-        public int LinkCount { get; set; }
-
-        public void ScopeLost()
+        override public void ScopeLost()
         {
             // Hardly ever seems to be called :-(
             SetShow(false);
