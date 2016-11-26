@@ -493,7 +493,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            int height = GetInt(PopValueAssert(shared));
+            int argc = CountRemainingArgs(shared);
+            int height = argc > 1 ? GetInt(PopValueAssert(shared)) : 0;
             int width = GetInt(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             ReturnValue = new GUIWidgets(width,height,shared);

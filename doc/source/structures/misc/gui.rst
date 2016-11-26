@@ -16,7 +16,7 @@ The "Hello World" program::
         // "Hello World" program for kOS GUI.
         //
         // Create a GUI window
-        LOCAL gui TO GUI(200,100).
+        LOCAL gui TO GUI(200).
         // Add widgets to the GUI
         LOCAL label TO gui:ADDLABEL("Hello world!").
         SET label:ALIGN TO "CENTER".
@@ -33,12 +33,13 @@ The "Hello World" program::
 Creating a Window
 -----------------
 
-.. function:: GUI(width, height)
+.. function:: GUI(width [, height])
 
 This creates a new ``GUI`` object that you can then manipulate
-to build up a GUI::
+to build up a GUI. If no height is specified, it will resize automatically.
+The width can be set to 0 to force automatic width resizing too::
 
-        SET gui TO GUI(200,100).
+        SET gui TO GUI(200).
         SET button TO gui:ADDBUTTON("OK").
         gui:SHOW().
         UNTIL button:PRESSED WAIT(0.1).
