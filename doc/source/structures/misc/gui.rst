@@ -21,7 +21,6 @@ The "Hello World" program::
         LOCAL label TO gui:ADDLABEL("Hello world!").
         SET label:ALIGN TO "CENTER".
         SET label:HSTRETCH TO True. // Fill horizontally
-        SET label:VSTRETCH TO True. // Take up any spare vertical space.
         LOCAL ok TO gui:ADDBUTTON("OK").
         // Show the GUI.
         gui:SHOW().
@@ -57,8 +56,10 @@ following hierarchy:
 - :struct:`WIDGET`
     - :struct:`BOX`
         - :struct:`GUI`
+        - :struct:`SCROLLBOX`
     - :struct:`LABEL`
         - :struct:`BUTTON`
+            - :struct:`POPUPMENU`
         - :struct:`TEXTFIELD`
     - :struct:`SLIDER`
     - :struct:`SPACING`
@@ -75,6 +76,7 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :attr:`X`                             :struct:`scalar` (pixels)       X-position of the window. Negative values measure from the right side of the screen.
     :attr:`Y`                             :struct:`scalar` (pixels)       Y-position of the window. Negative values measure from the bottom of the screen.
+    :attr:`DRAGGABLE`                     :struct:`Boolean`               Set to false to prevent the window being user-draggable.
     ===================================== =============================== =============
 
 .. structure:: Widget
@@ -86,6 +88,7 @@ following hierarchy:
     ===================================== =============================== =============
     :meth:`SHOW`                                                          Show the widget. All except GUI objects are shown by default.
     :meth:`HIDE`                                                          Hide the widget.
+    :meth:`DISPOSE`                                                       Remove the widget permanently.
     :attr:`ENABLED`                       :struct:`Boolean`               Set to False to "grey out" the widget, preventing user interaction.
     :attr:`HMARGIN`                       :struct:`scalar` (pixels)       Horizontal spacing between this and other widgets.
     :attr:`VMARGIN`                       :struct:`scalar` (pixels)       Vertical spacing between this and other widgets.
@@ -137,15 +140,19 @@ following hierarchy:
     :meth:`ADDLABEL(text)`                :struct:`Label`                 Creates a label in the Box.
     :meth:`ADDBUTTON(text)`               :struct:`Button`                Creates a clickable button in the Box.
     :meth:`ADDCHECKBOX(text,on)`          :struct:`Button`                Creates a toggleable button in the Box, initially checked if on is true.
+    :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
+    :meth:`ADDPOPUPMENU(text)`            :struct:`PopupMenu`             Creates a popup menu.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
     :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
     :meth:`ADDHBOX`                       :struct:`Box`                   Creates a nested horizontally-arranged Box in the Box.
     :meth:`ADDVBOX`                       :struct:`Box`                   Creates a nested vertically Box in the Box.
     :meth:`ADDSTACK`                      :struct:`Box`                   Creates a nested stacked Box in the Box. Only the first enabled subwidget is ever shown. See :meth:`SHOWONLY` below.
+    :meth:`ADDSCROLLBOX`                  :struct:`ScrollBox`             Creates a nested scrollable Box of widgets.
     :meth:`ADDSPACING(size)`              :struct:`Spacing`               Creates a blank space of the given size (flexible if -1).
     :attr:`WIDGETS`                       :struct:`List(Widget)`          Returns a LIST of the widgets that have been added to the Box.
     :meth:`SHOWONLY(widget)`                                              Hide all but the given widget.
+    :meth:`CLEAR`                                                         Dispose all child widgets.
     ===================================== =============================== =============
 
 .. structure:: Label
@@ -181,6 +188,7 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :attr:`PRESSED`                       :struct:`Boolean`               Has the button been pressed?
     :meth:`SETTOGGLE`                     :struct:`Boolean`               Set to True to make the button toggle between pressed and not pressed, like a :struct:`CheckBox`.
+    :attr:`EXCLUSIVE`                     :struct:`Boolean`               If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
     ===================================== =============================== =============
 
 .. note::
@@ -190,6 +198,22 @@ following hierarchy:
 
     If the Button is created by the Button:ADDCHECKBOX method, it will have a different visual
     style and it will start already in toggle mode.
+
+.. structure:: PopupMenu
+
+    `PopupMenu` objects are created inside Box objects via ADDPOPUPMENU method.
+
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+                   Every suffix of :struct:`BUTTON`
+    -----------------------------------------------------------------------------------
+    :attr:`OPTIONS`                       :struct:`List`(Any)             List of options to display.
+    :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
+    :attr:`VALUE`                         Any                             Returns the current selected value.
+    :attr:`INDEX`                         integer                         Returns the index of the current selected value.
+    :meth:`CLEAR`                                                         Removes all options.
+    ===================================== =============================== =============
 
 .. structure:: TextField
 
@@ -222,6 +246,20 @@ following hierarchy:
     :attr:`MAX`                           :struct:`scalar`                The maximum value (bottom on vertical slider).
     ===================================== =============================== =============
 
+.. structure:: ScrollBox
+
+    `ScrollBox` objects are created inside Box objects via ADDSCROLLBOX method.
+
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+                   Every suffix of :struct:`BOX`
+    -----------------------------------------------------------------------------------
+    :attr:`HALWAYS`                       :struct:`Boolean`               Always show the horizontal scrollbar.
+    :attr:`VALWAYS`                       :struct:`Boolean`               Always show the vertical scrollbar.
+    :attr:`POSITION`                      :struct:`Vector2`               The position of the scrolled content.
+    ===================================== =============================== =============
+
 .. structure:: Spacing
 
     `Spacing` objects are created inside Box objects via ADDSPACING method.
@@ -233,9 +271,4 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :attr:`AMOUNT`                        :struct:`scalar`                The amount of space, or -1 for flexible spacing.
     ===================================== =============================== =============
-
-.. note::
-
-    If a GUI does not have enough content to fill the size it is set for, the bottom will be transparent but still
-    clickable. It is recommended that you use an expanding widget or flexible spacing to ensure all space is used.
 

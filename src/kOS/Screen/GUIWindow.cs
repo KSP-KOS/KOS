@@ -18,6 +18,7 @@ namespace kOS.Screen
     {
         private SharedObjects shared;
         public string TitleText {get; set;}
+        public bool draggable = true;
         private bool uiGloballyHidden = false;
         private GUIWidgets widgets;
         private GUIStyle style;
@@ -30,6 +31,8 @@ namespace kOS.Screen
             style.normal.background = null;
             style.onNormal.background = null;
             style.focused.background = null;
+            style.margin = new RectOffset(0, 0, 0, 0);
+            style.padding = new RectOffset(0, 0, 0, 0);
 
             IsPowered = true;
             WindowRect = new Rect(0, 0, 0, 0); // will get resized later in AttachTo().
@@ -95,12 +98,19 @@ namespace kOS.Screen
             
             GUI.skin = HighLogic.Skin;
 
-            var e = GUI.enabled;
-            GUI.enabled = IsPowered;
-            WindowRect = GUI.Window(UniqueId, WindowRect, WidgetGui, TitleText, style);
-            GUI.enabled = e;
+            WindowRect = GUILayout.Window(UniqueId, WindowRect, WidgetGui, TitleText, style);
+
+            if (currentPopup != null) {
+                var r = RectExtensions.EnsureCompletelyVisible(currentPopup.popupRect);
+                if (Event.current.type == EventType.MouseDown && !r.Contains(Event.current.mousePosition)) {
+                    currentPopup.PopDown();
+                } else {
+                    GUI.BringWindowToFront(UniqueId + 1);
+                    currentPopup.popupRect = GUILayout.Window(UniqueId + 1, r, PopupGui, "", style);
+                }
+            }
         }
-        
+
         void Update()
         {
             if (!IsPowered) {
@@ -122,10 +132,15 @@ namespace kOS.Screen
         
         void WidgetGui(int windowId)
         {
-            GUILayout.BeginArea(new Rect(0,0,WindowRect.width,WindowRect.height));
             widgets.DoGUI();
-            GUILayout.EndArea();
-            GUI.DragWindow();
+            if (draggable)
+                GUI.DragWindow();
+        }
+
+        void PopupGui(int windowId)
+        {
+            if (currentPopup != null)
+                currentPopup.DoPopupGUI();
         }
         
         public Rect GetRect()
@@ -148,6 +163,8 @@ namespace kOS.Screen
             else r.y = y;
             WindowRect = r;
         }
+
+        public PopupMenu currentPopup;
 
         internal void AttachTo(int width, int height, string title, SharedObjects sharedObj, GUIWidgets w)
         {

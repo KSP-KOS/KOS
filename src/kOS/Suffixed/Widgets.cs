@@ -23,10 +23,10 @@ using System;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Widget")]
-    abstract public class Widget : Structure, IKOSScopeObserver
+    abstract public class Widget : Structure
     {
         abstract protected GUIStyle BaseStyle();
-        private Box parent;
+        protected Box parent;
         private GUIStyle _style;
         public GUIStyle style { get { return _style == null ? BaseStyle() : _style; } }
         public GUIStyle setstyle { get { if (_style == null) { _style = new GUIStyle(BaseStyle()); } return _style; } }
@@ -34,14 +34,21 @@ namespace kOS.Suffixed
         public bool enabled { get; protected set; }
         public bool shown { get; protected set; }
 
-        public int LinkCount { get; set; }
-
         public Widget(Box parent)
         {
             this.parent = parent;
             enabled = true;
             shown = true;
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        protected GUIWidgets FindGUI()
+        {
+            var c = this;
+            while (c.parent != null) {
+                c = c.parent;
+            }
+            return c as GUIWidgets;
         }
 
         protected RgbaColor GetStyleRgbaColor()
@@ -67,6 +74,7 @@ namespace kOS.Suffixed
             AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => enabled, value => enabled = value));
             AddSuffix("SHOW", new NoArgsVoidSuffix(Show));
             AddSuffix("HIDE", new NoArgsVoidSuffix(Hide));
+            AddSuffix("DISPOSE", new NoArgsVoidSuffix(Dispose));
 
             AddSuffix("HSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchWidth, value => setstyle.stretchWidth = value));
             AddSuffix("VSTRETCH", new SetSuffix<BooleanValue>(() => style.stretchHeight, value => setstyle.stretchHeight = value));
@@ -92,6 +100,12 @@ namespace kOS.Suffixed
         virtual public void Hide()
         {
             shown = false;
+        }
+
+        virtual public void Dispose()
+        {
+            shown = false;
+            if (parent != null) parent.Remove(this);
         }
 
         abstract public void DoGUI();
@@ -137,12 +151,6 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "WIDGET";
-        }
-
-        virtual public void ScopeLost()
-        {
-            UnityEngine.Debug.Log("Scope lost on " + this + (parent==null ? " (no parent)" : "(parent is "+parent+")"));
-            if (parent != null) parent.Remove(this);
         }
     }
 
@@ -350,8 +358,9 @@ namespace kOS.Suffixed
     {
         public bool Pressed { get; set; }
         public bool isToggle { get; set; }
+        public bool isExclusive { get; set; }
 
-        public Button(Box parent, string text) : base(parent,text)
+        public Button(Box parent, string text) : base(parent, text)
         {
             isToggle = false;
             RegisterInitializer(InitializeSuffixes);
@@ -364,8 +373,16 @@ namespace kOS.Suffixed
 
         public static Button NewCheckbox(Box parent, string text)
         {
-            var r = new Button(parent,text);
+            var r = new Button(parent, text);
             r.SetToggleMode(true);
+            return r;
+        }
+
+        public static Button NewRadioButton(Box parent, string text)
+        {
+            var r = new Button(parent, text);
+            r.SetToggleMode(true);
+            r.isExclusive = true;
             return r;
         }
 
@@ -373,6 +390,7 @@ namespace kOS.Suffixed
         {
             AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => Pressed = value));
             AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
+            AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => isExclusive, value => isExclusive = value));
         }
 
         public void SetToggleMode(BooleanValue on)
@@ -392,6 +410,9 @@ namespace kOS.Suffixed
         {
             if (isToggle) {
                 Pressed = GUILayout.Toggle(Pressed, content, style);
+                if (isExclusive && Pressed && parent != null) {
+                    parent.UnpressAllBut(this);
+                }
             } else {
                 if (GUILayout.Toggle(Pressed, content, style)) Pressed = true;
             }
@@ -403,12 +424,142 @@ namespace kOS.Suffixed
         }
     }
 
+    [kOS.Safe.Utilities.KOSNomenclature("PopupMenu")]
+    public class PopupMenu : Button
+    {
+        private ListValue list;
+        private int index = 0;
+        GUIStyle popupStyle;
+        GUIStyle itemStyle;
+
+        public PopupMenu(Box parent, string text) : base(parent, text)
+        {
+            setstyle.alignment = TextAnchor.MiddleLeft;
+            isToggle = true;
+
+            itemStyle = new GUIStyle(style);
+            itemStyle.margin.top = 0;
+            itemStyle.margin.bottom = 0;
+            itemStyle.normal.background = null;
+            itemStyle.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu_bg_hover", false);
+            itemStyle.hover.textColor = Color.black;
+            itemStyle.active.background = itemStyle.hover.background;
+            itemStyle.stretchWidth = true;
+
+            popupStyle = new GUIStyle(HighLogic.Skin.window);
+            popupStyle.padding.top = popupStyle.padding.bottom; // no title area
+            popupStyle.padding.left = 0;
+            popupStyle.padding.right = 0;
+            popupStyle.margin = new RectOffset(0, 0, 0, 0);
+
+            list = new ListValue();
+            list.Add(new StringValue(text));
+            content.image =  GameDatabase.Instance.GetTexture("kOS/GFX/radiobutton", false);
+            RegisterInitializer(InitializeSuffixes);
+        }
+
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.button;
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("OPTIONS", new SetSuffix<ListValue>(() => list, value => list = value));
+            AddSuffix("ADDOPTION", new OneArgsSuffix<Structure>(AddOption));
+            AddSuffix("VALUE", new SetSuffix<Structure>(() => (index >= 0 && index <= list.Count()) ? list[index] : new StringValue(""), value => Choose(value)));
+            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => index, value => index = value));
+            AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
+        }
+
+        public void Clear()
+        {
+            list.Clear();
+            content.text = "";
+            // Note: we leave the index alone so things can be set in any order.
+        }
+
+        public void AddOption(Structure opt)
+        {
+            if (list.Count() == index)
+                content.text = opt.ToString();
+            list.Add(opt);
+        }
+
+        public void Choose(Structure v)
+        {
+            for (index = 0; index<list.Count(); ++index) {
+                if (list[index] == v) {
+                    return;
+                }
+            }
+            index = -1;
+        }
+
+        public override void DoGUI()
+        {
+            var was = Pressed;
+            base.DoGUI();
+            if (Event.current.type == EventType.Repaint) {
+                var r = GUILayoutUtility.GetLastRect();
+                popupRect.position = GUIUtility.GUIToScreenPoint(r.position) + new Vector2(0, r.height);
+                popupRect.width = r.width;
+            }
+            if (was != Pressed) {
+                var gui = FindGUI();
+                if (gui != null) {
+                    if (Pressed)
+                        gui.SetCurrentPopup(this);
+                    else
+                        gui.UnsetCurrentPopup(this);
+                }
+            }
+        }
+
+        public void PopDown()
+        {
+            Pressed = false;
+            var gui = FindGUI();
+            if (gui != null)
+                gui.UnsetCurrentPopup(this);
+        }
+
+        override public void Dispose()
+        {
+            PopDown();
+            base.Dispose();
+        }
+
+        public Rect popupRect;
+        public void DoPopupGUI()
+        {
+            // Use onNormal as popup style (seems to suit it).
+            popupStyle.normal.background = style.onNormal.background;
+            popupStyle.border = style.border;
+
+            GUILayout.BeginVertical(popupStyle);
+            for (int i=0; i<list.Count(); ++i) {
+                if (GUILayout.Button(list[i].ToString(), itemStyle)) {
+                    index = i;
+                    content.text = list[i].ToString();
+                    PopDown();
+                }
+            }
+            GUILayout.EndVertical();
+        }
+
+        public override string ToString()
+        {
+            return "POPUPMENU(" + content.text + ")";
+        }
+    }
+
     [kOS.Safe.Utilities.KOSNomenclature("Box")]
     public class Box : Widget
     {
         public enum LayoutMode { Stack, Horizontal, Vertical }
-        LayoutMode layout;
-        List<Widget> widgets;
+        protected LayoutMode layout;
+        protected List<Widget> widgets;
 
         public int Count { get { return widgets.Count; } }
 
@@ -429,26 +580,44 @@ namespace kOS.Suffixed
             AddSuffix("ADDLABEL", new OneArgsSuffix<Label, StringValue>(AddLabel));
             AddSuffix("ADDTEXTFIELD", new OneArgsSuffix<TextField, StringValue>(AddTextField));
             AddSuffix("ADDBUTTON", new OneArgsSuffix<Button, StringValue>(AddButton));
+            AddSuffix("ADDRADIOBUTTON", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddRadioButton));
             AddSuffix("ADDCHECKBOX", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddCheckbox));
+            AddSuffix("ADDPOPUPMENU", new OneArgsSuffix<PopupMenu, StringValue>(AddPopupMenu));
             AddSuffix("ADDHSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddHSlider));
             AddSuffix("ADDVSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddVSlider));
             AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
             AddSuffix("ADDVBOX", new Suffix<Box>(AddVBox));
             AddSuffix("ADDHLAYOUT", new Suffix<Box>(AddHLayout));
             AddSuffix("ADDVLAYOUT", new Suffix<Box>(AddVLayout));
+            AddSuffix("ADDSCROLLBOX", new Suffix<ScrollBox>(AddScrollBox));
             AddSuffix("ADDSTACK", new Suffix<Box>(AddStack));
             AddSuffix("ADDSPACING", new OneArgsSuffix<Spacing, ScalarValue>(AddSpace));
             AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(widgets)));
-            AddSuffix("SHOWONLY", new OneArgsSuffix<Widget>(value=>ShowOnly(value)));
+            AddSuffix("SHOWONLY", new OneArgsSuffix<Widget>(value => ShowOnly(value)));
+            AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
         }
 
         public void ShowOnly(Widget toshow)
         {
-            for (var i=0; i<widgets.Count; ++i) {
+            for (var i = 0; i < widgets.Count; ++i) {
                 var w = widgets[i];
                 if (w == toshow) w.Show();
                 else w.Hide();
             }
+        }
+
+        public void UnpressAllBut(Widget leave)
+        {
+            for (var i = 0; i < widgets.Count; ++i) {
+                var w = widgets[i] as Button;
+                if (w != null && w != leave) w.Pressed = false;
+            }
+        }
+
+        public void Clear()
+        {
+            widgets.Clear();
+            // children who try to Dispose will not be found.
         }
 
         public Spacing AddSpace(ScalarValue amount)
@@ -488,7 +657,14 @@ namespace kOS.Suffixed
 
         public Box AddVBox()
         {
-            var w = new Box(this,Box.LayoutMode.Vertical);
+            var w = new Box(this, Box.LayoutMode.Vertical);
+            widgets.Add(w);
+            return w;
+        }
+
+        public ScrollBox AddScrollBox()
+        {
+            var w = new ScrollBox(this);
             widgets.Add(w);
             return w;
         }
@@ -550,12 +726,23 @@ namespace kOS.Suffixed
             return w;
         }
 
-        public override void DoGUI()
+        public Button AddRadioButton(StringValue text, BooleanValue on)
         {
-            if (!shown) return;
-            if (!enabled) GUI.enabled = false;
-            if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal(style);
-            else if (layout == LayoutMode.Vertical) GUILayout.BeginVertical(style);
+            var w = Button.NewRadioButton(this, text);
+            w.Pressed = on;
+            widgets.Add(w);
+            return w;
+        }
+
+        public PopupMenu AddPopupMenu(StringValue text)
+        {
+            var w = new PopupMenu(this, text);
+            widgets.Add(w);
+            return w;
+        }
+
+        public void DoChildGUIs()
+        {
             for (var i = 0; i < widgets.Count; ++i) {
                 if (widgets[i].shown) {
                     var ge = GUI.enabled;
@@ -566,18 +753,69 @@ namespace kOS.Suffixed
                         break;
                 }
             }
+        }
+
+        public override void DoGUI()
+        {
+            if (!shown) return;
+            if (!enabled) GUI.enabled = false;
+            if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal(style);
+            else if (layout == LayoutMode.Vertical) GUILayout.BeginVertical(style);
+            DoChildGUIs();
             if (layout == LayoutMode.Horizontal) GUILayout.EndHorizontal();
             else if (layout == LayoutMode.Vertical) GUILayout.EndVertical();
         }
 
         public override string ToString()
         {
-            return layout+"BOX";
+            return layout + "BOX";
+        }
+    }
+    [kOS.Safe.Utilities.KOSNomenclature("ScrollBox")]
+    public class ScrollBox : Box
+    {
+        bool hscrollalways = false;
+        bool vscrollalways = false;
+        Vector2 position;
+
+        public ScrollBox(Box parent) : base(parent, LayoutMode.Vertical)
+        {
+            RegisterInitializer(InitializeSuffixes);
+        }
+
+        protected override GUIStyle BaseStyle()
+        {
+            return HighLogic.Skin.scrollView;
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("HALWAYS", new SetSuffix<BooleanValue>(() => hscrollalways, value => hscrollalways = value));
+            AddSuffix("VALWAYS", new SetSuffix<BooleanValue>(() => vscrollalways, value => vscrollalways = value));
+            AddSuffix("POSITION", new SetSuffix<Vector>(() => new Vector(position.x,position.y,0), value => { position.x = (float)value.X; position.y = (float)value.Y; }));
+        }
+
+        public override void DoGUI()
+        {
+            if (!shown) return;
+            GUI.enabled = true; // always allow scrolling
+            position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,HighLogic.Skin.horizontalScrollbar,HighLogic.Skin.verticalScrollbar,style);
+            if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal();
+            if (!enabled) GUI.enabled = false;
+            DoChildGUIs();
+            if (layout == LayoutMode.Horizontal) GUILayout.EndHorizontal();
+            GUI.enabled = true;
+            GUILayout.EndScrollView();
+        }
+
+        public override string ToString()
+        {
+            return "SCROLLBOX";
         }
     }
 
     [kOS.Safe.Utilities.KOSNomenclature("GUI")]
-    public class GUIWidgets : Box
+    public class GUIWidgets : Box, IKOSScopeObserver
     {
         private GUIWindow window;
 
@@ -599,13 +837,14 @@ namespace kOS.Suffixed
         {
             AddSuffix("X", new SetSuffix<ScalarValue>(() => window.GetRect().x, value => window.SetX(value)));
             AddSuffix("Y", new SetSuffix<ScalarValue>(() => window.GetRect().y, value => window.SetY(value)));
+            AddSuffix("DRAGGABLE", new SetSuffix<BooleanValue>(() => window.draggable, value => window.draggable = value));
         }
 
-        override public void ScopeLost()
+        public int LinkCount { get; set; }
+
+        public void ScopeLost()
         {
-            // Hardly ever seems to be called :-(
-            SetShow(false);
-            window.Close();
+            Dispose();
         }
 
         override public void Show()
@@ -616,6 +855,10 @@ namespace kOS.Suffixed
         {
             window.Close();
         }
+        override public void Dispose()
+        {
+            GameObject.Destroy(window.gameObject);
+        }
 
         public bool GetShow()
         {
@@ -625,6 +868,21 @@ namespace kOS.Suffixed
         public void SetShow(BooleanValue newShowVal)
         {
             window.gameObject.SetActive(newShowVal);
+        }
+
+        public void SetCurrentPopup(PopupMenu pop)
+        {
+            if (window.currentPopup != null) {
+                if (window.currentPopup == pop) return;
+                window.currentPopup.PopDown();
+            }
+            window.currentPopup = pop;
+        }
+
+        public void UnsetCurrentPopup(PopupMenu pop)
+        {
+            if (window.currentPopup == pop)
+                window.currentPopup = null;
         }
 
         public override string ToString()
