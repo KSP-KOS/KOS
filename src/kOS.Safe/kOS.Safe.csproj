@@ -69,6 +69,7 @@
     <Compile Include="Encapsulation\TerminalInput.cs" />
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
     <Compile Include="Exceptions\KOSInvalidTargetException.cs" />
+    <Compile Include="Exceptions\KOSNumberParseException.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
     <Compile Include="Exceptions\KOSVolumeOutOfRangeException.cs" />

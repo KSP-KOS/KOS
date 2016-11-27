@@ -145,6 +145,61 @@ namespace kOS.Safe.Encapsulation
         {
             return internalString.TrimStart();
         }
+        
+        /// <summary>
+        /// A wrapper around ToScalar to handle the fact that a kOS suffix can't
+        /// handle being called with zero or one args (optional arg), but can handle
+        /// a var-args list like this:
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public ScalarValue ToScalarVarArgsWrapper(params Structure [] args)
+        {
+            if (args.Length > 1)
+                throw new KOSArgumentMismatchException(1, args.Length, "TONUMBER must be called with zero or one argument, no more.");
+            if (args.Length == 0)
+                return ToScalar();
+            else
+            {
+                return ToScalar((ScalarValue)args[0]); // should throw error if args[0] isn't ScalarValue.
+            }
+        }
+        
+        /// <summary>
+        /// Parse the string into a number
+        /// </summary>
+        /// <param name="defaultIfError">If the string parse fails, return this value instead.  Note that if
+        /// this optional value is left off, a KOSexception will be thrown on parsing errors instead.</param>
+        /// <returns></returns>
+        public ScalarValue ToScalar(ScalarValue defaultIfError = null)
+        {
+            char[] decimalMarkers = new char[] {'.', ','}; // depends on culture
+            char[] scientificNotationMarkers = new Char[] {'e', 'E'};
+            string trimmed = internalString.Trim();
+            bool needsDoubleParse =
+                (trimmed.IndexOfAny(decimalMarkers) >= 0) || (trimmed.IndexOfAny(scientificNotationMarkers) >= 0);
+            
+            if (needsDoubleParse)
+            {
+                double val;
+                if (double.TryParse(trimmed, out val))
+                    return (ScalarValue) ScalarValue.FromPrimitiveWithAssert(val);
+                else if (defaultIfError != null)
+                    return defaultIfError;
+                else
+                    throw new KOSNumberParseException(internalString);
+            }
+            else
+            {
+                int val;
+                if (int.TryParse(trimmed, out val))
+                    return (ScalarValue) ScalarValue.FromPrimitiveWithAssert(val);
+                else if (defaultIfError != null)
+                    return defaultIfError;
+                else
+                    throw new KOSNumberParseException(internalString);
+            }
+        }
 
         public Structure GetIndex(int index)
         {
@@ -165,12 +220,12 @@ namespace kOS.Safe.Encapsulation
         // Required by the interface but unimplemented, because strings are immutable.
         public void SetIndex(Structure index, Structure value)
         {
-            throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
+            throw new KOSException("Strings are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
         // Required by the interface but unimplemented, because strings are immutable.
         public void SetIndex(int index, Structure value)
         {
-            throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
+            throw new KOSException("Strings are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
 
         public IEnumerator<string> GetEnumerator ()
@@ -216,6 +271,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("TRIM",       new NoArgsSuffix<StringValue>(() => Trim()));
             AddSuffix("TRIMEND",    new NoArgsSuffix<StringValue>(() => TrimEnd()));
             AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
+            AddSuffix("TONUMBER",   new VarArgsSuffix<ScalarValue, Structure>(ToScalarVarArgsWrapper));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
             AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));

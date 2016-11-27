@@ -169,6 +169,9 @@ Structure
         * - :attr:`TRIMSTART`
           - :struct:`String`
           - returns a new string with no leading whitespace
+        * - :meth:`TONUMBER(defaultIfError)`
+          - :struct:`Scalar`
+          - Parse the string into a number that can be used for mathematics.
 
 
 .. method:: String:CONTAINS(string)
@@ -326,6 +329,48 @@ Structure
 
     returns a new string with no leading whitespace
 
+.. method:: String:TONUMBER(defaultIfError)
+
+    :parameter defaultIfError: (optional argument) :struct:`Scalar` to return as a default value if the string format is in error.
+    :return: :struct:`Scalar`
+
+    Returns the numeric version of the string, as a number that can be used
+    for mathematics or anywhere a :struct:`Scalar` is expected.  If the
+    string is not in a format that kOS is able to convert into a number, then
+    the value ``defaultIfError`` is returned instead.  You can use this to
+    either select a sane default, or to deliberately select a value you
+    never expect to get in normal circumstances so you can use it as a
+    test to see if the string was formatted well.
+
+    The argument ``defaultIfError`` is optional.  If it is left off, then
+    when there is a problem in the format of the string, you will get
+    an error that stops the script instead of returning a value.
+
+    The valid understood format allows an optional leading sign,
+    a decimal point with fractional part, and scientific notation
+    using "e" as in "1.23e3" for "1230" or "1.23e-3" for "0.00123".
+
+    Example - using with math::
+
+        set str to "16.8".
+        print "half of " + str + " is " + str:tonumber() / 2.
+        half of 16.8 is 8.4
+    
+    Example - checking for bad values by using defaultIfError::
+
+        set str to "Garbage 123 that is not a proper number".
+        set val to str:tonumber(-9999).
+        if val = -9999 { 
+          print "that string isn't a number".
+        } else {
+          print "the string is a number: " + val.
+        }
+
+    Example - not setting a default value can throw an error::
+
+       set str to "Garbage".
+       set val to str:tonumber().  // the script dies with error here.
+       print "value is " + val. // the script never gets this far.
     
 Access to Individual Characters
 -------------------------------
