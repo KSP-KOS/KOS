@@ -467,7 +467,7 @@ namespace kOS.Suffixed
         {
             AddSuffix("OPTIONS", new SetSuffix<ListValue>(() => list, value => list = value));
             AddSuffix("ADDOPTION", new OneArgsSuffix<Structure>(AddOption));
-            AddSuffix("VALUE", new SetSuffix<Structure>(() => (index >= 0 && index <= list.Count()) ? list[index] : new StringValue(""), value => Choose(value)));
+            AddSuffix("VALUE", new SetSuffix<Structure>(() => (index >= 0 && index < list.Count()) ? list[index] : new StringValue(""), value => Choose(value)));
             AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => index, value => index = value));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
         }
