@@ -78,6 +78,7 @@ following hierarchy:
     :attr:`X`                             :struct:`scalar` (pixels)       X-position of the window. Negative values measure from the right side of the screen.
     :attr:`Y`                             :struct:`scalar` (pixels)       Y-position of the window. Negative values measure from the bottom of the screen.
     :attr:`DRAGGABLE`                     :struct:`Boolean`               Set to false to prevent the window being user-draggable.
+    :attr:`EXTRADELAY`                    :struct:`scalar` (seconds)      Add artificial delay to all communication with this GUI (good for testing before you get into deep space)
     ===================================== =============================== =============
 
 .. structure:: Widget
@@ -143,7 +144,7 @@ following hierarchy:
     :meth:`ADDCHECKBOX(text,on)`          :struct:`Button`                Creates a toggleable button in the Box, initially checked if on is true.
     :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
-    :meth:`ADDPOPUPMENU(text)`            :struct:`PopupMenu`             Creates a popup menu.
+    :meth:`ADDPOPUPMENU`                  :struct:`PopupMenu`             Creates a popup menu.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
     :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
     :meth:`ADDHBOX`                       :struct:`Box`                   Creates a nested horizontally-arranged Box in the Box.
@@ -204,15 +205,21 @@ following hierarchy:
 
     `PopupMenu` objects are created inside Box objects via ADDPOPUPMENU method.
 
+    These objects have a list of values (not necessarily strings) which are presented to
+    the user as a list from which they can choose. If the items in the list are not strings,
+    you should generally set the OPTIONSUFFIX to something (eg. "NAME").
+
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
                    Every suffix of :struct:`BUTTON`
     -----------------------------------------------------------------------------------
     :attr:`OPTIONS`                       :struct:`List`(Any)             List of options to display.
+    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix that names the options.
     :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                             Returns the current selected value.
     :attr:`INDEX`                         integer                         Returns the index of the current selected value.
+    :attr:`CHANGED`                       :struct:`Boolean`               Has the user chosen something?
     :meth:`CLEAR`                                                         Removes all options.
     ===================================== =============================== =============
 
@@ -272,4 +279,13 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :attr:`AMOUNT`                        :struct:`scalar`                The amount of space, or -1 for flexible spacing.
     ===================================== =============================== =============
+
+Communication Delay
+-------------------
+
+If communication delay is enabled (eg. using RemoteTech), you will still be
+able to interact with a GUI, but changes to values and messages will incur
+a signal delay. Similarly, changes to values in the GUI will be delayed coming
+back. Some things such as GUI creation, adding widgets, etc. are immediate for
+simplicity.
 

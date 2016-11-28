@@ -22,6 +22,14 @@ using System;
 
 namespace kOS.Suffixed
 {
+    static class StringExt
+    {
+        public static string Ellipsis(this string value, int maxChars)
+        {
+            return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
+        }
+    }
+
     [kOS.Safe.Utilities.KOSNomenclature("Widget")]
     abstract public class Widget : Structure
     {
@@ -105,7 +113,12 @@ namespace kOS.Suffixed
         virtual public void Dispose()
         {
             shown = false;
-            if (parent != null) parent.Remove(this);
+            if (parent != null) {
+                parent.Remove(this);
+                var gui = FindGUI();
+                if (gui != null)
+                    gui.ClearCommunication(this);
+            }
         }
 
         abstract public void DoGUI();
@@ -148,6 +161,15 @@ namespace kOS.Suffixed
             return r;
         }
 
+        virtual protected void Communicate(Action a)
+        {
+            var gui = FindGUI();
+            if (gui != null)
+                gui.Communicate(this,ToString(),a);
+            else
+                a();
+        }
+
         public override string ToString()
         {
             return "WIDGET";
@@ -158,7 +180,8 @@ namespace kOS.Suffixed
     public class Slider : Widget
     {
         public bool horizontal { get; set; }
-        public float value { get; set; }
+        private float value { get; set; }
+        private float value_visible { get; set; }
         public float min { get; set; }
         public float max { get; set; }
         protected GUIStyle thumbStyle;
@@ -178,22 +201,27 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("VALUE", new SetSuffix<ScalarValue>(() => value, v => value = v));
+            AddSuffix("VALUE", new SetSuffix<ScalarValue>(() => value, v => { if (value != v) { value = v; Communicate(() => value_visible = v); } }));
             AddSuffix("MIN", new SetSuffix<ScalarValue>(() => min, v => min = v));
             AddSuffix("MAX", new SetSuffix<ScalarValue>(() => max, v => max = v));
         }
 
         public override void DoGUI()
         {
+            float newvalue;
             if (horizontal)
-                value = GUILayout.HorizontalSlider(value, min, max, style, thumbStyle);
+                newvalue = GUILayout.HorizontalSlider(value_visible, min, max, style, thumbStyle);
             else
-                value = GUILayout.VerticalSlider(value, min, max, style, thumbStyle);
+                newvalue = GUILayout.VerticalSlider(value_visible, min, max, style, thumbStyle);
+            if (newvalue != value_visible) {
+                value_visible = newvalue;
+                Communicate(() => value = newvalue);
+            }
         }
 
         public override string ToString()
         {
-            return "SLIDER(" + value + ")";
+            return string.Format("SLIDER({0:0.00})",value);
         }
     }
 
@@ -235,12 +263,14 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Label")]
     public class Label : Widget
     {
-        public GUIContent content { get; set; }
+        private GUIContent content { get; set; }
+        private GUIContent content_visible { get; set; }
 
         public Label(Box parent, string text) : base(parent)
         {
             RegisterInitializer(InitializeSuffixes);
             content = new GUIContent(text);
+            content_visible = new GUIContent(text);
         }
 
         protected override GUIStyle BaseStyle()
@@ -250,13 +280,53 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("TEXT", new SetSuffix<StringValue>(() => content.text, value => content.text = value));
-            AddSuffix("IMAGE", new SetSuffix<StringValue>(() => "", value => content.image = GetTexture(value)));
-            AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => content.tooltip = value));
+            AddSuffix("TEXT", new SetSuffix<StringValue>(() => content.text, value => { if (content.text != value) { content.text = value; Communicate(() => content_visible.text = value); } }));
+            AddSuffix("IMAGE", new SetSuffix<StringValue>(() => "", value => SetContentImage(value)));
+            AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => { if (content.tooltip != value) { content.tooltip = value; Communicate(() => content_visible.tooltip = value); } }));
             AddSuffix("ALIGN", new SetSuffix<StringValue>(GetAlignment, SetAlignment));
             AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => style.fontSize, value => setstyle.fontSize = value));
             AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => style.richText, value => setstyle.richText = value));
             AddSuffix("TEXTCOLOR", new SetSuffix<RgbaColor>(() => GetStyleRgbaColor(), value => SetStyleRgbaColor(value)));
+        }
+
+        protected void SetInitialContentImage(Texture2D img)
+        {
+            content.image = img;
+            content_visible.image = img;
+        }
+
+        protected void SetContentImage(string img)
+        {
+            var tex = GetTexture(img);
+            content.image = tex;
+            Communicate(() => content_visible.image = tex);
+        }
+
+        protected string StoredText()
+        {
+            return content.text;
+        }
+
+        protected string VisibleTooltip()
+        {
+            return content_visible.tooltip;
+        }
+        protected string VisibleText()
+        {
+            return content_visible.text;
+        }
+
+        protected void SetVisibleText(string t)
+        {
+            if (content_visible.text != t) {
+                content_visible.text = t;
+                Communicate(() => content.text = t);
+            }
+        }
+
+        protected GUIContent VisibleContent()
+        {
+            return content_visible;
         }
 
         StringValue GetAlignment()
@@ -277,12 +347,12 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            GUILayout.Label(content, style);
+            GUILayout.Label(content_visible, style);
         }
 
         public override string ToString()
         {
-            return "LABEL(" + content.text + ")";
+            return "LABEL(" + content.text.Ellipsis(10) + ")";
         }
     }
 
@@ -333,30 +403,31 @@ namespace kOS.Suffixed
         public override void DoGUI()
         {
             if (Event.current.keyCode == KeyCode.Return && GUIUtility.keyboardControl == uiID) {
-                Confirmed = true;
+                Communicate(() => Confirmed = true);
                 GUIUtility.keyboardControl = -1;
             }
             uiID = GUIUtility.GetControlID(FocusType.Passive) + 1; // Dirty kludge.
-            var newtext = GUILayout.TextField(content.text, style);
-            if (newtext != content.text) {
-                content.text = newtext;
+            var newtext = GUILayout.TextField(VisibleText(), style);
+            if (newtext != VisibleText()) {
+                SetVisibleText(newtext);
                 Changed = true;
             }
             if (newtext == "") {
-                GUI.Label(GUILayoutUtility.GetLastRect(), content.tooltip, toolTipStyle);
+                GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), toolTipStyle);
             }
         }
 
         public override string ToString()
         {
-            return "TEXTFIELD(" + content.text + ")";
+            return "TEXTFIELD(" + StoredText().Ellipsis(10) + ")";
         }
     }
 
     [kOS.Safe.Utilities.KOSNomenclature("Button")]
     public class Button : Label
     {
-        public bool Pressed { get; set; }
+        public bool Pressed { get; private set; }
+        public bool PressedVisible { get; private set; }
         public bool isToggle { get; set; }
         public bool isExclusive { get; set; }
 
@@ -371,16 +442,20 @@ namespace kOS.Suffixed
             return isToggle ? HighLogic.Skin.toggle : HighLogic.Skin.button;
         }
 
-        public static Button NewCheckbox(Box parent, string text)
+        public static Button NewCheckbox(Box parent, string text, bool on)
         {
             var r = new Button(parent, text);
+            r.Pressed = on;
+            r.PressedVisible = on;
             r.SetToggleMode(true);
             return r;
         }
 
-        public static Button NewRadioButton(Box parent, string text)
+        public static Button NewRadioButton(Box parent, string text, bool on)
         {
             var r = new Button(parent, text);
+            r.Pressed = on;
+            r.PressedVisible = on;
             r.SetToggleMode(true);
             r.isExclusive = true;
             return r;
@@ -388,7 +463,7 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => Pressed = value));
+            AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => { Pressed = value; Communicate(() => PressedVisible = value); }));
             AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => isExclusive, value => isExclusive = value));
         }
@@ -406,33 +481,50 @@ namespace kOS.Suffixed
             return r;
         }
 
+        public void SetPressedVisible(bool on)
+        {
+            PressedVisible = on;
+            if (PressedVisible != on)
+                Communicate(() => Pressed = on);
+        }
+
         public override void DoGUI()
         {
             if (isToggle) {
-                Pressed = GUILayout.Toggle(Pressed, content, style);
-                if (isExclusive && Pressed && parent != null) {
-                    parent.UnpressAllBut(this);
+                var newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), style);
+                PressedVisible = newpressed;
+                if (isExclusive && newpressed && parent != null) {
+                    parent.UnpressVisibleAllBut(this);
                 }
+                if (Pressed != newpressed)
+                    Communicate(() => Pressed = newpressed);
             } else {
-                if (GUILayout.Toggle(Pressed, content, style)) Pressed = true;
+                if (GUILayout.Toggle(PressedVisible, VisibleContent(), style)) {
+                    if (!PressedVisible) {
+                        PressedVisible = true;
+                        Communicate(() => Pressed = true);
+                    }
+                }
             }
         }
 
         public override string ToString()
         {
-            return "BUTTON(" + content.text + ")" + (Pressed ? " is pressed" : "");
+            return "BUTTON(" + VisibleText().Ellipsis(10) + ")";
         }
     }
 
     [kOS.Safe.Utilities.KOSNomenclature("PopupMenu")]
     public class PopupMenu : Button
     {
+        private bool changed = false;
         private ListValue list;
         private int index = 0;
         GUIStyle popupStyle;
         GUIStyle itemStyle;
+        string optSuffix = "ToString";
 
-        public PopupMenu(Box parent, string text) : base(parent, text)
+        public PopupMenu(Box parent) : base(parent,"")
         {
             setstyle.alignment = TextAnchor.MiddleLeft;
             isToggle = true;
@@ -453,8 +545,7 @@ namespace kOS.Suffixed
             popupStyle.margin = new RectOffset(0, 0, 0, 0);
 
             list = new ListValue();
-            list.Add(new StringValue(text));
-            content.image =  GameDatabase.Instance.GetTexture("kOS/GFX/radiobutton", false);
+            SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/radiobutton", false));
             RegisterInitializer(InitializeSuffixes);
         }
 
@@ -468,28 +559,54 @@ namespace kOS.Suffixed
             AddSuffix("OPTIONS", new SetSuffix<ListValue>(() => list, value => list = value));
             AddSuffix("ADDOPTION", new OneArgsSuffix<Structure>(AddOption));
             AddSuffix("VALUE", new SetSuffix<Structure>(() => (index >= 0 && index < list.Count()) ? list[index] : new StringValue(""), value => Choose(value)));
-            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => index, value => index = value));
+            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => index, value => { index = value; if (index >= 0 && index < list.Count()) SetVisibleText(GetItemString(list[index])); }));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
+            AddSuffix("CHANGED", new SetSuffix<BooleanValue>(() => TakeChange(), value => changed = value));
+            AddSuffix("OPTIONSUFFIX", new SetSuffix<StringValue>(() => optSuffix, value => optSuffix = value));
         }
 
         public void Clear()
         {
             list.Clear();
-            content.text = "";
+            SetVisibleText("");
+            Communicate(() => changed = true);
             // Note: we leave the index alone so things can be set in any order.
+        }
+
+        public bool TakeChange()
+        {
+            var r = changed;
+            changed = false;
+            return r;
+        }
+
+        string GetItemString(Structure item)
+        {
+            if (item.HasSuffix(optSuffix)) {
+                var v = item.GetSuffix(optSuffix);
+                if (v.HasValue) return v.Value.ToString();
+            }
+            return item.ToString();
         }
 
         public void AddOption(Structure opt)
         {
             if (list.Count() == index)
-                content.text = opt.ToString();
+                SetVisibleText(GetItemString(opt));
             list.Add(opt);
+            Communicate(() => changed = true);
         }
 
         public void Choose(Structure v)
         {
-            for (index = 0; index<list.Count(); ++index) {
+            for (index = 0; index < list.Count(); ++index) {
                 if (list[index] == v) {
+                    return;
+                }
+            }
+            var vs = GetItemString(v);
+            for (index = 0; index < list.Count(); ++index) {
+                if (GetItemString(list[index]) == vs) {
                     return;
                 }
             }
@@ -498,17 +615,17 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            var was = Pressed;
+            var was = PressedVisible;
             base.DoGUI();
             if (Event.current.type == EventType.Repaint) {
                 var r = GUILayoutUtility.GetLastRect();
                 popupRect.position = GUIUtility.GUIToScreenPoint(r.position) + new Vector2(0, r.height);
                 popupRect.width = r.width;
             }
-            if (was != Pressed) {
+            if (was != PressedVisible) {
                 var gui = FindGUI();
                 if (gui != null) {
-                    if (Pressed)
+                    if (PressedVisible)
                         gui.SetCurrentPopup(this);
                     else
                         gui.UnsetCurrentPopup(this);
@@ -518,7 +635,7 @@ namespace kOS.Suffixed
 
         public void PopDown()
         {
-            Pressed = false;
+            SetPressedVisible(false);
             var gui = FindGUI();
             if (gui != null)
                 gui.UnsetCurrentPopup(this);
@@ -539,10 +656,12 @@ namespace kOS.Suffixed
 
             GUILayout.BeginVertical(popupStyle);
             for (int i=0; i<list.Count(); ++i) {
-                if (GUILayout.Button(list[i].ToString(), itemStyle)) {
-                    index = i;
-                    content.text = list[i].ToString();
+                if (GUILayout.Button(GetItemString(list[i]), itemStyle)) {
+                    var newindex = i;
+                    Communicate(() => index = newindex);
+                    SetVisibleText(GetItemString(list[i]));
                     PopDown();
+                    Communicate(() => changed = true);
                 }
             }
             GUILayout.EndVertical();
@@ -550,7 +669,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "POPUPMENU(" + content.text + ")";
+            return "POPUP(" + StoredText().Ellipsis(10) + ")";
         }
     }
 
@@ -582,7 +701,7 @@ namespace kOS.Suffixed
             AddSuffix("ADDBUTTON", new OneArgsSuffix<Button, StringValue>(AddButton));
             AddSuffix("ADDRADIOBUTTON", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddRadioButton));
             AddSuffix("ADDCHECKBOX", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddCheckbox));
-            AddSuffix("ADDPOPUPMENU", new OneArgsSuffix<PopupMenu, StringValue>(AddPopupMenu));
+            AddSuffix("ADDPOPUPMENU", new Suffix<PopupMenu>(AddPopupMenu));
             AddSuffix("ADDHSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddHSlider));
             AddSuffix("ADDVSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddVSlider));
             AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
@@ -606,11 +725,11 @@ namespace kOS.Suffixed
             }
         }
 
-        public void UnpressAllBut(Widget leave)
+        public void UnpressVisibleAllBut(Widget leave)
         {
             for (var i = 0; i < widgets.Count; ++i) {
                 var w = widgets[i] as Button;
-                if (w != null && w != leave) w.Pressed = false;
+                if (w != null && w != leave) { w.SetPressedVisible(false); }
             }
         }
 
@@ -720,23 +839,21 @@ namespace kOS.Suffixed
 
         public Button AddCheckbox(StringValue text, BooleanValue on)
         {
-            var w = Button.NewCheckbox(this, text);
-            w.Pressed = on;
+            var w = Button.NewCheckbox(this, text, on);
             widgets.Add(w);
             return w;
         }
 
         public Button AddRadioButton(StringValue text, BooleanValue on)
         {
-            var w = Button.NewRadioButton(this, text);
-            w.Pressed = on;
+            var w = Button.NewRadioButton(this, text, on);
             widgets.Add(w);
             return w;
         }
 
-        public PopupMenu AddPopupMenu(StringValue text)
+        public PopupMenu AddPopupMenu()
         {
-            var w = new PopupMenu(this, text);
+            var w = new PopupMenu(this);
             widgets.Add(w);
             return w;
         }
@@ -768,7 +885,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return layout + "BOX";
+            return layout.ToString()[0] + "BOX";
         }
     }
     [kOS.Safe.Utilities.KOSNomenclature("ScrollBox")]
@@ -798,14 +915,16 @@ namespace kOS.Suffixed
         public override void DoGUI()
         {
             if (!shown) return;
+            var was = GUI.enabled;
             GUI.enabled = true; // always allow scrolling
             position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,HighLogic.Skin.horizontalScrollbar,HighLogic.Skin.verticalScrollbar,style);
             if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal();
-            if (!enabled) GUI.enabled = false;
+            if (!enabled || !was) GUI.enabled = false;
             DoChildGUIs();
             if (layout == LayoutMode.Horizontal) GUILayout.EndHorizontal();
             GUI.enabled = true;
             GUILayout.EndScrollView();
+            GUI.enabled = was;
         }
 
         public override string ToString()
@@ -838,6 +957,7 @@ namespace kOS.Suffixed
             AddSuffix("X", new SetSuffix<ScalarValue>(() => window.GetRect().x, value => window.SetX(value)));
             AddSuffix("Y", new SetSuffix<ScalarValue>(() => window.GetRect().y, value => window.SetY(value)));
             AddSuffix("DRAGGABLE", new SetSuffix<BooleanValue>(() => window.draggable, value => window.draggable = value));
+            AddSuffix("EXTRADELAY", new SetSuffix<ScalarValue>(() => window.extraDelay, value => window.extraDelay = value));
         }
 
         public int LinkCount { get; set; }
@@ -883,6 +1003,16 @@ namespace kOS.Suffixed
         {
             if (window.currentPopup == pop)
                 window.currentPopup = null;
+        }
+
+        public void Communicate(Widget w, string reason, Action a)
+        {
+            window.Communicate(w, reason, a);
+        }
+
+        public void ClearCommunication(Widget w)
+        {
+            window.ClearCommunication(w);
         }
 
         public override string ToString()
