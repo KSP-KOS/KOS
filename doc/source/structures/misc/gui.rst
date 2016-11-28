@@ -209,6 +209,19 @@ following hierarchy:
     the user as a list from which they can choose. If the items in the list are not strings,
     you should generally set the OPTIONSUFFIX to something (eg. "NAME").
 
+    Example::
+
+	local popup to gui:addpopupmenu().
+	set popup:OPTIONSUFFIX to "NAME".
+	list bodies in bodies.
+	for planet in bodies {
+		if planet:hasbody and planet:body = Sun {
+			popup:addoption(planet).
+		}
+	}
+	set popup:value to body.
+
+
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
