@@ -165,5 +165,60 @@ namespace kOS.Safe.Test.Structures
             Assert.AreNotEqual(testValue, null);
             Assert.AreNotEqual(null, testValue);
         }
+
+        [Test]
+        public void CanParseScientificStrings()
+        {
+            // check using a double value
+            ScalarValue doubleTest = 1.23e-5;
+            Assert.IsTrue(doubleTest.IsDouble);
+            var stringTest = new StringValue("1.23e-5");
+            Assert.IsTrue(stringTest.ToScalar() == doubleTest);
+            stringTest = new StringValue("1.23 e -5");
+            Assert.IsTrue(stringTest.ToScalar() == doubleTest);
+            stringTest = new StringValue("1.23e -5");
+            Assert.IsTrue(stringTest.ToScalar() == doubleTest);
+            stringTest = new StringValue("1.23 e-5");
+            Assert.IsTrue(stringTest.ToScalar() == doubleTest);
+            stringTest = new StringValue(" 1.23 e -5 ");
+            Assert.IsTrue(stringTest.ToScalar() == doubleTest);
+            stringTest = new StringValue(" 1.23e-5 ");
+            Assert.IsTrue(stringTest.ToScalar() == doubleTest);
+
+            // check using an integer value
+            ScalarValue intTest = 1.23e3;
+            Assert.IsTrue(intTest.IsInt);
+            // without sign symbol
+            stringTest = new StringValue("1.23e3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue("1.23 e 3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue("1.23e 3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue("1.23 e3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue(" 1.23 e 3 ");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue(" 1.23e3 ");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+
+            // with sign symbol
+            stringTest = new StringValue("1.23e+3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue("1.23 e +3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue("1.23e +3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue("1.23 e+3");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue(" 1.23 e +3 ");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+            stringTest = new StringValue(" 1.23e+3 ");
+            Assert.IsTrue(stringTest.ToScalar() == intTest);
+
+            // test error throwing with invalid format
+            stringTest = new StringValue(" 1.23e+3a ");
+            Assert.Throws(typeof(Exceptions.KOSNumberParseException), () => stringTest.ToScalar());
+        }
     }
 }

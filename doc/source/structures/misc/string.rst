@@ -12,9 +12,9 @@ Unlike other structures, strings are created with a special syntax::
 
     // Create a new string
     SET s TO "Hello, Strings!".
-    
 
-Strings are immutable. This means, once a string has been created, it 
+
+Strings are immutable. This means, once a string has been created, it
 can not be directly modified. However, new strings can be created out
 of existing strings. For example::
 
@@ -70,7 +70,7 @@ In the first example, both sides of the ``<`` operator are
 :ref:`scalars <scalar>`, so the comparison is done numerically,
 and 1234 is much bigger than 99.
 
-In the second example, one side of the ``<`` operator is a 
+In the second example, one side of the ``<`` operator is a
 string, so the other side is converted from the :ref:`scalar <scalar>`
 ``99`` into the :ref:`string <string>` ``"99"`` to perform the
 comparison, and then the string comparison looks one character at
@@ -89,7 +89,7 @@ will let you choose case-sensitivity when you prefer.
 At the moment the only way to force a case-sensitive comparison is
 to look at the characters one at a time and obtain their numerical
 ordinal Unicode value with the :func:`unchar(a)` function.
-	
+
 Structure
 ---------
 
@@ -105,10 +105,10 @@ Structure
 
         * - :meth:`CONTAINS(string)`
           - :ref:`boolean <boolean>`
-          - True if the given string is contained within this string  
+          - True if the given string is contained within this string
         * - :meth:`ENDSWITH(string)`
           - :ref:`boolean <boolean>`
-          - True if this string ends with the given string 
+          - True if this string ends with the given string
         * - :meth:`FIND(string)`
           - :struct:`Scalar`
           - Returns the index of the first occurrence of the given string in this string (starting from 0)
@@ -150,7 +150,7 @@ Structure
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
           - :ref:`boolean <boolean>`
-          - True if this string starts with the given string 
+          - True if this string starts with the given string
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
           - Returns a new string with the given count of characters from this string starting from the given start position
@@ -172,13 +172,16 @@ Structure
         * - :meth:`TONUMBER(defaultIfError)`
           - :struct:`Scalar`
           - Parse the string into a number that can be used for mathematics.
+        * - :meth:`TOSCALAR(defaultIfError)`
+          - :struct:`Scalar`
+          - Alias for :meth:`TONUMBER`
 
 
 .. method:: String:CONTAINS(string)
 
     :parameter string: :struct:`String` to look for
     :type: :ref:`boolean <boolean>`
-    
+
     True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
@@ -192,15 +195,15 @@ Structure
 
     :parameter string: :struct:`String` to look for
     :type: :struct:`String`
-    
+
     Returns the index of the first occurrence of the given string in this string (starting from 0).
-    
+
 .. method:: String:FINDAT(string, startAt)
 
     :parameter string: :struct:`String` to look for
     :parameter startAt: :struct:`Scalar` (integer) index to start searching at
     :type: :struct:`String`
-    
+
     Returns the index of the first occurrence of the given string in this string (starting from startAt).
 
 .. method:: String:FINDLAST(string)
@@ -275,7 +278,7 @@ Structure
 
     :parameter separator: :struct:`String` delimiter on which this string will be split
     :return: :struct:`List`
-    
+
     Breaks this string up into a list of smaller strings on each occurrence of the given separator. This will return a
     list of strings, none of which will contain the separator character(s).
 
@@ -355,12 +358,12 @@ Structure
         set str to "16.8".
         print "half of " + str + " is " + str:tonumber() / 2.
         half of 16.8 is 8.4
-    
+
     Example - checking for bad values by using defaultIfError::
 
         set str to "Garbage 123 that is not a proper number".
         set val to str:tonumber(-9999).
-        if val = -9999 { 
+        if val = -9999 {
           print "that string isn't a number".
         } else {
           print "the string is a number: " + val.
@@ -371,7 +374,11 @@ Structure
        set str to "Garbage".
        set val to str:tonumber().  // the script dies with error here.
        print "value is " + val. // the script never gets this far.
-    
+
+.. method:: String:TONUMBER(defaultIfError)
+
+    Alias for :meth:`String:TONUMBER(defaultIfError)`
+
 Access to Individual Characters
 -------------------------------
 
@@ -380,7 +387,7 @@ All string indexes start counting at zero. (The characters are numbered from 0 t
 ``string[expression]``
 
   - operator: access the character at position 'expression'. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.
-    
+
 ``FOR VAR IN STRING { ... }.``
 
   - :ref:`A type of loop <flow>` in which var iterates over all the characters of the string from 0 to LENGTH-1.
@@ -404,23 +411,23 @@ Examples::
     PRINT "FINDLASTAT(''l'', 9):          " + s:FINDLASTAT("l", 9). // 3
     PRINT "FINDLASTAT(''l'', 2):          " + s:FINDLASTAT("l", 2). // 2
     PRINT "INSERT(7, ''Big ''):           " + s:INSERT(7, "Big ").  // Hello, Big Strings!
-    
+
     PRINT " ".
     PRINT "                               |------ 18 ------|".
     PRINT "PADLEFT(18):                   " + s:PADLEFT(18).        //    Hello, Strings!
-    PRINT "PADRIGHT(18):                  " + s:PADRIGHT(18).       // Hello, Strings!   
+    PRINT "PADRIGHT(18):                  " + s:PADRIGHT(18).       // Hello, Strings!
     PRINT " ".
-    
+
     PRINT "REMOVE(1, 3):                  " + s:REMOVE(1, 3).               // Ho, Strings!
     PRINT "REPLACE(''Hell'', ''Heaven''): " + s:REPLACE("Hell", "Heaven").  // Heaveno, Strings!
     PRINT "STARTSWITH(''Hell''):          " + s:STARTSWITH("Hell").         // True
     PRINT "STARTSWITH(''Heaven''):        " + s:STARTSWITH("Heaven").       // False
     PRINT "TOUPPER:                       " + s:TOUPPER().                  // HELLO, STRINGS!
     PRINT "TOLOWER:                       " + s:TOLOWER().                  // hello, strings!
-    
+
     PRINT " ".
     PRINT "''  Hello!  '':TRIM():         " + "  Hello!  ":TRIM().          // Hello!
-    PRINT "''  Hello!  '':TRIMSTART():    " + "  Hello!  ":TRIMSTART().     // Hello!  
+    PRINT "''  Hello!  '':TRIMSTART():    " + "  Hello!  ":TRIMSTART().     // Hello!
     PRINT "''  Hello!  '':TRIMEND():      " + "  Hello!  ":TRIMEND().       //   Hello!
 
     PRINT " ".

@@ -173,32 +173,18 @@ namespace kOS.Safe.Encapsulation
         /// <returns></returns>
         public ScalarValue ToScalar(ScalarValue defaultIfError = null)
         {
-            char[] decimalMarkers = new char[] {'.', ','}; // depends on culture
-            char[] scientificNotationMarkers = new Char[] {'e', 'E'};
-            string trimmed = internalString.Trim();
-            bool needsDoubleParse =
-                (trimmed.IndexOfAny(decimalMarkers) >= 0) || (trimmed.IndexOfAny(scientificNotationMarkers) >= 0);
-            
-            if (needsDoubleParse)
+            ScalarValue result;
+
+            if (ScalarValue.TryParse(internalString, out result))
             {
-                double val;
-                if (double.TryParse(trimmed, out val))
-                    return (ScalarValue) ScalarValue.FromPrimitiveWithAssert(val);
-                else if (defaultIfError != null)
-                    return defaultIfError;
-                else
-                    throw new KOSNumberParseException(internalString);
+                return result;
             }
-            else
+            else if (defaultIfError != null)
             {
-                int val;
-                if (int.TryParse(trimmed, out val))
-                    return (ScalarValue) ScalarValue.FromPrimitiveWithAssert(val);
-                else if (defaultIfError != null)
-                    return defaultIfError;
-                else
-                    throw new KOSNumberParseException(internalString);
+                return defaultIfError;
             }
+
+            throw new KOSNumberParseException(internalString);
         }
 
         public Structure GetIndex(int index)
@@ -271,7 +257,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("TRIM",       new NoArgsSuffix<StringValue>(() => Trim()));
             AddSuffix("TRIMEND",    new NoArgsSuffix<StringValue>(() => TrimEnd()));
             AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
-            AddSuffix("TONUMBER",   new VarArgsSuffix<ScalarValue, Structure>(ToScalarVarArgsWrapper));
+            AddSuffix(new[] { "TONUMBER", "TOSCALAR" },   new VarArgsSuffix<ScalarValue, Structure>(ToScalarVarArgsWrapper));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
             AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));
