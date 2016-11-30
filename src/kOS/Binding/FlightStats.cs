@@ -23,7 +23,6 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter(new [] { "OBT" , "ORBIT"}, () => new OrbitInfo(shared.Vessel.orbit,shared));
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
-            shared.BindingMgr.AddGetter("SHIP", () => new VesselTarget(shared));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => new VesselTarget(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
             shared.BindingMgr.AddGetter("STAGE", () => new StageValues(shared));

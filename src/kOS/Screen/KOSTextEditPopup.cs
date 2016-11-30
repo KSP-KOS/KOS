@@ -58,9 +58,7 @@ namespace kOS.Screen
             // Load dummy textures
             resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
 
-            var gObj = new GameObject("texteditConfirm", typeof(DelegateDialog));
-            DontDestroyOnLoad(gObj);
-            dialog = (DelegateDialog)gObj.GetComponent(typeof(DelegateDialog));
+            dialog = gameObject.AddComponent<DelegateDialog>();
             var urlGetter = new WWW(string.Format("file://{0}GameData/kOS/GFX/resize-button.png", KSPUtil.ApplicationRootPath.Replace("\\", "/")));
             urlGetter.LoadImageIntoTexture(resizeImage);
         }

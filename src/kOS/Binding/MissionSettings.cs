@@ -9,9 +9,15 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class MissionSettings : Binding
     {
+        private VesselTarget ship;
+        private SharedObjects sharedObj;
+
         public override void AddTo(SharedObjects shared)
         {
+            sharedObj = shared;
+
             shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
+            shared.BindingMgr.AddGetter("SHIP", () => ship ?? (ship = new VesselTarget(shared)));
 
             shared.BindingMgr.AddSetter("TARGET", val =>
             {
@@ -80,6 +86,19 @@ namespace kOS.Binding
                 return FlightGlobals.fetch.VesselTarget != null;
             });
 
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (ship == null)
+            {
+                ship = new Suffixed.VesselTarget(sharedObj);
+            }
+            if (!ship.Vessel.Equals(sharedObj.Vessel))
+            {
+                ship = new VesselTarget(sharedObj);
+            }
         }
     }
 }

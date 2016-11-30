@@ -255,7 +255,7 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return "Structure ";
+            return KOSNomenclature.GetKOSName(GetType()) + "()"; // print as the KOSNomenclature string name
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace kOS.Sound
     /// </summary>
     public class SoundMaker : MonoBehaviour, ISoundMaker
     {
-        private string kspDirectory = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+        private string kspDirectory;
         private Dictionary<string, AudioSource> sounds;
         private Voice[] voices;
         private Dictionary<string, ProceduralSoundWave> waveGenerators;
@@ -29,6 +29,8 @@ namespace kOS.Sound
         // Each Terminal should hold one instance of me.
         void Awake()
         {
+            kspDirectory = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+
             sounds = new Dictionary<string, AudioSource>();
             waveGenerators = new Dictionary<string, ProceduralSoundWave>();
 

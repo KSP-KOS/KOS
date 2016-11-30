@@ -141,9 +141,7 @@ namespace kOS.Screen
                 fontSize = 10
             };
 
-            var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
-            DontDestroyOnLoad(gObj);
-            popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
+            popupEditor = gameObject.AddComponent<KOSTextEditPopup>();
             popupEditor.SetUniqueId(UniqueId + 5);
             
             customSkin = BuildPanelSkin();

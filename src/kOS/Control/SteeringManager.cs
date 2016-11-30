@@ -437,7 +437,7 @@ namespace kOS.Control
         {
             if (Value == null)
             {
-                SafeHouse.Logger.LogError("SteeringManager.Update: Value is <null>");
+                SafeHouse.Logger.SuperVerbose("SteeringManager.Update: Value is <null>");
                 return;
             }
 
