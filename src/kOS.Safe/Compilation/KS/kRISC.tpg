@@ -7,7 +7,7 @@ PLUSMINUS    -> @"(\+|-)";
 MULT         -> @"\*";
 DIV          -> @"/";
 POWER        -> @"\^";
-E            -> @"\be\b";
+E            -> @"\be((?=\d)|\b)";
 //Logic
 NOT          -> @"\bnot\b";
 AND          -> @"\band\b";
