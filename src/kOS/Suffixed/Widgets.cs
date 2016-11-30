@@ -477,7 +477,10 @@ namespace kOS.Suffixed
         public bool TakePress()
         {
             var r = Pressed;
-            if (!isToggle) Pressed = false;
+            if (!isToggle && Pressed) {
+                Pressed = false;
+                Communicate(() => PressedVisible = false);
+            }
             return r;
         }
 
