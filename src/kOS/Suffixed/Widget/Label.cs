@@ -29,8 +29,8 @@ namespace kOS.Suffixed
             AddSuffix("IMAGE", new SetSuffix<StringValue>(() => "", value => SetContentImage(value)));
             AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => { if (content.tooltip != value) { content.tooltip = value; Communicate(() => content_visible.tooltip = value); } }));
             AddSuffix("ALIGN", new SetSuffix<StringValue>(GetAlignment, SetAlignment));
-            AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => style.fontSize, value => setstyle.fontSize = value));
-            AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => style.richText, value => setstyle.richText = value));
+            AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => Style.fontSize, value => SetStyle.fontSize = value));
+            AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => Style.richText, value => SetStyle.richText = value));
             AddSuffix("TEXTCOLOR", new SetSuffix<RgbaColor>(() => GetStyleRgbaColor(), value => SetStyleRgbaColor(value)));
         }
 
@@ -76,23 +76,23 @@ namespace kOS.Suffixed
 
         StringValue GetAlignment()
         {
-            if (style.alignment == TextAnchor.MiddleCenter) return "CENTER";
-            if (style.alignment == TextAnchor.MiddleRight) return "RIGHT";
+            if (Style.alignment == TextAnchor.MiddleCenter) return "CENTER";
+            if (Style.alignment == TextAnchor.MiddleRight) return "RIGHT";
             return "LEFT";
         }
 
         void SetAlignment(StringValue s)
         {
             s = s.ToLower();
-            if (s == "center") setstyle.alignment = TextAnchor.MiddleCenter;
-            else if (s == "right") setstyle.alignment = TextAnchor.MiddleRight;
-            else if (s == "left") setstyle.alignment = TextAnchor.MiddleLeft;
+            if (s == "center") SetStyle.alignment = TextAnchor.MiddleCenter;
+            else if (s == "right") SetStyle.alignment = TextAnchor.MiddleRight;
+            else if (s == "left") SetStyle.alignment = TextAnchor.MiddleLeft;
             else throw new KOSInvalidArgumentException("LABEL", "ALIGNMENT", "expected CENTER, LEFT, or RIGHT, found " + s);
         }
 
         public override void DoGUI()
         {
-            GUILayout.Label(content_visible, style);
+            GUILayout.Label(content_visible, Style);
         }
 
         public override string ToString()

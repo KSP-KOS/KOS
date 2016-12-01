@@ -7,7 +7,7 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Spacing")]
     public class Spacing : Widget
     {
-        public float amount { get; set; }
+        private float amount { get; set; }
 
         public Spacing(Box parent, float v) : base(parent)
         {

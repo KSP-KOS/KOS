@@ -11,7 +11,7 @@ namespace kOS.Suffixed
         public bool Changed { get; set; }
         public bool Confirmed { get; set; }
 
-        static GUIStyle toolTipStyle = null;
+        private static GUIStyle toolTipStyle = null;
 
         public TextField(Box parent, string text) : base(parent,text)
         {
@@ -56,7 +56,7 @@ namespace kOS.Suffixed
                 GUIUtility.keyboardControl = -1;
             }
             uiID = GUIUtility.GetControlID(FocusType.Passive) + 1; // Dirty kludge.
-            var newtext = GUILayout.TextField(VisibleText(), style);
+            var newtext = GUILayout.TextField(VisibleText(), Style);
             if (newtext != VisibleText()) {
                 SetVisibleText(newtext);
                 Changed = true;

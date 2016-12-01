@@ -9,16 +9,16 @@ namespace kOS.Suffixed
     public class Box : Widget
     {
         public enum LayoutMode { Stack, Horizontal, Vertical }
-        protected LayoutMode layout;
-        protected List<Widget> widgets;
+        protected LayoutMode Mode { get; private set; }
+        protected List<Widget> Widgets { get; private set; }
 
-        public int Count { get { return widgets.Count; } }
+        public int Count { get { return Widgets.Count; } }
 
         public Box(Box parent, LayoutMode mode) : base(parent)
         {
             RegisterInitializer(InitializeSuffixes);
-            layout = mode;
-            widgets = new List<Widget>();
+            Mode = mode;
+            Widgets = new List<Widget>();
         }
 
         protected override GUIStyle BaseStyle()
@@ -43,15 +43,15 @@ namespace kOS.Suffixed
             AddSuffix("ADDSCROLLBOX", new Suffix<ScrollBox>(AddScrollBox));
             AddSuffix("ADDSTACK", new Suffix<Box>(AddStack));
             AddSuffix("ADDSPACING", new OneArgsSuffix<Spacing, ScalarValue>(AddSpace));
-            AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(widgets)));
+            AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(Widgets)));
             AddSuffix("SHOWONLY", new OneArgsSuffix<Widget>(value => ShowOnly(value)));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
         }
 
         public void ShowOnly(Widget toshow)
         {
-            for (var i = 0; i < widgets.Count; ++i) {
-                var w = widgets[i];
+            for (var i = 0; i < Widgets.Count; ++i) {
+                var w = Widgets[i];
                 if (w == toshow) w.Show();
                 else w.Hide();
             }
@@ -59,84 +59,84 @@ namespace kOS.Suffixed
 
         public void UnpressVisibleAllBut(Widget leave)
         {
-            for (var i = 0; i < widgets.Count; ++i) {
-                var w = widgets[i] as Button;
+            for (var i = 0; i < Widgets.Count; ++i) {
+                var w = Widgets[i] as Button;
                 if (w != null && w != leave) { w.SetPressedVisible(false); }
             }
         }
 
         public void Clear()
         {
-            widgets.Clear();
+            Widgets.Clear();
             // children who try to Dispose will not be found.
         }
 
         public Spacing AddSpace(ScalarValue amount)
         {
             var w = new Spacing(this, amount);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Slider AddHSlider(ScalarValue min, ScalarValue max)
         {
             var w = new Slider(this, true, min, min, max);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Slider AddVSlider(ScalarValue min, ScalarValue max)
         {
             var w = new Slider(this, false, min, min, max);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Box AddStack()
         {
             var w = new Box(this, Box.LayoutMode.Stack);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Box AddHBox()
         {
             var w = new Box(this, Box.LayoutMode.Horizontal);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Box AddVBox()
         {
             var w = new Box(this, Box.LayoutMode.Vertical);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public ScrollBox AddScrollBox()
         {
             var w = new ScrollBox(this);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         void MakeFlat()
         {
-            setstyle.margin = new RectOffset(0, 0, 0, 0);
-            setstyle.padding = new RectOffset(0, 0, 0, 0);
-            setstyle.normal.background = null;
+            SetStyle.margin = new RectOffset(0, 0, 0, 0);
+            SetStyle.padding = new RectOffset(0, 0, 0, 0);
+            SetStyle.normal.background = null;
         }
 
         public void Remove(Widget child)
         {
-            widgets.Remove(child);
+            Widgets.Remove(child);
         }
 
         public Box AddHLayout()
         {
             var w = new Box(this, Box.LayoutMode.Horizontal);
             w.MakeFlat();
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
@@ -144,61 +144,61 @@ namespace kOS.Suffixed
         {
             var w = new Box(this, Box.LayoutMode.Vertical);
             w.MakeFlat();
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Label AddLabel(StringValue text)
         {
             var w = new Label(this, text);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public TextField AddTextField(StringValue text)
         {
             var w = new TextField(this, text);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Button AddButton(StringValue text)
         {
             var w = new Button(this, text);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Button AddCheckbox(StringValue text, BooleanValue on)
         {
             var w = Button.NewCheckbox(this, text, on);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public Button AddRadioButton(StringValue text, BooleanValue on)
         {
             var w = Button.NewRadioButton(this, text, on);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public PopupMenu AddPopupMenu()
         {
             var w = new PopupMenu(this);
-            widgets.Add(w);
+            Widgets.Add(w);
             return w;
         }
 
         public void DoChildGUIs()
         {
-            for (var i = 0; i < widgets.Count; ++i) {
-                if (widgets[i].shown) {
+            for (var i = 0; i < Widgets.Count; ++i) {
+                if (Widgets[i].Shown) {
                     var ge = GUI.enabled;
-                    if (ge && !widgets[i].enabled) GUI.enabled = false;
-                    widgets[i].DoGUI();
+                    if (ge && !Widgets[i].Enabled) GUI.enabled = false;
+                    Widgets[i].DoGUI();
                     if (ge) GUI.enabled = true;
-                    if (layout == LayoutMode.Stack)
+                    if (Mode == LayoutMode.Stack)
                         break;
                 }
             }
@@ -206,18 +206,18 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            if (!shown) return;
-            if (!enabled) GUI.enabled = false;
-            if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal(style);
-            else if (layout == LayoutMode.Vertical) GUILayout.BeginVertical(style);
+            if (!Shown) return;
+            if (!Enabled) GUI.enabled = false;
+            if (Mode == LayoutMode.Horizontal) GUILayout.BeginHorizontal(Style);
+            else if (Mode == LayoutMode.Vertical) GUILayout.BeginVertical(Style);
             DoChildGUIs();
-            if (layout == LayoutMode.Horizontal) GUILayout.EndHorizontal();
-            else if (layout == LayoutMode.Vertical) GUILayout.EndVertical();
+            if (Mode == LayoutMode.Horizontal) GUILayout.EndHorizontal();
+            else if (Mode == LayoutMode.Vertical) GUILayout.EndVertical();
         }
 
         public override string ToString()
         {
-            return layout.ToString()[0] + "BOX";
+            return Mode.ToString()[0] + "BOX";
         }
     }
 }

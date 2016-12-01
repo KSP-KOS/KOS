@@ -9,19 +9,19 @@ namespace kOS.Suffixed
     {
         public bool Pressed { get; private set; }
         public bool PressedVisible { get; private set; }
-        public bool isToggle { get; set; }
-        public bool isExclusive { get; set; }
-        public KOSDelegate onPressed;
+        public bool IsToggle { get; set; }
+        public bool IsExclusive { get; set; }
+        public KOSDelegate OnPressed;
 
         public Button(Box parent, string text) : base(parent, text)
         {
-            isToggle = false;
+            IsToggle = false;
             RegisterInitializer(InitializeSuffixes);
         }
 
         protected override GUIStyle BaseStyle()
         {
-            return isToggle ? HighLogic.Skin.toggle : HighLogic.Skin.button;
+            return IsToggle ? HighLogic.Skin.toggle : HighLogic.Skin.button;
         }
 
         public static Button NewCheckbox(Box parent, string text, bool on)
@@ -39,7 +39,7 @@ namespace kOS.Suffixed
             r.Pressed = on;
             r.PressedVisible = on;
             r.SetToggleMode(true);
-            r.isExclusive = true;
+            r.IsExclusive = true;
             return r;
         }
 
@@ -50,19 +50,19 @@ namespace kOS.Suffixed
              * AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
              */
             AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
-            AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => isExclusive, value => isExclusive = value));
+            AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => IsExclusive, value => IsExclusive = value));
         }
 
         public void SetToggleMode(BooleanValue on)
         {
-            if (isToggle != on)
-                isToggle = on;
+            if (IsToggle != on)
+                IsToggle = on;
         }
 
         public bool TakePress()
         {
             var r = Pressed;
-            if (!isToggle && Pressed) {
+            if (!IsToggle && Pressed) {
                 Pressed = false;
                 Communicate(() => PressedVisible = false);
             }
@@ -78,10 +78,10 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            if (isToggle) {
-                var newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), style);
+            if (IsToggle) {
+                var newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), Style);
                 PressedVisible = newpressed;
-                if (isExclusive && newpressed && parent != null) {
+                if (IsExclusive && newpressed && parent != null) {
                     parent.UnpressVisibleAllBut(this);
                 }
                 if (Pressed != newpressed) {
@@ -90,7 +90,7 @@ namespace kOS.Suffixed
                         Communicate(() => DoOnPressed());
                 }
             } else {
-                if (GUILayout.Toggle(PressedVisible, VisibleContent(), style)) {
+                if (GUILayout.Toggle(PressedVisible, VisibleContent(), Style)) {
                     if (!PressedVisible) {
                         PressedVisible = true;
                         Communicate(() => Pressed = true);
@@ -103,9 +103,9 @@ namespace kOS.Suffixed
         private void DoOnPressed()
         {
             UnityEngine.Debug.Log("DoOnPressed");
-            if (onPressed != null) {
-                UnityEngine.Debug.Log("DoOnPressed: " + onPressed.ToString());
-                onPressed.Call(new Structure[0]);
+            if (OnPressed != null) {
+                UnityEngine.Debug.Log("DoOnPressed: " + OnPressed.ToString());
+                OnPressed.Call(new Structure[0]);
             }
         }
 

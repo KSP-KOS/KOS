@@ -24,7 +24,7 @@ namespace kOS.Suffixed
 
         public GUIWidgets(int width, int height, SharedObjects shared) : base(null,Box.LayoutMode.Vertical)
         {
-            setstyle.padding.top = style.padding.bottom; // no title area.
+            SetStyle.padding.top = Style.padding.bottom; // no title area.
             var go = new GameObject("kOSGUIWindow");
             window = go.AddComponent<GUIWindow>();
             window.AttachTo(width,height,"",shared,this);

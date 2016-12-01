@@ -7,12 +7,12 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("Slider")]
     public class Slider : Widget
     {
-        public bool horizontal { get; set; }
+        private bool horizontal { get; set; }
         private float value { get; set; }
         private float value_visible { get; set; }
-        public float min { get; set; }
-        public float max { get; set; }
-        protected GUIStyle thumbStyle;
+        private float min { get; set; }
+        private float max { get; set; }
+        private GUIStyle thumbStyle;
 
         public Slider(Box parent, bool h_not_v, float v, float from, float to) : base(parent)
         {
@@ -21,7 +21,7 @@ namespace kOS.Suffixed
             value = v;
             min = from;
             max = to;
-            if (horizontal) { setstyle.margin.top = 8; setstyle.margin.bottom = 8; } // align better with labels.
+            if (horizontal) { SetStyle.margin.top = 8; SetStyle.margin.bottom = 8; } // align better with labels.
             thumbStyle = new GUIStyle(horizontal ? HighLogic.Skin.horizontalSliderThumb : HighLogic.Skin.verticalSliderThumb);
         }
 
@@ -38,9 +38,9 @@ namespace kOS.Suffixed
         {
             float newvalue;
             if (horizontal)
-                newvalue = GUILayout.HorizontalSlider(value_visible, min, max, style, thumbStyle);
+                newvalue = GUILayout.HorizontalSlider(value_visible, min, max, Style, thumbStyle);
             else
-                newvalue = GUILayout.VerticalSlider(value_visible, min, max, style, thumbStyle);
+                newvalue = GUILayout.VerticalSlider(value_visible, min, max, Style, thumbStyle);
             if (newvalue != value_visible) {
                 value_visible = newvalue;
                 Communicate(() => value = newvalue);

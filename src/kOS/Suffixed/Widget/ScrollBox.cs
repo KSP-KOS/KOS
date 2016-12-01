@@ -7,9 +7,9 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("ScrollBox")]
     public class ScrollBox : Box
     {
-        bool hscrollalways = false;
-        bool vscrollalways = false;
-        Vector2 position;
+        private bool hscrollalways = false;
+        private bool vscrollalways = false;
+        private Vector2 position;
 
         public ScrollBox(Box parent) : base(parent, LayoutMode.Vertical)
         {
@@ -30,14 +30,14 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            if (!shown) return;
+            if (!Shown) return;
             var was = GUI.enabled;
             GUI.enabled = true; // always allow scrolling
-            position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,HighLogic.Skin.horizontalScrollbar,HighLogic.Skin.verticalScrollbar,style);
-            if (layout == LayoutMode.Horizontal) GUILayout.BeginHorizontal();
-            if (!enabled || !was) GUI.enabled = false;
+            position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,HighLogic.Skin.horizontalScrollbar,HighLogic.Skin.verticalScrollbar,Style);
+            if (Mode == LayoutMode.Horizontal) GUILayout.BeginHorizontal();
+            if (!Enabled || !was) GUI.enabled = false;
             DoChildGUIs();
-            if (layout == LayoutMode.Horizontal) GUILayout.EndHorizontal();
+            if (Mode == LayoutMode.Horizontal) GUILayout.EndHorizontal();
             GUI.enabled = true;
             GUILayout.EndScrollView();
             GUI.enabled = was;

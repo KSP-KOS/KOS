@@ -10,16 +10,16 @@ namespace kOS.Suffixed
         private bool changed = false;
         private ListValue list;
         private int index = 0;
-        GUIStyle popupStyle;
-        GUIStyle itemStyle;
-        string optSuffix = "ToString";
+        private GUIStyle popupStyle;
+        private GUIStyle itemStyle;
+        private string optSuffix = "ToString";
 
         public PopupMenu(Box parent) : base(parent,"")
         {
-            setstyle.alignment = TextAnchor.MiddleLeft;
-            isToggle = true;
+            SetStyle.alignment = TextAnchor.MiddleLeft;
+            IsToggle = true;
 
-            itemStyle = new GUIStyle(style);
+            itemStyle = new GUIStyle(Style);
             itemStyle.margin.top = 0;
             itemStyle.margin.bottom = 0;
             itemStyle.normal.background = null;
@@ -141,8 +141,8 @@ namespace kOS.Suffixed
         public void DoPopupGUI()
         {
             // Use onNormal as popup style (seems to suit it).
-            popupStyle.normal.background = style.onNormal.background;
-            popupStyle.border = style.border;
+            popupStyle.normal.background = Style.onNormal.background;
+            popupStyle.border = Style.border;
 
             GUILayout.BeginVertical(popupStyle);
             for (int i=0; i<list.Count(); ++i) {
