@@ -980,7 +980,7 @@ namespace kOS.Suffixed
         }
         override public void Dispose()
         {
-            GameObject.Destroy(window.gameObject);
+            window.Detach(this);
         }
 
         public bool GetShow()

@@ -147,6 +147,8 @@ namespace kOS.Screen
 
         void WidgetGui(int windowId)
         {
+            if (widgets == null) return;
+
             CheckConnectivity();
 
             widgets.DoGUI();
@@ -221,6 +223,15 @@ namespace kOS.Screen
             shared.UpdateHandler.AddObserver(this);
             shared.AddWindow(this);
         }
+
+        internal void Detach(GUIWidgets w)
+        {
+            if (widgets == w) {
+                widgets = null;
+                Close();
+            }
+        }
+
 
         class ActionTime
         {
