@@ -33,15 +33,14 @@ namespace kOS.Screen
         public GUIWindow()
         {
             // Transparent - leave the widget inside it to draw background if it wants to.
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            style = new GUIStyle(theSkin.window);
+            style = new GUIStyle(HighLogic.Skin.window);
             style.normal.background = null;
             style.onNormal.background = null;
             style.focused.background = null;
             style.margin = new RectOffset(0, 0, 0, 0);
             style.padding = new RectOffset(0, 0, 0, 0);
 
-            commDelayStyle = new GUIStyle(theSkin.label);
+            commDelayStyle = new GUIStyle(HighLogic.Skin.label);
             commDelayStyle.normal.textColor = Color.black;
             commDelayStyle.alignment = TextAnchor.MiddleCenter;
             commDelayStyle.clipping = TextClipping.Overflow;
