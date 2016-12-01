@@ -5,6 +5,7 @@ using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Safe.Execution;
 using kOS.Safe.Encapsulation;
+using System.Text;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -536,7 +537,13 @@ namespace kOS.Safe.Compilation.KS
         /// </summary>
         private string ConcatenateNodes(ParseNode node)
         {
-            return string.Format("{0}{1}{2}", context.NumCompilesSoFar, GetContainingScopeId(node), ConcatenateNodesRecurse(node));
+            LineCol whereNodeIs = GetLineCol(node);
+            return string.Format("{0}L{1}C{2}{3}{4}",
+                                 context.NumCompilesSoFar,
+                                 whereNodeIs.Line,
+                                 whereNodeIs.Column,
+                                 GetContainingScopeId(node),
+                                 ConcatenateNodesRecurse(node));
         }
         
         private string ConcatenateNodesRecurse(ParseNode node)
@@ -1462,20 +1469,20 @@ namespace kOS.Safe.Compilation.KS
             else
             {
                 //number in scientific notation
-                int exponentIndex = 2;
-                int exponentSign = 1;
-
-                double mantissa = double.Parse(node.Nodes[0].Nodes[0].Token.Text);
-
-                if (node.Nodes[2].Token.Type == TokenType.PLUSMINUS)
+                StringBuilder sb = new StringBuilder();
+                sb.Append(node.Nodes[0].Nodes[0].Token.Text); // have to use the sub-node of double or integer
+                for (int i = 1; i < node.Nodes.Count; ++i)
                 {
-                    exponentIndex++;
-                    exponentSign = (node.Nodes[2].Token.Text == "-") ? -1 : 1;
+                    sb.Append(node.Nodes[i].Token.Text);
                 }
-
-                int exponent = exponentSign * int.Parse(node.Nodes[exponentIndex].Token.Text);
-                double number = mantissa * System.Math.Pow(10, exponent);
-                AddOpcode(new OpcodePush(number));
+                string parseText = sb.ToString();
+                ScalarValue val;
+                if (ScalarValue.TryParse(parseText, out val))
+                {
+                    AddOpcode(new OpcodePush(val));
+                }
+                else
+                    throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, parseText));
             }
         }
 
@@ -1488,27 +1495,25 @@ namespace kOS.Safe.Compilation.KS
         private void VisitInteger(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            object number;
-            int integerNumber;
-
-            if (int.TryParse(node.Token.Text, out integerNumber))
+            ScalarValue val;
+            if (ScalarValue.TryParseInt(node.Token.Text, out val))
             {
-                number = integerNumber;
+                AddOpcode(new OpcodePush(val));
             }
             else
-            {
-                number = double.Parse(node.Token.Text);
-            }
-
-            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
+                throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, node.Token.Text));
         }
 
         private void VisitDouble(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            object number = double.Parse(node.Token.Text);
-
-            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
+            ScalarValue val;
+            if (ScalarValue.TryParseDouble(node.Token.Text, out val))
+            {
+                AddOpcode(new OpcodePush(val));
+            }
+            else
+                throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, node.Token.Text));
         }
 
         private void VisitTrueFalse(ParseNode node)

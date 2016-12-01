@@ -89,3 +89,4 @@ Key Notes:
 10. (For mod developers) Spams the Unity log file with a message for every time an opcode is executed in the virtual machine.  Very laggy. See :attr:`Config:DEBUGEACHOPCODE`
 11. :ref:`Connectivity manager<connectivityManagers>` selector
 12. List of all available :ref:`connectivity managers<connectivityManagers>`.
+13. Brightness of a kOS terminal when it appears for the first time in a scene. (You must reload the scene to see the effect of any changes to this slider.)

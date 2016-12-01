@@ -56,7 +56,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.POWER, regex);
             Tokens.Add(TokenType.POWER);
 
-            regex = new Regex(@"\be\b");
+            regex = new Regex(@"\be((?=\d)|\b)");
             Patterns.Add(TokenType.E, regex);
             Tokens.Add(TokenType.E);
 
