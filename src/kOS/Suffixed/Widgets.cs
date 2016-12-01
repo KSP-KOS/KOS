@@ -548,7 +548,7 @@ namespace kOS.Suffixed
             popupStyle.margin = new RectOffset(0, 0, 0, 0);
 
             list = new ListValue();
-            SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/radiobutton", false));
+            SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu", false));
             RegisterInitializer(InitializeSuffixes);
         }
 
