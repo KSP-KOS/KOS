@@ -46,7 +46,9 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => { Pressed = value; Communicate(() => PressedVisible = value); }));
-            AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
+            /* Can't work out how to call kOS code from C# in DoOnPressed() below.
+             * AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
+             */
             AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => isExclusive, value => isExclusive = value));
         }
