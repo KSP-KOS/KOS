@@ -299,6 +299,9 @@ namespace kOS.Screen
 
             InputLockManager.RemoveControlLock(CONTROL_LOCKOUT);
 
+            // Apparently Unlock now gets called at a point after the
+            // CameraManager instance changes... so check the reference.
+            cameraManager = CameraManager.Instance;
             cameraManager.enabled = true;
 
 
