@@ -29,8 +29,10 @@ namespace kOS.Screen
         private Color slowControlColor = new Color(1, 0.95f, 0.95f, 0.9f);
         private Texture2D commDelayedTexture;
         public float extraDelay = 0f;
-        
-        public GUIWindow()
+
+        public bool ShowCursor { get; set; }
+
+        public void Awake()
         {
             // Transparent - leave the widget inside it to draw background if it wants to.
             style = new GUIStyle(HighLogic.Skin.window);
@@ -54,12 +56,7 @@ namespace kOS.Screen
 
             IsPowered = true;
             WindowRect = new Rect(0, 0, 0, 0); // will get resized later in AttachTo().
-        }
 
-        public bool ShowCursor { get; set; }
-
-        public void Awake()
-        {
             GameEvents.onHideUI.Add (OnHideUI);
 			GameEvents.onShowUI.Add (OnShowUI);
         }
