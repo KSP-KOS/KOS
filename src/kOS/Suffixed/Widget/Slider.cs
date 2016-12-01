@@ -12,20 +12,17 @@ namespace kOS.Suffixed
         private float valueVisible { get; set; }
         private float min { get; set; }
         private float max { get; set; }
-        private GUIStyle thumbStyle;
+        private WidgetStyle thumbStyle;
 
-        public Slider(Box parent, bool h_not_v, float v, float from, float to) : base(parent)
+        public Slider(Box parent, bool h_not_v, float v, float from, float to) : base(parent, parent.FindStyle(h_not_v ? "horizontalSlider" : "verticalSlider"))
         {
             RegisterInitializer(InitializeSuffixes);
             horizontal = h_not_v;
             value = v;
             min = from;
             max = to;
-            if (horizontal) { SetStyle.margin.top = 8; SetStyle.margin.bottom = 8; } // align better with labels.
-            thumbStyle = new GUIStyle(horizontal ? HighLogic.Skin.horizontalSliderThumb : HighLogic.Skin.verticalSliderThumb);
+            thumbStyle = parent.FindStyle(horizontal ? "horizontalSliderThumb" : "verticalSliderThumb");
         }
-
-        protected override GUIStyle BaseStyle() { return horizontal ? HighLogic.Skin.horizontalSlider : HighLogic.Skin.verticalSlider; }
 
         private void InitializeSuffixes()
         {
@@ -38,9 +35,9 @@ namespace kOS.Suffixed
         {
             float newvalue;
             if (horizontal)
-                newvalue = GUILayout.HorizontalSlider(valueVisible, min, max, Style, thumbStyle);
+                newvalue = GUILayout.HorizontalSlider(valueVisible, min, max, ReadOnlyStyle, thumbStyle.ReadOnly);
             else
-                newvalue = GUILayout.VerticalSlider(valueVisible, min, max, Style, thumbStyle);
+                newvalue = GUILayout.VerticalSlider(valueVisible, min, max, ReadOnlyStyle, thumbStyle.ReadOnly);
             if (newvalue != valueVisible) {
                 valueVisible = newvalue;
                 Communicate(() => value = newvalue);

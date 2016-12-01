@@ -21,21 +21,28 @@ namespace kOS.Suffixed
     {
         protected Box parent;
 
-        // To optimize the common case where each subclass just uses the one default style,
-        // subclasses implement BaseStyle() to return that style (directly from HighLogic.Skin),
-        // then use Style to read the Style and SetStyle to change properties of the style.
-        //
-        abstract protected GUIStyle BaseStyle();
-        private GUIStyle copyOnWriteStyle;
-        public GUIStyle Style { get { return copyOnWriteStyle == null ? BaseStyle() : copyOnWriteStyle; } }
-        public GUIStyle SetStyle { get { if (copyOnWriteStyle == null) { copyOnWriteStyle = new GUIStyle(BaseStyle()); } return copyOnWriteStyle; } }
+        // The WidgetStyle is cheap as it only creates a new GUIStyle if it is
+        // actually changed, otherwise it just refers to the one in the GUI:SKIN.
+        private WidgetStyle copyOnWriteStyle;
+        public GUIStyle ReadOnlyStyle { get { return copyOnWriteStyle.ReadOnly; } }
+
+        public WidgetStyle FindStyle(string name)
+        {
+            GUIWidgets gui = FindGUI();
+            if (gui != null) {
+                var s = gui.Skin.GetStyle(name);
+                return new WidgetStyle(s.ReadOnly);
+            }
+            return new WidgetStyle(HighLogic.Skin.GetStyle(name)); // fallback; shouldn't happen
+        }
 
         public bool Enabled { get; protected set; }
         public bool Shown { get; protected set; }
 
-        public Widget(Box parent)
+        public Widget(Box parent, WidgetStyle style)
         {
             this.parent = parent;
+            this.copyOnWriteStyle = style;
             Enabled = true;
             Shown = true;
             RegisterInitializer(InitializeSuffixes);
@@ -50,45 +57,14 @@ namespace kOS.Suffixed
             return c as GUIWidgets;
         }
 
-        protected RgbaColor GetStyleRgbaColor()
-        {
-            var c = Style.normal.textColor;
-            return new RgbaColor(c.r, c.g, c.b, c.a);
-        }
-        
-        protected void SetStyleRgbaColor(RgbaColor rgba)
-        {
-            SetStyle.normal.textColor = rgba.Color;
-        }
-
         private void InitializeSuffixes()
         {
-            AddSuffix("HMARGIN", new SetSuffix<ScalarIntValue>(() => Style.margin.left, value => { SetStyle.margin.left = value; SetStyle.margin.right = value; }));
-            AddSuffix("HPADDING", new SetSuffix<ScalarIntValue>(() => Style.padding.left, value => { SetStyle.padding.left = value; SetStyle.padding.right = value; }));
-            AddSuffix("VMARGIN", new SetSuffix<ScalarIntValue>(() => Style.margin.top, value => { SetStyle.margin.top = value; SetStyle.margin.bottom = value; }));
-            AddSuffix("VPADDING", new SetSuffix<ScalarIntValue>(() => Style.padding.top, value => { SetStyle.padding.top = value; SetStyle.padding.bottom = value; }));
-
-            AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => Style.fixedWidth, value => SetStyle.fixedWidth = value));
-            AddSuffix("HEIGHT", new SetSuffix<ScalarValue>(() => Style.fixedHeight, value => SetStyle.fixedHeight = value));
             AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => Enabled, value => Enabled = value));
             AddSuffix("SHOW", new NoArgsVoidSuffix(Show));
             AddSuffix("HIDE", new NoArgsVoidSuffix(Hide));
             AddSuffix("DISPOSE", new NoArgsVoidSuffix(Dispose));
-
-            AddSuffix("HSTRETCH", new SetSuffix<BooleanValue>(() => Style.stretchWidth, value => SetStyle.stretchWidth = value));
-            AddSuffix("VSTRETCH", new SetSuffix<BooleanValue>(() => Style.stretchHeight, value => SetStyle.stretchHeight = value));
-
-            AddSuffix("HBORDER", new SetSuffix<ScalarIntValue>(() => Style.border.left, value => { SetStyle.border.left = value; SetStyle.border.right = value; }));
-            AddSuffix("VBORDER", new SetSuffix<ScalarIntValue>(() => Style.border.top, value => { SetStyle.border.top = value; SetStyle.border.bottom = value; }));
-
-            AddSuffix("BG", new SetSuffix<StringValue>(() => "", value => SetStyle.normal.background = GetTexture(value)));
-            AddSuffix("BG_FOCUSED", new SetSuffix<StringValue>(() => "", value => SetStyle.focused.background = GetTexture(value)));
-            AddSuffix("BG_ACTIVE", new SetSuffix<StringValue>(() => "", value => SetStyle.active.background = GetTexture(value)));
-            AddSuffix("BG_HOVER", new SetSuffix<StringValue>(() => "", value => SetStyle.hover.background = GetTexture(value)));
-            AddSuffix("BG_ON", new SetSuffix<StringValue>(() => "", value => SetStyle.onNormal.background = GetTexture(value)));
-            AddSuffix("BG_FOCUSED_ON", new SetSuffix<StringValue>(() => "", value => SetStyle.onFocused.background = GetTexture(value)));
-            AddSuffix("BG_ACTIVE_ON", new SetSuffix<StringValue>(() => "", value => SetStyle.onActive.background = GetTexture(value)));
-            AddSuffix("BG_HOVER_ON", new SetSuffix<StringValue>(() => "", value => SetStyle.onHover.background = GetTexture(value)));
+            AddSuffix("STYLE", new SetSuffix<WidgetStyle>(() => copyOnWriteStyle, value => copyOnWriteStyle = value));
+            AddSuffix("GUI", new Suffix<GUIWidgets>(() => FindGUI()));
         }
 
         virtual public void Show()

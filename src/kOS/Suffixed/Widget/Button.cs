@@ -13,20 +13,19 @@ namespace kOS.Suffixed
         public bool IsExclusive { get; set; }
         public KOSDelegate OnPressed;
 
-        public Button(Box parent, string text) : base(parent, text)
+        public Button(Box parent, string text) : this(parent, text, parent.FindStyle("button"))
+        {
+        }
+
+        public Button(Box parent, string text, WidgetStyle buttonStyle) : base(parent, text, buttonStyle)
         {
             IsToggle = false;
             RegisterInitializer(InitializeSuffixes);
         }
 
-        protected override GUIStyle BaseStyle()
-        {
-            return IsToggle ? HighLogic.Skin.toggle : HighLogic.Skin.button;
-        }
-
         public static Button NewCheckbox(Box parent, string text, bool on)
         {
-            var r = new Button(parent, text);
+            var r = new Button(parent, text, parent.FindStyle("toggle"));
             r.Pressed = on;
             r.PressedVisible = on;
             r.SetToggleMode(true);
@@ -35,7 +34,7 @@ namespace kOS.Suffixed
 
         public static Button NewRadioButton(Box parent, string text, bool on)
         {
-            var r = new Button(parent, text);
+            var r = new Button(parent, text, parent.FindStyle("toggle"));
             r.Pressed = on;
             r.PressedVisible = on;
             r.SetToggleMode(true);
@@ -79,7 +78,7 @@ namespace kOS.Suffixed
         public override void DoGUI()
         {
             if (IsToggle) {
-                bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), Style);
+                bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle);
                 PressedVisible = newpressed;
                 if (IsExclusive && newpressed && parent != null) {
                     parent.UnpressVisibleAllBut(this);
@@ -90,7 +89,7 @@ namespace kOS.Suffixed
                         Communicate(() => DoOnPressed());
                 }
             } else {
-                if (GUILayout.Toggle(PressedVisible, VisibleContent(), Style)) {
+                if (GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle)) {
                     if (!PressedVisible) {
                         PressedVisible = true;
                         Communicate(() => Pressed = true);

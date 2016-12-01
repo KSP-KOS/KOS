@@ -10,15 +10,14 @@ namespace kOS.Suffixed
         private bool hscrollalways = false;
         private bool vscrollalways = false;
         private Vector2 position;
+        private WidgetStyle hsbStyle;
+        private WidgetStyle vsbStyle;
 
-        public ScrollBox(Box parent) : base(parent, LayoutMode.Vertical)
+        public ScrollBox(Box parent) : base(parent, LayoutMode.Vertical, parent.FindStyle("scrollView"))
         {
+            hsbStyle = parent.FindStyle("horizontalScrollbar");
+            vsbStyle = parent.FindStyle("verticalScrollbar");
             RegisterInitializer(InitializeSuffixes);
-        }
-
-        protected override GUIStyle BaseStyle()
-        {
-            return HighLogic.Skin.scrollView;
         }
 
         private void InitializeSuffixes()
@@ -33,7 +32,7 @@ namespace kOS.Suffixed
             if (!Shown) return;
             bool was = GUI.enabled;
             GUI.enabled = true; // always allow scrolling
-            position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,HighLogic.Skin.horizontalScrollbar,HighLogic.Skin.verticalScrollbar,Style);
+            position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,hsbStyle.ReadOnly,vsbStyle.ReadOnly,ReadOnlyStyle);
             if (Mode == LayoutMode.Horizontal) GUILayout.BeginHorizontal();
             if (!Enabled || !was) GUI.enabled = false;
             DoChildGUIs();

@@ -4,6 +4,8 @@ using UnityEngine;
 using kOS.Safe.Execution;
 using kOS.Screen;
 using System;
+using kOS.Utilities;
+using System.Collections.Generic;
 
 /* Usage:
  * 
@@ -21,19 +23,69 @@ namespace kOS.Suffixed
     public class GUIWidgets : Box, IKOSScopeObserver
     {
         private GUIWindow window;
+        public WidgetSkin Skin { get; private set; }
 
-        public GUIWidgets(int width, int height, SharedObjects shared) : base(null,Box.LayoutMode.Vertical)
+        public GUIWidgets(int width, int height, SharedObjects shared) : base(Box.LayoutMode.Vertical,new WidgetStyle(new GUIStyle(HighLogic.Skin.window)))
         {
-            SetStyle.padding.top = Style.padding.bottom; // no title area.
+            var gskin = Utils.GetSkinCopy(HighLogic.Skin);
+
+            // Get back the style we made in the base initializer.
+            gskin.window = ReadOnlyStyle;
+            // no title area.
+            gskin.window.padding.top = gskin.window.padding.bottom;
+
+            // align better with labels.
+            gskin.horizontalSlider.margin.top = 8;
+            gskin.horizontalSlider.margin.bottom = 8;
+
+            List<GUIStyle> styles = new List<GUIStyle>(gskin.customStyles);
+
+            var flatLayout = new GUIStyle(gskin.box);
+            flatLayout.name = "flatLayout";
+            flatLayout.margin = new RectOffset(0, 0, 0, 0);
+            flatLayout.padding = new RectOffset(0, 0, 0, 0);
+            flatLayout.normal.background = null;
+            styles.Add(flatLayout);
+
+            var popupWindow = new GUIStyle(gskin.window);
+            popupWindow.name = "popupWindow";
+            popupWindow.padding.left = 0;
+            popupWindow.padding.right = 0;
+            popupWindow.margin = new RectOffset(0, 0, 0, 0);
+            popupWindow.normal.background = gskin.button.onNormal.background;
+            popupWindow.border = gskin.button.border;
+
+            styles.Add(popupWindow);
+
+            var popupMenu = new GUIStyle(gskin.button);
+            popupMenu.name = "popupMenu";
+            popupMenu.alignment = TextAnchor.MiddleLeft;
+            styles.Add(popupMenu);
+
+            var popupMenuItem = new GUIStyle(gskin.label);
+            popupMenuItem.name = "popupMenuItem";
+            popupMenuItem.margin.top = 0;
+            popupMenuItem.margin.bottom = 0;
+            popupMenuItem.normal.background = null;
+            popupMenuItem.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu_bg_hover", false);
+            popupMenuItem.hover.textColor = Color.black;
+            popupMenuItem.active.background = popupMenuItem.hover.background;
+            popupMenuItem.stretchWidth = true;
+            styles.Add(popupMenuItem);
+
+            var labelTipOverlay = new GUIStyle(gskin.label);
+            labelTipOverlay.name = "labelTipOverlay";
+            labelTipOverlay.normal.textColor = new Color(0.6f, 0.6f, 0.6f, 0.2f);
+            styles.Add(labelTipOverlay);
+
+            gskin.customStyles = styles.ToArray();
+
+            Skin = new WidgetSkin(gskin);
+
             var go = new GameObject("kOSGUIWindow");
             window = go.AddComponent<GUIWindow>();
             window.AttachTo(width,height,"",shared,this);
             InitializeSuffixes();
-        }
-
-        protected override GUIStyle BaseStyle()
-        {
-            return HighLogic.Skin.window;
         }
 
         private void InitializeSuffixes()
@@ -42,6 +94,7 @@ namespace kOS.Suffixed
             AddSuffix("Y", new SetSuffix<ScalarValue>(() => window.GetRect().y, value => window.SetY(value)));
             AddSuffix("DRAGGABLE", new SetSuffix<BooleanValue>(() => window.draggable, value => window.draggable = value));
             AddSuffix("EXTRADELAY", new SetSuffix<ScalarValue>(() => window.extraDelay, value => window.extraDelay = value));
+            AddSuffix("SKIN", new SetSuffix<WidgetSkin>(() => Skin, value => Skin = value));
         }
 
         public int LinkCount { get; set; }

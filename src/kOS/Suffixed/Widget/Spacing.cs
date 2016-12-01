@@ -9,15 +9,10 @@ namespace kOS.Suffixed
     {
         private float amount { get; set; }
 
-        public Spacing(Box parent, float v) : base(parent)
+        public Spacing(Box parent, float v) : base(parent, null) // spacing has no style associated.
         {
             RegisterInitializer(InitializeSuffixes);
             amount = v;
-        }
-
-        protected override GUIStyle BaseStyle()
-        {
-            return HighLogic.Skin.label; // not that changing a spacing style makes any sense.
         }
 
         private void InitializeSuffixes()

@@ -10,38 +10,20 @@ namespace kOS.Suffixed
         private bool changed = false;
         private ListValue list;
         private int index = 0;
-        private GUIStyle popupStyle;
-        private GUIStyle itemStyle;
+        private WidgetStyle popupStyle;
+        private WidgetStyle itemStyle;
         private string optSuffix = "ToString";
 
-        public PopupMenu(Box parent) : base(parent,"")
+        public PopupMenu(Box parent) : base(parent,"", parent.FindStyle("popupMenu"))
         {
-            SetStyle.alignment = TextAnchor.MiddleLeft;
             IsToggle = true;
 
-            itemStyle = new GUIStyle(Style);
-            itemStyle.margin.top = 0;
-            itemStyle.margin.bottom = 0;
-            itemStyle.normal.background = null;
-            itemStyle.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu_bg_hover", false);
-            itemStyle.hover.textColor = Color.black;
-            itemStyle.active.background = itemStyle.hover.background;
-            itemStyle.stretchWidth = true;
-
-            popupStyle = new GUIStyle(HighLogic.Skin.window);
-            popupStyle.padding.top = popupStyle.padding.bottom; // no title area
-            popupStyle.padding.left = 0;
-            popupStyle.padding.right = 0;
-            popupStyle.margin = new RectOffset(0, 0, 0, 0);
+            itemStyle = FindStyle("popupMenuItem");
+            popupStyle = FindStyle("popupWindow");
 
             list = new ListValue();
             SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu", false));
             RegisterInitializer(InitializeSuffixes);
-        }
-
-        protected override GUIStyle BaseStyle()
-        {
-            return HighLogic.Skin.button;
         }
 
         private void InitializeSuffixes()
@@ -140,13 +122,9 @@ namespace kOS.Suffixed
         public Rect popupRect;
         public void DoPopupGUI()
         {
-            // Use onNormal as popup style (seems to suit it).
-            popupStyle.normal.background = Style.onNormal.background;
-            popupStyle.border = Style.border;
-
-            GUILayout.BeginVertical(popupStyle);
+            GUILayout.BeginVertical(popupStyle.ReadOnly);
             for (int i=0; i<list.Count(); ++i) {
-                if (GUILayout.Button(GetItemString(list[i]), itemStyle)) {
+                if (GUILayout.Button(GetItemString(list[i]), itemStyle.ReadOnly)) {
                     int newindex = i;
                     Communicate(() => index = newindex);
                     SetVisibleText(GetItemString(list[i]));

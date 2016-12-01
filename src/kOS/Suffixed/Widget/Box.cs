@@ -14,16 +14,19 @@ namespace kOS.Suffixed
 
         public int Count { get { return Widgets.Count; } }
 
-        public Box(Box parent, LayoutMode mode) : base(parent)
+        public Box(Box parent, LayoutMode mode) : this(parent, mode, parent.FindStyle("box"))
+        {
+        }
+
+        public Box(LayoutMode mode, WidgetStyle style) : this(null, mode, style)
+        {
+        }
+
+        public Box(Box parent, LayoutMode mode, WidgetStyle style) : base(parent, style)
         {
             RegisterInitializer(InitializeSuffixes);
             Mode = mode;
             Widgets = new List<Widget>();
-        }
-
-        protected override GUIStyle BaseStyle()
-        {
-            return HighLogic.Skin.box;
         }
 
         private void InitializeSuffixes()
@@ -120,13 +123,6 @@ namespace kOS.Suffixed
             return w;
         }
 
-        void MakeFlat()
-        {
-            SetStyle.margin = new RectOffset(0, 0, 0, 0);
-            SetStyle.padding = new RectOffset(0, 0, 0, 0);
-            SetStyle.normal.background = null;
-        }
-
         public void Remove(Widget child)
         {
             Widgets.Remove(child);
@@ -134,16 +130,14 @@ namespace kOS.Suffixed
 
         public Box AddHLayout()
         {
-            var w = new Box(this, Box.LayoutMode.Horizontal);
-            w.MakeFlat();
+            var w = new Box(this, Box.LayoutMode.Horizontal, FindStyle("flatLayout"));
             Widgets.Add(w);
             return w;
         }
 
         public Box AddVLayout()
         {
-            var w = new Box(this, Box.LayoutMode.Vertical);
-            w.MakeFlat();
+            var w = new Box(this, Box.LayoutMode.Vertical, FindStyle("flatLayout"));
             Widgets.Add(w);
             return w;
         }
@@ -208,8 +202,8 @@ namespace kOS.Suffixed
         {
             if (!Shown) return;
             if (!Enabled) GUI.enabled = false;
-            if (Mode == LayoutMode.Horizontal) GUILayout.BeginHorizontal(Style);
-            else if (Mode == LayoutMode.Vertical) GUILayout.BeginVertical(Style);
+            if (Mode == LayoutMode.Horizontal) GUILayout.BeginHorizontal(ReadOnlyStyle);
+            else if (Mode == LayoutMode.Vertical) GUILayout.BeginVertical(ReadOnlyStyle);
             DoChildGUIs();
             if (Mode == LayoutMode.Horizontal) GUILayout.EndHorizontal();
             else if (Mode == LayoutMode.Vertical) GUILayout.EndVertical();

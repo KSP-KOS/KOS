@@ -11,16 +11,15 @@ namespace kOS.Suffixed
         private GUIContent content { get; set; }
         private GUIContent content_visible { get; set; }
 
-        public Label(Box parent, string text) : base(parent)
+        public Label(Box parent, string text, WidgetStyle style) : base(parent, style)
         {
             RegisterInitializer(InitializeSuffixes);
             content = new GUIContent(text);
             content_visible = new GUIContent(text);
         }
 
-        protected override GUIStyle BaseStyle()
+        public Label(Box parent, string text) : this(parent, text, parent.FindStyle("label"))
         {
-            return HighLogic.Skin.label;
         }
 
         private void InitializeSuffixes()
@@ -28,10 +27,6 @@ namespace kOS.Suffixed
             AddSuffix("TEXT", new SetSuffix<StringValue>(() => content.text, value => { if (content.text != value) { content.text = value; Communicate(() => content_visible.text = value); } }));
             AddSuffix("IMAGE", new SetSuffix<StringValue>(() => "", value => SetContentImage(value)));
             AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => { if (content.tooltip != value) { content.tooltip = value; Communicate(() => content_visible.tooltip = value); } }));
-            AddSuffix("ALIGN", new SetSuffix<StringValue>(GetAlignment, SetAlignment));
-            AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => Style.fontSize, value => SetStyle.fontSize = value));
-            AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => Style.richText, value => SetStyle.richText = value));
-            AddSuffix("TEXTCOLOR", new SetSuffix<RgbaColor>(() => GetStyleRgbaColor(), value => SetStyleRgbaColor(value)));
         }
 
         protected void SetInitialContentImage(Texture2D img)
@@ -74,25 +69,9 @@ namespace kOS.Suffixed
             return content_visible;
         }
 
-        StringValue GetAlignment()
-        {
-            if (Style.alignment == TextAnchor.MiddleCenter) return "CENTER";
-            if (Style.alignment == TextAnchor.MiddleRight) return "RIGHT";
-            return "LEFT";
-        }
-
-        void SetAlignment(StringValue s)
-        {
-            s = s.ToLower();
-            if (s == "center") SetStyle.alignment = TextAnchor.MiddleCenter;
-            else if (s == "right") SetStyle.alignment = TextAnchor.MiddleRight;
-            else if (s == "left") SetStyle.alignment = TextAnchor.MiddleLeft;
-            else throw new KOSInvalidArgumentException("LABEL", "ALIGNMENT", "expected CENTER, LEFT, or RIGHT, found " + s);
-        }
-
         public override void DoGUI()
         {
-            GUILayout.Label(content_visible, Style);
+            GUILayout.Label(content_visible, ReadOnlyStyle);
         }
 
         public override string ToString()

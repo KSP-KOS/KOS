@@ -11,20 +11,12 @@ namespace kOS.Suffixed
         public bool Changed { get; set; }
         public bool Confirmed { get; set; }
 
-        private static GUIStyle toolTipStyle = null;
+        private WidgetStyle toolTipStyle;
 
-        public TextField(Box parent, string text) : base(parent,text)
+        public TextField(Box parent, string text) : base(parent,text,parent.FindStyle("textField"))
         {
-            if (toolTipStyle == null) {
-                toolTipStyle = new GUIStyle(HighLogic.Skin.label);
-                toolTipStyle.normal.textColor = new Color(0.6f, 0.6f, 0.6f, 0.2f);
-            }
+            toolTipStyle = FindStyle("labelTipOverlay");
             RegisterInitializer(InitializeSuffixes);
-        }
-
-        protected override GUIStyle BaseStyle()
-        {
-            return HighLogic.Skin.textField;
         }
 
         private void InitializeSuffixes()
@@ -56,13 +48,13 @@ namespace kOS.Suffixed
                 GUIUtility.keyboardControl = -1;
             }
             uiID = GUIUtility.GetControlID(FocusType.Passive) + 1; // Dirty kludge.
-            string newtext = GUILayout.TextField(VisibleText(), Style);
+            string newtext = GUILayout.TextField(VisibleText(), ReadOnlyStyle);
             if (newtext != VisibleText()) {
                 SetVisibleText(newtext);
                 Changed = true;
             }
             if (newtext == "") {
-                GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), toolTipStyle);
+                GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), toolTipStyle.ReadOnly);
             }
         }
 

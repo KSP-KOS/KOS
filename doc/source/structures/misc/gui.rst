@@ -79,6 +79,7 @@ following hierarchy:
     :attr:`Y`                             :struct:`scalar` (pixels)       Y-position of the window. Negative values measure from the bottom of the screen.
     :attr:`DRAGGABLE`                     :struct:`Boolean`               Set to false to prevent the window being user-draggable.
     :attr:`EXTRADELAY`                    :struct:`scalar` (seconds)      Add artificial delay to all communication with this GUI (good for testing before you get into deep space)
+    :attr:`SKIN`                          :struct:`Skin`                  The skin defining the default style of widgets in this GUI.
     ===================================== =============================== =============
 
 .. structure:: Widget
@@ -92,45 +93,9 @@ following hierarchy:
     :meth:`HIDE`                                                          Hide the widget.
     :meth:`DISPOSE`                                                       Remove the widget permanently.
     :attr:`ENABLED`                       :struct:`Boolean`               Set to False to "grey out" the widget, preventing user interaction.
-    :attr:`HMARGIN`                       :struct:`scalar` (pixels)       Horizontal spacing between this and other widgets.
-    :attr:`VMARGIN`                       :struct:`scalar` (pixels)       Vertical spacing between this and other widgets.
-    :attr:`HPADDING`                      :struct:`scalar` (pixels)       Horizontal spacing between the outside of the widget and its contents.
-    :attr:`VPADDING`                      :struct:`scalar` (pixels)       Vertical spacing between the outside of the widget and its contents.
-    :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally? (default depends on widget subclass)
-    :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
-    :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
-    :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
-    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
-    :attr:`BG_ON`                         :struct:`string`                Image file when the widget is "on" (eg. button is pressed).
-    :attr:`BG_HOVER`                      :struct:`string`                Image file when the widget is under the mouse.
-    :attr:`BG_HOVER_ON`                   :struct:`string`                Image file when the widget is under the mouse and "on".
-    :attr:`BG_ACTIVE`                     :struct:`string`                Image file when the widget is active (eg. button being held down).
-    :attr:`BG_ACTIVE_ON`                  :struct:`string`                Image file when the widget is active and "on".
-    :attr:`BG_FOCUSED`                    :struct:`string`                Image file when the widget has keyboard focus.
-    :attr:`BG_FOCUSED_ON`                 :struct:`string`                Image file when the widget has keyboard focus and is "on".
-    :attr:`HBORDER`                       :struct:`scalar` (pixels)       Left and right column counts for BG image border.
-    :attr:`VBORDER`                       :struct:`scalar` (pixels)       Top and bottom row counts for BG image border.
+    :attr:`STYLE`                         :struct:`Style`                 The style of the widget.
+    :attr:`GUI`                           :struct:`GUI`                   The GUI ultimately containing this widget.
     ===================================== =============================== =============
-
-.. note::
-
-    The `BG` attributes (`BG`, `BG_FOCUSED`, `BG_ACTIVE`, `BG_ON`, `BG_FOCUSED_ON`, `BG_ACTIVE_ON`, and `BG_HOVER_ON`)
-    are each a "9-slice" image.
-
-    .. image:: /_images/general/9-slice.png
-        :align: right
-
-    The corners of the image are used as-is, but the pixels
-    between them are stretched to make the full size of image required.
-    The :attr:`VBORDER` attribute defines the top and bottom rows of pixels, and
-    the :attr:`HBORDER` attribute defines the left and right rows of pixels.
-
-    The image files are always found relative to volume 0 (the Ships/Scripts directory) and
-    specifying a ".png" extension is optional.
-
-    If set to "", these background images will default to the corresponding non-ON image
-    and if that is also "", it will default to the normal `BG` image,
-    and if that is also "", then it will default to completely transparent.
 
 .. structure:: Box
 
@@ -150,6 +115,8 @@ following hierarchy:
     :meth:`ADDPOPUPMENU`                  :struct:`PopupMenu`             Creates a popup menu.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
     :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
+    :meth:`ADDHLAYOUT`                    :struct:`Box`                   Creates a nested transparent horizontally-arranged Box in the Box.
+    :meth:`ADDVLAYOUT`                    :struct:`Box`                   Creates a nested transparent vertically Box in the Box.
     :meth:`ADDHBOX`                       :struct:`Box`                   Creates a nested horizontally-arranged Box in the Box.
     :meth:`ADDVBOX`                       :struct:`Box`                   Creates a nested vertically Box in the Box.
     :meth:`ADDSTACK`                      :struct:`Box`                   Creates a nested stacked Box in the Box. Only the first enabled subwidget is ever shown. See :meth:`SHOWONLY` below.
@@ -172,15 +139,7 @@ following hierarchy:
     :attr:`TEXT`                          :struct:`string`                The text on the label. May include some markup. See RICHTEXT below.
     :attr:`IMAGE`                         :struct:`string`                The name of an image for the label. The images are in the Ships/Script directory and ".png" is optional.
     :attr:`TOOLTIP`                       :struct:`string`                A tooltip for the label.
-    :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
-    :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the label.
-    :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
-    :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
     ===================================== =============================== =============
-
-.. note::
-    The ALIGN attribute will not do anything useful unless either HSTRETCH is set to true or a fixed WIDTH is set,
-    since otherwise it will be exactly the right size to fit the label with no alignment within that space being necessary.
 
 .. structure:: Button
 
@@ -295,6 +254,107 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :attr:`AMOUNT`                        :struct:`scalar`                The amount of space, or -1 for flexible spacing.
     ===================================== =============================== =============
+
+.. structure:: Skin
+
+    This object holds styles for all widget types. Changes to the styles on a GUI:SKIN
+    will affect all subsequently created widgets. Note that some of the styles are used
+    by subparts of widgets, such as the HORIZONTALSLIDERTHUMB, which is used by a SLIDER
+    when oriented horizontally.
+
+    If you create your own composite widgets, you can use ADD and GET to centralize setting
+    up the style of your composite widgets.
+
+    ====================================== =========================== =============
+    Suffix                                 Type                        Description
+    :attr:`BOX`                            :struct:`Style`             Style for :struct:`Box` widgets.
+    :attr:`BUTTON`                         :struct:`Style`             Style for :struct:`Button` widgets.
+    :attr:`HORIZONTALSCROLLBAR`            :struct:`Style`             Style for the horizontal scrollbar of :struct:`ScrollBox` widgets.
+    :attr:`HORIZONTALSCROLLBARLEFTBUTTON`  :struct:`Style`             Style for the horizontal scrollbar left button of :struct:`ScrollBox` widgets.
+    :attr:`HORIZONTALSCROLLBARRIGHTBUTTON` :struct:`Style`             Style for the horizontal scrollbar right button of :struct:`ScrollBox` widgets.
+    :attr:`HORIZONTALSCROLLBARTHUMB`       :struct:`Style`             Style for the horizontal scrollbar thumb of :struct:`ScrollBox` widgets.
+    :attr:`HORIZONTALSLIDER`               :struct:`Style`             Style for horizontal :struct:`Slider` widgets.
+    :attr:`HORIZONTALSLIDERTHUMB`          :struct:`Style`             Style for the thumb of horizontal :struct:`Slider` widgets.
+    :attr:`VERTICALSCROLLBAR`              :struct:`Style`             Style for the vertical scrollbar of :struct:`ScrollBox` widgets.
+    :attr:`VERTICALSCROLLBARLEFTBUTTON`    :struct:`Style`             Style for the vertical scrollbar left button of :struct:`ScrollBox` widgets.
+    :attr:`VERTICALSCROLLBARRIGHTBUTTON`   :struct:`Style`             Style for the vertical scrollbar right button of :struct:`ScrollBox` widgets.
+    :attr:`VERTICALSCROLLBARTHUMB`         :struct:`Style`             Style for the vertical scrollbar thumb of :struct:`ScrollBox` widgets.
+    :attr:`VERTICALSLIDER`                 :struct:`Style`             Style for vertical :struct:`Slider` widgets.
+    :attr:`VERTICALSLIDERTHUMB`            :struct:`Style`             Style for the thumb of vertical :struct:`Slider` widgets.
+    :attr:`LABEL`                          :struct:`Style`             Style for :struct:`Label` widgets.
+    :attr:`SCROLLVIEW`                     :struct:`Style`             Style for :struct:`ScrollBox` widgets.
+    :attr:`TEXTFIELD`                      :struct:`Style`             Style for :struct:`TextField widgets.
+    :attr:`TOGGLE`                         :struct:`Style`             Style for :struct:`Button` widgets in toggle mode (GUI:ADDCHECKBOX and GUI:ADDRADIOBUTTON).
+    :attr:`FLATLAYOUT`                     :struct:`Style`             Style for :struct:`Box` transparent widgets (GUI:ADDHLAYOUT and GUI:ADDVLAYOUT).
+    :attr:`POPUPMENU`                      :struct:`Style`             Style for :struct:`PopupMenu` widgets.
+    :attr:`POPUPWINDOW`                    :struct:`Style`             Style for the popup window of :struct:`PopupMenu` widgets.
+    :attr:`POPUPMENUITEM`                  :struct:`Style`             Style for the menu items of :struct:`PopupMenu` widgets.
+    :attr:`LABELTIPOVERLAY`                :struct:`Style`             Style for tooltips overlayed on :struct:`Label` widgets.
+    :attr:`WINDOW`                         :struct:`Style`             Style for :struct:`GUI` windows.
+
+    :attr:`ADD(name)`                      :struct:`Style`             Adds a new style.
+    :attr:`GET(name)`                      :struct:`Style`             Gets a style by name (including ADDed styles).
+    ====================================== =========================== =============
+
+.. structure:: Style
+
+    This object represents the style of a widget. Styles can be either changed directly
+    on a :struct:`Widget`, or changed on the GUI:SKIN so as to affect all subsequently
+    created widgets.
+
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+    :attr:`HMARGIN`                       :struct:`scalar` (pixels)       Horizontal spacing between this and other widgets.
+    :attr:`VMARGIN`                       :struct:`scalar` (pixels)       Vertical spacing between this and other widgets.
+    :attr:`HPADDING`                      :struct:`scalar` (pixels)       Horizontal spacing between the outside of the widget and its contents.
+    :attr:`VPADDING`                      :struct:`scalar` (pixels)       Vertical spacing between the outside of the widget and its contents.
+    :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally? (default depends on widget subclass)
+    :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
+    :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
+    :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
+    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
+    :attr:`BG_ON`                         :struct:`string`                Image file when the widget is "on" (eg. button is pressed).
+    :attr:`BG_HOVER`                      :struct:`string`                Image file when the widget is under the mouse.
+    :attr:`BG_HOVER_ON`                   :struct:`string`                Image file when the widget is under the mouse and "on".
+    :attr:`BG_ACTIVE`                     :struct:`string`                Image file when the widget is active (eg. button being held down).
+    :attr:`BG_ACTIVE_ON`                  :struct:`string`                Image file when the widget is active and "on".
+    :attr:`BG_FOCUSED`                    :struct:`string`                Image file when the widget has keyboard focus.
+    :attr:`BG_FOCUSED_ON`                 :struct:`string`                Image file when the widget has keyboard focus and is "on".
+    :attr:`HBORDER`                       :struct:`scalar` (pixels)       Left and right column counts for BG image border.
+    :attr:`VBORDER`                       :struct:`scalar` (pixels)       Top and bottom row counts for BG image border.
+    :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
+    :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the label.
+    :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
+    :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
+    ===================================== =============================== =============
+
+.. note::
+    The ALIGN attribute will not do anything useful unless either HSTRETCH is set to true or a fixed WIDTH is set,
+    since otherwise it will be exactly the right size to fit the content of the widget with no alignment within that space being necessary.
+
+    It is currently only relevant for the widgets that have scalar content (Label and subclasses).
+
+.. note::
+
+    The `BG` attributes (`BG`, `BG_FOCUSED`, `BG_ACTIVE`, `BG_ON`, `BG_FOCUSED_ON`, `BG_ACTIVE_ON`, and `BG_HOVER_ON`)
+    are each a "9-slice" image.
+
+    .. image:: /_images/general/9-slice.png
+        :align: right
+
+    The corners of the image are used as-is, but the pixels
+    between them are stretched to make the full size of image required.
+    The :attr:`VBORDER` attribute defines the top and bottom rows of pixels, and
+    the :attr:`HBORDER` attribute defines the left and right rows of pixels.
+
+    The image files are always found relative to volume 0 (the Ships/Scripts directory) and
+    specifying a ".png" extension is optional.
+
+    If set to "", these background images will default to the corresponding non-ON image
+    and if that is also "", it will default to the normal `BG` image,
+    and if that is also "", then it will default to completely transparent.
+
 
 Communication Delay
 -------------------
