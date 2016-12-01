@@ -101,33 +101,36 @@ following hierarchy:
     :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
     :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
     :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
+    :attr:`BG_ON`                         :struct:`string`                Image file when the widget is "on" (eg. button is pressed).
+    :attr:`BG_HOVER`                      :struct:`string`                Image file when the widget is under the mouse.
+    :attr:`BG_HOVER_ON`                   :struct:`string`                Image file when the widget is under the mouse and "on".
+    :attr:`BG_ACTIVE`                     :struct:`string`                Image file when the widget is active (eg. button being held down).
+    :attr:`BG_ACTIVE_ON`                  :struct:`string`                Image file when the widget is active and "on".
+    :attr:`BG_FOCUSED`                    :struct:`string`                Image file when the widget has keyboard focus.
+    :attr:`BG_FOCUSED_ON`                 :struct:`string`                Image file when the widget has keyboard focus and is "on".
     :attr:`HBORDER`                       :struct:`scalar` (pixels)       Left and right column counts for BG image border.
     :attr:`VBORDER`                       :struct:`scalar` (pixels)       Top and bottom row counts for BG image border.
     ===================================== =============================== =============
 
 .. note::
 
-    The `BG` attribute comes in 8 flavours: `BG`, `BG_FOCUSED`, `BG_ACTIVE`, `BG_ON`, `BG_FOCUSED_ON`, `BG_ACTIVE_ON`, and `BG_HOVER_ON`.
-
-    ============= =====================================================
-    FOCUSED       The widget has keyboard focus.
-    ACTIVE        The widget is hot (eg. button is being held down).
-    HOVER         The widget is under the mouse.
-    ON            The widget is on (eg. button is PRESSED).
-    ============= =====================================================
+    The `BG` attributes (`BG`, `BG_FOCUSED`, `BG_ACTIVE`, `BG_ON`, `BG_FOCUSED_ON`, `BG_ACTIVE_ON`, and `BG_HOVER_ON`)
+    are each a "9-slice" image.
 
     .. image:: /_images/general/9-slice.png
         :align: right
 
-    The image file is a "9-slice" image, where the corners of the image are used as-is, but the pixels
+    The corners of the image are used as-is, but the pixels
     between them are stretched to make the full size of image required.
-    The :attr:`VBORDER` attribute defines the top and bottom rows of pixels (default 8), and
-    the :attr:`HBORDER` attribute defines the left and right rows of pixels (default 15).
+    The :attr:`VBORDER` attribute defines the top and bottom rows of pixels, and
+    the :attr:`HBORDER` attribute defines the left and right rows of pixels.
 
-    The image files are found relative to Ships/Scripts directory and specifying a ".png" extension is optional.
+    The image files are always found relative to volume 0 (the Ships/Scripts directory) and
+    specifying a ".png" extension is optional.
 
-    If set to "", the background will default to the non-ON image and then default to the normal `BG` image,
-    and then default to completely transparent.
+    If set to "", these background images will default to the corresponding non-ON image
+    and if that is also "", it will default to the normal `BG` image,
+    and if that is also "", then it will default to completely transparent.
 
 .. structure:: Box
 
