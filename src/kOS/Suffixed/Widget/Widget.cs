@@ -106,7 +106,7 @@ namespace kOS.Suffixed
             Shown = false;
             if (parent != null) {
                 parent.Remove(this);
-                var gui = FindGUI();
+                GUIWidgets gui = FindGUI();
                 if (gui != null)
                     gui.ClearCommunication(this);
             }
@@ -137,11 +137,11 @@ namespace kOS.Suffixed
                 t = new TexFileInfo();
                 textureCache.Add(relativePath, t);
             }
-            var path = Path.Combine(SafeHouse.ArchiveFolder, relativePath);
+            string path = Path.Combine(SafeHouse.ArchiveFolder, relativePath);
             var r = new Texture2D(0, 0, TextureFormat.ARGB32, false);
             string[] exts = { ".png", "" };
-            foreach (var ext in exts) {
-                var filename = path + ext;
+            foreach (string ext in exts) {
+                string filename = path + ext;
                 if (File.Exists(filename)) {
                     r.LoadImage(File.ReadAllBytes(filename));
                     t.texture = r;
@@ -154,7 +154,7 @@ namespace kOS.Suffixed
 
         virtual protected void Communicate(Action a)
         {
-            var gui = FindGUI();
+            GUIWidgets gui = FindGUI();
             if (gui != null)
                 gui.Communicate(this,ToString(),a);
             else

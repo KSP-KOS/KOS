@@ -61,7 +61,7 @@ namespace kOS.Suffixed
 
         public bool TakePress()
         {
-            var r = Pressed;
+            bool r = Pressed;
             if (!IsToggle && Pressed) {
                 Pressed = false;
                 Communicate(() => PressedVisible = false);
@@ -79,7 +79,7 @@ namespace kOS.Suffixed
         public override void DoGUI()
         {
             if (IsToggle) {
-                var newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), Style);
+                bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), Style);
                 PressedVisible = newpressed;
                 if (IsExclusive && newpressed && parent != null) {
                     parent.UnpressVisibleAllBut(this);

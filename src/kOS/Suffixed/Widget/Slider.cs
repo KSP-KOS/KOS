@@ -9,7 +9,7 @@ namespace kOS.Suffixed
     {
         private bool horizontal { get; set; }
         private float value { get; set; }
-        private float value_visible { get; set; }
+        private float valueVisible { get; set; }
         private float min { get; set; }
         private float max { get; set; }
         private GUIStyle thumbStyle;
@@ -29,7 +29,7 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("VALUE", new SetSuffix<ScalarValue>(() => value, v => { if (value != v) { value = v; Communicate(() => value_visible = v); } }));
+            AddSuffix("VALUE", new SetSuffix<ScalarValue>(() => value, v => { if (value != v) { value = v; Communicate(() => valueVisible = v); } }));
             AddSuffix("MIN", new SetSuffix<ScalarValue>(() => min, v => min = v));
             AddSuffix("MAX", new SetSuffix<ScalarValue>(() => max, v => max = v));
         }
@@ -38,11 +38,11 @@ namespace kOS.Suffixed
         {
             float newvalue;
             if (horizontal)
-                newvalue = GUILayout.HorizontalSlider(value_visible, min, max, Style, thumbStyle);
+                newvalue = GUILayout.HorizontalSlider(valueVisible, min, max, Style, thumbStyle);
             else
-                newvalue = GUILayout.VerticalSlider(value_visible, min, max, Style, thumbStyle);
-            if (newvalue != value_visible) {
-                value_visible = newvalue;
+                newvalue = GUILayout.VerticalSlider(valueVisible, min, max, Style, thumbStyle);
+            if (newvalue != valueVisible) {
+                valueVisible = newvalue;
                 Communicate(() => value = newvalue);
             }
         }

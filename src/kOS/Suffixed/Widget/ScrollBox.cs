@@ -31,7 +31,7 @@ namespace kOS.Suffixed
         public override void DoGUI()
         {
             if (!Shown) return;
-            var was = GUI.enabled;
+            bool was = GUI.enabled;
             GUI.enabled = true; // always allow scrolling
             position = GUILayout.BeginScrollView(position,hscrollalways,vscrollalways,HighLogic.Skin.horizontalScrollbar,HighLogic.Skin.verticalScrollbar,Style);
             if (Mode == LayoutMode.Horizontal) GUILayout.BeginHorizontal();

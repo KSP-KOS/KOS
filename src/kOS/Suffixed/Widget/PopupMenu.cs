@@ -65,7 +65,7 @@ namespace kOS.Suffixed
 
         public bool TakeChange()
         {
-            var r = changed;
+            bool r = changed;
             changed = false;
             return r;
         }
@@ -73,7 +73,7 @@ namespace kOS.Suffixed
         string GetItemString(Structure item)
         {
             if (item.HasSuffix(optSuffix)) {
-                var v = item.GetSuffix(optSuffix);
+                ISuffixResult v = item.GetSuffix(optSuffix);
                 if (v.HasValue) return v.Value.ToString();
             }
             return item.ToString();
@@ -94,7 +94,7 @@ namespace kOS.Suffixed
                     return;
                 }
             }
-            var vs = GetItemString(v);
+            string vs = GetItemString(v);
             for (index = 0; index < list.Count(); ++index) {
                 if (GetItemString(list[index]) == vs) {
                     return;
@@ -105,15 +105,15 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
-            var was = PressedVisible;
+            bool was = PressedVisible;
             base.DoGUI();
             if (Event.current.type == EventType.Repaint) {
-                var r = GUILayoutUtility.GetLastRect();
+                Rect r = GUILayoutUtility.GetLastRect();
                 popupRect.position = GUIUtility.GUIToScreenPoint(r.position) + new Vector2(0, r.height);
                 popupRect.width = r.width;
             }
             if (was != PressedVisible) {
-                var gui = FindGUI();
+                GUIWidgets gui = FindGUI();
                 if (gui != null) {
                     if (PressedVisible)
                         gui.SetCurrentPopup(this);
@@ -126,7 +126,7 @@ namespace kOS.Suffixed
         public void PopDown()
         {
             SetPressedVisible(false);
-            var gui = FindGUI();
+            GUIWidgets gui = FindGUI();
             if (gui != null)
                 gui.UnsetCurrentPopup(this);
         }
@@ -147,7 +147,7 @@ namespace kOS.Suffixed
             GUILayout.BeginVertical(popupStyle);
             for (int i=0; i<list.Count(); ++i) {
                 if (GUILayout.Button(GetItemString(list[i]), itemStyle)) {
-                    var newindex = i;
+                    int newindex = i;
                     Communicate(() => index = newindex);
                     SetVisibleText(GetItemString(list[i]));
                     PopDown();

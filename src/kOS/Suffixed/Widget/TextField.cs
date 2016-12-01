@@ -35,14 +35,14 @@ namespace kOS.Suffixed
 
         public bool TakeChange()
         {
-            var r = Changed;
+            bool r = Changed;
             Changed = false;
             return r;
         }
 
         public bool TakeConfirm()
         {
-            var r = Confirmed;
+            bool r = Confirmed;
             Confirmed = false;
             return r;
         }
@@ -56,7 +56,7 @@ namespace kOS.Suffixed
                 GUIUtility.keyboardControl = -1;
             }
             uiID = GUIUtility.GetControlID(FocusType.Passive) + 1; // Dirty kludge.
-            var newtext = GUILayout.TextField(VisibleText(), Style);
+            string newtext = GUILayout.TextField(VisibleText(), Style);
             if (newtext != VisibleText()) {
                 SetVisibleText(newtext);
                 Changed = true;

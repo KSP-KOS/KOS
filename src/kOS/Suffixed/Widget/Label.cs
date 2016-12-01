@@ -42,7 +42,7 @@ namespace kOS.Suffixed
 
         protected void SetContentImage(string img)
         {
-            var tex = GetTexture(img);
+            Texture2D tex = GetTexture(img);
             content.image = tex;
             Communicate(() => content_visible.image = tex);
         }
