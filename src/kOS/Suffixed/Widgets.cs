@@ -430,6 +430,7 @@ namespace kOS.Suffixed
         public bool PressedVisible { get; private set; }
         public bool isToggle { get; set; }
         public bool isExclusive { get; set; }
+        public KOSDelegate onPressed;
 
         public Button(Box parent, string text) : base(parent, text)
         {
@@ -464,6 +465,7 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => { Pressed = value; Communicate(() => PressedVisible = value); }));
+            AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
             AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => isExclusive, value => isExclusive = value));
         }
@@ -499,15 +501,28 @@ namespace kOS.Suffixed
                 if (isExclusive && newpressed && parent != null) {
                     parent.UnpressVisibleAllBut(this);
                 }
-                if (Pressed != newpressed)
+                if (Pressed != newpressed) {
                     Communicate(() => Pressed = newpressed);
+                    if (newpressed)
+                        Communicate(() => DoOnPressed());
+                }
             } else {
                 if (GUILayout.Toggle(PressedVisible, VisibleContent(), style)) {
                     if (!PressedVisible) {
                         PressedVisible = true;
                         Communicate(() => Pressed = true);
+                        Communicate(() => DoOnPressed());
                     }
                 }
+            }
+        }
+
+        private void DoOnPressed()
+        {
+            UnityEngine.Debug.Log("DoOnPressed");
+            if (onPressed != null) {
+                UnityEngine.Debug.Log("DoOnPressed: " + onPressed.ToString());
+                onPressed.Call(new Structure[0]);
             }
         }
 
