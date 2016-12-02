@@ -193,7 +193,7 @@ following hierarchy:
     :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix that names the options.
     :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                             Returns the current selected value.
-    :attr:`INDEX`                         integer                         Returns the index of the current selected value.
+    :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
     :attr:`CHANGED`                       :struct:`Boolean`               Has the user chosen something?
     :meth:`CLEAR`                                                         Removes all options.
     ===================================== =============================== =============
@@ -240,7 +240,7 @@ following hierarchy:
     -----------------------------------------------------------------------------------
     :attr:`HALWAYS`                       :struct:`Boolean`               Always show the horizontal scrollbar.
     :attr:`VALWAYS`                       :struct:`Boolean`               Always show the vertical scrollbar.
-    :attr:`POSITION`                      :struct:`Vector2`               The position of the scrolled content.
+    :attr:`POSITION`                      :struct:`Vector`                The position of the scrolled content (Z is ignored).
     ===================================== =============================== =============
 
 .. structure:: Spacing
