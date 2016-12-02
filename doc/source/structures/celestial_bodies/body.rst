@@ -9,11 +9,27 @@ This is any sort of planet or moon. To get a variable referring to a Body, you c
     // like "Mun" for example.
     SET MY_VAR TO BODY("name").
 
-Also, all bodies have hard-coded variable names as well. You can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``.
-
 .. note::
     .. versionchanged:: 0.13
         A Celestial Body is now also an :ref:`Orbitable <orbitable>`, and can use all the terms described for these objects too.
+
+
+Bodies' names are added to the kerboscript language as variable names as well.
+This means you can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``,
+and the variable ``Kerbin`` to mean the same thing as ``BODY("Kerbin")``, and so on.
+
+.. note::
+    Exception: If you are using a mod that replaces the stock game's planets
+    and moons with new bodies with new names, then there is a chance a body's
+    name will match an existing bound variable name in kOS and we cannot
+    control this.  Therefore if this happens, that body name will NOT become a
+    variable name, so you can only refer to that body with the expression
+    ``BODY(name)``.  (For example, this occurred when Galileo Planet Pack had
+    a planet called "Eta" which has the same name as the bound variable "ETA").
+    .. versionchanged:: 1.0.2
+        This behavior was only added in kOS 1.0.2.
+        Using a version of kOS prior to 1.0.2 will cause a name clash and
+        broken behavior if a planet or moon exists that overrides a keyword name.
 
 Predefined Celestial Bodies
 ---------------------------
