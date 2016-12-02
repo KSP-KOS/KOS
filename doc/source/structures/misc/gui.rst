@@ -293,6 +293,7 @@ following hierarchy:
     :attr:`WINDOW`                         :struct:`Style`             Style for :struct:`GUI` windows.
 
     :attr:`ADD(name)`                      :struct:`Style`             Adds a new style.
+    :attr:`HAS(name)`                      :struct:`Boolean`           Does the skin have the named style?
     :attr:`GET(name)`                      :struct:`Style`             Gets a style by name (including ADDed styles).
     ====================================== =========================== =============
 
@@ -305,28 +306,27 @@ following hierarchy:
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
-    :attr:`HMARGIN`                       :struct:`scalar` (pixels)       Horizontal spacing between this and other widgets.
-    :attr:`VMARGIN`                       :struct:`scalar` (pixels)       Vertical spacing between this and other widgets.
-    :attr:`HPADDING`                      :struct:`scalar` (pixels)       Horizontal spacing between the outside of the widget and its contents.
-    :attr:`VPADDING`                      :struct:`scalar` (pixels)       Vertical spacing between the outside of the widget and its contents.
     :attr:`HSTRETCH`                      :struct:`Boolean`               Should the widget stretch horizontally? (default depends on widget subclass)
     :attr:`VSTRETCH`                      :struct:`Boolean`               Should the widget stretch vertically?
     :attr:`WIDTH`                         :struct:`scalar` (pixels)       Fixed width (or 0 if flexible).
     :attr:`HEIGHT`                        :struct:`scalar` (pixels)       Fixed height (or 0 if flexible).
-    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
-    :attr:`BG_ON`                         :struct:`string`                Image file when the widget is "on" (eg. button is pressed).
-    :attr:`BG_HOVER`                      :struct:`string`                Image file when the widget is under the mouse.
-    :attr:`BG_HOVER_ON`                   :struct:`string`                Image file when the widget is under the mouse and "on".
-    :attr:`BG_ACTIVE`                     :struct:`string`                Image file when the widget is active (eg. button being held down).
-    :attr:`BG_ACTIVE_ON`                  :struct:`string`                Image file when the widget is active and "on".
-    :attr:`BG_FOCUSED`                    :struct:`string`                Image file when the widget has keyboard focus.
-    :attr:`BG_FOCUSED_ON`                 :struct:`string`                Image file when the widget has keyboard focus and is "on".
-    :attr:`HBORDER`                       :struct:`scalar` (pixels)       Left and right column counts for BG image border.
-    :attr:`VBORDER`                       :struct:`scalar` (pixels)       Top and bottom row counts for BG image border.
+    :attr:`MARGIN`                        :struct:`StyleRectOffset`       Spacing between this and other widgets.
+    :attr:`PADDING`                       :struct:`StyleRectOffset`       Spacing between the outside of the widget and its contents (text, etc.).
+    :attr:`BORDER`                        :struct:`StyleRectOffset`       Size of the edges in the 9-slice image for BG images in NORMAL, HOVER, etc.
     :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
     :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the label.
     :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
-    :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
+    :attr:`NORMAL`                        :struct:`StyleState`            Properties for the widget normally.
+    :attr:`ON`                            :struct:`StyleState`            Properties for when the widget is under the mouse and "on".
+    :attr:`NORMAL_ON`                     :struct:`StyleState`            Alias for ON.
+    :attr:`HOVER`                         :struct:`StyleState`            Properties for when the widget is under the mouse.
+    :attr:`HOVER_ON`                      :struct:`StyleState`            Properties for when the widget is under the mouse and "on".
+    :attr:`ACTIVE`                        :struct:`StyleState`            Properties for when the widget is active (eg. button being held down).
+    :attr:`ACTIVE_ON`                     :struct:`StyleState`            Properties for when the widget is active and "on".
+    :attr:`FOCUSED`                       :struct:`StyleState`            Properties for when the widget has keyboard focus.
+    :attr:`FOCUSED_ON`                    :struct:`StyleState`            Properties for when the widget has keyboard focus and is "on".
+    :attr:`BG`                            :struct:`string`                The same as NORMAL:BG. Name of a "9-slice" image file.
+    :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The same as NORMAL:TEXTCOLOR. The color of the text on the label.
     ===================================== =============================== =============
 
 .. note::
@@ -335,18 +335,27 @@ following hierarchy:
 
     It is currently only relevant for the widgets that have scalar content (Label and subclasses).
 
+.. structure:: StyleState
+
+    A sub-structure of :struct:`Style`.
+
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+    :attr:`BG`                            :struct:`string`                Name of a "9-slice" image file. See note below.
+    :attr:`TEXTCOLOR`                     :ref:`Color <colors>`           The color of the text on the label.
+    ===================================== =============================== =============
+
 .. note::
 
-    The `BG` attributes (`BG`, `BG_FOCUSED`, `BG_ACTIVE`, `BG_ON`, `BG_FOCUSED_ON`, `BG_ACTIVE_ON`, and `BG_HOVER_ON`)
-    are each a "9-slice" image.
+    The `BG` attribute is a "9-slice" image.
 
     .. image:: /_images/general/9-slice.png
         :align: right
 
     The corners of the image are used as-is, but the pixels
     between them are stretched to make the full size of image required.
-    The :attr:`VBORDER` attribute defines the top and bottom rows of pixels, and
-    the :attr:`HBORDER` attribute defines the left and right rows of pixels.
+    The :attr:`BORDER` attribute defines the left, right, top and bottom rows of unstretched pixels.
 
     The image files are always found relative to volume 0 (the Ships/Scripts directory) and
     specifying a ".png" extension is optional.
@@ -354,6 +363,21 @@ following hierarchy:
     If set to "", these background images will default to the corresponding non-ON image
     and if that is also "", it will default to the normal `BG` image,
     and if that is also "", then it will default to completely transparent.
+
+.. structure:: StyleRectOffset
+
+    A sub-structure of :struct:`Style`.
+
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+    :attr:`LEFT`                          :struct:`Scalar`                Number of pixels on the left.
+    :attr:`RIGHT`                         :struct:`Scalar`                Number of pixels on the right.
+    :attr:`TOP`                           :struct:`Scalar`                Number of pixels on the top.
+    :attr:`BOTTOM`                        :struct:`Scalar`                Number of pixels on the bottom.
+    :attr:`H`                             :struct:`Scalar`                Sets the number of pixels on both the left and right. Reading returns LEFT.
+    :attr:`V`                             :struct:`Scalar`                Sets the number of pixels on both the top and bottom. Reading returns TOP.
+    ===================================== =============================== =============
 
 
 Communication Delay

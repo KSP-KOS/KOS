@@ -2,10 +2,6 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using System.Collections.Generic;
-using kOS.Safe.Utilities;
-using System.IO;
-using System;
-using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -57,13 +53,14 @@ namespace kOS.Suffixed
                 }
             }
 
-            AddSuffix("ADD", new OneArgsSuffix<WidgetStyle, StringValue>(AddStyle));
+            AddSuffix("ADD", new TwoArgsSuffix<WidgetStyle, StringValue, WidgetStyle>(AddStyle));
             AddSuffix("GET", new OneArgsSuffix<WidgetStyle, StringValue>(GetStyle));
+            AddSuffix("HAS", new OneArgsSuffix<BooleanValue, StringValue>(value => styles.ContainsKey(value.ToUpper())));
         }
 
-        public WidgetStyle AddStyle(StringValue name)
+        public WidgetStyle AddStyle(StringValue name, WidgetStyle basis)
         {
-            var r = new WidgetStyle(HighLogic.Skin.label);
+            var r = new WidgetStyle(basis.ReadOnly);
             styles.Add(name.ToString().ToUpperInvariant(), r);
             return r;
         }

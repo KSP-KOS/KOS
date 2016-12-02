@@ -65,6 +65,7 @@ namespace kOS.Suffixed
             AddSuffix("DISPOSE", new NoArgsVoidSuffix(Dispose));
             AddSuffix("STYLE", new SetSuffix<WidgetStyle>(() => copyOnWriteStyle, value => copyOnWriteStyle = value));
             AddSuffix("GUI", new Suffix<GUIWidgets>(() => FindGUI()));
+            AddSuffix("PARENT", new Suffix<Widget>(() => parent));
         }
 
         virtual public void Show()

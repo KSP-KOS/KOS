@@ -44,7 +44,7 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => { Pressed = value; Communicate(() => PressedVisible = value); }));
+            AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => SetPressed(value)));
             /* Can't work out how to call kOS code from C# in DoOnPressed() below.
              * AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
              */
@@ -58,31 +58,44 @@ namespace kOS.Suffixed
                 IsToggle = on;
         }
 
+        public void SetPressed(bool value)
+        {
+            if (Pressed != value) {
+                Pressed = value;
+                Communicate(() => PressedVisible = value);
+            }
+        }
+
         public bool TakePress()
         {
             bool r = Pressed;
             if (!IsToggle && Pressed) {
                 Pressed = false;
-                Communicate(() => PressedVisible = false);
+                Communicate(() => SetPressedVisible(false));
             }
             return r;
         }
 
         public void SetPressedVisible(bool on)
         {
-            PressedVisible = on;
-            if (PressedVisible != on)
-                Communicate(() => Pressed = on);
+            if (PressedVisible != on) {
+                PressedVisible = on;
+                if (Pressed != on) Communicate(() => SetPressed(on));
+                if (IsExclusive && PressedVisible && parent != null) {
+                    parent.UnpressVisibleAllBut(this);
+                }
+            }
         }
 
         public override void DoGUI()
         {
             if (IsToggle) {
                 bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle);
-                PressedVisible = newpressed;
-                if (IsExclusive && newpressed && parent != null) {
-                    parent.UnpressVisibleAllBut(this);
+                if (IsExclusive) {
+                    if (!newpressed) return; // stays pressed
+                    if (parent != null) parent.UnpressVisibleAllBut(this);
                 }
+                PressedVisible = newpressed;
                 if (Pressed != newpressed) {
                     Communicate(() => Pressed = newpressed);
                     if (newpressed)
