@@ -60,6 +60,7 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("ENABLED", new SetSuffix<BooleanValue>(() => Enabled, value => Enabled = value));
+            AddSuffix("VISIBLE", new SetSuffix<BooleanValue>(() => Shown, value => {  if (value) Show(); else Hide(); }));
             AddSuffix("SHOW", new NoArgsVoidSuffix(Show));
             AddSuffix("HIDE", new NoArgsVoidSuffix(Hide));
             AddSuffix("DISPOSE", new NoArgsVoidSuffix(Dispose));

@@ -89,8 +89,9 @@ following hierarchy:
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============
-    :meth:`SHOW`                                                          Show the widget. All except GUI objects are shown by default.
-    :meth:`HIDE`                                                          Hide the widget.
+    :meth:`SHOW`                                                          Show the widget. Equivalent to setting VISIBLE to True.
+    :meth:`HIDE`                                                          Hide the widget. Equivalent to setting VISIBLE to False.
+    :attr:`VISIBLE`                                                       Show or hide the widget. All except top-level GUI objects are shown by default.
     :meth:`DISPOSE`                                                       Remove the widget permanently.
     :attr:`ENABLED`                       :struct:`Boolean`               Set to False to "grey out" the widget, preventing user interaction.
     :attr:`STYLE`                         :struct:`Style`                 The style of the widget.
@@ -151,17 +152,23 @@ following hierarchy:
                    Every suffix of :struct:`LABEL`
     -----------------------------------------------------------------------------------
     :attr:`PRESSED`                       :struct:`Boolean`               Has the button been pressed?
-    :meth:`SETTOGGLE`                     :struct:`Boolean`               Set to True to make the button toggle between pressed and not pressed, like a :struct:`CheckBox`.
+    :attr:`TOGGLE`                        :struct:`Boolean`               Set to True to make the button toggle between pressed and not pressed. See Box:ADDCHECKBOX.
     :attr:`EXCLUSIVE`                     :struct:`Boolean`               If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
     ===================================== =============================== =============
 
 .. note::
 
-    Unless SETTOGGLE(True) is called, the value of :attr:`PRESSED` resets to False as
+    Unless TOGGLE is set to True, the value of :attr:`PRESSED` resets to False as
     soon as the value is accessed.
 
     If the Button is created by the Button:ADDCHECKBOX method, it will have a different visual
-    style and it will start already in toggle mode.
+    style and it will start already in TOGGLE mode.
+
+    If EXCLUSIVE is set to True, when the button is clicked (or changed programmatically),
+    other buttons with the same parent will be set to False (regardless of if they are EXCLUSIVE).
+
+    If the Button is created by the Button:ADDRADIOBUTTON method, it will have the checkbox
+    style, and it will start already in TOGGLE and EXCLUSIVE modes.
 
 .. structure:: PopupMenu
 

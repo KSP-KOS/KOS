@@ -106,10 +106,12 @@ namespace kOS.Suffixed
 
         override public void Show()
         {
+            base.Show();
             window.Open();
         }
         override public void Hide()
         {
+            base.Hide();
             window.Close();
         }
         override public void Dispose()

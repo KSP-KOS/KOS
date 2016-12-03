@@ -48,7 +48,7 @@ namespace kOS.Suffixed
             /* Can't work out how to call kOS code from C# in DoOnPressed() below.
              * AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
              */
-            AddSuffix("SETTOGGLE", new OneArgsSuffix<BooleanValue>(SetToggleMode));
+            AddSuffix("TOGGLE", new SetSuffix<BooleanValue>(() => IsToggle, value => SetToggleMode(value)));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => IsExclusive, value => IsExclusive = value));
         }
 
@@ -62,7 +62,12 @@ namespace kOS.Suffixed
         {
             if (Pressed != value) {
                 Pressed = value;
-                Communicate(() => PressedVisible = value);
+                if (PressedVisible != value) {
+                    Communicate(() => PressedVisible = value);
+                    if (IsExclusive && value && parent != null) {
+                        Communicate(() => { if (parent != null) parent.UnpressVisibleAllBut(this); });
+                    }
+                }
             }
         }
 
@@ -80,10 +85,10 @@ namespace kOS.Suffixed
         {
             if (PressedVisible != on) {
                 PressedVisible = on;
-                if (Pressed != on) Communicate(() => SetPressed(on));
                 if (IsExclusive && PressedVisible && parent != null) {
                     parent.UnpressVisibleAllBut(this);
                 }
+                Communicate(() => Pressed = on);
             }
         }
 
@@ -91,16 +96,8 @@ namespace kOS.Suffixed
         {
             if (IsToggle) {
                 bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle);
-                if (IsExclusive) {
-                    if (!newpressed) return; // stays pressed
-                    if (parent != null) parent.UnpressVisibleAllBut(this);
-                }
-                PressedVisible = newpressed;
-                if (Pressed != newpressed) {
-                    Communicate(() => Pressed = newpressed);
-                    if (newpressed)
-                        Communicate(() => DoOnPressed());
-                }
+                if (IsExclusive && !newpressed) return; // stays pressed
+                SetPressedVisible(newpressed);
             } else {
                 if (GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle)) {
                     if (!PressedVisible) {
@@ -114,9 +111,8 @@ namespace kOS.Suffixed
 
         private void DoOnPressed()
         {
-            UnityEngine.Debug.Log("DoOnPressed");
+            // Not used currently - we can't call kOS code like this.
             if (OnPressed != null) {
-                UnityEngine.Debug.Log("DoOnPressed: " + OnPressed.ToString());
                 OnPressed.Call(new Structure[0]);
             }
         }
