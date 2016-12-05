@@ -568,7 +568,8 @@ namespace kOS.Safe.Compilation.KS
             ParseNode bodyNode;
             
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            if (IsLockStatement(node))
+            bool isLock = IsLockStatement(node);
+            if (isLock)
             {
                 funcIdentifier = lastSubNode.Nodes[1].Token.Text;
                 bodyNode = lastSubNode.Nodes[3];
@@ -585,6 +586,7 @@ namespace kOS.Safe.Compilation.KS
                 context.UserFunctions.GetUserFunction(funcIdentifier, storageType == StorageModifier.GLOBAL ? (Int16)0 : GetContainingScopeId(node), node);
             int expressionHash = ConcatenateNodes(bodyNode).GetHashCode();
             userFuncObject.GetUserFunctionOpcodes(expressionHash);
+            userFuncObject.IsFunction = !isLock;
             if (userFuncObject.IsSystemLock())
                 BuildSystemTrigger(userFuncObject);
         }
