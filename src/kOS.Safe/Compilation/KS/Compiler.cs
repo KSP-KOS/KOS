@@ -694,7 +694,7 @@ namespace kOS.Safe.Compilation.KS
                 bodyNode = lastSubNode.Nodes[2]; // The INSTRUCTION_BLOCK of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
             }
             else
-                return; // In principle this shouldn't have ever been called in this case.
+                return; // Should only be the case when scanning elements for anonymous functions
 
             UserFunction userFuncObject = context.UserFunctions.GetUserFunction(
                 userFuncIdentifier,
