@@ -92,7 +92,7 @@ namespace kOS.Suffixed
 
             partSet.GetConnectedResourceTotals(resourceDef.id, out total, out capacity, true);
 
-            return Math.Round(total, 2);
+            return total;
         }
 
         public void CreatePartSet()
