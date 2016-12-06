@@ -140,19 +140,17 @@ or one created by GUI:ADDVLAYOUT, GUI:ADDSCROLLBOX, etc.::
 2. Images for the Tabs and Panels
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The images are quite simple:
+The images are based on other elements to make them suit the style.
 
-.. figure:: /_images/tutorials/gui/front.png
-    :width: 100%
-    The tab when at the front
+============================= =============== ======================
+The tab when in front:        |fronttabimage| Based on Button normal state
+The tab when in the back      |backtabimage|  Based on Button normal_on state
+The panel below the tabs:     |paneltabimage| Based on the GUI window background
+============================= =============== ======================
 
-.. figure:: /_images/tutorials/gui/back.png
-    :width: 100%
-    The tab when at the back
-
-.. figure:: /_images/tutorials/gui/panel.png
-    :width: 100%
-    The panel below the tabs
+.. |fronttabimage| image:: /_images/tutorials/gui/front.png
+.. |backtabimage| image:: /_images/tutorials/gui/back.png
+.. |paneltabimage| image:: /_images/tutorials/gui/panel.png
 
 Note that these images need to be in the "TabWidget/images" directory, as referred to in the code above.
 
