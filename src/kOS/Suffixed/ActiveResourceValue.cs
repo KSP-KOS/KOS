@@ -1,34 +1,26 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
+using System;
+using System.Linq;
 
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("ActiveResource")]
-    public class ActiveResourceValue : Structure
+    public class ActiveResourceValue : AggregateResourceValue
     {
-        private readonly Vessel vessel;
         private readonly int resourceId;
-        private readonly SharedObjects shared;
+        private readonly PartSet partSet;
         private double amount;
         private double capacity;
+        private WeakReference stageValRef;
 
-        public ActiveResourceValue(Vessel ves, int resId, SharedObjects shared)
+        public ActiveResourceValue(PartResourceDefinition definition, SharedObjects shared, StageValues stageValues, PartSet partSet) :
+            base(definition, shared)
         {
-            vessel = ves;
-            resourceId = resId;
-            this.shared = shared;
-            InitializeActiveResourceSuffixes();
-        }
-
-        private void InitializeActiveResourceSuffixes()
-        {
-            AddSuffix("NAME", new Suffix<StringValue>(GetName, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("AMOUNT", new Suffix<ScalarValue>(GetAmount, "The resources currently available"));
-            AddSuffix("CAPACITY", new Suffix<ScalarValue>(GetCapacity, "The total storage capacity currently available"));
-            AddSuffix("DENSITY", new Suffix<ScalarValue>(GetDensity, "The density of this resource"));
-            // TODO: IMPORTANT fix this before release, though it isn't a documented suffix and there may be value to unifying the resource classes
-            //AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(activeResource.parts, shared), "The containers for this resource"));
+            stageValRef = new WeakReference(stageValues);
+            resourceId = definition.id;
+            this.partSet = partSet;
         }
 
         public override string ToString()
@@ -36,26 +28,38 @@ namespace kOS.Suffixed
             return string.Format("ACTIVERESOURCE({0},{1},{2})", GetName(), GetAmount(), GetCapacity());
         }
 
-        public StringValue GetName()
+        public override ScalarValue GetAmount()
         {
-            return PartResourceLibrary.Instance.resourceDefinitions[resourceId].name;
-        }
-
-        public ScalarValue GetAmount()
-        {
-            vessel.GetConnectedResourceTotals(resourceId, out amount, out capacity, true);
+            CreatePartSet();
+            partSet.GetConnectedResourceTotals(resourceId, out amount, out capacity, true);
             return amount;
         }
 
-        public ScalarValue GetCapacity()
+        public override ScalarValue GetCapacity()
         {
-            vessel.GetConnectedResourceTotals(resourceId, out amount, out capacity, true);
+            CreatePartSet();
+            partSet.GetConnectedResourceTotals(resourceId, out amount, out capacity, true);
             return capacity;
         }
 
-        public ScalarValue GetDensity()
+        public override ListValue GetParts()
         {
-            return PartResourceLibrary.Instance.resourceDefinitions[resourceId].density;
+            CreatePartSet();
+            return PartValueFactory.Construct(partSet.GetParts().Where(
+                e => e.Resources.Any(
+                    e2 => e2.info.id == resourceId)), shared);
+        }
+
+        public void CreatePartSet()
+        {
+            if (stageValRef.IsAlive)
+            {
+                var stage = stageValRef.Target as StageValues;
+                if (stage != null)
+                {
+                    stage.CreatePartSet();
+                }
+            }
         }
     }
 }
