@@ -14,6 +14,8 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class FlightStats : Binding
     {
+        private StageValues stageValue;
+
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
@@ -26,7 +28,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("SHIP", () => new VesselTarget(shared));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => new VesselTarget(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
-            shared.BindingMgr.AddGetter("STAGE", () => new StageValues(shared));
+            shared.BindingMgr.AddGetter("STAGE", () => stageValue ?? (stageValue = new StageValues(shared)));
 
             shared.BindingMgr.AddSetter("SHIPNAME", value => shared.Vessel.vesselName = value.ToString());
 

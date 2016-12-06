@@ -16,6 +16,9 @@ namespace kOS.Suffixed
         private readonly SharedObjects shared;
         private HashSet<global::Part> partHash = new HashSet<global::Part>();
         private PartSet partSet;
+        private double lastRefresh = 0;
+        private ListValue<ActiveResourceValue> resList;
+        private Lexicon resLex;
 
         public StageValues(SharedObjects shared)
         {
@@ -35,26 +38,30 @@ namespace kOS.Suffixed
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
         {
-            var toReturn = new ListValue<ActiveResourceValue>();
+            if (resList != null) return resList;
+            resList = new ListValue<ActiveResourceValue>();
+            CreatePartSet();
             var defs = PartResourceLibrary.Instance.resourceDefinitions;
             foreach (var def in defs)
             {
-                toReturn.Add(new ActiveResourceValue(shared.Vessel, def.id, shared));
+                resList.Add(new ActiveResourceValue(def, shared, this, partSet));
             }
 
-            return toReturn;
+            return resList;
         }
 
         private Lexicon GetResourceDictionary()
         {
-            var toReturn = new Lexicon();
+            if (resLex != null) return resLex;
+            resLex = new Lexicon();
+            CreatePartSet();
             var defs = PartResourceLibrary.Instance.resourceDefinitions;
             foreach (var def in defs)
             {
-                toReturn.Add(new StringValue(def.name), new ActiveResourceValue(shared.Vessel, def.id, shared));
+                resLex.Add(new StringValue(def.name), new ActiveResourceValue(def, shared, this, partSet));
             }
 
-            return toReturn;
+            return resLex;
         }
 
         public override ISuffixResult GetSuffix(string suffixName)
@@ -65,11 +72,11 @@ namespace kOS.Suffixed
                 return base.GetSuffix(suffixName);
             }
 
-            var resourceAmount = GetResourceOfCurrentStage(fixedName);
-            return new SuffixResult(ScalarValue.Create(resourceAmount.HasValue ? resourceAmount.Value : 0.0));
+            double resourceAmount = GetResourceOfCurrentStage(fixedName);
+            return new SuffixResult(ScalarValue.Create(resourceAmount));
         }
 
-        private double? GetResourceOfCurrentStage(string resourceName)
+        private double GetResourceOfCurrentStage(string resourceName)
         {
             PartResourceDefinition resourceDef = PartResourceLibrary.Instance.resourceDefinitions[resourceName];
 
@@ -90,6 +97,11 @@ namespace kOS.Suffixed
 
         public void CreatePartSet()
         {
+            double refresh = Planetarium.GetUniversalTime();
+            if (lastRefresh >= refresh)
+                return;
+            lastRefresh = refresh;
+
             // The following replicates the logic in KSP.UI.Screens.ResourceDisplay.CreateResourceList
             // We're creating the set every time because it doesn't pay attention to the various events
             // that would tell us that the old partset is no longer valid.
