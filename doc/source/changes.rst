@@ -24,6 +24,51 @@ release.
 
 ****
 
+Changes in 1.0.2
+----------------
+
+Sound/Kerbal Interface Device (SKID)
+::::::::::::::::::::::::::::::::::::
+
+The SKID chip allows scripts to output procedural sound clips.  Great for custom
+error tones, or for playing simple music.  A basic example would be::
+
+    SET V0 TO GETVOICE(0).      // Gets a reference to the zero-th voice in the chip.
+    V0:PLAY( NOTE(400, 2.5) ).  // Starts a note at 400 Hz for 2.5 seconds.
+                                // The note will play while the program continues.
+    PRINT "The note is still playing".
+    PRINT "when this prints out.".
+
+For an example of a song, check out the :ref:`Example song section of voice documentation<voicesong>`
+
+Also check out the :ref:`SKID chip documentation<skid>` for an indepth explaination.
+
+Trajectories Support
+::::::::::::::::::::
+
+If you have the Trajectories mod for KSP installed, you can now access data from
+that structure using :struct:`ADDONS:TR<TRAddon>`.  This provides access to
+impact prediction through the Trajectories mod.  For example::
+
+    if ADDONS:TR:AVAILABLE {
+        if ADDONS:TR:HASIMPACT {
+            PRINT ADDONS:TR:IMPACTPOS.
+        } else {
+            PRINT "Impact position is not available".
+        }
+    } else {
+        PRINT "Trajectories is not available.".
+    }
+
+For more information see the :ref:`Trajectories Addon Documentation<Trajectories>`
+
+Also Added
+::::::::::
+
+* :attr:`GeoCoordinates:VELOCITY` and :meth:`GeoCoordinates:ALTITUDEVELOCITY()`
+* :meth:`String:TONUMBER()`
+* :attr:`SteeringManager:ROLLCONTROLANGLERANGE`
+
 Changes in 1.0.1
 ----------------
 
