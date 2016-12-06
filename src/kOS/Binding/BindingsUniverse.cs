@@ -42,7 +42,6 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("SOLARPRIMEVECTOR", () => new Vector(Planetarium.right));
             shared.BindingMgr.AddGetter("ARCHIVE", () => shared.VolumeMgr.GetVolume(Archive.ArchiveName));
 
-
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
@@ -52,7 +51,7 @@ namespace kOS.Binding
                 // in the language.  (This has to be here because planet packs can rename the
                 // bodies and we can't control the body names we might have.  A body name could
                 // be something like "Eta" or "Stage" or something along those lines.)
-                
+
                 if( !shared.BindingMgr.HasGetter(body.name) )
                     shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
             }
