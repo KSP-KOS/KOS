@@ -107,7 +107,7 @@ namespace kOS.Screen
             // GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
 
             GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
-            GameEvents.onGUIApplicationLauncherReady.Add(RemoveButton);
+            GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
             GameObject.DontDestroyOnLoad(this);
@@ -166,6 +166,11 @@ namespace kOS.Screen
 
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
+        }
+        
+        public void RemoveButton(GameScenes scene)
+        {
+            RemoveButton();
         }
 
         public void RemoveButton()
