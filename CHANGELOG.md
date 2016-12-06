@@ -1,6 +1,72 @@
 kOS Mod Changelog
 =================
 
+# v1.0.2 (for KSP 1.2.1) Make a little noise!
+
+### BREAKING CHANGES
+* As always, if you use the compiler feature to make KSM files, you should
+  recompile the KSM files when using a new release of kOS or results will
+  be unpredictable.
+* Most in game settings are now integrated with KSP's difficulty settings window.
+  You will be prompted to migrate existing settings when you load your save game.
+  Telnet settings are still stored in the old config file, but everything else is
+  now stored within the save file.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1843) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/settingsWindows.html#ksp-difficulty-settings-window)
+* Calls to resource suffixes on the `stage` bound variable are no longer rounded to 2 decimal places.
+  Previously they were rounded to assist in detecting "zero" fuel, but they cause inequality issues
+  when comparing to the newer `stage:resources` list or `stage:resourceslex` values.
+* The behavior of the resource suffixes on the `stage` bound variable has changed with regard
+  to asparagus staging.  If you have smaller tanks that **can** be staged, `stage:liquidfuel`
+  will return `0` even if you still have an engine firing.  This is a break from previous versions
+  of kOS, but is aligned with the current UI design.  Previous versions also aligned with the KSP
+  UI, but the UI mechanic was updated with KSP 1.2.1
+
+### NEW FEATURES
+* Official release for KSP version 1.2.1!
+* kOS now has a procedural sound system!  You can use it to play customized error
+  tones or make your own musical notes.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1859) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/skid.html)
+* Support for CommNet and modifications to make RemoteTech and CommNet use similar systems.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1850) | [documentation](http://ksp-kos.github.io/KOS_DOC/commands/communication.html#connectivity-managers)
+* Trajectories integration enabled via new `ADDONS:TR`
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1603) | [documentation](http://ksp-kos.github.io/KOS_DOC/addons/Trajectories.html)
+* Added new setting for default terminal brightnes, and updated default value to 70%
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1872) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/settingsWindows.html#ksp-difficulty-settings-window)
+* Added `VELOCITY` and `ALTITUDEVELOCITY` suffixes to `geocoordinates
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1874) | [documentation](http://ksp-kos.github.io/KOS_DOC/math/geocoordinates.html#attribute:GEOCOORDINATES:VELOCITY)
+* Added `TONUMBER` and `TOSCALAR` suffixes to `string` values for parsing numerical values
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1883) | [documentation](http://ksp-kos.github.io/KOS_DOC/structures/misc/string.html#method:STRING:TONUMBER)
+* New `steeringmanager` suffix `ROLLCONTROLANGLERANGE` to dictate the maximum value
+  of `ANGLEERROR` for which the manager will attempt to control roll
+  [commit](https://github.com/KSP-KOS/KOS/commit/3c1d5d15fa5834858204a07870c2e768870fce72) | [documentation](http://ksp-kos.github.io/KOS_DOC/structures/misc/steeringmanager.html#attribute:STEERINGMANAGER:ROLLCONTROLANGLERANGE)
+* KSM files are now gzip compressed internally, dramatically reducing the file size.
+  Existing KSM files **should** still load, but see above for the recommendation to
+  recompile all KSM files.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1858)
+
+### BUG FIXES
+* Fix for throwing errors when another mod uses dynamic assembly
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1851)
+* Update Blizzy toolbar wrapper to the most recent version
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1851)
+* Fix for local kOS hard disks breaking when loading with 4 byte long files
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1858)
+* kOS no longer uses a write-only lock when writing to the archive, preventing
+  an error when accessing a file opened for reading by another program
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1870)
+* Fix for duplicate functions/locks breaking ksm files
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1871)
+* Fix for null ref error when editing node suffixes on KSP 1.2.1
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1876)
+* Fix for issue where a body with the same name as one of our bound variables would block
+  access to said variable (specifically Eta in Galileo's Planet Pack blocked the `eta` bound variable)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1888)
+* Fix for getting the science value and transmit value in sandbox mode
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1889)
+* Fix error where `unlock all` inside a trigger will try to
+  unlock functions too
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1889)
+
 # v1.0.1 (for KSP 1.1.3) Let's take some input!
 
 ## Why 1.1.3 and not 1.2?
