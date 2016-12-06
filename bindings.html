@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog of Bound Variable Names &mdash; kOS 1.0.1 documentation</title>
+  <title>Catalog of Bound Variable Names &mdash; kOS 1.0.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 1.0.1 documentation" href="index.html"/>
+    <link rel="top" title="kOS 1.0.2 documentation" href="index.html"/>
         <link rel="up" title="General Topics" href="general.html"/>
         <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
         <link rel="prev" title="General Topics" href="general.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.2
               </div>
             
           
@@ -103,10 +103,11 @@
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/kospartmodule.html">Game Part</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/settingsWindows.html">Settings Windows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/skid.html">Sound Chip (SKID)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
@@ -727,6 +728,30 @@ on-rails into full physics.</p>
 <p>TIME is the time since the entire saved game campaign started, in the
 kerbal universe&#8217;s time. i.e. TIME = 0 means a brand new campaign was
 just started.</p>
+<dl class="object">
+<dt>
+<code class="descname">HOMECONNECTION</code></dt>
+<dd><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="commands/communication.html#global:HOMECONNECTION" title="HOMECONNECTION global"><code class="xref ks ks-global docutils literal"><span class="pre">HOMECONNECTION</span></code></a></dt>
+<dd>Globally bound variable for the connection to &#8220;home&#8221;.</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="object">
+<dt>
+<code class="descname">CONTROLCONNECTION</code></dt>
+<dd><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="commands/communication.html#global:CONTROLCONNECTION" title="CONTROLCONNECTION global"><code class="xref ks ks-global docutils literal"><span class="pre">CONTROLCONNECTION</span></code></a></dt>
+<dd>Globally bound variable for the connection to a control source.</dd>
+</dl>
+</div>
+</dd></dl>
+
 <div class="section" id="kuniverse">
 <h3>KUNIVERSE<a class="headerlink" href="#kuniverse" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="structures/misc/kuniverse.html#kuniverse"><span>Kuniverse</span></a> is a structure that contains many settings that
@@ -880,7 +905,7 @@ to kOS that are designed to support the features introduced by some other mods. 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0.1',
+            VERSION:'1.0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

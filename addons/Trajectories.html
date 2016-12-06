@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Trajectories &mdash; kOS 0.20.1 documentation</title>
+  <title>Trajectories &mdash; kOS 1.0.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.20.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.2 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Contribute" href="../contribute.html"/>
         <link rel="prev" title="DMagic Orbital Science" href="OrbitalScience.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.20.1
+                1.0.2
               </div>
             
           
@@ -171,14 +171,6 @@
 current version. This means that future Trajectories updates may break this
 addon, in which case <code class="docutils literal"><span class="pre">ADDONS:TR:AVAILABLE</span></code> will return false.  It is also
 possible for future versions of Trjectories to remain fully compatible.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">As of this publishing, this is not compatible with the currently released
-version of Trajectories (1.6.3) due to an issue with including the API file.
-This will work if you compile from
-<span class="xref std std-ref">the source</span>
-and future release versions of Trajectories should be supported as well.</p>
-</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Trajectories only predicts the trajectory of the &#8220;Active Vessel,&#8221; which is the vessel with the camera focused on it. <a class="reference internal" href="#attribute:TRADDON:IMPACTPOS" title="TRADDON:IMPACTPOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IMPACTPOS</span></code></a>, <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a>, <a class="reference internal" href="#method:TRADDON:SETTARGET" title="TRADDON:SETTARGET method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETTARGET</span></code></a>, and <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a> will throw exceptions if you try to call them from an inactive vessel or if Trajectories has not calculated an impact position. You should always check if <a class="reference internal" href="#attribute:TRADDON:HASIMPACT" title="TRADDON:HASIMPACT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASIMPACT</span></code></a> is true before accessing these suffixes.</p>
@@ -432,7 +424,7 @@ TRAddon:<code class="descname">CORRECTEDVECTOR</code><a class="headerlink" href=
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.20.1',
+            VERSION:'1.0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

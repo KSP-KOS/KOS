@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>String &mdash; kOS 1.0.1 documentation</title>
+  <title>String &mdash; kOS 1.0.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Terminal" href="terminal.html"/>
         <link rel="prev" title="SteeringManager" href="steeringmanager.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.2
               </div>
             
           
@@ -117,6 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="note.html">Note</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
@@ -128,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
@@ -372,6 +374,14 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STRING:TRIMSTART" title="STRING:TRIMSTART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRIMSTART</span></code></a></td>
 <td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>returns a new string with no leading whitespace</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">TONUMBER(defaultIfError)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>Parse the string into a number that can be used for mathematics.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref ks ks-meth docutils literal"><span class="pre">TOSCALAR(defaultIfError)</span></code></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">TONUMBER</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -772,6 +782,66 @@ String:<code class="descname">TRIMSTART</code><a class="headerlink" href="#attri
 <p>returns a new string with no leading whitespace</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:STRING:TONUMBER">
+String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>defaultIfError<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TONUMBER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>defaultIfError</strong> &#8211; (optional argument) <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> to return as a default value if the string format is in error.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the numeric version of the string, as a number that can be used
+for mathematics or anywhere a <a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> is expected.  If the
+string is not in a format that kOS is able to convert into a number, then
+the value <code class="docutils literal"><span class="pre">defaultIfError</span></code> is returned instead.  You can use this to
+either select a sane default, or to deliberately select a value you
+never expect to get in normal circumstances so you can use it as a
+test to see if the string was formatted well.</p>
+<p>The argument <code class="docutils literal"><span class="pre">defaultIfError</span></code> is optional.  If it is left off, then
+when there is a problem in the format of the string, you will get
+an error that stops the script instead of returning a value.</p>
+<p>The valid understood format allows an optional leading sign,
+a decimal point with fractional part, and scientific notation
+using &#8220;e&#8221; as in &#8220;1.23e3&#8221; for &#8220;1230&#8221; or &#8220;1.23e-3&#8221; for &#8220;0.00123&#8221;.</p>
+<p>Example - using with math:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;16.8&quot;</span><span class="p">.</span>
+<span class="k">print</span> <span class="s">&quot;half of &quot;</span> <span class="o">+</span> <span class="nv">str</span> <span class="o">+</span> <span class="s">&quot; is &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2</span><span class="p">.</span>
+<span class="nv">half</span> <span class="nv">of</span> <span class="mf">16</span><span class="p">.</span><span class="mf">8</span> <span class="ow">is</span> <span class="mf">8</span><span class="p">.</span><span class="mf">4</span>
+</pre></div>
+</div>
+<p>Example - checking for bad values by using defaultIfError:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;Garbage 123 that is not a proper number&quot;</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">val</span> <span class="ow">to</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">(</span><span class="o">-</span><span class="mf">9999</span><span class="p">).</span>
+<span class="k">if</span> <span class="nv">val</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="s">&quot;that string isn&#39;t a number&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="s">&quot;the string is a number: &quot;</span> <span class="o">+</span> <span class="nv">val</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Example - not setting a default value can throw an error:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;Garbage&quot;</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">val</span> <span class="ow">to</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">().</span>  <span class="c1">// the script dies with error here.</span>
+<span class="k">print</span> <span class="s">&quot;value is &quot;</span> <span class="o">+</span> <span class="nv">val</span><span class="p">.</span> <span class="c1">// the script never gets this far.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>defaultIfError<span class="sig-paren">)</span></dt>
+<dd><p>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">String:TONUMBER(defaultIfError)</span></code></a></p>
+</dd></dl>
+
 </div>
 <div class="section" id="access-to-individual-characters">
 <h2>Access to Individual Characters<a class="headerlink" href="#access-to-individual-characters" title="Permalink to this headline">¶</a></h2>
@@ -873,7 +943,7 @@ String:<code class="descname">TRIMSTART</code><a class="headerlink" href="#attri
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.1',
+            VERSION:'1.0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

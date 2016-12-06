@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Communication &mdash; kOS 1.0.1 documentation</title>
+  <title>Communication &mdash; kOS 1.0.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.2 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Transferring resources" href="resource_transfer.html"/>
         <link rel="prev" title="Serialization" href="serialization.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.2
               </div>
             
           
@@ -308,6 +308,108 @@ the first step we must obtain the <a class="reference internal" href="../structu
 </div>
 </div>
 </div>
+<div class="section" id="connectivity-managers">
+<span id="connectivitymanagers"></span><h2>Connectivity Managers<a class="headerlink" href="#connectivity-managers" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version v1.0.2: </span>The concept of selectable connectivity managers was added after KSP
+introduced a stock communications system (CommNet). kOS was updated to
+support both CommNet and RemoteTech. Other mods may be supported or
+provide their own support in the future.</p>
+</div>
+</div>
+<p>kOS can implement communications over a variaty of connectivity configurations.
+We refer to these options as &#8220;Connectivity Managers.&#8221; You can slect the active
+manager from the <a class="reference internal" href="../general/settingsWindows.html#settingswindow"><span>kOS section of KSP&#8217;s Difficulty Settings</span></a>.
+If the currently selected manager no longer is available, or if a new manager
+becomes available, you will be prompted with a dialog box to select the manager
+you want to use.</p>
+<dl class="object">
+<dt>
+<code class="descname">Connectivity Managers</code></dt>
+<dd><p>By default kOS supports the following list of managers. If a manager is not
+currently available (because the required mod isn&#8217;t installed, or the system
+is disabled in the settings) it will not be shown in lists of available managers.</p>
+<dl class="docutils">
+<dt>PermitAllConnectivityManager</dt>
+<dd>This manager will permit all connectivity at all times.  Connections
+between vessels, home, and control always show as being connected. This
+is the equivalent of setting <code class="docutils literal"><span class="pre">CONFIG:RT</span></code> to <code class="docutils literal"><span class="pre">False</span></code> under the former
+system. It is possible kOS will be unable to use all features if this
+manager is selected while communication limitations are enforced by
+another mod or a setting.</dd>
+<dt>CommNetConnectivityManager</dt>
+<dd><p class="first">This manager will use KSP&#8217;s stock CommNet implementation to monitor
+connections.  It will only be available if CommNet is enabled in the KSP
+difficulty settings.</p>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">CommNet has limitations on updating connections for vessels
+which are not the active vessel.  The best way to ensure that a connection
+is updated is to include one of the kinds of antenna that can act as
+a relay on one or both of the vessels.</p>
+</div>
+</dd>
+<dt>RemoteTechConnectivityManager</dt>
+<dd>This manager will use the RemoteTech mod to monitor connections. It will
+only be available if RemoteTech is installed.  You can access more
+detailed information and methods using the <a class="reference internal" href="../addons/RemoteTech.html#remotetech"><span>RemoteTech Addon</span></a></dd>
+</dl>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Take care when configuring your game for connectivity.  Enabling
+multiple systems at the same time may result in unexpected behaviors
+both for the game connectivity itself, and for kOS&#8217;s connectivity
+manager.  kOS only supports selecting one connectivity manager at a time
+and you should ensure that only the corresponding in game connectivity
+system is enabled.</p>
+</div>
+</dd></dl>
+
+<p>You can check communication status between vessels by checking the
+<a class="reference internal" href="../structures/vessels/vessel.html#attribute:VESSEL:CONNECTION" title="VESSEL:CONNECTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:CONNECTION</span></code></a>.  To monitor the status for home and control
+connections the following bound variables are available.  This allows you to
+monitor the basic network status using a single unified system, regardless of
+which connectivity manager is selected.</p>
+<dl class="global">
+<dt id="global:HOMECONNECTION">
+<code class="descname">HOMECONNECTION</code><a class="headerlink" href="#global:HOMECONNECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <a class="reference internal" href="../structures/communication/connection.html#structure:CONNECTION" title="CONNECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Connection</span></code></a> representing the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel&#8217;s</span></a>
+communication line to a network &#8220;home&#8221; node.  This home node may be the KSC
+ground station, or other ground stations added by the CommNet settings or
+RemoteTech.  Functionally, this connection may be used to determine if the
+archive volume is accessible.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Attempting to send a message to the &#8220;home&#8221; connection will result in an
+error message.  While this connection uses the same structure as when
+sending inter-vessel and inter-processor messages, message support is
+not included.</p>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONTROLCONNECTION">
+<code class="descname">CONTROLCONNECTION</code><a class="headerlink" href="#global:CONTROLCONNECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <a class="reference internal" href="../structures/communication/connection.html#structure:CONNECTION" title="CONNECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Connection</span></code></a> representing the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel&#8217;s</span></a>
+communication line to a control source.  This may be the same as the
+<a class="reference internal" href="#global:HOMECONNECTION" title="HOMECONNECTION global"><code class="xref ks ks-global docutils literal"><span class="pre">HOMECONNECTION</span></code></a>, or it may represent a local crewed command pod,
+or it may represent a connection to a control station.  When using the
+<code class="docutils literal"><span class="pre">CommNetConnectivityManager</span></code> this should show as connected whenever a vessel
+has partial manned control, or full control.  Functionally this may be used
+to determine if terminal input is available, and what the potential signal
+delay may be for this input.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Attempting to send a message to the &#8220;control&#8221; connection will result in
+an error message.  While this connection uses the same structure as when
+sending inter-vessel and inter-processor messages, message support is
+not included.</p>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -351,7 +453,7 @@ the first step we must obtain the <a class="reference internal" href="../structu
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.1',
+            VERSION:'1.0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -6,11 +6,38 @@ Configuration of kOS
 
 .. structure:: Config
 
-    :struct:`Config` is a special structure that allows your kerboscript programs to set or get the values stored in the kOS plugin's config file.
+    :struct:`Config` is a special structure that allows your kerboscript
+    programs to set or get the values stored in the kOS plugin's configuration.
+    Some of the global values are stored in an external file, while save game
+    specific values are stored in that save file.
 
-    The options here can also be set by using the user interface panel shown here. This control panel is part of the :ref:`App Control Panel <applauncher>`
+    .. note::
+        .. versionadded:: v1.0.2
+            Prior to this version of kOS, all settings were stored globally in
+            a single external file.  KSP version 1.2.0 introduced a new way to
+            store settings within the save file itself, and most settings were
+            migrated to this system.
 
-    In either case, whether the setting is changed via the GUI panel, or via script code, these are settings that **affect the kOS mod in all saved games** as soon as the change is made. It's identical to editing the config file in the kOS installation directory, and in fact will actually change that file the next time the game saves its state.
+    .. note::
+        If your save file has not yet migrated to the new settings storage
+        system and an old config file is present, you will be prompted with a
+        dialog box offering to migrate the old settings or use the defaults.
+        You may also choose to prevent further attempts to migrate settings.
+        If you do so, kOS will set the ``InstructionsPerUpdate`` to a
+        negative value in the old config file, as a flag to indicate no
+        further migrations should happen.  (Note the old config file is
+        still actively used for global settings such as the telnet settings,
+        even after you've done this, so don't delete it.)
+
+    The options here can also be set by using the :ref:`App Control Panel <applauncher>`
+    or the :ref:`kOS section of KSP's Difficulty Settings<settingsWindow>`
+
+    Because the Telnet server runs as a global instance for KSP, the telnet
+    specific settings are stored globally in kOS's external config file.  These
+    values are noted as **global** below, but all other values may be presumed
+    to be local to the current save file.
+
+    The config file may be found at :file:`{[KSP Directory]}/GameData/kOS/Plugins/PluginData/kOS/`
 
     .. list-table:: Members (all Gettable and Settable)
         :header-rows: 1
@@ -22,62 +49,62 @@ Configuration of kOS
           - Description
 
         * - :attr:`IPU`
-          - :ref:`scalar <scalar>` (integer)
+          - :struct:`Scalar` (integer)
           - 150
           - Instructions per update
         * - :attr:`UCP`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Use compressed persistence
         * - :attr:`STAT`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Print statistics to screen
-        * - :attr:`RT2`
-          - :ref:`boolean <boolean>`
+        * - :attr:`RT`
+          - :struct:`Boolean`
           - False
           - Enable RemoteTech2 integration
         * - :attr:`ARCH`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Start on archive (instead of volume 1)
         * - :attr:`OBEYHIDEUI`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True
           - Obey the KSP Hide user interface key (usually mapped to F2).
         * - :attr:`SAFE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable safe mode
         * - :attr:`AUDIOERR`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable sound effect on kOS error
         * - :attr:`VERBOSE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - Enable verbose exceptions
         * - :attr:`TELNET`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - False
           - activate the telnet server
         * - :attr:`TPORT`
-          - :ref:`scalar <scalar>` (integer)
+          - :struct:`Scalar` (integer)
           - 5410
           - set the port the telnet server will run on
         * - :attr:`LOOPBACK`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True
           - Force the telnet server to use loopback (127.0.0.1) address
         * - :attr:`DEBUGEACHOPCODE`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - false
           - Unholy debug spam used by the kOS developers
 
 .. attribute:: Config:IPU
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>` integer. range = [50,2000]
+    :type: :struct:`Scalar` integer. range = [50,2000]
 
     Configures the ``InstructionsPerUpdate`` setting.
 
@@ -88,18 +115,18 @@ Configuration of kOS
 .. attribute:: Config:UCP
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``UseCompressedPersistence`` setting.
+    Configures the ``useCompressedPersistence`` setting.
 
     If true, then the contents of the kOS local volume 'files' stored inside the campaign save's persistence file will be stored using a compression algorithm that has the advantage of making them take less space, but at the cost of making the data impossible to decipher with the naked human eye when looking at the persistence file.
 
 .. attribute:: Config:STAT
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``ShowStatistics`` setting.
+    Configures the ``showStatistics`` setting.
 
     If true, then executing a program will log numbers to the screen showing execution speed statistics.
 
@@ -107,12 +134,12 @@ Configuration of kOS
     :ref:`ProfileResult() <profileresult>` function available, for
     deep analysis of your program run, if you are so inclined.
 
-.. attribute:: Config:RT2
+.. attribute:: Config:RT
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``EnableRT2Integration`` setting.
+    Configures the ``enableRTIntegration`` setting.
 
     If true, then the kOS mod will attempt to interact with the Remote Tech 2 mod, letting RT2 make decisions about whether or not a vessel is within communications range rather than having kOS use its own more primitive algorithm for it.
 
@@ -122,18 +149,18 @@ Configuration of kOS
 .. attribute:: Config:ARCH
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``StartOnArchive`` setting.
+    Configures the ``startOnArchive`` setting.
 
     If true, then when a vessel is first loaded onto the launchpad or runway, the initial default volume will be set to volume 0, the archive, instead of volume 1, the local drive.
 
 .. attribute:: Config:OBEYHIDEUI
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``ObeyHideUI`` setting.
+    Configures the ``obeyHideUI`` setting.
 
     If true, then the kOS terminals will all hide when you toggle the user
     interface widgets with Kerbal Space Program's Hide UI key (it is
@@ -144,10 +171,10 @@ Configuration of kOS
 .. attribute:: Config:SAFE
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
 
-    Configures the ``EnableSafeMode`` setting.
+    Configures the ``enableSafeMode`` setting.
     If true, then it enables the following error messages::
 
         Tried to push NaN into the stack.
@@ -162,9 +189,9 @@ Configuration of kOS
 .. attribute:: Config:AUDIOERR
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``AudibleExceptions`` setting.
+    Configures the ``audibleExceptions`` setting.
 
     If true, then it enables a mode in which errors coming from kOS will
     generte a sound effect of a short little warning bleep to remind you that
@@ -175,21 +202,23 @@ Configuration of kOS
 .. attribute:: Config:VERBOSE
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``VerboseExceptions`` setting.
+    Configures the ``verboseExceptions`` setting.
 
     If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.
 
 .. attribute:: Config:TELNET
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
+
+    **GLOBAL SETTING**
 
     Configures the ``EnableTelnet`` setting.
 
     When set to true, it activates a
-    `kOS telnet server in game <../../general/telnet.html>`__ that allows you to 
+    `kOS telnet server in game <../../general/telnet.html>`__ that allows you to
     connect external terminal programs like Putty and Xterm to it.
     Turning the option off or on immediately toggles the server.  (When
     you change it from false to true, it will start the server right then.
@@ -208,12 +237,14 @@ Configuration of kOS
 .. attribute:: Config:TPORT
 
     :access: Get/Set
-    :type: :ref:`scalar <scalar>` (integer)
+    :type: :struct:`Scalar` (integer)
+
+    **GLOBAL SETTING**
 
     Configures the ``TelnetPort`` setting.
 
     Changes the TCP/IP port number that the
-    `kOS telnet server in game <../../general/telnet.html>`__ 
+    `kOS telnet server in game <../../general/telnet.html>`__
     will listen to.
 
     To make the change take effect you may have to
@@ -222,13 +253,15 @@ Configuration of kOS
 .. attribute:: Config:LOOPBACK
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
+
+    **GLOBAL SETTING**
 
     Configures the ``TelnetLoopback`` setting.
 
-    If true, then it tells the 
-    `kOS telnet server in game <../../general/telnet.html>`__ 
-    to refuse to use the computer's actual IP address, and 
+    If true, then it tells the
+    `kOS telnet server in game <../../general/telnet.html>`__
+    to refuse to use the computer's actual IP address, and
     instead use the loopback address (127.0.0.1).  This is
     the default mode the kOS mod ships in, in order to
     make it impossible get external access to your computer.
@@ -239,16 +272,15 @@ Configuration of kOS
 .. attribute:: Config:DEBUGEACHOPCODE
 
     :access: Get/Set
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
-    Configures the ``DebugEachOpcode`` setting.
+    Configures the ``debugEachOpcode`` setting.
 
     NOTE: This makes the game VERY slow, use with caution.
 
-    If true, each opcode that is executed by the CPU will be accompanied by 
-    an entry in the KSP log. This is a debugging tool for those who are very 
+    If true, each opcode that is executed by the CPU will be accompanied by
+    an entry in the KSP log. This is a debugging tool for those who are very
     familiar with the inner workings of kOS and should rarely be used outside
     the kOS dev team.
 
     This change takes effect immediately.
-
