@@ -26,6 +26,7 @@ and the variable ``Kerbin`` to mean the same thing as ``BODY("Kerbin")``, and so
     variable name, so you can only refer to that body with the expression
     ``BODY(name)``.  (For example, this occurred when Galileo Planet Pack had
     a planet called "Eta" which has the same name as the bound variable "ETA").
+
     .. versionchanged:: 1.0.2
         This behavior was only added in kOS 1.0.2.
         Using a version of kOS prior to 1.0.2 will cause a name clash and
@@ -150,11 +151,10 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
 .. attribute:: Body:ROTATIONANGLE
 
-    The rotation angle is the number of degrees between the 
-    :ref:`Solar Prime Vector <solarprimevector>` and the 
+    The rotation angle is the number of degrees between the
+    :ref:`Solar Prime Vector <solarprimevector>` and the
     current positon of the body's prime meridian (body longitude
     of zero).
 
     The value is in constant motion, and once per body's day, its
     ``:rotationangle`` will wrap around through a full 360 degrees.
-
