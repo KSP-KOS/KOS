@@ -272,6 +272,11 @@ following hierarchy:
     If you create your own composite widgets, you can use ADD and GET to centralize setting
     up the style of your composite widgets.
 
+    If you wish to make a complete new Skin, the cleanest method would be to put all
+    the graphics in a directory, along with a kOS script that given a GUI:SKIN, changes
+    everything in that skin as needed, allowing users to run your script with their GUI:SKIN
+    to make it use your custom skin.
+
     ====================================== =========================== =============
     Suffix                                 Type                        Description
     :attr:`BOX`                            :struct:`Style`             Style for :struct:`Box` widgets.
