@@ -15,6 +15,11 @@ kOS Mod Changelog
 * Calls to resource suffixes on the `stage` bound variable are no longer rounded to 2 decimal places.
   Previously they were rounded to assist in detecting "zero" fuel, but they cause inequality issues
   when comparing to the newer `stage:resources` list or `stage:resourceslex` values.
+* The behavior of the resource suffixes on the `stage` bound variable has changed with regard
+  to asparagus staging.  If you have smaller tanks that **can** be staged, `stage:liquidfuel`
+  will return `0` even if you still have an engine firing.  This is a break from previous versions
+  of kOS, but is aligned with the current UI design.  Previous versions also aligned with the KSP
+  UI, but the UI mechanic was updated with KSP 1.2.1
 
 ### NEW FEATURES
 * Official release for KSP version 1.2.1!
