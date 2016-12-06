@@ -43,6 +43,17 @@ For an example of a song, check out the :ref:`Example song section of voice docu
 
 Also check out the :ref:`SKID chip documentation<skid>` for an indepth explaination.
 
+CommNet Support
+:::::::::::::::
+
+kOS now supports communications networks through KSP's stock CommNet system as
+well as RemoteTech (only one networking system may be enabled at a time).  The
+underlying system was modified and abstracted to allow both systems to use a
+common interface.  Other mods that would like to add network support can
+implement this system as well without a need to update kOS itself.
+
+Check out the :ref:`Connectivity Managers documentation here<connectivityManagers>`
+
 Trajectories Support
 ::::::::::::::::::::
 

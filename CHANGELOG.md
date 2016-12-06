@@ -18,6 +18,8 @@ kOS Mod Changelog
 * kOS now has a procedural sound system!  You can use it to play customized error
   tones or make your own musical notes.
   [pull request](https://github.com/KSP-KOS/KOS/pull/1859) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/skid.html)
+* Support for CommNet and modifications to make RemoteTech and CommNet use similar systems.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1850) | [documentation](http://ksp-kos.github.io/KOS_DOC/commands/communication.html#connectivity-managers)
 * Trajectories integration enabled via new `ADDONS:TR`
   [pull request](https://github.com/KSP-KOS/KOS/pull/1603) | [documentation](http://ksp-kos.github.io/KOS_DOC/addons/Trajectories.html)
 * Added new setting for default terminal brightnes, and updated default value to 70%
