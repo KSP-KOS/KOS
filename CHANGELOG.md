@@ -11,7 +11,10 @@ kOS Mod Changelog
   You will be prompted to migrate existing settings when you load your save game.
   Telnet settings are still stored in the old config file, but everything else is
   now stored within the save file.
-  [pull request](https://github.com/KSP-KOS/KOS/pull/1843) | [documentation]()
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1843) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/settingsWindows.html#ksp-difficulty-settings-window)
+* Calls to resource suffixes on the `stage` bound variable are no longer rounded to 2 decimal places.
+  Previously they were rounded to assist in detecting "zero" fuel, but they cause inequality issues
+  when comparing to the newer `stage:resources` list or `stage:resourceslex` values.
 
 ### NEW FEATURES
 * Official release for KSP version 1.2.1!
