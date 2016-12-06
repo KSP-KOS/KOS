@@ -51,21 +51,6 @@ namespace kOS.Binding
                 return vessel.patchedConicSolver.maneuverNodes.Count > 0;
             });
             shared.BindingMgr.AddGetter("ALLNODES", () => GetAllNodes(shared));
-
-            // These are now considered shortcuts to SHIP:suffix
-            foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
-            {
-                var cName = scName;
-                shared.BindingMgr.AddGetter(scName, () => VesselShortcutGetter(shared, cName));
-            }
-        }
-        
-        public object VesselShortcutGetter(SharedObjects shared, string name)
-        {
-            ISuffixResult suffix = new VesselTarget(shared).GetSuffix(name);
-            if (! suffix.HasValue)
-                suffix.Invoke(shared.Cpu);
-            return suffix.Value;
         }
 
         public ListValue<Node> GetAllNodes(SharedObjects shared)

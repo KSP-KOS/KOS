@@ -3,6 +3,7 @@ using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
 using kOS.Module;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Binding
 {
@@ -18,6 +19,11 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
             shared.BindingMgr.AddGetter("SHIP", () => ship ?? (ship = new VesselTarget(shared)));
+            // These are now considered shortcuts to SHIP:suffix
+            foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
+            {
+                shared.BindingMgr.AddGetter(scName, () => VesselShortcutGetter(scName));
+            }
 
             shared.BindingMgr.AddSetter("TARGET", val =>
             {
@@ -88,16 +94,33 @@ namespace kOS.Binding
 
         }
 
+        public object VesselShortcutGetter(string name)
+        {
+            ISuffixResult suffix =ship.GetSuffix(name);
+            if (!suffix.HasValue)
+                suffix.Invoke(sharedObj.Cpu);
+            return suffix.Value;
+        }
+
         public override void Update()
         {
             base.Update();
             if (ship == null)
             {
-                ship = new Suffixed.VesselTarget(sharedObj);
-            }
-            if (!ship.Vessel.Equals(sharedObj.Vessel))
-            {
                 ship = new VesselTarget(sharedObj);
+                ship.LinkCount++;
+            }
+            else if (ship.Vessel == null)
+            {
+                ship.LinkCount--;
+                ship = new VesselTarget(sharedObj);
+                ship.LinkCount++;
+            }
+            else if (!ship.Vessel.id.Equals(sharedObj.Vessel.id))
+            {
+                ship.LinkCount--;
+                ship = new VesselTarget(sharedObj);
+                ship.LinkCount++;
             }
         }
     }
