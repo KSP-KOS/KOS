@@ -24,6 +24,11 @@ release.
 
 ****
 
+Changes in 1.0.3
+----------------
+
+No significant changes, compiled for KSP v1.2.2.
+
 Changes in 1.0.2
 ----------------
 

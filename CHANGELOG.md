@@ -1,6 +1,14 @@
 kOS Mod Changelog
 =================
 
+# v1.0.3 (for KSP 1.2.2) Make a little noise! (Part Deux)
+
+This release is nearly identical to v1.0.2, except that it was compiled against
+binaries from KSP v1.2.2 (released just before we published) and the version numbers
+have been advanced.  While it appears that kOS v1.0.2 is compatible with KSP v1.2.2,
+we wanted to err on the side of caution and provide an explicitly compatible release.
+Please review the changelog for v1.0.2 if you are upgrading from an earlier version.
+
 # v1.0.2 (for KSP 1.2.1) Make a little noise!
 
 ### BREAKING CHANGES
