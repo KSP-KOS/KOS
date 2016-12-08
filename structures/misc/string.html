@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>String &mdash; kOS 1.0.2 documentation</title>
+  <title>String &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Terminal" href="terminal.html"/>
         <link rel="prev" title="SteeringManager" href="steeringmanager.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -121,7 +121,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">String</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">String</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
@@ -161,7 +161,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -246,11 +246,11 @@ give), and the two will be compared as strings.  Example:</p>
 </pre></div>
 </div>
 <p>In the first example, both sides of the <code class="docutils literal"><span class="pre">&lt;</span></code> operator are
-<a class="reference internal" href="../../math/scalar.html#scalar"><span>scalars</span></a>, so the comparison is done numerically,
+<a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalars</span></a>, so the comparison is done numerically,
 and 1234 is much bigger than 99.</p>
 <p>In the second example, one side of the <code class="docutils literal"><span class="pre">&lt;</span></code> operator is a
-string, so the other side is converted from the <a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>
-<code class="docutils literal"><span class="pre">99</span></code> into the <a class="reference internal" href="#string"><span>string</span></a> <code class="docutils literal"><span class="pre">&quot;99&quot;</span></code> to perform the
+string, so the other side is converted from the <a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a>
+<code class="docutils literal"><span class="pre">99</span></code> into the <a class="reference internal" href="#string"><span class="std std-ref">string</span></a> <code class="docutils literal"><span class="pre">&quot;99&quot;</span></code> to perform the
 comparison, and then the string comparison looks one character at
 a time and notices that &#8220;1&#8221; is less than &#8220;9&#8221; and calls &#8220;1234&#8221; the
 lesser value.</p>
@@ -288,11 +288,11 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:CONTAINS" title="STRING:CONTAINS method"><code class="xref ks ks-meth docutils literal"><span class="pre">CONTAINS(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>True if the given string is contained within this string</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:ENDSWITH" title="STRING:ENDSWITH method"><code class="xref ks ks-meth docutils literal"><span class="pre">ENDSWITH(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>True if this string ends with the given string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:FIND" title="STRING:FIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">FIND(string)</span></code></a></td>
@@ -348,7 +348,7 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <td>Breaks this string up into a list of smaller strings on each occurrence of the given separator</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:STARTSWITH" title="STRING:STARTSWITH method"><code class="xref ks ks-meth docutils literal"><span class="pre">STARTSWITH(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>True if this string starts with the given string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:SUBSTRING" title="STRING:SUBSTRING method"><code class="xref ks ks-meth docutils literal"><span class="pre">SUBSTRING(start,</span> <span class="pre">count)</span></code></a></td>
@@ -399,7 +399,7 @@ String:<code class="descname">CONTAINS</code><span class="sig-paren">(</span>str
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -419,7 +419,7 @@ String:<code class="descname">ENDSWITH</code><span class="sig-paren">(</span>str
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -673,7 +673,7 @@ String:<code class="descname">STARTSWITH</code><span class="sig-paren">(</span>s
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -855,7 +855,7 @@ String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>def
 <p><code class="docutils literal"><span class="pre">FOR</span> <span class="pre">VAR</span> <span class="pre">IN</span> <span class="pre">STRING</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}.</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="../../language/flow.html#flow"><span>A type of loop</span></a> in which var iterates over all the characters of the string from 0 to LENGTH-1.</li>
+<li><a class="reference internal" href="../../language/flow.html#flow"><span class="std std-ref">A type of loop</span></a> in which var iterates over all the characters of the string from 0 to LENGTH-1.</li>
 </ul>
 </div></blockquote>
 <p>Examples:</p>
@@ -943,7 +943,7 @@ String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>def
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

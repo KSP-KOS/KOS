@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using the Sound/Kerbal Interface Device (SKID) &mdash; kOS 1.0.2 documentation</title>
+  <title>Using the Sound/Kerbal Interface Device (SKID) &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="The Name Tag System" href="nametag.html"/>
         <link rel="prev" title="KerboScript Machine Code" href="compiling.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -105,7 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Sound Chip (SKID)</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sound Chip (SKID)</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
@@ -143,7 +143,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -174,7 +174,7 @@ It turns out all kOS CPU&#8217;s come with a so-called SKID chip
 (Sound/Kerbal Interface Device).  This little integrated chip can
 send audio data through the terminal lines and play the sounds on
 your terminal&#8217;s speaker.  (Note, you can&#8217;t hear the sound over
-<a class="reference internal" href="telnet.html#telnet"><span>telnet connections</span></a>.)</p>
+<a class="reference internal" href="telnet.html#telnet"><span class="std std-ref">telnet connections</span></a>.)</p>
 <p>This page will explain what we have discovered about how to use
 this interesting little device.</p>
 <div class="contents local topic" id="contents">
@@ -318,7 +318,7 @@ a fraction of a second), for how long a note takes to
 achieve its full volume in its initial first spike when it
 is played.  Note that the volume achieved at the top of
 this spike is the voice&#8217;s default volume level.
-This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>,
+This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>,
 because it represents the instrument&#8217;s physical properties that
 don&#8217;t change when the song goes faster.</dd>
 <dt>Decay (a time setting)</dt>
@@ -326,7 +326,7 @@ don&#8217;t change when the song goes faster.</dd>
 a fraction of a second), for how long a note takes to
 drop from its initial spike in volume down to its sustaining
 volume level.
-This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>,
+This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>,
 because it represents the instrument&#8217;s physical properties that
 don&#8217;t change when the song goes faster.</dd>
 <dt>Sustain (a volume setting)</dt>
@@ -344,7 +344,7 @@ a fraction of a second), for how long a note takes to
 fade from its Sustain volume level back down to zero again
 at the end of the note when the sustained duration of the note
 is over.
-This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>,
+This time setting is not modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>,
 because it represents the instrument&#8217;s physical properties that
 don&#8217;t change when the song goes faster.</dd>
 </dl>
@@ -426,7 +426,7 @@ passed into it, to let it know the parameters of that one note:</p>
 synthesizer keyboard.  Be aware that if you set the frequency
 to zero, you end up with a note that is, essentially, a &#8220;rest&#8221;,
 and makes no sound.  The frequency can also be expressed using
-<a class="reference internal" href="#skid-letter-frequency"><span>musical letter notation</span></a>.
+<a class="reference internal" href="#skid-letter-frequency"><span class="std std-ref">musical letter notation</span></a>.
 If you define both a Frequency and an EndFrequency, then the
 Frequency is merely the initial frequency the note starts at.</dd>
 <dt>EndFrequency (In Hertz)</dt>
@@ -443,7 +443,7 @@ frequency of the note.  It will also change the frequency as
 quickly or slowly as needed to make the frequency reach EndFrequency
 at exactly the moment the note&#8217;s Duration runs out.  (So giving it
 a shorter Duration makes it change frequencies faster).</dd>
-<dt>Duration (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>)</dt>
+<dt>Duration (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>)</dt>
 <dd>Defines how long this entire note lasts from the start of its
 Attack until the end when the next note can start.  Note that
 by default, unless you choose to set the KeyDownLength (see
@@ -451,7 +451,7 @@ next item below) to something other than the default, the note
 won&#8217;t quite fill the entire Duration, instead reserving a small
 sliver of the end of the Duration to represent the gap between
 this note and the next.</dd>
-<dt>KeyDownLength (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>)</dt>
+<dt>KeyDownLength (Seconds, modified by <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>)</dt>
 <dd><p class="first">Defines how long you imagine the &#8220;key&#8221; on a synthesizer keyboard is
 being held down for to produce this note. In terms of the
 ADSR Envelope, this is the time span that includes the Attack,
@@ -507,11 +507,11 @@ note to last.</p>
 <div class="section" id="songs-lists-of-notes">
 <span id="skid-song"></span><h3><a class="toc-backref" href="#id17">Songs (Lists of Notes)</a><a class="headerlink" href="#songs-lists-of-notes" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to point the SKID chip at an array of these
-<a class="reference internal" href="#skid-note"><span>notes</span></a> to make it play several notes back to
+<a class="reference internal" href="#skid-note"><span class="std std-ref">notes</span></a> to make it play several notes back to
 back without further intervention of the main CPU.  When the
 chip is given such a list of notes, it is a bit like feeding
 &#8220;sheet music&#8221; to the chip, and letting it play the song itself.</p>
-<p>This is where the settings such as <a class="reference internal" href="#skid-tempo"><span>tempo</span></a>
+<p>This is where the settings such as <a class="reference internal" href="#skid-tempo"><span class="std std-ref">tempo</span></a>
 become quite relevant.  The SKID chip will simply play the
 notes it sees in the order they&#8217;re listed, waiting for one
 note to finish its Duration before the next note is started.
@@ -551,7 +551,7 @@ some 3-note chords in it.  At minimum, a keyboard player would need
 3 of the voices to the job, and make sure all 3 voices are given the
 same settings (Waveform, ADSR Envelope, Tempo, Volume, etc).  With one
 of these voices, you play all the time, all the notes.  (You give it
-a <a class="reference internal" href="#skid-song"><span>song</span></a> that consists of all the notes in the sheet
+a <a class="reference internal" href="#skid-song"><span class="std std-ref">song</span></a> that consists of all the notes in the sheet
 music).  With the other two voices, you&#8217;d give them songs (note lists)
 that contain rests in all the places where there is only a singleton
 note being played, but then have them join in with with the extra notes
@@ -695,7 +695,7 @@ to play them.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

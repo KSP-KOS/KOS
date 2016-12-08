@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KOSDelegate &mdash; kOS 1.0.2 documentation</title>
+  <title>KOSDelegate &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="KUniverse 4th wall methods" href="kuniverse.html"/>
         <link rel="prev" title="Part Highlighting" href="highlight.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -113,7 +113,7 @@
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="config.html">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">KOSDelegate</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">KOSDelegate</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
@@ -161,7 +161,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -190,7 +190,7 @@
   <div class="section" id="kosdelegate">
 <span id="id1"></span><h1>KOSDelegate<a class="headerlink" href="#kosdelegate" title="Permalink to this headline">¶</a></h1>
 <p>The structure <cite>KOSDelegate</cite> is what you get when you use the
-<a class="reference internal" href="../../language/delegates.html#kosdelegate-atsign"><span>Delegate at-sign syntax</span></a>, as in
+<a class="reference internal" href="../../language/delegates.html#kosdelegate-atsign"><span class="std std-ref">Delegate at-sign syntax</span></a>, as in
 this example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">myfunc</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello, there&quot;</span><span class="p">.</span> <span class="p">}</span>
 
@@ -199,7 +199,7 @@ this example:</p>
 </pre></div>
 </div>
 <p>You also get a <cite>KOSDelegate</cite> when you use the
-<a class="reference internal" href="../../language/anonymous.html#anonymous-functions"><span>Anonymous function</span></a> syntax like so:</p>
+<a class="reference internal" href="../../language/anonymous.html#anonymous-functions"><span class="std std-ref">Anonymous function</span></a> syntax like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">del1</span> <span class="ow">to</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello, there&quot;</span><span class="p">.</span> <span class="p">}.</span>
 <span class="c1">// del1 is now a KOSDelegate.</span>
 </pre></div>
@@ -207,10 +207,10 @@ this example:</p>
 <p>A KOSDelegate is a reference to the function that can be used to
 call the function later elsewhere in the code.</p>
 <p>The full explanation of the delegate feature
-<a class="reference internal" href="../../language/delegates.html#delegates"><span>is explained elsewhere</span></a>.  This page just
+<a class="reference internal" href="../../language/delegates.html#delegates"><span class="std std-ref">is explained elsewhere</span></a>.  This page just
 documents the members of the KOSDelegate structure for completeness.
 The full explanation of how this structure works and what it&#8217;s
-for can be found on the <a class="reference internal" href="../../language/delegates.html#delegates"><span>delegate page</span></a>.</p>
+for can be found on the <a class="reference internal" href="../../language/delegates.html#delegates"><span class="std std-ref">delegate page</span></a>.</p>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
@@ -250,7 +250,7 @@ KOSDelegate:<code class="descname">CALL</code><span class="sig-paren">(</span>va
 function this KOSDelegate is calling.  The exact number of
 arguments you pass should match the number the function expects,
 minus any that you have pre-set with the <code class="docutils literal"><span class="pre">:BIND</span></code> suffix.</p>
-<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-call"><span>further explained elsewhere</span></a>.</p>
+<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-call"><span class="std std-ref">further explained elsewhere</span></a>.</p>
 <p>Note that in some cases you can omit the use of the explicit suffix
 <code class="docutils literal"><span class="pre">:CALL</span></code> and just use parentheses abutted against the
 KOSDelegate variable itself to indicate that you wish to call the
@@ -267,7 +267,7 @@ pass in will be bound to the leftmost parameters of the function.
 When using this new KOSDelegate to call the function, you pass in
 only the remaining arguments that were not designated in the
 call to <code class="docutils literal"><span class="pre">:BIND</span></code>.</p>
-<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-bind"><span>further explained elsewhere</span></a>.</p>
+<p>This is <a class="reference internal" href="../../language/delegates.html#kosdelegate-bind"><span class="std std-ref">further explained elsewhere</span></a>.</p>
 </dd></dl>
 
 </div>
@@ -314,7 +314,7 @@ call to <code class="docutils literal"><span class="pre">:BIND</span></code>.</p
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

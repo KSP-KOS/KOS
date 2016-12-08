@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Geographic Coordinates &mdash; kOS 1.0.2 documentation</title>
+  <title>Geographic Coordinates &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Reference Frames" href="ref_frame.html"/>
         <link rel="prev" title="Directions" href="direction.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -103,7 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scalar.html">Scalar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Geographic Coordinates</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Geographic Coordinates</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref_frame.html">Reference Frames</a></li>
@@ -137,7 +137,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -171,7 +171,7 @@
 <li><a class="reference internal" href="#example-usage" id="id3">Example Usage</a></li>
 </ul>
 </div>
-<p>The <code class="docutils literal"><span class="pre">GeoCoordinates</span></code> object (also <code class="docutils literal"><span class="pre">LATLNG</span></code>) represents a latitude and longitude pair, which is a location on the surface of a <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span>Body</span></a>.</p>
+<p>The <code class="docutils literal"><span class="pre">GeoCoordinates</span></code> object (also <code class="docutils literal"><span class="pre">LATLNG</span></code>) represents a latitude and longitude pair, which is a location on the surface of a <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span class="std std-ref">Body</span></a>.</p>
 <div class="section" id="creation">
 <h2><a class="toc-backref" href="#id1">Creation</a><a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -221,34 +221,34 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:LAT" title="GEOCOORDINATES:LAT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LAT</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 <td>none</td>
 <td>Latitude</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:LNG" title="GEOCOORDINATES:LNG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LNG</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 <td>none</td>
 <td>Longitude</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:DISTANCE" title="GEOCOORDINATES:DISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DISTANCE</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (m)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
 <td>none</td>
-<td>distance from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></td>
+<td>distance from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:TERRAINHEIGHT" title="GEOCOORDINATES:TERRAINHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TERRAINHEIGHT</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (m)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
 <td>none</td>
 <td>above or below sea level</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:HEADING" title="GEOCOORDINATES:HEADING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HEADING</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 <td>none</td>
-<td><em>absolute</em> heading from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></td>
+<td><em>absolute</em> heading from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BEARING</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (deg)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (deg)</td>
 <td>none</td>
-<td><em>relative</em> direction from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></td>
+<td><em>relative</em> direction from <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:POSITION" title="GEOCOORDINATES:POSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></code></a></td>
 <td><cite>Vector</cite> (3D Ship-Raw coords)</td>
@@ -257,7 +257,7 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:ALTITUDEPOSITION" title="GEOCOORDINATES:ALTITUDEPOSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEPOSITION</span></code></a></td>
 <td><cite>Vector</cite> (3D Ship-Raw coords)</td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (altitude above sea level)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (altitude above sea level)</td>
 <td>Position of a point above (or below) the surface point, by giving the altitude number.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:VELOCITY" title="GEOCOORDINATES:VELOCITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></code></a></td>
@@ -267,7 +267,7 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:GEOCOORDINATES:ALTITUDEVELOCITY" title="GEOCOORDINATES:ALTITUDEVELOCITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEVELOCITY</span></code></a></td>
 <td><a class="reference internal" href="../structures/orbits/orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></code></a></td>
-<td><a class="reference internal" href="scalar.html#scalar"><span>scalar</span></a> (altitude above sea level)</td>
+<td><a class="reference internal" href="scalar.html#scalar"><span class="std std-ref">scalar</span></a> (altitude above sea level)</td>
 <td>Velocity of a point above (or below) the surface point, by giving the altitude number.</td>
 </tr>
 </tbody>
@@ -293,7 +293,7 @@ GeoCoordinates:<code class="descname">LNG</code><a class="headerlink" href="#att
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:DISTANCE">
 GeoCoordinates:<code class="descname">DISTANCE</code><a class="headerlink" href="#attribute:GEOCOORDINATES:DISTANCE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Distance from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU_Vessel</span></a> to this point on the surface.</p>
+<dd><p>Distance from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU_Vessel</span></a> to this point on the surface.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -305,13 +305,13 @@ GeoCoordinates:<code class="descname">TERRAINHEIGHT</code><a class="headerlink" 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:HEADING">
 GeoCoordinates:<code class="descname">HEADING</code><a class="headerlink" href="#attribute:GEOCOORDINATES:HEADING" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <em>absolute</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU_Vessel</span></a> to this point on the surface.</p>
+<dd><p>The <em>absolute</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU_Vessel</span></a> to this point on the surface.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:GEOCOORDINATES:BEARING">
 GeoCoordinates:<code class="descname">BEARING</code><a class="headerlink" href="#attribute:GEOCOORDINATES:BEARING" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <em>relative</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span>CPU_Vessel</span></a> to this point on the surface. For example, if the vessel is heading at compass heading 45, and the geo-coordinates location is at heading 30, then <a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:BEARING</span></code></a> will return -15.</p>
+<dd><p>The <em>relative</em> compass direction from the <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU_Vessel</span></a> to this point on the surface. For example, if the vessel is heading at compass heading 45, and the geo-coordinates location is at heading 30, then <a class="reference internal" href="#attribute:GEOCOORDINATES:BEARING" title="GEOCOORDINATES:BEARING attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GeoCoordinates:BEARING</span></code></a> will return -15.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -439,7 +439,7 @@ on a locaton affixed to the body the farther that location is from the body&#821
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

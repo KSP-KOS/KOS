@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 1.0.2 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Part Highlighting" href="highlight.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -111,7 +111,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Configuration of kOS</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -215,8 +215,8 @@ further migrations should happen.  (Note the old config file is
 still actively used for global settings such as the telnet settings,
 even after you&#8217;ve done this, so don&#8217;t delete it.)</p>
 </div>
-<p>The options here can also be set by using the <a class="reference internal" href="../../general/settingsWindows.html#applauncher"><span>App Control Panel</span></a>
-or the <a class="reference internal" href="../../general/settingsWindows.html#settingswindow"><span>kOS section of KSP&#8217;s Difficulty Settings</span></a></p>
+<p>The options here can also be set by using the <a class="reference internal" href="../../general/settingsWindows.html#applauncher"><span class="std std-ref">App Control Panel</span></a>
+or the <a class="reference internal" href="../../general/settingsWindows.html#settingswindow"><span class="std std-ref">kOS section of KSP&#8217;s Difficulty Settings</span></a></p>
 <p>Because the Telnet server runs as a global instance for KSP, the telnet
 specific settings are stored globally in kOS&#8217;s external config file.  These
 values are noted as <strong>global</strong> below, but all other values may be presumed
@@ -321,7 +321,7 @@ Config:<code class="descname">IPU</code><a class="headerlink" href="#attribute:C
 </tbody>
 </table>
 <p>Configures the <code class="docutils literal"><span class="pre">InstructionsPerUpdate</span></code> setting.</p>
-<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span>physics update tick</span></a>.</p>
+<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span class="std std-ref">physics update tick</span></a>.</p>
 <p>This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.</p>
 </dd></dl>
 
@@ -358,7 +358,7 @@ Config:<code class="descname">STAT</code><a class="headerlink" href="#attribute:
 <p>Configures the <code class="docutils literal"><span class="pre">showStatistics</span></code> setting.</p>
 <p>If true, then executing a program will log numbers to the screen showing execution speed statistics.</p>
 <p>When this is set to true, it also makes the use of the
-<a class="reference internal" href="../../bindings.html#profileresult"><span>ProfileResult()</span></a> function available, for
+<a class="reference internal" href="../../bindings.html#profileresult"><span class="std std-ref">ProfileResult()</span></a> function available, for
 deep analysis of your program run, if you are so inclined.</p>
 </dd></dl>
 
@@ -622,7 +622,7 @@ the kOS dev team.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Lexicon &mdash; kOS 1.0.2 documentation</title>
+  <title>Lexicon &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Collections" href="../collections.html"/>
         <link rel="next" title="List" href="list.html"/>
         <link rel="prev" title="Iterator" href="iterator.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -105,7 +105,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../collections.html">Collections</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="enumerable.html">Enumerable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="iterator.html">Iterator</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Lexicon</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Lexicon</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="list.html">List</a></li>
@@ -150,7 +150,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -180,11 +180,11 @@
 <span id="id1"></span><h1>Lexicon<a class="headerlink" href="#lexicon" title="Permalink to this headline">¶</a></h1>
 <p>A <a class="reference internal" href="#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> is
 <a class="reference external" href="https://en.wikipedia.org/wiki/Associative_array">an associative array</a>,
-and is similar to the <a class="reference internal" href="list.html#list"><span>LIST type</span></a>.  If you are an experienced
+and is similar to the <a class="reference internal" href="list.html#list"><span class="std std-ref">LIST type</span></a>.  If you are an experienced
 programmer who already knows what &#8220;associative array&#8221; means, you can
 probably skip this section and go to the next part of the page further
 down, otherwise read on:</p>
-<p>In a normal array, or in kerboscript&#8217;s <a class="reference internal" href="list.html#list"><span>LIST type</span></a> you
+<p>In a normal array, or in kerboscript&#8217;s <a class="reference internal" href="list.html#list"><span class="std std-ref">LIST type</span></a> you
 specify which item in the list you want by giving its integer position
 in the list.</p>
 <p>But in a <a class="reference internal" href="#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a>, you store pairs of keys and values, where
@@ -265,11 +265,11 @@ need to be of a homogeneous type.</p>
 <td>append an item to the lexicon</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:LEXICON:CASESENSITIVE" title="LEXICON:CASESENSITIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CASESENSITIVE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>changes the behaviour of string based keys. Which are by default case insensitive. Setting this will clear the lexicon.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:LEXICON:CASE" title="LEXICON:CASE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CASE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>A synonym for <cite>CASESENSITIVE</cite></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:LEXICON:CLEAR" title="LEXICON:CLEAR method"><code class="xref ks ks-meth docutils literal"><span class="pre">CLEAR</span></code></a></td>
@@ -281,15 +281,15 @@ need to be of a homogeneous type.</p>
 <td>returns a (shallow) copy of the contents of the lexicon</td>
 </tr>
 <tr class="row-odd"><td><code class="xref ks ks-meth docutils literal"><span class="pre">DUMP</span></code></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
 <td>verbose dump of all contained elements</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:LEXICON:HASKEY" title="LEXICON:HASKEY method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASKEY(keyvalue)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>does the lexicon have a key of the given value?</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:LEXICON:HASVALUE" title="LEXICON:HASVALUE method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASVALUE(value)</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
 <td>does the lexicon have a value of the given value?</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:LEXICON:KEYS" title="LEXICON:KEYS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KEYS</span></code></a></td>
@@ -301,7 +301,7 @@ need to be of a homogeneous type.</p>
 <td>gives a flat <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of the values in the lexicon</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:LEXICON:LENGTH" title="LEXICON:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 <td>number of pairs in the lexicon</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:LEXICON:REMOVE" title="LEXICON:REMOVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">REMOVE(keyvalue)</span></code></a></td>
@@ -341,7 +341,7 @@ Lexicon:<code class="descname">CASESENSITIVE</code><a class="headerlink" href="#
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get or Set</td>
 </tr>
@@ -368,7 +368,7 @@ Lexicon:<code class="descname">CASE</code><a class="headerlink" href="#attribute
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get or Set</td>
 </tr>
@@ -407,7 +407,7 @@ Lexicon:<code class="descname">LENGTH</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -448,7 +448,7 @@ Lexicon:<code class="descname">HASKEY</code><span class="sig-paren">(</span>key<
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -468,7 +468,7 @@ Lexicon:<code class="descname">HASVALUE</code><span class="sig-paren">(</span>ke
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
 </td>
 </tr>
 </tbody>
@@ -483,7 +483,7 @@ Lexicon:<code class="descname">DUMP</code><a class="headerlink" href="#attribute
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -543,7 +543,7 @@ Lexicon:<code class="descname">VALUES</code><a class="headerlink" href="#attribu
 <dt><code class="docutils literal"><span class="pre">lexicon[expression]</span></code></dt>
 <dd>operator: another syntax to access the element at position &#8216;expression&#8217;. Works for get or set. Any arbitrary complex expression may be used with this syntax, not just a number or variable name.</dd>
 <dt><code class="docutils literal"><span class="pre">FOR</span> <span class="pre">VAR</span> <span class="pre">IN</span> <span class="pre">LEXICON:KEYS</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}.</span></code></dt>
-<dd><a class="reference internal" href="../../language/flow.html#flow"><span>A type of loop</span></a> in which var iterates over all the items of lexicon from item 0 to item LENGTH-1.</dd>
+<dd><a class="reference internal" href="../../language/flow.html#flow"><span class="std std-ref">A type of loop</span></a> in which var iterates over all the items of lexicon from item 0 to item LENGTH-1.</dd>
 </dl>
 </div>
 <div class="section" id="implicit-add-when-using-index-brackets-with-new-key-values">
@@ -661,7 +661,7 @@ existing value in-place rather than trying to make a new one.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

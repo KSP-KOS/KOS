@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessel &mdash; kOS 1.0.2 documentation</title>
+  <title>Vessel &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="VesselSensors" href="vesselsensors.html"/>
         <link rel="prev" title="Stage" href="stage.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -124,7 +124,7 @@
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Vessel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Vessel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
 </li>
@@ -161,7 +161,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -206,7 +206,7 @@
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
-<p><span class="versionmodified">New in version 0.13: </span>A vessel is now a type of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a>. Much of what a Vessel can do can now by done by any orbitable object. The documentation for those abilities has been moved to the <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>orbitable page</span></a>.</p>
+<p><span class="versionmodified">New in version 0.13: </span>A vessel is now a type of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a>. Much of what a Vessel can do can now by done by any orbitable object. The documentation for those abilities has been moved to the <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span class="std std-ref">orbitable page</span></a>.</p>
 </div>
 </div>
 <dl class="structure">
@@ -313,11 +313,11 @@
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></code></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP_RAW</span></a></td>
+<td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span class="std std-ref">SHIP_RAW</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
-<td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP_RAW</span></a></td>
+<td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span class="std std-ref">SHIP_RAW</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></code></a></td>
 <td><a class="reference internal" href="vesselsensors.html#structure:VESSELSENSORS" title="VESSELSENSORS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VesselSensors</span></code></a></td>
@@ -437,7 +437,7 @@ Vessel:<code class="descname">CONTROL</code><a class="headerlink" href="#attribu
 </tbody>
 </table>
 <p>The structure representing the raw flight controls for the vessel.</p>
-<p>WARNING: This suffix is only gettable for <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
+<p>WARNING: This suffix is only gettable for <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -447,13 +447,13 @@ Vessel:<code class="descname">BEARING</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p><em>relative</em> compass heading (degrees) to this vessel from the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a>, taking into account the CPU Vessel&#8217;s own heading.</p>
+<p><em>relative</em> compass heading (degrees) to this vessel from the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a>, taking into account the CPU Vessel&#8217;s own heading.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -463,13 +463,13 @@ Vessel:<code class="descname">HEADING</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p><em>absolute</em> compass heading (degrees) to this vessel from the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span>CPU Vessel</span></a></p>
+<p><em>absolute</em> compass heading (degrees) to this vessel from the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><span class="std std-ref">CPU Vessel</span></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -479,13 +479,13 @@ Vessel:<code class="descname">MAXTHRUST</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrust"><span>engines&#8217; MAXTHRUSTs</span></a> of all the currently active engines In Kilonewtons.</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrust"><span class="std std-ref">engines&#8217; MAXTHRUSTs</span></a> of all the currently active engines In Kilonewtons.</p>
 </dd></dl>
 
 <dl class="method">
@@ -500,12 +500,12 @@ Vessel:<code class="descname">MAXTHRUSTAT</code><span class="sig-paren">(</span>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrustat"><span>engines&#8217; MAXTHRUSTATs</span></a> of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrustat"><span class="std std-ref">engines&#8217; MAXTHRUSTATs</span></a> of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -515,13 +515,13 @@ Vessel:<code class="descname">AVAILABLETHRUST</code><a class="headerlink" href="
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrust"><span>engines&#8217; AVAILABLETHRUSTs</span></a> of all the currently active engines taking into account their throttlelimits. Result is in Kilonewtons.</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrust"><span class="std std-ref">engines&#8217; AVAILABLETHRUSTs</span></a> of all the currently active engines taking into account their throttlelimits. Result is in Kilonewtons.</p>
 </dd></dl>
 
 <dl class="method">
@@ -536,12 +536,12 @@ Vessel:<code class="descname">AVAILABLETHRUSTAT</code><span class="sig-paren">(<
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (kN)</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrustat"><span>engines&#8217; AVAILABLETHRUSTATs</span></a> of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrustat"><span class="std std-ref">engines&#8217; AVAILABLETHRUSTATs</span></a> of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -567,7 +567,7 @@ Vessel:<code class="descname">MASS</code><a class="headerlink" href="#attribute:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (metric tons)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (metric tons)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -583,7 +583,7 @@ Vessel:<code class="descname">WETMASS</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (metric tons)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (metric tons)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -599,7 +599,7 @@ Vessel:<code class="descname">DRYMASS</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (metric tons)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (metric tons)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -615,7 +615,7 @@ Vessel:<code class="descname">DYNAMICPRESSURE</code><a class="headerlink" href="
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (ATM&#8217;s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (ATM&#8217;s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -635,7 +635,7 @@ Vessel:<code class="descname">Q</code><a class="headerlink" href="#attribute:VES
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (ATM&#8217;s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (ATM&#8217;s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -651,7 +651,7 @@ Vessel:<code class="descname">VERTICALSPEED</code><a class="headerlink" href="#a
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -667,7 +667,7 @@ Vessel:<code class="descname">GROUNDSPEED</code><a class="headerlink" href="#att
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -681,7 +681,7 @@ ship&#8217;s velocity is ignored when calculating this.</p>
 <div class="last versionadded">
 <p><span class="versionmodified">New in version 0.18: </span>The old name for this value was SURFACESPEED.  The name was changed
 because it was confusing before.  &#8220;surface speed&#8221; implied it&#8217;s the
-<a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> magnitude of &#8220;surface velocity&#8221;, but it wasn&#8217;t, because of how
+<a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> magnitude of &#8220;surface velocity&#8221;, but it wasn&#8217;t, because of how
 it ignores the vertical component.</p>
 </div>
 </div>
@@ -694,7 +694,7 @@ Vessel:<code class="descname">AIRSPEED</code><a class="headerlink" href="#attrib
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -710,7 +710,7 @@ Vessel:<code class="descname">TERMVELOCITY</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m/s)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -726,7 +726,7 @@ Vessel:<code class="descname">SHIPNAME</code><a class="headerlink" href="#attrib
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -748,7 +748,7 @@ Vessel:<code class="descname">STATUS</code><a class="headerlink" href="#attribut
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">get only</td>
 </tr>
@@ -764,7 +764,7 @@ Vessel:<code class="descname">TYPE</code><a class="headerlink" href="#attribute:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -786,7 +786,7 @@ Vessel:<code class="descname">ANGULARMOMENTUM</code><a class="headerlink" href="
 </tr>
 </tbody>
 </table>
-<p>Given in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP_RAW</span></a> reference frame. The vector
+<p>Given in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span class="std std-ref">SHIP_RAW</span></a> reference frame. The vector
 represents the axis of the rotation (in left-handed convention,
 not right handed as most physics textbooks show it), and its
 magnitude is the angular momentum of the rotation, which varies
@@ -855,7 +855,7 @@ Vessel:<code class="descname">LOADED</code><a class="headerlink" href="#attribut
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -872,7 +872,7 @@ Vessel:<code class="descname">UNPACKED</code><a class="headerlink" href="#attrib
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -906,7 +906,7 @@ Vessel:<code class="descname">ISDEAD</code><a class="headerlink" href="#attribut
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -934,7 +934,7 @@ Vessel:<code class="descname">PATCHES</code><a class="headerlink" href="#attribu
 </tr>
 </tbody>
 </table>
-<p>The list of <a class="reference internal" href="../orbits/orbit.html#orbit"><span>orbit patches</span></a> that describe this vessel&#8217;s current travel path based on momentum alone with no thrusting changes. If the current path has no transitions to other bodies, then this will be a list of only one orbit. If the current path intersects other bodies, then this will be a list describing the transitions into and out of the intersecting body&#8217;s sphere of influence. SHIP:PATCHES[0] is always exactly the same as SHIP:OBT, SHIP:PATCHES[1] is the same as SHIP:OBT:NEXTPATCH, SHIP:PATCHES[2] is the same as SHIP:OBT:NEXTPATCH:NEXTPATCH, and so on. Note that you will only see as far into the future as your KSP settings allow. (See the setting CONIC_PATCH_LIMIT in your settings.cfg file)</p>
+<p>The list of <a class="reference internal" href="../orbits/orbit.html#orbit"><span class="std std-ref">orbit patches</span></a> that describe this vessel&#8217;s current travel path based on momentum alone with no thrusting changes. If the current path has no transitions to other bodies, then this will be a list of only one orbit. If the current path intersects other bodies, then this will be a list describing the transitions into and out of the intersecting body&#8217;s sphere of influence. SHIP:PATCHES[0] is always exactly the same as SHIP:OBT, SHIP:PATCHES[1] is the same as SHIP:OBT:NEXTPATCH, SHIP:PATCHES[2] is the same as SHIP:OBT:NEXTPATCH:NEXTPATCH, and so on. Note that you will only see as far into the future as your KSP settings allow. (See the setting CONIC_PATCH_LIMIT in your settings.cfg file)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -988,7 +988,7 @@ Vessel:<code class="descname">PARTS</code><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p>A List of all the <a class="reference internal" href="part.html#part"><span>parts</span></a> on the vessel. <code class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:PARTS.</span></code> has exactly the same effect as <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span> <span class="pre">IN</span> <span class="pre">FOO.</span></code>. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>A List of all the <a class="reference internal" href="part.html#part"><span class="std std-ref">parts</span></a> on the vessel. <code class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:PARTS.</span></code> has exactly the same effect as <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span> <span class="pre">IN</span> <span class="pre">FOO.</span></code>. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1004,7 +1004,7 @@ Vessel:<code class="descname">DOCKINGPORTS</code><a class="headerlink" href="#at
 </tr>
 </tbody>
 </table>
-<p>A List of all the <a class="reference internal" href="dockingport.html#dockingport"><span>docking ports</span></a> on the Vessel.</p>
+<p>A List of all the <a class="reference internal" href="dockingport.html#dockingport"><span class="std std-ref">docking ports</span></a> on the Vessel.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1020,7 +1020,7 @@ Vessel:<code class="descname">ELEMENTS</code><a class="headerlink" href="#attrib
 </tr>
 </tbody>
 </table>
-<p>A List of all the <a class="reference internal" href="element.html#element"><span>elements</span></a> on the Vessel.</p>
+<p>A List of all the <a class="reference internal" href="element.html#element"><span class="std std-ref">elements</span></a> on the Vessel.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1036,7 +1036,7 @@ Vessel:<code class="descname">RESOURCES</code><a class="headerlink" href="#attri
 </tr>
 </tbody>
 </table>
-<p>A List of all the <a class="reference internal" href="aggregateresource.html#aggregateresource"><span>AggregateResources</span></a> on the vessel. <code class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:RESOURCES.</span></code> has exactly the same effect as <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">RESOURCES</span> <span class="pre">IN</span> <span class="pre">FOO.</span></code>.</p>
+<p>A List of all the <a class="reference internal" href="aggregateresource.html#aggregateresource"><span class="std std-ref">AggregateResources</span></a> on the vessel. <code class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:RESOURCES.</span></code> has exactly the same effect as <code class="docutils literal"><span class="pre">LIST</span> <span class="pre">RESOURCES</span> <span class="pre">IN</span> <span class="pre">FOO.</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1047,7 +1047,7 @@ Vessel:<code class="descname">PARTSNAMED</code><span class="sig-paren">(</span>n
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Name of the parts</li>
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) Name of the parts</li>
 </ul>
 </td>
 </tr>
@@ -1056,7 +1056,7 @@ Vessel:<code class="descname">PARTSNAMED</code><span class="sig-paren">(</span>n
 </tr>
 </tbody>
 </table>
-<p>Part:NAME. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>Part:NAME. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1067,7 +1067,7 @@ Vessel:<code class="descname">PARTSTITLED</code><span class="sig-paren">(</span>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>title</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Title of the parts</li>
+<li><strong>title</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) Title of the parts</li>
 </ul>
 </td>
 </tr>
@@ -1076,7 +1076,7 @@ Vessel:<code class="descname">PARTSTITLED</code><span class="sig-paren">(</span>
 </tr>
 </tbody>
 </table>
-<p>Part:TITLE. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>Part:TITLE. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1087,7 +1087,7 @@ Vessel:<code class="descname">PARTSTAGGED</code><span class="sig-paren">(</span>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tag</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Tag of the parts</li>
+<li><strong>tag</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) Tag of the parts</li>
 </ul>
 </td>
 </tr>
@@ -1096,7 +1096,7 @@ Vessel:<code class="descname">PARTSTAGGED</code><span class="sig-paren">(</span>
 </tr>
 </tbody>
 </table>
-<p>Part:TAG value. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>Part:TAG value. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1107,7 +1107,7 @@ Vessel:<code class="descname">PARTSDUBBED</code><span class="sig-paren">(</span>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) name, title or tag of the parts</li>
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) name, title or tag of the parts</li>
 </ul>
 </td>
 </tr>
@@ -1116,7 +1116,7 @@ Vessel:<code class="descname">PARTSDUBBED</code><span class="sig-paren">(</span>
 </tr>
 </tbody>
 </table>
-<p>name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1127,7 +1127,7 @@ Vessel:<code class="descname">MODULESNAMED</code><span class="sig-paren">(</span
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span>string</span></a>) Name of the part modules</li>
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a>) Name of the part modules</li>
 </ul>
 </td>
 </tr>
@@ -1136,7 +1136,7 @@ Vessel:<code class="descname">MODULESNAMED</code><span class="sig-paren">(</span
 </tr>
 </tbody>
 </table>
-<p>match the given name. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>match the given name. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1156,7 +1156,7 @@ Vessel:<code class="descname">PARTSINGROUP</code><span class="sig-paren">(</span
 </tr>
 </tbody>
 </table>
-<p>one action triggered by the given action group. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>one action triggered by the given action group. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1176,7 +1176,7 @@ Vessel:<code class="descname">MODULESINGROUP</code><span class="sig-paren">(</sp
 </tr>
 </tbody>
 </table>
-<p>have at least one action triggered by the given action group. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>have at least one action triggered by the given action group. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1190,7 +1190,7 @@ Vessel:<code class="descname">ALLPARTSTAGGED</code><span class="sig-paren">(</sp
 </tr>
 </tbody>
 </table>
-<p>nametag on them of any sort that is nonblank. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span>ship parts and modules</span></a>.</p>
+<p>nametag on them of any sort that is nonblank. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><span class="std std-ref">ship parts and modules</span></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1200,7 +1200,7 @@ Vessel:<code class="descname">CREWCAPACITY</code><a class="headerlink" href="#at
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -1294,7 +1294,7 @@ Vessel:<code class="descname">MESSAGES</code><a class="headerlink" href="#attrib
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

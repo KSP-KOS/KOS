@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>File I/O &mdash; kOS 1.0.2 documentation</title>
+  <title>File I/O &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Terminal and game environment" href="terminalgui.html"/>
         <link rel="prev" title="Querying a vessel’s parts" href="parts.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="prediction.html">Prediction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">File I/O</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">File I/O</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
@@ -140,7 +140,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -167,7 +167,7 @@
   <div class="section" id="file-i-o">
 <span id="files"></span><h1>File I/O<a class="headerlink" href="#file-i-o" title="Permalink to this headline">¶</a></h1>
 <p>For information about where files are kept and how to deal with volumes see the
-<a class="reference internal" href="../general/volumes.html#volumes"><span>Volumes</span></a> page in the general topics section of this
+<a class="reference internal" href="../general/volumes.html#volumes"><span class="std std-ref">Volumes</span></a> page in the general topics section of this
 documentation.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -399,7 +399,7 @@ for the current volume.</p>
 <p>Changes the current directory to the root directory of the specified volume.
 Volumes can be referenced by instances of <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>, their ID numbers
 or their names if they&#8217;ve been given one. Understanding how
-<a class="reference internal" href="../general/volumes.html#volumes"><span>volumes work</span></a> is important to understanding this command.</p>
+<a class="reference internal" href="../general/volumes.html#volumes"><span class="std std-ref">volumes work</span></a> is important to understanding this command.</p>
 <p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>                        <span class="c1">// Switch to volume 0.</span>
 <span class="k">SET</span> <span class="k">VOLUME</span><span class="p">(</span><span class="mf">1</span><span class="p">):</span><span class="nv">NAME</span> <span class="ow">TO</span> <span class="nv">AwesomeDisk</span><span class="p">.</span>  <span class="c1">// Name volume 1 as AwesomeDisk.</span>
@@ -422,10 +422,10 @@ more flexible commands that could deal with both files and directories.
 The old syntax was not designed with directories in mind. It would also
 make it difficult for the kOS parser to properly handle paths.</p>
 <p>Please update your scripts to use the new commands:
-<a class="reference internal" href="#movepath"><span>movepath(frompath, topath)</span></a>,
-<a class="reference internal" href="#copypath"><span>copypath(frompath, topath)</span></a> and
-<a class="reference internal" href="#deletepath"><span>deletepath(path)</span></a>.
-<a class="reference internal" href="#runpath"><span>runpath(path)</span></a>.</p>
+<a class="reference internal" href="#movepath"><span class="std std-ref">movepath(frompath, topath)</span></a>,
+<a class="reference internal" href="#copypath"><span class="std std-ref">copypath(frompath, topath)</span></a> and
+<a class="reference internal" href="#deletepath"><span class="std std-ref">deletepath(path)</span></a>.
+<a class="reference internal" href="#runpath"><span class="std std-ref">runpath(path)</span></a>.</p>
 </div>
 </div>
 <div class="section" id="list">
@@ -434,7 +434,7 @@ make it difficult for the kOS parser to properly handle paths.</p>
 the current working directory.</p>
 <p>This is actually a shorthand for the longer <code class="code docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span></code> command.</p>
 <p>To get the files into a <a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LIST</span></code></a> structure you can read in a script (rather
-than just printed to the screen), use the <a class="reference internal" href="list.html#list-files"><span>list files in ...</span></a>
+than just printed to the screen), use the <a class="reference internal" href="list.html#list-files"><span class="std std-ref">list files in ...</span></a>
 command.</p>
 </div>
 <div class="section" id="cd-path">
@@ -528,7 +528,7 @@ nothing present under the given path. Also see <a class="reference internal" hre
 <div class="section" id="writejson-object-path">
 <span id="writejson"></span><h3><a class="toc-backref" href="#id27">WRITEJSON(OBJECT, PATH)</a><a class="headerlink" href="#writejson-object-path" title="Permalink to this headline">¶</a></h3>
 <p>Serializes the given object to JSON format and saves it under the given path.</p>
-<p>Go to <a class="reference internal" href="serialization.html#serialization"><span>Serialization page</span></a> to read more about serialization.</p>
+<p>Go to <a class="reference internal" href="serialization.html#serialization"><span class="std std-ref">Serialization page</span></a> to read more about serialization.</p>
 <p>Usage example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">L</span> <span class="ow">TO</span> <span class="nv">LEXICON</span><span class="p">().</span>
 <span class="k">SET</span> <span class="nv">NESTED</span> <span class="ow">TO</span> <span class="nv">QUEUE</span><span class="p">().</span>
@@ -545,7 +545,7 @@ nothing present under the given path. Also see <a class="reference internal" hre
 <div class="section" id="readjson-path">
 <h3><a class="toc-backref" href="#id28">READJSON(PATH)</a><a class="headerlink" href="#readjson-path" title="Permalink to this headline">¶</a></h3>
 <p>Reads the contents of a file previously created using <code class="docutils literal"><span class="pre">WRITEJSON</span></code> and deserializes them.</p>
-<p>Go to <a class="reference internal" href="serialization.html#serialization"><span>Serialization page</span></a> to read more about serialization.</p>
+<p>Go to <a class="reference internal" href="serialization.html#serialization"><span class="std std-ref">Serialization page</span></a> to read more about serialization.</p>
 <p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">L</span> <span class="ow">TO</span> <span class="nv">READJSON</span><span class="p">(</span><span class="s">&quot;output.json&quot;</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="nv">L</span><span class="p">[</span><span class="s">&quot;key1&quot;</span><span class="p">].</span>
@@ -671,7 +671,7 @@ use the <code class="docutils literal"><span class="pre">run</span></code> comma
 <p>Although the syntax is a bit different for <code class="docutils literal"><span class="pre">RUN</span></code> versus
 <code class="docutils literal"><span class="pre">RUNPATH</span></code> (and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code>), all 3 techniques allow you to
 pass arguments into the program that it sees as its main script
-<a class="reference internal" href="../language/variables.html#declare-parameter"><span>parameter</span></a> values.</p>
+<a class="reference internal" href="../language/variables.html#declare-parameter"><span class="std std-ref">parameter</span></a> values.</p>
 <p>The following commands do equivalent things:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;AutoLaunch.ks&quot;</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
 <span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;AutoLaunch.ksm&quot;</span><span class="p">,</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
@@ -753,7 +753,7 @@ to find a file with the &#8221;.ks&#8221; extension appended to it.</li>
 <dd>Path to the destination file. If the optional argument 2 is missing, it will assume it&#8217;s the same as argument 1, but with a file extension changed to <code class="docutils literal"><span class="pre">*.ksm</span></code>.</dd>
 </dl>
 </div></blockquote>
-<p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><span>Kerboscript ML Executable
+<p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><span class="std std-ref">Kerboscript ML Executable
 image</span></a> that can be used
 instead of executing the program script directly.</p>
 <p>The RUN, RUNPATH, or RUNONCEPATH commands (mentioned elsewhere
@@ -761,7 +761,7 @@ on this page) can work with either *.ks script files or *.ksm
 compiled files.</p>
 <p>The full details of this process are long and complex enough to be
 placed on a separate page.</p>
-<p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><span>the details of the Kerboscript ML
+<p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><span class="std std-ref">the details of the Kerboscript ML
 Executable</span></a>.</p>
 </div>
 <div class="section" id="edit-path">
@@ -836,7 +836,7 @@ the code during play, this editor is useful.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

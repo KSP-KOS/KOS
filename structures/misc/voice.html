@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Voice &mdash; kOS 1.0.2 documentation</title>
+  <title>Voice &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Waypoints" href="../waypoint.html"/>
         <link rel="prev" title="Drawing Vectors on the Screen" href="vecdraw.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -127,7 +127,7 @@
 <li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Voice</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Voice</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -161,7 +161,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -189,9 +189,9 @@
             
   <div class="section" id="voice">
 <span id="id1"></span><h1>Voice<a class="headerlink" href="#voice" title="Permalink to this headline">¶</a></h1>
-<p>This structure represents a single one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span>&#8216;voices&#8217;</span></a>
-in the built-in sound chip called <a class="reference internal" href="../../general/skid.html#skid"><span>SKID</span></a> in the kOS CPU.
-Please refer to the <a class="reference internal" href="../../general/skid.html#skid"><span>SKID chip</span></a> documentation page if you
+<p>This structure represents a single one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span class="std std-ref">&#8216;voices&#8217;</span></a>
+in the built-in sound chip called <a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID</span></a> in the kOS CPU.
+Please refer to the <a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID chip</span></a> documentation page if you
 have not already done so before reading this page.  The things mentioned
 here are just ways to access the features of the SKID chip so they won&#8217;t
 be fully explained on this page, instead just referring to the SKID
@@ -217,8 +217,8 @@ documentation with links.</p>
 </tr>
 </tbody>
 </table>
-<p>To access one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span>voices</span></a> of the
-<a class="reference internal" href="../../general/skid.html#skid"><span>SKID</span></a> chip, you use the <code class="docutils literal"><span class="pre">GetVoice(num)</span></code> built-in
+<p>To access one of the <a class="reference internal" href="../../general/skid.html#skid-voice"><span class="std std-ref">voices</span></a> of the
+<a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID</span></a> chip, you use the <code class="docutils literal"><span class="pre">GetVoice(num)</span></code> built-in
 function.</p>
 <p>Where <code class="docutils literal"><span class="pre">num</span></code> is the number of the hardware voice you&#8217;re interested
 in accessing.  (The numbering starts with the first voice being
@@ -271,22 +271,22 @@ you probably only need to ever use voice 0.</p>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:ATTACK" title="VOICE:ATTACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATTACK</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Get/Set</td>
-<td>The <em>Attack</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<td>The <em>Attack</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:DECAY" title="VOICE:DECAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DECAY</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Get/Set</td>
-<td>The <em>Decay</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<td>The <em>Decay</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:SUSTAIN" title="VOICE:SUSTAIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SUSTAIN</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Get/Set</td>
-<td>The <em>Sustain</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<td>The <em>Sustain</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:RELEASE" title="VOICE:RELEASE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RELEASE</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Get/Set</td>
-<td>The <em>Release</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a></td>
+<td>The <em>Release</em> setting of the SKID voice&#8217;s <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VOICE:VOLUME" title="VOICE:VOLUME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VOLUME</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
@@ -296,7 +296,7 @@ you probably only need to ever use voice 0.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VOICE:WAVE" title="VOICE:WAVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WAVE</span></code></a></td>
 <td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
 <td>Get/Set</td>
-<td>The name for the <a class="reference internal" href="../../general/skid.html#skid-waveform"><span>waveform</span></a> you want this voice to use.</td>
+<td>The name for the <a class="reference internal" href="../../general/skid.html#skid-waveform"><span class="std std-ref">waveform</span></a> you want this voice to use.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:VOICE:PLAY" title="VOICE:PLAY method"><code class="xref ks ks-meth docutils literal"><span class="pre">PLAY(note_or_list)</span></code></a></td>
 <td>None</td>
@@ -341,7 +341,7 @@ Voice:<code class="descname">ATTACK</code><a class="headerlink" href="#attribute
 </tbody>
 </table>
 <p>The <em>Attack</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  This value is
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  This value is
 in seconds (usually a fractional portion of a second).</p>
 </dd></dl>
 
@@ -359,7 +359,7 @@ Voice:<code class="descname">DECAY</code><a class="headerlink" href="#attribute:
 </tbody>
 </table>
 <p>The <em>Decay</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  This value is
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  This value is
 in seconds (usually a fractional portion of a second).</p>
 </dd></dl>
 
@@ -377,7 +377,7 @@ Voice:<code class="descname">SUSTAIN</code><a class="headerlink" href="#attribut
 </tbody>
 </table>
 <p>The <em>Sustain</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  Unlike the other
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  Unlike the other
 values in the ASDR Envelope, this setting is NOT a measure
 of time.  This is a coefficient to multiply the volume by
 during the sustain portion of the notes that are being played
@@ -398,7 +398,7 @@ Voice:<code class="descname">RELEASE</code><a class="headerlink" href="#attribut
 </tbody>
 </table>
 <p>The <em>Release</em> setting of the SKID voice&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  This value is
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  This value is
 in seconds (usually a fractional portion of a second).
 Note, that in order for this setting to have any real
 effect, the notes that are being played have to
@@ -422,7 +422,7 @@ Voice:<code class="descname">VOLUME</code><a class="headerlink" href="#attribute
 </table>
 <p>The &#8220;peak&#8221; volume of the notes played on this voice, when they
 hit the top of their initial spike in the
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>.  While conceptually the
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>.  While conceptually the
 max value is 1.0, in practice it can often go higher because
 the KSP game setting for User Interface volume is usually only
 at 50%, and in that scenario putting a 1.0 here would put the
@@ -443,7 +443,7 @@ Voice:<code class="descname">WAVE</code><a class="headerlink" href="#attribute:V
 </tbody>
 </table>
 <p>To select which of the SKID chip&#8217;s
-<a class="reference internal" href="../../general/skid.html#skid-waveform"><span>waveform generators</span></a> you want this voice
+<a class="reference internal" href="../../general/skid.html#skid-waveform"><span class="std std-ref">waveform generators</span></a> you want this voice
 to use, set this to the string name of that waveform.  If you
 use a string that isn&#8217;t one of the ones listed there (i.e.
 &#8220;triangle&#8221;, &#8220;noise&#8221;, &#8220;square&#8221;, etc) then the attempt to set this
@@ -611,7 +611,7 @@ It will change the speed in mid-song.)</p>
 <p>Be aware that this <em>only</em> scales the timings of the <a class="reference internal" href="note.html#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a>&#8216;s
 <a class="reference internal" href="note.html#attribute:NOTE:KEYDOWNLENGTH" title="NOTE:KEYDOWNLENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">KEYDOWNLENGTH</span></code></a> and <a class="reference internal" href="note.html#attribute:NOTE:DURATION" title="NOTE:DURATION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DURATION</span></code></a>
 timings.  It does not
-affect the timings in the <a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>, as
+affect the timings in the <a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>, as
 those represent what are meant to be physical properties of the
 &#8220;instrument&#8221; the voice is playing on.  This means if you set the
 tempo too fast, it will start cutting off the full duration of the
@@ -714,7 +714,7 @@ Type it in (or cut and paste it) to see the system at work:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Delegates (function references) &mdash; kOS 1.0.2 documentation</title>
+  <title>Delegates (function references) &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="prev" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="anonymous.html">Anonymous User Functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Delegates (function references)</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Delegates (function references)</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced topics</a><ul class="simple">
@@ -142,7 +142,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -395,7 +395,7 @@ of these delegates.</p>
 <div class="section" id="anonymous-functions">
 <h2><a class="toc-backref" href="#id6">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this headline">¶</a></h2>
 <p>Kerboscript also allows you to make a Delegate from an
-<a class="reference internal" href="anonymous.html#anonymous-functions"><span>Anonymous function</span></a> (see the link
+<a class="reference internal" href="anonymous.html#anonymous-functions"><span class="std std-ref">Anonymous function</span></a> (see the link
 for the full description of the syntax and its use), as in this
 example below:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">add_func</span> <span class="ow">to</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">,</span><span class="nv">b</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">+</span><span class="nv">b</span><span class="p">.</span> <span class="p">}.</span>
@@ -519,7 +519,7 @@ at the location where it was created.  It is possible for the
 KOSDelegate you make of a function to access the local variables
 that only that function is allowed to see, even if you call that
 delegate from a &#8220;foreign&#8221; location where those variables wouldn&#8217;t
-normally be in <a class="reference internal" href="variables.html#scope"><span>scope</span></a>.</p>
+normally be in <a class="reference internal" href="variables.html#scope"><span class="std std-ref">scope</span></a>.</p>
 </div>
 </div>
 <div class="section" id="kinds-of-delegate-no-suffixes">
@@ -533,7 +533,7 @@ intended as a future feature though.  It&#8217;s been put off because it
 involves decisions that impact the future of the language and which, once
 made, can&#8217;t be changed easily.</em>)</p>
 <ul>
-<li><p class="first">You <strong>can</strong> make a delegate of a <a class="reference internal" href="user_functions.html#user-functions"><span>user function</span></a>
+<li><p class="first">You <strong>can</strong> make a delegate of a <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">user function</span></a>
 implemented in Kerboscript code.</p>
 <blockquote>
 <div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">mysquarefunc</span> <span class="p">{</span> <span class="kd">parameter</span> <span class="nv">a</span><span class="p">.</span> <span class="k">return</span> <span class="nv">a</span><span class="o">*</span><span class="nv">a</span><span class="p">.</span> <span class="p">}</span>
@@ -611,7 +611,7 @@ wrapper around a structure suffix call, and make a delegate of <strong>that</str
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

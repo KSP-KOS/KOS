@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Cooked Control &mdash; kOS 1.0.2 documentation</title>
+  <title>Cooked Control &mdash; kOS 1.0.3 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Raw Control" href="raw.html"/>
         <link rel="prev" title="Flight Control" href="../flight.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../commands.html">Commands</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">Cooked Control</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cooked Control</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="raw.html">Raw Control</a></li>
@@ -146,7 +146,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -205,9 +205,9 @@ LOCK THROTTLE.  See the note in the next section below.</p>
 <span class="target" id="lock-steering"></span><dl class="object">
 <dt>
 <code class="descname">LOCK STEERING TO expression.</code></dt>
-<dd><p>This sets the direction <strong>kOS</strong> should point the ship where <em>expression</em> is a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../../math/direction.html#direction"><span>Direction</span></a> created from a <a class="reference internal" href="../../math/direction.html#rotation"><span>Rotation</span></a> or <a class="reference internal" href="../../math/direction.html#heading"><span>Heading</span></a>:</p>
+<dd><p>This sets the direction <strong>kOS</strong> should point the ship where <em>expression</em> is a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../../math/direction.html#direction"><span class="std std-ref">Direction</span></a> created from a <a class="reference internal" href="../../math/direction.html#rotation"><span class="std std-ref">Rotation</span></a> or <a class="reference internal" href="../../math/direction.html#heading"><span class="std std-ref">Heading</span></a>:</p>
 <blockquote>
-<div><p><a class="reference internal" href="../../math/direction.html#rotation"><span>Rotation</span></a></p>
+<div><p><a class="reference internal" href="../../math/direction.html#rotation"><span class="std std-ref">Rotation</span></a></p>
 <blockquote>
 <div><p>A Rotation expressed as <code class="docutils literal"><span class="pre">R(pitch,yaw,roll)</span></code>. Note that pitch, yaw and roll are not based on the horizon, but based on an internal coordinate system used by <strong>KSP</strong> that is hard to use. Thankfully, you can force the rotation into a sensible frame of reference by adding a rotation to a known direction first.</p>
 <p>To select a direction that is 20 degrees off from straight up:</p>
@@ -220,7 +220,7 @@ LOCK THROTTLE.  See the note in the next section below.</p>
 </div>
 <p><code class="docutils literal"><span class="pre">UP</span></code> and <code class="docutils literal"><span class="pre">NORTH</span></code> are the only two predefined rotations.</p>
 </div></blockquote>
-<p><a class="reference internal" href="../../math/direction.html#heading"><span>Heading</span></a></p>
+<p><a class="reference internal" href="../../math/direction.html#heading"><span class="std std-ref">Heading</span></a></p>
 <blockquote>
 <div><p>A heading expressed as <code class="docutils literal"><span class="pre">HEADING(compass,</span> <span class="pre">pitch)</span></code>. This will aim 30 degrees above the horizon, due south:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCK</span> <span class="nv">STEERING</span> <span class="ow">TO</span> <span class="nv">HEADING</span><span class="p">(</span><span class="mf">180</span><span class="p">,</span> <span class="mf">30</span><span class="p">).</span>
@@ -339,7 +339,7 @@ LOCK WHEELSTEERING.  See the note in the next section below.</p>
 <h2><a class="toc-backref" href="#id2">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a><a class="headerlink" href="#don-t-wait-during-cooked-control-calculation" title="Permalink to this headline">¶</a></h2>
 <p>Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
 WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
-<a class="reference internal" href="../../general/cpu_hardware.html#triggers"><span>triggers</span></a> that cause your expression
+<a class="reference internal" href="../../general/cpu_hardware.html#triggers"><span class="std std-ref">triggers</span></a> that cause your expression
 to be calculated every single physics update tick behind
 the scenes, you should not execute a <code class="docutils literal"><span class="pre">WAIT</span></code> command
 in the code that performs the evaluation of the value
@@ -400,7 +400,7 @@ scratch, while entirely possible with kOS, might be unnecessary if all
 you really want to do is just make the cooked steering behave slightly
 differently.</p>
 <p>The adjustments described below all come from the
-<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> structure, which
+<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span class="std std-ref">SteeringManager</span></a> structure, which
 has its own detailed documentation page.</p>
 <div class="section" id="some-simple-suggestions-to-try-fixing-common-problems">
 <h3>Some simple suggestions to try fixing common problems<a class="headerlink" href="#some-simple-suggestions-to-try-fixing-common-problems" title="Permalink to this headline">¶</a></h3>
@@ -490,7 +490,7 @@ its instructions of where to set the control lever, learns how to fine
 tune its commands about how to set the lever to get the measurement to
 settle on the value you asked for.</p>
 <p>A more complex discussion of PID controllers than that is outside the
-scope of this document, but you can check out <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span>the PID Loop tutorial.</span></a></p>
+scope of this document, but you can check out <a class="reference internal" href="../../tutorials/pidloops.html#pidloops"><span class="std std-ref">the PID Loop tutorial.</span></a></p>
 </div>
 <div class="section" id="cooked-steering-s-use-of-pid-controllers">
 <h3>Cooked Steering&#8217;s use of PID controllers<a class="headerlink" href="#cooked-steering-s-use-of-pid-controllers" title="Permalink to this headline">¶</a></h3>
@@ -538,7 +538,7 @@ on the control indicator meters in the lower-left of the screen).
 versus the direction the ship is meant to be pointed, and uses the offset
 between the two to decide how to set the desired rotational velocity (rate
 at which the angle is changing).</p>
-<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> allow direct
+<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span class="std std-ref">SteeringManager</span></a> allow direct
 manipulation of the rotational velocity&#8217;s PID tuning parameters.</p>
 </div>
 <div class="section" id="the-torque-pid">
@@ -553,11 +553,11 @@ rotational velocity to seek, the second PID controller takes over,
 the Torque PID, which uses that information to choose how to set
 the actual controls themselves (i.e. the WASDQE controls) to accelerate
 toward that goal rotational velocity.</p>
-<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> don&#8217;t quite
+<p>The suffixes to <a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span class="std std-ref">SteeringManager</span></a> don&#8217;t quite
 allow direct manipulation of the torque PID tuning parameters Kp, Ki,
 and Kd, because they are calculated indirectly from the ship&#8217;s own
 attributes.  However, there are several suffixes to
-<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span>SteeringManager</span></a> that allow you to make
+<a class="reference internal" href="../../structures/misc/steeringmanager.html#steeringmanager"><span class="std std-ref">SteeringManager</span></a> that allow you to make
 indirect adjustments to them that are used in calculating the values
 it uses for Kp, Ki, and Kd.</p>
 <hr class="docutils" />
@@ -699,7 +699,7 @@ or to make your own steering control from scratch using raw steering.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.2',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
