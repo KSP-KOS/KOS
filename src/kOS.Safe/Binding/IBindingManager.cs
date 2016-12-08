@@ -10,6 +10,7 @@ namespace kOS.Safe.Binding
         void AddGetter(IEnumerable<string> names, BindingGetDlg dlg);
         void AddSetter(string name, BindingSetDlg dlg);
         void AddSetter(IEnumerable<string> names, BindingSetDlg dlg);
+        bool HasGetter(string name);
         void PreUpdate();
         void PostUpdate();
         void ToggleFlyByWire(string paramName, bool enabled);

@@ -309,6 +309,8 @@ Structure
     "envelope" of the notes, if you are playing the notes with settings
     that have a slow attack or decay.
 
+.. _voicesong:
+
 Example Song
 ------------
 

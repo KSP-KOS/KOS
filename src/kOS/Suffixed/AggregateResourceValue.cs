@@ -10,7 +10,7 @@ namespace kOS.Suffixed
     public class AggregateResourceValue : Structure
     {
         private readonly string name;
-        private readonly SharedObjects shared;
+        protected readonly SharedObjects shared;
         private readonly float density;
         private readonly List<PartResource> resources;
 
@@ -25,25 +25,34 @@ namespace kOS.Suffixed
 
         private void InitializeAggregateResourceSuffixes()
         {
-            AddSuffix("NAME", new Suffix<StringValue>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("DENSITY", new Suffix<ScalarValue>(() => density, "The density of the resource"));
+            AddSuffix("NAME", new Suffix<StringValue>(GetName, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("DENSITY", new Suffix<ScalarValue>(GetDensity, "The density of the resource"));
             AddSuffix("AMOUNT", new Suffix<ScalarValue>(GetAmount, "The resources currently available"));
             AddSuffix("CAPACITY", new Suffix<ScalarValue>(GetCapacity, "The total storage capacity currently available"));
-            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(GetParts, "The containers for this resource"));
+            AddSuffix("PARTS", new Suffix<ListValue>(GetParts, "The containers for this resource"));
         }
 
-        private ListValue<PartValue> GetParts()
+        public virtual StringValue GetName()
         {
-            var parts = PartValueFactory.Construct(resources.Select(r => r.part), shared);
-            return ListValue<PartValue>.CreateList(parts);
+            return name;
         }
 
-        private ScalarValue GetCapacity()
+        public ScalarValue GetDensity()
+        {
+            return density;
+        }
+
+        public virtual ListValue GetParts()
+        {
+            return PartValueFactory.Construct(resources.Select(r => r.part), shared);
+        }
+
+        public virtual ScalarValue GetCapacity()
         {
             return resources.Sum(r => r.maxAmount);
         }
 
-        private ScalarValue GetAmount()
+        public virtual ScalarValue GetAmount()
         {
             return resources.Sum(r => r.amount);
         }
