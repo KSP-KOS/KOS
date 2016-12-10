@@ -31,10 +31,10 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\KSP\KSP_1.2.1debug\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>C:\KSP\KSP_1.2.1debug\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\Resources\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\Resources\GameData\kOS\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -47,10 +47,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\KSP\KSP_1.2.1debug\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:\KSP\KSP_1.2.1debug\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\Resources\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -266,13 +266,6 @@
       xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
       IF EXIST "$(SolutionDir)\..\KSPdirlink\" xcopy "$(TargetPath)" "$(SolutionDir)\..\KSPdirlink\GameData\kOS\Plugins" /y || exit /B 0
     </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "C:\KSP\KSP_1.2.1debug\GameData\kOS\Plugins" /y
-
-      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
-      IF EXIST "$(SolutionDir)\..\KSPdirlink\" xcopy "$(TargetPath)" "$(SolutionDir)\..\KSPdirlink\GameData\kOS\Plugins" /y || exit /B 0
-</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
