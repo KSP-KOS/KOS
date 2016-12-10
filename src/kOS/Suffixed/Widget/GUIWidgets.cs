@@ -34,6 +34,9 @@ namespace kOS.Suffixed
             // no title area.
             gskin.window.padding.top = gskin.window.padding.bottom;
 
+            // Stretch labels, otherwise ALIGN is confusing.
+            gskin.label.stretchWidth = true;
+
             // align better with labels.
             gskin.horizontalSlider.margin.top = 8;
             gskin.horizontalSlider.margin.bottom = 8;
