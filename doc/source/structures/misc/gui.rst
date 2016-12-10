@@ -304,6 +304,9 @@ following hierarchy:
     :attr:`LABELTIPOVERLAY`                :struct:`Style`             Style for tooltips overlayed on :struct:`Label` widgets.
     :attr:`WINDOW`                         :struct:`Style`             Style for :struct:`GUI` windows.
 
+    :attr:`FONT`                           :struct:`string`            The name of the font used (if STYLE:FONT does not change it for an element).
+    :attr:`SELECTIONCOLOR`                 :ref:`Color <colors>`       The background color of selected text (eg. TEXTFIELD).
+
     :attr:`ADD(name)`                      :struct:`Style`             Adds a new style.
     :attr:`HAS(name)`                      :struct:`Boolean`           Does the skin have the named style?
     :attr:`GET(name)`                      :struct:`Style`             Gets a style by name (including ADDed styles).
@@ -326,7 +329,8 @@ following hierarchy:
     :attr:`PADDING`                       :struct:`StyleRectOffset`       Spacing between the outside of the widget and its contents (text, etc.).
     :attr:`BORDER`                        :struct:`StyleRectOffset`       Size of the edges in the 9-slice image for BG images in NORMAL, HOVER, etc.
     :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
-    :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the label.
+    :attr:`FONT`                          :struct:`string`                The name of the font of the text on the content or "" if the default.
+    :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the content.
     :attr:`RICHTEXT`                      :struct:`Boolean`               Set to False to disable rich-text (<i>...</i>, etc.)
     :attr:`NORMAL`                        :struct:`StyleState`            Properties for the widget normally.
     :attr:`ON`                            :struct:`StyleState`            Properties for when the widget is under the mouse and "on".

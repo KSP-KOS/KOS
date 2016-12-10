@@ -2,6 +2,8 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using kOS.Safe.Exceptions;
+using System.Collections.Generic;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
@@ -64,9 +66,40 @@ namespace kOS.Suffixed
             AddSuffix("ACTIVE_ON", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.onActive)));
             AddSuffix("HOVER_ON", new Suffix<WidgetStyleState>(() => new WidgetStyleState(Writable.onHover)));
 
+            AddSuffix("FONT", new SetSuffix<StringValue>(GetFont, SetFont));
             AddSuffix("FONTSIZE", new SetSuffix<ScalarIntValue>(() => ReadOnly.fontSize, value => Writable.fontSize = value));
             AddSuffix("RICHTEXT", new SetSuffix<BooleanValue>(() => ReadOnly.richText, value => Writable.richText = value));
             AddSuffix("ALIGN", new SetSuffix<StringValue>(GetAlignment, SetAlignment));
+        }
+
+        StringValue GetFont()
+        {
+            if (ReadOnly.font == null) return "";
+            return ReadOnly.font.name;
+        }
+
+        void SetFont(StringValue name)
+        {
+            Writable.font = FontNamed(name);
+        }
+
+        static Dictionary<string, Font> fontDict = null;
+
+        public static Font FontNamed(string name)
+        {
+            if (fontDict == null) {
+                var allfonts = Resources.FindObjectsOfTypeAll<Font>();
+                fontDict = new Dictionary<string, Font>(System.StringComparer.InvariantCultureIgnoreCase);
+                SafeHouse.Logger.Log(allfonts.Length + " fonts found");
+                foreach (var f in allfonts) {
+                    fontDict[f.name] = f;
+                    SafeHouse.Logger.Log("  font name: \"" + f.name + "\"");
+                }
+            }
+            if (name == "" || !fontDict.ContainsKey(name)) {
+                return null;
+            }
+            return fontDict[name];
         }
 
         StringValue GetAlignment()

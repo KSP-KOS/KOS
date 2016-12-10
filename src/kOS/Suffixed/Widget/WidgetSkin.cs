@@ -53,10 +53,36 @@ namespace kOS.Suffixed
                 }
             }
 
+            AddSuffix("FONT", new SetSuffix<StringValue>(GetFont, SetFont));
+            AddSuffix("SELECTIONCOLOR", new SetSuffix<RgbaColor>(GetSelectionColor, SetSelectionColor));
+
             AddSuffix("ADD", new TwoArgsSuffix<WidgetStyle, StringValue, WidgetStyle>(AddStyle));
             AddSuffix("GET", new OneArgsSuffix<WidgetStyle, StringValue>(GetStyle));
             AddSuffix("HAS", new OneArgsSuffix<BooleanValue, StringValue>(value => styles.ContainsKey(value.ToUpper())));
         }
+
+        RgbaColor GetSelectionColor()
+        {
+            var c = Skin.settings.selectionColor;
+            return new RgbaColor(c.r, c.g, c.b, c.a);
+        }
+
+        void SetSelectionColor(RgbaColor value)
+        {
+            Skin.settings.selectionColor = value.Color;
+        }
+
+        StringValue GetFont()
+        {
+            if (Skin.font == null) return "";
+            return Skin.font.name;
+        }
+
+        void SetFont(StringValue name)
+        {
+            Skin.font = WidgetStyle.FontNamed(name);
+        }
+
 
         public WidgetStyle AddStyle(StringValue name, WidgetStyle basis)
         {

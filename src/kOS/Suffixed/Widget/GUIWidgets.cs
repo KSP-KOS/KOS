@@ -88,6 +88,12 @@ namespace kOS.Suffixed
             InitializeSuffixes();
         }
 
+        public override void DoGUI()
+        {
+            GUI.skin = Skin.Skin;
+            base.DoGUI();
+        }
+
         private void InitializeSuffixes()
         {
             AddSuffix("X", new SetSuffix<ScalarValue>(() => window.GetRect().x, value => window.SetX(value)));
