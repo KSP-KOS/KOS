@@ -104,6 +104,11 @@ namespace kOS.Binding
                 AddBoundVariable(name, null, dlg);
             }
         }
+        
+        public bool HasGetter(string name)
+        {
+            return variables.ContainsKey(name);
+        }
 
         public void PreUpdate()
         {

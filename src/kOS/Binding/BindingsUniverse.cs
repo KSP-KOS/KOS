@@ -38,15 +38,23 @@ namespace kOS.Binding
                 }
             });
             shared.BindingMgr.AddGetter("CONSTANT", () => new ConstantValue());
-            foreach (var body in FlightGlobals.fetch.bodies)
-            {
-                var cBody = body;
-                shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
-            }
-
             shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
             shared.BindingMgr.AddGetter("SOLARPRIMEVECTOR", () => new Vector(Planetarium.right));
             shared.BindingMgr.AddGetter("ARCHIVE", () => shared.VolumeMgr.GetVolume(Archive.ArchiveName));
+
+            foreach (var body in FlightGlobals.fetch.bodies)
+            {
+                var cBody = body;
+
+                // We refuse to override other bound identifiers with body names.  Body names
+                // are of "weakest" priority when their names clash with other bound variables
+                // in the language.  (This has to be here because planet packs can rename the
+                // bodies and we can't control the body names we might have.  A body name could
+                // be something like "Eta" or "Stage" or something along those lines.)
+
+                if( !shared.BindingMgr.HasGetter(body.name) )
+                    shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
+            }
         }
 
     }

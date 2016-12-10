@@ -568,7 +568,8 @@ namespace kOS.Safe.Compilation.KS
             ParseNode bodyNode;
             
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            if (IsLockStatement(node))
+            bool isLock = IsLockStatement(node);
+            if (isLock)
             {
                 funcIdentifier = lastSubNode.Nodes[1].Token.Text;
                 bodyNode = lastSubNode.Nodes[3];
@@ -585,6 +586,7 @@ namespace kOS.Safe.Compilation.KS
                 context.UserFunctions.GetUserFunction(funcIdentifier, storageType == StorageModifier.GLOBAL ? (Int16)0 : GetContainingScopeId(node), node);
             int expressionHash = ConcatenateNodes(bodyNode).GetHashCode();
             userFuncObject.GetUserFunctionOpcodes(expressionHash);
+            userFuncObject.IsFunction = !isLock;
             if (userFuncObject.IsSystemLock())
                 BuildSystemTrigger(userFuncObject);
         }
@@ -692,7 +694,7 @@ namespace kOS.Safe.Compilation.KS
                 bodyNode = lastSubNode.Nodes[2]; // The INSTRUCTION_BLOCK of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
             }
             else
-                return; // In principle this shouldn't have ever been called in this case.
+                return; // Should only be the case when scanning elements for anonymous functions
 
             UserFunction userFuncObject = context.UserFunctions.GetUserFunction(
                 userFuncIdentifier,
