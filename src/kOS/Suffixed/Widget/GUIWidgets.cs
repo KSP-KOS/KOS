@@ -27,7 +27,10 @@ namespace kOS.Suffixed
 
         public GUIWidgets(int width, int height, SharedObjects shared) : base(Box.LayoutMode.Vertical,new WidgetStyle(new GUIStyle(HighLogic.Skin.window)))
         {
-            var gskin = Utils.GetSkinCopy(HighLogic.Skin);
+            var gskin = UnityEngine.Object.Instantiate(HighLogic.Skin);
+
+            // Use Arial as that's what used in other KSP GUIs
+            gskin.font = WidgetStyle.FontNamed("Arial");
 
             // Get back the style we made in the base initializer.
             gskin.window = ReadOnlyStyle;
@@ -93,8 +96,10 @@ namespace kOS.Suffixed
 
         public override void DoGUI()
         {
+            var prevSkin = GUI.skin;
             GUI.skin = Skin.Skin;
             base.DoGUI();
+            GUI.skin = prevSkin;
         }
 
         private void InitializeSuffixes()
