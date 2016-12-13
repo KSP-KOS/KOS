@@ -849,32 +849,37 @@ namespace kOS.Screen
             }
             GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth, screen.RowCount * charHeight));
 
-            List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
-
-            // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
-            int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
-
-            for (int row = 0; row < rowsToPaint; row++)
+            // When loading a quicksave, it is possible for the teminal window to update even though
+            // mostRecentScreen is null.  If that's the case, just skip the screen update.
+            if (mostRecentScreen != null)
             {
-                IScreenBufferLine lineBuffer = buffer[row];
-                for (int column = 0; column < lineBuffer.Length; column++)
+                List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
+
+                // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
+                int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
+
+                for (int row = 0; row < rowsToPaint; row++)
                 {
-                    char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
-                        ShowCharacterByAscii(c, column, row, reversingScreen,
-                                             charWidth, charHeight, screen.Brightness);
+                    IScreenBufferLine lineBuffer = buffer[row];
+                    for (int column = 0; column < lineBuffer.Length; column++)
+                    {
+                        char c = lineBuffer[column];
+                        if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
+                            ShowCharacterByAscii(c, column, row, reversingScreen,
+                                                 charWidth, charHeight, screen.Brightness);
+                    }
                 }
-            }
 
-            bool blinkOn = cursorBlinkTime < 0.5f &&
-                           screen.CursorRowShow < screen.RowCount &&
-                           IsPowered &&
-                           ShowCursor;
-            
-            if (blinkOn)
-            {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
-                                     charWidth, charHeight, screen.Brightness);
+                bool blinkOn = cursorBlinkTime < 0.5f &&
+                               screen.CursorRowShow < screen.RowCount &&
+                               IsPowered &&
+                               ShowCursor;
+
+                if (blinkOn)
+                {
+                    ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
+                                         charWidth, charHeight, screen.Brightness);
+                }
             }
             
             GUI.EndGroup();
