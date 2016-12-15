@@ -132,10 +132,9 @@ namespace kOS.Screen
         {
             if (!ApplicationLauncher.Ready) return;
 
-            var useBlizzyOnly = false;
-
-            if (ToolbarManager.ToolbarAvailable)
-                useBlizzyOnly = SafeHouse.Config.UseBlizzyToolbarOnly;
+            var useBlizzyOnly = ToolbarManager.ToolbarAvailable &&
+                                kOSCustomParameters.Instance != null &&
+                                kOSCustomParameters.Instance.useBlizzyToolbarOnly;
 
             if (firstTime)
             {
@@ -234,9 +233,6 @@ namespace kOS.Screen
             {
                 SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
             }
-
-            if (blizzyButton != null)
-                blizzyButton.Destroy();
         }
 
         public void OnDestroy()
@@ -314,6 +310,21 @@ namespace kOS.Screen
 
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
+            if (launcherButton == null)
+            {
+                if (isTop)
+                {
+                    rectToFit = new Rect(0, 0, UnityEngine.Screen.width - assumeStagingListWidth, UnityEngine.Screen.height);
+                    windowRect = new Rect(UnityEngine.Screen.width, 0, 0, 0);
+                }
+                else
+                {
+                    rectToFit = new Rect(0, 0, UnityEngine.Screen.width - assumeStagingListWidth, UnityEngine.Screen.height - assumeStagingListWidth);
+                    windowRect = new Rect(UnityEngine.Screen.width, UnityEngine.Screen.height, 0, 0);
+                }
+                isOpen = true;
+                return;
+            }
             Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
 
             // There has *got* to be a method somewhere in Unity that does this transformation
