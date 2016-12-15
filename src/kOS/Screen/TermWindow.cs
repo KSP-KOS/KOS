@@ -8,6 +8,7 @@ using kOS.Module;
 using kOS.UserIO;
 using kOS.Safe.UserIO;
 using KSP.UI.Dialogs;
+using kOS.Safe.Utilities;
 
 namespace kOS.Screen
 {
@@ -166,6 +167,12 @@ namespace kOS.Screen
             // you can experiment with swapping in different font image files and the code
             // will still work without a recompile:
             int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
+            if (charSourceSize == 0 || !allTexturesFound) // if the size is zero or textures are missing, abort loading the font array
+            {
+                SafeHouse.Logger.LogError("[TermWindow] Aborting LoadFontArray, error in loaded texture");
+                allTexturesFound = false;
+                return;
+            }
             int numRows = fontImage.width / charSourceSize;
             int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
             
@@ -203,17 +210,21 @@ namespace kOS.Screen
         private void LoadAudio()
         {
             beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
-            AudioClip beepClip = beepURL.audioClip;            
+            AudioClip beepClip = beepURL.audioClip;
             beepSource = gameObject.AddComponent<AudioSource>();
             beepSource.clip = beepClip;
         }
 
-        public void LoadTexture(String relativePath, ref Texture2D targetTexture)
+        public void LoadTexture(string relativePath, ref Texture2D targetTexture)
         {
             var imageLoader = new WWW("file://" + root + relativePath);
             imageLoader.LoadImageIntoTexture(targetTexture);
 
-            if (imageLoader.isDone && imageLoader.size == 0) allTexturesFound = false;
+            if (imageLoader.isDone && imageLoader.size == 0)
+            {
+                SafeHouse.Logger.LogError(string.Format("[TermWindow] Loading texture from \"{0}\" failed", relativePath));
+                allTexturesFound = false;
+            }
         }
         
         public void OpenPopupEditor(Volume v, GlobalPath path)
@@ -750,7 +761,12 @@ namespace kOS.Screen
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
                            "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
 
-                GUI.Label(closeButtonRect, "Close");
+                closeButtonRect = new Rect(WindowRect.width - 75, WindowRect.height - 30, 50, 25);
+                if (GUI.Button(closeButtonRect, "Close"))
+                {
+                    Close();
+                    Event.current.Use();
+                }
                 return;
             }
 
