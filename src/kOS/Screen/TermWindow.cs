@@ -1194,7 +1194,7 @@ namespace kOS.Screen
         
         private static GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = kOS.Utilities.Utils.GetSkinCopy(HighLogic.Skin);
+            GUISkin theSkin = Instantiate(HighLogic.Skin); // Use Instantiate to make a copy of the Skin Object
 
             theSkin.label.fontSize = 10;
             theSkin.label.normal.textColor = Color.white;

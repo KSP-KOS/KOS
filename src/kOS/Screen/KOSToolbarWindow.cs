@@ -726,9 +726,7 @@ namespace kOS.Screen
 
         private static GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key
-            // fields.  Instead we'll have to set all the GUIStyle's manually everywhere - ugly.
+            GUISkin theSkin = Instantiate(HighLogic.Skin); // Use Instantiate to make a copy of the Skin Object
 
             // Now alter the parts of theSkin that we want to change:
             //
