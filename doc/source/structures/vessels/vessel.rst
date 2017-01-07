@@ -25,59 +25,63 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
 .. structure:: Vessel
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ======================================== =============================== =============
+    Suffix                                   Type                            Description
+    ======================================== =============================== =============
                    Every suffix of :struct:`Orbitable`
-    -----------------------------------------------------------------------------------
-    :attr:`CONTROL`                       :struct:`Control`               Raw flight controls
-    :attr:`BEARING`                       :struct:`scalar` (deg)          relative heading to this vessel
-    :attr:`HEADING`                       :struct:`scalar` (deg)          Absolute heading to this vessel
-    :attr:`MAXTHRUST`                     :struct:`scalar`                Sum of active maximum thrusts
-    :meth:`MAXTHRUSTAT(pressure)`         :struct:`scalar`                Sum of active maximum thrusts at the given atmospheric pressure
-    :attr:`AVAILABLETHRUST`               :struct:`scalar`                Sum of active limited maximum thrusts
-    :meth:`AVAILABLETHRUSTAT(pressure)`   :struct:`scalar`                Sum of active limited maximum thrusts at the given atmospheric pressure
-    :attr:`FACING`                        :struct:`Direction`             The way the vessel is pointed
-    :attr:`MASS`                          :struct:`scalar` (metric tons)  Mass of the ship
-    :attr:`WETMASS`                       :struct:`scalar` (metric tons)  Mass of the ship fully fuelled
-    :attr:`DRYMASS`                       :struct:`scalar` (metric tons)  Mass of the ship with no resources
-    :attr:`DYNAMICPRESSURE`               :struct:`scalar` (ATM's)        Air Pressure surrounding the vessel
-    :attr:`Q`                             :struct:`scalar` (ATM's)        Alias name for DYNAMICPRESSURE
-    :attr:`VERTICALSPEED`                 :struct:`scalar` (m/s)          How fast the ship is moving "up"
-    :attr:`GROUNDSPEED`                   :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
-    :attr:`AIRSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
-    :attr:`TERMVELOCITY`                  :struct:`scalar` (m/s)          terminal velocity of the vessel
-    :attr:`SHIPNAME`                      :struct:`string`                The name of the vessel
-    :attr:`NAME`                          :struct:`string`                Synonym for SHIPNAME
-    :attr:`STATUS`                        :struct:`string`                Current ship status
-    :attr:`TYPE`                          :struct:`string`                Ship type
-    :attr:`ANGULARMOMENTUM`               :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
-    :attr:`ANGULARVEL`                    :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
-    :attr:`SENSORS`                       :struct:`VesselSensors`         Sensor data
-    :attr:`LOADED`                        :struct:`Boolean`               loaded into KSP physics engine or "on rails"
-    :attr:`UNPACKED`                      :struct:`Boolean`               The ship has individual parts unpacked
-    :attr:`LOADDISTANCE`                  :struct:`LoadDistance`          the :struct:`LoadDistance` object for this vessel
-    :attr:`ISDEAD`                        :struct:`Boolean`               True if the vessel refers to a ship that has gone away.
-    :attr:`PATCHES`                       :struct:`List`                  :struct:`Orbit` patches
-    :attr:`ROOTPART`                      :struct:`Part`                  Root :struct:`Part` of this vessel
-    :attr:`CONTROLPART`                   :struct:`Part`                  Control reference :struct:`Part` of this vessel
-    :attr:`PARTS`                         :struct:`List`                  all :struct:`Parts <Part>`
-    :attr:`DOCKINGPORTS`                  :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
-    :attr:`ELEMENTS`                      :struct:`List`                  all :struct:`Elements <Element>`
-    :attr:`RESOURCES`                     :struct:`List`                  all :struct:`AggrgateResources <AggregateResource>`
-    :meth:`PARTSNAMED(name)`              :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`
-    :meth:`PARTSTITLED(title)`            :struct:`List`                  :struct:`Parts <Part>` by :attr:`TITLE <Part:TITLE>`
-    :meth:`PARTSTAGGED(tag)`              :struct:`List`                  :struct:`Parts <Part>` by :attr:`TAG <Part:TAG>`
-    :meth:`PARTSDUBBED(name)`             :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`, :attr:`TITLE <Part:TITLE>` or :attr:`TAG <Part:TAG>`
-    :meth:`MODULESNAMED(name)`            :struct:`List`                  :struct:`PartModules <PartModule>` by :attr:`NAME <PartModule:NAME>`
-    :meth:`PARTSINGROUP(group)`           :struct:`List`                  :struct:`Parts <Part>` by action group
-    :meth:`MODULESINGROUP(group)`         :struct:`List`                  :struct:`PartModules <PartModule>` by action group
-    :meth:`ALLPARTSTAGGED()`              :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
-    :attr:`CREWCAPACITY`                  :struct:`scalar`                Crew capacity of this vessel
-    :meth:`CREW()`                        :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
-    :attr:`CONNECTION`                    :struct:`Connection`            Returns your connection to this vessel
-    :attr:`MESSAGES`                      :struct:`MessageQueue`          This vessel's message queue
-    ===================================== =============================== =============
+    --------------------------------------------------------------------------------------
+    :attr:`CONTROL`                          :struct:`Control`               Raw flight controls
+    :attr:`BEARING`                          :struct:`scalar` (deg)          relative heading to this vessel
+    :attr:`HEADING`                          :struct:`scalar` (deg)          Absolute heading to this vessel
+    :attr:`MAXTHRUST`                        :struct:`scalar`                Sum of active maximum thrusts
+    :meth:`MAXTHRUSTAT(pressure)`            :struct:`scalar`                Sum of active maximum thrusts at the given atmospheric pressure
+    :attr:`AVAILABLETHRUST`                  :struct:`scalar`                Sum of active limited maximum thrusts
+    :meth:`AVAILABLETHRUSTAT(pressure)`      :struct:`scalar`                Sum of active limited maximum thrusts at the given atmospheric pressure
+    :attr:`FACING`                           :struct:`Direction`             The way the vessel is pointed
+    :attr:`MASS`                             :struct:`scalar` (metric tons)  Mass of the ship
+    :attr:`WETMASS`                          :struct:`scalar` (metric tons)  Mass of the ship fully fuelled
+    :attr:`DRYMASS`                          :struct:`scalar` (metric tons)  Mass of the ship with no resources
+    :attr:`DYNAMICPRESSURE`                  :struct:`scalar` (ATM's)        Air Pressure surrounding the vessel
+    :attr:`Q`                                :struct:`scalar` (ATM's)        Alias name for DYNAMICPRESSURE
+    :attr:`VERTICALSPEED`                    :struct:`scalar` (m/s)          How fast the ship is moving "up"
+    :attr:`GROUNDSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
+    :attr:`AIRSPEED`                         :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
+    :attr:`TERMVELOCITY`                     :struct:`scalar` (m/s)          terminal velocity of the vessel
+    :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
+    :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
+    :attr:`STATUS`                           :struct:`string`                Current ship status
+    :attr:`TYPE`                             :struct:`string`                Ship type
+    :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
+    :attr:`ANGULARVEL`                       :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
+    :attr:`SENSORS`                          :struct:`VesselSensors`         Sensor data
+    :attr:`LOADED`                           :struct:`Boolean`               loaded into KSP physics engine or "on rails"
+    :attr:`UNPACKED`                         :struct:`Boolean`               The ship has individual parts unpacked
+    :attr:`LOADDISTANCE`                     :struct:`LoadDistance`          the :struct:`LoadDistance` object for this vessel
+    :attr:`ISDEAD`                           :struct:`Boolean`               True if the vessel refers to a ship that has gone away.
+    :attr:`PATCHES`                          :struct:`List`                  :struct:`Orbit` patches
+    :attr:`ROOTPART`                         :struct:`Part`                  Root :struct:`Part` of this vessel
+    :attr:`CONTROLPART`                      :struct:`Part`                  Control reference :struct:`Part` of this vessel
+    :attr:`PARTS`                            :struct:`List`                  all :struct:`Parts <Part>`
+    :attr:`DOCKINGPORTS`                     :struct:`List`                  all :struct:`DockingPorts <DockingPort>`
+    :attr:`ELEMENTS`                         :struct:`List`                  all :struct:`Elements <Element>`
+    :attr:`RESOURCES`                        :struct:`List`                  all :struct:`AggrgateResources <AggregateResource>`
+    :meth:`PARTSNAMED(name)`                 :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`
+    :meth:`PARTSNAMEDPATTERN(namePattern)`   :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>` regex pattern
+    :meth:`PARTSTITLED(title)`               :struct:`List`                  :struct:`Parts <Part>` by :attr:`TITLE <Part:TITLE>`
+    :meth:`PARTSTITLEDPATTERN(titlePattern)` :struct:`List`                  :struct:`Parts <Part>` by :attr:`TITLE <Part:TITLE>` regex pattern
+    :meth:`PARTSTAGGED(tag)`                 :struct:`List`                  :struct:`Parts <Part>` by :attr:`TAG <Part:TAG>`
+    :meth:`PARTSTAGGEDPATTERN(tagPattern)`   :struct:`List`                  :struct:`Parts <Part>` by :attr:`TAG <Part:TAG>` regex pattern
+    :meth:`PARTSDUBBED(name)`                :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`, :attr:`TITLE <Part:TITLE>` or :attr:`TAG <Part:TAG>`
+    :meth:`PARTSDUBBEDPATTERN(namePattern)`  :struct:`List`                  :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`, :attr:`TITLE <Part:TITLE>` or :attr:`TAG <Part:TAG>`  regex pattern
+    :meth:`MODULESNAMED(name)`               :struct:`List`                  :struct:`PartModules <PartModule>` by :attr:`NAME <PartModule:NAME>`
+    :meth:`PARTSINGROUP(group)`              :struct:`List`                  :struct:`Parts <Part>` by action group
+    :meth:`MODULESINGROUP(group)`            :struct:`List`                  :struct:`PartModules <PartModule>` by action group
+    :meth:`ALLPARTSTAGGED()`                 :struct:`List`                  :struct:`Parts <Part>` that have non-blank nametags
+    :attr:`CREWCAPACITY`                     :struct:`scalar`                Crew capacity of this vessel
+    :meth:`CREW()`                           :struct:`List`                  all :struct:`CrewMembers <CrewMember>`
+    :attr:`CONNECTION`                       :struct:`Connection`            Returns your connection to this vessel
+    :attr:`MESSAGES`                         :struct:`MessageQueue`          This vessel's message queue
+    ======================================== =============================== =============
 
 .. note::
 
@@ -406,12 +410,26 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Part:NAME. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
+.. method:: Vessel:PARTSNAMEDPATTERN(namePattern)
+
+    :parameter namePattern: (:ref:`string <string>`) Pattern of the name of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Part:NAME. The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
 .. method:: Vessel:PARTSTITLED(title)
 
     :parameter title: (:ref:`string <string>`) Title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     Part:TITLE. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. method:: Vessel:PARTSTITLEDPATTERN(titlePattern)
+
+    :parameter titlePattern: (:ref:`string <string>`) Patern of the title of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Part:TITLE. The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:PARTSTAGGED(tag)
 
@@ -420,12 +438,26 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Part:TAG value. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
+.. method:: Vessel:PARTSTAGGEDPATTERN(tagPattern)
+
+    :parameter tagPattern: (:ref:`string <string>`) Pattern of the tag of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    Part:TAG value. The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
 .. method:: Vessel:PARTSDUBBED(name)
 
     :parameter name: (:ref:`string <string>`) name, title or tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
     name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. method:: Vessel:PARTSDUBBEDPATTERN(namePattern)
+
+    :parameter namePattern: (:ref:`string <string>`) Pattern of the name, title or tag of the parts
+    :return: :struct:`List` of :struct:`Part` objects
+
+    name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMEDPATTERN(val), :PARTSTITLEDPATTERN(val), :PARTSTAGGEDPATTERN(val). The matching is done identically as in :meth:`String:MATCHESPATTERN`\ . For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:MODULESNAMED(name)
 
