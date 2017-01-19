@@ -108,7 +108,7 @@ namespace kOS.Suffixed
         public void KOSUpdate(double deltaTime)
         {
             if (line == null || hat == null) return;
-            if (scopeLost)
+            if (scopeLost) // TODO: When collection scope tracking is fixed, we can simply check the link count instead
             {
                 SetShow(false);
                 scopeLost = false; // Clear the flag just in case something still has a reference to this object

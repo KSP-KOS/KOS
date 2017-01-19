@@ -30,7 +30,7 @@ namespace kOS.AddOns.ActionGroupsExtended
             {
                 return false;
             }
-            try //try-catch is required as the below code returns a NullRef if AGX is not present.
+            try
             {
                 return (bool)calledType.InvokeMember("AGXInstalled", BINDINGS, null, null, null);
             }
