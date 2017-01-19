@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Colors &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="Time Span" href="time.html"/>
+        <link rel="prev" title="List" href="list.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>Colors</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/misc/rgba.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="colors">
+<span id="id1"></span><h1>Colors<a class="headerlink" href="#colors" title="Permalink to this headline">¶</a></h1>
+<p>Any place you need to specify a color in the game (at the moment this is
+just with <a class="reference internal" href="vecdraw.html#vecdraw"><em>VECDRAW</em></a>.) You do so with a
+rgba color structure defined as follows:</p>
+<p>Method 1: Use one of these pre-arranged named colors:</p>
+<ul>
+<li><dl class="global">
+<dt id="RED">
+<tt class="descname">RED</tt><a class="headerlink" href="#RED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="GREEN">
+<tt class="descname">GREEN</tt><a class="headerlink" href="#GREEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="BLUE">
+<tt class="descname">BLUE</tt><a class="headerlink" href="#BLUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="YELLOW">
+<tt class="descname">YELLOW</tt><a class="headerlink" href="#YELLOW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="CYAN">
+<tt class="descname">CYAN</tt><a class="headerlink" href="#CYAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="MAGENTA">
+<tt class="descname">MAGENTA</tt><a class="headerlink" href="#MAGENTA" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><dl class="global">
+<dt id="PURPLE">
+<tt class="descname">PURPLE</tt><a class="headerlink" href="#PURPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Alias of <a class="reference internal" href="#MAGENTA" title="MAGENTA global"><tt class="xref ks ks-global docutils literal"><span class="pre">MAGENTA</span></tt></a>)</p>
+</dd></dl>
+
+</li>
+</ul>
+</dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="WHITE">
+<tt class="descname">WHITE</tt><a class="headerlink" href="#WHITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+<li><dl class="global">
+<dt id="BLACK">
+<tt class="descname">BLACK</tt><a class="headerlink" href="#BLACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</li>
+</ul>
+<dl class="function">
+<dt id="RGB">
+<tt class="descname">RGB</tt><big>(</big>r,g,b<big>)</big><a class="headerlink" href="#RGB" title="Permalink to this definition">¶</a></dt>
+<dd><p>This global function creates a color from red green and blue values:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myColor</span> <span class="n">TO</span> <span class="n">RGB</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>where:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">r</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the red component.</dd>
+<dt><tt class="docutils literal"><span class="pre">g</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the green component.</dd>
+<dt><tt class="docutils literal"><span class="pre">b</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the blue component.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="RGBA">
+<tt class="descname">RGBA</tt><big>(</big>r,g,b,a<big>)</big><a class="headerlink" href="#RGBA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#RGB" title="RGB function"><tt class="xref ks ks-func docutils literal"><span class="pre">RGB()</span></tt></a> but with an alpha (transparency) channel:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myColor</span> <span class="n">TO</span> <span class="n">RGBA</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">).</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">r,</span> <span class="pre">g,</span> <span class="pre">b</span></tt> are the same as above.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">a</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the alpha component. (1.0 means opaque, 0.0 means invisibly transparent).</dd>
+</dl>
+</dd></dl>
+
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myarrow</span> <span class="n">TO</span> <span class="n">VECDRAW</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">VEC</span> <span class="n">to</span> <span class="n">V</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">YELLOW</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">mycolor</span> <span class="n">TO</span> <span class="n">YELLOW</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">mycolor</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">RGB</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">).</span>
+
+<span class="c1">// COLOUR spelling works too</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOUR</span> <span class="n">to</span> <span class="n">RGB</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">).</span>
+
+<span class="c1">// half transparent yellow.</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">RGBA</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="time.html" class="btn btn-neutral float-right" title="Time Span">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="list.html" class="btn btn-neutral" title="List"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

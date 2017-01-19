@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Fundamental Constants &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
+        <link rel="next" title="Vectors" href="vector.html"/>
+        <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../math.html">Mathematics</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../math.html">Mathematics and Basic Geometry</a> &raquo;</li>
+      
+    <li>Fundamental Constants</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/math/basic.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <span class="target" id="constants"><span id="math"></span></span><div class="section" id="fundamental-constants">
+<span id="index-0"></span><h1>Fundamental Constants<a class="headerlink" href="#fundamental-constants" title="Permalink to this headline">¶</a></h1>
+<p>A few fundamental constants can be obtained by using the expression <tt class="docutils literal"><span class="pre">CONSTANT()</span></tt> followed by a colon (<tt class="docutils literal"><span class="pre">:</span></tt>) followed by one of the following:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Identifier</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#G" title="G global"><tt class="xref ks ks-global docutils literal"><span class="pre">G</span></tt></a></td>
+<td>Newton&#8217;s Gravitational Constant</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#E" title="E global"><tt class="xref ks ks-global docutils literal"><span class="pre">E</span></tt></a></td>
+<td>Natural Log</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PI" title="PI global"><tt class="xref ks ks-global docutils literal"><span class="pre">PI</span></tt></a></td>
+<td><span class="math">\(π\)</span></td>
+</tr>
+</tbody>
+</table>
+<dl class="global">
+<dt id="G">
+<tt class="descname">Constant():G</tt><a class="headerlink" href="#G" title="Permalink to this definition">¶</a></dt>
+<dd><p>Newton&#8217;s Gravitational Constant, 6.67384E-11:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin is:&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="n">constant</span><span class="p">()</span><span class="o">:</span><span class="n">G</span> <span class="o">*</span> <span class="n">Kerbin</span><span class="o">:</span><span class="n">Mass</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="E">
+<tt class="descname">Constant():E</tt><a class="headerlink" href="#E" title="Permalink to this definition">¶</a></dt>
+<dd><p>Natural Log base &#8220;e&#8221;:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;e^2 is:&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="n">constant</span><span class="p">()</span><span class="o">:</span><span class="n">e</span> <span class="o">^</span> <span class="mf">2.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="PI">
+<tt class="descname">Constant():PI</tt><a class="headerlink" href="#PI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ratio of circumference of a circle to its diameter</p>
+</dd></dl>
+
+<span class="target" id="math-functions"></span></div>
+<div class="section" id="mathematical-functions">
+<span id="index-1"></span><h1>Mathematical Functions<a class="headerlink" href="#mathematical-functions" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Function</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#ABS" title="ABS function"><tt class="xref ks ks-func docutils literal"><span class="pre">ABS(a)</span></tt></a></td>
+<td>absolute value</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#CEILING" title="CEILING function"><tt class="xref ks ks-func docutils literal"><span class="pre">CEILING(a)</span></tt></a></td>
+<td>round up</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#FLOOR" title="FLOOR function"><tt class="xref ks ks-func docutils literal"><span class="pre">FLOOR(a)</span></tt></a></td>
+<td>round down</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LN" title="LN function"><tt class="xref ks ks-func docutils literal"><span class="pre">LN(a)</span></tt></a></td>
+<td>natural log</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LOG10" title="LOG10 function"><tt class="xref ks ks-func docutils literal"><span class="pre">LOG10(a)</span></tt></a></td>
+<td>log base 10</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#MOD" title="MOD function"><tt class="xref ks ks-func docutils literal"><span class="pre">MOD(a,b)</span></tt></a></td>
+<td>modulus</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#MIN" title="MIN function"><tt class="xref ks ks-func docutils literal"><span class="pre">MIN(a,b)</span></tt></a></td>
+<td>minimum</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#MAX" title="MAX function"><tt class="xref ks ks-func docutils literal"><span class="pre">MAX(a,b)</span></tt></a></td>
+<td>maximum</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ROUND" title="ROUND function"><tt class="xref ks ks-func docutils literal"><span class="pre">ROUND(a)</span></tt></a></td>
+<td>round to whole number</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ROUND" title="ROUND function"><tt class="xref ks ks-func docutils literal"><span class="pre">ROUND(a,b)</span></tt></a></td>
+<td>round to nearest place</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#SQRT" title="SQRT function"><tt class="xref ks ks-func docutils literal"><span class="pre">SQRT(a)</span></tt></a></td>
+<td>square root</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="ABS">
+<tt class="descname">ABS</tt><big>(</big>a<big>)</big><a class="headerlink" href="#ABS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns absolute value of input:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ABS</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span> <span class="c1">// prints 1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="CEILING">
+<tt class="descname">CEILING</tt><big>(</big>a<big>)</big><a class="headerlink" href="#CEILING" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rounds up to the nearest whole number:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">CEILING</span><span class="p">(</span><span class="mf">1.887</span><span class="p">).</span> <span class="c1">// prints 2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="FLOOR">
+<tt class="descname">FLOOR</tt><big>(</big>a<big>)</big><a class="headerlink" href="#FLOOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rounds down to the nearest whole number:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">FLOOR</span><span class="p">(</span><span class="mf">1.887</span><span class="p">).</span> <span class="c1">// prints 1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="LN">
+<tt class="descname">LN</tt><big>(</big>a<big>)</big><a class="headerlink" href="#LN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the natural log of the provided number:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">LN</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span> <span class="c1">// prints 0.6931471805599453</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="LOG10">
+<tt class="descname">LOG10</tt><big>(</big>a<big>)</big><a class="headerlink" href="#LOG10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the log base 10 of the provided number:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">LOG10</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span> <span class="c1">// prints 0.30102999566398114</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="MOD">
+<tt class="descname">MOD</tt><big>(</big>a,b<big>)</big><a class="headerlink" href="#MOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns remainder from integer division:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">MOD</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span><span class="mi">6</span><span class="p">).</span> <span class="c1">// prints 3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="MIN">
+<tt class="descname">MIN</tt><big>(</big>a,b<big>)</big><a class="headerlink" href="#MIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns The lower of the two values:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">MIN</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">).</span> <span class="c1">// prints 0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="MAX">
+<tt class="descname">MAX</tt><big>(</big>a,b<big>)</big><a class="headerlink" href="#MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns The higher of the two values:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">MAX</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">).</span> <span class="c1">// prints 100</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ROUND">
+<tt class="descname">ROUND</tt><big>(</big>a<big>)</big><a class="headerlink" href="#ROUND" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rounds to the nearest whole number:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="mf">1.887</span><span class="p">).</span> <span class="c1">// prints 2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">ROUND</tt><big>(</big>a,b<big>)</big></dt>
+<dd><p>Rounds to the nearest place value:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ROUND</span><span class="p">(</span><span class="mf">1.887</span><span class="p">,</span><span class="mi">2</span><span class="p">).</span> <span class="c1">// prints 1.89</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SQRT">
+<tt class="descname">SQRT</tt><big>(</big>a<big>)</big><a class="headerlink" href="#SQRT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns square root:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">SQRT</span><span class="p">(</span><span class="mf">7.89</span><span class="p">).</span> <span class="c1">// prints 2.80891438103763</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="trig"></span><div class="section" id="trigonometric-functions">
+<span id="index-2"></span><h2>Trigonometric Functions<a class="headerlink" href="#trigonometric-functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#SIN" title="SIN function"><tt class="xref ks ks-func docutils literal"><span class="pre">SIN(a)</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#COS" title="COS function"><tt class="xref ks ks-func docutils literal"><span class="pre">COS(a)</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#TAN" title="TAN function"><tt class="xref ks ks-func docutils literal"><span class="pre">TAN(a)</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ARCSIN" title="ARCSIN function"><tt class="xref ks ks-func docutils literal"><span class="pre">ARCSIN(x)</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ARCCOS" title="ARCCOS function"><tt class="xref ks ks-func docutils literal"><span class="pre">ARCCOS(x)</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ARCTAN" title="ARCTAN function"><tt class="xref ks ks-func docutils literal"><span class="pre">ARCTAN(x)</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ARCTAN2" title="ARCTAN2 function"><tt class="xref ks ks-func docutils literal"><span class="pre">ARCTAN2(x,y)</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="SIN">
+<tt class="descname">SIN</tt><big>(</big>a<big>)</big><a class="headerlink" href="#SIN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; (deg) angle</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">sine of the angle</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">SIN</span><span class="p">(</span><span class="mi">6</span><span class="p">).</span> <span class="c1">// prints 0.10452846326</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="COS">
+<tt class="descname">COS</tt><big>(</big>a<big>)</big><a class="headerlink" href="#COS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; (deg) angle</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cosine of the angle</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">COS</span><span class="p">(</span><span class="mi">6</span><span class="p">).</span> <span class="c1">// prints 0.99452189536</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="TAN">
+<tt class="descname">TAN</tt><big>(</big>a<big>)</big><a class="headerlink" href="#TAN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; (deg) angle</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tangent of the angle</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">TAN</span><span class="p">(</span><span class="mi">6</span><span class="p">).</span> <span class="c1">// prints 0.10510423526</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ARCSIN">
+<tt class="descname">ARCSIN</tt><big>(</big>x<big>)</big><a class="headerlink" href="#ARCSIN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; (scalar)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose sine is x</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ARCSIN</span><span class="p">(</span><span class="mf">0.67</span><span class="p">).</span> <span class="c1">// prints 42.0670648</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ARCCOS">
+<tt class="descname">ARCCOS</tt><big>(</big>x<big>)</big><a class="headerlink" href="#ARCCOS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; (scalar)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose cosine is x</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ARCCOS</span><span class="p">(</span><span class="mf">0.67</span><span class="p">).</span> <span class="c1">// prints 47.9329352</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ARCTAN">
+<tt class="descname">ARCTAN</tt><big>(</big>x<big>)</big><a class="headerlink" href="#ARCTAN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; (scalar)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose tangent is x</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ARCTAN</span><span class="p">(</span><span class="mf">0.67</span><span class="p">).</span> <span class="c1">// prints 33.8220852</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ARCTAN2">
+<tt class="descname">ARCTAN2</tt><big>(</big>y,x<big>)</big><a class="headerlink" href="#ARCTAN2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>y</strong> &#8211; (scalar)</li>
+<li><strong>x</strong> &#8211; (scalar)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(deg) angle whose tangent is <span class="math">\(\frac{y}{x}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">ARCTAN2</span><span class="p">(</span><span class="mf">0.67</span><span class="p">,</span> <span class="mf">0.89</span><span class="p">).</span> <span class="c1">// prints 36.9727625</span>
+</pre></div>
+</div>
+<p>The two parameters resolve ambiguities when taking the arctangent. See the <a class="reference external" href="http://en.wikipedia.org/wiki/Atan2">wikipedia page about atan2</a> for more details.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vector.html" class="btn btn-neutral float-right" title="Vectors">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../math.html" class="btn btn-neutral" title="Mathematics and Basic Geometry"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

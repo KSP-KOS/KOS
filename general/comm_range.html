@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Communication Range For Remote Updates &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="General Topics" href="../general.html"/>
+        <link rel="next" title="The KerboScript Language" href="../language.html"/>
+        <link rel="prev" title="Ship Parts and PartModules" href="parts_and_partmodules.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../general.html">General Topics</a> &raquo;</li>
+      
+    <li>Communication Range For Remote Updates</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/general/comm_range.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="communication-range-for-remote-updates">
+<span id="comm-range"></span><h1>Communication Range For Remote Updates<a class="headerlink" href="#communication-range-for-remote-updates" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last deprecated">
+<p><span class="versionmodified">Deprecated since version 0.12.2: </span>The stock game and the future of this feature is still fuzzy, and will likely be related to RemoteTech2 in some way. If you don&#8217;t use RemoteTech2, then there will be no check for range anymore as of version 0.12.2. The following shortcuts are now used.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">COMMRANGE</span></tt></dt>
+<dd>always returns a Very Big Number, and</dd>
+<dt><tt class="docutils literal"><span class="pre">INRANGE</span></tt></dt>
+<dd>always returns true.</dd>
+</dl>
+<p>If you are using a version of <tt class="docutils literal"><span class="pre">kOS</span> <span class="pre">&gt;=</span> <span class="pre">0.12.2</span></tt>, then most of what this page says won&#8217;t be true.</p>
+</div>
+</div>
+<div class="section" id="communication-range-deprecated">
+<h2>Communication Range (Deprecated)<a class="headerlink" href="#communication-range-deprecated" title="Permalink to this headline">¶</a></h2>
+<p>Kerbin must be within CommRange of the vessel in order for the following operations to work:</p>
+<ul class="simple">
+<li>COPY a file from a local volume to Archive</li>
+<li>COPY a file from Archive to a local volume.</li>
+<li>LIST the files on the Archive.</li>
+</ul>
+<p>You can always find out whether or not the vessel is within transmission range of Kerbin using the following:</p>
+<ul class="simple">
+<li>PRINT COMMRANGE. // Shows a number, in meters.</li>
+<li>PRINT INCOMMRANGE. // Shows a boolean true/false, for whether or not
+you are in range.</li>
+</ul>
+<p>A future plan is to implement a feature that when the RemoteTech mod is installed, kOS will query RemoteTech to ask whether or not the vessel is in communications range, and allow RemoteTech to override the calculation described below.</p>
+<p>The system described below is meant to be used only when RemoteTech2 is not installed.</p>
+<div class="section" id="how-to-calculate-communications-range">
+<h3>How to calculate communications range<a class="headerlink" href="#how-to-calculate-communications-range" title="Permalink to this headline">¶</a></h3>
+<p>Communications range is decided by how many antennae are installed, and of what type. There are three categories of antenna:</p>
+<ul class="simple">
+<li>longAntenna: (The Communotron 16 &#8216;stick&#8217;)</li>
+<li>mediumDishAntenna: (The Comms DTS-M1)</li>
+<li>commDish: (The Communotron 88-88)</li>
+</ul>
+<p>The number of meters of range is decided by this formula:</p>
+<p>max range = ( (100,000 + L<a href="#id1"><span class="problematic" id="id2">*</span></a>1,000,000) <a href="#id3"><span class="problematic" id="id4">*</span></a>100^M * 200^D ) meters Where: * L = number of longAntenna&#8217;s on the vessel. * M = number of mediumDishAntenna&#8217;s on the vessel. * D = number of commDish&#8217;s on the vessel.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="9%" />
+<col width="6%" />
+<col width="25%" />
+<col width="54%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3">No. of Antennae</th>
+<th class="head" rowspan="2">Max range</th>
+<th class="head" rowspan="2">Context for comparison</th>
+</tr>
+<tr class="row-even"><th class="head">Long</th>
+<th class="head">Medium
+Dish</th>
+<th class="head">Dish</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1100 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>0</td>
+<td>0</td>
+<td>2100 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>1</td>
+<td>0</td>
+<td>10,000 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>0</td>
+<td>1</td>
+<td>20,000 km</td>
+<td>Mun-to-Kerbin = 12,000 km</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>0</td>
+<td>1</td>
+<td>220,000 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>0</td>
+<td>1</td>
+<td>420,000 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>2</td>
+<td>0</td>
+<td>1,000,000 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>0</td>
+<td>2</td>
+<td>4,000,000 km</td>
+<td>Almost the closest distance
+Moho gets to the Sun</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>1</td>
+<td>1</td>
+<td>22,000,000 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>0</td>
+<td>2</td>
+<td>44,000,000 km</td>
+<td>A bit bigger than the &#8216;diameter&#8217;
+of Duna&#8217;s orbit of the Sun</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>0</td>
+<td>2</td>
+<td>84,000,000 km</td>
+<td>A bit bigger than the biggest
+distance between Jool and the Sun</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>0</td>
+<td>2</td>
+<td>124,000,000 km</td>
+<td>A bit bigger than the biggest
+distance between Eeloo and the Sun</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2,200,000,000 km</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>0</td>
+<td>3</td>
+<td>8,800,000,000 km</td>
+<td>Larger than any distance in the
+Kerbal system</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../language.html" class="btn btn-neutral float-right" title="The KerboScript Language">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="parts_and_partmodules.html" class="btn btn-neutral" title="Ship Parts and PartModules"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
