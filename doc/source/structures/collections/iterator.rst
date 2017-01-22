@@ -3,7 +3,14 @@
 Iterator
 ========
 
-An iterator can be obtained from :attr:`List:ITERATOR`. Once a :struct:`List` has given you an :struct:`Iterator` object, you can use it to access elements inside the :struct:`List`. An ITERATOR is a `generic computer programming concept <http://en.wikipedia.org/wiki/Iterator>`__. In the general case it's a variable type that allows you to get the value at a position in some collection, as well as increment to the next item in the collection in order to operate on all objects in the collection one at a time. In kOS it operates on :struct:`Lists <List>`.
+An iterator can be obtained from :attr:`List:ITERATOR` as well as from other places.
+An ITERATOR is a
+`generic computer programming concept <http://en.wikipedia.org/wiki/Iterator>`__.
+In the general case it's a variable type that allows you to get
+the value at a position in some collection, as well as increment
+to the next item in the collection in order to operate on all
+objects in the collection one at a time. In kOS it operates
+on :struct:`Lists <List>` and most other collection types.
 
 A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
 
@@ -42,7 +49,7 @@ Which would result in this output::
 
         * - :meth:`RESET`
           -
-          - Rewind to the just before the beginning
+          - Rewind to the just before the beginning.  NOTE: MIGHT NOT BE SUPPORTED.
         * - :meth:`NEXT`
           - :ref:`boolean <boolean>`
           - Move iterator to the next item
@@ -60,6 +67,11 @@ Which would result in this output::
 .. method:: Iterator:RESET
 
     Call this to rewind the iterator to just before the beginning of the list. After a call to :meth:`Iterator:RESET`, the iterator must be moved with :meth:`Iterator:NEXT` before it gets to the first value in the list.
+
+    .. note::
+
+        Not all ``ITERATOR`` types are capable of performing a RESET operation.  Several of them
+        don't implement this.  You might get the NotSupportedException error when you try using this.
 
 .. method:: Iterator:NEXT
 

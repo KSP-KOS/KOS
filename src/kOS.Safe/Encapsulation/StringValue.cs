@@ -262,7 +262,7 @@ namespace kOS.Safe.Encapsulation
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
             AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));
             AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<ScalarValue, StringValue>   ( s => LastIndexOf(s)));
-
+            AddSuffix ("ITERATOR", new NoArgsSuffix<Enumerator>( () => new Enumerator(GetEnumerator()) ));
         }
 
         public static bool operator ==(StringValue val1, StringValue val2)
