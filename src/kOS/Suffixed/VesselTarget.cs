@@ -15,13 +15,17 @@ using kOS.Communication;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
 using kOS.Safe;
+using kOS.Safe.Execution;
 
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Vessel")]
-    public class VesselTarget : Orbitable, IKOSTargetable
+    public class VesselTarget : Orbitable, IKOSTargetable, IKOSScopeObserver
     {
         private static string DumpGuid = "guid";
+
+        private ListValue cachedParts = new ListValue();
+        private bool cachedPartsAreStale = true;
 
         public override Orbit Orbit { get { return Vessel.orbit; } }
 
@@ -203,19 +207,48 @@ namespace kOS.Suffixed
 
         public VesselTarget()
         {
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         public VesselTarget(Vessel target, SharedObjects shared)
             : base(shared)
         {
             Vessel = target;
-            InitializeSuffixes();
+            HookEvents();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         public VesselTarget(SharedObjects shared)
             : this(shared.Vessel, shared)
         {
+        }
+
+        public void HookEvents()
+        {
+            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
+            GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
+        }
+
+        public void UnhookEvents()
+        {
+            GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
+            GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
+        }
+
+        public void OnVesselDestroy(Vessel v)
+        {
+            if (Vessel.Equals(v))
+            {
+                UnhookEvents();
+                Vessel = null;
+            }
+        }
+
+        public void OnVesselPartCountChanged(Vessel v)
+        {
+            cachedParts.Clear();
+            cachedPartsAreStale = true;
+            GetAllParts();
         }
 
         private Vessel CurrentVessel { get { return Shared.Vessel; } }
@@ -236,6 +269,20 @@ namespace kOS.Suffixed
 
         public static string[] ShortCuttableShipSuffixes { get; private set; }
 
+        private int linkCount = 0;
+        public int LinkCount
+        {
+            get
+            {
+                return linkCount; }
+            set
+            {
+                linkCount = value;
+                if (linkCount <= 0)
+                    ScopeLost();
+            }
+        }
+
         public override string ToString()
         {
             return "SHIP(\"" + Vessel.vesselName + "\")";
@@ -243,7 +290,20 @@ namespace kOS.Suffixed
 
         public ListValue GetAllParts()
         {
-            return PartValueFactory.Construct(Vessel.Parts, Shared);
+            if (cachedPartsAreStale)
+            {
+                cachedParts.Clear();
+                for (int i = 0; i < Vessel.Parts.Count; ++i)
+                {
+                    var part = Vessel.Parts[i];
+                    if (part.State != PartStates.DEAD && part.transform != null)
+                    {
+                        cachedParts.Add(PartValueFactory.Construct(Vessel.Parts[i], Shared));
+                    }
+                }
+                cachedPartsAreStale = false;
+            }
+            return cachedParts;
         }
 
         private ListValue GetPartsDubbed(StringValue searchTerm)
@@ -653,6 +713,11 @@ namespace kOS.Suffixed
             }
 
             Vessel = vessel;
+        }
+
+        public void ScopeLost()
+        {
+            UnhookEvents();
         }
     }
 }

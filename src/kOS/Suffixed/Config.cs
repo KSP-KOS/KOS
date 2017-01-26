@@ -33,8 +33,8 @@ namespace kOS.Suffixed
 
         private Config()
         {
-            keys = new Dictionary<string, ConfigKey>();
-            alias = new Dictionary<string, ConfigKey>();
+            keys = new Dictionary<string, ConfigKey>(StringComparer.OrdinalIgnoreCase);
+            alias = new Dictionary<string, ConfigKey>(StringComparer.OrdinalIgnoreCase);
             properties = new Dictionary<PropId, ConfigKey>();
             InitializeSuffixes();
             BuildValuesDictionary();

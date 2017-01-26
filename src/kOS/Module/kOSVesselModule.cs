@@ -243,7 +243,7 @@ namespace kOS.Module
             // "Require Signal for Control" is enabled.  It's very hacky, and my have unexpected results.
             if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
             {
-                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
             }
         }
@@ -257,7 +257,7 @@ namespace kOS.Module
 
             if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
             {
-                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
             }
         }
@@ -280,17 +280,20 @@ namespace kOS.Module
             }
         }
 
-        private void cacheControllable()
+        private void CacheControllable()
         {
-            if (commNetParams == null)
+            if (commNetParams == null && HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null)
                 commNetParams = HighLogic.CurrentGame.Parameters.CustomParams<CommNet.CommNetParams>();
             if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
             {
                 // HACK: Get around inability to affect throttle if connection is lost and require
                 if (isControllableField == null)
                     isControllableField = parentVessel.GetType().GetField("isControllable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                isControllableField.SetValue(parentVessel, true);
-                workAroundControllable = true;
+                if (isControllableField != null) // given the above line, this shouldn't be null unless the KSP version changed.
+                {
+                    isControllableField.SetValue(parentVessel, true);
+                    workAroundControllable = true;
+                }
             }
             else
             {

@@ -671,7 +671,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            string suffixName = cpu.PopStack().ToString().ToUpper();
+            string suffixName = cpu.PopStack().ToString();
             object popValue = cpu.PopValueEncapsulated();
 
             var specialValue = popValue as ISuffixed;
@@ -744,7 +744,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             Structure value = cpu.PopStructureEncapsulated();         // new value to set it to
-            string suffixName = cpu.PopStack().ToString().ToUpper();  // name of suffix being set
+            string suffixName = cpu.PopStack().ToString();            // name of suffix being set
             Structure popValue = cpu.PopStructureEncapsulated();      // object to which the suffix is attached.
 
             // We aren't converting the popValue to a Scalar, Boolean, or String structure here because

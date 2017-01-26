@@ -21,6 +21,7 @@ namespace kOS.Suffixed
         private LineRenderer line;
         private LineRenderer hat;
         private bool enable;
+        private bool scopeLost = false;
         private readonly UpdateHandler updateHandler;
         private readonly SharedObjects shared;
         private GameObject lineObj;
@@ -74,7 +75,13 @@ namespace kOS.Suffixed
             // (Note that if I didn't do this,
             // then as far as C# thinks, I wouldn't be orphaned because
             // UpdateHandler is holding a reference to me.)
-            SetShow(false);
+
+            // Store the information about lost scope to be checked in the KOSUpdate method
+            // because Unity complains if we try to set visual element visibility from
+            // outside of the main thread.  That isn't a problem most of the time, but the
+            // finalizer method called by the GC (see Variable.cs ~Variable method) is
+            // apparently called from another thread, or at least Unity thinks it is.
+            scopeLost = true;
         }
 
         /// <summary>Make all vector renderers invisible everywhere in the kOS module.</summary>
@@ -101,6 +108,11 @@ namespace kOS.Suffixed
         public void KOSUpdate(double deltaTime)
         {
             if (line == null || hat == null) return;
+            if (scopeLost) // TODO: When collection scope tracking is fixed, we can simply check the link count instead
+            {
+                SetShow(false);
+                scopeLost = false; // Clear the flag just in case something still has a reference to this object
+            }
             if (!enable) return;
 
             GetCamData();

@@ -19,14 +19,20 @@ namespace kOS
         public SharedObjects()
         {
             AllVoiceValues = new Dictionary<int, VoiceValue>();
-            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
         }
 
-        private void OnVesselDestroy(Vessel data)
+        public void DestroyObjects()
         {
-            if (data.id == Vessel.id)
+            if (BindingMgr != null) { BindingMgr.Dispose(); }
+            if (Window != null) { UnityEngine.Object.Destroy(Window); }
+            if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
+            var props = typeof(SharedObjects).GetProperties();
+            foreach (var prop in props)
             {
-                BindingMgr.Dispose();
+                if (!prop.PropertyType.IsValueType)
+                {
+                    prop.SetValue(this, null, null);
+                }
             }
         }
     }

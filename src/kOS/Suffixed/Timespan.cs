@@ -141,6 +141,11 @@ namespace kOS.Suffixed
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return span.GetHashCode();
+        }
+
         public static bool operator ==(TimeSpan a, TimeSpan b)
         {
             Type compareType = typeof(TimeSpan);
