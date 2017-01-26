@@ -99,6 +99,7 @@ namespace kOS.Sound
             // but if the user has set a note to play for 60s the effects of calling Stop may not be seen immediately.
             // So we stop the underlying voice too.
             voice.Stop();
+            curNote = null;
         }
 
         public void KOSUpdate(double deltaTime)
@@ -128,8 +129,8 @@ namespace kOS.Sound
                 }
             }
 
-            // If still playing prev note, do nothing except maybe change
-            // its frequency if it's a slidenote:
+            // If still playing prev note, return, doing nothing except maybe changing
+            // the current note's frequency if it's a slidenote:
             if (now < noteEndTimeStamp)
             {
                 NoteValue note = song[noteNum] as NoteValue;
@@ -142,29 +143,81 @@ namespace kOS.Sound
                 return;
             }
 
-            // Increment to next note and start playing it:
-            ++noteNum;
-            if (noteNum >= song.Count())
+            AdvanceNote(now);
+        }
+        
+        /// <summary>
+        /// Advance until finding a note that is within the current timestamp,
+        /// and start playing it.
+        /// <br/><br/>
+        /// This takes into account that under laggy conditions
+        /// our physics updates might be coming too infrequently to hit every note on time.
+        /// This will advance to where we *should have been* in the song list by now,
+        /// by calculating based on how long the notes were *supppsed* to have
+        /// lasted and when they were *suppposed* to have ended.
+        /// <br/><br/>
+        /// This might mean that a note gets its duration shorted to "catch up", or even
+        /// that a note gets skipped entirely in order to "catch up".
+        /// This is necessary to keep the voices of multi-voice songs synced up with each other.
+        /// <br/><br/>
+        /// If there is no next note and the voice isn't in looping mode,
+        /// it will set isPlaying to false.
+        /// <br/>
+        /// </summary>
+        /// <param name="now">timestamp for current time right now</param>
+        private void AdvanceNote(float now)
+        {
+            // Keep advancing through the notes list until we get to a note
+            // that should have been executing at the current time:
+            while (now > noteEndTimeStamp)
             {
+                NoteValue prevNote = curNote;
+                ++noteNum;
                 if (loop)
+                    noteNum = noteNum % song.Count(); // wraparound to zero if looping and past end.
+                if (noteNum >= song.Count())
                 {
-                    noteNum = -1;
-                    noteEndTimeStamp = -1f;
+                    isPlaying = false; // stop if past end.
+                    curNote = null;
+                    break;
+                }
+
+                // Advancing the note:
+                // -------------------
+                curNote = song[noteNum] as NoteValue;
+                if (curNote == null)
+                    return;
+                if (prevNote == null)
+                {
+                    // No prev note, so start first note at right now:
+                    noteStartTimeStamp = now;
                 }
                 else
-                    IsPlaying = false;
-            }
-            else
-            {
-                curNote = song[noteNum] as NoteValue;
-                if (curNote != null)
                 {
-                    noteStartTimeStamp = now;
-                    noteEndTimeStamp = now + tempo*curNote.Duration;
-                    noteFreqTotalChange = curNote.EndFrequency - curNote.Frequency;
-                    voice.BeginProceduralSound(curNote.Frequency, tempo*curNote.KeyDownLength, curNote.Volume);
+                    // Don't set start time to now, but rather set it to when this note
+                    // *should* have started if the physics update had hit at the right time:
+                    noteStartTimeStamp = noteStartTimeStamp + tempo*prevNote.Duration;
                 }
+
+                noteEndTimeStamp = noteStartTimeStamp + tempo*curNote.Duration;
+                noteFreqTotalChange = curNote.EndFrequency - curNote.Frequency;
             }
+
+            // Now play the note we had advanced to:
+            if (isPlaying)
+                voice.BeginProceduralSound(curNote.Frequency, tempo*curNote.KeyDownLength, curNote.Volume);
+
+            // Be aware that because we told the low level sound chip to start this note *now*, but we
+            // tracked our own start time (noteStartTimeStamp) as when the note *should* have started,
+            // that the low level sound chip will start the ADSR envelope now, rather than partway through
+            // the middle of the envelope.  This means that if a note has to get "shorted" to catch up,
+            // then the "shorted" part of the note that gets cut off will be the *end* of that note,
+            // not the *start* of it.  Thus if the ADSR envelope makes short staccato notes with fast
+            // attack and decay with no sustain, we won't end up silencing the note entirely when it's
+            // shorted.  (We would if we had cut off the start of the note and kept the end of it that
+            // occurs after the attack and the decay are over.).
+            // TL;DR : If we have to play a short duration version of the note, we'd rather snip off the
+            // release part at the end then snip off the attack/decay part at the start.
         }
 
         public void Dispose()
