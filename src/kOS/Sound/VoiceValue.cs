@@ -198,25 +198,25 @@ namespace kOS.Sound
                     // *should* have started if the physics update had hit at the right time:
                     noteStartTimeStamp = noteStartTimeStamp + tempo*prevNote.Duration;
                 }
-                
+
                 noteEndTimeStamp = noteStartTimeStamp + tempo*curNote.Duration;
                 noteFreqTotalChange = curNote.EndFrequency - curNote.Frequency;
             }
-            
+
             // Now play the note we had advanced to:
             if (isPlaying)
                 voice.BeginProceduralSound(curNote.Frequency, tempo*curNote.KeyDownLength, curNote.Volume);
-            
+
             // Be aware that because we told the low level sound chip to start this note *now*, but we
             // tracked our own start time (noteStartTimeStamp) as when the note *should* have started,
             // that the low level sound chip will start the ADSR envelope now, rather than partway through
             // the middle of the envelope.  This means that if a note has to get "shorted" to catch up,
             // then the "shorted" part of the note that gets cut off will be the *end* of that note,
             // not the *start* of it.  Thus if the ADSR envelope makes short staccato notes with fast
-            // attack and decay with no sustain, we won't end up selencing the note entirely when it's
+            // attack and decay with no sustain, we won't end up silencing the note entirely when it's
             // shorted.  (We would if we had cut off the start of the note and kept the end of it that
             // occurs after the attack and the decay are over.).
-            // TL;DR : If we have to play a short duration version of the note, we'd rather snip ff the
+            // TL;DR : If we have to play a short duration version of the note, we'd rather snip off the
             // release part at the end then snip off the attack/decay part at the start.
         }
 
