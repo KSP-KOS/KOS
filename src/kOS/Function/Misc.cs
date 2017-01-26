@@ -471,7 +471,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             // How many milliseconds of extra sleep to cause?
-            int ms = Convert.ToInt32(PopValueAssert(shared));
+            int ms = GetInt(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             System.Threading.Thread.Sleep(ms);
         }
