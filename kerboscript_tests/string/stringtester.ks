@@ -19,7 +19,7 @@ PRINT "INSERT(7, ''Big ''):           " + s:INSERT(7, "Big ").  // Hello, Big St
 PRINT " ".
 PRINT "                               |------ 18 ------|".
 PRINT "PADLEFT(18):                   " + s:PADLEFT(18).        //    Hello, Strings!
-PRINT "PADRIGHT(18):                  " + s:PADRIGHT(18).       // Hello, Strings!   
+PRINT "PADRIGHT(18):                  " + s:PADRIGHT(18).       // Hello, Strings!
 PRINT " ".
 
 PRINT "REMOVE(1, 3):                  " + s:REMOVE(1, 3).               // Ho, Strings!
@@ -30,7 +30,7 @@ PRINT "TOUPPER:                       " + s:TOUPPER().                  // HELLO
 PRINT "TOLOWER:                       " + s:TOLOWER().                  // hello, strings!
 PRINT " ".
 PRINT "''  Hello!  '':TRIM():         " + "  Hello!  ":TRIM().          // Hello!
-PRINT "''  Hello!  '':TRIMSTART():    " + "  Hello!  ":TRIMSTART().     // Hello!  
+PRINT "''  Hello!  '':TRIMSTART():    " + "  Hello!  ":TRIMSTART().     // Hello!
 PRINT "''  Hello!  '':TRIMEND():      " + "  Hello!  ":TRIMEND().       //   Hello!
 PRINT " ".
 PRINT "Chained: " + "Hello!":SUBSTRING(0, 4):TOUPPER():REPLACE("ELL", "ELEPHANT").  // HELEPHANT
@@ -76,3 +76,12 @@ PRINT "Test: different value, int, note string, not number compare:".
 comparetest("123", 1000).
 PRINT "Test: different value, double, note string, not number compare:".
 comparetest("123.456", 1000.456).
+function iterateTest {
+    parameter str.
+    print "Iterate through the string:".
+    print "  " + str.
+    for ch in str {
+        print ch.
+    }
+}
+iterateTest("abcd").

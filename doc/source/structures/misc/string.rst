@@ -33,7 +33,7 @@ Using an Iterator (FOR)
 
 Strings can be treated a little bit like iterable lists
 of characters. This allows them to be used in FOR loops
-as in the example below:
+as in the example below::
 
   LOCAL str is "abcde".
 
@@ -278,7 +278,7 @@ Structure
 
     Returns a new string with the given string inserted at the given index into this string
 
-.. attribute:: Enumerable:ITERATOR
+.. attribute:: String:ITERATOR
 
     :type: :struct:`Iterator`
     :access: Get only
