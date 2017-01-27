@@ -55,7 +55,7 @@ These return predicted information about the future position and velocity of an 
     :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
     :type time:     :struct:`TimeSpan`
-    :return: An :ref:`ObitalVelocity <orbitablevelocity>` structure.
+    :return: An :ref:`OrbitalVelocity <orbitablevelocity>` structure.
 
     Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
 

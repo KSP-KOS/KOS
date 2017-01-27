@@ -167,6 +167,23 @@ namespace kOS.Function
         }
     }
 
+    [Function("orbit")]
+    public class FunctionOrbit : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var when = GetTimeSpan(PopValueAssert(shared));
+            var body = (BodyTarget) PopValueAssert(shared);
+            if (body == null)
+                throw new KOSInvalidArgumentException("orbit", "body", "no body found");
+            Vector vel = GetVector(PopValueAssert(shared));
+            Vector pos = GetVector(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            var result = new OrbitInfo(pos, vel, body, when.ToUnixStyleTime(), shared);
+            ReturnValue = result;
+        }
+    }
+
     [Function("heading")]
     public class FunctionHeading : FunctionBase
     {
@@ -460,7 +477,7 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
             DoExecuteWork(shared, start, vec, rgba, str, scale, show, width);
         }
-        
+
         public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width)
         {
             var vRend = new VectorRenderer( shared.UpdateHandler, shared )
@@ -473,7 +490,7 @@ namespace kOS.Function
                 };
             vRend.SetLabel( str );
             vRend.SetShow( show );
-            
+
             ReturnValue = vRend;
         }
     }
@@ -487,7 +504,7 @@ namespace kOS.Function
             VectorRenderer.ClearAll(shared.UpdateHandler);
         }
     }
-    
+
     [Function("positionat")]
     public class FunctionPositionAt : FunctionBase
     {
@@ -539,7 +556,7 @@ namespace kOS.Function
             ReturnValue = new OrbitInfo( what.GetOrbitAtUT(when.ToUnixStyleTime()), shared );
         }
     }
-    
+
     [Function("career")]
     public class FunctionCareer : FunctionBase
     {
@@ -549,7 +566,7 @@ namespace kOS.Function
             ReturnValue = new Career();
         }
     }
-    
+
     [Function("constant")]
     public class FunctionConstant : FunctionBase
     {
@@ -559,14 +576,14 @@ namespace kOS.Function
             ReturnValue = new ConstantValue();
         }
     }
-    
+
     [Function("allwaypoints")]
     public class FunctionAllWaypoints : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
             AssertArgBottomAndConsume(shared); // no args
-            
+
             // ReSharper disable SuggestUseVarKeywordEvident
             ListValue<WaypointValue> returnList = new ListValue<WaypointValue>();
             // ReSharper enable SuggestUseVarKeywordEvident
@@ -589,7 +606,7 @@ namespace kOS.Function
             ReturnValue = returnList;
         }
     }
-    
+
     [Function("waypoint")]
     public class FunctionWaypoint : FunctionBase
     {
@@ -606,7 +623,7 @@ namespace kOS.Function
             // first time a contract with a waypoint is created).
             if (wpm == null)
                 throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints exist");
-            
+
             string baseName;
             int index;
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
@@ -614,7 +631,7 @@ namespace kOS.Function
                 pointName = baseName;
             Waypoint point = wpm.Waypoints.FirstOrDefault(
                 p => string.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
-            
+
             // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
             // nulls), so bomb out here:
             if (point ==null)

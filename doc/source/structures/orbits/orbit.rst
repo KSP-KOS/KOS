@@ -17,6 +17,31 @@ Whenever you get the :struct:`Orbit` of a :struct:`Vessel`, be aware that its ju
 
     Some of the parameters listed here come directly from KSP's API and there is a bit of inconsistency with whether it uses radians or degrees for angles. As much as possible we have tried to present everything in kOS as degrees for consistency, but some of these may have slipped through. If you see any of these being reported in radians, please make a bug report.
 
+
+Creation
+--------
+
+.. function:: ORBIT(x, v, body, t)
+
+    :parameter x: (vector) position at time t in the :ref:`ship-center-raw-rotation <ship-raw>` frame
+    :parameter v: (vetor) velocity at time t
+    :parameter body: (CelstialBody) central body of orbit
+    :parameter t: (scalar) universal time
+    :return: :struct:`Orbit`
+
+    This creates a new user defined orbit (for predictive/calculation purposes) around a body given the position and velocity
+    at a given time.  The vectors are in the ref:`ship-center-raw-rotation <ship-raw>` frame.  This makes it easy to
+    recover (or perturb) an orbit based on a given position and velocity:
+
+        SET t TO TIME:SECONDS + 100.
+        SET o TO ORBIT( obt:velocityat(t):orbit, obt:positionat(t), body, t ).
+
+    Here, a new :struct:`Orbit` called ``o`` is created that should be very nearly equal to the current orbit.
+
+    To create an orbit based on the position (r) and velocity (v) from the center of the body a translation is required:
+
+        SET o TO ORBIT( r + body:position, v, body, TIME:SECONDS ).
+
 Structure
 ---------
 
@@ -78,9 +103,15 @@ Structure
         * - :attr:`POSITION`
           - :struct:`Vector`
           - The current position
+        * - :attr:`POSITIONAT(time)`
+          - :struct:`Vector`
+          - The position at the given time
         * - :attr:`VELOCITY`
           - :struct:`Vector`
           - The current velocity
+        * - :attr:`VELOCITYAT(time)`
+          - :struct:`Vector`
+          - The velocity at the given time
         * - :attr:`NEXTPATCH`
           - :struct:`Orbit`
           - Next :struct:`Orbit`
@@ -214,15 +245,41 @@ Structure
 
     :type: :struct:`Vector`
     :access: Get only
+    :return:        A position :struct:`Vector` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
 
-    The current position of whatever the object is that is in this orbit.
+    The current position of whatever the object is that is in this orbit.  This vector is relative to the :ref:`ship-center-raw-rotation <ship-raw>` frame.  It
+    may be more useful to subtract the orbit:body:position before using it to convert to a body-centric position.
+
+.. attribute:: Orbit:POSITIONAT
+
+    :type: :struct:`Vector`
+    :param time:    Time of prediction
+    :type time:     :struct:`TimeSpan`
+    :access: Get only
+    :return:        A position :struct:`Vector` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
+
+    Returns a prediction of where the object will be at some :ref:`universal Timestamp <timestamp>`.  This vector is relative to the
+    :ref:`ship-center-raw-rotation <ship-raw>` frame (at the current time).  It may be more useful to subtract the orbit:body:position before
+    using it to conver to a body-centric position.  This prediction does not take into account future maneuver nodes.
 
 .. attribute:: Orbit:VELOCITY
 
-    :type: :struct:`Vector`
+    :type: :struct:`OrbitalVelocity`
     :access: Get only
+    :return:        An :ref:`OrbitalVelocity <orbitablevelocity>` structure.
 
     The current velocity of whatever the object is that is in this orbit.
+
+.. attribute:: Orbit:VELOCITYAT
+
+    :type: :struct:`OrbitalVelocity`
+    :param time:    Time of prediction
+    :type time:     :struct:`TimeSpan`
+    :access: Get only
+    :return:        An :ref:`OrbitalVelocity <orbitablevelocity>` structure.
+
+    Returns a prediction of what the velocity of the object will be at some :ref:`universal Timestamp <timestamp>`.  This prediction does not take into account
+    future maneuver nodes.
 
 .. attribute:: Orbit:NEXTPATCH
 
