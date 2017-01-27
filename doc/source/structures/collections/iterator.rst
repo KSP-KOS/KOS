@@ -3,7 +3,14 @@
 Iterator
 ========
 
-An iterator can be obtained from :attr:`List:ITERATOR`. Once a :struct:`List` has given you an :struct:`Iterator` object, you can use it to access elements inside the :struct:`List`. An ITERATOR is a `generic computer programming concept <http://en.wikipedia.org/wiki/Iterator>`__. In the general case it's a variable type that allows you to get the value at a position in some collection, as well as increment to the next item in the collection in order to operate on all objects in the collection one at a time. In kOS it operates on :struct:`Lists <List>`.
+An iterator can be obtained from :attr:`List:ITERATOR` as well as from other places.
+An ITERATOR is a
+`generic computer programming concept <http://en.wikipedia.org/wiki/Iterator>`__.
+In the general case it's a variable type that allows you to get
+the value at a position in some collection, as well as increment
+to the next item in the collection in order to operate on all
+objects in the collection one at a time. In kOS it operates
+on :struct:`Lists <List>` and most other collection types.
 
 A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
 
@@ -12,8 +19,7 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
 
     // It could be looped over like this
     SET MyCurrent TO MyList:ITERATOR.
-    MyCurrent:RESET().
-    PRINT "After reset, position = " + MyCurrent:INDEX.
+    PRINT "before the first NEXT, position = " + MyCurrent:INDEX.
     UNTIL NOT MyCurrent:NEXT {
         PRINT "Item at position " + MyIter:INDEX + " is [" + MyIter:VALUE + "].".
     }
@@ -22,10 +28,30 @@ A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
 
 Which would result in this output::
 
-    After reset, position = -1.
+    before the first NEXT, position = -1.
     Item at position 0 is [Hello].
     Item at position 1 is [Aloha].
     Item at position 2 is [Bonjour].
+
+When you first create an iterator by using an ITERATOR suffix of some collection
+type like :struct:`List`, :struct:`List`, or even :struct:`String`, the
+initial position of the index is always -1, and the current value is always
+invalid.  This represents a position just *before the start* of the list of
+items.  Only after the first time :attr:`NEXT` is called does the value of
+:attr:`VALUE` become usable as the first thing in the collection.
+
+Rewinding No Longer Supported
+-----------------------------
+
+.. note::
+
+    There used to be a :RESET method for iterators, but it has been
+    removed as it was not always implemented and sometimes gave an
+    error.  Now to start the enumeration over you need to obtain a
+    new iterator.
+
+Members
+-------
 
 .. highlight:: kerboscript
 
@@ -41,8 +67,8 @@ Which would result in this output::
 
 
         * - :meth:`RESET`
-          -
-          - Rewind to the just before the beginning
+          - n/a
+          - (This method has been removed)
         * - :meth:`NEXT`
           - :ref:`boolean <boolean>`
           - Move iterator to the next item
@@ -59,7 +85,20 @@ Which would result in this output::
 
 .. method:: Iterator:RESET
 
-    Call this to rewind the iterator to just before the beginning of the list. After a call to :meth:`Iterator:RESET`, the iterator must be moved with :meth:`Iterator:NEXT` before it gets to the first value in the list.
+    :returns: n/a
+
+    This suffix has been deleted from kOS.
+
+    .. note::
+
+        Previous versions of kOS had a ``:RESET`` suffix for Iterators.  This doesn't
+        exist anymore and is being left in the documentation here just so people trying
+        to search for it will find this message explaining where it went.  kOS had to
+        drop it because it's no longer as easy to implement it under the hood with
+        newer versions of .Net.
+
+    (If you want to restart an iteration you must call the ``:ITERATOR`` suffix of
+    the collection again to obtain a new iterator.)
 
 .. method:: Iterator:NEXT
 
@@ -83,7 +122,7 @@ Which would result in this output::
 
     .. note::
 
-        If you have just used :meth:`Iterator:RESET` or have just created the ITERATOR, then the value of :attr:`Iterator:INDEX` is -1. It only becomes 0 after the first call to :meth:`Iterator:NEXT`.
+        If you have just created the ITERATOR, then the value of :attr:`Iterator:INDEX` is -1. It only becomes 0 after the first call to :meth:`Iterator:NEXT`.
 
 .. attribute:: Iterator:VALUE
 

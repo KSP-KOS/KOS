@@ -22,13 +22,55 @@ of existing strings. For example::
     SET s TO "Hello, Strings!".
     SET t TO s:REPLACE("Hello", "Goodbye").
 
-Strings are iterable. This scripts prints the string's characters one per line::
+ACCESSING INDIVIDUAL CHARACTERS
+-------------------------------
 
-  SET str TO "abcde".
+There's two main ways to access the individual characters
+of a string - using an iterator or using index numbers:
+
+Using an Iterator (FOR)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Strings can be treated a little bit like iterable lists
+of characters. This allows them to be used in FOR loops
+as in the example below::
+
+  LOCAL str is "abcde".
 
   FOR c IN str {
-    PRINT c.
+    PRINT c.  // prints "a" the first time, then "b", etc.
   }
+
+The reason you can use Strings with the FOR loop like this is
+because you can obatain an :struct:`Iterator` of a string with the
+:attr:`ITERATOR` suffix mentioned below.  (Any type that
+implements the ITERATOR suffix can do this.)
+
+Using an Index ( [i] )
+~~~~~~~~~~~~~~~~~~~~~~
+
+Strings can also be treated a little bit like lists in that
+they allow you to use the square-brackets operator `[`..`]`
+to choose one character by its index number (numbers start
+counting at zero).  Here's an example that does the same thing
+as the FOR loop above, but using index notation::
+
+  LOCAL str is "abcde".
+  local index is 0.
+  until index = str:LENGTH {
+    print str[index].
+    set index to index + 1.
+  }
+
+Be aware that despite being able to read the characters this way,
+you cannot set them this way.  The following will give
+an error::
+
+  LOCAL str is "abcde".
+
+  // The following line gives an error because you can't
+  // change the characters inside a string:
+  set str[0] to "X".
 
 Boolean Operators
 -----------------
@@ -104,10 +146,10 @@ Structure
           - Description
 
         * - :meth:`CONTAINS(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if the given string is contained within this string
         * - :meth:`ENDSWITH(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if this string ends with the given string
         * - :meth:`FIND(string)`
           - :struct:`Scalar`
@@ -127,6 +169,9 @@ Structure
         * - :meth:`INSERT(index, string)`
           - :struct:`String`
           - Returns a new string with the given string inserted at the given index into this string
+        * - :attr:`ITERATOR`
+          - :struct:`Iterator`
+          - generates an iterator object the elements
         * - :meth:`LASTINDEXOF(string)`
           - :struct:`Scalar`
           - Alias for FINDLAST(string)
@@ -149,7 +194,7 @@ Structure
           - :struct:`String`
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if this string starts with the given string
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
@@ -180,14 +225,14 @@ Structure
 .. method:: String:CONTAINS(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if this string ends with the given string.
 
@@ -232,6 +277,18 @@ Structure
     :type: :struct:`String`
 
     Returns a new string with the given string inserted at the given index into this string
+
+.. attribute:: String:ITERATOR
+
+    :type: :struct:`Iterator`
+    :access: Get only
+
+    An alternate means of iterating over a string's characters
+    (See: :struct:`Iterator`).
+
+    For most programs you won't have to use this directly.  It's just
+    what enables you to use a string with a FOR loop to get access
+    to its characters one at a time.
 
 .. method:: String:LASTINDEXOF(string)
 
@@ -285,7 +342,7 @@ Structure
 .. method:: String:STARTSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if this string starts with the given string .
 
@@ -375,7 +432,7 @@ Structure
        set val to str:tonumber().  // the script dies with error here.
        print "value is " + val. // the script never gets this far.
 
-.. method:: String:TONUMBER(defaultIfError)
+.. method:: String:TOSCALAR(defaultIfError)
 
     Alias for :meth:`String:TONUMBER(defaultIfError)`
 
