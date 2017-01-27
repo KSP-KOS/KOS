@@ -112,7 +112,7 @@ namespace kOS.Sound
         {
             if (! waveGenerators.ContainsKey(waveName))
                 return false;
-            if (num < 0 || num > waveGenerators.Count)
+            if (num < 0 || num >= voices.Length)
                 return false;
 
             voices[num].SetWave(waveGenerators[waveName]);
