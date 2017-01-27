@@ -125,6 +125,14 @@ namespace kOS.Suffixed
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            // just returning a randomly selected constant hash value
+            // since the class is mutable, so we cannot rely on X, Y, or Z
+            // remaining constant for the entire object life
+            return ~23; // bitwise complement "23"... just cause
+        }
+
         public static implicit operator Vector3d(Vector d)
         {
             return d.ToVector3D();

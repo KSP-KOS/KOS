@@ -21,7 +21,6 @@ namespace kOS
         {
             ManagedWindows = new List<KOSManagedWindow>();
             AllVoiceValues = new Dictionary<int, VoiceValue>();
-            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
         }
 
         public void AddWindow(KOSManagedWindow w)
@@ -34,11 +33,18 @@ namespace kOS
             ManagedWindows.Remove(w);
         }
 
-        private void OnVesselDestroy(Vessel data)
+        public void DestroyObjects()
         {
-            if (data.id == Vessel.id)
+            if (BindingMgr != null) { BindingMgr.Dispose(); }
+            if (Window != null) { UnityEngine.Object.Destroy(Window); }
+            if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
+            var props = typeof(SharedObjects).GetProperties();
+            foreach (var prop in props)
             {
-                BindingMgr.Dispose();
+                if (!prop.PropertyType.IsValueType)
+                {
+                    prop.SetValue(this, null, null);
+                }
             }
         }
     }

@@ -165,35 +165,42 @@ namespace kOS.Safe.Execution
 
         public string Dump()
         {
-            var builder = new StringBuilder();
-            builder.AppendLine("Stack dump: stackPointer = " + stackPointer);
-
-            // Print in reverse order so the top of the stack is on top of the printout:
-            // (actually given the double nature of the stack, one of the two sub-stacks
-            // inside it will always be backwardly printed):
-            for (int index = stack.Count - 1; index >= 0; --index)
+            try
             {
-                object item = stack[index];
-                builder.AppendLine(string.Format("{0:000} {1,4} {2} (type: {3})", index, (index == stackPointer ? "SP->" : ""),
-                                                 (item == null ? "<null>" : item.ToString()),
-                                                 (item == null ? "<n/a>" : KOSNomenclature.GetKOSName(item.GetType()))));
-                VariableScope dict = item as VariableScope;
-                if (dict != null)
+                var builder = new StringBuilder();
+                builder.AppendLine("Stack dump: stackPointer = " + stackPointer);
+
+                // Print in reverse order so the top of the stack is on top of the printout:
+                // (actually given the double nature of the stack, one of the two sub-stacks
+                // inside it will always be backwardly printed):
+                for (int index = stack.Count - 1; index >= 0; --index)
                 {
-                    builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
-                                         dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
-                    builder.AppendLine();
-                    // Dump the local variable context stored here on the stack:
-                    foreach (string varName in dict.Variables.Keys)
+                    object item = stack[index];
+                    builder.AppendLine(string.Format("{0:000} {1,4} {2} (type: {3})", index, (index == stackPointer ? "SP->" : ""),
+                                                     (item == null ? "<null>" : item.ToString()),
+                                                     (item == null ? "<n/a>" : KOSNomenclature.GetKOSName(item.GetType()))));
+                    VariableScope dict = item as VariableScope;
+                    if (dict != null)
                     {
-                        var value = dict.Variables[varName].Value;
-                        builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
+                        builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
+                                             dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
                         builder.AppendLine();
+                        // Dump the local variable context stored here on the stack:
+                        foreach (string varName in dict.Variables.Keys)
+                        {
+                            var value = dict.Variables[varName].Value;
+                            builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
+                            builder.AppendLine();
+                        }
                     }
                 }
-            }
 
-            return builder.ToString();
+                return builder.ToString();
+            }
+            catch (Exception ex)
+            {
+                return string.Format("Error creating stack dump, contact kOS devs.\n{0}\n\n{1}", ex.Message, ex.StackTrace);
+            }
         }
 
         /// <summary>

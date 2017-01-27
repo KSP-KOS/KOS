@@ -29,7 +29,7 @@ namespace kOS.Safe.Encapsulation
         public StringValue(string stringValue)
         {
             internalString = stringValue;
-            StringInitializeSuffixes();
+            RegisterInitializer(StringInitializeSuffixes);
         }
 
         public StringValue(StringValue stringValue)

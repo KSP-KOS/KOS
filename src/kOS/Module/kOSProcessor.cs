@@ -46,6 +46,7 @@ namespace kOS.Module
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
         private bool firstUpdate = true;
+        private bool objectsInitialized = false;
 
         private MovingAverage averagePower = new MovingAverage();
 
@@ -53,9 +54,6 @@ namespace kOS.Module
         // required by the archive volume (which has infinite space).
         // TODO: This corresponds to the existing value and should be adjusted for balance.
         private const int ARCHIVE_EFFECTIVE_BYTES = 50000;
-
-        //640K ought to be enough for anybody -sic
-        private const int PROCESSOR_HARD_CAP = 655360;
 
         private const string BootDirectoryName = "boot";
 
@@ -201,7 +199,9 @@ namespace kOS.Module
         // TODO - later refactor making this kOS.Safer so it can work on ITermWindow, which also means moving all of UserIO's classes too.
         public Screen.TermWindow GetWindow()
         {
-            return shared.Window;
+            if (shared.Window != null)
+                return shared.Window;
+            return GetComponent<Screen.TermWindow>();
         }
 
         //returns basic information on kOSProcessor module in Editor
@@ -400,6 +400,12 @@ namespace kOS.Module
 
         public void InitObjects()
         {
+            if (objectsInitialized)
+            {
+                SafeHouse.Logger.SuperVerbose("kOSProcessor.InitObjects() - objects already initialized");
+                return;
+            }
+            objectsInitialized = true;
             shared = new SharedObjects();
 
             shared.Vessel = vessel;
@@ -419,9 +425,7 @@ namespace kOS.Module
             shared.AddonManager = new AddOns.AddonManager(shared);
 
             // Make the window that is going to correspond to this kOS part:
-            var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));
-            DontDestroyOnLoad(gObj);
-            shared.Window = (Screen.TermWindow)gObj.GetComponent(typeof(Screen.TermWindow));
+            shared.Window = gameObject.AddComponent<Screen.TermWindow>();
             shared.Window.AttachTo(shared);
             shared.SoundMaker = shared.Window.GetSoundMaker();
 
@@ -498,18 +502,19 @@ namespace kOS.Module
                     return (a.part.uid() < b.part.uid()) ? -1 : (a.part.uid() > b.part.uid()) ? 1 : 0;
                 });
             }
-            GameEvents.onPartDestroyed.Add(OnDestroyingMyHardware);
         }
 
-        private void OnDestroyingMyHardware(Part p)
+        public void OnDestroy()
         {
-            // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
-            if (p != part)
-                return;
-
-            GetWindow().DetachAllTelnets();
+            SafeHouse.Logger.SuperVerbose("kOSProcessor.OnDestroy()!");
 
             allMyInstances.RemoveAll(m => m == this);
+
+            if (shared != null)
+            {
+                shared.DestroyObjects();
+                shared = null;
+            }
         }
 
         /// <summary>
@@ -547,7 +552,7 @@ namespace kOS.Module
 
         public void Update()
         {
-            if (HighLogic.LoadedScene == GameScenes.EDITOR)
+            if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {
@@ -677,6 +682,7 @@ namespace kOS.Module
 
         public override void OnLoad(ConfigNode node)
         {
+            SafeHouse.Logger.SuperVerbose("kOSProcessor.OnLoad");
             try
             {
                 // KSP Seems to want to make an instance of my partModule during initial load

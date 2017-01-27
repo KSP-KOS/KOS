@@ -8,6 +8,7 @@ using kOS.Module;
 using kOS.UserIO;
 using kOS.Safe.UserIO;
 using KSP.UI.Dialogs;
+using kOS.Safe.Utilities;
 
 namespace kOS.Screen
 {
@@ -16,16 +17,16 @@ namespace kOS.Screen
     {
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
-        
-        private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+
+        private static string root;
         private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
         private static readonly Color colorAlpha = new Color(1f, 1f, 1f, 0.8f); // slightly less opaque window color when not focused.
         private static readonly Color bgColor = new Color(0.0f, 0.0f, 0.0f, 1.0f); // black background of terminal
         private static readonly Color textColor = new Color(0.4f, 1.0f, 0.2f, 1.0f); // font color on terminal
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f); // font color when power starved.
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.8f); // font color when power starved and not focused.
-        private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
-        private Rect resizeButtonCoords = new Rect(0,0,0,0); // will be resized later.
+        private Rect closeButtonRect;
+        private Rect resizeButtonCoords;
         private GUIStyle tinyToggleStyle;
         private Vector2 resizeOldSize;
         private bool resizeMouseDown;
@@ -44,7 +45,7 @@ namespace kOS.Screen
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
         private float cursorBlinkTime;
-        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D fontImage;
         private Texture2D [] fontArray;
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
@@ -59,15 +60,15 @@ namespace kOS.Screen
         /// <summary>Telnet repaints happen less often than Update()s.  Not every Update() has a telnet repaint happening.
         /// This tells you whether there was one this update.</summary>
         private bool telnetsGotRepainted;
-        
-        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+
+        private Texture2D terminalImage;
+        private Texture2D terminalFrameImage;
+        private Texture2D terminalFrameActiveImage;
+        private Texture2D resizeButtonImage;
+        private Texture2D networkZigZagImage;
+        private Texture2D brightnessButtonImage;
+        private Texture2D fontWidthButtonImage;
+        private Texture2D fontHeightButtonImage;
         private WWW beepURL;
         private AudioSource beepSource;
         private int guiTerminalBeepsPending;
@@ -106,6 +107,22 @@ namespace kOS.Screen
 
         public void Awake()
         {
+            // set dummy rectangles
+            closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
+            resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
+
+            // Load dummy textures
+            fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+
+            root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal_frame.png", ref terminalFrameImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal_frame_active.png", ref terminalFrameActiveImage);
@@ -125,9 +142,7 @@ namespace kOS.Screen
                 fontSize = 10
             };
 
-            var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
-            DontDestroyOnLoad(gObj);
-            popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
+            popupEditor = gameObject.AddComponent<KOSTextEditPopup>();
             popupEditor.SetUniqueId(UniqueId + 5);
             
             customSkin = BuildPanelSkin();
@@ -140,6 +155,7 @@ namespace kOS.Screen
 
         public void OnDestroy()
         {
+            Unlock();
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
         }
@@ -152,6 +168,12 @@ namespace kOS.Screen
             // you can experiment with swapping in different font image files and the code
             // will still work without a recompile:
             int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
+            if (charSourceSize == 0 || !allTexturesFound) // if the size is zero or textures are missing, abort loading the font array
+            {
+                SafeHouse.Logger.LogError("[TermWindow] Aborting LoadFontArray, error in loaded texture");
+                allTexturesFound = false;
+                return;
+            }
             int numRows = fontImage.width / charSourceSize;
             int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
             
@@ -189,17 +211,21 @@ namespace kOS.Screen
         private void LoadAudio()
         {
             beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
-            AudioClip beepClip = beepURL.audioClip;            
+            AudioClip beepClip = beepURL.audioClip;
             beepSource = gameObject.AddComponent<AudioSource>();
             beepSource.clip = beepClip;
         }
 
-        public void LoadTexture(String relativePath, ref Texture2D targetTexture)
+        public void LoadTexture(string relativePath, ref Texture2D targetTexture)
         {
             var imageLoader = new WWW("file://" + root + relativePath);
             imageLoader.LoadImageIntoTexture(targetTexture);
 
-            if (imageLoader.isDone && imageLoader.size == 0) allTexturesFound = false;
+            if (imageLoader.isDone && imageLoader.size == 0)
+            {
+                SafeHouse.Logger.LogError(string.Format("[TermWindow] Loading texture from \"{0}\" failed", relativePath));
+                allTexturesFound = false;
+            }
         }
         
         public void OpenPopupEditor(Volume v, GlobalPath path)
@@ -285,6 +311,9 @@ namespace kOS.Screen
 
             InputLockManager.RemoveControlLock(CONTROL_LOCKOUT);
 
+            // Apparently Unlock now gets called at a point after the
+            // CameraManager instance changes... so check the reference.
+            cameraManager = CameraManager.Instance;
             cameraManager.enabled = true;
 
 
@@ -733,7 +762,12 @@ namespace kOS.Screen
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
                            "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
 
-                GUI.Label(closeButtonRect, "Close");
+                closeButtonRect = new Rect(WindowRect.width - 75, WindowRect.height - 30, 50, 25);
+                if (GUI.Button(closeButtonRect, "Close"))
+                {
+                    Close();
+                    Event.current.Use();
+                }
                 return;
             }
 
@@ -832,32 +866,37 @@ namespace kOS.Screen
             }
             GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth, screen.RowCount * charHeight));
 
-            List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
-
-            // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
-            int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
-
-            for (int row = 0; row < rowsToPaint; row++)
+            // When loading a quicksave, it is possible for the teminal window to update even though
+            // mostRecentScreen is null.  If that's the case, just skip the screen update.
+            if (mostRecentScreen != null)
             {
-                IScreenBufferLine lineBuffer = buffer[row];
-                for (int column = 0; column < lineBuffer.Length; column++)
+                List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
+
+                // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
+                int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
+
+                for (int row = 0; row < rowsToPaint; row++)
                 {
-                    char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
-                        ShowCharacterByAscii(c, column, row, reversingScreen,
-                                             charWidth, charHeight, screen.Brightness);
+                    IScreenBufferLine lineBuffer = buffer[row];
+                    for (int column = 0; column < lineBuffer.Length; column++)
+                    {
+                        char c = lineBuffer[column];
+                        if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
+                            ShowCharacterByAscii(c, column, row, reversingScreen,
+                                                 charWidth, charHeight, screen.Brightness);
+                    }
                 }
-            }
 
-            bool blinkOn = cursorBlinkTime < 0.5f &&
-                           screen.CursorRowShow < screen.RowCount &&
-                           IsPowered &&
-                           ShowCursor;
-            
-            if (blinkOn)
-            {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
-                                     charWidth, charHeight, screen.Brightness);
+                bool blinkOn = cursorBlinkTime < 0.5f &&
+                               screen.CursorRowShow < screen.RowCount &&
+                               IsPowered &&
+                               ShowCursor;
+
+                if (blinkOn)
+                {
+                    ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
+                                         charWidth, charHeight, screen.Brightness);
+                }
             }
             
             GUI.EndGroup();
@@ -1156,7 +1195,7 @@ namespace kOS.Screen
         
         private static GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = kOS.Utilities.Utils.GetSkinCopy(HighLogic.Skin);
+            GUISkin theSkin = Instantiate(HighLogic.Skin); // Use Instantiate to make a copy of the Skin Object
 
             theSkin.label.fontSize = 10;
             theSkin.label.normal.textColor = Color.white;

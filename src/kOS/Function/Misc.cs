@@ -451,6 +451,31 @@ namespace kOS.Function
             ReturnValue = shared.Cpu.DumpVariables();
         }
     }
+    
+    [Function("debugfreezegame")]
+    /// <summary>
+    /// Deliberately cause physics lag by making the main game thread sleep.
+    /// Clearly not something there's a good reason to do *except* when
+    /// trying to test a script that only fails when the game is lagging.
+    /// This is not the same thing as executing a WAIT command, because
+    /// a WAIT command will return control to KSP and in a later physics
+    /// tick, resume when the timer expires.  This function, on the other
+    /// hand, refuses to return control back to the main game, suspending
+    /// the KSP main game's thread for the number of suggested milliseconds.
+    /// (Warning: Thread.Sleep() is incapable of being as precise as it may
+    /// seem.  It takes milliseconds, but often can only sleep in 15 or 30 ms
+    /// increments, rounding the sleep time up to the nearest increment chunk.)
+    /// </summary>
+    public class DebugFreezeGame : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            // How many milliseconds of extra sleep to cause?
+            int ms = GetInt(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            System.Threading.Thread.Sleep(ms);
+        }
+    }
 
     [Function("profileresult")]
     public class ProfileResult : FunctionBase
