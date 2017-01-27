@@ -43,7 +43,7 @@ as in the example below::
 
 The reason you can use Strings with the FOR loop like this is
 because you can obatain an :struct:`Iterator` of a string with the
-:attr:`ITERATOR` suffix mentioned below.  (Any type that 
+:attr:`ITERATOR` suffix mentioned below.  (Any type that
 implements the ITERATOR suffix can do this.)
 
 Using an Index ( [i] )
@@ -70,7 +70,7 @@ an error::
 
   // The following line gives an error because you can't
   // change the characters inside a string:
-  set str[0] to "X". 
+  set str[0] to "X".
 
 Boolean Operators
 -----------------
@@ -146,10 +146,10 @@ Structure
           - Description
 
         * - :meth:`CONTAINS(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if the given string is contained within this string
         * - :meth:`ENDSWITH(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if this string ends with the given string
         * - :meth:`FIND(string)`
           - :struct:`Scalar`
@@ -194,7 +194,7 @@ Structure
           - :struct:`String`
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if this string starts with the given string
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
@@ -225,14 +225,14 @@ Structure
 .. method:: String:CONTAINS(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if this string ends with the given string.
 
@@ -342,7 +342,7 @@ Structure
 .. method:: String:STARTSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if this string starts with the given string .
 
@@ -432,7 +432,7 @@ Structure
        set val to str:tonumber().  // the script dies with error here.
        print "value is " + val. // the script never gets this far.
 
-.. method:: String:TONUMBER(defaultIfError)
+.. method:: String:TOSCALAR(defaultIfError)
 
     Alias for :meth:`String:TONUMBER(defaultIfError)`
 
