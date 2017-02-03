@@ -30,3 +30,6 @@ Intermediate
 
 :doc:`Execute Node script <tutorials/exenode>`
     ZiwKerman describes a generic "execute manuever node" script to be a one-size-fits-all solution to many situations in KSP.  If you can make a manuever node for something, exenode will execute it.
+
+:doc:`Creating Reusable GUI Elements <tutorials/gui>`
+    Creating and using a "TabWidget" to put a lot of functionality in a small amount of screenspace.
