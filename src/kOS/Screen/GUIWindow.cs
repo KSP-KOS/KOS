@@ -236,10 +236,10 @@ namespace kOS.Screen
         class ActionTime
         {
             public ActionTime(Widget w, string r, Action a, double t) { widget = w;  reason = r;  action = a; time = t; }
-            public Widget widget { get; }
-            public string reason { get; }
-            public Action action { get; }
-            public double time { get; }
+            public Widget widget { get; private set;}
+            public string reason { get; private set;}
+            public Action action { get; private set;}
+            public double time { get; private set;}
         }
         List<ActionTime> delayedActions = new List<ActionTime>();
         public void Communicate(Widget w, string reason, Action a)

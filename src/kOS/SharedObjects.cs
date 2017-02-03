@@ -12,7 +12,7 @@ namespace kOS
         public ProcessorManager ProcessorMgr { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
-        public List<KOSManagedWindow> ManagedWindows { get; }
+        public List<KOSManagedWindow> ManagedWindows { get; private set; }
         public TransferManager TransferManager { get; set; }
         public AddOns.AddonManager AddonManager { get; set; }
         public Dictionary<int, VoiceValue> AllVoiceValues { get; private set; }
