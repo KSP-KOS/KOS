@@ -29,6 +29,8 @@ namespace kOS.Suffixed
         public bool TelnetLoopback { get { return GetPropValue<bool>(PropId.TelnetLoopback); } set { SetPropValue(PropId.TelnetLoopback, value); } }        
         public int TextEditFontSize {get { return GetPropValue<int>(PropId.TextEditFontSize); } set { SetPropValue(PropId.TextEditFontSize, value); } }
         public string TextEditFontName {get { return GetPropValue<string>(PropId.TextEditFontName); } set { SetPropValue(PropId.TextEditFontName, value); } }
+        public int TerminalFontSize {get { return GetPropValue<int>(PropId.TerminalFontSize); } set { SetPropValue(PropId.TerminalFontSize, value); } }
+        public string TerminalFontName {get { return GetPropValue<string>(PropId.TerminalFontName); } set { SetPropValue(PropId.TerminalFontName, value); } }
         public bool UseBlizzyToolbarOnly { get { return kOSCustomParameters.Instance.useBlizzyToolbarOnly; } set { kOSCustomParameters.Instance.useBlizzyToolbarOnly = value; } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
         public float Brightness {get { return kOSCustomParameters.Instance.terminalBrightness; } set { kOSCustomParameters.Instance.terminalBrightness = value; } }
@@ -68,6 +70,8 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
             AddConfigKey(PropId.TextEditFontSize, new ConfigKey("TextEditFontSize", "EDITFONTSIZE", "Font Size for text edit widget", 12, 6, 20, typeof(int)));
             AddConfigKey(PropId.TextEditFontName, new ConfigKey("TextEditFontName", "EDITFONTNAME", "Font Name for text edit widget", "Courier New Bold", "n/a", "n/a", typeof(string)));
+            AddConfigKey(PropId.TerminalFontSize, new ConfigKey("TerminalFontSize", "TERMFONTSIZE", "Font Size for terminal window", 12, 6, 20, typeof(int)));
+            AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "TERMFONTNAME", "Font Name for terminal window", "Courier New Bold", "n/a", "n/a", typeof(string)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -220,7 +224,9 @@ namespace kOS.Suffixed
             UseBlizzyToolbarOnly = 13,
             DebugEachOpcode = 14,
             TextEditFontSize = 15,
-            TextEditFontName = 16
+            TextEditFontName = 16,
+            TerminalFontSize = 17,
+            TerminalFontName = 18
         }
     }
 }

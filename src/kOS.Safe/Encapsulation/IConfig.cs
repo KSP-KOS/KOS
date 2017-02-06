@@ -20,6 +20,9 @@ namespace kOS.Safe.Encapsulation
         bool UseBlizzyToolbarOnly { get; set; }
         int TextEditFontSize {get; set; }
         string TextEditFontName {get; set; }
+        int TerminalFontSize {get; set; }
+        string TerminalFontName {get; set; }
+
 
         /// <summary>
         /// Return the moment in time when the most recent change to any of the

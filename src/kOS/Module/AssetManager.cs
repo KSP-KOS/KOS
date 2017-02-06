@@ -89,7 +89,9 @@ namespace kOS.Module
         /// <returns>The font</returns>
         /// <param name="name">Name of the font as it appaers in GetSystemFontNames</param>
         /// <param name="size">point size for the desired font.</param>
-        public Font GetSystemFontByNameAndSize(string name, int size)
+        /// <param name="checkMono">If true, then perform a check for monospace and issue a warning and return null
+        /// if it's not monospaced.</param>
+        public Font GetSystemFontByNameAndSize(string name, int size, bool checkMono)
         {
             // Now that a font is asked for, now we'll lazy-load it.
 
@@ -99,7 +101,16 @@ namespace kOS.Module
             {
                 Fonts[key] = Font.CreateDynamicFontFromOSFont(name, size);
             }
-            return Fonts[key];
+
+            Font potentialReturn = Fonts[key];
+            if (checkMono && !(IsFontMonospaced(potentialReturn)))
+            {
+                string msg = string.Format("{0} is proportional width.\nA monospaced font is required.", name);
+                ScreenMessages.PostScreenMessage(
+                    string.Format("<color=#ff9900><size=20>{0}</size></color>",msg), 8, ScreenMessageStyle.UPPER_CENTER);
+                return null;
+            }
+            return potentialReturn;
         }
 
         /// <summary>
@@ -111,11 +122,13 @@ namespace kOS.Module
         /// <returns>The system font by name.</returns>
         /// <param name="names">Names.</param>
         /// <param name="size">Size.</param>
-        public Font GetSystemFontByNameAndSize(string[] names, int size)
+        /// <param name="checkMono">If true, then perform a check for monospace and issue a warning and return null
+        /// if it's not monospaced.</param>
+        public Font GetSystemFontByNameAndSize(string[] names, int size, bool checkMono)
         {
             foreach (string name in names)
             {
-                Font hit = GetSystemFontByNameAndSize(name, size);
+                Font hit = GetSystemFontByNameAndSize(name, size, checkMono);
                 if (hit != null)
                     return hit;
             }
@@ -135,6 +148,60 @@ namespace kOS.Module
         public List<string> GetSystemFontNames()
         {
             return FontNames;
+        }
+
+        /// <summary>A tool we can use to check if a font is monospaced by
+        /// comparing the width of certain key letters.</summary>
+        private static bool IsFontMonospaced(Font f)
+        {
+            CharacterInfo chInfo;
+            int prevWidth;
+
+            // Unity Lazy-loads the character info for the font.  Until you try
+            // to actually render a character, it's CharacterInfo isn't populated
+            // yet (all fields for the character's dimensions return a bogus zero value).
+            // This next call forces Unity to load the information for the given characters
+            // even though they haven't been rendered yet:
+            f.RequestCharactersInTexture("XiW _i:");
+
+            f.GetCharacterInfo('X', out chInfo);
+            prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: X advance is " + prevWidth);
+
+            f.GetCharacterInfo('i', out chInfo);
+            if (prevWidth != chInfo.advance)
+                return false;
+            prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: i advance is " + prevWidth);
+
+            f.GetCharacterInfo('W', out chInfo);
+            if (prevWidth != chInfo.advance)
+                return false;
+            prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: W advance is " + prevWidth);
+
+            f.GetCharacterInfo(' ', out chInfo);
+            if (prevWidth != chInfo.advance)
+                return false;
+            prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: ' ' advance is " + prevWidth);
+
+            f.GetCharacterInfo('_', out chInfo);
+            if (prevWidth != chInfo.advance)
+                return false;
+            prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: _ advance is " + prevWidth);
+
+            f.GetCharacterInfo(':', out chInfo);
+            if (prevWidth != chInfo.advance)
+                return false;
+            prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: : advance is " + prevWidth);
+
+            // That's probably a good enough test.  If all the above characters
+            // have the same width, there's really good chance this is monospaced.
+
+            return true;
         }
 
         /* ------- Comment out - this is the old way using an asset bundle.

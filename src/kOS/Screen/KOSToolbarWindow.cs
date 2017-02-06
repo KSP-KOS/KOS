@@ -453,9 +453,8 @@ namespace kOS.Screen
                         ListPickerDialog picker = this.gameObject.AddComponent<ListPickerDialog>();
                         picker.Summon(windowRect.x + windowRect.width / 2, windowRect.y + windowRect.height / 2,
                             key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(),
-                            delegate(string s) {
-                            Console.WriteLine("eraseme: changing " + key.Value + " to: " + s);
-                              key.Value = s; } // To be called when the user picks something.
+                            // This only sets the value if the font is monospaced, else the warning message comes out:
+                            delegate(string s) { if (AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null) key.Value = s; }
                         );
                     }
                 }

@@ -47,6 +47,21 @@ namespace kOS.Screen
         private float cursorBlinkTime;
         private Texture2D fontImage;
         private Texture2D [] fontArray;
+
+        private Font font;
+        private int fontSize;
+        private string[] tryFontNames = {
+            "User pick Goes Here", // overwrite this first one with the user selection - the rest are a fallback just in case
+            "Courier New Bold",
+            "Courier Bold",
+            "Courier New",
+            "Courier",
+            "Monaco",
+            "Consolas",
+            "Liberation Mono",
+            "Arial" // very bad, proportional, but guaranteed to exist in Unity no matter what.
+        };
+
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
         private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
@@ -259,6 +274,23 @@ namespace kOS.Screen
             base.Open();
             BringToFront();
             guiTerminalBeepsPending = 0; // Closing and opening the window will wipe pending beeps from the beep queue.
+
+            GetFontIfChanged();
+        }
+
+        private void GetFontIfChanged()
+        {
+            int newSize = SafeHouse.Config.TerminalFontSize;
+            string newName =  SafeHouse.Config.TerminalFontName;
+            if (fontSize != newSize || !(tryFontNames[0].Equals(newName)))
+            {
+                fontSize = newSize;
+                tryFontNames[0] = newName;
+                font = AssetManager.Instance.GetSystemFontByNameAndSize(tryFontNames, fontSize, false);
+
+                // TODO - There will probably be other measurements that have to get recalculated
+                // here too.
+            }
         }
 
         public override void Close()
@@ -332,6 +364,8 @@ namespace kOS.Screen
         void OnGUI()
         {
             if (!IsOpen) return;
+
+            GetFontIfChanged();
             
             ProcessUnconsumedInput();
 
