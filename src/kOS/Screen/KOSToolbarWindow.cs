@@ -488,11 +488,20 @@ namespace kOS.Screen
             if (clicked)
             {
                 ListPickerDialog picker = this.gameObject.AddComponent<ListPickerDialog>();
+
+                kOS.Screen.ChangeAction onChange = delegate(String s)
+                    {
+                        // If the font is monospaced, we'll accept it, else we'll deny the attempt
+                        // and not commit the change to the config fields:
+                        bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null;
+                        if (ok)
+                            key.Value = s;
+                        return ok;
+                    };
+
                 picker.Summon(windowRect.x + windowRect.width / 2, windowRect.y + windowRect.height / 2,
-                    key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(),
-                    // This only sets the value if the font is monospaced, else the warning message comes out:
-                    delegate(string s) { if (AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null) key.Value = s; }
-                );
+                    key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange
+                    );
             }
         }
 

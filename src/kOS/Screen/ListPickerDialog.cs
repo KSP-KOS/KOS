@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace kOS.Screen
 {
-    public delegate void ChangeAction(string pick); // a callback to invoke upon a selection fron the list.
-    
+    /// <summary>
+    /// A callback to invoke upon a selection fron the list.
+    /// If it returns true, the change is accepted.  If it
+    /// returns false, the change has been denied and the list
+    /// picker should not highlight the selected thing.
+    /// </summary>
+    public delegate bool ChangeAction(string pick);
+
     /// <summary>
     /// A GUI widget that lets the user pick a string from a list of strings.
     /// When a string is picked, the dialog is called to tell someone about it.
@@ -94,8 +100,10 @@ namespace kOS.Screen
             string newValue = GUIScrollPick(windowId, current, choices);
             if (!newValue.Equals(current))
             {
-                current = newValue;
-                callWhenChanged(current);
+                // Notify the caller of the change, and if they accept it, commit it so
+                // the widget will highlight the new pick (else the highlight won't move).
+                if (callWhenChanged(newValue))
+                    current = newValue;
             }
             bool closed = GUILayout.Button("Close", HighLogic.Skin.button);
             if (closed)
