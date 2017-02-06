@@ -56,7 +56,7 @@ namespace kOS.Suffixed
             AddSuffix("DEBUGEACHOPCODE", new SetSuffix<BooleanValue>(() => DebugEachOpcode, value => DebugEachOpcode = value));
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => Brightness, value => Brightness = value, 0f, 1f, 0.01f));
-            AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 20f, 1f));
+            AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 30f, 1f));
         }
 
         private void BuildValuesDictionary()
