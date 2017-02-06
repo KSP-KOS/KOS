@@ -16,7 +16,6 @@ namespace kOS.Screen
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
         private const string CONTROL_LOCKOUT = "kOSTerminal";
-        private const int FONTIMAGE_CHARS_PER_ROW = 16;
 
         private static string root;
         private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
@@ -45,8 +44,6 @@ namespace kOS.Screen
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
         private float cursorBlinkTime;
-        private Texture2D fontImage;
-        private Texture2D [] fontArray;
 
         private Font font;
         private int fontSize;
@@ -83,7 +80,6 @@ namespace kOS.Screen
         private Texture2D resizeButtonImage;
         private Texture2D networkZigZagImage;
         private Texture2D brightnessButtonImage;
-        private Texture2D fontWidthButtonImage;
         private Texture2D fontHeightButtonImage;
         private WWW beepURL;
         private AudioSource beepSource;
@@ -128,14 +124,12 @@ namespace kOS.Screen
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
             // Load dummy textures
-            fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
 
             root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
@@ -145,12 +139,8 @@ namespace kOS.Screen
             LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
             LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
-            LoadTexture("GameData/kOS/GFX/font-width-button.png", ref fontWidthButtonImage);
             LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
-            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
-            
-            LoadFontArray();
-            
+
             LoadAudio();
             
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
@@ -175,49 +165,6 @@ namespace kOS.Screen
             Unlock();
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
-        }
-        
-        private void LoadFontArray()
-        {
-            // Calculate image size from the presumption that it is a hardcoded number of char
-            // pictures wide and that each image is square.
-            // Then calculate everything else dynamically from that so that
-            // you can experiment with swapping in different font image files and the code
-            // will still work without a recompile:
-            int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
-            if (charSourceSize == 0 || !allTexturesFound) // if the size is zero or textures are missing, abort loading the font array
-            {
-                SafeHouse.Logger.LogError("[TermWindow] Aborting LoadFontArray, error in loaded texture");
-                allTexturesFound = false;
-                return;
-            }
-            int numRows = fontImage.width / charSourceSize;
-            int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
-            
-            // Make it hold all possible ASCII values even though many will be blank pictures:
-            fontArray = new Texture2D[numCharImages];
-            
-            for (int i = 0 ; i < numCharImages ; ++i)
-            {
-                // TextureFormat cannot be DXT1 or DXT5 if you want to ever perform a
-                // SetPixel on the texture (which we do).  So we start it off as a ARGB32
-                // first, long enough to perform the SetPixel call, then compress it
-                // afterward into a DXT5:
-                Texture2D charImage = new Texture2D(charSourceSize, charSourceSize, TextureFormat.ARGB32, false);
-
-                int tx = i % FONTIMAGE_CHARS_PER_ROW;
-                int ty = i / FONTIMAGE_CHARS_PER_ROW;
-                
-                // While Unity uses the convention of upside down textures common in
-                // 3D (2D images put orgin at upper-left, 3D uses lower-left), it doesn't seem
-                // to apply this rule to textures loaded from files like the fontImage.
-                // Thus the difference requiring the upside-down Y coord below.
-                charImage.SetPixels(fontImage.GetPixels(tx * charSourceSize, fontImage.height - (ty+1) * charSourceSize, charSourceSize, charSourceSize));
-                charImage.Compress(false);
-                charImage.Apply();
-
-                fontArray[i] = charImage;
-            }
         }
         
         public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
@@ -840,7 +787,6 @@ namespace kOS.Screen
             Rect rasterBarsButtonRect = new Rect(10, WindowRect.height - 42, 85, 18);
             Rect brightnessRect = new Rect(3, WindowRect.height - 100, 8, 50);
             Rect brightnessButtonRect = new Rect(1, WindowRect.height - 48, brightnessButtonImage.width, brightnessButtonImage.height);
-            Rect fontWidthButtonRect = new Rect(15, WindowRect.height-32, fontWidthButtonImage.width, fontWidthButtonImage.height);
             Rect fontWidthLabelRect = new Rect(35, WindowRect.height-28, 20, 10);
             Rect fontWidthLessButtonRect = new Rect(65, WindowRect.height-28, 10, 10);
             Rect fontWidthMoreButtonRect = new Rect(90, WindowRect.height-28, 10, 10);
