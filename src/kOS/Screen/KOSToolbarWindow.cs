@@ -375,11 +375,6 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
 
-        public void CallbackOnTextEditFontPick(string newName)
-        {
-            SafeHouse.Config.TextEditFontName = newName;
-        }
-
         void OnHideUI()
         {
             uiGloballyHidden = true;
@@ -427,7 +422,7 @@ namespace kOS.Screen
             foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
                 bool isFontField;
-                if (key.StringKey.Equals("TextEditFontName") || key.StringKey.Equals("TerminalFontName"))
+                if (key.StringKey.Equals("TerminalFontName"))
                     isFontField = true;
                 else
                     isFontField = false;
@@ -447,16 +442,7 @@ namespace kOS.Screen
                 {
                     toolTipText += " is: " + key.Value;
                     labelText = "     ^ " + labelText;
-                    bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
-                    if (clicked)
-                    {
-                        ListPickerDialog picker = this.gameObject.AddComponent<ListPickerDialog>();
-                        picker.Summon(windowRect.x + windowRect.width / 2, windowRect.y + windowRect.height / 2,
-                            key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(),
-                            // This only sets the value if the font is monospaced, else the warning message comes out:
-                            delegate(string s) { if (AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null) key.Value = s; }
-                        );
-                    }
+                    DrawFontField(key);
                 }
                 else if (key.Value is bool)
                 {
@@ -494,6 +480,20 @@ namespace kOS.Screen
             GUI.SetNextControlName(""); // because if you don't then there is no such thing as the "non" control to move the focus to.
             // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
             // provide an unfocus method.
+        }
+
+        private void DrawFontField(ConfigKey key)
+        {
+            bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
+            if (clicked)
+            {
+                ListPickerDialog picker = this.gameObject.AddComponent<ListPickerDialog>();
+                picker.Summon(windowRect.x + windowRect.width / 2, windowRect.y + windowRect.height / 2,
+                    key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(),
+                    // This only sets the value if the font is monospaced, else the warning message comes out:
+                    delegate(string s) { if (AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null) key.Value = s; }
+                );
+            }
         }
 
 
@@ -780,9 +780,7 @@ namespace kOS.Screen
             theSkin.textArea.padding = new RectOffset(0, 0, 0, 0);
             theSkin.textArea.margin = new RectOffset(1, 1, 1, 1);
             theSkin.toggle.fontSize = 10;
-            theSkin.button.fontSize =11;
-            theSkin.button.padding = new RectOffset(0,0,0,0);
-            theSkin.button.margin = new RectOffset(1,1,1,1);
+            theSkin.button.fontSize = 11;
 
             // And these are new styles for our own use in special cases:
             //

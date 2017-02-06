@@ -18,9 +18,7 @@ namespace kOS.Safe.Encapsulation
         bool AudibleExceptions { get; set; }
         bool TelnetLoopback { get; set; }
         bool UseBlizzyToolbarOnly { get; set; }
-        int TextEditFontSize {get; set; }
-        string TextEditFontName {get; set; }
-        int TerminalFontSize {get; set; }
+        int TerminalFontDefaultSize {get; set; }
         string TerminalFontName {get; set; }
 
 

@@ -61,7 +61,8 @@ namespace kOS.Screen
             "Liberation Mono",
             "Arial" // very bad, proportional, but guaranteed to exist in Unity no matter what.
         };
-
+        private GUISkin terminalLetterSkin;
+            
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
         private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
@@ -161,6 +162,7 @@ namespace kOS.Screen
             popupEditor.SetUniqueId(UniqueId + 5);
             
             customSkin = BuildPanelSkin();
+            terminalLetterSkin = BuildPanelSkin();
 
             GameEvents.onHideUI.Add (OnHideUI);
             GameEvents.onShowUI.Add (OnShowUI);
@@ -280,13 +282,16 @@ namespace kOS.Screen
 
         private void GetFontIfChanged()
         {
-            int newSize = SafeHouse.Config.TerminalFontSize;
+            int newSize = shared.Screen.CharacterPixelHeight;
             string newName =  SafeHouse.Config.TerminalFontName;
             if (fontSize != newSize || !(tryFontNames[0].Equals(newName)))
             {
                 fontSize = newSize;
                 tryFontNames[0] = newName;
                 font = AssetManager.Instance.GetSystemFontByNameAndSize(tryFontNames, fontSize, false);
+
+                terminalLetterSkin.label.font = font;
+                terminalLetterSkin.label.fontSize = fontSize;
 
                 // TODO - There will probably be other measurements that have to get recalculated
                 // here too.
@@ -579,6 +584,16 @@ namespace kOS.Screen
                 }
             }
         }
+
+        /// <summary>
+        /// A means to get the current terminal font size without
+        /// having to expose the terminal's inner members.
+        /// </summary>
+        /// <returns>The font size.</returns>
+        public int GetFontSize()
+        {
+            return shared.Screen.CharacterPixelHeight;
+        }
         
         /// <summary>
         /// Read all pending input from all telnet clients attached and process it all.
@@ -812,6 +827,7 @@ namespace kOS.Screen
             IScreenBuffer screen = shared.Screen;
             
             GUI.color = isLocked ? color : colorAlpha;
+
             GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
 
             if (telnets.Count > 0)
@@ -859,15 +875,14 @@ namespace kOS.Screen
             screen.Brightness = GUI.VerticalSlider(brightnessRect, screen.Brightness, 1f, 0f);
             GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
 
-            int charWidth = screen.CharacterPixelWidth;
+            // int charWidth = screen.CharacterPixelWidth;
             int charHeight = screen.CharacterPixelHeight;
-            
-            GUI.DrawTexture(fontWidthButtonRect, fontWidthButtonImage);
-            GUI.Label(fontWidthLabelRect,charWidth+"px", customSkin.label);
-            if (GUI.Button(fontWidthLessButtonRect, "-", customSkin.button))
-                charWidth = Math.Max(4, charWidth - 2);
-            if (GUI.Button(fontWidthMoreButtonRect, "+", customSkin.button))
-                charWidth = Math.Min(24, charWidth + 2);
+
+            CharacterInfo chInfo;
+            terminalLetterSkin.label.font.RequestCharactersInTexture("X"); // Make sure the char in the font is lazy-loaded by Unity.
+            terminalLetterSkin.label.font.GetCharacterInfo('X', out chInfo);
+
+            int charWidth = chInfo.advance;
 
             GUI.DrawTexture(fontHeightButtonRect, fontHeightButtonImage);
             GUI.Label(fontHeightLabelRect,charHeight+"px", customSkin.label);
@@ -876,8 +891,8 @@ namespace kOS.Screen
             if (GUI.Button(fontHeightMoreButtonRect, "+", customSkin.button))
                 charHeight = Math.Min(24, charHeight + 2);
 
-            screen.CharacterPixelWidth = charWidth;
             screen.CharacterPixelHeight = charHeight;
+            screen.CharacterPixelWidth = charWidth;
 
             fontGotResized = false;
             if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)
@@ -898,6 +913,7 @@ namespace kOS.Screen
                 GUI.color = AdjustColor(textColor, screen.Brightness);
                 GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
             }
+            terminalLetterSkin.label.normal.textColor = AdjustColor(reversingScreen ? bgColor : currentTextColor, screen.Brightness);            
             GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth, screen.RowCount * charHeight));
 
             // When loading a quicksave, it is possible for the teminal window to update even though
@@ -912,13 +928,7 @@ namespace kOS.Screen
                 for (int row = 0; row < rowsToPaint; row++)
                 {
                     IScreenBufferLine lineBuffer = buffer[row];
-                    for (int column = 0; column < lineBuffer.Length; column++)
-                    {
-                        char c = lineBuffer[column];
-                        if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
-                            ShowCharacterByAscii(c, column, row, reversingScreen,
-                                                 charWidth, charHeight, screen.Brightness);
-                    }
+                    GUI.Label(new Rect(0, (row * charHeight), WindowRect.width - 10, charHeight), lineBuffer.ToString(), terminalLetterSkin.label);
                 }
 
                 bool blinkOn = cursorBlinkTime < 0.5f &&
@@ -928,7 +938,8 @@ namespace kOS.Screen
 
                 if (blinkOn)
                 {
-                    ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
+                    char ch = buffer[screen.CursorRowShow][screen.CursorColumnShow];
+                    DrawCursorAt(ch, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
                                          charWidth, charHeight, screen.Brightness);
                 }
             }
@@ -999,11 +1010,20 @@ namespace kOS.Screen
             }
         }
         
-        void ShowCharacterByAscii(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, float brightness)
+        void DrawCursorAt(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, float brightness)
         {
+            // To emulate inverting the screen character, draw a solid block, then the reversed character atop it:
+            // Solid Block:
             GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
-            GUI.color = AdjustColor(reversingScreen ? bgColor : currentTextColor, brightness);            
-            GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), fontArray[ch], ScaleMode.StretchToFill, true);
+            GUI.color = AdjustColor(reversingScreen ? bgColor : currentTextColor, brightness);
+            GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), Texture2D.whiteTexture, ScaleMode.StretchToFill, true);
+            GUI.EndGroup();
+            // Inverted Character atop it in the same position:
+            GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
+            GUI.color = AdjustColor(reversingScreen ? currentTextColor : bgColor,
+                2*brightness /*it seems to need slightly higher alpha values to show up atop the solid block*/ );
+            terminalLetterSkin.label.normal.textColor = GUI.color;
+            GUI.Label(new Rect(0, 0, charWidth, charHeight), ch.ToString(), terminalLetterSkin.label);
             GUI.EndGroup();
         }
 
@@ -1022,8 +1042,8 @@ namespace kOS.Screen
             shared = sharedObj;
             shared.Window = this;
             
-            shared.Screen.CharacterPixelWidth = 8;
-            shared.Screen.CharacterPixelHeight = 8;
+            shared.Screen.CharacterPixelWidth = 8; // will be overridden later when drawing the font.
+            shared.Screen.CharacterPixelHeight = SafeHouse.Config.TerminalFontDefaultSize;
             shared.Screen.Brightness = kOSCustomParameters.Instance.terminalBrightness;
             formerCharPixelWidth = shared.Screen.CharacterPixelWidth;
             formerCharPixelHeight = shared.Screen.CharacterPixelHeight;

@@ -27,9 +27,7 @@ namespace kOS.Suffixed
         public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
         public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
         public bool TelnetLoopback { get { return GetPropValue<bool>(PropId.TelnetLoopback); } set { SetPropValue(PropId.TelnetLoopback, value); } }        
-        public int TextEditFontSize {get { return GetPropValue<int>(PropId.TextEditFontSize); } set { SetPropValue(PropId.TextEditFontSize, value); } }
-        public string TextEditFontName {get { return GetPropValue<string>(PropId.TextEditFontName); } set { SetPropValue(PropId.TextEditFontName, value); } }
-        public int TerminalFontSize {get { return GetPropValue<int>(PropId.TerminalFontSize); } set { SetPropValue(PropId.TerminalFontSize, value); } }
+        public int TerminalFontDefaultSize {get { return GetPropValue<int>(PropId.TerminalFontDefaultSize); } set { SetPropValue(PropId.TerminalFontDefaultSize, value); } }
         public string TerminalFontName {get { return GetPropValue<string>(PropId.TerminalFontName); } set { SetPropValue(PropId.TerminalFontName, value); } }
         public bool UseBlizzyToolbarOnly { get { return kOSCustomParameters.Instance.useBlizzyToolbarOnly; } set { kOSCustomParameters.Instance.useBlizzyToolbarOnly = value; } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
@@ -58,9 +56,7 @@ namespace kOS.Suffixed
             AddSuffix("DEBUGEACHOPCODE", new SetSuffix<BooleanValue>(() => DebugEachOpcode, value => DebugEachOpcode = value));
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => Brightness, value => Brightness = value, 0f, 1f, 0.01f));
-
-            // Unsure if we should add EDITFONTSIZE and EDITFONTNAME here as suffixes, or leave them as a GUI-only option.
-
+            AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 20f, 1f));
         }
 
         private void BuildValuesDictionary()
@@ -68,10 +64,8 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
             AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
-            AddConfigKey(PropId.TextEditFontSize, new ConfigKey("TextEditFontSize", "EDITFONTSIZE", "Font Size for text edit widget", 12, 6, 20, typeof(int)));
-            AddConfigKey(PropId.TextEditFontName, new ConfigKey("TextEditFontName", "EDITFONTNAME", "Font Name for text edit widget", "Courier New Bold", "n/a", "n/a", typeof(string)));
-            AddConfigKey(PropId.TerminalFontSize, new ConfigKey("TerminalFontSize", "TERMFONTSIZE", "Font Size for terminal window", 12, 6, 20, typeof(int)));
-            AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "TERMFONTNAME", "Font Name for terminal window", "Courier New Bold", "n/a", "n/a", typeof(string)));
+            AddConfigKey(PropId.TerminalFontDefaultSize, new ConfigKey("TerminalFontDefaultSize", "DEFAULTFONTSIZE", "Initial Terminal:CHARHEIGHT when a terminal is first opened", 12, 6, 20, typeof(int)));
+            AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "Courier New Bold", "n/a", "n/a", typeof(string)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -223,10 +217,8 @@ namespace kOS.Suffixed
             TelnetLoopback = 12,
             UseBlizzyToolbarOnly = 13,
             DebugEachOpcode = 14,
-            TextEditFontSize = 15,
-            TextEditFontName = 16,
-            TerminalFontSize = 17,
-            TerminalFontName = 18
+            TerminalFontDefaultSize = 15,
+            TerminalFontName = 16
         }
     }
 }

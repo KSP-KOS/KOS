@@ -90,12 +90,16 @@ namespace kOS.Screen
 
         private string GetConfigFontName()
         {
-            return SafeHouse.Config.TextEditFontName;
+            return SafeHouse.Config.TerminalFontName;
         }
 
         private int GetConfigFontSize()
         {
-            return SafeHouse.Config.TextEditFontSize;
+            // For a few moments upon first activating the text editor popup, the
+            // TermWindow isn't attached yet so the term member is null.  Return a
+            // dummy value at first but then correct it later the next time this is
+            // queired after the term is attached:
+            return (term != null ) ? term.GetFontSize() : 8;
         }
 
         public void AttachTo(TermWindow termWindow, Volume attachVolume, GlobalPath path)
