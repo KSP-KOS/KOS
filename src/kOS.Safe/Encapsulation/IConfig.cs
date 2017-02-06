@@ -18,6 +18,8 @@ namespace kOS.Safe.Encapsulation
         bool AudibleExceptions { get; set; }
         bool TelnetLoopback { get; set; }
         bool UseBlizzyToolbarOnly { get; set; }
+        int TextEditFontSize {get; set; }
+        string TextEditFontName {get; set; }
 
         /// <summary>
         /// Return the moment in time when the most recent change to any of the

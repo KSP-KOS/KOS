@@ -54,6 +54,10 @@ namespace kOS.Safe.Encapsulation.Suffixes
             {
                 returnValue = newValue;
             }
+            else if (Value is string)
+            {
+                returnValue = newValue;
+            }
             else
             {
                 throw new Exception( "kOS CONFIG has new type that wasn't supported yet:  contact kOS developers" );

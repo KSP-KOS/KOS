@@ -316,6 +316,8 @@ namespace kOS.Screen
 
             Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
 
+            AssetManager.Instance.UpdateSystemFontLists(); // only when this window is re-opened, re-load font names.
+
             // There has *got* to be a method somewhere in Unity that does this transformation
             // without having to hardcode the formula, but after wasting 5 hours searching
             // Unity docs and google and ILSpy, I give up trying to find it.  This formula is
@@ -373,6 +375,11 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
 
+        public void CallbackOnTextEditFontPick(string newName)
+        {
+            SafeHouse.Config.TextEditFontName = newName;
+        }
+
         void OnHideUI()
         {
             uiGloballyHidden = true;
@@ -419,12 +426,40 @@ namespace kOS.Screen
 
             foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
-                CountBeginHorizontal();
+                bool isFontField;
+                if (key.StringKey.Equals("TextEditFontName") || key.StringKey.Equals("TerminalFontName"))
+                    isFontField = true;
+                else
+                    isFontField = false;
+
+                if (isFontField)
+                {
+                    CountBeginVertical();
+                    GUILayout.Label("_____", panelSkin.label);
+                }
+                else
+                    CountBeginHorizontal();
 
                 string labelText = key.Alias;
                 string toolTipText = key.Name;
 
-                if (key.Value is bool)
+                if (isFontField)
+                {
+                    toolTipText += " is: " + key.Value;
+                    labelText = "     ^ " + labelText;
+                    bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
+                    if (clicked)
+                    {
+                        ListPickerDialog picker = this.gameObject.AddComponent<ListPickerDialog>();
+                        picker.Summon(windowRect.x + windowRect.width / 2, windowRect.y + windowRect.height / 2,
+                            key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(),
+                            delegate(string s) {
+                            Console.WriteLine("eraseme: changing " + key.Value + " to: " + s);
+                              key.Value = s; } // To be called when the user picks something.
+                        );
+                    }
+                }
+                else if (key.Value is bool)
                 {
                     key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
                 }
@@ -440,7 +475,10 @@ namespace kOS.Screen
                 GUILayout.Label(new GUIContent(labelText, toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();
 
-                CountEndHorizontal();
+                if (isFontField)
+                    CountEndVertical();
+                else
+                    CountEndHorizontal();
             }
             CountEndVertical();
 
@@ -458,6 +496,7 @@ namespace kOS.Screen
             // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
             // provide an unfocus method.
         }
+
 
         private int DrawConfigIntField(int keyVal, int whichInt)
         {

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
+using kOS.Module;
 
 namespace kOS.Screen
 {
@@ -14,11 +16,17 @@ namespace kOS.Screen
     public class KOSTextEditPopup : KOSManagedWindow
     {
         private const int FRAME_THICKNESS = 8;
-        private const int FONT_HEIGHT = 12;
         private const string EXIT_BUTTON_TEXT = "(E)xit";
         private const string SAVE_BUTTON_TEXT = "(S)ave";
         private const string RELOAD_BUTTON_TEXT = "(R)eload";
 
+        private int fontHeight = 12;
+        private Font font;
+        // A list of fonts including the user's choice plus a few fallback options if the user's choice isn't working:
+        private string[] tryFontNames =
+            new string[] { "_User's choice_", "Courier New Bold", "Courier Bold", "Courier New", "Courier", "Monaco", "Consolas", "Arial" };
+        private string prevConfigFontName = "";
+        private int prevConfigFontSize = 12;
         private Rect innerCoords;
         private Rect saveCoords;
         private Rect exitCoords;
@@ -38,6 +46,7 @@ namespace kOS.Screen
         private DelegateDialog dialog;
         private Vector2 scrollPosition; // tracks where within the text box it's scrolled to.
         private bool consumeEvent;
+        private GUIStyle textWidgetStyle;
 
         public KOSTextEditPopup()
         {
@@ -61,6 +70,32 @@ namespace kOS.Screen
             dialog = gameObject.AddComponent<DelegateDialog>();
             var urlGetter = new WWW(string.Format("file://{0}GameData/kOS/GFX/resize-button.png", KSPUtil.ApplicationRootPath.Replace("\\", "/")));
             urlGetter.LoadImageIntoTexture(resizeImage);
+
+            GetFont();
+        }
+
+        private void GetFont()
+        {
+            fontHeight = GetConfigFontSize();
+            tryFontNames[0] = GetConfigFontName();
+
+            font = AssetManager.Instance.GetSystemFontByNameAndSize(tryFontNames, fontHeight);
+
+            textWidgetStyle = new GUIStyle(HighLogic.Skin.textArea);
+            textWidgetStyle.font = font;
+
+            prevConfigFontSize = fontHeight;
+            prevConfigFontName = tryFontNames[0];
+        }
+
+        private string GetConfigFontName()
+        {
+            return SafeHouse.Config.TextEditFontName;
+        }
+
+        private int GetConfigFontSize()
+        {
+            return SafeHouse.Config.TextEditFontSize;
         }
 
         public void AttachTo(TermWindow termWindow, Volume attachVolume, GlobalPath path)
@@ -122,6 +157,10 @@ namespace kOS.Screen
         public void OnGUI()
         {
             if (!IsOpen) return;
+
+            // If the config options changed the font for me, reload it:
+            if ((! prevConfigFontName.Equals(GetConfigFontName())) || prevConfigFontSize != GetConfigFontSize())
+                GetFont();
 
             CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
             CalcInnerCoords();
@@ -314,7 +353,7 @@ namespace kOS.Screen
             // Seems to be no way to move more than one line at
             // a time - so have to do this:
             int pos = Math.Min(editor.cursorIndex, contents.Length - 1);
-            int rows = ((int)innerCoords.height) / FONT_HEIGHT;
+            int rows = ((int)innerCoords.height) / fontHeight;
             while (rows > 0 && pos >= 0)
             {
                 if (contents[pos] == '\n')
@@ -331,7 +370,7 @@ namespace kOS.Screen
             // Seems to be no way to move more than one line at
             // a time - so have to do this:
             int pos = Math.Min(editor.cursorIndex, contents.Length - 1);
-            int rows = ((int)innerCoords.height) / FONT_HEIGHT;
+            int rows = ((int)innerCoords.height) / fontHeight;
             while (rows > 0 && pos < contents.Length)
             {
                 if (contents[pos] == '\n')
@@ -395,12 +434,12 @@ namespace kOS.Screen
 
         protected void DrawWindow(int windowId)
         {
-            GUI.contentColor = Color.green;
+            GUI.contentColor = Color.yellow;
 
             GUILayout.BeginArea(innerCoords);
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
             int preLength = contents.Length;
-            contents = GUILayout.TextArea(contents);
+            contents = GUILayout.TextArea(contents, textWidgetStyle);
             int postLength = contents.Length;
             GUILayout.EndScrollView();
             GUILayout.EndArea();
@@ -452,9 +491,9 @@ namespace kOS.Screen
             if (!IsOpen) return;
 
             innerCoords = new Rect(FRAME_THICKNESS,
-                                    FRAME_THICKNESS + 1.5f * FONT_HEIGHT,
+                                    FRAME_THICKNESS + 1.5f * fontHeight,
                                     WindowRect.width - 2 * FRAME_THICKNESS,
-                                    WindowRect.height - 2 * FRAME_THICKNESS - 2 * FONT_HEIGHT);
+                                    WindowRect.height - 2 * FRAME_THICKNESS - 2 * fontHeight);
 
             Vector2 labSize = GUI.skin.label.CalcSize(new GUIContent(BuildTitle()));
             Vector2 exitSize = GUI.skin.box.CalcSize(new GUIContent(EXIT_BUTTON_TEXT));
@@ -498,7 +537,7 @@ namespace kOS.Screen
 
             var editor = GetWidgetController();
             Vector2 pos = editor.graphicalCursorPos;
-            float usableHeight = innerCoords.height - 2.5f * FONT_HEIGHT;
+            float usableHeight = innerCoords.height - 2.5f * fontHeight;
             if (pos.y < scrollPosition.y)
                 scrollPosition.y = pos.y;
             else if (pos.y > scrollPosition.y + usableHeight)
