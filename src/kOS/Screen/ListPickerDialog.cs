@@ -4,14 +4,6 @@ using UnityEngine;
 namespace kOS.Screen
 {
     /// <summary>
-    /// A callback to invoke upon a selection fron the list.
-    /// If it returns true, the change is accepted.  If it
-    /// returns false, the change has been denied and the list
-    /// picker should not highlight the selected thing.
-    /// </summary>
-    public delegate bool ChangeAction(string pick);
-
-    /// <summary>
     /// A GUI widget that lets the user pick a string from a list of strings.
     /// When a string is picked, the dialog is called to tell someone about it.
     /// (Not to be confused with the kerbscript-capable popup dialog.  This is 
@@ -19,6 +11,19 @@ namespace kOS.Screen
     /// </summary>
     public class ListPickerDialog : MonoBehaviour
     {
+        /// <summary>
+        /// A callback to invoke upon a selection fron the list.
+        /// If it returns true, the change is accepted.  If it
+        /// returns false, the change has been denied and the list
+        /// picker should not highlight the selected thing.
+        /// </summary>
+        public delegate bool ChangeAction(string pick);
+
+        /// <summary>
+        /// A callback to invoke upon closing the list window entirely.
+        /// </summary>
+        public delegate void CloseAction();
+
         private List<string> choices;
         private string current;
         private string title;
@@ -44,7 +49,14 @@ namespace kOS.Screen
         /// <param name="current">Current string value.</param>
         /// <param name="choices">Choices.</param>
         /// <param name="callWhenChanged">The dialog box will call this when a new pick has been made.</param>
-        public void Summon(float leftX, float topY, string title, string current, IEnumerable<string> choices, ChangeAction callWhenChanged)
+        public void Summon(
+            float leftX,
+            float topY,
+            string title,
+            string current,
+            IEnumerable<string> choices,
+            ChangeAction callWhenChanged,
+            CloseAction callWhenClosed)
         {
             this.choices = new List<string>(choices);
             this.current = current;
@@ -63,12 +75,17 @@ namespace kOS.Screen
             }
         }
 
-        void Awake()
+        public void Awake()
         {
             running = false;
         }
 
-        void OnGUI()
+        public void Close()
+        {
+            running = false;
+        }
+
+        public void OnGUI()
         {
             if (!running)
                 return;
@@ -94,7 +111,7 @@ namespace kOS.Screen
                 Destroy(this);
         }
 
-        void DrawInnards(int windowId)
+        private void DrawInnards(int windowId)
         {
             GUILayout.BeginVertical();
             string newValue = GUIScrollPick(windowId, current, choices);
@@ -105,8 +122,8 @@ namespace kOS.Screen
                 if (callWhenChanged(newValue))
                     current = newValue;
             }
-            bool closed = GUILayout.Button("Close", HighLogic.Skin.button);
-            if (closed)
+            bool closeButtonPressed = GUILayout.Button("Close", HighLogic.Skin.button);
+            if (closeButtonPressed)
             {
                 running = false;
             }

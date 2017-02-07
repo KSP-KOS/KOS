@@ -873,8 +873,15 @@ namespace kOS.Screen
 
                 for (int row = 0; row < rowsToPaint; row++)
                 {
-                    IScreenBufferLine lineBuffer = buffer[row];
-                    GUI.Label(new Rect(0, (row * charHeight), WindowRect.width - 10, charHeight), lineBuffer.ToString(), terminalLetterSkin.label);
+                    // At first the screen is filled with null chars.  So if you do something like
+                    // PRINT "AAA" AT (4,0) you can get a row of the screen like so "\0\0\0\0AAA".
+                    // When the font renderer prints null chars, they don't advance the cursor
+                    // even in a monospoaced font (so "\0\0\0\0AAA" looks just like "AAA" instead
+                    // of looking like "    AAA" when printed).  The reason for the "cooking" of
+                    // the string below is to fix this problem:
+                    string lineString = buffer[row].ToString().Replace( '\0', ' ');
+
+                    GUI.Label(new Rect(0, (row * charHeight), WindowRect.width - 10, charHeight), lineString, terminalLetterSkin.label);
                 }
 
                 bool blinkOn = cursorBlinkTime < 0.5f &&

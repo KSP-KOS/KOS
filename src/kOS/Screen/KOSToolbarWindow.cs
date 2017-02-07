@@ -76,6 +76,7 @@ namespace kOS.Screen
         private bool alreadyAwake;
         private bool firstTime = true;
         private bool isOpen;
+        private kOS.Screen.ListPickerDialog fontPicker;
 
         private DateTime prevConfigTimeStamp = DateTime.MinValue;
 
@@ -111,6 +112,8 @@ namespace kOS.Screen
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
             GameObject.DontDestroyOnLoad(this);
+
+            fontPicker = null;
         }
 
         // TODO - Remove this next method after verifying KSP 1.1 works without it:
@@ -237,6 +240,13 @@ namespace kOS.Screen
 
             if (blizzyButton != null)
                 blizzyButton.Destroy();
+
+            // force close the font picker window if it was still open:
+            if (fontPicker != null)
+            {
+                fontPicker.enabled = false;
+                fontPicker.gameObject.DestroyGameObject();
+            }
         }
 
         public void OnDestroy()
@@ -496,21 +506,31 @@ namespace kOS.Screen
             bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
             if (clicked)
             {
-                ListPickerDialog picker = this.gameObject.AddComponent<ListPickerDialog>();
+                // Make a new picker if it's closed, or close it if it's already open.
+                if (fontPicker == null)
+                {
+                    fontPicker = this.gameObject.AddComponent<ListPickerDialog>();
+                    kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
+                        {
+                            // If the font is monospaced, we'll accept it, else we'll deny the attempt
+                            // and not commit the change to the config fields:
+                            bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null;
+                            if (ok)
+                                key.Value = s;
+                            return ok;
+                        };
 
-                kOS.Screen.ChangeAction onChange = delegate(String s)
-                    {
-                        // If the font is monospaced, we'll accept it, else we'll deny the attempt
-                        // and not commit the change to the config fields:
-                        bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null;
-                        if (ok)
-                            key.Value = s;
-                        return ok;
-                    };
+                    kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { fontPicker = null; };
 
-                picker.Summon(windowRect.x + windowRect.width / 2, windowRect.y + windowRect.height / 2,
-                    key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange
-                    );
+                    fontPicker.Summon(windowRect.x, windowRect.y + windowRect.height,
+                        key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange, onClose
+                        );
+                }
+                else
+                {
+                    fontPicker.Close();
+                    fontPicker = null;
+                }
             }
         }
 

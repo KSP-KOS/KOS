@@ -9,6 +9,6 @@
         void ArrayCopyFrom(IScreenBufferLine source, int sourceStart, int destinationStart, int length = -1);
         void ArrayCopyFrom(char[] source, int sourceStart, int destinationStart, int length = -1);
         void TouchTime();
-        string ToString(); // Am I allowed to put this in an interface?
+        string ToString(); // Does this do anything?  Or will the generic object.ToString() always satisfy it when the class never explicitly makes one?
     }
 }
