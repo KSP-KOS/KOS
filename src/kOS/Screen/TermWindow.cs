@@ -990,7 +990,7 @@ namespace kOS.Screen
             
             shared.Screen.CharacterPixelWidth = 8; // will be overridden later when drawing the font.
             shared.Screen.CharacterPixelHeight = SafeHouse.Config.TerminalFontDefaultSize;
-            shared.Screen.Brightness = kOSCustomParameters.Instance.terminalBrightness;
+            shared.Screen.Brightness = SafeHouse.Config.TerminalBrightness;
             formerCharPixelWidth = shared.Screen.CharacterPixelWidth;
             formerCharPixelHeight = shared.Screen.CharacterPixelHeight;
 

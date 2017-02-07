@@ -20,6 +20,7 @@ namespace kOS.Safe.Encapsulation
         bool UseBlizzyToolbarOnly { get; set; }
         int TerminalFontDefaultSize {get; set; }
         string TerminalFontName {get; set; }
+        float TerminalBrightness {get; set; }
 
 
         /// <summary>

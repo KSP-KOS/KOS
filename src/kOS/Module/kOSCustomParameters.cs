@@ -104,11 +104,6 @@ namespace kOS.Module
                                          "button on it instead of both it and the stock toolbar.")]
         public bool useBlizzyToolbarOnly = false;
 
-        [GameParameters.CustomFloatParameterUI("Default terminal brightness", minValue = 0f, maxValue = 1f, stepCount = 50, displayFormat = "N2",
-                                         toolTip = "Brightness of a kOS terminal when it appears for the first time in a scene.\n" +
-                                         "(You must reload the scene to see the effect of any changes to this slider.)")]
-        public float terminalBrightness = 0.7f;
-
         [GameParameters.CustomParameterUI("Debug each opcode",
                                          toolTip = "(For mod developers) Spams the Unity log file with a message for every time\n" +
                                          "an opcode is executed in the virtual machine.  Very laggy.")]

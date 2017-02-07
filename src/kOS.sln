@@ -39,6 +39,12 @@ Global
 		$2.IndentSwitchBody = True
 		$2.AnonymousMethodBraceStyle = DoNotChange
 		$2.StatementBraceStyle = NextLine
+		$2.ElseNewLinePlacement = DoNotCare
+		$2.ElseIfNewLinePlacement = DoNotCare
+		$2.CatchNewLinePlacement = DoNotCare
+		$2.FinallyNewLinePlacement = DoNotCare
+		$2.WhileNewLinePlacement = DoNotCare
+		$2.EmbeddedStatementPlacement = DoNotCare
 		$2.BeforeMethodDeclarationParentheses = False
 		$2.BeforeMethodCallParentheses = False
 		$2.BeforeConstructorDeclarationParentheses = False

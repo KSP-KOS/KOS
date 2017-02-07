@@ -409,7 +409,7 @@ namespace kOS.Screen
 
             DrawActiveCPUsOnPanel();
 
-            CountBeginVertical();
+            CountBeginVertical("", 150);
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", tooltipLabelStyle);
             GUILayout.Label("Global VALUES", headingLabelStyle);
@@ -446,11 +446,20 @@ namespace kOS.Screen
                 }
                 else if (key.Value is bool)
                 {
-                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
+                    key.Value = GUILayout.Toggle((bool)key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
                 }
                 else if (key.Value is int)
                 {
                     key.Value = DrawConfigIntField((int)(key.Value), whichInt++);
+                }
+                else if (key.Value is float)
+                {
+                    CountBeginVertical();
+                    //Mathf doesn't have a Round to hundreths place, so this is how I'm faking it:
+                    GUILayout.Label(new GUIContent((Mathf.Round((float)key.Value*100f)/100f).ToString()), panelSkin.label);
+                    key.Value = GUILayout.HorizontalSlider((float)key.Value, (float)key.MinValue, (float)key.MaxValue,
+                        GUILayout.MinWidth(50), GUILayout.MaxHeight(4));
+                    CountEndVertical();
                 }
                 else
                 {
@@ -730,11 +739,14 @@ namespace kOS.Screen
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
         // string in both of them and see if they get the same count here.
-        private void CountBeginVertical(string debugHelp = "")
+        private void CountBeginVertical(string debugHelp = "", float minWidth = -1)
         {
             if (!String.IsNullOrEmpty(debugHelp))
                 SafeHouse.Logger.SuperVerbose("BeginVertical(\"" + debugHelp + "\") Nest " + verticalSectionCount);
-            GUILayout.BeginVertical();
+            if (minWidth < 0)
+                GUILayout.BeginVertical();
+            else
+                GUILayout.BeginVertical(GUILayout.MinWidth(minWidth));
             ++verticalSectionCount;
         }
 
