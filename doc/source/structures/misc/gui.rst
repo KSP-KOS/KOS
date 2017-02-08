@@ -19,8 +19,8 @@ The "Hello World" program::
         LOCAL gui TO GUI(200).
         // Add widgets to the GUI
         LOCAL label TO gui:ADDLABEL("Hello world!").
-        SET label:ALIGN TO "CENTER".
-        SET label:HSTRETCH TO True. // Fill horizontally
+        SET label:STYLE:ALIGN TO "CENTER".
+        SET label:STYLE:HSTRETCH TO True. // Fill horizontally
         LOCAL ok TO gui:ADDBUTTON("OK").
         // Show the GUI.
         gui:SHOW().
@@ -174,9 +174,12 @@ following hierarchy:
 
     `PopupMenu` objects are created inside Box objects via ADDPOPUPMENU method.
 
-    These objects have a list of values (not necessarily strings) which are presented to
-    the user as a list from which they can choose. If the items in the list are not strings,
-    you should generally set the OPTIONSUFFIX to something (eg. "NAME").
+    The menu displays the string values in the OPTIONS property. If OPTIONS contains items that are not strings,
+    then by default their :attr:`TOSTRING <Structure:TOSTRING>` suffixes will be used to display them as strings.
+
+    You can change this default behaviour by setting the popupmenu's :OPTIONSUFFIX to a different suffix
+    name other than "TOSTRING". In the example below which builds a list of bodies for the pulldown list,
+    the body:NAME suffix will be used instead of the body:TOSTRING suffix for all the items in the list.
 
     Example::
 
@@ -196,8 +199,8 @@ following hierarchy:
     ===================================== =============================== =============
                    Every suffix of :struct:`BUTTON`
     -----------------------------------------------------------------------------------
-    :attr:`OPTIONS`                       :struct:`List`(Any)             List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix that names the options.
+    :attr:`OPTIONS`                       :struct:`List` (Any)             List of options to display.
+    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix used for display names. Default = TOSTRING.
     :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                             Returns the current selected value.
     :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
@@ -295,7 +298,7 @@ following hierarchy:
     :attr:`VERTICALSLIDERTHUMB`            :struct:`Style`             Style for the thumb of vertical :struct:`Slider` widgets.
     :attr:`LABEL`                          :struct:`Style`             Style for :struct:`Label` widgets.
     :attr:`SCROLLVIEW`                     :struct:`Style`             Style for :struct:`ScrollBox` widgets.
-    :attr:`TEXTFIELD`                      :struct:`Style`             Style for :struct:`TextField widgets.
+    :attr:`TEXTFIELD`                      :struct:`Style`             Style for :struct:`TextField` widgets.
     :attr:`TOGGLE`                         :struct:`Style`             Style for :struct:`Button` widgets in toggle mode (GUI:ADDCHECKBOX and GUI:ADDRADIOBUTTON).
     :attr:`FLATLAYOUT`                     :struct:`Style`             Style for :struct:`Box` transparent widgets (GUI:ADDHLAYOUT and GUI:ADDVLAYOUT).
     :attr:`POPUPMENU`                      :struct:`Style`             Style for :struct:`PopupMenu` widgets.

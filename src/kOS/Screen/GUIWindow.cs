@@ -29,6 +29,7 @@ namespace kOS.Screen
         private Color slowControlColor = new Color(1, 0.95f, 0.95f, 0.9f);
         private Texture2D commDelayedTexture;
         public float extraDelay = 0f;
+        public PopupMenu currentPopup;
 
         public bool ShowCursor { get; set; }
 
@@ -211,8 +212,6 @@ namespace kOS.Screen
             else r.y = y;
             WindowRect = r;
         }
-
-        public PopupMenu currentPopup;
 
         internal void AttachTo(int width, int height, string title, SharedObjects sharedObj, GUIWidgets w)
         {
