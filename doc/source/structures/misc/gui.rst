@@ -16,12 +16,12 @@ The "Hello World" program::
         // "Hello World" program for kOS GUI.
         //
         // Create a GUI window
-        LOCAL gui TO GUI(200).
+        LOCAL gui IS GUI(200).
         // Add widgets to the GUI
-        LOCAL label TO gui:ADDLABEL("Hello world!").
+        LOCAL label IS gui:ADDLABEL("Hello world!").
         SET label:ALIGN TO "CENTER".
         SET label:HSTRETCH TO True. // Fill horizontally
-        LOCAL ok TO gui:ADDBUTTON("OK").
+        LOCAL ok IS gui:ADDBUTTON("OK").
         // Show the GUI.
         gui:SHOW().
         // Handle GUI widget interactions.
@@ -100,7 +100,7 @@ following hierarchy:
 
 .. structure:: Box
 
-    `Box` objects are themselves created from other Box objects via ADDHBOX and other methods. The root `Box` is
+    ``Box`` objects are themselves created from other Box objects via ADDHBOX and other methods. The root ``Box`` is
     created with the GUI(width,height) function.
 
     ===================================== =============================== =============
@@ -130,7 +130,7 @@ following hierarchy:
 
 .. structure:: Label
 
-    `Label` objects are created inside Box objects via ADDLABEL method.
+    ``Label`` objects are created inside Box objects via ADDLABEL method.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -144,7 +144,7 @@ following hierarchy:
 
 .. structure:: Button
 
-    `Button` objects are created inside Box objects via ADDBUTTON and ADDCHECKBOX methods.
+    ``Button`` objects are created inside Box objects via ADDBUTTON and ADDCHECKBOX methods.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -172,16 +172,27 @@ following hierarchy:
 
 .. structure:: PopupMenu
 
-    `PopupMenu` objects are created inside Box objects via ADDPOPUPMENU method.
+    ``PopupMenu`` objects are created inside Box objects via ADDPOPUPMENU method.
 
-    These objects have a list of values (not necessarily strings) which are presented to
-    the user as a list from which they can choose. If the items in the list are not strings,
-    you should generally set the OPTIONSUFFIX to something (eg. "NAME").
+    A ``PopupMenu`` is a special kind of button for choosing from a list of things.
+    It looks like a button who's face displays the currently selected thing.  When a user
+    clicks on the button, it pops up a list of displayed strings to choose
+    from, and when one is selected the popup goes away and the new choice is
+    displayed on the button.
+
+    The objects in the list do not necessarily have to be string values.  By default
+    the ``PopupMenu`` will use the :attr:`Structure:TOSTRING` suffix to display
+    the string values of the items in the list.  If you'd like to use a different
+    suffix to convert the objects in the list into strings, you can choose that
+    suffix by setting the :attr:`OPTIONSSUFFIX` suffix of the ``PopupMenu``.
 
     Example::
 
-	local popup to gui:addpopupmenu().
+	local popup is gui:addpopupmenu().
+
+        // Make the popup display the Body:NAME's instead of the Body:TOSTRING's:
 	set popup:OPTIONSUFFIX to "NAME".
+
 	list bodies in bodies.
 	for planet in bodies {
 		if planet:hasbody and planet:body = Sun {
@@ -197,7 +208,7 @@ following hierarchy:
                    Every suffix of :struct:`BUTTON`
     -----------------------------------------------------------------------------------
     :attr:`OPTIONS`                       :struct:`List`(Any)             List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix that names the options.
+    :attr:`OPTIONSUFFIX`                  :struct:`string`                Set this to display items with something other than TOSTRING.
     :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                             Returns the current selected value.
     :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
@@ -207,7 +218,7 @@ following hierarchy:
 
 .. structure:: TextField
 
-    `TextField` objects are created inside Box objects via ADDTEXTFIELD method.
+    ``TextField`` objects are created inside Box objects via ADDTEXTFIELD method.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -224,7 +235,7 @@ following hierarchy:
 
 .. structure:: Slider
 
-    `Slider` objects are created inside Box objects via ADDHSLIDER and ADDVSLIDER methods.
+    ``Slider`` objects are created inside Box objects via ADDHSLIDER and ADDVSLIDER methods.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -238,7 +249,7 @@ following hierarchy:
 
 .. structure:: ScrollBox
 
-    `ScrollBox` objects are created inside Box objects via ADDSCROLLBOX method.
+    ``ScrollBox`` objects are created inside Box objects via ADDSCROLLBOX method.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -252,7 +263,7 @@ following hierarchy:
 
 .. structure:: Spacing
 
-    `Spacing` objects are created inside Box objects via ADDSPACING method.
+    ``Spacing`` objects are created inside Box objects via ADDSPACING method.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -364,7 +375,7 @@ following hierarchy:
 
 .. note::
 
-    The `BG` attribute is a "9-slice" image.
+    The ``BG`` attribute is a "9-slice" image.
 
     .. image:: /_images/general/9-slice.png
         :align: right

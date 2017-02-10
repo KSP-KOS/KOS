@@ -38,8 +38,8 @@ share the implementation with multiple KSP installs, and with others online::
 Our TabWidget should be usable in any context, but in this example, we just create it at the top-level.
 The AddTabWidget function should however accept any VBOX as the parameter::
 
-    LOCAL gui TO GUI(500).
-    LOCAL tabwidget TO AddTabWidget(gui).
+    LOCAL gui IS GUI(500).
+    LOCAL tabwidget IS AddTabWidget(gui).
 
 3. Add tabs
 ^^^^^^^^^^^
@@ -47,15 +47,15 @@ The AddTabWidget function should however accept any VBOX as the parameter::
 We will want a function that adds a tab with a title on it, and returns a box into which we can
 put whatever widgets we want::
 
-    LOCAL page TO AddTab(tabwidget,"One").
+    LOCAL page IS AddTab(tabwidget,"One").
     page:ADDLABEL("This is page 1").
     page:ADDLABEL("Put stuff here!").
 
-    LOCAL page TO AddTab(tabwidget,"Two").
+    LOCAL page IS AddTab(tabwidget,"Two").
     page:ADDLABEL("This is page 2").
     page:ADDLABEL("Put more stuff here!").
 
-    LOCAL page TO AddTab(tabwidget,"Three").
+    LOCAL page IS AddTab(tabwidget,"Three").
     page:ADDLABEL("This is page 3").
     page:ADDLABEL("Put even stuff here!").
 
@@ -74,7 +74,7 @@ tab for setting up Maneuver Nodes might be a better default::
 The rest here is just boilerplate - we add a Close button to the top level, then show and run the GUI until
 the user presses the Close button::
 
-    LOCAL close TO gui:ADDBUTTON("Close").
+    LOCAL close IS gui:ADDBUTTON("Close").
     gui:SHOW().
     UNTIL close:PRESSED {
         // Handle processing of all the widgets on all the tabs.
@@ -107,7 +107,7 @@ or one created by GUI:ADDVLAYOUT, GUI:ADDSCROLLBOX, etc.::
                         // The style for tabs is like a button, but it should smoothly connect
                         // to the panel below it, especially if it is the current selected tab.
 
-                        LOCAL style TO box:GUI:SKIN:ADD("TabWidgetTab",box:GUI:SKIN:BUTTON).
+                        LOCAL style IS box:GUI:SKIN:ADD("TabWidgetTab",box:GUI:SKIN:BUTTON).
 
                         // Images are stored alongside the code.
                         SET style:BG TO "TabWidget/images/back".
@@ -120,16 +120,16 @@ or one created by GUI:ADDVLAYOUT, GUI:ADDSCROLLBOX, etc.::
                         SET style:MARGIN:BOTTOM TO 0.
                 }
                 IF NOT box:GUI:SKIN:HAS("TabWidgetPanel") {
-                        LOCAL style TO box:GUI:SKIN:ADD("TabWidgetPanel",box:GUI:SKIN:WINDOW).
+                        LOCAL style IS box:GUI:SKIN:ADD("TabWidgetPanel",box:GUI:SKIN:WINDOW).
                         SET style:BG TO "TabWidget/images/panel".
                         SET style:PADDING:TOP to 0.
                 }
 
                 // Add a vlayout (in case the box is a HBOX, for example),
                 // then add a hlayout for the tabs and a stack to hols all the panels.
-                LOCAL vbox TO box:ADDVLAYOUT.
-                LOCAL tabs TO vbox:ADDHLAYOUT.
-                LOCAL panels TO vbox:ADDSTACK.
+                LOCAL vbox IS box:ADDVLAYOUT.
+                LOCAL tabs IS vbox:ADDHLAYOUT.
+                LOCAL panels IS vbox:ADDSTACK.
 
                 // any other customization of tabs and panels goes here
 
@@ -167,16 +167,16 @@ can be added.::
                 DECLARE PARAMETER tabname. // title for the tab
 
                 // Get back the two widgets we created in AddTabWidget
-                LOCAL hboxes TO tabwidget:WIDGETS.
-                LOCAL tabs TO hboxes[0]. // the HLAYOUT
-                LOCAL panels TO hboxes[1]. // the STACK
+                LOCAL hboxes IS tabwidget:WIDGETS.
+                LOCAL tabs IS hboxes[0]. // the HLAYOUT
+                LOCAL panels IS hboxes[1]. // the STACK
 
                 // Add another panel, style it correctly
-                LOCAL panel TO panels:ADDVBOX.
+                LOCAL panel IS panels:ADDVBOX.
                 SET panel:STYLE TO panel:GUI:SKIN:GET("TabWidgetPanel").
 
                 // Add another tab, style it correctly
-                LOCAL tab TO tabs:ADDBUTTON(tabname).
+                LOCAL tab IS tabs:ADDBUTTON(tabname).
                 SET tab:STYLE TO tab:GUI:SKIN:GET("TabWidgetTab").
 
                 // Set the tab button to be exclusive - when
@@ -218,8 +218,8 @@ that::
                 DECLARE PARAMETER tabwidget. // The tab
                 DECLARE PARAMETER tabnum. // Which tab to choose (0 is first)
                 // Find the tabs hlayout - is is the first of the two we added
-                LOCAL hboxes TO tabwidget:WIDGETS.
-                LOCAL tabs TO hboxes[0].
+                LOCAL hboxes IS tabwidget:WIDGETS.
+                LOCAL tabs IS hboxes[0].
                 // Find the tab, and set it to be pressed
                 SET tabs:WIDGETS[tabnum]:PRESSED TO true.
         }
