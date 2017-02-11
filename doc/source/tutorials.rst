@@ -12,6 +12,7 @@ If you prefer the tutorial style of explanation, please see the following exampl
     Design Patterns <tutorials/designpatterns>
     PID Loops <tutorials/pidloops>
     Execute Node script <tutorials/exenode>
+    Making a tabbed GUI <tutorials/gui>
 
 Introductory
 ------------

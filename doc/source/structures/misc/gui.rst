@@ -1,4 +1,4 @@
-.. _widgets
+.. _widgets:
 
 Creating GUIs
 =============
@@ -68,7 +68,7 @@ following hierarchy:
 
 .. structure:: GUI
 
-    This object is created with the GUI(width,height) function.
+    This object is created with the :func:`GUI(width,height)` function.
 
     ===================================== =============================== =============
     Suffix                                Type                            Description
@@ -207,8 +207,8 @@ following hierarchy:
     ===================================== =============================== =============
                    Every suffix of :struct:`BUTTON`
     -----------------------------------------------------------------------------------
-    :attr:`OPTIONS`                       :struct:`List`(Any)             List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`string`                Set this to display items with something other than TOSTRING.
+    :attr:`OPTIONS`                       :struct:`List`                  List of options to display.
+    :attr:`OPTIONSUFFIX`                  :struct:`String`                Set this to display items with something other than TOSTRING.
     :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                             Returns the current selected value.
     :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
@@ -306,7 +306,7 @@ following hierarchy:
     :attr:`VERTICALSLIDERTHUMB`            :struct:`Style`             Style for the thumb of vertical :struct:`Slider` widgets.
     :attr:`LABEL`                          :struct:`Style`             Style for :struct:`Label` widgets.
     :attr:`SCROLLVIEW`                     :struct:`Style`             Style for :struct:`ScrollBox` widgets.
-    :attr:`TEXTFIELD`                      :struct:`Style`             Style for :struct:`TextField widgets.
+    :attr:`TEXTFIELD`                      :struct:`Style`             Style for :struct:`TextField` widgets.
     :attr:`TOGGLE`                         :struct:`Style`             Style for :struct:`Button` widgets in toggle mode (GUI:ADDCHECKBOX and GUI:ADDRADIOBUTTON).
     :attr:`FLATLAYOUT`                     :struct:`Style`             Style for :struct:`Box` transparent widgets (GUI:ADDHLAYOUT and GUI:ADDVLAYOUT).
     :attr:`POPUPMENU`                      :struct:`Style`             Style for :struct:`PopupMenu` widgets.
@@ -407,12 +407,19 @@ following hierarchy:
     ===================================== =============================== =============
 
 
+.. _widget_delay:
+
 Communication Delay
 -------------------
 
 If communication delay is enabled (eg. using RemoteTech), you will still be
 able to interact with a GUI, but changes to values and messages will incur
-a signal delay. Similarly, changes to values in the GUI will be delayed coming
-back. Some things such as GUI creation, adding widgets, etc. are immediate for
-simplicity.
+the same sort of signal delay that interactive control over the vessel would
+incur.  (If your vessel can be controlled immediately because there's a
+kerbal on board, then your GUI for the vessel can be controlled immediately,
+but if your attempts to control the vessel are being subject to a signal
+delay, then your attempts to click on the GUI elements will get the same
+delay). Similarly, changes to values in the GUI will be delayed coming
+back by the same rules. Some things such as GUI creation, adding widgets,
+etc. are immediate for simplicity.
 
