@@ -3,7 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     [kOS.Safe.Utilities.KOSNomenclature("Box")]
     public class Box : Widget

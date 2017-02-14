@@ -10,6 +10,7 @@ using kOS.Safe.UserIO;
 using KSP.UI.Dialogs;
 using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
+using kOS.Suffixed.Widget;
 using kOS.Utilities;
 using kOS.Communication;
 using kOS.Safe;

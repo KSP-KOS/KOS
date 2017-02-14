@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
+using kOS.Suffixed.Widget;
 using kOS.Sound;
 using kOS.Utilities;
 using FinePrint;

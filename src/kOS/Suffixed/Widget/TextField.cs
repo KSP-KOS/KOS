@@ -3,7 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     [kOS.Safe.Utilities.KOSNomenclature("TextField")]
     public class TextField : Label

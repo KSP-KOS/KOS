@@ -6,7 +6,7 @@ using kOS.Safe.Utilities;
 using System.IO;
 using System;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     static class StringExt
     {
