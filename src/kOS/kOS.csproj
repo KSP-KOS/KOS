@@ -105,6 +105,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Screen\GUIWindow.cs" />
     <Compile Include="Sound\NoiseSoundWave.cs" />
     <Compile Include="Sound\NoteValue.cs" />
     <Compile Include="Sound\ProceduralSoundWave.cs" />
@@ -164,6 +165,20 @@
     <Compile Include="Suffixed\VesselEta.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
+    <Compile Include="Suffixed\Widget\Slider.cs" />
+    <Compile Include="Suffixed\Widget\Spacing.cs" />
+    <Compile Include="Suffixed\Widget\Label.cs" />
+    <Compile Include="Suffixed\Widget\TextField.cs" />
+    <Compile Include="Suffixed\Widget\Button.cs" />
+    <Compile Include="Suffixed\Widget\PopupMenu.cs" />
+    <Compile Include="Suffixed\Widget\Box.cs" />
+    <Compile Include="Suffixed\Widget\ScrollBox.cs" />
+    <Compile Include="Suffixed\Widget\GUIWidgets.cs" />
+    <Compile Include="Suffixed\Widget\WidgetSkin.cs" />
+    <Compile Include="Suffixed\Widget\WidgetStyleState.cs" />
+    <Compile Include="Suffixed\Widget\WidgetStyleRectOffset.cs" />
+    <Compile Include="Suffixed\Widget\WidgetStyle.cs" />
+    <Compile Include="Suffixed\Widget\Widget.cs" />
     <Compile Include="UserIO\TelnetMainServer.cs" />
     <Compile Include="UserIO\TelnetSingletonServer.cs" />
     <Compile Include="UserIO\TelnetWelcomeMenu.cs" />

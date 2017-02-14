@@ -322,16 +322,14 @@ namespace kOS.Screen
             ProcessUnconsumedInput();
 
             if (isLocked) ProcessKeyEvents();
-            
-            try
+            if (FlightResultsDialog.isDisplaying) return;
+            if (uiGloballyHidden)
             {
-                if (FlightResultsDialog.isDisplaying) return;
-                if (uiGloballyHidden && kOS.Safe.Utilities.SafeHouse.Config.ObeyHideUI) return;
+                kOS.Safe.Encapsulation.IConfig cfg = kOS.Safe.Utilities.SafeHouse.Config;
+                if (cfg == null || cfg.ObeyHideUI)
+                    return;
             }
-            catch(NullReferenceException)
-            {
-            }
-            
+
             GUI.skin = HighLogic.Skin;
             
             GUI.color = isLocked ? color : colorAlpha;
