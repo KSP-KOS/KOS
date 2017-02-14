@@ -19,9 +19,9 @@ The "Hello World" program::
         LOCAL gui IS GUI(200).
         // Add widgets to the GUI
         LOCAL label IS gui:ADDLABEL("Hello world!").
-        SET label:ALIGN TO "CENTER".
-        SET label:HSTRETCH TO True. // Fill horizontally
-        LOCAL ok IS gui:ADDBUTTON("OK").
+        SET label:STYLE:ALIGN TO "CENTER".
+        SET label:STYLE:HSTRETCH TO True. // Fill horizontally
+        LOCAL ok TO gui:ADDBUTTON("OK").
         // Show the GUI.
         gui:SHOW().
         // Handle GUI widget interactions.
@@ -180,11 +180,12 @@ following hierarchy:
     from, and when one is selected the popup goes away and the new choice is
     displayed on the button.
 
-    The objects in the list do not necessarily have to be string values.  By default
-    the ``PopupMenu`` will use the :attr:`Structure:TOSTRING` suffix to display
-    the string values of the items in the list.  If you'd like to use a different
-    suffix to convert the objects in the list into strings, you can choose that
-    suffix by setting the :attr:`OPTIONSSUFFIX` suffix of the ``PopupMenu``.
+    The menu displays the string values in the OPTIONS property. If OPTIONS contains items that are not strings,
+    then by default their :attr:`TOSTRING <Structure:TOSTRING>` suffixes will be used to display them as strings.
+
+    You can change this default behaviour by setting the popupmenu's :OPTIONSUFFIX to a different suffix
+    name other than "TOSTRING". In the example below which builds a list of bodies for the pulldown list,
+    the body:NAME suffix will be used instead of the body:TOSTRING suffix for all the items in the list.
 
     Example::
 
@@ -208,7 +209,7 @@ following hierarchy:
                    Every suffix of :struct:`BUTTON`
     -----------------------------------------------------------------------------------
     :attr:`OPTIONS`                       :struct:`List`                  List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`String`                Set this to display items with something other than TOSTRING.
+    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix used for display names. Default = TOSTRING.
     :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
     :attr:`VALUE`                         Any                             Returns the current selected value.
     :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
