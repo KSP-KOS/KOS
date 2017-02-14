@@ -3,7 +3,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using UnityEngine;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     [kOS.Safe.Utilities.KOSNomenclature("Label")]
     public class Label : Widget

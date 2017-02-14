@@ -17,7 +17,7 @@ using System.Collections.Generic;
  *   See docs for more.
  */
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     [kOS.Safe.Utilities.KOSNomenclature("GUI")]
     public class GUIWidgets : Box, IKOSScopeObserver

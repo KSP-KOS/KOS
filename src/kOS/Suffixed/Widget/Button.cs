@@ -2,7 +2,7 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     [kOS.Safe.Utilities.KOSNomenclature("Button")]
     public class Button : Label

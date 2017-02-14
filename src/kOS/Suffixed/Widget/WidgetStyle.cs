@@ -5,7 +5,7 @@ using kOS.Safe.Exceptions;
 using System.Collections.Generic;
 using kOS.Safe.Utilities;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Widget
 {
     [kOS.Safe.Utilities.KOSNomenclature("Style")]
     public class WidgetStyle : Structure
