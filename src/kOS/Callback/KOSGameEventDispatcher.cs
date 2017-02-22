@@ -65,7 +65,7 @@ namespace kOS.Callback
 		/// <returns></returns>
 		private bool UserDelgateIsAcceptable(UserDelegate del)
 		{
-			return del != null && !(del is DoNothingDelegate) && del.ProgContext.ContextId == Shared.Cpu.GetCurrentContext().ContextId;
+			return del != null && !(del is NoDelegate) && del.ProgContext.ContextId == Shared.Cpu.GetCurrentContext().ContextId;
 		}
 
 		// WHEN IMPLEMENTING A NEW EVENT TYPE:  Add a line to the following section

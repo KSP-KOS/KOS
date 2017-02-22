@@ -1337,12 +1337,12 @@ namespace kOS.Safe.Execution
                 // will be invalid.  Only execute the trigger if it still exists.
                 if (currentContext.ContainsTrigger(trigger))
                 {
-                    if (trigger is DoNothingDelegate)
+                    if (trigger is NoDelegate)
                     {
                         // Don't bother calling it.  Just declare it to be "done" with its default value.
                         trigger.FinishCallback(new ScalarIntValue(0));
                         // hypothetically this case shouldn't happen because our own code shouldn't
-                        // be adding triggers for the EmptyDelegate.  This is a fallback case to not
+                        // be adding triggers for the NoDelegate.  This is a fallback case to not
                         // blow up when we forget to do that check.
                     }
                     else

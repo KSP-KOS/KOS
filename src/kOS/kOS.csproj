@@ -278,7 +278,4 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Callback" />
-  </ItemGroup>
 </Project>

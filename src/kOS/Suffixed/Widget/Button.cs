@@ -7,11 +7,19 @@ namespace kOS.Suffixed.Widget
     [kOS.Safe.Utilities.KOSNomenclature("Button")]
     public class Button : Label
     {
-        public bool Pressed { get; private set; }
+        private bool pressed;
+        public bool Pressed
+        {
+            get { return pressed; }
+            private set { if (value != pressed) { pressed = value; ScheduleCallbacks(); } else { pressed = value; } }
+        }
+
         public bool PressedVisible { get; private set; }
         public bool IsToggle { get; set; }
         public bool IsExclusive { get; set; }
-        public KOSDelegate OnPressed;
+        public UserDelegate UserOnChanged { get ; set; }
+        public UserDelegate UserOnPressed { get; set; }
+        public UserDelegate UserOnReleased { get; set; }
 
         public Button(Box parent, string text) : this(parent, text, parent.FindStyle("button"))
         {
@@ -45,11 +53,55 @@ namespace kOS.Suffixed.Widget
         private void InitializeSuffixes()
         {
             AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => SetPressed(value)));
-            /* Can't work out how to call kOS code from C# in DoOnPressed() below.
-             * AddSuffix("ONPRESSED", new SetSuffix<KOSDelegate>(() => onPressed, value => onPressed = value));
-             */
             AddSuffix("TOGGLE", new SetSuffix<BooleanValue>(() => IsToggle, value => SetToggleMode(value)));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => IsExclusive, value => IsExclusive = value));
+            AddSuffix("ONCHANGED", new SetSuffix<UserDelegate>(
+                () => UserOnChanged ?? NoDelegate.Instance, value => UserOnChanged = (value is NoDelegate ? null : value) ));
+            AddSuffix("ONPRESSED", new SetSuffix<UserDelegate>(
+                () => UserOnPressed ?? NoDelegate.Instance, value => UserOnPressed = (value is NoDelegate ? null : value) ));
+            AddSuffix("ONRELEASED", new SetSuffix<UserDelegate>(
+                () => UserOnReleased ?? NoDelegate.Instance, value => UserOnReleased = (value is NoDelegate ? null : value) ));
+        }
+
+        /// <summary>
+        /// Should be called whenever the button value gets changed.
+        /// If there is a user callback registered to the change event, it
+        /// schedules it to get called on the next fixed update.
+        /// </summary>
+        protected virtual void ScheduleCallbacks()
+        {
+            // By default, this Button class keeps the button depressed until the script reads its
+            // state, and then it pops out because it was read.  Triggering a callback should count
+            // as the script "reading" the value, so it should pop out when that happens too.
+            bool causeRelease = false;
+
+            // This is being called from inside the Setter of the Pressed property, so
+            // the backing field 'pressed' is used here not the property 'Pressed', to
+            // avoid any potential strange recursion or threaded timing issues:
+            if (UserOnChanged != null)
+            {
+                UserOnChanged.TriggerNextUpdate(new BooleanValue(pressed));
+                if (pressed)
+                    causeRelease = true;
+            }
+            if (UserOnPressed != null && pressed)
+            {
+                UserOnPressed.TriggerNextUpdate();
+                causeRelease = true;
+            }
+            if (UserOnReleased != null && !pressed)
+                UserOnReleased.TriggerNextUpdate();
+
+            if (causeRelease)
+            {
+                // BE CAREFUL HERE!  This method is invoked during the Property Setter of `Pressed`,
+                // and calling TakePress() will cause the Pressed property to get set again (to false).
+                // If the flagging above isn't just right, there's a potential for infinite recursion
+                // here within the property setter.  (It works only because causeRelease is only true
+                // when the value becomes true, and TakePress() will only set it to false.  So they
+                // won't recurse back and forth.)
+                TakePress();
+            }
         }
 
         public void SetToggleMode(BooleanValue on)
@@ -103,17 +155,8 @@ namespace kOS.Suffixed.Widget
                     if (!PressedVisible) {
                         PressedVisible = true;
                         Communicate(() => Pressed = true);
-                        Communicate(() => DoOnPressed());
                     }
                 }
-            }
-        }
-
-        private void DoOnPressed()
-        {
-            // Not used currently - we can't call kOS code like this.
-            if (OnPressed != null) {
-                OnPressed.CallPassingArgs(new Structure[0]);
             }
         }
 

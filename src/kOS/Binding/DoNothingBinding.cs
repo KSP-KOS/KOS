@@ -9,7 +9,7 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            shared.BindingMgr.AddGetter("DONOTHING", () => new DoNothingDelegate(shared.Cpu));
+            shared.BindingMgr.AddGetter("DONOTHING", () => new NoDelegate(shared.Cpu));
         }
     }
 }

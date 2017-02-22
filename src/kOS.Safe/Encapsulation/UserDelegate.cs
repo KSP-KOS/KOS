@@ -109,5 +109,17 @@ namespace kOS.Safe.Encapsulation
             // about to be jumped into.
             return new KOSPassThruReturn();
         }
+
+        /// <summary>
+        /// A convienience shortcut to do a Cpu.AddTrigger for this UserDelegate.  See
+        /// Cpu.AddTrigger to see what this is for.  This is useful for cases where you
+        /// want to do an AddTrigger() but don't have access to the Shared.Cpu with which to
+        /// do so (the UserDelegate knows which Cpu it was created with so it can get to
+        /// it directly from that).
+        /// </summary>
+        public TriggerInfo TriggerNextUpdate(params Structure[] args)
+        {
+            return Cpu.AddTrigger(this, args);
+        }
     }
 }

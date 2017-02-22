@@ -1,7 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-# SharpDevelop 4.4
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS", "kOS\kOS.csproj", "{465EC87D-723D-4A6C-B116-9777AC641DE3}"
@@ -37,7 +36,26 @@ Global
 		$1.inheritsScope = text/plain
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
+		$2.AnonymousMethodBraceStyle = DoNotChange
+		$2.PropertyBraceStyle = DoNotChange
+		$2.PropertyGetBraceStyle = DoNotChange
+		$2.PropertySetBraceStyle = DoNotChange
+		$2.EventBraceStyle = DoNotChange
+		$2.EventAddBraceStyle = DoNotChange
+		$2.EventRemoveBraceStyle = DoNotChange
+		$2.StatementBraceStyle = DoNotChange
+		$2.ElseNewLinePlacement = DoNotCare
+		$2.ElseIfNewLinePlacement = DoNotCare
+		$2.CatchNewLinePlacement = DoNotCare
+		$2.FinallyNewLinePlacement = DoNotCare
+		$2.WhileNewLinePlacement = DoNotCare
+		$2.BeforeMethodDeclarationParentheses = False
+		$2.BeforeMethodCallParentheses = False
+		$2.BeforeConstructorDeclarationParentheses = False
+		$2.BeforeDelegateDeclarationParentheses = False
 		$2.AfterDelegateDeclarationParameterComma = True
+		$2.NewParentheses = False
+		$2.SpacesBeforeBrackets = False
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp

@@ -148,11 +148,11 @@ namespace kOS.Suffixed
         {
             // If a UserDelegate went away, throw away any previous trigger handles we may have been waiting to finish:
             // --------------------------------------------------------------------------------------------------------
-            if (StartDelegate == null) // Note: if the user assigns the DoNothingDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
+            if (StartDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 StartTrigger = null;
-            if (VectorDelegate == null) // Note: if the user assigns the DoNothingDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
+            if (VectorDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 VectorTrigger = null;
-            if (ColorDelegate == null) // Note: if the user assigns the DoNothingDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
+            if (ColorDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 ColorTrigger = null;
             
             // For any trigger handles for delegate calls that were in progress already, if they're now done
@@ -193,19 +193,19 @@ namespace kOS.Suffixed
             // -------------------------------------------------------------------------------------------------------------------------
             if (StartDelegate != null && (StartTrigger == null || StartTrigger.CallbackFinished))
             {
-                StartTrigger = shared.Cpu.AddTrigger(StartDelegate);
+                StartTrigger = StartDelegate.TriggerNextUpdate();
                 if (StartTrigger == null) // StartDelegate must be from a stale ProgramContext.  Stop trying to call it.
                     StartDelegate = null;
             }
             if (VectorDelegate != null && (VectorTrigger == null || VectorTrigger.CallbackFinished))
             {
-                VectorTrigger = shared.Cpu.AddTrigger(VectorDelegate);
+                VectorTrigger = VectorDelegate.TriggerNextUpdate();
                 if (VectorTrigger == null) // StartDelegate must be from a stale ProgramContext.  Stop trying to call it.
                     VectorDelegate = null;
             }
             if (ColorDelegate != null && (ColorTrigger == null || ColorTrigger.CallbackFinished))
             {
-                ColorTrigger = shared.Cpu.AddTrigger(ColorDelegate);
+                ColorTrigger = ColorDelegate.TriggerNextUpdate();
                 if (ColorTrigger == null) // StartDelegate must be from a stale ProgramContext.  Stop trying to call it.
                     ColorDelegate = null;
             }
@@ -218,20 +218,20 @@ namespace kOS.Suffixed
                    Vector = value;
                    RenderPointCoords();
                }));
-            AddSuffix(new[] { "VECUPDATE", "VECTORUPDATE" },
+            AddSuffix(new[] { "VECUPDATER", "VECTORUPDATER" },
                       new SetSuffix<UserDelegate>(
-                          () => VectorDelegate ?? new DoNothingDelegate(shared.Cpu), // never return a null to user code - make it a DoNothingDelegate instead.
-                          value => { VectorDelegate = (value is DoNothingDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                          () => VectorDelegate ?? new NoDelegate(shared.Cpu), // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { VectorDelegate = (value is NoDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
                          ));
             AddSuffix(new[] { "COLOR", "COLOUR" }, new SetSuffix<RgbaColor>(() => Color, value =>
                {
                    Color = value;
                    RenderColor();
                }));
-            AddSuffix(new[] { "COLORUPDATE", "COLOURUPDATE" },
+            AddSuffix(new[] { "COLORUPDATER", "COLOURUPDATER" },
                       new SetSuffix<UserDelegate>(
-                          () => ColorDelegate ?? new DoNothingDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
-                          value => { ColorDelegate = (value is DoNothingDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                          () => ColorDelegate ?? new NoDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { ColorDelegate = (value is NoDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
                          ));
             AddSuffix("SHOW", new SetSuffix<BooleanValue>(() => enable, SetShow));
             AddSuffix("START", new SetSuffix<Vector>(() => new Vector(Start), value =>
@@ -239,10 +239,10 @@ namespace kOS.Suffixed
                 Start = value;
                 RenderPointCoords();
             }));
-            AddSuffix("STARTUPDATE",
+            AddSuffix("STARTUPDATER",
                       new SetSuffix<UserDelegate>(
-                          () => StartDelegate ?? new DoNothingDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
-                          value => { StartDelegate = (value is DoNothingDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                          () => StartDelegate ?? new NoDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { StartDelegate = (value is NoDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
                          ));
             AddSuffix("SCALE", new SetSuffix<ScalarValue>(() => Scale, value =>
             {

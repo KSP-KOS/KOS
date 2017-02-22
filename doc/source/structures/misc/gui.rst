@@ -11,7 +11,7 @@ entirely GUI-driven vessel controls can be developed.
 .. figure:: /_images/general/gui-HelloWorld.png
     :width: 100%
 
-The "Hello World" program::
+The "Hello World" program, version 1 with "polling"::
 
         // "Hello World" program for kOS GUI.
         //
@@ -25,10 +25,57 @@ The "Hello World" program::
         // Show the GUI.
         gui:SHOW().
         // Handle GUI widget interactions.
-        // Can safely wait and GUI will still be responsive.
-        UNTIL ok:PRESSED { PRINT("Waiting for GUI"). WAIT(0.1). }
+        //
+        // This is the technique known as "polling" - In a loop you
+        // continually check to see if the value of the widgets in
+        // the GUI have changed:
+        LOCAL isDone IS FALSE.
+        UNTIL isDone
+        {
+          if (ok:PRESSED)
+            SET isDone TO TRUE.
+          WAIT 0.1. // No need to waste CPU time checking too often.
+        }
+        print "OK pressed.  Now closing demo.".
         // Hide when done (will also hide if power lost).
         gui:HIDE().
+
+The same "Hello World" program, version 2 with "callbacks"::
+
+        // "Hello World" program for kOS GUI.
+        //
+        // Create a GUI window
+        LOCAL gui IS GUI(200).
+        // Add widgets to the GUI
+        LOCAL label IS gui:ADDLABEL("Hello world!").
+        SET label:STYLE:ALIGN TO "CENTER".
+        SET label:STYLE:HSTRETCH TO True. // Fill horizontally
+        LOCAL ok TO gui:ADDBUTTON("OK").
+        // Show the GUI.
+        gui:SHOW().
+        // Handle GUI widget interactions.
+        //
+        // This is the technique known as "callbacks" - instead
+        // of actively looking again and again to see if a button was
+        // pressed, the script just tells kOS that it shold call a
+        // delegate function when it notices the button has done
+        // something, and then the program passively waits for that
+        // to happen:
+        LOCAL isDone IS FALSE.
+        function myPressedChecker {
+          SET isDone TO TRUE.
+        }
+        SET ok:ONPRESSED TO myPressedChecker@. // This could also be an anonymous function instead.
+        wait until isDone.
+
+        print "OK pressed.  Now closing demo.".
+        // Hide when done (will also hide if power lost).
+        gui:HIDE().
+
+Both techniques (the "polling" and the "callbacks" style) of interacting with the GUI are
+supported by the widgets in the system.  The "callbacks" style is supported by the
+use of various "ON" suffixes with names like ``ONPRESSED``, ``ONCHANGED``, and so on.
+
 
 Creating a Window
 -----------------
@@ -146,20 +193,49 @@ following hierarchy:
 
     ``Button`` objects are created inside Box objects via ADDBUTTON and ADDCHECKBOX methods.
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ===============================            =============
+    Suffix                                Type                                       Description
+    ===================================== ===============================            =============
                    Every suffix of :struct:`LABEL`
-    -----------------------------------------------------------------------------------
-    :attr:`PRESSED`                       :struct:`Boolean`               Has the button been pressed?
-    :attr:`TOGGLE`                        :struct:`Boolean`               Set to True to make the button toggle between pressed and not pressed. See Box:ADDCHECKBOX.
-    :attr:`EXCLUSIVE`                     :struct:`Boolean`               If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
+    ----------------------------------------------------------------------------------------------
+    :attr:`PRESSED`                       :struct:`Boolean`                          Has the button been pressed in and not yet read?
+    :attr:`TOGGLE`                        :struct:`Boolean`                          Set to true to make the button take one click to go in and a second cick to pop back out.
+    :attr:`EXCLUSIVE`                     :struct:`Boolean`                          If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
+    :attr:`ONPRESSED`                     :struct:`KOSDelegate` (no args)            Your function called whenever the button goes in.
+    :attr:`ONRELEASED`                    :struct:`KOSDelegate` (no args)            Your function called whenever the button goes out.
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button goes either in or out.
     ===================================== =============================== =============
 
 .. note::
 
-    Unless TOGGLE is set to True, the value of :attr:`PRESSED` resets to False as
-    soon as the value is accessed.
+    Reading the value of the :attr:`PRESSED` suffix will tell you if the button is pressed in (true)
+    or released (false).  But be aware that if :attr:`TOGGLE` is set to false (which is the default),
+    then the :attr:`PRESSED` suffix will only give a value of `True` once and then automatically
+    become `False` again after that.
+
+    **Behaviour when TOGGLE is false (the default):**
+
+    By default, :attr:`TOGGLE` is set to false.  This means the button automatically releases
+    itself and doesn't require a second click by the user to pop the button back out again.
+    The button's :attr:`PRESSED` suffix will only stay true long enough for the kerboscript
+    to notice that it has been pressed.  After that the button will release itself (and 
+    :attr:`PRESSED` will therefore be false until the next button press).
+
+    The conditions under which a button will automatically release itself when :attr:`TOGGLE` is
+    set to `False` are:
+
+    - When the script looks at the value of the button's :attr:`PRESSED` value.
+      (It will only be true once.  After that first peek at its value, it will be false.)
+    - If the script defines an :attr:`ONCHANGED` user delegate, or an :attr:`ONPRESSED` 
+      user delegate.  (Then kOS will set the :attr:`PRESSED` value to false right away and
+      instead schedule the delegate to run.)
+
+    **Behaviour when TOGGLE is true:**
+
+    If TOGGLE is set to True, then the button will not automatically release after it is
+    read by the script.  Instead it will need to be clicked by the user a second time to make
+    it pop back out.  In this mode, the button's :attr:`PRESSED` value will never automatically
+    reset to false on its own.
 
     If the Button is created by the Button:ADDCHECKBOX method, it will have a different visual
     style and it will start already in TOGGLE mode.
@@ -169,6 +245,65 @@ following hierarchy:
 
     If the Button is created by the Button:ADDRADIOBUTTON method, it will have the checkbox
     style, and it will start already in TOGGLE and EXCLUSIVE modes.
+
+    **Callback hooks ONCHANGED, ONPRESSED, ONRELEASED:**
+
+    The three suffixes :attr:`ONCHANGED`, :attr:`ONPRESSED`, and :attr:`ONRELEASED` are similar
+    to each other.  All of them are what is known as a "callback hook".  You can assign them to
+    a :struct:`KOSDelegate` of one of your functions (named or anonymous) and from then on 
+    kOS will call that function whenever the button gets changed as described.
+
+    :attr:`ONPRESSED` and :attr:`ONRELEASED` are both called with no parameters.  To use them,
+    your function must be written to expect no parameters.
+
+    :attr:`ONCHANGED` is called with one parameter, the boolean value the button got changed to.
+    To use :attr:`ONCHANGED`, your function must be written to expect a single boolean parameter.
+    :attr:`ONCHANGED` is really only useful with buttons where :attr:`TOGGLE` is true.
+
+    Here is an example of using the button callback hooks::
+
+        LOCAL doneYet is FALSE.
+        LOCAL g IS GUI(200).
+
+        // b1 is a normal button that auto-releases itself:
+        // Note that the callback hook, myButtonDetector, is
+        // a named function found elsewhere in this same program:
+        LOCAL b1 IS g:ADDBUTTON("button 1").
+        SET b1:ONPRESSED TO myButtonDetector@.
+
+        // b2 is also a normal button that auto-releases itself,
+        // but this time we'll use an anonymous callback hook for it:
+        LOCAL b2 IS g:ADDBUTTON("button 2").
+        SET b2:ONPRESSED TO { print "Button Two got pressed". }
+        
+        // b3 is a toggle button.
+        // We'll use it to demonstrate how ONCHANGED callback hooks look:
+        LOCAL b3 IS g:ADDBUTTON("button 3 (toggles)").
+        SET b3:TOGGLE TO TRUE.
+        SET b3:ONCHANGED TO myChangeDetector@.
+
+        // b4 is the exit button.  For this we'll use another
+        // anonymous function that just sets a boolean variable
+        // to signal the end of the program:
+        LOCAL b4 IS g:ADDBUTTON("EXIT DEMO").
+        SET b4:ONPRESSED TO { set doneYet to true. }
+        
+        g:show(). // Start showing the window.
+
+        wait until doneYet. // program will stay here until exit clicked.
+
+        g:hide(). // Finish the demo and close the window.
+
+        //END.
+
+        function myButtonDetector {
+          print "Button One got pressed.".
+        }
+        function myChangeDetector {
+          parameter newState.
+          print "Button Three has just become " + newState.
+        }
+
 
 .. structure:: PopupMenu
 

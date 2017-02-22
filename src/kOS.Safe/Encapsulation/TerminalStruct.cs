@@ -59,7 +59,7 @@ namespace kOS.Safe.Encapsulation
             {
                 // If the watcher is dead, take it out of the list, else call it with (cols, rows) as its arguments:
                 
-                if (watcher is DoNothingDelegate) // User passed us a pointless "null" delegate
+                if (watcher is NoDelegate) // User passed us a pointless "null" delegate
                     continue;
 
                 List<Structure> argList = new List<Structure>(new Structure[] {(ScalarIntValue)sb.ColumnCount, (ScalarIntValue)sb.RowCount});
@@ -86,13 +86,20 @@ namespace kOS.Safe.Encapsulation
             // Only schedule the call to the next one if the previous one isn't still waiting:
             if (currentResizeTrigger == null || currentResizeTrigger.CallbackFinished)
             {
-                currentResizeTrigger = pendingResizeTriggers.Dequeue();
+                if (pendingResizeTriggers.Count == 0)
+                {
+                    currentResizeTrigger = null;
+                }
+                else
+                {
+                    currentResizeTrigger = pendingResizeTriggers.Dequeue();
 
-                // Try calling it again, and by the way any time we notice an attempt
-                // to call it again has failed, then go back and trim our list of
-                // watchers so it won't happen again:
-                if (Shared.Cpu.AddTrigger(currentResizeTrigger) == null)
-                    TrimStaleWatchers();
+                    // Try calling it again, and by the way any time we notice an attempt
+                    // to call it again has failed, then go back and trim our list of
+                    // watchers so it won't happen again:
+                    if (Shared.Cpu.AddTrigger(currentResizeTrigger) == null)
+                        TrimStaleWatchers();
+                }
             }
         }
 
@@ -102,7 +109,7 @@ namespace kOS.Safe.Encapsulation
             
             List<UserDelegate> deleteUs = new List<UserDelegate>();
             foreach (UserDelegate watcher in resizeWatchers)
-                if (watcher is DoNothingDelegate || watcher.ProgContext.ContextId != Shared.Cpu.GetCurrentContext().ContextId)
+                if (watcher is NoDelegate || watcher.ProgContext.ContextId != Shared.Cpu.GetCurrentContext().ContextId)
                     deleteUs.Add(watcher);
                 
             foreach (UserDelegate deadWatcher in deleteUs)

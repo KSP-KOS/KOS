@@ -67,7 +67,6 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
-    <Compile Include="Encapsulation\DoNothingDelegate.cs" />
     <Compile Include="Exceptions\KOSAtmosphereObsoletionException.cs" />
     <Compile Include="Exceptions\KOSInvalidDelegateType.cs" />
     <Compile Include="Encapsulation\TerminalInput.cs" />
@@ -271,6 +270,8 @@
     <Compile Include="SafeSharedObjects.cs" />
     <Compile Include="Persistence\PathValue.cs" />
     <Compile Include="Execution\InternalPath.cs" />
+    <Compile Include="Exceptions\KOSCannotCallException.cs" />
+    <Compile Include="Encapsulation\NoDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -282,9 +283,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Callback" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -26,9 +26,9 @@ public class TriggerInfo
     /// </summary>
     public Structure ReturnValue { get; private set; }
     /// <summary>
-    /// If this is a C# callback, this tells you if it reached the end and populated
-    /// its ReturnValue yet or not.  (It's possible for a callback to take more
-    /// than 1 update to reach the end of the function).
+    /// If this is a kerboscript rather than C# callback, this tells you if it reached
+    /// the end and populated its ReturnValue yet or not.  (It's possible for a script
+    /// callback to take more than 1 update to reach the end of the function).
     /// </summary>
     public bool CallbackFinished { get; private set; }
     /// <summary>
