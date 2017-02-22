@@ -1,34 +1,65 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
+using System;
+using System.Linq;
 
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("ActiveResource")]
-    public class ActiveResourceValue : Structure
+    public class ActiveResourceValue : AggregateResourceValue
     {
-        private readonly Vessel.ActiveResource activeResource;
-        private readonly SharedObjects shared;
+        private readonly int resourceId;
+        private readonly PartSet partSet;
+        private double amount;
+        private double capacity;
+        private WeakReference stageValRef;
 
-        public ActiveResourceValue(Vessel.ActiveResource activeResource, SharedObjects shared)
+        public ActiveResourceValue(PartResourceDefinition definition, SharedObjects shared, StageValues stageValues, PartSet partSet) :
+            base(definition, shared)
         {
-            this.activeResource = activeResource;
-            this.shared = shared;
-            InitializeActiveResourceSuffixes();
-        }
-
-        private void InitializeActiveResourceSuffixes()
-        {
-            AddSuffix("NAME", new Suffix<StringValue>(() => activeResource.info.name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("AMOUNT", new Suffix<ScalarValue>(() => activeResource.amount, "The resources currently available"));
-            AddSuffix("CAPACITY", new Suffix<ScalarValue>(() => activeResource.maxAmount, "The total storage capacity currently available"));
-            AddSuffix("DENSITY", new Suffix<ScalarValue>(() => activeResource.info.density, "The density of this resource"));
-            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(activeResource.parts, shared), "The containers for this resource"));
+            stageValRef = new WeakReference(stageValues);
+            resourceId = definition.id;
+            this.partSet = partSet;
         }
 
         public override string ToString()
         {
-            return string.Format("ACTIVERESOURCE({0},{1},{2})", activeResource.info.name, activeResource.amount, activeResource.maxAmount);
+            return string.Format("ACTIVERESOURCE({0},{1},{2})", GetName(), GetAmount(), GetCapacity());
+        }
+
+        public override ScalarValue GetAmount()
+        {
+            CreatePartSet();
+            partSet.GetConnectedResourceTotals(resourceId, out amount, out capacity, true);
+            return amount;
+        }
+
+        public override ScalarValue GetCapacity()
+        {
+            CreatePartSet();
+            partSet.GetConnectedResourceTotals(resourceId, out amount, out capacity, true);
+            return capacity;
+        }
+
+        public override ListValue GetParts()
+        {
+            CreatePartSet();
+            return PartValueFactory.Construct(partSet.GetParts().Where(
+                e => e.Resources.Any(
+                    e2 => e2.info.id == resourceId)), shared);
+        }
+
+        public void CreatePartSet()
+        {
+            if (stageValRef.IsAlive)
+            {
+                var stage = stageValRef.Target as StageValues;
+                if (stage != null)
+                {
+                    stage.CreatePartSet();
+                }
+            }
         }
     }
 }

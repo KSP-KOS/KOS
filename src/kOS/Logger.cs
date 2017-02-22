@@ -56,7 +56,7 @@ namespace kOS
             }
 
             if (SafeHouse.Config.AudibleExceptions && Shared != null && Shared.SoundMaker != null)
-                Shared.SoundMaker.BeginSound("error");
+                Shared.SoundMaker.BeginFileSound("error");
 
             LogToScreen(message);
             

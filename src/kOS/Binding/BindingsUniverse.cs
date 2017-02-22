@@ -6,69 +6,25 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using kOS.Safe.Persistence;
+using kOS.Communication;
 
 namespace kOS.Binding
 {
     [Binding("ksp")]
     public class BindingTimeWarp : Binding
     {
+        private HomeConnection homeConnection;
+        private ControlConnection controlConnection;
+
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("KUNIVERSE", () => new KUniverseValue(shared));
-
-            shared.BindingMgr.AddGetter("WARPMODE", () =>
-                {
-                    switch (TimeWarp.WarpMode)
-                    {
-                        case TimeWarp.Modes.HIGH:
-                            return "RAILS";
-
-                        case TimeWarp.Modes.LOW:
-                            return "PHYSICS";
-
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                });
-            shared.BindingMgr.AddSetter("WARPMODE", val =>
-                {
-                    TimeWarp.Modes toSet;
-
-                    switch (val.ToString().ToUpper())
-                    {
-                        case "PHYSICS":
-                            toSet = TimeWarp.Modes.LOW;
-                            break;
-
-                        case "RAILS":
-                            toSet = TimeWarp.Modes.HIGH;
-                            break;
-
-                        default:
-                            throw new Exception(string.Format("WARPMODE '{0}' is not valid", val));
-                    }
-
-                    TimeWarp.fetch.Mode = toSet;
-                });
-            shared.BindingMgr.AddGetter("WARP", () => TimeWarp.CurrentRateIndex);
-            shared.BindingMgr.AddSetter("WARP", val =>
-            {
-                int newRate;
-                if (int.TryParse(val.ToString(), out newRate))
-                {
-                    switch (TimeWarp.WarpMode)
-                    {
-                        case TimeWarp.Modes.HIGH:
-                            SetWarpRate(newRate, TimeWarp.fetch.warpRates.Length - 1);
-                            break;
-                        case TimeWarp.Modes.LOW:
-                            SetWarpRate(newRate, TimeWarp.fetch.physicsWarpRates.Length - 1);
-                            break;
-                        default:
-                            throw new Exception(string.Format("WARPMODE '{0}' is unknown to kOS, please contact the devs", val));
-                    }
-                }
-            });
+            shared.BindingMgr.AddGetter("HOMECONNECTION", () => homeConnection ?? (homeConnection = new HomeConnection(shared)));
+            shared.BindingMgr.AddGetter("CONTROLCONNECTION", () => controlConnection ?? (controlConnection = new ControlConnection(shared)));
+            shared.BindingMgr.AddGetter("WARPMODE", () => TimeWarpValue.Instance.GetModeAsString());
+            shared.BindingMgr.AddSetter("WARPMODE", val => TimeWarpValue.Instance.SetModeAsString((StringValue)StringValue.FromPrimitive(val.ToString())));
+            shared.BindingMgr.AddGetter("WARP", () => TimeWarpValue.Instance.GetWarp());
+            shared.BindingMgr.AddSetter("WARP", val => TimeWarpValue.Instance.SetWarp((ScalarIntValue)ScalarIntValue.FromPrimitive(val)));
             shared.BindingMgr.AddGetter("MAPVIEW", () => MapView.MapIsEnabled);
             shared.BindingMgr.AddSetter("MAPVIEW", val =>
             {
@@ -82,25 +38,24 @@ namespace kOS.Binding
                 }
             });
             shared.BindingMgr.AddGetter("CONSTANT", () => new ConstantValue());
-            foreach (var body in FlightGlobals.fetch.bodies)
-            {
-                var cBody = body;
-                shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
-            }
-
             shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
             shared.BindingMgr.AddGetter("SOLARPRIMEVECTOR", () => new Vector(Planetarium.right));
             shared.BindingMgr.AddGetter("ARCHIVE", () => shared.VolumeMgr.GetVolume(Archive.ArchiveName));
+
+            foreach (var body in FlightGlobals.fetch.bodies)
+            {
+                var cBody = body;
+
+                // We refuse to override other bound identifiers with body names.  Body names
+                // are of "weakest" priority when their names clash with other bound variables
+                // in the language.  (This has to be here because planet packs can rename the
+                // bodies and we can't control the body names we might have.  A body name could
+                // be something like "Eta" or "Stage" or something along those lines.)
+
+                if( !shared.BindingMgr.HasGetter(body.name) )
+                    shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
+            }
         }
 
-        private static void SetWarpRate(int newRate, int maxRate)
-        {
-            var clampedValue = Mathf.Clamp(newRate, 0, maxRate);
-            if (clampedValue != newRate)
-            {
-                SafeHouse.Logger.Log(string.Format("Clamped Timewarp rate. Was: {0} Is: {1}", newRate, clampedValue));
-            }
-            TimeWarp.SetRate(clampedValue, false);
-        }
     }
 }

@@ -15,13 +15,17 @@ using kOS.Communication;
 using kOS.Serialization;
 using kOS.Safe.Serialization;
 using kOS.Safe;
+using kOS.Safe.Execution;
 
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Vessel")]
-    public class VesselTarget : Orbitable, IKOSTargetable
+    public class VesselTarget : Orbitable, IKOSTargetable, IKOSScopeObserver
     {
         private static string DumpGuid = "guid";
+
+        private ListValue cachedParts = new ListValue();
+        private bool cachedPartsAreStale = true;
 
         public override Orbit Orbit { get { return Vessel.orbit; } }
 
@@ -37,7 +41,7 @@ namespace kOS.Suffixed
 
         public override Vector GetPosition()
         {
-            return new Vector(Vessel.findWorldCenterOfMass() - CurrentVessel.findWorldCenterOfMass());
+            return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
         }
 
         public override OrbitableVelocity GetVelocities()
@@ -80,7 +84,7 @@ namespace kOS.Suffixed
                 pos = pos + offset;
             }
 
-            return new Vector(pos - Shared.Vessel.findWorldCenterOfMass()); // Convert to ship-centered frame.
+            return new Vector(pos - Shared.Vessel.CoMD); // Convert to ship-centered frame.
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace kOS.Suffixed
             if (parent != null)
             {
                 Vector3d pos = GetPositionAtUT(timeStamp);
-                surfVel = new Vector(orbVel - parent.getRFrmVel(pos + Shared.Vessel.findWorldCenterOfMass()));
+                surfVel = new Vector(orbVel - parent.getRFrmVel(pos + Shared.Vessel.CoMD));
             }
             else
                 surfVel = new Vector(orbVel.x, orbVel.y, orbVel.z);
@@ -203,19 +207,48 @@ namespace kOS.Suffixed
 
         public VesselTarget()
         {
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         public VesselTarget(Vessel target, SharedObjects shared)
             : base(shared)
         {
             Vessel = target;
-            InitializeSuffixes();
+            HookEvents();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         public VesselTarget(SharedObjects shared)
             : this(shared.Vessel, shared)
         {
+        }
+
+        public void HookEvents()
+        {
+            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
+            GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
+        }
+
+        public void UnhookEvents()
+        {
+            GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
+            GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
+        }
+
+        public void OnVesselDestroy(Vessel v)
+        {
+            if (Vessel.Equals(v))
+            {
+                UnhookEvents();
+                Vessel = null;
+            }
+        }
+
+        public void OnVesselPartCountChanged(Vessel v)
+        {
+            cachedParts.Clear();
+            cachedPartsAreStale = true;
+            GetAllParts();
         }
 
         private Vessel CurrentVessel { get { return Shared.Vessel; } }
@@ -229,12 +262,26 @@ namespace kOS.Suffixed
         // in order to implement the orbit solver later.
         public ScalarValue GetDistance()
         {
-            return Vector3d.Distance(CurrentVessel.findWorldCenterOfMass(), Vessel.findWorldCenterOfMass());
+            return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
         }
 
         public Vessel Vessel { get; private set; }
 
         public static string[] ShortCuttableShipSuffixes { get; private set; }
+
+        private int linkCount = 0;
+        public int LinkCount
+        {
+            get
+            {
+                return linkCount; }
+            set
+            {
+                linkCount = value;
+                if (linkCount <= 0)
+                    ScopeLost();
+            }
+        }
 
         public override string ToString()
         {
@@ -243,7 +290,20 @@ namespace kOS.Suffixed
 
         public ListValue GetAllParts()
         {
-            return PartValueFactory.Construct(Vessel.Parts, Shared);
+            if (cachedPartsAreStale)
+            {
+                cachedParts.Clear();
+                for (int i = 0; i < Vessel.Parts.Count; ++i)
+                {
+                    var part = Vessel.Parts[i];
+                    if (part.State != PartStates.DEAD && part.transform != null)
+                    {
+                        cachedParts.Add(PartValueFactory.Construct(Vessel.Parts[i], Shared));
+                    }
+                }
+                cachedPartsAreStale = false;
+            }
+            return cachedParts;
         }
 
         private ListValue GetPartsDubbed(StringValue searchTerm)
@@ -436,7 +496,7 @@ namespace kOS.Suffixed
             AddSuffix("VERTICALSPEED", new Suffix<ScalarValue>(() => Vessel.verticalSpeed));
             AddSuffix("GROUNDSPEED", new Suffix<ScalarValue>(GetHorizontalSrfSpeed));
             AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSObsoletionException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
-            AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
+            AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.CoMD)).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<StringValue>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<StringValue>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
@@ -655,6 +715,11 @@ namespace kOS.Suffixed
             }
 
             Vessel = vessel;
+        }
+
+        public void ScopeLost()
+        {
+            UnhookEvents();
         }
     }
 }

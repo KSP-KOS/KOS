@@ -80,7 +80,7 @@ namespace kOS.Suffixed.Part
             // of the node where the two docking ports will join together, which will help
             // with docking operations
 
-            return new Vector(module.nodeTransform.position - Shared.Vessel.findWorldCenterOfMass());
+            return new Vector(module.nodeTransform.position - Shared.Vessel.CoMD);
         }
 
         public void DoUndock()

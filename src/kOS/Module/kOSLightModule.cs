@@ -1,4 +1,4 @@
-using kOS.Safe.Utilities;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace kOS.Module
@@ -28,7 +28,7 @@ namespace kOS.Module
 
         [KSPField(isPersistant = false, guiActive = false)]
         public string animationName = "";
-        
+
         [KSPField(isPersistant = false, guiActive = false)]
         public string pulseWidth = "";
 
@@ -36,15 +36,16 @@ namespace kOS.Module
         public string gapWidth = "";
 
         private double lastTime = double.MaxValue;
+        private Color lastColor = new Color(0, 0, 0, 0);
 
         private readonly Color powerOffColor = new Color(0, 0, 0, 0);
 
         private ModuleLight lightModule;
-        private Light[] lights;
-        private Renderer[] renderers;
+        private List<Light> lights;
+        private List<Renderer> renderers;
         private Animation[] animations;
         private bool lastLightModuleIsOn = false;
-        
+
         public override void OnLoad(ConfigNode node)
         {
             updateReferences();
@@ -128,6 +129,9 @@ namespace kOS.Module
             if (lightModule != null)
             {
                 Color currentColor = powerStarved || !lightModule.isOn ? powerOffColor : new Color(red, green, blue, 1);
+                if (currentColor.Equals(lastColor))
+                    return;
+                lastColor = currentColor;
                 if (lights != null)
                 {
                     foreach (Light lgt in lights)

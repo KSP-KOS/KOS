@@ -124,7 +124,9 @@ Structure
     :access: Get/Set
 
     GET:
-        The vector rendered into a :ref:`Direction <direction>` (see note at the bottom of this page about information loss when doing this).
+        The vector rendered into a :ref:`Direction <direction>` (see
+        :ref:`note in the Directions documentation <vectors_vs_directions>`
+        about information loss when doing this).
 
     SET:
         Tells the vector to keep its magnitude as it is but point in a new direction, adjusting its :math:`(x,y,z)` numbers accordingly.
@@ -140,18 +142,18 @@ Structure
 Operations and Methods
 ----------------------
 
-============================================================= =============
-Method / Operator                                              Return Type    
-============================================================= =============
- :ref:`* (asterisk) <Vector *>`                               :struct:`scalar` or :struct:`Vector` 
- :ref:`+ (plus)     <Vector +->`                              :struct:`Vector`
- :ref:`- (minus)    <Vector +->`                              :struct:`Vector`
- :ref:`- (unary)    <Vector +->`                              :struct:`Vector`
- :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`  :struct:`scalar`
- :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                     :struct:`Vector`
- :func:`VANG`, :func:`VECTORANGLE`                            :struct:`scalar` (deg)
- :func:`VXCL`, :func:`VECTOREXCLUDE`                          :struct:`Vector`
-============================================================= =============
+======================================================================== =============
+Method / Operator                                                         Return Type    
+======================================================================== =============
+ :ref:`* (asterisk) <Vector *>`                                          :struct:`scalar` or :struct:`Vector` 
+ :ref:`+ (plus)     <Vector +->`                                         :struct:`Vector`
+ :ref:`- (minus)    <Vector +->`                                         :struct:`Vector`
+ :ref:`- (unary)    <Vector +->`                                         :struct:`Vector`
+ :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* (asterisk) <Vector *>`  :struct:`scalar`
+ :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                                :struct:`Vector`
+ :func:`VANG`, :func:`VECTORANGLE`                                       :struct:`scalar` (deg)
+ :func:`VXCL`, :func:`VECTOREXCLUDE`                                     :struct:`Vector`
+======================================================================== =============
 
 .. index:: vector multiplication
 .. _Vector *:
@@ -257,13 +259,13 @@ Method / Operator                                              Return Type
             \frac{
                 \vec{v_1}\cdot\vec{v_2}
             }{
-                \left|\vec{v_1}\cdot\vec{v_2}\right|
+                \left|\vec{v_1}\right|\cdot\left|\vec{v_2}\right|
             }
         \right)
 
     or in **KerboScript**::
 
-        arccos( (VDOT(v1,v2) / VDOT(v1,v2):MAG ) )
+        arccos( (VDOT(v1,v2) / (v1:MAG * v2:MAG) ) )
 
 .. function:: VXCL(v1,v2)
 

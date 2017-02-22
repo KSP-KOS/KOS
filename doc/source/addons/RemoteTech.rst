@@ -3,19 +3,43 @@
 RemoteTech
 ==========
 
-RemoteTech is a modification for Squad’s "Kerbal Space Program" (KSP) which overhauls the unmanned space program. It does this by requiring unmanned vessels have a connection to Kerbal Space Center (KSC) to be able to be controlled. This adds a new layer of difficulty that compensates for the lack of live crew members.
+RemoteTech is a modification for Squad's "Kerbal Space Program" (KSP) which overhauls the unmanned space program. It does this by requiring unmanned vessels have a connection to Kerbal Space Center (KSC) to be able to be controlled. This adds a new layer of difficulty that compensates for the lack of live crew members.
 
 - Download: http://spacedock.info/mod/520/RemoteTech
 - Sources: https://github.com/RemoteTechnologiesGroup/RemoteTech
 - Documentation: http://remotetechnologiesgroup.github.io/RemoteTech/
 
+You can find out if the RemoteTech addon is available in the
+current game installation by usng the boolean expression
+``addons:available("RT")``.
 
 Interaction with kOS
 --------------------
 
+.. note::
+
+    .. versionadded:: v1.0.2
+        kOS now supports access to connection informaion from a unified location.
+        See :ref:`Connectivity Managers <connectivityManagers>` for more
+        information. All of the previous implementation as detailed on this page
+        remains supported.
+
 When you have RemoteTech installed you can only interact with the core's terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.
 
 If you launch a manned craft while using RemoteTech, you are still able to input commands from the terminal even if you do not have a connection to the KSC.  The archive will still be inaccessible without a connection to the KSC.  Under the current implementation, there is no delay when accessing the archive with a local terminal.  This implementation may change in the future to account for delays in reading and writing data over the connection.
+
+Remote Tech and the kOS GUI widgets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: v1.1.0
+
+The kOS :ref:`GUI widget <widgets>` system tries to
+:ref:`obey the signal delay <widgets_delay>` imposed by RemoteTech,
+when Remote Tech is installed.  A user's interaction with
+GUI widgets on the screen will be subject to the same
+signal delay rules as the interactive flying controls of the
+ship.
+
 
 Antennas
 ~~~~~~~~
@@ -51,14 +75,14 @@ of some of its suffixes.
 RTAddon
 ~~~~~~~
 
-Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
+Starting version 0.17 of kOS you can access structure RTAddon via ``ADDONS:RT``.
 
 .. structure:: RTAddon
 
     ===================================== ===================================== =============
      Suffix                                Type                                  Description
     ===================================== ===================================== =============
-     :attr:`AVAILABLE`                     :struct:`Boolean` (readonly)          True if RT is installed and RT integration enabled.
+     :attr:`AVAILABLE`                     :struct:`Boolean` (readonly)          True if RT is installed and RT integration enabled. It is better to use ``addons:available("IR")`` for this.
      :meth:`DELAY(vessel)`                 :struct:`Scalar`                      Get shortest possible delay to given :struct:`Vessel`
      :meth:`KSCDELAY(vessel)`              :struct:`Boolean`                     Get delay from KSC to given :struct:`Vessel`
      :meth:`ANTENNAHASCONNECTION(part)`    :struct:`Boolean`                     True if given :struct:`Part` has any connection
@@ -76,6 +100,9 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
     :access: Get only
 
     True if RT is installed and RT integration enabled.
+
+    It is better to use ``ADDONS:AVAILABLE("RT")`` first to discover if
+    RemoteTech is installed.
 
 .. method:: RTAddon:DELAY(vessel)
 

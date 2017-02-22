@@ -46,7 +46,7 @@ namespace kOS.Suffixed
             AddSuffix("MINUTE", new Suffix<ScalarValue>(CalculateMinute));
             AddSuffix("SECOND", new Suffix<ScalarValue>(CalculateSecond));
             AddSuffix("SECONDS", new Suffix<ScalarValue>(() => span));
-            AddSuffix("CLOCK", new Suffix<StringValue>(() => string.Format("{0:00}:{1:00}:{2:00}", CalculateHour(), CalculateMinute(), CalculateSecond())));
+            AddSuffix("CLOCK", new Suffix<StringValue>(() => string.Format("{0:00}:{1:00}:{2:00}", (int)CalculateHour(), (int)CalculateMinute(), (int)CalculateSecond())));
             AddSuffix("CALENDAR", new Suffix<StringValue>(() => "Year " + CalculateYear() + ", day " + CalculateDay()));
         }
 
@@ -80,7 +80,7 @@ namespace kOS.Suffixed
 
         private ScalarValue CalculateSecond()
         {
-            return span%SECONDS_IN_MINUTE;
+            return (int)Math.Floor(span % SECONDS_IN_MINUTE);
         }
 
         public double ToUnixStyleTime()
@@ -139,6 +139,11 @@ namespace kOS.Suffixed
                 return span == t.ToUnixStyleTime();
             }
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return span.GetHashCode();
         }
 
         public static bool operator ==(TimeSpan a, TimeSpan b)

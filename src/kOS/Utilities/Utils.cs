@@ -109,50 +109,6 @@ namespace kOS.Utilities
             return outAngle;
         }
 
-        public static GUISkin GetSkinCopy(GUISkin toCopy)
-        {
-            // If we just did something like this:
-            //     theSkin = HighLogic.Skin;
-            //     theSkin.label.fontSize=10;
-            // Then theSkin would have just been a reference to the same skin
-            // everybody else uses in KSP and therefore it would have altered
-            // the look of all the KSP windows from stock and all the other mods.
-            // (Yes, this is what happened the first time I tried this).
-            //
-            // Therefore we want to make theSkin a deep copy of HighLogic.Skin, then
-            // alter it after making the copy, but GUISkin has no copy constructor.
-            // The individual GUIStyle's inside it do, however, and that is what
-            // causes this next block of code.  It's starting off theSkin as a deep
-            // copy of HighLogic.Skin, at least as much as it can:
-            //
-            var skin = ScriptableObject.CreateInstance<GUISkin>();
-
-            // This is literally every GUISTyle mentioned in Unity's documention for
-            // GUISkin, as of 11/11/2014.  If Unity updates these, we could be screwed:
-            //
-            skin.box = new GUIStyle(toCopy.box);
-            skin.button = new GUIStyle(toCopy.button);
-            skin.horizontalScrollbar = new GUIStyle(toCopy.horizontalScrollbar);
-            skin.horizontalScrollbarLeftButton = new GUIStyle(toCopy.horizontalScrollbarLeftButton);
-            skin.horizontalScrollbarRightButton = new GUIStyle(toCopy.horizontalScrollbarRightButton);
-            skin.horizontalScrollbarThumb = new GUIStyle(toCopy.horizontalScrollbarThumb);
-            skin.horizontalSlider = new GUIStyle(toCopy.horizontalSlider);
-            skin.horizontalSliderThumb = new GUIStyle(toCopy.horizontalSliderThumb);
-            skin.label = new GUIStyle(toCopy.label);
-            skin.scrollView = new GUIStyle(toCopy.scrollView);
-            skin.textArea = new GUIStyle(toCopy.textArea);
-            skin.textField = new GUIStyle(toCopy.textField);
-            skin.toggle = new GUIStyle(toCopy.toggle);
-            skin.verticalScrollbar = new GUIStyle(toCopy.verticalScrollbar);
-            skin.verticalScrollbarDownButton = new GUIStyle(toCopy.verticalScrollbarDownButton);
-            skin.verticalScrollbarThumb = new GUIStyle(toCopy.verticalScrollbarThumb);
-            skin.verticalScrollbarUpButton = new GUIStyle(toCopy.verticalScrollbarUpButton);
-            skin.verticalSlider = new GUIStyle(toCopy.verticalSlider);
-            skin.verticalSliderThumb = new GUIStyle(toCopy.verticalSliderThumb);
-            skin.window = new GUIStyle(toCopy.window);
-            return skin;
-        }
-
         /// <summary>
         ///   Returns true if body a orbits body b, either directly or through
         ///   a grandparent chain.
@@ -246,10 +202,16 @@ namespace kOS.Utilities
             // When we can't use body.orbit, then manually perform the work that (probably) body.orbit.GetVel()
             // is doing itself.  This isn't DRY, but SQUAD made it impossible to be DRY when they didn't implement
             // the algorithm for the Sun so we have to repeat it again ourselves:
-            
+
+            // If we assume this happens when the body is the sun, then the sun's body is the
+            // reference frame of the SOI's rotation            
             CelestialBody soiBody = shared.Vessel.mainBody;
             if (soiBody.orbit != null)
-                return soiBody.orbit.GetFrameVel();
+            {
+                Vector3d wonkyAxesVel = soiBody.orbit.GetFrameVel();
+                Vector3d correctedVel = new Vector3d(wonkyAxesVel.x, wonkyAxesVel.z, wonkyAxesVel.y); // have to swap axes because KSP API is weird.
+                return -correctedVel; // invert direction because the above gives vel of my body rel to sun, and I want vel of sun rel to my body.
+            }
             return (-1)*shared.Vessel.obt_velocity;
         }
 
@@ -268,6 +230,58 @@ namespace kOS.Utilities
             if (parent == body)
                 parent = null;
             return parent;
+        }
+
+        /// <summary>
+        /// Determines if a given case insensitive name corresponds with a defined resource, and
+        /// outputs the case sensitive name for easy access from Squad's lists.
+        /// </summary>
+        /// <param name="insensitiveName">case insensitive name</param>
+        /// <param name="fixedName">output case sensitive name</param>
+        /// <returns>true if a matching resource definition is found</returns>
+        public static bool IsResource(string insensitiveName, out string fixedName)
+        {
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
+            foreach (var def in defs)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
+                {
+                    fixedName = def.name;
+                    return true;
+                }
+            }
+            fixedName = insensitiveName;
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a given case insensitive name corresponds with a defined resource, and
+        /// outputs the resource id for easy access from Squad's lists.
+        /// </summary>
+        /// <param name="insensitiveName">case insensitive name</param>
+        /// <param name="foundId">output id of the found resource, zero if none found</param>
+        /// <returns>true if a matching resource definition is found</returns>
+        public static bool IsResource(string insensitiveName, out int foundId)
+        {
+            var defs = PartResourceLibrary.Instance.resourceDefinitions;
+            // PartResourceDefinitionList's array index accessor uses the resource id
+            // instead of as a list index, so we need to use an enumerator.
+            foreach (var def in defs)
+            {
+                // loop through definitions looking for a case insensitive name match,
+                // return true if a match is found
+                if (def.name.Equals(insensitiveName, StringComparison.OrdinalIgnoreCase))
+                {
+                    foundId = def.id;
+                    return true;
+                }
+            }
+            foundId = 0;
+            return false;
         }
     }
 }

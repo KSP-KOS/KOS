@@ -21,6 +21,7 @@ namespace kOS.Control
             destination.ShowSteeringStats = origin.ShowSteeringStats;
             destination.WriteCSVFiles = origin.WriteCSVFiles;
             destination.MaxStoppingTime = origin.MaxStoppingTime;
+            destination.RollControlAngleRange = origin.RollControlAngleRange;
 
             destination.pitchPI.Ts = origin.pitchPI.Ts;
             destination.yawPI.Ts = origin.yawPI.Ts;
@@ -145,6 +146,18 @@ namespace kOS.Control
         private double lastSessionTime = double.MaxValue;
 
         public double MaxStoppingTime { get; set; }
+        private double rollControlAngleRange;
+        public double RollControlAngleRange
+        {
+            get
+            {
+                return rollControlAngleRange;
+            }
+            set
+            {
+                rollControlAngleRange = Math.Max(EPSILON, Math.Min(180, value));
+            }
+        }
 
         private double accPitch = 0;
         private double accYaw = 0;
@@ -273,6 +286,7 @@ namespace kOS.Control
             EnableTorqueAdjust = false;
 
             MaxStoppingTime = 2;
+            RollControlAngleRange = 5;
 
             PitchTorqueAdjust = 0;
             YawTorqueAdjust = 0;
@@ -328,6 +342,7 @@ namespace kOS.Control
             AddSuffix("YAWTORQUEFACTOR", new SetSuffix<ScalarValue>(() => YawTorqueFactor, value => YawTorqueFactor = value));
             AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<ScalarValue>(() => RollTorqueFactor, value => RollTorqueFactor = value));
             AddSuffix("AVERAGEDURATION", new Suffix<ScalarValue>(() => AverageDuration.Mean));
+            AddSuffix("ROLLCONTROLANGLERANGE", new SetSuffix<ScalarValue>(() => RollControlAngleRange, value => RollControlAngleRange = value));
 #if DEBUG
             AddSuffix("MOI", new Suffix<Vector>(() => new Vector(momentOfInertia)));
             AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
@@ -422,7 +437,7 @@ namespace kOS.Control
         {
             if (Value == null)
             {
-                SafeHouse.Logger.LogError("SteeringManager.Update: Value is <null>");
+                SafeHouse.Logger.SuperVerbose("SteeringManager.Update: Value is <null>");
                 return;
             }
 
@@ -497,7 +512,7 @@ namespace kOS.Control
             }
 
             targetRot = Value.Rotation;
-            centerOfMass = shared.Vessel.findWorldCenterOfMass();
+            centerOfMass = shared.Vessel.CoMD;
 
             vesselTransform = shared.Vessel.ReferenceTransform;
             // Found that the default rotation has top pointing forward, forward pointing down, and right pointing starboard.
@@ -589,11 +604,19 @@ namespace kOS.Control
             Vector3d yawControl = Vector3d.zero;
             Vector3d rollControl = Vector3d.zero;
 
+            Vector3 pos;
+            Vector3 neg;
             foreach (var pm in torqueProviders.Keys)
             {
                 var tp = torqueProviders[pm];
-                var torque = tp.GetPotentialTorque();
-                rawTorque += torque;
+                tp.GetPotentialTorque(out pos, out neg);
+                // It is possible for the torque returned to be negative.  It's also possible
+                // for the positive and negative actuation to differ.  Below averages the value
+                // for positive and negative actuation in an attempt to compensate for some issues
+                // of differing signs and asymmetric torque.
+                rawTorque.x += (Math.Abs(pos.x) + Math.Abs(neg.x)) / 2;
+                rawTorque.y += (Math.Abs(pos.y) + Math.Abs(neg.y)) / 2;
+                rawTorque.z += (Math.Abs(pos.z) + Math.Abs(neg.z)) / 2;
             }
 
             rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
@@ -707,7 +730,7 @@ namespace kOS.Control
             // Because the value of phi is already error, we say the input is -error and the setpoint is 0 so the PID has the correct sign
             tgtPitchOmega = pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega);
             tgtYawOmega = yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega);
-            if (Math.Abs(phi) > 5 * Math.PI / 180d)
+            if (Math.Abs(phi) > RollControlAngleRange * Math.PI / 180d)
             {
                 tgtRollOmega = 0;
                 rollRatePI.ResetI();
@@ -738,10 +761,7 @@ namespace kOS.Control
                 yawRatePI.ResetI();
                 rollRatePI.ResetI();
                 Quaternion target = TargetDirection.Rotation * Quaternion.Euler(90, 0, 0);
-                if (Quaternion.Angle(shared.Vessel.Autopilot.SAS.lockedHeading, target) > 15)
-                    shared.Vessel.Autopilot.SAS.LockHeading(target, true);
-                else
-                    shared.Vessel.Autopilot.SAS.lockedHeading = target;
+                shared.Vessel.Autopilot.SAS.LockRotation(target);
             }
             else
             {

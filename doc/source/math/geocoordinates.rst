@@ -18,9 +18,9 @@ Creation
     :parameter lng: (deg) Longitude
     :return: :struct:`GeoCoordinates`
 
-    This function creates a :struct:`GeoCoordiantes` object with the given latitude and longitude. Once created it can't be changed. The :attr:`GeoCoordinates:LAT` and :attr:`GeoCoordinates:LNG` suffixes are get-only and cannot be set. To switch to a new location, make a new call to :func:`LATLNG()`.
+    This function creates a :struct:`GeoCoordinates` object with the given latitude and longitude. Once created it can't be changed. The :attr:`GeoCoordinates:LAT` and :attr:`GeoCoordinates:LNG` suffixes are get-only and cannot be set. To switch to a new location, make a new call to :func:`LATLNG()`.
 
-    It is also possible to obtain a :struct:`GeoCoordiates` from some suffixes of some other structures. For example::
+    It is also possible to obtain a :struct:`GeoCoordinates` from some suffixes of some other structures. For example::
 
         SET spot to SHIP:GEOPOSITION.
 
@@ -70,6 +70,14 @@ Structure
           - `Vector` (3D Ship-Raw coords)
 	  - :ref:`scalar <scalar>` (altitude above sea level)
           - Position of a point above (or below) the surface point, by giving the altitude number.
+        * - :attr:`VELOCITY`
+          - :struct:`OrbitableVelocity`
+	  - none
+          - Velocity of the surface at this point (due to the rotation of the planet/moon).
+        * - :attr:`ALTITUDEVELOCITY`
+          - :struct:`OrbitableVelocity`
+	  - :ref:`scalar <scalar>` (altitude above sea level)
+          - Velocity of a point above (or below) the surface point, by giving the altitude number.
 
 .. note::
 
@@ -107,45 +115,68 @@ Structure
 
     The ship-raw 3D position above or below the surface of the body, relative to the current ship's Center of mass.  You pass in an altitude number for the altitude above "sea" level of the desired location.
 
-Examples Usage
---------------
+.. attribute:: GeoCoordinates:VELOCITY
+
+    The (linear) velocity of this spot on the surface of the planet/moon, due to the rotation of the
+    body causing that spot to move though space.
+    (For example, on Kerbin at a sea level location, it would be 174.95 m/s eastward, and slightly
+    more at higher terrain spots above sea level.)
+    Note that this is returned as an :struct:`OrbitableVelocity`, meaning it isn't a vector but a
+    pair of vectors, one called ``:orbit`` and one called ``:surface``.  Note that the
+    surface-relative velocity you get from the ``:surface`` suffix isn't always zero like you might
+    intuit because ``:surface`` gives you the velocity relative to the surface reference frame
+    where ``SHIP`` is, which might not be the same latitude/longitude/altitude as where this
+    Geocoordinates is.
+
+.. attribute:: GeoCoordinates:ALTITUDEVELOCITY (altitude)
+
+    This is the same as :attr:`GeoCoordinates:VELOCITY`, except that it lets you specify some
+    altitude other than the surface terrain height.  You specify a (sea-level) altitude,
+    and it will calculate based on a point at that altitude which may be above or below
+    the actual surface at this latitude and longitude.  It will calculate as if you had some
+    point fixed to the ground, like an imaginary tower bolted to the surface, but not at the
+    ground's altitude.  (The body's rotation will impart a larger magnitude linear velocity
+    on a locaton affixed to the body the farther that location is from the body's center).
+
+Example Usage
+-------------
 
 ::
 
     SET spot TO LATLNG(10, 20).     // Initialize point at latitude 10,
                                     // longitude 20
-                                    
+    
     PRINT spot:LAT.                 // Print 10
     PRINT spot:LNG.                 // Print 20
     
     PRINT spot:DISTANCE.            // Print distance from vessel to x
-                                    // (same altitude is presumed)
     PRINT spot:HEADING.             // Print the heading to the point
     PRINT spot:BEARING.             // Print the heading to the point
                                     // relative to vessel heading
-                                    
+    
     SET spot TO SHIP:GEOPOSITION.   // Make spot into a location on the
                                     // surface directly underneath the
                                     // current ship
-                                    
+    
     SET spot TO LATLNG(spot:LAT,spot:LNG+5). // Make spot into a new
-                                             // location 5  degrees east
+                                             // location 5 degrees east
                                              // of the old one
-
+    
     // Point nose of ship at a spot 100,000 meters altitude above a
     // particular known latitude of 50 east, 20.2 north:
     LOCK STEERING TO LATLNG(50,20.2):ALTITUDEPOSITION(100000).
-
+    
     // A nice complex example:
     // -------------------------
-    // Drawing an debug arrow in 3D space at the spot where the Geocoordinate 'spot' is:
-    // It starts at a position 100m above the ground altitude and is aimed down at
-    // the spot on the ground:
+    // Drawing an debug arrow in 3D space at the spot where the GeoCoordinate
+    // "spot" is:
+    // It starts at a position 100m above the ground altitude and is aimed down
+    // at the spot on the ground:
     SET VD TO VECDRAWARGS(
                   spot:ALTITUDEPOSITION(spot:TERRAINHEIGHT+100),
                   spot:POSITION - spot:ALTITUDEPOSITION(TERRAINHEIGHT+100),
                   red, "THIS IS THE SPOT", 1, true).
-
+    
     PRINT "THESE TWO NUMBERS SHOULD BE THE SAME:".
     PRINT (SHIP:ALTITIUDE - SHIP:GEOPOSITION:TERRAINHEIGHT).
     PRINT ALT:RADAR.

@@ -14,6 +14,8 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class FlightStats : Binding
     {
+        private StageValues stageValue;
+
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
@@ -23,10 +25,9 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter(new [] { "OBT" , "ORBIT"}, () => new OrbitInfo(shared.Vessel.orbit,shared));
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
-            shared.BindingMgr.AddGetter("SHIP", () => new VesselTarget(shared));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => new VesselTarget(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
-            shared.BindingMgr.AddGetter("STAGE", () => new StageValues(shared));
+            shared.BindingMgr.AddGetter("STAGE", () => stageValue ?? (stageValue = new StageValues(shared)));
 
             shared.BindingMgr.AddSetter("SHIPNAME", value => shared.Vessel.vesselName = value.ToString());
 
@@ -52,21 +53,6 @@ namespace kOS.Binding
                 return vessel.patchedConicSolver.maneuverNodes.Count > 0;
             });
             shared.BindingMgr.AddGetter("ALLNODES", () => GetAllNodes(shared));
-
-            // These are now considered shortcuts to SHIP:suffix
-            foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
-            {
-                var cName = scName;
-                shared.BindingMgr.AddGetter(scName, () => VesselShortcutGetter(shared, cName));
-            }
-        }
-        
-        public object VesselShortcutGetter(SharedObjects shared, string name)
-        {
-            ISuffixResult suffix = new VesselTarget(shared).GetSuffix(name);
-            if (! suffix.HasValue)
-                suffix.Invoke(shared.Cpu);
-            return suffix.Value;
         }
 
         public ListValue<Node> GetAllNodes(SharedObjects shared)

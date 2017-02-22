@@ -107,7 +107,7 @@ namespace kOS.Screen
             // GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
 
             GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
-            GameEvents.onGUIApplicationLauncherReady.Add(RemoveButton);
+            GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
             GameObject.DontDestroyOnLoad(this);
@@ -166,6 +166,11 @@ namespace kOS.Screen
 
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
+        }
+        
+        public void RemoveButton(GameScenes scene)
+        {
+            RemoveButton();
         }
 
         public void RemoveButton()
@@ -404,6 +409,8 @@ namespace kOS.Screen
 
             CountBeginVertical();
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
+            GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", tooltipLabelStyle);
+            GUILayout.Label("Global VALUES", headingLabelStyle);
             GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
 
             int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
@@ -719,9 +726,7 @@ namespace kOS.Screen
 
         private static GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key
-            // fields.  Instead we'll have to set all the GUIStyle's manually everywhere - ugly.
+            GUISkin theSkin = Instantiate(HighLogic.Skin); // Use Instantiate to make a copy of the Skin Object
 
             // Now alter the parts of theSkin that we want to change:
             //

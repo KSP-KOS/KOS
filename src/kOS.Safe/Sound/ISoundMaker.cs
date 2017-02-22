@@ -13,14 +13,6 @@ namespace kOS.Safe.Sound
     public interface ISoundMaker
     {
         /// <summary>
-        /// Load the given sound file into the set of sounds the soundmaker knows how to play,
-        /// giving it a name to refer to it in the future.
-        /// </summary>
-        /// <param name="soundName">name to refer to this sound in the future.</param>
-        /// <param name="soundFileURL">URL of where to obtain the sound clip file from.</param>
-        void LoadSound(string soundName, string soundFileURL);
-        
-        /// <summary>
         /// Attempt to play the given sound clip by its name.  Note that
         /// it is impossible to play the same sound clip multiple times on
         /// top of itself, with the system ISoundMaker is using.  Therefore
@@ -29,9 +21,18 @@ namespace kOS.Safe.Sound
         /// This call is non-blocking.  It will only begin the sound and let it
         /// play in the background, returning immediately.  It will not wait for
         /// the sound clip to finish playing.
-        /// </summary>
+        /// Begin a sound without messing with its duration or frequency.
+        /// This should only be used with sound samples that have finite
+        /// duration encoded into them, like sound files, and not with
+        /// ProceduralSoundWave sounds that emit the generated wave
+        /// forever until told to stop.        /// </summary>
         /// <param name="soundName">string that was given to LoadSound() earlier</param>
         /// <returns>True if the sound has begun playing.  False if it has to wait.</returns>
-        bool BeginSound(string soundName);        
+        bool BeginFileSound(string soundName, float volume = 1f);
+
+        IVoice GetVoice(int num);
+        void StopAllVoices();
+        string GetWaveName(int voiceNum);
+        bool SetWave(int num, string waveName);
     }
 }

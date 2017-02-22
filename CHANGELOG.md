@@ -1,6 +1,317 @@
 kOS Mod Changelog
 =================
 
+# v1.0.3 (for KSP 1.2.2) Make a little noise! (Part Deux)
+
+This release is nearly identical to v1.0.2, except that it was compiled against
+binaries from KSP v1.2.2 (released just before we published) and the version numbers
+have been advanced.  While it appears that kOS v1.0.2 is compatible with KSP v1.2.2,
+we wanted to err on the side of caution and provide an explicitly compatible release.
+Please review the changelog for v1.0.2 if you are upgrading from an earlier version.
+
+# v1.0.2 (for KSP 1.2.1) Make a little noise!
+
+### BREAKING CHANGES
+* As always, if you use the compiler feature to make KSM files, you should
+  recompile the KSM files when using a new release of kOS or results will
+  be unpredictable.
+* Most in game settings are now integrated with KSP's difficulty settings window.
+  You will be prompted to migrate existing settings when you load your save game.
+  Telnet settings are still stored in the old config file, but everything else is
+  now stored within the save file.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1843) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/settingsWindows.html#ksp-difficulty-settings-window)
+* Calls to resource suffixes on the `stage` bound variable are no longer rounded to 2 decimal places.
+  Previously they were rounded to assist in detecting "zero" fuel, but they cause inequality issues
+  when comparing to the newer `stage:resources` list or `stage:resourceslex` values.
+* The behavior of the resource suffixes on the `stage` bound variable has changed with regard
+  to asparagus staging.  If you have smaller tanks that **can** be staged, `stage:liquidfuel`
+  will return `0` even if you still have an engine firing.  This is a break from previous versions
+  of kOS, but is aligned with the current UI design.  Previous versions also aligned with the KSP
+  UI, but the UI mechanic was updated with KSP 1.2.x
+
+### NEW FEATURES
+* Official release for KSP version 1.2.1!
+* kOS now has a procedural sound system!  You can use it to play customized error
+  tones or make your own musical notes.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1859) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/skid.html)
+* Support for CommNet and modifications to make RemoteTech and CommNet use similar systems.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1850) | [documentation](http://ksp-kos.github.io/KOS_DOC/commands/communication.html#connectivity-managers)
+* Trajectories integration enabled via new `ADDONS:TR`
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1603) | [documentation](http://ksp-kos.github.io/KOS_DOC/addons/Trajectories.html)
+* Added new setting for default terminal brightnes, and updated default value to 70%
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1872) | [documentation](http://ksp-kos.github.io/KOS_DOC/general/settingsWindows.html#ksp-difficulty-settings-window)
+* Added `VELOCITY` and `ALTITUDEVELOCITY` suffixes to `geocoordinates
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1874) | [documentation](http://ksp-kos.github.io/KOS_DOC/math/geocoordinates.html#attribute:GEOCOORDINATES:VELOCITY)
+* Added `TONUMBER` and `TOSCALAR` suffixes to `string` values for parsing numerical values
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1883) | [documentation](http://ksp-kos.github.io/KOS_DOC/structures/misc/string.html#method:STRING:TONUMBER)
+* New `steeringmanager` suffix `ROLLCONTROLANGLERANGE` to dictate the maximum value
+  of `ANGLEERROR` for which the manager will attempt to control roll
+  [commit](https://github.com/KSP-KOS/KOS/commit/3c1d5d15fa5834858204a07870c2e768870fce72) | [documentation](http://ksp-kos.github.io/KOS_DOC/structures/misc/steeringmanager.html#attribute:STEERINGMANAGER:ROLLCONTROLANGLERANGE)
+* KSM files are now gzip compressed internally, dramatically reducing the file size.
+  Existing KSM files **should** still load, but see above for the recommendation to
+  recompile all KSM files.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1858)
+
+### BUG FIXES
+* Fix for throwing errors when another mod uses dynamic assembly
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1851)
+* Update Blizzy toolbar wrapper to the most recent version
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1851)
+* Fix for local kOS hard disks breaking when loading with 4 byte long files
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1858)
+* kOS no longer uses a write-only lock when writing to the archive, preventing
+  an error when accessing a file opened for reading by another program
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1870)
+* Fix for duplicate functions/locks breaking ksm files
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1871)
+* Fix for null ref error when editing node suffixes on KSP 1.2.1
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1876)
+* Fix for issue where a body with the same name as one of our bound variables would block
+  access to said variable (specifically Eta in Galileo's Planet Pack blocked the `eta` bound variable)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1888)
+* Fix for getting the science value and transmit value in sandbox mode
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1889)
+* Fix error where `unlock all` inside a trigger will try to
+  unlock functions too
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1889)
+
+# v1.0.1 (for KSP 1.1.3) Let's take some input!
+
+## Why 1.1.3 and not 1.2?
+
+We wanted to get the last bug fixes and new features into the hands of any users
+who might not update KSP to 1.2 right away.  Traditionally there are some mods
+that take a while to update when KSP releases a new version, and many users
+choose to wait for all of their favorite mods to update before upgrading KSP.
+By releasing in conjunction with the update, we can ensure that as many users as
+possible have access to these latest updates.  We will be releasing a version of
+kOS that is compatible with KSP 1.2 as soon as possible after the final build is
+released to the public.
+
+### BREAKING CHANGES
+
+* As always, if you use the compiler feature to make KSM files, you should
+  recompile the KSM files when using a new release of kOS or results will
+  be unpredictable.
+* The `stage` command/function now implements the yield behavior, waiting until
+  the next physics tick to return.  This ensures that all vessel stats are
+  updated together. (https://github.com/KSP-KOS/KOS/pull/1807)
+
+### NEW FEATURES
+
+* Functions and opcodes can now tell the CPU to yield (wait) based on their own
+  arbitrary logic.  This allows future functions to be "blocking" (preventing
+  further execution) without blocking KSP itself.
+  (https://github.com/KSP-KOS/KOS/issues/1805,
+  https://github.com/KSP-KOS/KOS/pull/1807, and
+  https://github.com/KSP-KOS/KOS/pull/1820)
+* New `timewarp` structure, available on the `kuniverse` bound variable. This
+  structure provides additional information and control over time warp. The old
+  warp bound variables remain in place.
+  (https://github.com/KSP-KOS/KOS/issues/1790 and
+  https://github.com/KSP-KOS/KOS/pull/1820)
+* Introducing a new `terminalinput` structure for keyboard interaction from
+  within scripts!  Currently support is only provided for getting single
+  characters.
+  (https://github.com/KSP-KOS/KOS/pull/1830)
+
+Please check http://ksp-kos.github.io/KOS_DOC/changes.html for more detailed
+explanations for the new features.
+
+### BUG FIXES
+
+* Fix for formatting of `time:clock` to pad zeros
+  (https://github.com/KSP-KOS/KOS/issues/1771 and
+  https://github.com/KSP-KOS/KOS/pull/1772)
+* Fix for not being able to construct a `vessel("foo")` if "foo" is the name of
+  the current vessel (https://github.com/KSP-KOS/KOS/issues/1565 and
+  https://github.com/KSP-KOS/KOS/pull/1802)
+* RemoteTech steering should be fixed.  At worst you may see a 1sec gap with
+  the controls, as we now refresh the steering callback about once per second.
+  (https://github.com/KSP-KOS/KOS/issues/1806 and
+  https://github.com/KSP-KOS/KOS/pull/1809)
+* Named functions defined within anonymous functions will no longer throw an
+  error (https://github.com/KSP-KOS/KOS/issues/1801 and
+  https://github.com/KSP-KOS/KOS/pull/1811)
+* `lock steering` no longer throws an exception inside of an anonymous functions
+  (https://github.com/KSP-KOS/KOS/issues/1784 and
+  https://github.com/KSP-KOS/KOS/pull/1811)
+* Compiled programs that include a large number of named functions should no
+  longer throw an error (https://github.com/KSP-KOS/KOS/issues/1796 and
+  https://github.com/KSP-KOS/KOS/pull/1812)
+* Fixed the first call to `wait` after the cpu boots
+  (https://github.com/KSP-KOS/KOS/issues/1785)
+* Various documentation fixes (https://github.com/KSP-KOS/KOS/pull/1810,
+  https://github.com/KSP-KOS/KOS/pull/1823, and
+  https://github.com/KSP-KOS/KOS/pull/1834)
+
+
+# v1.0.0 (for KSP 1.1.3) Hey let's stop calling it Beta.
+
+### About the name:
+
+kOS has been around long enough that we figured it was long overdue
+for us to stop calling it 0.something.  Lots of people are using it,
+and we're worried about backward compatibility enough that we're not
+really treating it like a Beta anymore.  This version contains mostly
+a few things that we knew might break backward compatibility so we'd
+been putting them off for a long time.  A jump to 1.0 seems a good time
+to add those changes.
+
+Of course, it has lots of other changes for whatever else was being
+worked on since the last release.
+
+### BREAKING CHANGES
+
+* As always, if you use the compiler feature to make KSM files, you should
+  recompile the KSM files when using a new release of kOS or results will
+  be unpredictable.
+* New Subdirectories ability has deprecated several filename commands such
+  as ``delete``, ``copy``, and ``rename``.  They will still work, but will
+  complain with a message every time you use them, as we may be removing
+  them eventually.  The new commands ``deletepath``, ``copypath``, and
+  ``movepath`` described below are meant to replace them.
+* When using a RemoteTech antenna that requires directional aiming,
+  in the past you could aim it at mission control with
+  ``SETFIELD("target", "mission-control")`` and now you have to
+  say ``SETFIELD("target", "Mission Control")`` instead, due to
+  changes in RT's naming schemes.
+* Previously the Y and Z axes of SUN:VELOCITY:ORBIT were swapped.
+  (https://github.com/KSP-KOS/KOS/issues/1764)
+  This has been fixed so it is now the same as for any other body,
+  however scripts might exist that had previously been swapping them
+  back to compensate for this, and if there were they would now break
+  since that swapping is no longer needed.
+
+### NEW FEATURES
+
+* **Subdirectories:** (http://hvacengi.github.io/KOS/commands/files.html)
+  You are now able to store subdirectories ("folders") in your volumes,
+  both in the archive and in local volumes.  To accomodate the new feature
+  new versions of the file manipulation commands had to be made (please
+  go over the documentation in the link given above).  In the Archive,
+  which is really your ``Ships/Script/`` directory on your computer,
+  these subdirectories are stored as actual directories in your computer
+  filesystem.  (For example, the file ``0:/dir1/dir2/file.ks`` would be
+  stored at ``Kerbal Space Program/Shipts/Script/dir1/dir2.file.ks`` on
+  your real computer.) In local volumes, they are stored in the persistence.sfs
+  savegame file like usual.
+  (Pull Request discussion record: https://github.com/KSP-KOS/KOS/pull/1567)
+  * Boot subdirectory: (http://hvacengi.github.io/KOS/general/volumes.html#special-handling-of-files-in-the-boot-directory)
+    To go with Subdirectories, now you make a subdirectory in your archive
+    called ``boot/``, and put all the candidate boot files there.  When
+    selecting a boot file in the VAB or SPH, the selections are taken from
+    there and need not contain the "boot_" prefix to the filename anymore.
+    Old boot files will be grandfathered in that are named the old way,
+    however.
+  * CORE:BOOTFILENAME is now a full path.  i.e. ``boot/myfile.ks``.
+  * PATH structure now allows you to get information about
+    the new full subdirectories system from your scripts.
+    (http://hvacengi.github.io/KOS/structures/volumes_and_files/path.html)
+  * New RUNPATH command now allows any arbitrary string expression to be
+    used as the name of the file to be run.  i.e.
+    ``set basename to "prog". set num to 1. runpath(basename+num, arg1). // same as run prog1(arg1)``.
+    As part of the support for this, programs with a large number of RUN
+    commands (or RUNPATH commands) should now take up a bit less
+    of a memory footprint than they used to in their compiled form
+    (and thus in KSM files too).
+    (http://hvacengi.github.io/KOS/commands/files.html#runpath-and-runoncepath)
+* **Communication between scripts** on different CPUs of the same vessel or
+  between different vessels.
+  (http://hvacengi.github.io/KOS/commands/communication.html)
+  * A new structure, the ``Message``, contains some arbitrary piece of
+    data you choose (a number, a string, a list collection, etc), and
+    some header information kOS will add to it that describes where it
+    came from, when it was sent, and so on.  What you choose to do
+    with these arbitrary chunks of data is up to you.  kOS only lets
+    you send them.  You design your own protocol for what the data means.
+  * If RemoteTech is installed, a connection is needed to send a message
+    to another vessel (but not to a CPU on the same vessel).  And, the
+    message won't actually show up in the other vessel's queue until the
+    required lightspeed delay.
+  * To handle KSP's inability to have different vessels far away from each
+    other both fully loaded and active, you do have to switch scenes back
+    and forth between distant vessels if you want them to have a conversation
+    back and forth.  Messages that were meant to arrive on a vessel while
+    it wasn't within active loading range will wait in the recever's vessel
+    queue until you switch to it, so you don't have to hurry and switch
+    "in time" to get the message.
+* **Added anonymous functions :**
+  (http://hvacengi.github.io/KOS/language/anonymous.html)
+  By placing arbitrary braces containing the body of a function anywhere
+  within the script that an expression is expected, the compiler builds
+  the function code right there and then returns a delegate of it as the
+  value of the expression.
+* **New 3rd-party addon framework** (https://github.com/KSP-KOS/KOS/tree/develop/src/kOS/AddOns/Addon%20Readme.md)
+  allows authors of other KSP mods to add hooks into kOS so that kOS
+  scripts can interface with their mods more directly, without kOS
+  developers having to maintain that code themselves in the kOS
+  repository.
+  (Pull Request discussion record: https://github.com/KSP-KOS/KOS/pull/1667)
+* **allow scripted vessel launches**
+  ``KUNIVERSE:GETCRAFT()``, ``KUNIVERSE:LAUNCHCRAFT()``, ``KUNIVERSE:CRAFTLIST()``,
+  and ``KUNIVERSE:LAUNCHCRAFTFROM()`` allow you to script the changing of scenes
+  and loading of vessels into those scenes.  While this breaks the 4th wall
+  quite a bit (how would an autopilot choose to manufacture an instance of the
+  plane?), it's meant to help with script testing and scripts that try to
+  repeatedly run the same mission unattended.
+  (http://hvacengi.github.io/KOS/structures/misc/kuniverse.html)
+* **eta to SOI change:**
+  Added SHIP:OBT:NEXTPATCHETA to get the time to the next orbit patch
+  transition (SOI change).
+  (http://hvacengi.github.io/KOS/structures/orbits/orbit.html#attribute:ORBIT:NEXTPATCHETA)
+* **get control-from:**
+  Added ``SHIP:CONTROLPART`` to return the ``Part`` of the vessel that is
+  currently set as its "control from here" part.
+  (http://hvacengi.github.io/KOS/structures/vessels/vessel.html#attribute:VESSEL:CONTROLPART)
+* **maneuver nodes as a list:**(
+  New ``ALLNODES`` bound variable that returns a list of all the currently
+  planned manuever nodes (the nodes you could iterate through with
+  ``NEXTNODE``, but rendered into one list structure).
+  (http://hvacengi.github.io/KOS/bindings#allnodes)
+* Several new **pseudo-action-groups** (akin to "panels on", that aren't
+  action groups as far as stock KSP is concerned, but kOS treats them like
+  action groups) were added.  (http://hvacengi.github.io/KOS/commands/flight/systems#kos-pseudo-action-groups)
+* Ability to **get/set the navball mode** (surface, orbital, target) with
+  the ``NAVMODE`` bound variable:
+  i.e. ``SET NAVMODE TO "SURFACE".``.
+* **UniqueSet structure.** (http://hvacengi.github.io/KOS/structures/collections/uniqueset.html)
+  A collection intended for when all you care about is whether a equivalent
+  object exists or doesn't exist yet in the collection, and everything else
+  (order, etc) doesn't matter.
+
+### BUG FIXES
+
+* In some cases (https://github.com/KSP-KOS/KOS/issues/1661) the program
+  wouldn't stop immediately when you execute a  ``kuniverse`` command that
+  reloads a save or switches scenes.  It would instead finish out the
+  remainder of the IPU instructions in the current physics tick.
+  After the fix, causing a scene change (or reload) automatically stops the
+  program right there since anything it does after that would be moot as
+  the game is about to remove everything it's talking about from memory.
+* If using "Start on archive", with Remote Tech, a misleading "power starved"
+  error was thrown when you reboot a probe that's out of antenna range.
+  (https://github.com/KSP-KOS/KOS/issues/1363)
+* ``unchar("a")`` was apparently broken for a few months and we hadn't noticed.
+  The root cause was that its implementation had to be edited to comply with
+  the change that enforced the VM to only use kOS ``Structure`` types on the
+  stack.  The need for that change had been missed.
+  (https://github.com/KSP-KOS/KOS/issues/1692)
+* Previously Infernal Robotics allowed you to move servos that weren't even
+  on your own vessel and you shouldn't have direct control over.  This has
+  been fixed.  (https://github.com/KSP-KOS/KOS/issues/1540)
+* Refactored previous non-working technique for quicksave/quickload to
+  turn it into something that works.
+  (https://github.com/KSP-KOS/KOS/issues/1372)
+* There were cases where using CTRL-C to abort a program would cause some
+  old cruft to still be leftover in the VM's stack.  This made the system
+  fail to clear out the names of functions that were no longer loaded in
+  memory, making it act like they were still reachable and call-able.
+  (https://github.com/KSP-KOS/KOS/issues/1610)
+* Some types of ``Resource`` didn't contain the ``:DENSITY`` suffix like the
+  documentation claimed they would.
+  (https://github.com/KSP-KOS/KOS/issues/1623)
+
 # v0.20.1 KSP 1.1.2 and bug repair
 
 The biggest reason for this release is to handle two game-breaking

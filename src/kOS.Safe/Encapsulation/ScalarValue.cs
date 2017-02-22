@@ -1,12 +1,20 @@
 ﻿using kOS.Safe.Exceptions;
 using System;
+using System.Globalization;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("Scalar")]
     abstract public class ScalarValue : PrimitiveStructure, IConvertible
     {
+        // regular expression used to match white space surrounding the "e" in scientific notation
+        private static readonly Regex trimPattern = new Regex(@"(?![\d\.])\s*[eE]\s*(?=[\d\+-])");
+
+        // array of characters used to determine if a string should be parsed as double, "." or "," depends on culture
+        private static readonly char[] doubleCharacters = new char[] { '.', ',', 'e', 'E' };
+
         abstract public bool IsInt { get; }
 
         abstract public bool IsDouble { get; }
@@ -78,6 +86,49 @@ namespace kOS.Safe.Encapsulation
             }
 
             throw new KOSException(string.Format("Failed to set scalar value.  Passed type {0}, expected Double or Int", value.GetType().Name));
+        }
+
+        public static bool TryParse(string str, out ScalarValue result)
+        {
+            result = null; // default the out value to null
+          
+            bool needsDoubleParse = str.IndexOfAny(doubleCharacters) >= 0;
+
+            if (needsDoubleParse)
+            {
+                return TryParseDouble(str, out result);
+            }
+            else
+            {
+                return TryParseInt(str, out result);
+            }
+        }
+
+        public static bool TryParseInt(string str, out ScalarValue result)
+        {
+            result = null; // default the out value to null
+            int val;
+            if (int.TryParse(str, out val))
+            {
+                result = new ScalarIntValue(val);
+                return true;
+            }
+            return false;
+        }
+
+        public static bool TryParseDouble(string str, out ScalarValue result)
+        {
+            result = null; // default the out value to null
+            str = trimPattern.Replace(str, "E"); // remove white space around "e"
+            double val;
+            if (double.TryParse(str, out val))
+            {
+                // use Create instead of new ScalarDoubleValue so doubles that
+                // represent integers will output a ScalarIntValue instead
+                result = Create(val);
+                return true;
+            }
+            return false;
         }
 
         public int GetIntValue()

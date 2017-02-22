@@ -54,13 +54,6 @@ namespace kOS.UserIO
         {
             isListening = false;
             telnets = new List<TelnetSingletonServer>();
-            
-            DontDestroyOnLoad(transform.gameObject); // Otherwise Unity will stop calling my Update() on the next scene change because my gameObject went away.
-
-            Instance = this;
-            
-            tempListenPermission = GetPermanentListenPermission();
-            tempRealIPPermission = GetPermanentRealIPPermission();
         }
         
         /// <summary>
@@ -217,6 +210,16 @@ namespace kOS.UserIO
         internal void SingletonStopped(TelnetSingletonServer telnet)
         {
             telnets.Remove(telnet);
+        }
+
+        public void Start()
+        {
+            Instance = this;
+
+            tempListenPermission = GetPermanentListenPermission();
+            tempRealIPPermission = GetPermanentRealIPPermission();
+            
+            DontDestroyOnLoad(gameObject); // Otherwise Unity will stop calling my Update() on the next scene change because my gameObject went away.
         }
 
         /// <summary>

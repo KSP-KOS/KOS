@@ -11,6 +11,7 @@ using Debug = UnityEngine.Debug;
 using Math = System.Math;
 using kOS.Control;
 using kOS.Module;
+using kOS.Communication;
 
 namespace kOS.Binding
 {
@@ -20,6 +21,9 @@ namespace kOS.Binding
         private Vessel currentVessel;
         private readonly Dictionary<string, FlightCtrlParam> flightParameters = new Dictionary<string, FlightCtrlParam>();
         private static readonly Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
+        /// <summary>How often to re-attempt the remote tech hook, expressed as a number of physics updates</summary>
+        private const int RemoteTechRehookPeriod = 25;
+        private int counterRemoteTechRefresh = RemoteTechRehookPeriod - 2; // make sure it starts out ready to trigger soon
         public SharedObjects Shared { get; set; }
 
         public override void AddTo(SharedObjects shared)
@@ -41,7 +45,7 @@ namespace kOS.Binding
             SafeHouse.Logger.Log("FlightControlManager.AddTo " + Shared.Vessel.id);
 
             currentVessel = shared.Vessel;
-            currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
+            ConnectivityManager.AddAutopilotHook(currentVessel, OnFlyByWire);
 
             AddNewFlightParam("throttle", Shared);
             AddNewFlightParam("steering", Shared);
@@ -88,7 +92,21 @@ namespace kOS.Binding
             //   update if the new vessel isn't valid and set up yet when the old vessel connection got
             //   broken off.
             //
-            if (currentVessel != null && currentVessel.id == Shared.Vessel.id) return;
+            if (currentVessel != null && currentVessel.id == Shared.Vessel.id)
+            {
+                if (ConnectivityManager.NeedAutopilotResubscribe)
+                {
+                    if (++counterRemoteTechRefresh > RemoteTechRehookPeriod)
+                    {
+                        ConnectivityManager.AddAutopilotHook(currentVessel, OnFlyByWire);
+                    }
+                }
+                else
+                {
+                    counterRemoteTechRefresh = RemoteTechRehookPeriod - 2;
+                }
+                return;
+            }
 
             // If it gets this far, that means the part the kOSProcessor module is inside of
             // got disconnected from its original vessel and became a member
@@ -101,7 +119,7 @@ namespace kOS.Binding
             // so this this stops trying to pilot the vessel it's not attached to anymore:
             if (currentVessel != null && VesselIsValid(currentVessel))
             {
-                currentVessel.OnPreAutopilotUpdate -= OnFlyByWire;
+                ConnectivityManager.RemoveAutopilotHook(currentVessel, OnFlyByWire);
                 currentVessel = null;
             }
 
@@ -109,8 +127,8 @@ namespace kOS.Binding
             if (! VesselIsValid(Shared.Vessel)) return;
             
             // Now attach to the new vessel:
-            currentVessel = Shared.Vessel;            
-            currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
+            currentVessel = Shared.Vessel;
+            ConnectivityManager.AddAutopilotHook(currentVessel, OnFlyByWire);
 
             foreach (var param in flightParameters.Values)
                 param.UpdateFlightControl(currentVessel);
@@ -451,30 +469,7 @@ namespace kOS.Binding
                             }
                             return;
                         }
-                        if (RemoteTechHook.IsAvailable(control.Vessel.id))
-                        {
-                            HandleRemoteTechPilot();
-                        }
                     }
-                }
-            }
-
-            private void HandleRemoteTechPilot()
-            {
-                var action = ChooseAction();
-                if (action == null)
-                {
-                    return;
-                }
-                if (Enabled)
-                {
-                    SafeHouse.Logger.Log(string.Format("Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
-                    RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
-                }
-                else
-                {
-                    SafeHouse.Logger.Log(string.Format("Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
-                    RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
                 }
             }
 
@@ -487,40 +482,23 @@ namespace kOS.Binding
             {
                 if (value == null || !Enabled) return;
 
-                var action = ChooseAction();
-                if (action == null)
-                {
-                    return;
-                }
-
-                if (!RemoteTechHook.IsAvailable(control.Vessel.id))
-                {
-                    action.Invoke(c);
-                }
-            }
-
-            private Action<FlightCtrlState> ChooseAction()
-            {
-                Action<FlightCtrlState> action;
                 switch (name)
                 {
                     case "throttle":
-                        action = UpdateThrottle;
+                        UpdateThrottle(c);
                         break;
                     case "wheelthrottle":
-                        action = UpdateWheelThrottle;
+                        UpdateWheelThrottle(c);
                         break;
                     case "steering":
-                        action = SteerByWire;
+                        SteerByWire(c);
                         break;
                     case "wheelsteering":
-                        action = WheelSteer;
+                        WheelSteer(c);
                         break;
                     default:
-                        action = null;
                         break;
                 }
-                return action;
             }
 
             private void UpdateThrottle(FlightCtrlState c)

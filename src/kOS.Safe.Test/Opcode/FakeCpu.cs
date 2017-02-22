@@ -218,6 +218,11 @@ namespace kOS.Safe.Test.Opcode
         {
             throw new NotImplementedException();
         }
+        
+        public void YieldProgram(YieldFinishedDetector yieldTracker)
+        {
+            throw new NotImplementedException();            
+        }
 
         public void BreakExecution(bool manual)
         {

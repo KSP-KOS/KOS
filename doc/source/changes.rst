@@ -24,6 +24,217 @@ release.
 
 ****
 
+Changes in 1.0.3
+----------------
+
+No significant changes, compiled for KSP v1.2.2.
+
+Changes in 1.0.2
+----------------
+
+Sound/Kerbal Interface Device (SKID)
+::::::::::::::::::::::::::::::::::::
+
+The SKID chip allows scripts to output procedural sound clips.  Great for custom
+error tones, or for playing simple music.  A basic example would be::
+
+    SET V0 TO GETVOICE(0).      // Gets a reference to the zero-th voice in the chip.
+    V0:PLAY( NOTE(400, 2.5) ).  // Starts a note at 400 Hz for 2.5 seconds.
+                                // The note will play while the program continues.
+    PRINT "The note is still playing".
+    PRINT "when this prints out.".
+
+For an example of a song, check out the :ref:`Example song section of voice documentation<voicesong>`
+
+Also check out the :ref:`SKID chip documentation<skid>` for an indepth explaination.
+
+CommNet Support
+:::::::::::::::
+
+kOS now supports communications networks through KSP's stock CommNet system as
+well as RemoteTech (only one networking system may be enabled at a time).  The
+underlying system was modified and abstracted to allow both systems to use a
+common interface.  Other mods that would like to add network support can
+implement this system as well without a need to update kOS itself.
+
+Check out the :ref:`Connectivity Managers documentation here<connectivityManagers>`
+
+Trajectories Support
+::::::::::::::::::::
+
+If you have the Trajectories mod for KSP installed, you can now access data from
+that structure using :struct:`ADDONS:TR<TRAddon>`.  This provides access to
+impact prediction through the Trajectories mod.  For example::
+
+    if ADDONS:TR:AVAILABLE {
+        if ADDONS:TR:HASIMPACT {
+            PRINT ADDONS:TR:IMPACTPOS.
+        } else {
+            PRINT "Impact position is not available".
+        }
+    } else {
+        PRINT "Trajectories is not available.".
+    }
+
+For more information see the :ref:`Trajectories Addon Documentation<Trajectories>`
+
+Also Added
+::::::::::
+
+* :attr:`GeoCoordinates:VELOCITY` and :meth:`GeoCoordinates:ALTITUDEVELOCITY()`
+* :meth:`String:TONUMBER()`
+* :attr:`SteeringManager:ROLLCONTROLANGLERANGE`
+
+Changes in 1.0.1
+----------------
+
+Terminal Input
+::::::::::::::
+
+A new structure :struct:`TerminalInput` is available as a suffix of
+:attr:`Terminal<Terminal:INPUT>`, allowing scripts to respond to user input.
+
+Example::
+
+    terminal:input:clear().
+    print "Press any key to continue...".
+    terminal:input:getchar(). // blocking callback
+    print "Input will be echoed back to you.  Press q to quit".
+    set done to false.
+    until done {
+        if (terminal:input:haschar) {
+            set input to terminal:input:getchar().
+            if input = "q" {
+                set done to true.
+            }
+            else {
+                print "Input read was: " + input + " (ascii " + unchar(input) + ")".
+            }
+        }
+        wait 0.
+    }
+
+Timewarp
+::::::::
+
+The new :struct:`TimeWarp` structure provides better access to information about
+timewarp.  It provides lists of warp rates, information about the physics
+timestep, and can tell you if the warp rate has settled.
+
+Example::
+
+    print kuniverse:timewarp:ratelist. // prints the rates available in the current mode
+    set eta to 150 * 6 * 60 * 60. // 150 days
+    kuniverse:timewarp:warpto(time:seconds + eta).
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 0.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    wait 60 * 60.
+    kuniverse:timewarp:cancelwarp().
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    print "rate:    " + kuniverse:timewarp:rate.
+    wait until kuniverse:timewarp:issettled.
+    print "delta t: " + kuniverse:timewarp:physicsdeltat.  // see the step change
+    print "rate:    " + kuniverse:timewarp:rate.
+
+Changes in 1.0.0
+----------------
+
+Subdirectories
+::::::::::::::
+
+See :ref:`Understanding directories <directories>`.
+
+You are now able to store subdirectories ("folders") in your volumes,
+both in the archive and in local volumes.  To accomodate the new feature
+new versions of the file manipulation commands had to be made (please
+go over the documentation in the link given above).
+
+Boot Subdirectory
+^^^^^^^^^^^^^^^^^
+
+See :ref:`Special Handing of files in the "boot" directory <boot>`.
+
+To go with Subdirectories, now you make a subdirectory in your archive
+called ``boot/``, and put all the candidate boot files there.
+
+PATH structure
+^^^^^^^^^^^^^^
+
+You can now get information about a
+:ref:`file's path and location <path>`.
+
+New RUNPATH command
+^^^^^^^^^^^^^^^^^^^
+
+:ref:`New RUNPATH command <runpath>` lest you make the program to run
+be a varying expression.
+
+Communications
+::::::::::::::
+
+:ref:`Communication between scripts <communication>`
+on different CPUs of the same vessel or between different vessels.
+
+Message Structure
+^^^^^^^^^^^^^^^^^
+
+A :ref:`Message structure <message>` added  to be used with
+the new communications system.
+
+Anonymous functions
+:::::::::::::::::::
+
+:ref:`Anonymous functions <anonymous_functions>` now implemented.
+
+Allow scripted vessel launches
+::::::::::::::::::::::::::::::
+
+``GETCRAFT()``, ``LAUNCHCRAFT()``, ``CRAFTLIST()``, ``LAUNCHCRAFTFROM()``
+were added as new suffixes to the :ref:`Kuniverse <kuniverse>` structure.
+
+ETA to SOI change
+:::::::::::::::::
+
+:attr:`ORBIT:NEXTPATCHETA` to get the time to the next orbit patch
+  transition (SOI change).
+
+VESSEL:CONTROLPART
+::::::::::::::::::
+
+:attr:`VESSEL:CONTROLPART` to get the part which has been used
+as the current "control from here".
+
+Maneuver nodes as a list
+:::::::::::::::::::::::::
+
+:global:`ALLNODES` bound variable added.
+
+More pseudo-action-groups
+:::::::::::::::::::::::::
+
+:ref:`Some new Pseudo-Action-Groups added <kos-boolean-flags>` for
+handling a lot of new groups of parts.
+
+Get Navball Mode
+::::::::::::::::
+
+:global:`NAVMODE` bound variable:
+
+UniqueSet
+:::::::::
+
+Added a :ref:`UniqueSet <uniqueset>` collection for holding a
+generic set of things where order is irrelevant and duplicates are
+guaranteed not to exist.
+
+
 Changes in 0.20.1
 -----------------
 

@@ -41,6 +41,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`YAWTS`                        :struct:`scalar` (s)      Settling time for the yaw torque calculation.
     :attr:`ROLLTS`                       :struct:`scalar` (s)      Settling time for the roll torque calculation.
     :attr:`MAXSTOPPINGTIME`              :struct:`scalar` (s)      The maximum amount of stopping time to limit angular turn rate.
+    :attr:`ROLLCONTROLANGLERANGE`        :struct:`scalar` (deg)    The maximum value of :attr:`ANGLEERROR` for which to control roll.
     :attr:`ANGLEERROR`                   :struct:`scalar` (deg)    The angle between vessel:facing and target directions
     :attr:`PITCHERROR`                   :struct:`scalar` (deg)    The angular error in the pitch direction
     :attr:`YAWERROR`                     :struct:`scalar` (deg)    The angular error in the yaw direction
@@ -168,6 +169,20 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     .. note::
 
         This setting affects all three of the :ref:`rotational velocity PID's <cooked_omega_pid>` at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.
+
+.. attribute:: SteeringManager:ROLLCONTROLANGLERANGE
+
+    :type: :ref:`scalar <scalar>` (deg)
+    :access: Get/Set
+
+    The maximum value of :attr:`ANGLEERROR<SteeringManager:ANGLEERROR>` for
+    which kOS will attempt to respond to error along the roll axis.  If this
+    is set to 5 (the default value), the facing direction will need to be within
+    5 degrees of the target direction before it actually attempts to roll the
+    ship.  Setting the value to 180 will effectivelly allow roll control at any
+    error amount.  When :attr:`ANGLEERROR<SteeringManager:ANGLEERROR>` is
+    greater than this value, kOS will only attempt to kill all roll angular
+    velocity.  The value is clamped between 180 and 1e-16.
 
 .. attribute:: SteeringManager:ANGLEERROR
 

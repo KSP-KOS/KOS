@@ -154,7 +154,7 @@ namespace kOS.Function
 
             foreach (var body in FlightGlobals.fetch.bodies)
             {
-                list.AddItem(body.bodyName, Vector3d.Distance(body.position, shared.Vessel.findWorldCenterOfMass()));
+                list.AddItem(body.bodyName, Vector3d.Distance(body.position, shared.Vessel.CoMD));
             }
 
             return list;
@@ -189,8 +189,10 @@ namespace kOS.Function
             foreach (Part part in shared.Vessel.Parts)
             {
                 string stageStr = part.inverseStage.ToString();
-                foreach (PartResource resource in part.Resources)
+                PartResource resource;
+                for (int i = 0; i < part.Resources.Count; ++i)
                 {
+                    resource = part.Resources[i];
                     string key = stageStr + "|" + resource.resourceName;
                     if (resourceDict.ContainsKey(key))
                     {

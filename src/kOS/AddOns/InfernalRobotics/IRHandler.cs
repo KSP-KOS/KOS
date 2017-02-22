@@ -27,7 +27,7 @@ namespace kOS.AddOns.InfernalRobotics
                 //if the scene was loaded on non-IR Vessel and then IR vessel became focused we might need to re-init the API
                 IRWrapper.InitWrapper();
 
-                UnityEngine.Debug.Log ("KOS-IR: FixedUpdate reinit: " + IRWrapper.APIReady);
+                Safe.Utilities.SafeHouse.Logger.SuperVerbose("KOS-IR: FixedUpdate reinit: " + IRWrapper.APIReady);
 
                 initPending = false;
             }

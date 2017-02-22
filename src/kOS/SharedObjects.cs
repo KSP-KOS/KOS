@@ -1,9 +1,9 @@
-﻿using kOS.Execution;
-using kOS.Communication;
-using kOS.Binding;
-using kOS.Factories;
+﻿using kOS.Communication;
+using kOS.Execution;
 using kOS.Screen;
 using kOS.Callback;
+using kOS.Sound;
+using System.Collections.Generic;
 
 namespace kOS
 {
@@ -11,26 +11,45 @@ namespace kOS
     {
         public Vessel Vessel { get; set; }
         public ProcessorManager ProcessorMgr { get; set; }
-        public ConnectivityManager ConnectivityMgr { get; set; }
-        public IFactory Factory { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
+        public List<KOSManagedWindow> ManagedWindows { get; private set; }
         public TransferManager TransferManager { get; set; }
         public AddOns.AddonManager AddonManager { get; set; }
         public GameEventDispatchManager DispatchManager
         {
             get { return (GameEventDispatchManager)GameEventDispatchManager; }
         }
+        public Dictionary<int, VoiceValue> AllVoiceValues { get; private set; }
+
         public SharedObjects()
         {
-            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
+            ManagedWindows = new List<KOSManagedWindow>();
+            AllVoiceValues = new Dictionary<int, VoiceValue>();
         }
 
-        private void OnVesselDestroy(Vessel data)
+        public void AddWindow(KOSManagedWindow w)
         {
-            if (data.id == Vessel.id)
+            ManagedWindows.Add(w);
+        }
+
+        public void RemoveWindow(KOSManagedWindow w)
+        {
+            ManagedWindows.Remove(w);
+        }
+
+        public void DestroyObjects()
+        {
+            if (BindingMgr != null) { BindingMgr.Dispose(); }
+            if (Window != null) { UnityEngine.Object.Destroy(Window); }
+            if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
+            var props = typeof(SharedObjects).GetProperties();
+            foreach (var prop in props)
             {
-                BindingMgr.Dispose();
+                if (!prop.PropertyType.IsValueType)
+                {
+                    prop.SetValue(this, null, null);
+                }
             }
         }
     }

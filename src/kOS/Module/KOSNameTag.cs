@@ -31,9 +31,7 @@ namespace kOS.Module
                     return;
                 }
             }
-            GameObject gObj = new GameObject("nametag", typeof(KOSNameTagWindow));
-            DontDestroyOnLoad(gObj);
-            typingWindow = (KOSNameTagWindow)gObj.GetComponent(typeof(KOSNameTagWindow));
+            typingWindow = gameObject.AddComponent<KOSNameTagWindow>();
             typingWindow.Invoke(this, nameTag);
         }
 
@@ -46,6 +44,7 @@ namespace kOS.Module
         public void TypingCancel()
         {
             typingWindow.Close();
+            Destroy(typingWindow);
             typingWindow = null;
         }
     }

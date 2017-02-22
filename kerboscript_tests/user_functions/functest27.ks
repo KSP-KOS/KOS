@@ -2,7 +2,7 @@ print "running a test to see if you can call".
 print "a function from inside a KSM file.".
 
 print "Ensuring functest27_b.ksm is deleted:".
-log "" to "functest27_b.ksm". delete "functest27_b.ksm".
+log "" to "functest27_b.ksm". deletepath("functest27_b.ksm").
 
 print "Trying to compile functest27_b.ks to KSM file:".
 compile functest27_b.

@@ -19,12 +19,6 @@ namespace kOS.Safe.Encapsulation
 
         private void EnumeratorInitializeSuffixes()
         {
-            AddSuffix("RESET", new NoArgsVoidSuffix(() =>
-            {
-                index = -1;
-                status = false;
-                enumerator.Reset();
-            }));
             AddSuffix("NEXT", new NoArgsSuffix<BooleanValue>(() =>
             {
                 status = enumerator.MoveNext();

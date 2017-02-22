@@ -1,9 +1,6 @@
-using kOS.AddOns.RemoteTech;
 using kOS.Binding;
 using kOS.Callback;
 using kOS.Execution;
-using kOS.Factories;
-using kOS.Function;
 using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
@@ -23,7 +20,6 @@ using UnityEngine;
 using kOS.Safe.Encapsulation;
 using KSP.UI;
 using kOS.Suffixed;
-using kOS.Safe.Communication;
 using kOS.Safe.Function;
 
 namespace kOS.Module
@@ -51,6 +47,7 @@ namespace kOS.Module
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
         private bool firstUpdate = true;
+        private bool objectsInitialized = false;
 
         private MovingAverage averagePower = new MovingAverage();
 
@@ -58,9 +55,6 @@ namespace kOS.Module
         // required by the archive volume (which has infinite space).
         // TODO: This corresponds to the existing value and should be adjusted for balance.
         private const int ARCHIVE_EFFECTIVE_BYTES = 50000;
-
-        //640K ought to be enough for anybody -sic
-        private const int PROCESSOR_HARD_CAP = 655360;
 
         private const string BootDirectoryName = "boot";
 
@@ -206,7 +200,9 @@ namespace kOS.Module
         // TODO - later refactor making this kOS.Safer so it can work on ITermWindow, which also means moving all of UserIO's classes too.
         public Screen.TermWindow GetWindow()
         {
-            return shared.Window;
+            if (shared.Window != null)
+                return shared.Window;
+            return GetComponent<Screen.TermWindow>();
         }
 
         //returns basic information on kOSProcessor module in Editor
@@ -405,37 +401,39 @@ namespace kOS.Module
 
         public void InitObjects()
         {
+            if (objectsInitialized)
+            {
+                SafeHouse.Logger.SuperVerbose("kOSProcessor.InitObjects() - objects already initialized");
+                return;
+            }
+            objectsInitialized = true;
             shared = new SharedObjects();
-            CreateFactory();
 
             shared.Vessel = vessel;
             shared.Processor = this;
             shared.KSPPart = part;
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
-            shared.Interpreter = shared.Factory.CreateInterpreter(shared);
+            shared.Interpreter = new Screen.ConnectivityInterpreter(shared);
             shared.Screen = shared.Interpreter;
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
-            shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
-            shared.ConnectivityMgr = shared.Factory.CreateConnectivityManager();
+            shared.VolumeMgr = new ConnectivityVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
-            shared.SoundMaker = Sound.SoundMaker.Instance;
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
             SafeHouse.Logger.Log("eraseme: InitObjects() Just made new shared.GameEventDispatchManager.");            
 
             // Make the window that is going to correspond to this kOS part:
-            var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));
-            DontDestroyOnLoad(gObj);
-            shared.Window = (Screen.TermWindow)gObj.GetComponent(typeof(Screen.TermWindow));
+            shared.Window = gameObject.AddComponent<Screen.TermWindow>();
             shared.Window.AttachTo(shared);
+            shared.SoundMaker = shared.Window.GetSoundMaker();
 
             // initialize archive
-            Archive = shared.Factory.CreateArchive();
+            Archive = new Archive(SafeHouse.ArchiveFolder);
             shared.VolumeMgr.Add(Archive);
 
             Messages = new MessageQueue();
@@ -443,7 +441,7 @@ namespace kOS.Module
             // initialize harddisk
             if (HardDisk == null)
             {
-                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+                HardDisk = new Harddisk(diskSpace);
 
                 if (!string.IsNullOrEmpty(Tag))
                 {
@@ -507,18 +505,19 @@ namespace kOS.Module
                     return (a.part.uid() < b.part.uid()) ? -1 : (a.part.uid() > b.part.uid()) ? 1 : 0;
                 });
             }
-            GameEvents.onPartDestroyed.Add(OnDestroyingMyHardware);
         }
 
-        private void OnDestroyingMyHardware(Part p)
+        public void OnDestroy()
         {
-            // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
-            if (p != part)
-                return;
-
-            GetWindow().DetachAllTelnets();
+            SafeHouse.Logger.SuperVerbose("kOSProcessor.OnDestroy()!");
 
             allMyInstances.RemoveAll(m => m == this);
+
+            if (shared != null)
+            {
+                shared.DestroyObjects();
+                shared = null;
+            }
         }
 
         /// <summary>
@@ -535,31 +534,6 @@ namespace kOS.Module
             // So if the caller adds/removes from it, it won't mess with the
             // private list we're internally maintaining:
             return allMyInstances.GetRange(0, allMyInstances.Count);
-        }
-
-        private void CreateFactory()
-        {
-            SafeHouse.Logger.LogWarning("Starting Factory Building");
-            bool isAvailable;
-            try
-            {
-                isAvailable = RemoteTechHook.IsAvailable();
-            }
-            catch
-            {
-                isAvailable = false;
-            }
-
-            if (isAvailable)
-            {
-                SafeHouse.Logger.LogWarning("RemoteTech Factory Building");
-                shared.Factory = new RemoteTechFactory();
-            }
-            else
-            {
-                SafeHouse.Logger.LogWarning("Standard Factory Building");
-                shared.Factory = new StandardFactory();
-            }
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
@@ -581,7 +555,7 @@ namespace kOS.Module
 
         public void Update()
         {
-            if (HighLogic.LoadedScene == GameScenes.EDITOR)
+            if (HighLogic.LoadedScene == GameScenes.EDITOR && EditorLogic.fetch != null)
             {
                 if (diskSpace != Convert.ToInt32(diskSpaceUI))
                 {
@@ -711,6 +685,7 @@ namespace kOS.Module
 
         public override void OnLoad(ConfigNode node)
         {
+            SafeHouse.Logger.SuperVerbose("kOSProcessor.OnLoad");
             try
             {
                 // KSP Seems to want to make an instance of my partModule during initial load
@@ -786,7 +761,7 @@ namespace kOS.Module
             if (ProcessorMode == ProcessorModes.OFF) return;
 
             double volumePower = 0;
-            if (shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel))
+            if (shared.VolumeMgr.CheckCurrentVolumeRange())
             {
                 // If the current volume is in range, check the capacity and calculate power
                 var volume = shared.VolumeMgr.CurrentVolume;
@@ -883,9 +858,10 @@ namespace kOS.Module
                     {
                         shared.VolumeMgr.SwitchTo(HardDisk);
                     }
-                    if (shared.Cpu != null) shared.Cpu.Boot();
+                    firstUpdate = true; // handle booting the cpu on the next FixedUpdate
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                     if (shared.Window != null) shared.Window.IsPowered = true;
+                    foreach (var w in shared.ManagedWindows) w.IsPowered = true;
                     break;
 
                 case ProcessorModes.OFF:
@@ -893,6 +869,8 @@ namespace kOS.Module
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
+                    if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
+                    foreach (var w in shared.ManagedWindows) w.IsPowered = false;
                     break;
             }
 
@@ -921,7 +899,7 @@ namespace kOS.Module
         public bool CheckCanBoot()
         {
             if (shared.VolumeMgr == null) { shared.Logger.Log("No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { shared.Logger.Log(new Safe.Exceptions.KOSVolumeOutOfRangeException("Boot")); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange()) { shared.Logger.LogException(new Safe.Exceptions.KOSVolumeOutOfRangeException("Boot")); }
             else if (shared.VolumeMgr.CurrentVolume == null) { shared.Logger.Log("No current volume"); }
             else if (shared.ScriptHandler == null) { shared.Logger.Log("No script handler"); }
             else

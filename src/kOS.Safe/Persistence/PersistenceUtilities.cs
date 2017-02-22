@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Zip.Compression;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
@@ -11,6 +12,7 @@ namespace kOS.Safe.Persistence
 {
     public static class PersistenceUtilities
     {
+        public static readonly byte[] GzipHeader = new byte[] { (GZipConstants.GZIP_MAGIC >> 8), (GZipConstants.GZIP_MAGIC & 0xff), Deflater.DEFLATED, 0 };
         public static bool IsBinary(FileCategory category)
         {
             return category == FileCategory.BINARY || category == FileCategory.KSM;
@@ -30,7 +32,7 @@ namespace kOS.Safe.Persistence
             Array.Copy(firstBytes, 0, firstFour, 0, atMostFour);
             var returnCat = atMostFour < 4 ? FileCategory.TOOSHORT : FileCategory.BINARY; // default if none of the conditions pass
 
-            if (firstFour.SequenceEqual(CompiledObject.MagicId))
+            if (firstFour.SequenceEqual(CompiledObject.MagicId) || firstFour.SequenceEqual(GzipHeader))
             {
                 returnCat = FileCategory.KSM;
             }
@@ -169,7 +171,7 @@ namespace kOS.Safe.Persistence
                 // result of this swap on writing:
                 returnValue = returnValue.Replace('/',',');
 
-                SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
+                //SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
 
                 return returnValue;
             }
@@ -183,20 +185,24 @@ namespace kOS.Safe.Persistence
             byte[] inputBuffer = Convert.FromBase64String(massagedInput);
 
             using (var inputStream = new MemoryStream(inputBuffer))
+            {
                 // mono requires an installed zlib library for GZipStream to work :(
                 //using (var zipStream = new GZipStream(inputStream, CompressionMode.Decompress))
-            using (var zipStream = new GZipInputStream(inputStream))
-            using (var decompressedStream = new MemoryStream())
-            {
-                var buffer = new byte[4096];
-                int read;
-
-                while ((read = zipStream.Read(buffer, 0, buffer.Length)) > 0)
+                using (var zipStream = new GZipInputStream(inputStream))
                 {
-                    decompressedStream.Write(buffer, 0, read);
-                }
+                    using (var decompressedStream = new MemoryStream())
+                    {
+                        var buffer = new byte[4096];
+                        int read;
 
-                return decompressedStream.ToArray();
+                        while ((read = zipStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            decompressedStream.Write(buffer, 0, read);
+                        }
+
+                        return decompressedStream.ToArray();
+                    }
+                }
             }
         }
 

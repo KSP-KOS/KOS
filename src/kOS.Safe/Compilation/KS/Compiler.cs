@@ -5,6 +5,7 @@ using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Safe.Execution;
 using kOS.Safe.Encapsulation;
+using System.Text;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -238,40 +239,71 @@ namespace kOS.Safe.Compilation.KS
         
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
         {
+            bool doChildren = true;
+            bool doInvoke = false;
             switch (node.Token.Type)
             {
-                // Statements that can have other statements nested inside them need to be
-                // recursed through to search for instances of the special statements
-                // we are looking for here:
+                // Any statement which might have another statement nested inside
+                // it should be recursed into to check if that other statement
+                // might be a lock, or a user function (anonymous or named).
                 //
-                case TokenType.Start:
-                case TokenType.instruction_block:
-                case TokenType.instruction:
-                case TokenType.if_stmt:
-                case TokenType.fromloop_stmt:
-                case TokenType.until_stmt:
-                case TokenType.for_stmt:
-                case TokenType.on_stmt:
-                case TokenType.when_stmt:
-                case TokenType.declare_function_clause:
-                    foreach (ParseNode childNode in node.Nodes)
-                        IterateUserFunctions(childNode, action);
-                    break;
+                // We assume by default a node should be recursed into unless explicitly
+                // told otherwise here.  Doing it this way around is the safer default
+                // because of what happens when we fail to mention a part of speech here.
+                // If we fail to recurse when we should have, that can be fatal as it makes
+                // the compiler produce wrong code.  But if we do recurse when we didn't have
+                // to, that just wastes a bit of CPU time, which isn't as bad.
+                //
+                case TokenType.onoff_trailer:
+                case TokenType.stage_stmt:
+                case TokenType.clear_stmt:
+                case TokenType.break_stmt:
+                case TokenType.preserve_stmt:
+                case TokenType.run_stmt:
+                case TokenType.compile_stmt:
+                case TokenType.list_stmt:
+                case TokenType.reboot_stmt:
+                case TokenType.shutdown_stmt:
+                case TokenType.unset_stmt:
+                case TokenType.sci_number:
+                case TokenType.number:
+                case TokenType.INTEGER:
+                case TokenType.DOUBLE:
+                case TokenType.PLUSMINUS:
+                case TokenType.MULT:
+                case TokenType.DIV:
+                case TokenType.POWER:
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                case TokenType.STRING:
+                case TokenType.TRUEFALSE:
+                case TokenType.COMPARATOR:
+                case TokenType.AND:
+                case TokenType.OR:
+                case TokenType.directive:
+                    doChildren = false;
+                    break;                
 
                 // These are the statements we're searching for to work on here:
                 //
-                case TokenType.declare_stmt: // for DECLARE FUNCTION's
-                    // for catching functions nested inside functions, or locks nested inside functions:
-                    // Depth-first: Walk my children first, then iterate through me.  Thus the functions nested inside
-                    // me have already been compiled before I start compiling my own code.  This allows my code to make
-                    // forward-calls into my nested functions, because they've been compiled and we know where they live
-                    // in memory now.
-                    foreach (ParseNode childNode in node.Nodes)
-                        IterateUserFunctions(childNode, action);                    
-
-                    action.Invoke(node);
+                case TokenType.declare_stmt: // for DECLARE FUNCTION's.
+                case TokenType.instruction_block: // just in case it's an anon function's body
+                    doInvoke = true;
                     break;
+                default:
+                    break;
+
             }
+            // for catching functions nested inside functions, or locks nested inside functions:
+            // Depth-first: Walk my children first, then iterate through me.  Thus the functions nested inside
+            // me have already been compiled before I start compiling my own code.  This allows my code to make
+            // forward-calls into my nested functions, because they've been compiled and we know where they live
+            // in memory now.
+            if (doChildren)
+                foreach (ParseNode childNode in node.Nodes)
+                    IterateUserFunctions(childNode, action);
+            if (doInvoke)
+                action.Invoke(node);
         }
 
         /// <summary>
@@ -505,7 +537,13 @@ namespace kOS.Safe.Compilation.KS
         /// </summary>
         private string ConcatenateNodes(ParseNode node)
         {
-            return string.Format("{0}{1}{2}", context.NumCompilesSoFar, GetContainingScopeId(node), ConcatenateNodesRecurse(node));
+            LineCol whereNodeIs = GetLineCol(node);
+            return string.Format("{0}L{1}C{2}{3}{4}",
+                                 context.NumCompilesSoFar,
+                                 whereNodeIs.Line,
+                                 whereNodeIs.Column,
+                                 GetContainingScopeId(node),
+                                 ConcatenateNodesRecurse(node));
         }
         
         private string ConcatenateNodesRecurse(ParseNode node)
@@ -530,7 +568,8 @@ namespace kOS.Safe.Compilation.KS
             ParseNode bodyNode;
             
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
-            if (IsLockStatement(node))
+            bool isLock = IsLockStatement(node);
+            if (isLock)
             {
                 funcIdentifier = lastSubNode.Nodes[1].Token.Text;
                 bodyNode = lastSubNode.Nodes[3];
@@ -547,6 +586,7 @@ namespace kOS.Safe.Compilation.KS
                 context.UserFunctions.GetUserFunction(funcIdentifier, storageType == StorageModifier.GLOBAL ? (Int16)0 : GetContainingScopeId(node), node);
             int expressionHash = ConcatenateNodes(bodyNode).GetHashCode();
             userFuncObject.GetUserFunctionOpcodes(expressionHash);
+            userFuncObject.IsFunction = !isLock;
             if (userFuncObject.IsSystemLock())
                 BuildSystemTrigger(userFuncObject);
         }
@@ -654,7 +694,7 @@ namespace kOS.Safe.Compilation.KS
                 bodyNode = lastSubNode.Nodes[2]; // The INSTRUCTION_BLOCK of: DEFINE FUNCTION IDENT INSTRUCTION_BLOCK.
             }
             else
-                return; // In principle this shouldn't have ever been called in this case.
+                return; // Should only be the case when scanning elements for anonymous functions
 
             UserFunction userFuncObject = context.UserFunctions.GetUserFunction(
                 userFuncIdentifier,
@@ -1431,20 +1471,20 @@ namespace kOS.Safe.Compilation.KS
             else
             {
                 //number in scientific notation
-                int exponentIndex = 2;
-                int exponentSign = 1;
-
-                double mantissa = double.Parse(node.Nodes[0].Nodes[0].Token.Text);
-
-                if (node.Nodes[2].Token.Type == TokenType.PLUSMINUS)
+                StringBuilder sb = new StringBuilder();
+                sb.Append(node.Nodes[0].Nodes[0].Token.Text); // have to use the sub-node of double or integer
+                for (int i = 1; i < node.Nodes.Count; ++i)
                 {
-                    exponentIndex++;
-                    exponentSign = (node.Nodes[2].Token.Text == "-") ? -1 : 1;
+                    sb.Append(node.Nodes[i].Token.Text);
                 }
-
-                int exponent = exponentSign * int.Parse(node.Nodes[exponentIndex].Token.Text);
-                double number = mantissa * System.Math.Pow(10, exponent);
-                AddOpcode(new OpcodePush(number));
+                string parseText = sb.ToString();
+                ScalarValue val;
+                if (ScalarValue.TryParse(parseText, out val))
+                {
+                    AddOpcode(new OpcodePush(val));
+                }
+                else
+                    throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, parseText));
             }
         }
 
@@ -1457,27 +1497,25 @@ namespace kOS.Safe.Compilation.KS
         private void VisitInteger(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            object number;
-            int integerNumber;
-
-            if (int.TryParse(node.Token.Text, out integerNumber))
+            ScalarValue val;
+            if (ScalarValue.TryParseInt(node.Token.Text, out val))
             {
-                number = integerNumber;
+                AddOpcode(new OpcodePush(val));
             }
             else
-            {
-                number = double.Parse(node.Token.Text);
-            }
-
-            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
+                throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, node.Token.Text));
         }
 
         private void VisitDouble(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            object number = double.Parse(node.Token.Text);
-
-            AddOpcode(new OpcodePush(ScalarValue.Create(number)));
+            ScalarValue val;
+            if (ScalarValue.TryParseDouble(node.Token.Text, out val))
+            {
+                AddOpcode(new OpcodePush(val));
+            }
+            else
+                throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, node.Token.Text));
         }
 
         private void VisitTrueFalse(ParseNode node)

@@ -11,10 +11,12 @@ namespace kOS.Suffixed.PartModuleField
     [kOS.Safe.Utilities.KOSNomenclature("ScienceExperimentModule")]
     public abstract class ScienceExperimentFields : PartModuleFields
     {
+        protected global::Part part;
         protected IScienceDataContainer container;
         public ScienceExperimentFields(PartModule module, SharedObjects shared) : base(module, shared)
         {
             this.container = module as IScienceDataContainer;
+            part = module.part;
 
             if (container == null)
             {
@@ -54,7 +56,7 @@ namespace kOS.Suffixed.PartModuleField
 
         public virtual ListValue Data()
         {
-            return new ListValue(container.GetData().Select(s => new ScienceDataValue(s)).Cast<Structure>());
+            return new ListValue(container.GetData().Select(s => new ScienceDataValue(s, part)).Cast<Structure>());
         }
 
         public virtual void DumpData()

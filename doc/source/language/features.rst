@@ -66,10 +66,11 @@ Structures are variables that contain more than one piece of information. For ex
     PRINT "The Mun's periapsis altitude is: " + MUN:PERIAPSIS.
     PRINT "The ship's surface velocity is: " + SHIP:VELOCITY:SURFACE.
 
-.. versionadded:: 0.19.0
-    As of kOS version 0.19.0, in fact ALL values a script can see are
-    now a kind of :struct:`Structure <structure>`, even basic primitive
-    types such as Boolean and Scalar.
+.. note::
+    .. versionadded:: 0.19.0
+        As of this kOS version, in fact ALL values a script can see are
+        now a kind of :struct:`Structure <structure>`, even basic primitive
+        types such as Boolean and Scalar.
 
 
 Many structures also let you set a specific component of them, for example::
@@ -129,12 +130,12 @@ the boolean expression ``x or y+2 > 10`` it never even bothers trying
 to add y and 2 to find out if it's greater than 10.  It already knew
 as soon as it got to the ``x or whatever`` that given that x is true,
 the *whatever* doesn't matter one bit.  Once one side of an OR is true,
-the other side can either be true or false and it won't change the fact 
+the other side can either be true or false and it won't change the fact
 that the whole expression will be true anyway.
 
 A similar short circuiting happens with AND.  Once the left side of the
 AND operator is false, then the entire AND expression is guaranteed
-to be false regardless of what's on the right side, so kerboscript 
+to be false regardless of what's on the right side, so kerboscript
 doesn't bother calculating the righthand side once the lefthand side is false.
 
 Read the link above for implications of why this matters in programming.
@@ -166,7 +167,7 @@ programming.
 But if you are an experienced programmer you might not like this
 behavior, and there are good arguments for why you might want to
 disable it.  If you wish to do so, a syntax exists to do so called
-:ref:``NOLAZYGLOBAL``.
+:ref:`@LAZYGLOBAL OFF <lazyglobal>`.
 
 .. _feature functions:
 
@@ -215,4 +216,3 @@ These terms are referred to as "suffixes". For example ``Velocity`` is a suffix 
     SET n:ETA to 500.
 
 The full list of available suffixes for each type :ref:`can be found here <structures>`.
-

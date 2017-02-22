@@ -16,15 +16,18 @@ namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
-        private enum Status
+        private enum Section
         {
-            Running = 1,
-            Waiting = 2
+            Main = 1,
+            Trigger = 2
         }
 
         private readonly IStack stack;
         private readonly VariableScope globalVariables;
-        private Status currentStatus;
+        private Section currentRunSection;
+        private List<YieldFinishedDetector> triggerYields;
+        private List<YieldFinishedDetector> mainYields;
+        
         private double currentTime;
         private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
@@ -55,12 +58,6 @@ namespace kOS.Safe.Execution
             set { currentContext.InstructionPointer = value; }
         }
         
-        /// <summary>
-        /// Where was the instruction pointer at the time this update
-        /// first started?
-        /// </summary>
-        int firstInstructionPointerInUpdate;
-
         public double SessionTime { get { return currentTime; } }
         
         public List<string> ProfileResult { get; private set; }
@@ -72,6 +69,8 @@ namespace kOS.Safe.Execution
             stack = new Stack();
             globalVariables = new VariableScope(0, -1);
             contexts = new List<ProgramContext>();
+            mainYields = new List<YieldFinishedDetector>();
+            triggerYields = new List<YieldFinishedDetector>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
         }
 
@@ -82,7 +81,7 @@ namespace kOS.Safe.Execution
             contexts.Clear();            
             if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
-            currentStatus = Status.Running;
+            currentRunSection = Section.Main;
             currentTime = 0;
             maxUpdateTime = 0.0;
             maxExecutionTime = 0.0;
@@ -245,6 +244,7 @@ namespace kOS.Safe.Execution
                 returnVal = PopStack();
                 --howMany;
             }
+
             return returnVal;
         }
 
@@ -389,7 +389,7 @@ namespace kOS.Safe.Execution
             SafeHouse.Logger.Log(string.Format("Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
             if (contexts.Count > 1)
             {
-                EndWait();
+                AbortAllYields();
 
                 if (SafeHouse.Config.ShowStatistics)
                     CalculateProfileResult();
@@ -399,6 +399,7 @@ namespace kOS.Safe.Execution
                     PopFirstContext();
                     shared.Screen.Print("Program aborted.");
                     shared.BindingMgr.UnBindAll();
+                    shared.SoundMaker.StopAllVoices(); // stop voices if execution was manually broken, but not if the program ends normally
                     PrintStatistics();
                     stack.Clear();
                 }
@@ -422,6 +423,70 @@ namespace kOS.Safe.Execution
             }
         }
 
+        /// <summary>
+        /// Call when you want to suspend execution of the Opcodes until some
+        /// future condition becomes true.  The CPU will call yieldTracker.Begin()
+        /// right away, and then after that call yieldTracker.IsFinished() again and
+        /// again until it returns true.  Until IsFinished() returns true, the CPU
+        /// will not advance any further into the program in its current "mode".
+        /// Note that the CPU will track "trigger" and "mainline" code separately for
+        /// this purpose.  Waiting in mainline code will still allow triggers to run.
+        /// </summary>
+        /// <param name="yieldTracker"></param>
+        public void YieldProgram(YieldFinishedDetector yieldTracker)
+        {
+            switch (currentRunSection)
+            {
+                case Section.Main:
+                    mainYields.Add(yieldTracker);
+                    break;
+                case Section.Trigger:
+                    triggerYields.Add(yieldTracker);
+                    break;
+                default:
+                    // Should hypothetically be impossible unless we add more values to the enum.
+                    break;
+            }
+            yieldTracker.creationTimeStamp = currentTime;
+            yieldTracker.Begin(shared);
+        }
+
+        private bool IsYielding()
+        {
+            List<YieldFinishedDetector> yieldTrackers;
+            
+            // Decide if we should operate on the yield trackers that are
+            // at the main code level or the ones that are at the trigger
+            // level:
+            switch (currentRunSection)
+            {
+                case Section.Main:
+                    yieldTrackers = mainYields;
+                    break;
+                case Section.Trigger:
+                    yieldTrackers = triggerYields;
+                    break;
+                default:
+                    // Should hypothetically be impossible unless we add more values to the enum.
+                    return false;
+            }
+            // Query the yield trackers and remove all the ones that claim they are finished.
+            // Always treat them as unfinished if this is the same fixed time stamp as the
+            // one in which the yield got Begin()'ed regardless of what their IsFinished() claims,
+            // because all waits will always wait at least one tick, according to all our docs.
+            yieldTrackers.RemoveAll((t) => t.creationTimeStamp != currentTime && t.IsFinished());
+            
+            // If any are still present, that means not all yielders in this context (main or trigger)
+            // are finished and we should still return that we are waiting:
+            return yieldTrackers.Count > 0;
+        }
+        
+        private void AbortAllYields()
+        {
+            mainYields.Clear();
+            triggerYields.Clear();
+        }
+        
         public void PushStack(object item)
         {
             stack.Push(item);
@@ -1142,27 +1207,6 @@ namespace kOS.Safe.Execution
             currentContext.RemoveTrigger(trigger);
         }
 
-        /// <summary>
-        /// Put the CPU into wait state for now, which will reset next Update.
-        /// Also, if given a number of seconds, return the number of seconds into
-        /// the future that is, in game-terms, for the sake of making a timestamp
-        /// of when the wait is expected to be over.
-        /// </summary>
-        /// <param name="waitTime"></param>
-        /// <returns></returns>
-        public double StartWait(double waitTime)
-        {
-            if (currentStatus == Status.Running)
-                currentStatus = Status.Waiting;
-            return currentTime + waitTime;
-        }
-
-        public void EndWait()
-        {
-            if (currentStatus == Status.Waiting)
-                currentStatus = Status.Running;
-        }
-
         public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
@@ -1172,8 +1216,6 @@ namespace kOS.Safe.Execution
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
             instructionsSoFarInUpdate = 0;
             var numMainlineInstructions = 0;
-
-            firstInstructionPointerInUpdate = InstructionPointer;
 
             if (showStatistics)
             {
@@ -1195,19 +1237,16 @@ namespace kOS.Safe.Execution
                 {
                     ProcessTriggers();
 
-                    if (currentStatus == Status.Running || currentStatus == Status.Waiting)
+                    if (showStatistics)
                     {
-                        if (showStatistics)
-                        {
-                            executionWatch.Start();
-                            instructionWatch.Start();
-                        }
-                        ContinueExecution(showStatistics);
-                        numMainlineInstructions = instructionsSoFarInUpdate;
-                        if (showStatistics)
-                        {
-                            executionWatch.Stop();
-                        }
+                        executionWatch.Start();
+                        instructionWatch.Start();
+                    }
+                    ContinueExecution(showStatistics);
+                    numMainlineInstructions = instructionsSoFarInUpdate;
+                    if (showStatistics)
+                    {
+                        executionWatch.Stop();
                     }
                 }
                 if (showStatistics)
@@ -1222,6 +1261,11 @@ namespace kOS.Safe.Execution
                 {
                     shared.Logger.Log(e);
                     SafeHouse.Logger.Log(stack.Dump());
+                }
+                if (shared.SoundMaker != null)
+                {
+                    // Stop all voices any time there is an error, both at the interpreter and in a program
+                    shared.SoundMaker.StopAllVoices();
                 }
 
                 if (contexts.Count == 1)
@@ -1344,31 +1388,30 @@ namespace kOS.Safe.Execution
         {
             var executeNext = true;
             int howManyMainLine = 0;
-            bool reachedMainLine = false;
+            currentRunSection = Section.Trigger; // assume we begin with trigger mode until we hit mainline code.
+            
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
 
-            EndWait(); // Temporarily, perhaps. If the first thing it finds is the same OpcodeWait, it can revert back to wait mode.
-
-            while (currentStatus == Status.Running &&
-                   instructionsSoFarInUpdate < instructionsPerUpdate &&
+            while (instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
-                if (InstructionPointer == firstInstructionPointerInUpdate &&
-                    ! stack.HasTriggerContexts()) // This additional check is important.
-                                                 // Hypothetically it could be possible for trigger code to hit the same
-                                                 // IP as where mainline code was interrupted, if both trigger code and
-                                                 // mainline code make use of the same library function, and the
-                                                 // trigger interruption occurred when mainline code was in that
-                                                 // same library function.  This ensures that if so, that doesn't count.
-                                                 // It only counts when all the triggers have popped off the call stack.
+                if (! stack.HasTriggerContexts())
                 {
-                    reachedMainLine = true;
+                    currentRunSection = Section.Main;
                 }
-                executeNext = ExecuteInstruction(currentContext, doProfiling);
-                instructionsSoFarInUpdate++;
-                if (reachedMainLine)
-                  ++howManyMainLine;
+                
+                if (IsYielding())
+                {
+                    executeNext = false;
+                }
+                else
+                {
+                    executeNext = ExecuteInstruction(currentContext, doProfiling);
+                    instructionsSoFarInUpdate++;
+                    if (currentRunSection == Section.Main)
+                       ++howManyMainLine;
+                }
             }
 
             // As long as at least one line of actual main code was reached, then re-enable all
@@ -1376,7 +1419,7 @@ namespace kOS.Safe.Execution
             // ensures that a nested bunch of triggers interruping other triggers can't
             // *completely* starve mainline code of execution, no matter how invasive
             // and cpu-hogging the user may have been written them to be:
-            if (reachedMainLine)
+            if (currentRunSection == Section.Main)
                 currentContext.ActivatePendingTriggers();
 
             if (executeLog.Length > 0)
@@ -1386,7 +1429,7 @@ namespace kOS.Safe.Execution
         private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
         {            
             Opcode opcode = context.Program[context.InstructionPointer];
-
+            
             if (SafeHouse.Config.DebugEachOpcode)
             {
                 executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));

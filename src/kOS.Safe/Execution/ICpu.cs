@@ -41,11 +41,10 @@ namespace kOS.Safe.Execution
         TriggerInfo AddTrigger(UserDelegate del, params Structure[] args);
         void RemoveTrigger(int triggerFunctionPointer);
         void RemoveTrigger(TriggerInfo trigger);
-        double StartWait(double waitTime);
-        void EndWait();
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
+        void YieldProgram(YieldFinishedDetector yieldTracker);
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         IProgramContext GetCurrentContext();
         Opcode GetCurrentOpcode();

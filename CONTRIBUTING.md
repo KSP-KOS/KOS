@@ -146,17 +146,13 @@ Setting Up Your Environment
   pull request to KSP-KOS/KOS `develop` for review to be included.
 
 ####Setting Up The Solution Dependencies
-1. Download the latest KSPAPIExtensions.dll from
-   https://github.com/Swamp-Ig/KSPAPIExtensions/releases, and copy
-   it to `$KSP/GameData/kOS/Plugins` and `$KOS/Resources/GameData/kOS/Plugins`.
+1. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
 
-2. Copy the folder `$KOS/Resources/GameData/kOS` to `$KSP/GameData/`
-
-3. Copy `Assembly-CSharp.dll`, `Assembly-CSharp-firstpass.dll`, `KSPUtil.dll`,
+2. Copy `Assembly-CSharp.dll`, `Assembly-CSharp-firstpass.dll`,
   `UnityEngine.dll` and `UnityEngine.UI.dll` from `$KSP/KSP_Data/Managed`
   into `$KOS/Resources`.  If you do not have a copy of KSP locally, you may
   download dummy assemblies at https://github.com/KSP-KOS/KSP_LIB
 
-4. If you want building the solution to update the dlls in your KSP
+3. If you want building the solution to update the dlls in your KSP
    directory, create a symbolic link called `KSPdirlink` from the root
    of this repository to your KSP installation directory.

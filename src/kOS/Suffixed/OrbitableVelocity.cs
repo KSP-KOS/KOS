@@ -35,7 +35,7 @@ namespace kOS.Suffixed
             CelestialBody parent = b.KOSExtensionGetParentBody();
             Surface = (parent != null) ?
                 new Vector(b.orbit.GetVel() - parent.getRFrmVel(b.position)) :
-                new Vector(Vector3d.zero);
+                new Vector(Orbital); // return same velocity as orbit when no parent body to compare against.
             InitializeSuffixes();
         }
 

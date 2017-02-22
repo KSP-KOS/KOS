@@ -12,9 +12,9 @@ namespace kOS.Module
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Bootstrapper : MonoBehaviour
     {
-        private readonly string legacyArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+        private string legacyArchiveFolder;
         private const string LEGACY_KOS_EXTENSION = ".txt";
-        private readonly string backupFolder = GameDatabase.Instance.PluginDataFolder + "/GameData/kOS/Backup_" + DateTime.Now.ToFileTimeUtc();
+        private string backupFolder;
 
         private const string LEGACY_KOS_FOLDER_DESC = "The kOS v0.15 update has moved the archive folder to /Ships/Script/ and " +
                                                       "changed the file extension from *.txt to *.ks to be more in line with " +
@@ -30,6 +30,8 @@ namespace kOS.Module
         
         public void Start()
         {
+            legacyArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+            backupFolder = GameDatabase.Instance.PluginDataFolder + "/GameData/kOS/Backup_" + DateTime.Now.ToFileTimeUtc();
             BuildEnvironment();
             BuildLogger();
 

@@ -250,13 +250,22 @@ namespace kOS.Safe.Compilation
                     labels.Add(program[index].Label, index);
                 }
             }
-
+ 
             // replace destination labels with the corresponding index
             for (int index = 0; index < program.Count; index++)
             {
                 Opcode opcode = program[index];
                 if (string.IsNullOrEmpty(opcode.DestinationLabel)) continue;
 
+                if (!labels.ContainsKey(opcode.DestinationLabel))
+                {
+                    Utilities.SafeHouse.Logger.LogError("=====Relabeled Program so far is: =========");
+                    Utilities.SafeHouse.Logger.LogError(Utilities.Debug.GetCodeFragment(program));
+
+                    throw new Exceptions.KOSCompileException(LineCol.Unknown(), string.Format(
+                        "ProgramBuilder.ReplaceLabels: Cannot find label {0}.  Opcode: {1}", opcode.DestinationLabel, opcode.ToString()));
+
+                }
                 int destinationIndex = labels[opcode.DestinationLabel];
                 if (opcode is BranchOpcode)
                 {

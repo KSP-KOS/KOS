@@ -10,7 +10,7 @@ addons:
 
 env:
   global:
-  - KSP_VERSION="1.1.3"
+  - KSP_VERSION="1.2.2"
 
 # Pre-shared token for pushing notifications to slack chat
 notifications:
