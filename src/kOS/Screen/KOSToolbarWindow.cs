@@ -47,7 +47,7 @@ namespace kOS.Screen
         // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200, 350);
 
-        private static Rect windowRect; // does anybody know why this is ststic?
+        private static Rect windowRect; // does anybody know why this is static?
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private static GUISkin panelSkin;
         private static GUIStyle headingLabelStyle;
@@ -244,8 +244,9 @@ namespace kOS.Screen
             // force close the font picker window if it was still open:
             if (fontPicker != null)
             {
-                fontPicker.enabled = false;
-                fontPicker.gameObject.DestroyGameObject();
+                fontPicker.Close();
+                Destroy(fontPicker);
+                fontPicker = null;
             }
         }
 
