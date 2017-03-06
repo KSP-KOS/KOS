@@ -49,6 +49,30 @@ namespace kOS.Suffixed.Widget
             RegisterInitializer(InitializeSuffixes);
         }
 
+        /// <summary>
+        /// Return either the delegate itself or a dummy delegate if it's null,
+        /// to protect against sending a null to kerboscript.  To be used with
+        /// all the callbacks the GUI system will use.
+        /// </summary>
+        /// <returns>The callback or NoDelegate.</returns>
+        /// <param name="d">delegate to try</param>
+        public static UserDelegate CallbackGetter(UserDelegate d)
+        {
+            return d ?? NoDelegate.Instance;
+        }
+
+        /// <summary>
+        /// Return the GUI callbackm or if NoDelegate was passed in, then
+        /// return null instead.  To be used in the Setters of SetSuffixes
+        /// for gui user callbacks so the kerboscript can pass in NoDelegate
+        /// and the kOS C# code will interpret that to mean a null.
+        /// </summary>
+        /// <param name="d">delegate to return</param>
+        public static UserDelegate CallbackSetter(UserDelegate d)
+        {
+            return (d is NoDelegate ? null : d);
+        }
+
         protected GUIWidgets FindGUI()
         {
             var c = this;

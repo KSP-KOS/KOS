@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -13,6 +14,8 @@ namespace kOS.Suffixed.Widget
         protected List<Widget> Widgets { get; private set; }
 
         public int Count { get { return Widgets.Count; } }
+
+        public UserDelegate UserOnRadioChange { get ; set; }
 
         public Box(Box parent, LayoutMode mode) : this(parent, mode, parent.FindStyle("box"))
         {
@@ -48,6 +51,8 @@ namespace kOS.Suffixed.Widget
             AddSuffix("ADDSPACING", new OneArgsSuffix<Spacing, ScalarValue>(AddSpace));
             AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(Widgets)));
             AddSuffix("SHOWONLY", new OneArgsSuffix<Widget>(value => ShowOnly(value)));
+            AddSuffix("RADIOVALUE", new Suffix<StringValue>(() => new StringValue(GetRadioValue())));
+            AddSuffix("ONRADIOCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnRadioChange), value => UserOnRadioChange = CallbackSetter(value)));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
         }
 
@@ -66,6 +71,41 @@ namespace kOS.Suffixed.Widget
                 var w = Widgets[i] as Button;
                 if (w != null && w != leave) { w.SetPressedVisible(false); }
             }
+        }
+
+        public void ScheduleOnRadioChange(Button b)
+        {
+            if (UserOnRadioChange != null)
+                UserOnRadioChange.TriggerNextUpdate(b);
+        }
+
+        /// <summary>
+        /// Gets which radio button inside this box has the "on" value, if there
+        /// is one.  Returns null if there's no such radio buttons or all are off.
+        /// </summary>
+        /// <returns>The radio button that is on.</returns>
+        public Button WhichRadioButtonOn()
+        {
+            for (int i = 0; i < Widgets.Count; ++i)
+            {
+                Button b = Widgets[i] as Button;
+                if (b != null && b.IsExclusive == true && b.Pressed)
+                    return b;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the string value of the radio button that's down, or empty string
+        /// if all radio buttons are up, or there are no radio buttons.
+        /// </summary>
+        /// <returns>The down button's radio value</returns>
+        public string GetRadioValue()
+        {
+            Button b = WhichRadioButtonOn();
+            if (b != null)
+                return b.Text;
+            return "";
         }
 
         public void Clear()

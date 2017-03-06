@@ -11,6 +11,8 @@ namespace kOS.Suffixed.Widget
         private GUIContent content { get; set; }
         private GUIContent content_visible { get; set; }
 
+        public string Text { get { return content.text; } }
+
         public Label(Box parent, string text, WidgetStyle style) : base(parent, style)
         {
             RegisterInitializer(InitializeSuffixes);

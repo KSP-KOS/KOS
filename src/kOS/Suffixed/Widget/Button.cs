@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
 using UnityEngine;
 
 namespace kOS.Suffixed.Widget
@@ -17,9 +18,8 @@ namespace kOS.Suffixed.Widget
         public bool PressedVisible { get; private set; }
         public bool IsToggle { get; set; }
         public bool IsExclusive { get; set; }
-        public UserDelegate UserOnChanged { get ; set; }
-        public UserDelegate UserOnPressed { get; set; }
-        public UserDelegate UserOnReleased { get; set; }
+        public UserDelegate UserOnChange { get ; set; }
+        public UserDelegate UserOnClick { get ; set; }
 
         public Button(Box parent, string text) : this(parent, text, parent.FindStyle("button"))
         {
@@ -52,15 +52,12 @@ namespace kOS.Suffixed.Widget
 
         private void InitializeSuffixes()
         {
-            AddSuffix("PRESSED", new SetSuffix<BooleanValue>(() => TakePress(), value => SetPressed(value)));
+            AddSuffix("PRESSED", new SetSuffix<BooleanValue>(GetPressed, value => SetPressed(value)));
+            AddSuffix("TAKEPRESS", new Suffix<BooleanValue>(() => new BooleanValue(TakePress())));
             AddSuffix("TOGGLE", new SetSuffix<BooleanValue>(() => IsToggle, value => SetToggleMode(value)));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => IsExclusive, value => IsExclusive = value));
-            AddSuffix("ONCHANGED", new SetSuffix<UserDelegate>(
-                () => UserOnChanged ?? NoDelegate.Instance, value => UserOnChanged = (value is NoDelegate ? null : value) ));
-            AddSuffix("ONPRESSED", new SetSuffix<UserDelegate>(
-                () => UserOnPressed ?? NoDelegate.Instance, value => UserOnPressed = (value is NoDelegate ? null : value) ));
-            AddSuffix("ONRELEASED", new SetSuffix<UserDelegate>(
-                () => UserOnReleased ?? NoDelegate.Instance, value => UserOnReleased = (value is NoDelegate ? null : value) ));
+            AddSuffix("ONCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnChange), value => UserOnChange = CallbackSetter(value)));
+            AddSuffix("ONCLICK", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnClick), value => UserOnClick = CallbackSetter(value)));
         }
 
         /// <summary>
@@ -75,31 +72,44 @@ namespace kOS.Suffixed.Widget
             // as the script "reading" the value, so it should pop out when that happens too.
             bool causeRelease = false;
 
+            // DO NOT USE PROPERTY "Pressed" in this method!
+            // USE backing Field "pressed" instead!!!
+            //
             // This is being called from inside the Setter of the Pressed property, so
             // the backing field 'pressed' is used here not the property 'Pressed', to
             // avoid any potential strange recursion or threaded timing issues:
-            if (UserOnChanged != null)
+
+            if (UserOnChange != null)
             {
-                UserOnChanged.TriggerNextUpdate(new BooleanValue(pressed));
-                if (pressed)
+                UserOnChange.TriggerNextUpdate(new BooleanValue(pressed));
+
+                // For a radio button set, whichever button became true will
+                // also cause the parent box to fire the change event hook.
+                // (Don't fire it for the button that became false or it will fire
+                // twice per change:)
+                if (IsExclusive && IsToggle && pressed)
+                    parent.ScheduleOnRadioChange(this);
+            }
+            // Toggles generate clicks on every button state change, while non-toggle buttons
+            // should only generate click events on the button-goes-in state,
+            // not the button-goes-out state that should auto-activate when it's read:
+            if (UserOnClick != null && (IsToggle || pressed))
+            {
+                UserOnClick.TriggerNextUpdate();
+                if (!IsToggle)
                     causeRelease = true;
             }
-            if (UserOnPressed != null && pressed)
-            {
-                UserOnPressed.TriggerNextUpdate();
-                causeRelease = true;
-            }
-            if (UserOnReleased != null && !pressed)
-                UserOnReleased.TriggerNextUpdate();
 
+            // <---- More callback triggers would go here if we add them later
+
+            // Don't actually cause the release of the button until here
+            // at the bottom after all the hooks have fired using the value prior to release:
             if (causeRelease)
             {
-                // BE CAREFUL HERE!  This method is invoked during the Property Setter of `Pressed`,
-                // and calling TakePress() will cause the Pressed property to get set again (to false).
-                // If the flagging above isn't just right, there's a potential for infinite recursion
-                // here within the property setter.  (It works only because causeRelease is only true
-                // when the value becomes true, and TakePress() will only set it to false.  So they
-                // won't recurse back and forth.)
+                // TakePress uses the property Pressed, not the field pressed, meaning it
+                // can cause a recursive reaction where it calls this method again.
+                // Be careful to keep the conditions above for UserOnClick just right so
+                // the release won't re-trigger the onclick.
                 TakePress();
             }
         }
@@ -123,10 +133,15 @@ namespace kOS.Suffixed.Widget
             }
         }
 
+        public BooleanValue GetPressed()
+        {
+            return Pressed;
+        }
+
         public bool TakePress()
         {
             bool r = Pressed;
-            if (!IsToggle && Pressed) {
+            if (!IsToggle && Pressed){
                 Pressed = false;
                 Communicate(() => SetPressedVisible(false));
             }
@@ -146,6 +161,9 @@ namespace kOS.Suffixed.Widget
 
         public override void DoGUI()
         {
+            // Toggles and one-shot buttons are handled differently.
+            // Toggles stay pressed until clicked again.
+            // one-shot buttons release as soon as the click is noticed by the script.
             if (IsToggle) {
                 bool newpressed = GUILayout.Toggle(PressedVisible, VisibleContent(), ReadOnlyStyle);
                 if (IsExclusive && !newpressed) return; // stays pressed
