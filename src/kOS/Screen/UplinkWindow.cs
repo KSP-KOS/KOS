@@ -392,7 +392,7 @@ namespace kOS.Screen
 
             MessageQueueStructure queue = InterVesselManager.Instance.GetQueue(vessel, null);
 
-            double delay = ConnectivityManager.GetDelayToHome(vessel) + 15;
+            double delay = ConnectivityManager.GetDelayToHome(vessel);
             double sentAt = Planetarium.GetUniversalTime();
             double receivedAt = sentAt + delay;
             Message msg = Message.Create(payload, sentAt, receivedAt, KscTarget.Instance, null);
