@@ -27,12 +27,11 @@ The "Hello World" program, version 1 with "polling"::
         // Handle GUI widget interactions.
         //
         // This is the technique known as "polling" - In a loop you
-        // continually check to see if the value of the widgets in
-        // the GUI have changed:
+        // continually check to see if something has happened:
         LOCAL isDone IS FALSE.
         UNTIL isDone
         {
-          if (ok:PRESSED)
+          if (ok:TAKEPRESS)
             SET isDone TO TRUE.
           WAIT 0.1. // No need to waste CPU time checking too often.
         }
@@ -62,10 +61,10 @@ The same "Hello World" program, version 2 with "callbacks"::
         // something, and then the program passively waits for that
         // to happen:
         LOCAL isDone IS FALSE.
-        function myPressedChecker {
+        function myClickChecker {
           SET isDone TO TRUE.
         }
-        SET ok:ONPRESSED TO myPressedChecker@. // This could also be an anonymous function instead.
+        SET ok:ONCLICK TO myClickChecker@. // This could also be an anonymous function instead.
         wait until isDone.
 
         print "OK pressed.  Now closing demo.".
@@ -74,7 +73,7 @@ The same "Hello World" program, version 2 with "callbacks"::
 
 Both techniques (the "polling" and the "callbacks" style) of interacting with the GUI are
 supported by the widgets in the system.  The "callbacks" style is supported by the
-use of various "ON" suffixes with names like ``ONPRESSED``, ``ONCHANGED``, and so on.
+use of various "ON" suffixes with names like ``ONCLICK``, ``ONCHANGE``, and so on.
 
 
 Creating a Window
@@ -89,7 +88,7 @@ The width can be set to 0 to force automatic width resizing too::
         SET gui TO GUI(200).
         SET button TO gui:ADDBUTTON("OK").
         gui:SHOW().
-        UNTIL button:PRESSED WAIT(0.1).
+        UNTIL button:TAKEPRESS WAIT(0.1).
         gui:HIDE().
 
 See the "ADD" functions in the :struct:`BOX` structure for
@@ -158,7 +157,7 @@ following hierarchy:
     :meth:`ADDLABEL(text)`                :struct:`Label`                 Creates a label in the Box.
     :meth:`ADDBUTTON(text)`               :struct:`Button`                Creates a clickable button in the Box.
     :meth:`ADDCHECKBOX(text,on)`          :struct:`Button`                Creates a toggleable button in the Box, initially checked if on is true.
-    :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.
+    :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.  ``text`` will be the name :attr:`RADIOVALUE` gets when this button is picked.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDPOPUPMENU`                  :struct:`PopupMenu`             Creates a popup menu.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
@@ -171,9 +170,12 @@ following hierarchy:
     :meth:`ADDSCROLLBOX`                  :struct:`ScrollBox`             Creates a nested scrollable Box of widgets.
     :meth:`ADDSPACING(size)`              :struct:`Spacing`               Creates a blank space of the given size (flexible if -1).
     :attr:`WIDGETS`                       :struct:`List(Widget)`          Returns a LIST of the widgets that have been added to the Box.
+    :attr:`RADIOVALUE`                    :struct:`String`                Returns the string name of the currently selected radio button within this box of radio buttons (empty string if no such value).
+    :attr:`ONRADIOCHANGE`                 :struct:`KOSDelegate` (button)  A callback hook you want called whenever the radio button selection within this box changes (it gets called with a parameter: the button that has been switched to).
     :meth:`SHOWONLY(widget)`                                              Hide all but the given widget.
     :meth:`CLEAR`                                                         Dispose all child widgets.
     ===================================== =============================== =============
+
 
 .. structure:: Label
 
@@ -198,37 +200,44 @@ following hierarchy:
     ===================================== ===============================            =============
                    Every suffix of :struct:`LABEL`
     ----------------------------------------------------------------------------------------------
-    :attr:`PRESSED`                       :struct:`Boolean`                          Has the button been pressed in and not yet read?
-    :attr:`TOGGLE`                        :struct:`Boolean`                          Set to true to make the button take one click to go in and a second cick to pop back out.
+    :attr:`PRESSED`                       :struct:`Boolean`                          Is the button currently down?
+    :attr:`TAKEPRESS`                     :struct:`Boolean`                          Return the PRESSED value AND release the button if it's down.
+    :attr:`TOGGLE`                        :struct:`Boolean`                          Set to true to make this button into a toggle-style button (stays down when clicked until clicked again).
     :attr:`EXCLUSIVE`                     :struct:`Boolean`                          If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
-    :attr:`ONPRESSED`                     :struct:`KOSDelegate` (no args)            Your function called whenever the button goes in.
-    :attr:`ONRELEASED`                    :struct:`KOSDelegate` (no args)            Your function called whenever the button goes out.
-    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button goes either in or out.
+    :attr:`ONCLICK`                       :struct:`KOSDelegate` (no args)            Your function called whenever the button gets clicked.
+    :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button's PRESSED state changes.
     ===================================== =============================== =============
 
 .. note::
 
     Reading the value of the :attr:`PRESSED` suffix will tell you if the button is pressed in (true)
-    or released (false).  But be aware that if :attr:`TOGGLE` is set to false (which is the default),
-    then the :attr:`PRESSED` suffix will only give a value of `True` once and then automatically
-    become `False` again after that.
+    or released (false).  But be aware that when :attr:`TOGGLE` is false, then the button will
+    remain pressed-in until such a time as your script detects that it has been pressed (so that
+    way the button won't press in-and-out too quickly for your script to notice).
 
     **Behaviour when TOGGLE is false (the default):**
 
-    By default, :attr:`TOGGLE` is set to false.  This means the button automatically releases
-    itself and doesn't require a second click by the user to pop the button back out again.
+    By default, :attr:`TOGGLE` is set to false.  This means the button does not require
+    a second click by the user to pop back out again after being pushed in.
     The button's :attr:`PRESSED` suffix will only stay true long enough for the kerboscript
-    to notice that it has been pressed.  After that the button will release itself (and 
-    :attr:`PRESSED` will therefore be false until the next button press).
+    to tell kOS "Yes I have seen the fact that it was pressed".  (See next paragraph). 
+    After that happens, :attr:`PRESSED` will become false again (and the button will pop back
+    out).
 
     The conditions under which a button will automatically release itself when :attr:`TOGGLE` is
     set to `False` are:
 
-    - When the script looks at the value of the button's :attr:`PRESSED` value.
-      (It will only be true once.  After that first peek at its value, it will be false.)
-    - If the script defines an :attr:`ONCHANGED` user delegate, or an :attr:`ONPRESSED` 
-      user delegate.  (Then kOS will set the :attr:`PRESSED` value to false right away and
-      instead schedule the delegate to run.)
+    - When the script calls the :attr:`TAKEPRESS` suffix method.  When this is done, the
+      button will become false even if was was previously true.
+    - If the script defines an :attr:`ONCLICK` user delegate.
+      (Then kOS will set the :attr:`PRESSED` value to false and instead Call the ``ONCLICK``
+      delegate.)
+
+    The :attr:`TAKEPRESS` suffix method is intended to be used for non-toggle buttons
+    in scripts that use the "polling" method of looking for a button change.
+
+    The :attr:`ONCLICK` suffix is intended to be used for non-toggle buttons in
+    scripts that use the "callbacks" method of looking for a button change.
 
     **Behaviour when TOGGLE is true:**
 
@@ -238,27 +247,52 @@ following hierarchy:
     reset to false on its own.
 
     If the Button is created by the Button:ADDCHECKBOX method, it will have a different visual
-    style and it will start already in TOGGLE mode.
+    style (the style called "toggle") and it will start already in TOGGLE mode.
 
     If EXCLUSIVE is set to True, when the button is clicked (or changed programmatically),
-    other buttons with the same parent will be set to False (regardless of if they are EXCLUSIVE).
+    other buttons with the same parent :struct:`Box` will be set to False (regardless of
+    if they are EXCLUSIVE).
 
     If the Button is created by the Button:ADDRADIOBUTTON method, it will have the checkbox
-    style, and it will start already in TOGGLE and EXCLUSIVE modes.
+    style (the style called "toggle"), and it will start already in TOGGLE and EXCLUSIVE modes.
 
-    **Callback hooks ONCHANGED, ONPRESSED, ONRELEASED:**
+    **A Note About Labels In Toggle Buttons:**
 
-    The three suffixes :attr:`ONCHANGED`, :attr:`ONPRESSED`, and :attr:`ONRELEASED` are similar
-    to each other.  All of them are what is known as a "callback hook".  You can assign them to
+    If the button is rendered with the default "toggle" style, then it doesnt' show the
+    label on the screen at all.  It hides it.  This is because the default toggle style
+    (from SQUAD, the makers of the game) was never designed to be used with a label inside
+    the button, and it doesn't render right at all when you try (so we made it invisible
+    in kOS).  If you want labels for your toggles, make the labels be separate label objects
+    you draw adjacent to the toggles, using :struct:`Box`'s ADDLABEL.
+
+    Alternatively, if you want a toggle that looks just like a normal button, where the
+    button just stays pressed in until clicked again, you can do this by changing the
+    skin like in the following example::
+
+
+        local myGUI is GUI(100).
+        local myButton is myGUI:ADDBUTTON("My Button").
+        set myButton:TOGGLE to true.
+
+        // The following line makes myButton look like a normal
+        // button despite being a toggle:
+        // If you do this, then your button can show the label "My Button" on it.
+        set myButton:style to myGui:Skin:Button.
+
+
+    **Callback hooks ONCLICK, ONCHANGE:**
+
+    The two suffixes :attr:`ONCHANGE`, and :attr:`ONCLICK` are similar
+    to each other.  They are what is known as a "callback hook".  You can assign them to
     a :struct:`KOSDelegate` of one of your functions (named or anonymous) and from then on 
     kOS will call that function whenever the button gets changed as described.
 
-    :attr:`ONPRESSED` and :attr:`ONRELEASED` are both called with no parameters.  To use them,
-    your function must be written to expect no parameters.
+    :attr:`ONCLICK` is called with no parameters.  To use it, your function must be
+    written to expect no parameters.
 
-    :attr:`ONCHANGED` is called with one parameter, the boolean value the button got changed to.
-    To use :attr:`ONCHANGED`, your function must be written to expect a single boolean parameter.
-    :attr:`ONCHANGED` is really only useful with buttons where :attr:`TOGGLE` is true.
+    :attr:`ONCHANGE` is called with one parameter, the boolean value the button got changed to.
+    To use :attr:`ONCHANGE`, your function must be written to expect a single boolean parameter.
+    :attr:`ONCHANGE` is really only useful with buttons where :attr:`TOGGLE` is true.
 
     Here is an example of using the button callback hooks::
 
@@ -269,24 +303,25 @@ following hierarchy:
         // Note that the callback hook, myButtonDetector, is
         // a named function found elsewhere in this same program:
         LOCAL b1 IS g:ADDBUTTON("button 1").
-        SET b1:ONPRESSED TO myButtonDetector@.
+        SET b1:ONCLICK TO myButtonDetector@.
 
         // b2 is also a normal button that auto-releases itself,
         // but this time we'll use an anonymous callback hook for it:
         LOCAL b2 IS g:ADDBUTTON("button 2").
-        SET b2:ONPRESSED TO { print "Button Two got pressed". }
+        SET b2:ONCLICK TO { print "Button Two got pressed". }
         
         // b3 is a toggle button.
         // We'll use it to demonstrate how ONCHANGED callback hooks look:
         LOCAL b3 IS g:ADDBUTTON("button 3 (toggles)").
+        set b3:style to g:skin:button.
         SET b3:TOGGLE TO TRUE.
-        SET b3:ONCHANGED TO myChangeDetector@.
+        SET b3:ONCHANGE TO myChangeDetector@.
 
         // b4 is the exit button.  For this we'll use another
         // anonymous function that just sets a boolean variable
         // to signal the end of the program:
         LOCAL b4 IS g:ADDBUTTON("EXIT DEMO").
-        SET b4:ONPRESSED TO { set doneYet to true. }
+        SET b4:ONCLICK TO { set doneYet to true. }
         
         g:show(). // Start showing the window.
 
@@ -297,13 +332,16 @@ following hierarchy:
         //END.
 
         function myButtonDetector {
-          print "Button One got pressed.".
+          print "Button One got clicked.".
         }
         function myChangeDetector {
           parameter newState.
           print "Button Three has just become " + newState.
         }
 
+    ** TODO - PUT AN EXAMPLE WITH A RADIO BUTTON HERE OR IN BOX: **
+
+    TODO....
 
 .. structure:: PopupMenu
 
