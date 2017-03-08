@@ -50,9 +50,9 @@ namespace kOS.Suffixed.Widget
             AddSuffix("ADDSTACK", new Suffix<Box>(AddStack));
             AddSuffix("ADDSPACING", new OneArgsSuffix<Spacing, ScalarValue>(AddSpace));
             AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(Widgets)));
-            AddSuffix("SHOWONLY", new OneArgsSuffix<Widget>(value => ShowOnly(value)));
             AddSuffix("RADIOVALUE", new Suffix<StringValue>(() => new StringValue(GetRadioValue())));
             AddSuffix("ONRADIOCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnRadioChange), value => UserOnRadioChange = CallbackSetter(value)));
+            AddSuffix("SHOWONLY", new OneArgsSuffix<Widget>(value => ShowOnly(value)));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
         }
 

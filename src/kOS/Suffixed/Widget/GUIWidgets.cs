@@ -93,6 +93,7 @@ namespace kOS.Suffixed.Widget
             // the toggle won't show it.  Toggles (in the default skin)
             // will need separate label objects adjacent to them to
             // label them:
+            /*
             gskin.toggle.normal.textColor = new Color(1f, 1f, 1f, 0f);
             gskin.toggle.onNormal.textColor = new Color(1f, 1f, 1f, 0f);
             gskin.toggle.hover.textColor = new Color(1f, 1f, 1f, 0f);
@@ -101,7 +102,7 @@ namespace kOS.Suffixed.Widget
             gskin.toggle.onFocused.textColor = new Color(1f, 1f, 1f, 0f);
             gskin.toggle.onActive.textColor = new Color(1f, 1f, 1f, 0f);
             gskin.toggle.active.textColor = new Color(1f, 1f, 1f, 0f);
-
+            */
             Skin = new WidgetSkin(gskin);
 
             var go = new GameObject("kOSGUIWindow");
