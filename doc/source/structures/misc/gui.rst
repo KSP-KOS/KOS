@@ -513,6 +513,7 @@ following hierarchy:
     :attr:`MARGIN`                        :struct:`StyleRectOffset`       Spacing between this and other widgets.
     :attr:`PADDING`                       :struct:`StyleRectOffset`       Spacing between the outside of the widget and its contents (text, etc.).
     :attr:`BORDER`                        :struct:`StyleRectOffset`       Size of the edges in the 9-slice image for BG images in NORMAL, HOVER, etc.
+    :attr:`OVERFLOW`                      :struct:`StyleRectOffset`       Extra space added to the area of the background image. Allows the background to go beyond the widget's rectangle.
     :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
     :attr:`FONT`                          :struct:`string`                The name of the font of the text on the content or "" if the default.
     :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the content.

@@ -47,6 +47,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("MARGIN", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.margin)));
             AddSuffix("PADDING", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.padding)));
             AddSuffix("BORDER", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.border)));
+            AddSuffix("OVERFLOW", new Suffix<WidgetStyleRectOffset>(() => new WidgetStyleRectOffset(Writable.overflow)));
 
             AddSuffix("WIDTH", new SetSuffix<ScalarValue>(() => ReadOnly.fixedWidth, value => Writable.fixedWidth = value));
             AddSuffix("HEIGHT", new SetSuffix<ScalarValue>(() => ReadOnly.fixedHeight, value => Writable.fixedHeight = value));
