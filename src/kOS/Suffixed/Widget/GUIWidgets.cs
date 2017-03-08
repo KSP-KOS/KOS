@@ -101,23 +101,6 @@ namespace kOS.Suffixed.Widget
 
             gskin.customStyles = styles.ToArray();
 
-            // The default toggle button rendering that Squad's skin
-            // uses can't render toggle labels properly it seems,
-            // so just make them invisible so you can at least have
-            // a label for the toggle (that the script sees), but
-            // the toggle won't show it.  Toggles (in the default skin)
-            // will need separate label objects adjacent to them to
-            // label them:
-            /*
-            gskin.toggle.normal.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.onNormal.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.hover.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.onHover.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.focused.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.onFocused.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.onActive.textColor = new Color(1f, 1f, 1f, 0f);
-            gskin.toggle.active.textColor = new Color(1f, 1f, 1f, 0f);
-            */
             Skin = new WidgetSkin(gskin);
 
             var go = new GameObject("kOSGUIWindow");

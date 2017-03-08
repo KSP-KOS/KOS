@@ -157,7 +157,7 @@ following hierarchy:
     :meth:`ADDLABEL(text)`                :struct:`Label`                 Creates a label in the Box.
     :meth:`ADDBUTTON(text)`               :struct:`Button`                Creates a clickable button in the Box.
     :meth:`ADDCHECKBOX(text,on)`          :struct:`Button`                Creates a toggleable button in the Box, initially checked if on is true.
-    :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.  ``text`` will be the name :attr:`RADIOVALUE` gets when this button is picked.
+    :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDPOPUPMENU`                  :struct:`PopupMenu`             Creates a popup menu.
     :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
@@ -228,20 +228,29 @@ following hierarchy:
     set to `False` are:
 
     - When the script calls the :attr:`TAKEPRESS` suffix method.  When this is done, the
-      button will become false even if was was previously true.
+      button will become false even if it was was previously true.
     - If the script defines an :attr:`ONCLICK` user delegate.
-      (Then kOS will set the :attr:`PRESSED` value to false and instead Call the ``ONCLICK``
-      delegate.)
+      (Then when the :attr:`PRESSED` value becomes true, kOS will immediately set it
+      back to false (too fast for the kerboscript to see it) and instead Call the
+      ``ONCLICK`` delegate.)
 
     The :attr:`TAKEPRESS` suffix method is intended to be used for non-toggle buttons
-    in scripts that use the "polling" method of looking for a button change.
+    in scripts that use the "polling" method of looking for a button change.  You can
+    put a check for ``if mybutton:TAKEPRESS { print "do something here". }`` in an
+    ``until`` loop or a ``when`` trigger and TAKEPRESS will only be true long enough
+    for the script to see it once, at which point it will become false again right away.
 
     The :attr:`ONCLICK` suffix is intended to be used for non-toggle buttons in
-    scripts that use the "callbacks" method of looking for a button change.
+    scripts that use the "callbacks" method of looking for a button change.  This
+    method is more efficient and simpler to use.  To use ONCLICK you set the ONCLICK
+    suffix to a user delegate you create that kOS will call when the button gets clicked.
+    example::
+    
+        set mybutton:ONCLICK to { print "Do something here.". }.
 
     **Behaviour when TOGGLE is true:**
 
-    If TOGGLE is set to True, then the button will not automatically release after it is
+    If TOGGLE is set to True, then the button will **not** automatically release after it is
     read by the script.  Instead it will need to be clicked by the user a second time to make
     it pop back out.  In this mode, the button's :attr:`PRESSED` value will never automatically
     reset to false on its own.
@@ -255,30 +264,6 @@ following hierarchy:
 
     If the Button is created by the Button:ADDRADIOBUTTON method, it will have the checkbox
     style (the style called "toggle"), and it will start already in TOGGLE and EXCLUSIVE modes.
-
-    **A Note About Labels In Toggle Buttons:**
-
-    If the button is rendered with the default "toggle" style, then it doesnt' show the
-    label on the screen at all.  It hides it.  This is because the default toggle style
-    (from SQUAD, the makers of the game) was never designed to be used with a label inside
-    the button, and it doesn't render right at all when you try (so we made it invisible
-    in kOS).  If you want labels for your toggles, make the labels be separate label objects
-    you draw adjacent to the toggles, using :struct:`Box`'s ADDLABEL.
-
-    Alternatively, if you want a toggle that looks just like a normal button, where the
-    button just stays pressed in until clicked again, you can do this by changing the
-    skin like in the following example::
-
-
-        local myGUI is GUI(100).
-        local myButton is myGUI:ADDBUTTON("My Button").
-        set myButton:TOGGLE to true.
-
-        // The following line makes myButton look like a normal
-        // button despite being a toggle:
-        // If you do this, then your button can show the label "My Button" on it.
-        set myButton:style to myGui:Skin:Button.
-
 
     **Callback hooks ONCLICK, ONCHANGE:**
 
