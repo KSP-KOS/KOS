@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed.PartModuleField;
 using System.Reflection;
 
@@ -43,6 +44,21 @@ namespace kOS.AddOns.OrbitalScience
                 BindingFlags.Public | BindingFlags.Instance);
 
             gatherDataMethod.Invoke(module, new object[] { true });
+        }
+
+        public override void ResetExperiment()
+        {
+            ThrowIfNotCPUVessel();
+
+            if (Inoperable())
+            {
+                throw new KOSException("Experiment is inoperable");
+            }
+
+            var gatherDataMethod = partModule.GetType().GetMethod("ResetExperiment",
+                BindingFlags.Public | BindingFlags.Instance);
+
+            gatherDataMethod.Invoke(partModule, new object[] { });
         }
     }
 }

@@ -69,12 +69,12 @@ namespace kOS.Suffixed.PartModuleField
 
             module.ResetExperiment();
         }
-          
+
         public override void TransmitData()
         {
             ThrowIfNotCPUVessel();
 
-            IScienceDataContainer container = module as IScienceDataContainer;
+            // This logic is mostly copied to DMScienceExperimentFields, make sure that changes here are copied there
 
             ScienceData[] data = container.GetData();
             ScienceData scienceData;
@@ -99,7 +99,7 @@ namespace kOS.Suffixed.PartModuleField
                 bestTransmitter.TransmitData(data.ToList());
                 for (int i = 0; i < data.Length; ++i)
                 {
-                    module.DumpData(data[i]); // DumpData calls endExperiment, and handles setting as inoperable
+                    container.DumpData(data[i]); // DumpData calls endExperiment, and handles setting as inoperable
                 }
                 if (module.useCooldown)
                 {
@@ -110,8 +110,6 @@ namespace kOS.Suffixed.PartModuleField
             {
                 ScreenMessages.PostScreenMessage("No transmitters available on this vessel or no data to transmit.", 4f, ScreenMessageStyle.UPPER_LEFT);
             }
-
         }
-            
     }
 }
