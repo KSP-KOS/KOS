@@ -73,7 +73,7 @@ The same "Hello World" program, version 2 with "callbacks"::
 
 Both techniques (the "polling" and the "callbacks" style) of interacting with the GUI are
 supported by the widgets in the system.  The "callbacks" style is supported by the
-use of various "ON" suffixes with names like ``ONCLICK``, ``ONCHANGE``, and so on.
+use of various "ON" suffixes with names like ``ONCLICK``, ``ONTOGGLE``, and so on.
 
 
 Creating a Window
@@ -205,7 +205,7 @@ following hierarchy:
     :attr:`TOGGLE`                        :struct:`Boolean`                          Set to true to make this button into a toggle-style button (stays down when clicked until clicked again).
     :attr:`EXCLUSIVE`                     :struct:`Boolean`                          If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
     :attr:`ONCLICK`                       :struct:`KOSDelegate` (no args)            Your function called whenever the button gets clicked.
-    :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button's PRESSED state changes.
+    :attr:`ONTOGGLE`                      :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button's PRESSED state changes.
     ===================================== =============================== =============
 
 .. note::
@@ -265,9 +265,9 @@ following hierarchy:
     If the Button is created by the Button:ADDRADIOBUTTON method, it will have the checkbox
     style (the style called "toggle"), and it will start already in TOGGLE and EXCLUSIVE modes.
 
-    **Callback hooks ONCLICK, ONCHANGE:**
+    **Callback hooks ONCLICK, ONTOGGLE:**
 
-    The two suffixes :attr:`ONCHANGE`, and :attr:`ONCLICK` are similar
+    The two suffixes :attr:`ONTOGLE`, and :attr:`ONCLICK` are similar
     to each other.  They are what is known as a "callback hook".  You can assign them to
     a :struct:`KOSDelegate` of one of your functions (named or anonymous) and from then on 
     kOS will call that function whenever the button gets changed as described.
@@ -275,9 +275,9 @@ following hierarchy:
     :attr:`ONCLICK` is called with no parameters.  To use it, your function must be
     written to expect no parameters.
 
-    :attr:`ONCHANGE` is called with one parameter, the boolean value the button got changed to.
-    To use :attr:`ONCHANGE`, your function must be written to expect a single boolean parameter.
-    :attr:`ONCHANGE` is really only useful with buttons where :attr:`TOGGLE` is true.
+    :attr:`ONTOGGLE` is called with one parameter, the boolean value the button got changed to.
+    To use :attr:`ONTOGGLE`, your function must be written to expect a single boolean parameter.
+    :attr:`ONTOGGLE` is really only useful with buttons where :attr:`TOGGLE` is true.
 
     Here is an example of using the button callback hooks::
 
@@ -296,11 +296,11 @@ following hierarchy:
         SET b2:ONCLICK TO { print "Button Two got pressed". }
         
         // b3 is a toggle button.
-        // We'll use it to demonstrate how ONCHANGED callback hooks look:
+        // We'll use it to demonstrate how ONTOGGLE callback hooks look:
         LOCAL b3 IS g:ADDBUTTON("button 3 (toggles)").
         set b3:style to g:skin:button.
         SET b3:TOGGLE TO TRUE.
-        SET b3:ONCHANGE TO myChangeDetector@.
+        SET b3:ONTOGGLE TO myToggleDetector@.
 
         // b4 is the exit button.  For this we'll use another
         // anonymous function that just sets a boolean variable
@@ -319,7 +319,7 @@ following hierarchy:
         function myButtonDetector {
           print "Button One got clicked.".
         }
-        function myChangeDetector {
+        function myToggleDetector {
           parameter newState.
           print "Button Three has just become " + newState.
         }

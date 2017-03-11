@@ -179,7 +179,6 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
-            SafeHouse.Logger.Log("eraseme: shared.GameEventDispatchManager is " + (shared.GameEventDispatchManager == null ? "<null>" : "<not null>"));
             shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)

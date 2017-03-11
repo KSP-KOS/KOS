@@ -17,7 +17,6 @@ namespace kOS.Callback
 
 		public GameEventDispatchManager(SharedObjects shared)
 		{
-		    Console.WriteLine("eraseme: GameEventDispatchManager constructor called.");
 			Shared = shared;
 			mapping = new Dictionary<ProgramContext, KOSGameEventDispatcher>();
 			CurrentDispatcher = null;
@@ -25,7 +24,6 @@ namespace kOS.Callback
 
 		public void SetDispatcherFor(ProgramContext context)
 		{
-		    Console.WriteLine("eraseme: GameEventDispatchManager.SetDistpacherFor("+context.ToString()+") called.");
 		    // Return existing one, or make a new one for it:
 		    if (mapping.ContainsKey(context))
 		    {
@@ -40,7 +38,6 @@ namespace kOS.Callback
 
 		public void RemoveDispatcherFor(ProgramContext context)
 		{
-		    Console.WriteLine("eraseme: GameEventDispatchManager.RemoveDispatcherFor("+context.ToString()+") called.");
 		    // First, unset the current dispatcher if the context
 		    // being removed is for the current dispatcher:
 		    KOSGameEventDispatcher contextDispatcher;
@@ -54,7 +51,6 @@ namespace kOS.Callback
 		
 		public void Clear()
 		{
-		    Console.WriteLine("eraseme: GameEventDispatchManager.Clear() called.");
 		    mapping.Clear();
 		    CurrentDispatcher = null;
 		}

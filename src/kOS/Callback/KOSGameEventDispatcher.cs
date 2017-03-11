@@ -97,7 +97,6 @@ namespace kOS.Callback
 			// WHEN IMPLEMENTING A NEW EVENT TYPE: Add a few lines here similar to to the ones you see below.
 			// (Clear the list if it's been initialized, and remove the GameEvent callback delegate.)
 
-		    Console.WriteLine("eraseme: ClearLists() being called.");
 		    if (soiChangeNotifyees != null ) soiChangeNotifyees.Clear();
 			GameEvents.onVesselSOIChanged.Remove(SendToSOIChangeNotifyees);
 
@@ -150,16 +149,13 @@ namespace kOS.Callback
 				switchVesselNotifyees = new UniqueSetValue<UserDelegate>();
 				theList = switchVesselNotifyees;
 				// Now that we know it's likely getting used, activate our own callback hook:
-				Console.WriteLine("eraseme: Adding GameEvents.onVesselSwitching");
 				GameEvents.onVesselSwitching.Add(SendToSwitchVesselNotifyees);
 			}
-			Console.WriteLine("eraseme: GetSwitchVesselNotifyees() is about to return a list of size " + theList.Count().ToString() );
 			return theList;
 		}
 
 		public void SendToSwitchVesselNotifyees(Vessel fromVes, Vessel toVes)
 		{
-		    Console.WriteLine("eraseme: SendToSwitchVesselNotifyees() has been started.");
 			UniqueSetValue<UserDelegate> notifyees = GetSwitchVesselNotifyees();
 			foreach (UserDelegate del in notifyees)
 				if (UserDelgateIsAcceptable(del))

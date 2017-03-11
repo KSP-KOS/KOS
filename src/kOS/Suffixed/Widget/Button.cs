@@ -18,7 +18,7 @@ namespace kOS.Suffixed.Widget
         public bool PressedVisible { get; private set; }
         public bool IsToggle { get; set; }
         public bool IsExclusive { get; set; }
-        public UserDelegate UserOnChange { get ; set; }
+        public UserDelegate UserOnToggle { get ; set; }
         public UserDelegate UserOnClick { get ; set; }
 
         public Button(Box parent, string text) : this(parent, text, parent.FindStyle("button"))
@@ -56,13 +56,13 @@ namespace kOS.Suffixed.Widget
             AddSuffix("TAKEPRESS", new Suffix<BooleanValue>(() => new BooleanValue(TakePress())));
             AddSuffix("TOGGLE", new SetSuffix<BooleanValue>(() => IsToggle, value => SetToggleMode(value)));
             AddSuffix("EXCLUSIVE", new SetSuffix<BooleanValue>(() => IsExclusive, value => IsExclusive = value));
-            AddSuffix("ONCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnChange), value => UserOnChange = CallbackSetter(value)));
+            AddSuffix("ONTOGGLE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnToggle), value => UserOnToggle = CallbackSetter(value)));
             AddSuffix("ONCLICK", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnClick), value => UserOnClick = CallbackSetter(value)));
         }
 
         /// <summary>
         /// Should be called whenever the button value gets changed.
-        /// If there is a user callback registered to the change event, it
+        /// If there is a user callback registered to the toggle event, it
         /// schedules it to get called on the next fixed update.
         /// </summary>
         protected virtual void ScheduleCallbacks()
@@ -79,9 +79,9 @@ namespace kOS.Suffixed.Widget
             // the backing field 'pressed' is used here not the property 'Pressed', to
             // avoid any potential strange recursion or threaded timing issues:
 
-            if (UserOnChange != null)
+            if (UserOnToggle != null)
             {
-                UserOnChange.TriggerNextUpdate(new BooleanValue(pressed));
+                UserOnToggle.TriggerNextUpdate(new BooleanValue(pressed));
 
                 // For a radio button set, whichever button became true will
                 // also cause the parent box to fire the change event hook.

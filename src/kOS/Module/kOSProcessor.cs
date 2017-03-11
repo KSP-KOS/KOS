@@ -425,7 +425,6 @@ namespace kOS.Module
             shared.Cpu = new CPU(shared);
             shared.AddonManager = new AddOns.AddonManager(shared);
             shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
-            SafeHouse.Logger.Log("eraseme: InitObjects() Just made new shared.GameEventDispatchManager.");            
 
             // Make the window that is going to correspond to this kOS part:
             shared.Window = gameObject.AddComponent<Screen.TermWindow>();
