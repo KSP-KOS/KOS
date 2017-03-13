@@ -73,7 +73,7 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnChange != null)
             {
-                UserOnChange.TriggerNextUpdate();
+                UserOnChange.TriggerNextUpdate(GetValue());
                 changed = false;
             }
         }
@@ -126,17 +126,8 @@ namespace kOS.Suffixed.Widget
                 Rect r = GUILayoutUtility.GetLastRect();
                 popupRect.position = GUIUtility.GUIToScreenPoint(r.position) + new Vector2(0, r.height);
                 popupRect.width = r.width;
-                // This is the max height of the content plus border drawing stuff.
-                int visibleRows = list.Count();
-                if (maxVisible > 0 && visibleRows > maxVisible)
-                    visibleRows = maxVisible;
-                
-                // I wish there was a better way than re-allocating this new string on every DoGUI(),
-                // but because the options list length could change at any time and so could the maxvisible, we have to:
-                string testString = new string('\n', visibleRows);
 
-                float itemHeight = popupStyle.ReadOnly.CalcHeight(new GUIContent(testString), popupRect.width);
-                popupRect.height = itemHeight;
+                popupRect.height = CalcPopupViewHeight();
             }
             if (was != PressedVisible) {
                 GUIWidgets gui = FindGUI();
@@ -147,6 +138,33 @@ namespace kOS.Suffixed.Widget
                         gui.UnsetCurrentPopup(this);
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculates the total height in pixels of the visible window of
+        /// the popup scrolling pane.
+        /// </summary>
+        /// <returns>The total height.</returns>
+        private float CalcPopupViewHeight()
+        {
+            int visibleRows = list.Count();
+            bool extendsPastBottom = (maxVisible > 0 && visibleRows > maxVisible);
+            if (extendsPastBottom)
+                visibleRows = maxVisible;
+
+            float itemHeight = itemStyle.ReadOnly.CalcHeight(new GUIContent("XX"), popupRect.width);
+            RectOffset innerPadding = popupStyle.ReadOnly.padding;
+
+            float innerPadHeight = innerPadding.top + innerPadding.bottom;
+            RectOffset windowPadding = parent.FindStyle("window").ReadOnly.padding;
+
+            // Scrollbars still seem to exist when the window fits the content.
+            // The frame has to be bigger than (not just equal to) the size of the content to suppress the scrollbars, it seems.
+            // Thus this little bit of extra pixels to add on when we are trying to show all the content, unscrolled:
+            float fudgeExtraToPreventScrollbar = 5f;
+
+            float framingPadHeight = windowPadding.top + (extendsPastBottom ? 0f : windowPadding.bottom + fudgeExtraToPreventScrollbar);
+            return visibleRows * itemHeight + innerPadHeight + framingPadHeight;
         }
 
         public void PopDown()

@@ -272,6 +272,7 @@
     <Compile Include="Execution\InternalPath.cs" />
     <Compile Include="Exceptions\KOSCannotCallException.cs" />
     <Compile Include="Encapsulation\NoDelegate.cs" />
+    <Compile Include="Encapsulation\Suffixes\ThreeArgsSuffix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

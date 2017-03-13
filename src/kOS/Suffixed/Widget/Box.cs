@@ -40,8 +40,8 @@ namespace kOS.Suffixed.Widget
             AddSuffix("ADDRADIOBUTTON", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddRadioButton));
             AddSuffix("ADDCHECKBOX", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddCheckbox));
             AddSuffix("ADDPOPUPMENU", new Suffix<PopupMenu>(AddPopupMenu));
-            AddSuffix("ADDHSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddHSlider));
-            AddSuffix("ADDVSLIDER", new TwoArgsSuffix<Slider, ScalarValue, ScalarValue>(AddVSlider));
+            AddSuffix("ADDHSLIDER", new ThreeArgsSuffix<Slider, ScalarValue, ScalarValue, ScalarValue>(AddHSlider));
+            AddSuffix("ADDVSLIDER", new ThreeArgsSuffix<Slider, ScalarValue, ScalarValue, ScalarValue>(AddVSlider));
             AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
             AddSuffix("ADDVBOX", new Suffix<Box>(AddVBox));
             AddSuffix("ADDHLAYOUT", new Suffix<Box>(AddHLayout));
@@ -121,16 +121,16 @@ namespace kOS.Suffixed.Widget
             return w;
         }
 
-        public Slider AddHSlider(ScalarValue min, ScalarValue max)
+        public Slider AddHSlider(ScalarValue init, ScalarValue min, ScalarValue max)
         {
-            var w = new Slider(this, true, min, min, max);
+            var w = new Slider(this, true, init, min, max);
             Widgets.Add(w);
             return w;
         }
 
-        public Slider AddVSlider(ScalarValue min, ScalarValue max)
+        public Slider AddVSlider(ScalarValue init, ScalarValue min, ScalarValue max)
         {
-            var w = new Slider(this, false, min, min, max);
+            var w = new Slider(this, false, init, min, max);
             Widgets.Add(w);
             return w;
         }
