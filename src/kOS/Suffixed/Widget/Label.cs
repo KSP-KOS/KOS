@@ -13,6 +13,9 @@ namespace kOS.Suffixed.Widget
 
         public string Text { get { return content.text; } }
 
+        private UserDelegate UserTextUpdater { get; set; }
+        private TriggerInfo UserTextUpdateResult;
+
         public Label(Box parent, string text, WidgetStyle style) : base(parent, style)
         {
             RegisterInitializer(InitializeSuffixes);
@@ -26,9 +29,19 @@ namespace kOS.Suffixed.Widget
 
         private void InitializeSuffixes()
         {
-            AddSuffix("TEXT", new SetSuffix<StringValue>(() => content.text, value => { if (content.text != value) { content.text = value; Communicate(() => content_visible.text = value); } }));
+            AddSuffix("TEXT", new SetSuffix<StringValue>(() => content.text, value => SetText(value)));
             AddSuffix("IMAGE", new SetSuffix<StringValue>(() => "", value => SetContentImage(value)));
+            AddSuffix("TEXTUPDATER", new SetSuffix<UserDelegate>(() => CallbackGetter(UserTextUpdater), value => UserTextUpdater = CallbackSetter(value)));
             AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => { if (content.tooltip != value) { content.tooltip = value; Communicate(() => content_visible.tooltip = value); } }));
+        }
+
+        private void SetText(string newValue)
+        {
+            if (content.text != newValue)
+            {
+                content.text = newValue;
+                Communicate(() => content_visible.text = newValue);
+            }
         }
 
         protected void SetInitialContentImage(Texture2D img)
@@ -73,7 +86,30 @@ namespace kOS.Suffixed.Widget
 
         public override void DoGUI()
         {
+            ScheduleTextUpdate();
             GUILayout.Label(content_visible, ReadOnlyStyle);
+        }
+
+        private void ScheduleTextUpdate()
+        {
+            if (UserTextUpdater == null)
+                return;
+
+            if (UserTextUpdateResult != null)
+            {
+                if (UserTextUpdateResult.CallbackFinished)
+                {
+                    SetText(UserTextUpdateResult.ReturnValue.ToString());
+                    UserTextUpdateResult = UserTextUpdater.TriggerNextUpdate();
+                }
+                // Else just do nothing because a previous call is still pending its return result.
+                // don't start up a second call while still waiting for the first one to finish.  (we
+                // don't want to end up stacking up calls faster than they execute.)
+            }
+            else
+            {
+                UserTextUpdateResult = UserTextUpdater.TriggerNextUpdate();
+            }
         }
 
         public override string ToString()

@@ -22,7 +22,10 @@ public class TriggerInfo
     public bool IsCSharpCallback { get; private set; }
     /// <summary>
     /// If this is a C# callback, this is where its return value will get
-    /// stored for the C# code to read it from.
+    /// stored for the C# code to read it from.  If this is a kerboscript
+    /// callback, this is also where the result will be stored, but in that case
+    /// you also have to check CallbackFinished first to make sure it's really been
+    /// populated before you read it.
     /// </summary>
     public Structure ReturnValue { get; private set; }
     /// <summary>
