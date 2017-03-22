@@ -92,10 +92,10 @@ Configuration of kOS
           - :struct:`Scalar` (integer)
           - 5410
           - set the port the telnet server will run on
-        * - :attr:`LOOPBACK`
-          - :struct:`Boolean`
-          - True
-          - Force the telnet server to use loopback (127.0.0.1) address
+        * - :attr:`IPADDRESS`
+          - :struct:`String`
+          - "127.0.0.1"
+          - The IP address the telnet server will try to use.
         * - :attr:`BRIGHTNESS`
           - :struct:`Scalar`
           - 0.7 (from range [0.0 .. 1.0])
@@ -258,21 +258,22 @@ Configuration of kOS
     To make the change take effect you may have to
     stop, then restart the telnet server, as described above.
 
-.. attribute:: Config:LOOPBACK
+.. attribute:: Config:IPADDRESS
 
     :access: Get/Set
-    :type: :struct:`Boolean`
+    :type: :struct:`String`
 
     **GLOBAL SETTING**
 
-    Configures the ``TelnetLoopback`` setting.
+    Configures the ``TelnetIPAddrString`` setting.
 
-    If true, then it tells the
-    `kOS telnet server in game <../../general/telnet.html>`__
-    to refuse to use the computer's actual IP address, and
-    instead use the loopback address (127.0.0.1).  This is
-    the default mode the kOS mod ships in, in order to
-    make it impossible get external access to your computer.
+    This is the IP address the telnet server will attempt to use when
+    it is enabled.  By default it will use the loopback address of
+    "127.0.0.1" unless you change this setting to the computer's
+    actual IP address.  Because most modern PC's have multiple IP
+    addresses, no attempt is made by kOS to guess which of them is "the"
+    right one.  You must tell kOS which one to use if you don't want it
+    to use the loopback address.
 
     To make the change take effect you may have to
     stop, then restart the telnet server, as described above.

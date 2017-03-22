@@ -16,7 +16,7 @@ namespace kOS.Safe.Encapsulation
         bool EnableTelnet { get; set; }
         int TelnetPort { get; set; }
         bool AudibleExceptions { get; set; }
-        bool TelnetLoopback { get; set; }
+        string TelnetIPAddrString { get; set; }
         bool UseBlizzyToolbarOnly { get; set; }
         int TerminalFontDefaultSize {get; set; }
         string TerminalFontName {get; set; }

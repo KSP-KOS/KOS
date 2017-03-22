@@ -76,8 +76,8 @@ Using it
 2. The very first time you do this, you will get a warning message, as per
    `SQUAD's rule number 5 about mods that run network services <http://forum.kerbalspaceprogram.com/threads/87843-Forum-Rules-Add-on-Posting-Rules-August-21st-2014>`_. 
    After accepting and clicking "yes", the server will be running on loopback 
-   127.0.0.1 (if you want to make it run on the non-loopback address, you will
-   get a secondary warning message about that too.
+   127.0.0.1 (if you want to make it run on a non-loopback address, you will
+   get a secondary warning message about that too.)
 
 3. Launch your telnet client (there is a list of telnet clients that are known
    to work listed below.
@@ -309,8 +309,8 @@ even implementing a name and password for connecting to the kOS telnet server.
 The purpose is to make it clear that if you want to open up your kOS telnet
 server, you need to be careful about how you do it.
 
-The default settings that kOS ships with restricts your kOS telnet server to
-only operating on the loopback address (127.0.0.1) so that you won't accidentally
+The default settings that kOS ships with sets your kOS telnet server to
+operate on the loopback address (127.0.0.1) so that you won't accidentally
 open anything up to the public without thinking about it and making a conscious
 decision to do so.  If you don't know what that means, it means this:
 Any server that runs on the magic special address 127.0.0.1, known as "loopback",
@@ -319,7 +319,7 @@ is incapable of taking connections from other computers besides itself.
 In order to allow your kOS telnet server to take connections from other 
 computers, you will typically need to do one of two things:
 
-Either turn off the CONFIG:LOOPBACK option in your kOS install and then
+Either set the CONFIG:IPADDRESS option to the address of your computer and then
 restart your telnet server (turn it off and on again using the button on the 
 control panel), or (much better), set up a remote ssh tunnel that will map
 from your current machine's loopback address on the port number of your server to
@@ -337,7 +337,7 @@ end up talking to your machine's port 5410 on its loopback address.
 
 **Port forwarding**
 
-If you opt to turn off the loopback-only mode on your kOS telnet server, then you
+If you opt to use a non-loopback address on your kOS telnet server, then you
 will probably also, if you have a typical home network setup, need to enable
 port forwarding on your router if you want people from outside your house to 
 connect to it.  (Again, think about the implications of doing so before you do it).

@@ -77,6 +77,7 @@ namespace kOS.Screen
         private bool firstTime = true;
         private bool isOpen;
         private kOS.Screen.ListPickerDialog fontPicker;
+        private kOS.Screen.ListPickerDialog ipAddrPicker;
 
         private DateTime prevConfigTimeStamp = DateTime.MinValue;
 
@@ -432,11 +433,12 @@ namespace kOS.Screen
 
             foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
-                bool isFontField;
+                bool isFontField = false;
                 if (key.StringKey.Equals("TerminalFontName"))
                     isFontField = true;
-                else
-                    isFontField = false;
+                bool isIPAddrField = false;
+                if (key.StringKey.Equals("TelnetIPAddrString"))
+                    isIPAddrField = true;
 
                 if (isFontField)
                 {
@@ -454,6 +456,11 @@ namespace kOS.Screen
                     toolTipText += " is: " + key.Value;
                     labelText = "     ^ " + labelText;
                     DrawFontField(key);
+                }
+                else if (isIPAddrField)
+                {
+                    toolTipText += " is: " + key.Value;
+                    DrawIPAddrField(key);
                 }
                 else if (key.Value is bool)
                 {
@@ -480,7 +487,7 @@ namespace kOS.Screen
                 GUILayout.Label(new GUIContent(labelText, toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();
 
-                if (isFontField)
+                if (isFontField || isIPAddrField)
                     CountEndVertical();
                 else
                     CountEndHorizontal();
@@ -512,25 +519,57 @@ namespace kOS.Screen
                 {
                     fontPicker = this.gameObject.AddComponent<ListPickerDialog>();
                     kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
-                        {
-                            // If the font is monospaced, we'll accept it, else we'll deny the attempt
-                            // and not commit the change to the config fields:
-                            bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null;
-                            if (ok)
-                                key.Value = s;
-                            return ok;
-                        };
+                    {
+                        // If the font is monospaced, we'll accept it, else we'll deny the attempt
+                        // and not commit the change to the config fields:
+                        bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null;
+                        if (ok)
+                            key.Value = s;
+                        return ok;
+                    };
 
                     kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { fontPicker = null; };
 
                     fontPicker.Summon(windowRect.x, windowRect.y + windowRect.height,
                         key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange, onClose
-                        );
+                    );
                 }
                 else
                 {
                     fontPicker.Close();
                     fontPicker = null;
+                }
+            }
+        }
+
+        private void DrawIPAddrField(ConfigKey key)
+        {
+            bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
+            if (clicked)
+            {
+                // Make a new picker if it's closed, or close it if it's already open.
+                if (ipAddrPicker == null)
+                {
+                    ipAddrPicker = this.gameObject.AddComponent<ListPickerDialog>();
+                    kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
+                    {
+                        bool ok = TelnetMainServer.Instance.SetBindAddrFromString(s);
+                        if (ok)
+                            key.Value = s;
+                        return ok;
+                    };
+
+                    kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { ipAddrPicker = null; };
+
+                    ipAddrPicker.Summon(windowRect.x, windowRect.y + windowRect.height,
+                        "Telnet address (restart telnet to take effect)\n",
+                        "current selection: " + key.Value.ToString(), TelnetMainServer.GetAllAddresses(), onChange, onClose
+                    );
+                }
+                else
+                {
+                    ipAddrPicker.Close();
+                    ipAddrPicker = null;
                 }
             }
         }
@@ -582,11 +621,12 @@ namespace kOS.Screen
             if (!isOn)
                 return "Telnet server disabled.";
 
-            string addr = TelnetMainServer.Instance.BindAddr.ToString();
+            string addr = TelnetMainServer.Instance.GetRunningAddress().ToString();
+            int port = TelnetMainServer.Instance.GetRunningPort();
             int numClients = TelnetMainServer.Instance.ClientCount;
 
-            return String.Format("Telnet server listening on {0}. ({1} client{2} connected).",
-                                 addr, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
+            return String.Format("Telnet server listening on {0} port {1}. ({2} client{3} connected).",
+                                 addr, port, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
         }
 
         private void DrawActiveCPUsOnPanel()
