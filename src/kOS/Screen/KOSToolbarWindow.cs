@@ -327,8 +327,6 @@ namespace kOS.Screen
 
             Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
 
-            AssetManager.Instance.UpdateSystemFontLists(); // only when this window is re-opened, re-load font names.
-
             // There has *got* to be a method somewhere in Unity that does this transformation
             // without having to hardcode the formula, but after wasting 5 hours searching
             // Unity docs and google and ILSpy, I give up trying to find it.  This formula is
@@ -515,7 +513,7 @@ namespace kOS.Screen
                         {
                             // If the font is monospaced, we'll accept it, else we'll deny the attempt
                             // and not commit the change to the config fields:
-                            bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 12, true) != null;
+                            bool ok = AssetManager.Instance.GetFontByNameAndSize(s, 12, true) != null;
                             if (ok)
                                 key.Value = s;
                             return ok;
@@ -523,8 +521,9 @@ namespace kOS.Screen
 
                     kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { fontPicker = null; };
 
-                    fontPicker.Summon(windowRect.x, windowRect.y + windowRect.height,
-                        key.Name, key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange, onClose
+                    fontPicker.Summon(windowRect.x, windowRect.y + windowRect.height, 300,
+                        key.Name, "(Only fonts detected as monospaced are shown.)",
+                        key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange, onClose
                         );
                 }
                 else
