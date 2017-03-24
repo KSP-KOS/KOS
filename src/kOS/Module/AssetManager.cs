@@ -117,8 +117,8 @@ namespace kOS.Module
             foreach (string fontName in osFontNames)
             {
                 Console.WriteLine("eraseme: Now testing if " + fontName + " is monospaced.");
-                // Ask Unity to use the font at size 12 (have to pick an arbitrary size to instantiate an OS font):
-                Font testFont = Font.CreateDynamicFontFromOSFont(fontName, 12);
+                // Ask Unity to use the font at size 13 (have to pick an arbitrary size to instantiate an OS font):
+                Font testFont = Font.CreateDynamicFontFromOSFont(fontName, 13); 
                 if (IsFontMonospaced(testFont))
                     monoFontNames.Add(fontName);
                 else
