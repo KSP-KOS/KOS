@@ -119,24 +119,22 @@ namespace kOS.Module
                 Console.WriteLine("eraseme: Now testing if " + fontName + " is monospaced.");
                 // Ask Unity to use the font at size 12 (have to pick an arbitrary size to instantiate an OS font):
                 Font testFont = Font.CreateDynamicFontFromOSFont(fontName, 12);
-                if (fontName.StartsWith("Arial")) // eraseme - testing
-                    continue; // eraseme - testing 
                 if (IsFontMonospaced(testFont))
                     monoFontNames.Add(fontName);
                 else
                     proportionalFontNames.Add(fontName);
             }
-            //foreach (object obj in resFonts)
-            //{
-            //    Font testFont = obj as Font;
-            //    if (testFont != null)
-            //    {
-            //        if (IsFontMonospaced(testFont))
-            //            monoFontNames.Add(testFont.name);
-            //        else
-            //            proportionalFontNames.Add(testFont.name);
-            //    }
-            //}
+            foreach (object obj in resFonts)
+            {
+                Font testFont = obj as Font;
+                if (testFont != null)
+                {
+                    if (IsFontMonospaced(testFont))
+                        monoFontNames.Add(testFont.name);
+                    else
+                        proportionalFontNames.Add(testFont.name);
+                }
+            }
         }
 
         /// <summary>
