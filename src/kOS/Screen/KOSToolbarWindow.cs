@@ -560,9 +560,9 @@ namespace kOS.Screen
 
                     kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { ipAddrPicker = null; };
 
-                    ipAddrPicker.Summon(windowRect.x, windowRect.y + windowRect.height, 250,
-                        "Telnet address (restart telnet to take effect)\n",
-                        "current selection: ", key.Value.ToString(), TelnetMainServer.GetAllAddresses(), onChange, onClose
+                    ipAddrPicker.Summon(windowRect.x, windowRect.y + windowRect.height, 300,
+                        "Telnet address (restart telnet to take effect)\n", null, 
+                        "current: " + key.Value.ToString(), TelnetMainServer.GetAllAddresses(), onChange, onClose
                     );
                 }
                 else
