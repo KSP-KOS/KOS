@@ -47,18 +47,15 @@ namespace kOS.Module
             Fonts = new Dictionary<string, Font>();
             FontNames = new List<String>();
 
-            fontsDone = false;
+        }
+
+        void Start()
+        {
+            EnsureFontsLoaded();
         }
 
         /// <summary>
-        /// Font loading has to wait until the game seems to be ready for it.
-        /// (When this was being done in Awake() or Start(),
-        /// it caused Unity to erase all glyph data for the default Arial font,
-        /// thus breaking every mod that uses Unity's default GUI.skin.
-        /// Moving this to happen later seems to avoid that bug, for unknown reasons.)
-        /// Whenever you want to use AssetManager.Instance, make sure to call this
-        /// first and it will load the fonts if it's the first time you've done so,
-        /// else it will do nothing and have no effect.
+        /// Call before the first use of the fonts in this AssetManager.
         /// </summary>
         public void EnsureFontsLoaded()
         {
@@ -89,9 +86,7 @@ namespace kOS.Module
                 {
                     // Only add those fonts which pass the monospace test:
                     if (GetSystemFontByNameAndSize(fontName, 13, true, false) != null)
-                    {
                         FontNames.Add(fontName);
-                    }
                 }
                 namesThatNoLongerExist.Remove(fontName);
             }
@@ -144,6 +139,22 @@ namespace kOS.Module
                     ScreenMessages.PostScreenMessage(
                         string.Format("<color=#ff9900><size=20>{0}</size></color>", msg), 8, ScreenMessageStyle.UPPER_CENTER);
                 }
+                // Must destroy the font right now, else Unity keeps the font data temporarily alive for
+                // too long a window of time, and it ends up failing when there's too many of
+                // them loaded at once.  Relying on the cleanup that automatically happens when you
+                // orphan the Font takes too long to avoid this bug.  As long as it *temporarily* had
+                // too much font data in memory, it breaks some of the other fonts that were loaded but
+                // hadn't be excercised yet.  (i.e nothing drawn in Arial with default GUI.skin can be
+                // seen anymore).
+                // This is a bug that during our user community testing didn't seem to happen to everybody,
+                // but it happened to some users depending on kinds of fonts they had on their OS and kinds
+                // of graphics cards (it seems to be related to the texture size of the texture being sent to
+                // the graphics card).  At any rate, explicitly doing this instead of waiting for the
+                // cleanup that is epxected to "magically" happen later on its own seems to cure the problem:
+                Font.DestroyImmediate(potentialReturn);
+                Fonts.Remove(key);
+
+
                 return null;
             }
             return potentialReturn;
@@ -202,37 +213,31 @@ namespace kOS.Module
 
             f.GetCharacterInfo('X', out chInfo);
             prevWidth = chInfo.advance;
-            System.Console.WriteLine("eraseme: X advance is " + prevWidth);
 
             f.GetCharacterInfo('i', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
-            System.Console.WriteLine("eraseme: i advance is " + prevWidth);
 
             f.GetCharacterInfo('W', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
-            System.Console.WriteLine("eraseme: W advance is " + prevWidth);
 
             f.GetCharacterInfo(' ', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
-            System.Console.WriteLine("eraseme: ' ' advance is " + prevWidth);
 
             f.GetCharacterInfo('_', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
-            System.Console.WriteLine("eraseme: _ advance is " + prevWidth);
 
             f.GetCharacterInfo(':', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
-            System.Console.WriteLine("eraseme: : advance is " + prevWidth);
 
             // That's probably a good enough test.  If all the above characters
             // have the same width, there's really good chance this is monospaced.

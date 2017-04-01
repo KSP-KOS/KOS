@@ -20,7 +20,7 @@ namespace kOS.Screen
         public delegate bool ChangeAction(string pick);
 
         /// <summary>
-        /// A callback to invoke upon closing the list window entirely.
+        /// A callback to invoke upon a closing the list box down.
         /// </summary>
         public delegate void CloseAction();
 
@@ -32,6 +32,7 @@ namespace kOS.Screen
         private static Dictionary<int,Vector2> prevScrollPositions; // track prev scroll positions of my instances.
         private bool running;
         private ChangeAction callWhenChanged;
+        private CloseAction callWhenClosed;
         private string longestString;
         private float minWidth;
         private GUIStyle listItemStyle;
@@ -71,6 +72,7 @@ namespace kOS.Screen
             this.title = title;
             this.subTitle = subTitle;
             this.callWhenChanged = callWhenChanged;
+            this.callWhenClosed = callWhenClosed;
             MakeStyles();
             outerWindowRect.x = leftX;
             outerWindowRect.y = topY;
@@ -103,7 +105,6 @@ namespace kOS.Screen
 
             // Make sure it shifts enough to the left to fit the biggest string:
             outerWindowRect.x = Mathf.Min(outerWindowRect.x, UnityEngine.Screen.width - outerWindowRect.width - 60);
-            System.Console.WriteLine("eraseme: maxsize.x="+minWidth+", Longest String = ["+longestString+"], OnGui Window rect = " + outerWindowRect.ToString());
             outerWindowRect = GUILayout.Window(
                 title.GetHashCode(),
                 outerWindowRect,
@@ -132,12 +133,14 @@ namespace kOS.Screen
                 {
                     current = newValue;
                     running = false; // close on successful pick.
+                    callWhenClosed();
                 }
             }
             bool closeButtonPressed = GUILayout.Button("Close", HighLogic.Skin.button);
             if (closeButtonPressed)
             {
                 running = false;
+                callWhenClosed();
             }
             GUILayout.EndVertical();
         }
@@ -182,17 +185,17 @@ namespace kOS.Screen
         {
             listItemStyle = new GUIStyle(HighLogic.Skin.label);
             listItemStyle.name = "ListPickerDialogItem";
-            // listItemStyle.wordWrap = false;
-            // listItemStyle.margin.top = 0;
-            // listItemStyle.margin.bottom = 0;
-            // listItemStyle.normal.background = null;
-            // listItemStyle.hover.background = new Texture2D(1, 1);
-            // listItemStyle.hover.background.SetPixel(0, 0, Color.gray);
-            // listItemStyle.hover.textColor = Color.black;
-            // listItemStyle.active.background = listItemStyle.hover.background;
-            // listItemStyle.active.textColor = Color.white;
-            // listItemStyle.focused.textColor = Color.white;
-            // listItemStyle.stretchWidth = true;
+            listItemStyle.wordWrap = false;
+            listItemStyle.margin.top = 0;
+            listItemStyle.margin.bottom = 0;
+            listItemStyle.normal.background = null;
+            listItemStyle.hover.background = new Texture2D(1, 1);
+            listItemStyle.hover.background.SetPixel(0, 0, Color.gray);
+            listItemStyle.hover.textColor = Color.black;
+            listItemStyle.active.background = listItemStyle.hover.background;
+            listItemStyle.active.textColor = Color.white;
+            listItemStyle.focused.textColor = Color.white;
+            listItemStyle.stretchWidth = true;
 
             // I tried everything to make Unity actually obey the following
             // style rules and it refuses to do so.  It refused to highlight
@@ -210,9 +213,9 @@ namespace kOS.Screen
 
             listHeaderStyle = new GUIStyle(HighLogic.Skin.label);
             listHeaderStyle.name = "ListPickerDialogHeader";
-            listHeaderStyle.normal.textColor = Color.white;
+            listHeaderStyle.normal.textColor = Color.black;
             listHeaderStyle.normal.background = new Texture2D(1, 1);
-            listHeaderStyle.normal.background.SetPixel(0, 0, Color.black);
+            listHeaderStyle.normal.background.SetPixel(0, 0, Color.white);
             listHeaderStyle.stretchWidth = true;
 
         }

@@ -508,8 +508,6 @@ namespace kOS.Screen
                 // Make a new picker if it's closed, or close it if it's already open.
                 if (fontPicker == null)
                 {
-                    AssetManager.Instance.EnsureFontsLoaded();
-
                     fontPicker = this.gameObject.AddComponent<ListPickerDialog>();
                     kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
                         {
