@@ -15,9 +15,14 @@ namespace kOS.Module
     public class AssetManager : MonoBehaviour
     {
         /// <summary>
+        /// <para>
         /// There will only be one instance of AssetManager, accessed through here.
         /// You do not need to construct AssetManager explicitly, as one will be made
         /// at load time by the way the KSPAddon attribute is set up.
+        /// </para><para>
+        /// WARNING!  Be sure you call Instance.EnsureFontsLoaded() once before using
+        /// any of the other members of Instance.  See the summary for
+        /// EnsureFontsLoaded() to see why you have to do this.</para>
         /// </summary>
         public static AssetManager Instance {get; set;}
 
@@ -28,25 +33,9 @@ namespace kOS.Module
         /// </summary>
         protected Dictionary<string,Font> Fonts {get; set;}
 
-        /// <summary>
-        /// The fonts that we will load from the OS itself:
-        /// </summary>
-        protected List<string> osFontNames;
-        /// <summary>
-        /// All the font names that are already loaded from the Resources of KSP itself instead of
-        /// being taken from the OS.  It's important that we treat these differently from how 
-        /// we treat the fonts that come from the OS, so as to avoid clobbering things like the
-        /// Unity default Arial font with the OS's own actual Arial font which is usually different:
-        /// </summary>
-        protected List<string> resourceFontNames;
-        /// <summary>
-        /// The fonts (both os and resource) which are monospaced.
-        /// </summary>
-        protected List<string> monoFontNames;
-        /// <summary>
-        /// The fonts (both os and resource) which are not monospaced.
-        /// </summary>
-        protected List<string> proportionalFontNames;
+        protected List<string> FontNames;
+
+        protected bool fontsDone;
 
         private static readonly string rootPath = KSPUtil.ApplicationRootPath.Replace("\\", "/");
 
@@ -56,10 +45,27 @@ namespace kOS.Module
             DontDestroyOnLoad(gameObject);            
 
             Fonts = new Dictionary<string, Font>();
-            osFontNames = new List<String>();
-            resourceFontNames = new List<String>();
+            FontNames = new List<String>();
 
+            fontsDone = false;
+        }
+
+        /// <summary>
+        /// Font loading has to wait until the game seems to be ready for it.
+        /// (When this was being done in Awake() or Start(),
+        /// it caused Unity to erase all glyph data for the default Arial font,
+        /// thus breaking every mod that uses Unity's default GUI.skin.
+        /// Moving this to happen later seems to avoid that bug, for unknown reasons.)
+        /// Whenever you want to use AssetManager.Instance, make sure to call this
+        /// first and it will load the fonts if it's the first time you've done so,
+        /// else it will do nothing and have no effect.
+        /// </summary>
+        public void EnsureFontsLoaded()
+        {
+            if (fontsDone)
+                return;            
             UpdateSystemFontLists();
+            fontsDone = true;
         }
 
         /// <summary>
@@ -76,65 +82,32 @@ namespace kOS.Module
         /// </summary>
         public void UpdateSystemFontLists()
         {
-            resourceFontNames = new List<string>();
-            UnityEngine.Object[] resFonts = Resources.FindObjectsOfTypeAll(typeof (Font));
-            foreach (UnityEngine.Object obj in resFonts)
-            {
-                Font f = obj as Font;
-                if (f != null)
-                {
-                    resourceFontNames.Add(f.name);
-                    Fonts.Add(f.name, f);
-                    Console.WriteLine("eraseme: UpdateSystemFontLists found Resource Font: " + f.name + ", def size=" + f.fontSize);
-                }
-            }
-
+            List<string> namesThatNoLongerExist = new List<string>(FontNames);
             foreach (string fontName in Font.GetOSInstalledFontNames())
             {
-                // This is a bit inefficient in that it's doing sequential searches on lists
-                // to perform the "contains" checks, but this only gets run at startup
-                // so it should be okay:
-                if (!osFontNames.Contains(fontName))
-                    if (!resourceFontNames.Contains(fontName)) // Do not clobber the game's fonts with the OS's fonts
-                    {
-                        osFontNames.Add(fontName);
-                        Console.WriteLine("eraseme: UpdateSystemFontLists found OS Font: " + fontName);
-                    }
-            }
-
-            // Now perform the walk of all the names to
-            // find which are mono spaced and which aren't.  Unity does not 
-            // expose the font metadata information so this has to be done
-            // the slow way by test printing something in the font and seeing
-            // how many pixels it takes up.
-            //
-            // Depending on how fast your computer is, this can add anywhere
-            // from 0.5 to about 2 seconds to the KSP loading screen time per
-            // 1000 fonts you've installed on the machine.  Given how slow
-            // the loading screen is anyway, hopefully nobody will notice.
-            monoFontNames = new List<string>();
-            proportionalFontNames = new List<string>();
-            foreach (string fontName in osFontNames)
-            {
-                Console.WriteLine("eraseme: Now testing if " + fontName + " is monospaced.");
-                // Ask Unity to use the font at size 13 (have to pick an arbitrary size to instantiate an OS font):
-                Font testFont = Font.CreateDynamicFontFromOSFont(fontName, 13); 
-                if (IsFontMonospaced(testFont))
-                    monoFontNames.Add(fontName);
-                else
-                    proportionalFontNames.Add(fontName);
-            }
-            foreach (object obj in resFonts)
-            {
-                Font testFont = obj as Font;
-                if (testFont != null)
+                if (!FontNames.Contains(fontName))
                 {
-                    if (IsFontMonospaced(testFont))
-                        monoFontNames.Add(testFont.name);
-                    else
-                        proportionalFontNames.Add(testFont.name);
+                    // Only add those fonts which pass the monospace test:
+                    if (GetSystemFontByNameAndSize(fontName, 13, true, false) != null)
+                    {
+                        FontNames.Add(fontName);
+                    }
                 }
+                namesThatNoLongerExist.Remove(fontName);
             }
+            // Any font name that used to be in the list but wasn't seen this time around
+            // must be a font that has been uninstalled from the OS while KSP was running:
+            foreach (string goneName in namesThatNoLongerExist)
+            {
+                FontNames.Remove(goneName);
+            }
+        }
+
+        // Unity loads each differently sized version of a font as a new
+        // dynamic font, so we have to track them separately by size:
+        private string MakeKey(string name, int size)
+        {
+            return string.Format("{0}/{1}", name, size);
         }
 
         /// <summary>
@@ -146,38 +119,38 @@ namespace kOS.Module
         /// </summary>
         /// <returns>The font</returns>
         /// <param name="name">Name of the font as it appaers in GetSystemFontNames</param>
-        /// <param name="size">point size for the desired font.  If this is the first time
-        /// this font was used, this will set the font's default size.</param>
+        /// <param name="size">point size for the desired font.</param>
         /// <param name="checkMono">If true, then perform a check for monospace and issue a warning and return null
         /// if it's not monospaced.</param>
-        public Font GetFontByNameAndSize(string name, int size, bool checkMono)
+        /// <param name="doErrorMessage">If true, then if the checkMono check (see above) fails, a message will
+        /// appear on screen complaining about this as it returns a null, else it will return null silently.</param>
+        public Font GetSystemFontByNameAndSize(string name, int size, bool checkMono, bool doErrorMessage = true)
         {
             // Now that a font is asked for, now we'll lazy-load it.
-            Console.WriteLine("eraseme: GetFontByNameAndSize(\""+name+"\", "+size+", "+checkMono);
-            string key = name;
+
+            // Make a string key from the name plus the size:
+            string key = MakeKey(name, size);
             if ( (!Fonts.ContainsKey(key)) || Fonts[key] == null)
             {
-                Console.WriteLine("eraseme:     GetFontByNameAndSize - font didn't exist already - loading it from OS");
                 Fonts[key] = Font.CreateDynamicFontFromOSFont(name, size);
             }
 
             Font potentialReturn = Fonts[key];
             if (checkMono && !(IsFontMonospaced(potentialReturn)))
             {
-                // With recent changes this message should hypothetically never appear now because the font name
-                // list is being culled to just the monospace fonts before the list picker is invoked.  But
-                // we're leaving this check here so it will still tell the user what's going on if we screwed
-                // up and put a proportional font into the list and they end up picking it.
-                string msg = string.Format("{0} is proportional width.\nA monospaced font is required.", name);
-                ScreenMessages.PostScreenMessage(
-                    string.Format("<color=#ff9900><size=20>{0}</size></color>",msg), 8, ScreenMessageStyle.UPPER_CENTER);
+                if (doErrorMessage)
+                {
+                    string msg = string.Format("{0} is proportional width.\nA monospaced font is required.", name);
+                    ScreenMessages.PostScreenMessage(
+                        string.Format("<color=#ff9900><size=20>{0}</size></color>", msg), 8, ScreenMessageStyle.UPPER_CENTER);
+                }
                 return null;
             }
             return potentialReturn;
         }
 
         /// <summary>
-        /// Just like GetFontByNameAndSize, except that you give it a list of
+        /// Just like GetSystemFontByNameAndSize, except that you give it a list of
         /// multiple names and it will try each in turn until it finds a name
         /// that returns an existing font.  Only if all the names fail to find
         /// a hit will it return null.
@@ -187,11 +160,11 @@ namespace kOS.Module
         /// <param name="size">Size.</param>
         /// <param name="checkMono">If true, then perform a check for monospace and issue a warning and return null
         /// if it's not monospaced.</param>
-        public Font GetFontByNameAndSize(string[] names, int size, bool checkMono)
+        public Font GetSystemFontByNameAndSize(string[] names, int size, bool checkMono)
         {
             foreach (string name in names)
             {
-                Font hit = GetFontByNameAndSize(name, size, checkMono);
+                Font hit = GetSystemFontByNameAndSize(name, size, checkMono);
                 if (hit != null)
                     return hit;
             }
@@ -199,33 +172,18 @@ namespace kOS.Module
         }
 
         /// <summary>
-        /// This is whatever system font names existed when the Unity engine
-        /// was first started.
+        /// This will be whatever
+        /// system font names existed the last time UpdateSystemFontLists()
+        /// was called.  (If you install a new font to the OS and re-run
+        /// UpdateSystemFontNames(), that new font name gets added to this
+        /// list.)  If you install a new system font and don't call 
+        /// UpdateSystemFontNames() again, the new font name won't be
+        /// in this list yet.
         /// </summary>
         /// <returns>A list of the OS font names kOS knows about.</returns>
         public List<string> GetSystemFontNames()
         {
-            return osFontNames;
-        }
-
-        /// <summary>
-        /// This is the subset of GetSystemFontNames() which have been
-        /// tested to be monospaced.
-        /// </summary>
-        /// <returns>The system mono font names.</returns>
-        public List<string> GetSystemMonoFontNames()
-        {
-            return monoFontNames;
-        }
-
-        /// <summary>
-        /// This will be the subset of GetSystemFontNames() which have been
-        /// tested and found NOT to be monospaced.
-        /// </summary>
-        /// <returns>The system mono font names.</returns>
-        public List<string> GetSystemProportionalFontNames()
-        {
-            return proportionalFontNames;
+            return FontNames;
         }
 
         /// <summary>A tool we can use to check if a font is monospaced by
@@ -244,31 +202,37 @@ namespace kOS.Module
 
             f.GetCharacterInfo('X', out chInfo);
             prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: X advance is " + prevWidth);
 
             f.GetCharacterInfo('i', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: i advance is " + prevWidth);
 
             f.GetCharacterInfo('W', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: W advance is " + prevWidth);
 
             f.GetCharacterInfo(' ', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: ' ' advance is " + prevWidth);
 
             f.GetCharacterInfo('_', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: _ advance is " + prevWidth);
 
             f.GetCharacterInfo(':', out chInfo);
             if (prevWidth != chInfo.advance)
                 return false;
             prevWidth = chInfo.advance;
+            System.Console.WriteLine("eraseme: : advance is " + prevWidth);
 
             // That's probably a good enough test.  If all the above characters
             // have the same width, there's really good chance this is monospaced.

@@ -79,7 +79,7 @@ namespace kOS.Screen
             fontHeight = GetConfigFontSize();
             tryFontNames[0] = GetConfigFontName();
 
-            font = AssetManager.Instance.GetFontByNameAndSize(tryFontNames, fontHeight, false);
+            font = AssetManager.Instance.GetSystemFontByNameAndSize(tryFontNames, fontHeight, false);
 
             textWidgetStyle = new GUIStyle(HighLogic.Skin.textArea);
             textWidgetStyle.font = font;

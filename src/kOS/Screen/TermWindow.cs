@@ -235,7 +235,7 @@ namespace kOS.Screen
             {
                 fontSize = newSize;
                 tryFontNames[0] = newName;
-                font = AssetManager.Instance.GetFontByNameAndSize(tryFontNames, fontSize, false);
+                font = AssetManager.Instance.GetSystemFontByNameAndSize(tryFontNames, fontSize, false);
 
                 terminalLetterSkin.label.font = font;
                 terminalLetterSkin.label.fontSize = fontSize;

@@ -508,12 +508,14 @@ namespace kOS.Screen
                 // Make a new picker if it's closed, or close it if it's already open.
                 if (fontPicker == null)
                 {
+                    AssetManager.Instance.EnsureFontsLoaded();
+
                     fontPicker = this.gameObject.AddComponent<ListPickerDialog>();
                     kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
                         {
                             // If the font is monospaced, we'll accept it, else we'll deny the attempt
                             // and not commit the change to the config fields:
-                            bool ok = AssetManager.Instance.GetFontByNameAndSize(s, 12, true) != null;
+                            bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 13, true) != null;
                             if (ok)
                                 key.Value = s;
                             return ok;
