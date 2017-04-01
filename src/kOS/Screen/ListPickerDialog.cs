@@ -153,6 +153,7 @@ namespace kOS.Screen
             if (!string.IsNullOrEmpty(subTitle))
                 GUILayout.Label(subTitle, HighLogic.Skin.label);
 
+            GUILayout.Label(Texture2D.blackTexture, GUILayout.ExpandWidth(true));
             GUILayout.Label(value, listHeaderStyle);
 
             // prevScrollPositions remembers the previous spot that each instance of this class
@@ -214,8 +215,7 @@ namespace kOS.Screen
             listHeaderStyle = new GUIStyle(HighLogic.Skin.label);
             listHeaderStyle.name = "ListPickerDialogHeader";
             listHeaderStyle.normal.textColor = Color.black;
-            listHeaderStyle.normal.background = new Texture2D(1, 1);
-            listHeaderStyle.normal.background.SetPixel(0, 0, Color.white);
+            listHeaderStyle.normal.background = Texture2D.whiteTexture;
             listHeaderStyle.stretchWidth = true;
 
         }
