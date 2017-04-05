@@ -3,7 +3,7 @@
 ScienceData
 ===========
 
-Represents results of a :struct:`science experiment <ScienceData>`.
+Represents results of a :struct:`science experiment <ScienceExperimentModule>`.
 
 .. structure:: ScienceData
 
