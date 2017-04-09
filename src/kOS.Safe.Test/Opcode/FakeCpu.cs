@@ -7,6 +7,7 @@ namespace kOS.Safe.Test.Opcode
     public class FakeCpu : ICpu
     {
         private readonly Stack<object> fakeStack;
+        public bool IsPoppingContext { get { return false; } }
 
         public FakeCpu()
         {

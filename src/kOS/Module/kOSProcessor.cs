@@ -48,6 +48,14 @@ namespace kOS.Module
         private bool firstUpdate = true;
         private bool objectsInitialized = false;
 
+        /// How many times have instances of this class been constructed during this process run?
+        private static int constructorCount;
+
+        private int kOSCoreId;
+        /// <summary>Can be used as a unique ID of which processor this is, but unlike Guid,
+        /// it doesn't remain unique across runs so you shouldn't use it for serialization.</summary>
+        public int KOSCoreId { get { return kOSCoreId; } }
+
         private MovingAverage averagePower = new MovingAverage();
 
         // This is the "constant" byte count used when calculating the EC
@@ -110,6 +118,7 @@ namespace kOS.Module
         public kOSProcessor()
         {
             ProcessorMode = ProcessorModes.READY;
+            kOSCoreId = ++constructorCount;
         }
 
         public VolumePath BootFilePath {
@@ -909,7 +918,7 @@ namespace kOS.Module
         public void Send(Structure content)
         {
             double sentAt = Planetarium.GetUniversalTime();
-            Messages.Push(Message.Create(content, sentAt, sentAt, new VesselTarget(shared), Tag));
+            Messages.Push(Message.Create(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(shared), Tag));
         }
     }
 }

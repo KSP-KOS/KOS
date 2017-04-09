@@ -106,7 +106,7 @@ namespace kOS.AddOns.RemoteTech
                 {
                     if (vessel.id.Equals(guid))
                     {
-                        return new VesselTarget(vessel, shared);
+                        return VesselTarget.CreateOrGetExisting(vessel, shared);
                     }
                 }
 

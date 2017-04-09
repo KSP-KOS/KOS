@@ -170,7 +170,7 @@ namespace kOS.Function
             {
                 if (vessel == shared.Vessel) continue;
 
-                var vT = new VesselTarget(vessel, shared);
+                var vT = VesselTarget.CreateOrGetExisting(vessel, shared);
                 list.AddItem(vT.Vessel.vesselName, vT.GetDistance());
             }
 

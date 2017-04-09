@@ -26,6 +26,9 @@ namespace kOS.Suffixed
 
         private ListValue cachedParts = new ListValue();
         private bool cachedPartsAreStale = true;
+        private bool eventsAreHooked = false;
+
+        private static Dictionary<InstanceKey, WeakReference> instanceCache;
 
         public override Orbit Orbit { get { return Vessel.orbit; } }
 
@@ -205,12 +208,20 @@ namespace kOS.Suffixed
                 };
         }
 
-        public VesselTarget()
+        /// <summary>
+        /// All constructors for this class have been restricted because everyone should
+        /// be calling the factory method CreateOrGetExisting() instead.
+        /// </summary>
+        protected VesselTarget()
         {
             RegisterInitializer(InitializeSuffixes);
         }
 
-        public VesselTarget(Vessel target, SharedObjects shared)
+        /// <summary>
+        /// All constructors for this class have been restricted because everyone should
+        /// be calling the factory method CreateOrGetExisting() instead.
+        /// </summary>
+        protected VesselTarget(Vessel target, SharedObjects shared)
             : base(shared)
         {
             Vessel = target;
@@ -218,21 +229,77 @@ namespace kOS.Suffixed
             RegisterInitializer(InitializeSuffixes);
         }
 
-        public VesselTarget(SharedObjects shared)
+        /// <summary>
+        /// All constructors for this class have been restricted because everyone should
+        /// be calling the factory method CreateOrGetExisting() instead.
+        /// </summary>
+        protected VesselTarget(SharedObjects shared)
             : this(shared.Vessel, shared)
         {
         }
 
+        /// <summary>
+        /// Factory method you should use instead of the constructor for this class.
+        /// This will construct a new instance if and only if there isn't already
+        /// an instance made for this particular kOSProcessor, for the given vessel
+        /// (Uniqueness determinied by the vessel's GUID).
+        /// If an instance already exists it will return a reference to that instead of making
+        /// a new one.
+        /// The reason this enforcement is needed is because VesselTarget has callback hooks
+        /// that prevent orphaning and garbage collection.  (The delegate inserted
+        /// into KSP's GameEvents counts as a reference to the VesselTarget.)
+        /// Using this factory method instead of a constructor prevents having thousands of stale
+        /// instances of VesselTarget, which was the cause of Github issue #1980.
+        /// </summary>
+        /// <returns>The or get.</returns>
+        /// <param name="Target">Target.</param>
+        /// <param name="Shared">Shared.</param>
+        public static VesselTarget CreateOrGetExisting(Vessel target, SharedObjects shared)
+        {
+            if (instanceCache == null)
+                instanceCache = new Dictionary<InstanceKey, WeakReference> ();
+
+            InstanceKey key = new InstanceKey { ProcessorId = shared.Processor.KOSCoreId, VesselId = target.id };
+            if (instanceCache.ContainsKey(key))
+            {
+                WeakReference weakRef = instanceCache[key];
+                if (weakRef.IsAlive)
+                    return (VesselTarget)weakRef.Target;
+                else
+                    instanceCache.Remove(key);
+            }
+            // If it either wasn't in the cache, or it was but the GC destroyed it by now, make a new one:
+            VesselTarget newlyConstructed = new VesselTarget(target, shared);
+            instanceCache.Add(key, new WeakReference(newlyConstructed));
+            return newlyConstructed;
+        }
+
+        public static VesselTarget CreateOrGetExisting(SharedObjects shared)
+        {
+            return CreateOrGetExisting(shared.Vessel, shared);
+        }
+
         public void HookEvents()
         {
-            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
-            GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
+            if (!eventsAreHooked)
+            {
+                GameEvents.onVesselDestroy.Add (OnVesselDestroy);
+                GameEvents.onVesselPartCountChanged.Add (OnVesselPartCountChanged);
+                eventsAreHooked = true;
+            }
         }
 
         public void UnhookEvents()
         {
-            GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
-            GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
+            // In the way we're firing off ScopeLost, it's possible to
+            // end up triggering this more than once, which is why this
+            // protective boolean check is here:
+            if (eventsAreHooked)
+            {
+                GameEvents.onVesselDestroy.Remove (OnVesselDestroy);
+                GameEvents.onVesselPartCountChanged.Remove (OnVesselPartCountChanged);
+                eventsAreHooked = false;
+            }
         }
 
         public void OnVesselDestroy(Vessel v)
@@ -278,6 +345,12 @@ namespace kOS.Suffixed
             set
             {
                 linkCount = value;
+
+                // Note, the following check to fire scopelost when link count
+                // hits zero is also happening in Variable.cs, so ScopeLost()
+                // fires twice for some cases.  But this still needs to
+                // be here to catch cases where the link count hits zero
+                // for reasons other than being in a named variable:
                 if (linkCount <= 0)
                     ScopeLost();
             }
@@ -718,6 +791,17 @@ namespace kOS.Suffixed
         public void ScopeLost()
         {
             UnhookEvents();
+        }
+
+        // The data that identifies a unique instance of this class, for use
+        // with the factory method that avoids duplicate instances:
+        private struct InstanceKey
+        {
+            /// <summary>The kOSProcessor Module that built me.</summary>
+            public int ProcessorId { get; set;}
+
+            /// <summary>The KSP vessel object that I'm wrapping.</summary>
+            public Guid VesselId { get; set;}
         }
     }
 }
