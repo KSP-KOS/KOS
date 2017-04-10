@@ -14,7 +14,10 @@ namespace kOS.Module
             {
                 if (instance == null)
                 {
-                    instance = HighLogic.CurrentGame.Parameters.CustomParams<kOSCustomParameters>();
+                    if (HighLogic.CurrentGame != null)
+                    {
+                        instance = HighLogic.CurrentGame.Parameters.CustomParams<kOSCustomParameters>();
+                    }
                 }
                 return instance;
             }
