@@ -29,7 +29,7 @@ namespace kOS.Safe.Screen
         public bool VisualBeep {get; set;}
         public int CharacterPixelWidth { get; set; }
         public int CharacterPixelHeight { get; set; }
-        public float Brightness { get; set; }
+        public double Brightness { get; set; }
 
         
         public int ColumnCount { get; private set; }

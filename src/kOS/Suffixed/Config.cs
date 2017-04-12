@@ -31,7 +31,11 @@ namespace kOS.Suffixed
         public string TerminalFontName {get { return GetPropValue<string>(PropId.TerminalFontName); } set { SetPropValue(PropId.TerminalFontName, value); } }
         public bool UseBlizzyToolbarOnly { get { return kOSCustomParameters.Instance.useBlizzyToolbarOnly; } set { kOSCustomParameters.Instance.useBlizzyToolbarOnly = value; } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
-        public float TerminalBrightness {get { return GetPropValue<float>(PropId.TerminalBrightness); } set { SetPropValue(PropId.TerminalBrightness, value); } }
+
+        // NOTE TO FUTURE MAINTAINERS:  If it looks like overkill to use a double instead of a float for this next field, you're right.
+        // But KSP seems to have a bug where single-precision floats don't get saved in the config XML file.  Doubles seem to work, though.
+        public double TerminalBrightness {get { return GetPropValue<double>(PropId.TerminalBrightness); } set { SetPropValue(PropId.TerminalBrightness, value); } }
+
         private Config()
         {
             keys = new Dictionary<string, ConfigKey>(StringComparer.OrdinalIgnoreCase);
@@ -66,7 +70,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
             AddConfigKey(PropId.TerminalFontDefaultSize, new ConfigKey("TerminalFontDefaultSize", "DEFAULTFONTSIZE", "Initial Terminal:CHARHEIGHT when a terminal is first opened", 12, 6, 20, typeof(int)));
             AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "Courier New Bold", "n/a", "n/a", typeof(string)));
-            AddConfigKey(PropId.TerminalBrightness, new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7f, 0f, 1f, typeof(float)));
+            AddConfigKey(PropId.TerminalBrightness, new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7d, 0d, 1d, typeof(double)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)

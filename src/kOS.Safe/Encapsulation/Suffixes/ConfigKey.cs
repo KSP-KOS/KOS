@@ -59,6 +59,15 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 else
                     returnValue = newValue;
             }
+            else if (Value is double)
+            {
+                if ((double)newValue < (double)MinValue)
+                    returnValue = MinValue;
+                else if ((double)newValue > (double)MaxValue)
+                    returnValue = MaxValue;
+                else
+                    returnValue = newValue;
+            }
             else if (Value is bool)
             {
                 returnValue = newValue;

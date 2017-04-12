@@ -472,13 +472,20 @@ namespace kOS.Screen
                 {
                     key.Value = DrawConfigIntField((int)(key.Value), whichInt++);
                 }
-                else if (key.Value is float)
+                else if (key.Value is float || key.Value is double) // if double, the UI will only handle it to float precisions, by the way.
                 {
                     CountBeginVertical();
+                    float floatValue = Convert.ToSingle(key.Value);
+                    float floatMin = Convert.ToSingle(key.MinValue);
+                    float floatMax = Convert.ToSingle(key.MaxValue);
                     //Mathf doesn't have a Round to hundreths place, so this is how I'm faking it:
-                    GUILayout.Label(new GUIContent((Mathf.Round((float)key.Value*100f)/100f).ToString()), panelSkin.label);
-                    key.Value = GUILayout.HorizontalSlider((float)key.Value, (float)key.MinValue, (float)key.MaxValue,
+                    GUILayout.Label(new GUIContent((Mathf.Round(floatValue*100f)/100f).ToString()), panelSkin.label);
+                    floatValue = GUILayout.HorizontalSlider(floatValue, floatMin, floatMax,
                         GUILayout.MinWidth(50), GUILayout.MaxHeight(4));
+                    if (key.Value is double)
+                        key.Value = (double)floatValue;
+                    else
+                        key.Value = floatValue;
                     CountEndVertical();
                 }
                 else

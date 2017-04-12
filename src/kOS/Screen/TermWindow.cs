@@ -813,7 +813,7 @@ namespace kOS.Screen
             screen.ReverseScreen = GUI.Toggle(reverseButtonRect, screen.ReverseScreen, "Reverse Screen", tinyToggleStyle);
             screen.VisualBeep = GUI.Toggle(visualBeepButtonRect, screen.VisualBeep, "Visual Beep", tinyToggleStyle);
             keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
-            screen.Brightness = GUI.VerticalSlider(brightnessRect, screen.Brightness, 1f, 0f);
+            screen.Brightness = (double) GUI.VerticalSlider(brightnessRect, (float)screen.Brightness, 1f, 0f);
             GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
             
             int charHeight = screen.CharacterPixelHeight;
@@ -909,10 +909,10 @@ namespace kOS.Screen
             GUI.DragWindow();
         }
         
-        protected Color AdjustColor(Color baseColor, float brightness)
+        protected Color AdjustColor(Color baseColor, double brightness)
         {
             Color newColor = baseColor;
-            newColor.a = brightness; // represent dimness by making it fade into the backround.
+            newColor.a = Convert.ToSingle(brightness); // represent dimness by making it fade into the backround.
             return newColor;
         }
 
@@ -957,7 +957,7 @@ namespace kOS.Screen
             }
         }
         
-        void DrawCursorAt(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, float brightness)
+        void DrawCursorAt(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, double brightness)
         {
             // To emulate inverting the screen character, draw a solid block, then the reversed character atop it:
             // Solid Block:
