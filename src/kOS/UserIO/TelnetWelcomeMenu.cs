@@ -25,12 +25,248 @@ namespace kOS.UserIO
         private readonly StringBuilder localMenuBuffer;
         private bool firstTime;
         private volatile bool forceMenuReprint;
-        
+        private MenuLevel currentLevel;
+
+        private abstract class MenuLevel
+        {
+            public virtual MenuLevel parentMenu { get { return new OuterMenu (); } }
+
+            public virtual List<String> helpText { get; } = new List<String> { };
+
+            public virtual List<List<String> > headers { get; } = new List<List<String> > {
+                new List<String> { "Menu", "" },
+                new List<String> { "Pick", "" },
+                new List<String> { "----", "----------------" }
+            };
+            public virtual String format { get; } = "{0,4} {1}";
+
+            public virtual void PrintMenu (TelnetWelcomeMenu parent)
+            {
+
+                List<String> displayChoices = new List<string> { };
+                int longestLength = 0;
+                foreach (List<String> hdrLine in headers) {
+                    String choice = String.Format (format, hdrLine.Cast<object> ().ToArray ());
+                    displayChoices.Add (choice);
+                    longestLength = Math.Max (choice.Length, longestLength);
+                }
+                int i = 1;
+                foreach (object[] bodyLine in this.MenuItems()) {
+                    string choice = String.Format (format, new object[] { "[" + i.ToString () + "]" }.Concat (bodyLine).ToArray ());
+                    displayChoices.Add (choice);
+                    longestLength = Math.Max (choice.Length, longestLength);
+                    i++;
+                }
+                foreach (string choice in displayChoices) {
+                    string choicePaddedToLongest = choice + new String (' ', (longestLength - choice.Length));
+                    parent.telnetServer.Write (parent.CenterPadded (choicePaddedToLongest, ' ') + (char)UnicodeCommand.STARTNEXTLINE);
+                }
+            }
+
+            public virtual List< object[] > MenuItems ()
+            { // Deliberately empty, so this is allowed not to be implemented.
+                return new List< object[] > ();
+            }
+
+            public virtual int ItemCount ()
+            {
+                return MenuItems ().Count;
+            }
+
+            public virtual bool ItemsChanged ()
+            {
+                return false;
+            }
+
+            public virtual void Selected (TelnetWelcomeMenu parent, int k)
+            {
+                return;
+            }
+        }
+
+        private class OuterMenu : MenuLevel
+        {
+            public override MenuLevel parentMenu { get { return this; } }
+
+            public override String format { get; } = "{0,4} {1}";
+
+            static List<object[] > theList = new List<object[] > {
+                new object[]{ "CPU List" },
+                new object[]{ "Order a Launch (Unimplemented)" },
+                new object[]{ "Vessel List" },
+                new object[]{ "The Fourth Wall" },
+            };
+
+            public override List<object[] > MenuItems ()
+            {
+                return theList;
+            }
+
+            public override bool ItemsChanged ()
+            {
+                return false;
+            }
+
+            public override void Selected (TelnetWelcomeMenu parent, int k)
+            {
+                switch (k) {
+                case 1:
+                    parent.currentLevel = new CPUMenu ();
+                    break;
+                case 2:
+                    parent.currentLevel = new LaunchOrderMenu ();
+                    break;
+                case 3:
+                    parent.currentLevel = new VesselSwitchMenu ();
+                    break;
+                case 4:
+                    parent.currentLevel = new FourthWallMenu ();
+                    break;
+                }
+            }
+        }
+
+        private class CPUMenu : MenuLevel
+        {
+            public override List<List<String> > headers { get; } = new List<List<String> > {
+                    new List<String>{"Menu", "GUI ", " Other ", "", "", ""},
+                    new List<String>{"Pick", "Open", "Telnets", "", "Vessel Name", "(CPU tagname)"},
+                    new List<String>{"----", "----", "-------", "", "--------------------------------", "" }
+            };
+            public override String format { get; } = "{0,4} {1,4} {2,4} {3} {4}";
+
+            public List<kOSProcessor> availableCPUs = new List<kOSProcessor> ();
+
+            public override List<String> helpText { get; } = new List<String> {
+                        "Choose a CPU to attach to by typing a " +
+                        "selection number and pressing return/enter. " +
+                        "Or enter [Q] to quit terminal server, " +
+                        "or [*] to go up a menu level.",
+                        "(After attaching, you can (D)etach and return " +
+                        "to this menu by pressing Control-D as the first " +
+                        "character on a new command line.)"
+                };
+
+            public override bool ItemsChanged ()
+            {
+                List<kOSProcessor> newList = kOSProcessor.AllInstances ();
+                bool itChanged = false;
+
+                if (newList.Count != availableCPUs.Count)
+                    itChanged = true;
+                else
+                    for (int i = 0; i < newList.Count; ++i)
+                        if (newList [i] != availableCPUs [i])
+                            itChanged = true;
+
+                availableCPUs = newList;
+                return itChanged;
+            }
+
+            public override List<object[]> MenuItems ()
+            {
+                List<object[]> rv = new List<object[]> ();
+                foreach (kOSProcessor kModule in availableCPUs) {
+                    Part thisPart = kModule.part;
+                    KOSNameTag partTag = thisPart.Modules.OfType<KOSNameTag> ().FirstOrDefault ();
+                    string partLabel = String.Format ("{0}({1})",
+                                                       thisPart.partInfo.title.Split (' ') [0], // just the first word of the name, i.e "CX-4181"
+                                                       ((partTag == null) ? "" : partTag.nameTag)
+                                                   );
+                    Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
+                    string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName ();
+
+                    bool guiOpen = kModule.GetWindow ().IsOpen;
+                    int numTelnets = kModule.GetWindow ().NumTelnets ();
+                    rv.Add (new object[]{ (guiOpen ? "yes" : "no"), numTelnets, vesselLabel, "(" + partLabel + ")" });
+                }
+                return rv;
+            }
+
+            public override void Selected (TelnetWelcomeMenu parent, int pickNumber)
+            {
+                parent.telnetServer.ConnectToProcessor (availableCPUs [pickNumber - 1]);
+            }
+        }
+
+        private class FourthWallMenu : MenuLevel
+        {
+            Suffixed.KUniverseValue v = new Suffixed.KUniverseValue(null); // We just don't use anything that hits the shared objects.
+
+            public override List<object[] > MenuItems ()
+            {
+                List<object[] > theList = new List<object[] > {
+                    new object[] { "Revert to Launch " + (v.CanRevertToLaunch() ? "" : "(Unavailable)" ) },
+                    new object[] { "Revert to Editor " + (v.CanRevvertToEditor() ? "" : "(Unavailable)" ) },
+                    new object[] { "Load Saved Game (Unimplemented)" }
+                };
+                return theList;
+            }
+
+            public override void Selected (TelnetWelcomeMenu parent, int pickNumber)
+            {
+                switch (pickNumber) {
+                case 1:
+                    v.RevertToLaunch();
+                    break;
+                case 2:
+                    v.RevertToEditor();
+                    break;
+                case 3:
+                    try {
+                        HighLogic.SaveFolder = "kossitude";
+                        Game game = GamePersistence.LoadGame ("quicksave", HighLogic.SaveFolder, true, false);
+                        FlightDriver.StartAndFocusVessel (game, game.flightState.activeVesselIdx);
+                    } catch (Exception e) {
+                        SafeHouse.Logger.Log (e.Message);
+                    }
+                    break;
+                }
+            }
+        }
+
+        private class LaunchOrderMenu : MenuLevel
+        {
+        }
+
+        private class VesselSwitchMenu : MenuLevel
+        {
+
+            List<Vessel> availableVessels = new List<Vessel> ();
+
+            public override bool ItemsChanged ()
+            {
+                var vl = FlightGlobals.Vessels.Where (v => v.DiscoveryInfo.Level == DiscoveryLevels.Owned);
+                if (availableVessels.SequenceEqual (vl))
+                    return false;
+                availableVessels = vl.ToList ();
+                return true;
+            }
+
+            public override List<object[]> MenuItems ()
+            {
+                List<object[]> rv = new List<object[]> ();
+                foreach (var vessel in availableVessels) {
+                    rv.Add (new object[]{ vessel.vesselName });
+                }
+                return rv;
+            }
+
+            public override void Selected (TelnetWelcomeMenu parent, int pickNumber)
+            {
+                Vessel vessel = availableVessels [pickNumber - 1];
+                if (!vessel.isActiveVessel) {
+                    FlightGlobals.SetActiveVessel (vessel);
+                }
+            }
+        }
+
         // Because this will be created as a Unity Gameobject, it has to have a parameterless constructor.
         // Actual setup args will be in the Setup() method below.
         public TelnetWelcomeMenu()
         {
             firstTime = true;
+            currentLevel = new CPUMenu();
             localMenuBuffer = new StringBuilder();
             availableCPUs = new List<kOSProcessor>();
         }
@@ -79,12 +315,12 @@ namespace kOS.UserIO
             {
                 if (forceMenuReprint)
                     telnetServer.Write((char)UnicodeCommand.CLEARSCREEN); // if we HAVE to reprint - do so on a clear screen.
-                bool listChanged = CPUListChanged();
+                bool listChanged = ActiveListChanged();
                 if (!firstTime && listChanged)
-                    telnetServer.Write("--(List of CPU's has Changed)--" + (char)UnicodeCommand.STARTNEXTLINE);
+                    telnetServer.Write("--(List has Changed)--" + (char)UnicodeCommand.STARTNEXTLINE);
                 firstTime = false;
                 if (listChanged || forceMenuReprint )
-                    PrintCPUMenu();
+                    PrintActiveMenu();
             }
             
             while (telnetServer.InputWaiting())
@@ -109,6 +345,37 @@ namespace kOS.UserIO
                 }
             }
         }
+
+        public void PrintActiveMenu() {
+            localMenuBuffer.Remove(0,localMenuBuffer.Length); // Any time the menu is reprinted, clear out any previous buffer text.
+            telnetServer.ReadAll(); // Consume and throw away any readahead typing that preceeded the printing of this menu.
+
+            forceMenuReprint = false;
+
+            telnetServer.Write("Terminal: type = " +
+                               telnetServer.ClientTerminalType +
+                               ", size = "
+                               + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight +
+                               (char)UnicodeCommand.STARTNEXTLINE);
+            telnetServer.Write(CenterPadded("",'_')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE);
+        currentLevel.PrintMenu(this);
+
+        if (currentLevel.ItemCount() > 0) {
+            telnetServer.Write(CenterPadded("",'-')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE);
+            foreach (String helpStr in currentLevel.helpText) {
+                telnetServer.Write(
+                        (char)UnicodeCommand.STARTNEXTLINE +
+                        WordBreak(helpStr) +
+                        (char)UnicodeCommand.STARTNEXTLINE
+                        );
+            }
+            telnetServer.Write(CenterPadded("", '-')/*line of '-' chars*/ +
+                    (char)UnicodeCommand.STARTNEXTLINE +
+                    "> ");
+        }
+            else
+                telnetServer.Write(CenterPadded(String.Format("{0,20}", "<NONE>"), ' ') + (char)UnicodeCommand.STARTNEXTLINE);
+        }
         
         public void LineEntered()
         {
@@ -123,6 +390,11 @@ namespace kOS.UserIO
                 Quit();
                 return;
             }
+            if (String.Equals(cmd.Substring(0,1),"*",StringComparison.CurrentCultureIgnoreCase))
+            {
+                StarCommand(cmd);
+                return;
+            }
             int pickNumber;
             if (!int.TryParse(cmd, out pickNumber) )
             {
@@ -130,102 +402,32 @@ namespace kOS.UserIO
                 forceMenuReprint = true;
                 return;
             }
-            if (pickNumber <= 0 || pickNumber > availableCPUs.Count)
+            if (pickNumber <= 0 || pickNumber > currentLevel.ItemCount())
             {
                 telnetServer.Write("No such number (" + pickNumber + ") on the menu." + (char)UnicodeCommand.STARTNEXTLINE);
                 forceMenuReprint = true;
                 return;
             }
-            telnetServer.ConnectToProcessor(availableCPUs[pickNumber-1]);
+
+            forceMenuReprint = true;
+            currentLevel.Selected(this, pickNumber);
             // Quit(); - uncomment to make it so that the TelnetWelcomeMenu aborts telnet when done - for testing purposes.
         }
-        
-        private bool CPUListChanged()
-        {
-            List<kOSProcessor> newList = kOSProcessor.AllInstances();
-            bool itChanged = false;
 
-            if (newList.Count != availableCPUs.Count)
-                itChanged = true;
-            else
-                for( int i = 0; i < newList.Count ; ++i)
-                    if (newList[i] != availableCPUs[i])
-                        itChanged = true;
-
-            availableCPUs = newList;
-            lastMenuQueryTime = DateTime.Now;
-            return itChanged;
-        }
-
-        private void PrintCPUMenu()
-        {
-            localMenuBuffer.Remove(0,localMenuBuffer.Length); // Any time the menu is reprinted, clear out any previous buffer text.
-            telnetServer.ReadAll(); // Consume and throw away any readahead typing that preceeded the printing of this menu.
-
-            forceMenuReprint = false;
-
-            telnetServer.Write("Terminal: type = " +
-                               telnetServer.ClientTerminalType +
-                               ", size = "
-                               + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight +
-                               (char)UnicodeCommand.STARTNEXTLINE);
-            telnetServer.Write(CenterPadded("",'_')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE);
-
-            const string FORMATTER = "{0,4} {1,4} {2,4} {3} {4} {5}";
-
-            int userPickNum = 1;
-            int longestLength = 0;
-            List<string> displayChoices = new List<string>
-            {
-                String.Format(FORMATTER, "Menu", "GUI ", " Other ", "", "", ""),
-                String.Format(FORMATTER, "Pick", "Open", "Telnets", "", "Vessel Name", "(CPU tagname)"),
-                String.Format(FORMATTER, "----", "----", "-------", "", "--------------------------------", "")
-            };
-            longestLength = displayChoices[2].Length;
-            foreach (kOSProcessor kModule in availableCPUs)
-            {
-                Part thisPart = kModule.part;
-                KOSNameTag partTag = thisPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-                string partLabel = String.Format("{0}({1})",
-                                             thisPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
-                                             ((partTag == null) ? "" : partTag.nameTag)
-                                            );
-                Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
-                string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName();
-                
-                bool guiOpen = kModule.GetWindow().IsOpen;
-                int numTelnets = kModule.GetWindow().NumTelnets();
-                string choice = String.Format(FORMATTER, "["+userPickNum+"]", (guiOpen ? "yes": "no"), numTelnets, "   ", vesselLabel, "("+partLabel+")");
-                displayChoices.Add(choice);
-                longestLength = Math.Max(choice.Length, longestLength);
-                ++userPickNum;
-            }
-            foreach (string choice in displayChoices)
-            {
-                string choicePaddedToLongest = choice + new String(' ',(longestLength - choice.Length));
-                telnetServer.Write(CenterPadded(choicePaddedToLongest, ' ') + (char)UnicodeCommand.STARTNEXTLINE);
-            }
-            
-            if (availableCPUs.Count > 0)
-                telnetServer.Write(CenterPadded("",'-')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE +
-                                   WordBreak("Choose a CPU to attach to by typing a " +
-                                             "selection number and pressing return/enter. " +
-                                             "Or enter [Q] to quit terminal server.") +
-                                   (char)UnicodeCommand.STARTNEXTLINE +
-                                   (char)UnicodeCommand.STARTNEXTLINE +
-                                   WordBreak("(After attaching, you can (D)etach and return " +
-                                             "to this menu by pressing Control-D as the first " +
-                                             "character on a new command line.)") +
-                                   (char)UnicodeCommand.STARTNEXTLINE +
-                                   CenterPadded("", '-')/*line of '-' chars*/ +
-                                   (char)UnicodeCommand.STARTNEXTLINE +
-                                   "> ");
-            else
-                telnetServer.Write(CenterPadded(String.Format(FORMATTER,"", "", "", "", "<NONE>", ""), ' ') + (char)UnicodeCommand.STARTNEXTLINE);
-
+        public void StarCommand(String cmd) {
+            // Separated out for possible additional levels of tree, etc.
+            currentLevel=currentLevel.parentMenu;
+            // Might as well let you dial the next level, if you know what you're dialing for.
+            localMenuBuffer.Append(cmd.Substring(1));
+            forceMenuReprint = true;
+            LineEntered();
         }
         
-        
+        private bool ActiveListChanged() {
+        lastMenuQueryTime = DateTime.Now;
+        return currentLevel.ItemsChanged();
+        }
+
         /// <summary>
         /// For writing out a message to the screen, trying to center it according to
         /// what the telnet client claimed its current width is:
