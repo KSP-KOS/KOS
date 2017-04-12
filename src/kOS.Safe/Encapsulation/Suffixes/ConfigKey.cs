@@ -50,7 +50,29 @@ namespace kOS.Safe.Encapsulation.Suffixes
                 // the execution but still get logged, then log such a warning here mentioning
                 // if the value attempted was denied and changed if it was.
             }
+            else if (Value is float)
+            {
+                if ((float)newValue < (float)MinValue)
+                    returnValue = MinValue;
+                else if ((float)newValue > (float)MaxValue)
+                    returnValue = MaxValue;
+                else
+                    returnValue = newValue;
+            }
+            else if (Value is double)
+            {
+                if ((double)newValue < (double)MinValue)
+                    returnValue = MinValue;
+                else if ((double)newValue > (double)MaxValue)
+                    returnValue = MaxValue;
+                else
+                    returnValue = newValue;
+            }
             else if (Value is bool)
+            {
+                returnValue = newValue;
+            }
+            else if (Value is string)
             {
                 returnValue = newValue;
             }
