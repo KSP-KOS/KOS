@@ -540,6 +540,7 @@ namespace kOS.Screen
                 else
                 {
                     fontPicker.Close();
+                    Destroy(fontPicker);
                     fontPicker = null;
                 }
             }
