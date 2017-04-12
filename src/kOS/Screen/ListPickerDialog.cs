@@ -164,7 +164,7 @@ namespace kOS.Screen
                 prevScrollPositions = new Dictionary<int, Vector2>();
             if (! prevScrollPositions.ContainsKey(windowId))
                 prevScrollPositions.Add(windowId, new Vector2());
-            
+
             prevScrollPositions[windowId] = GUILayout.BeginScrollView(prevScrollPositions[windowId]);
 
             GUILayout.BeginVertical();

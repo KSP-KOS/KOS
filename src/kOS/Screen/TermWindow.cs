@@ -239,9 +239,6 @@ namespace kOS.Screen
 
                 terminalLetterSkin.label.font = font;
                 terminalLetterSkin.label.fontSize = fontSize;
-
-                // TODO - There will probably be other measurements that have to get recalculated
-                // here too.
             }
         }
 
@@ -818,8 +815,7 @@ namespace kOS.Screen
             keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
             screen.Brightness = GUI.VerticalSlider(brightnessRect, screen.Brightness, 1f, 0f);
             GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
-
-            // int charWidth = screen.CharacterPixelWidth;
+            
             int charHeight = screen.CharacterPixelHeight;
 
             CharacterInfo chInfo;

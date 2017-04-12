@@ -87,7 +87,7 @@ namespace kOS.Safe.Encapsulation
                 terminalInput = new TerminalInput(shared);
             return terminalInput;
         }
-        
+
         public override string ToString()
         {
             return string.Format("{0} Terminal", base.ToString());

@@ -237,9 +237,6 @@ namespace kOS.Screen
                 SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
             }
 
-            if (blizzyButton != null)
-                blizzyButton.Destroy();
-
             // force close the font picker window if it was still open:
             if (fontPicker != null)
             {
@@ -543,6 +540,7 @@ namespace kOS.Screen
                 else
                 {
                     fontPicker.Close();
+                    Destroy(fontPicker);
                     fontPicker = null;
                 }
             }
