@@ -556,7 +556,6 @@ namespace kOS.UserIO
                 ContinuousChecks();
 
                 sb.Remove(0,sb.Length); // clear the whole thing.
-                Console.WriteLine("outThread, before lock section");
                 lock(outQueueAccess) // all access to inQueue and outQueue needs to be atomic.
                 {
                     while (outQueue.Count > 0)
@@ -565,10 +564,8 @@ namespace kOS.UserIO
                         sb.Append(ch);
                     }
                 }
-                Console.WriteLine("outThread, after lock section");
                 if (sb.Length > 0)
                 {
-                    Console.WriteLine("outThread, saw some text.");
                     sleepTime = 0; // Saw at least one char, so reset the sleep-slowdown.
                     string content = sb.ToString(); // instead of calling ToString() over and over.
                     if (terminalMapper == null)
@@ -581,7 +578,6 @@ namespace kOS.UserIO
                 }
                 else
                 {
-                    Console.WriteLine("outThread, sleeping a bit.");
                     Thread.Sleep(sleepTime);
                     if (sleepTime < SLEEP_TIME_MAX)
                         sleepTime += SLEEP_TIME_INC;
