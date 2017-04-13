@@ -42,7 +42,7 @@ Structure
           - date this message was received at
         * - :attr:`SENDER`
           - :struct:`Vessel` or :struct:`Boolean`
-          - vessel which has sent this message, or Boolean false if sender vessel is now gone
+          - vessel which has sent this message, or Boolean false if sender vessel is now gone, or Boolean true if the sender is the KSC
         * - :attr:`HASSENDER`
           - :struct:`Boolean`
           - Tests whether or not the sender vessel still exists.
@@ -71,11 +71,16 @@ Structure
     :type: :struct:`Vessel` or :struct:`Boolean`
 
     Vessel which has sent this message, or a boolean false value if
-    the sender vessel no longer exists.
+    the sender vessel no longer exists, or a boolean true value if the
+    message was sent from KSC.
 
-    If the sender of the message doesn't exist anymore (see the explanation
-    for :attr:`HASSENDER`), this suffix will return a different type
-    altogether.  It will be a :struct:`Boolean` (which is false).
+    If the sender of the message is an existing vessel, this suffix will
+    return that vessel. In all other cases, this suffix will return a
+    :struct:`Boolean` with the value:
+    
+        * ``false`` if the sender of the message is a vessel that no
+          longer exists (see :attr:`HASSENDER` for explanation),
+        * ``true`` if the message was sent from KSC.
 
     You can check for this condition either by using the :attr:`HASSENDER`
     suffix, or by checking the ``:ISTYPE`` suffix of the sender to
@@ -89,11 +94,13 @@ Structure
     when it was processed by the receiving script, it's possibile that
     the vessel that sent the message might not exist anymore.  It could
     have either exploded, or been recovered, or been merged into another
-    vessel via docking.  You can check the value of the ``:HASSENDER``
-    suffix to find out if the sender of the message is still a valid vessel.
-    If :attr:`HASSENDER` is false, then :attr:`SENDER` won't give you an
-    object of type :struct:`Vessel` and instead will give you just a
-    :struct:`Boolean` false.
+    vessel via docking. Another possible case is that the message was not
+    sent from a vessel at all but from the KSC.
+    
+    You can check the value of the ``:HASSENDER`` suffix to find out if
+    the sender of the message is still a valid vessel. If :attr:`HASSENDER`
+    is false, then :attr:`SENDER` won't give you an object of type
+    :struct:`Vessel` and instead will give you just a :struct:`Boolean`.
 
 .. attribute:: Message:CONTENT
 

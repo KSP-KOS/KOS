@@ -173,7 +173,9 @@ Key Notes:
   5. Closes the uplink window.
 
 The message (its ``CONTENT``) will be a string. It is the job of the receiver to parse it into something useful (if needed).
-The message can be sent only if the active vessel has a home connection (see below).
+The message can be sent only if the active vessel's :global:`HOMECONNECTION` is connected. The message behaves in the same
+way as if it was sent from another vessel, except for :attr:`Message:SENDER` and :attr:`Message:HASSENDER` that indicate
+that the source is the KSC and not a vessel (see their reference for details).
 
 
 .. _connectivityManagers:
