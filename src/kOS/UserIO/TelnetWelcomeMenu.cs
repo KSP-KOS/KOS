@@ -29,7 +29,7 @@ namespace kOS.UserIO
         public bool IsAttached { get { return telnetServer != null; } }
 
         // Because this will be created as a Unity Gameobject, it has to have a parameterless constructor.
-        // Actual setup args will be in the Setup() method below.
+        // Actual setup args will be in the Attach() method below.
         public TelnetWelcomeMenu()
         {
             firstTime = true;
