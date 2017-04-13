@@ -19,6 +19,8 @@ and visa versa.)
 
 Here is an annotated image of the control panel and what it does:
 
+TODO - replace with new image
+
 .. figure:: /_images/general/controlPanelWindow.png
     :width: 80 %
 
