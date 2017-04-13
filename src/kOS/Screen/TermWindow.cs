@@ -89,7 +89,7 @@ namespace kOS.Screen
         private KOSTextEditPopup popupEditor;
 
         // data stored per telnet client attached:
-        private readonly List<TelnetSingletonServer> telnets; // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
+        private volatile List<TelnetSingletonServer> telnets; // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
         private readonly Dictionary<TelnetSingletonServer, IScreenSnapShot> prevTelnetScreens;
         
         private ExpectNextChar inputExpected = ExpectNextChar.NORMAL;
@@ -549,11 +549,20 @@ namespace kOS.Screen
         /// </summary>
         private void ProcessTelnetInput()
         {
-            foreach (var telnet in telnets)
+            // It's possible to close and remove telnets from the list during the processing
+            // of input (if the detach signal Ctrl-D is sent).  Therefore we have to
+            // make this temp copy to prorect against the C# error "Collection was Modified"
+            // during the foreach loop:
+            TelnetSingletonServer[] tempTelnetList = new TelnetSingletonServer[telnets.Count()];
+            telnets.CopyTo(tempTelnetList);
+            foreach (TelnetSingletonServer telnet in tempTelnetList)
             {
-                while (telnet.InputWaiting())
+                if (telnet.ConnectedProcessor != null)
                 {
-                    ProcessOneInputChar(telnet.ReadChar(), telnet);
+                    while (telnet.InputWaiting())
+                    {
+                        ProcessOneInputChar(telnet.ReadChar(), telnet);
+                    }
                 }
             }
         }
@@ -633,7 +642,7 @@ namespace kOS.Screen
                             if (whichTelnet == null)
                                 Close();
                             else
-                                whichTelnet.DisconnectFromProcessor();
+                                DetachTelnet(whichTelnet);
                         }
                         break;
                         

@@ -170,10 +170,9 @@ namespace kOS.UserIO
         
         public void SetConfigEnable(bool newVal)
         {
-            if (bindAddr == null) // when nothing has been set yet, this will be the case.
+            if (bindAddr == null) // when nothing has been set yet, get it from config.
             {
-                SafeHouse.Config.EnableTelnet = false; // Turn it right back off, never having allowed the server to turn on.
-                return;
+                bindAddr = IPAddress.Parse(SafeHouse.Config.TelnetIPAddrString);
             }
 
             bool isLoopback = Equals(bindAddr, IPAddress.Loopback);
@@ -232,7 +231,12 @@ namespace kOS.UserIO
 
             SafeHouse.Logger.Log(string.Format("{2} TelnetMainServer stopped listening on {0} {1}", bindAddr, port, KSPLogger.LOGGER_PREFIX));
             server.Stop();
-            foreach (TelnetSingletonServer telnet in telnets)
+
+            // Have to use a temp copy of the list to iterate over because telnet.StopListening()
+            // can remove a telnet from the telnets list (while we're trying to use foreach on it):
+            TelnetSingletonServer[] tempTelnets = new TelnetSingletonServer[telnets.Count];
+            telnets.CopyTo(tempTelnets);
+            foreach (TelnetSingletonServer telnet in tempTelnets)
                 telnet.StopListening();
 
             // If it was only on for the one go, then it needs to get turned off again so
@@ -276,8 +280,13 @@ namespace kOS.UserIO
                 // Doing the command:
                 //     SET CONFIG:TELNET TO FALSE.
                 // should kill any singleton telnet servers that may have been started in the past
-                // when it was true.  This does that:
-                foreach (TelnetSingletonServer singleServer in telnets)
+                // when it was true.  This does that:0
+
+                // Have to use a temp copy of the list to iterate over because we
+                // remove things from the telnets list (while we're trying to use foreach on it):
+                TelnetSingletonServer[] tempTelnets = new TelnetSingletonServer[telnets.Count];
+                telnets.CopyTo(tempTelnets);
+                foreach (TelnetSingletonServer singleServer in tempTelnets)
                 {
                     singleServer.StopListening();
                     telnets.Remove(singleServer);

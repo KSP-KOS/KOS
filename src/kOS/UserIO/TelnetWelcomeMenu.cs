@@ -25,7 +25,9 @@ namespace kOS.UserIO
         private readonly StringBuilder localMenuBuffer;
         private bool firstTime;
         private volatile bool forceMenuReprint;
-        
+
+        public bool IsAttached { get { return telnetServer != null; } }
+
         // Because this will be created as a Unity Gameobject, it has to have a parameterless constructor.
         // Actual setup args will be in the Setup() method below.
         public TelnetWelcomeMenu()
@@ -35,26 +37,25 @@ namespace kOS.UserIO
             availableCPUs = new List<kOSProcessor>();
         }
         
-        public void Setup(TelnetSingletonServer tServer)
+        public void Attach(TelnetSingletonServer tServer)
         {
             telnetServer = tServer;
             lastMenuQueryTime = DateTime.MinValue; // Force a stale timestamp the first time.
             telnetServer.Write( (char)UnicodeCommand.TITLEBEGIN + "kOS Terminal Server Welcome Menu" + (char)UnicodeCommand.TITLEEND );
             forceMenuReprint = true; // force it to print the menu once the first time regardless of the state of the CPU list.
+            firstTime = true;
         }
-        
-        public void Quit()
-        {
-            enabled = false;
-            telnetServer.StopListening();
-        }
-        
+
         public void Detach()
         {
-            enabled = false;
             telnetServer = null;
         }
-        
+
+        public void Quit()
+        {
+            telnetServer.StopListening();
+        }
+
         /// <summary>
         /// The telnet server should tell me when the client got resized by calling this.
         /// I will reprint my menu in that case, since it is calculated by terminal width.
@@ -68,7 +69,11 @@ namespace kOS.UserIO
         {
             if (telnetServer == null)
             {
-                enabled = false; // turn me off.  I'm done.  I should get garbage collected shortly.
+                // Do not disable the monobehaviour because the only place that knows
+                // when to turn it back on again is in threads of TelnetSingletonServer,
+                // and Unity hates it when you try to perform enabled=true from another thread.
+                // So instead we have to leave this thing running here so it notices when
+                // telnetServer gets attached again, and it can re-enable *itself*.
                 return;
             }
             
@@ -87,7 +92,8 @@ namespace kOS.UserIO
                     PrintCPUMenu();
             }
             
-            while (telnetServer.InputWaiting())
+            while (telnetServer != null && // telnetServer can become null in the midst of this loop if you detach/attach.
+                telnetServer.InputWaiting())
             {
                 char ch = telnetServer.ReadChar();
                 switch (ch)
