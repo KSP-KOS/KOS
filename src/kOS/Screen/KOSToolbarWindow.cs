@@ -136,10 +136,9 @@ namespace kOS.Screen
         {
             if (!ApplicationLauncher.Ready) return;
 
-            var useBlizzyOnly = false;
-
-            if (ToolbarManager.ToolbarAvailable)
-                useBlizzyOnly = SafeHouse.Config.UseBlizzyToolbarOnly;
+            var useBlizzyOnly = ToolbarManager.ToolbarAvailable &&
+                                kOSCustomParameters.Instance != null &&
+                                kOSCustomParameters.Instance.useBlizzyToolbarOnly;
 
             if (firstTime)
             {
@@ -239,9 +238,6 @@ namespace kOS.Screen
                 SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
             }
 
-            if (blizzyButton != null)
-                blizzyButton.Destroy();
-
             // force close the font picker window if it was still open:
             if (fontPicker != null)
             {
@@ -326,6 +322,21 @@ namespace kOS.Screen
 
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
+            if (launcherButton == null)
+            {
+                if (isTop)
+                {
+                    rectToFit = new Rect(0, 0, UnityEngine.Screen.width - assumeStagingListWidth, UnityEngine.Screen.height);
+                    windowRect = new Rect(UnityEngine.Screen.width, 0, 0, 0);
+                }
+                else
+                {
+                    rectToFit = new Rect(0, 0, UnityEngine.Screen.width - assumeStagingListWidth, UnityEngine.Screen.height - assumeStagingListWidth);
+                    windowRect = new Rect(UnityEngine.Screen.width, UnityEngine.Screen.height, 0, 0);
+                }
+                isOpen = true;
+                return;
+            }
             Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
 
             // There has *got* to be a method somewhere in Unity that does this transformation
@@ -468,13 +479,20 @@ namespace kOS.Screen
                 {
                     key.Value = DrawConfigIntField((int)(key.Value), whichInt++);
                 }
-                else if (key.Value is float)
+                else if (key.Value is float || key.Value is double) // if double, the UI will only handle it to float precisions, by the way.
                 {
                     CountBeginVertical();
+                    float floatValue = Convert.ToSingle(key.Value);
+                    float floatMin = Convert.ToSingle(key.MinValue);
+                    float floatMax = Convert.ToSingle(key.MaxValue);
                     //Mathf doesn't have a Round to hundreths place, so this is how I'm faking it:
-                    GUILayout.Label(new GUIContent((Mathf.Round((float)key.Value*100f)/100f).ToString()), panelSkin.label);
-                    key.Value = GUILayout.HorizontalSlider((float)key.Value, (float)key.MinValue, (float)key.MaxValue,
+                    GUILayout.Label(new GUIContent((Mathf.Round(floatValue*100f)/100f).ToString()), panelSkin.label);
+                    floatValue = GUILayout.HorizontalSlider(floatValue, floatMin, floatMax,
                         GUILayout.MinWidth(50), GUILayout.MaxHeight(4));
+                    if (key.Value is double)
+                        key.Value = (double)floatValue;
+                    else
+                        key.Value = floatValue;
                     CountEndVertical();
                 }
                 else
@@ -536,6 +554,7 @@ namespace kOS.Screen
                 else
                 {
                     fontPicker.Close();
+                    Destroy(fontPicker);
                     fontPicker = null;
                 }
             }

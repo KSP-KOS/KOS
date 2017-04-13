@@ -37,13 +37,14 @@ namespace kOS.Module
 
         protected bool fontsDone;
 
-        private static readonly string rootPath = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+        private static string rootPath;
 
         void Awake()
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);            
+            DontDestroyOnLoad(gameObject);
 
+            rootPath = KSPUtil.ApplicationRootPath.Replace("\\", "/");
             Fonts = new Dictionary<string, Font>();
             FontNames = new List<String>();
 
@@ -60,7 +61,7 @@ namespace kOS.Module
         public void EnsureFontsLoaded()
         {
             if (fontsDone)
-                return;            
+                return;
             UpdateSystemFontLists();
             fontsDone = true;
         }
@@ -151,9 +152,8 @@ namespace kOS.Module
                 // of graphics cards (it seems to be related to the texture size of the texture being sent to
                 // the graphics card).  At any rate, explicitly doing this instead of waiting for the
                 // cleanup that is epxected to "magically" happen later on its own seems to cure the problem:
-                Font.DestroyImmediate(potentialReturn);
+                DestroyImmediate(potentialReturn);
                 Fonts.Remove(key);
-
 
                 return null;
             }
@@ -246,11 +246,11 @@ namespace kOS.Module
         }
 
         /* ------- Comment out - this is the old way using an asset bundle.
-		 * ------- This is left here because it took time to work out how
-		 * ------- to do this and I don't want to lose my record of how it was
-		 * ------- done (this code isn't committed yet as I type this because it
-		 * ------- wasn't fully right yet, thus why I want to leave it here
-		 * ------- becuase it's not in the history yet.).
+         * ------- This is left here because it took time to work out how
+         * ------- to do this and I don't want to lose my record of how it was
+         * ------- done (this code isn't committed yet as I type this because it
+         * ------- wasn't fully right yet, thus why I want to leave it here
+         * ------- becuase it's not in the history yet.).
         private bool fontAssetNeedsLoading = true;
         public void LoadFontBundle()
         {
