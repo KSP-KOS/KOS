@@ -38,7 +38,7 @@ namespace kOS.Screen
             if (invoked)
             {
                 float guessWidth = GUI.skin.label.CalcSize( new GUIContent(message) ).x;
-                GUILayout.Window( parent.GetUniqueId()+1, new Rect( parent.GetRect().xMin+10,
+                GUILayout.Window( parent.GetUniqueId()+1, new Rect( parent.GetRect().xMin+200,
                                                  parent.GetRect().yMin+10,
                                                  guessWidth,
                                                  0) , DrawConfirm, "Confirm", GUILayout.ExpandWidth(true) );

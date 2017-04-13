@@ -240,6 +240,8 @@
     <Compile Include="Communication\MessageQueue.cs" />
     <Compile Include="Communication\KscTarget.cs" />
     <Compile Include="Screen\UplinkWindow.cs" />
+    <Compile Include="Module\AssetManager.cs" />
+    <Compile Include="Screen\ListPickerDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

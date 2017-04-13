@@ -136,7 +136,7 @@ namespace kOS.Function
                 double d2 = ((ScalarValue)argument2).GetDoubleValue();
                 ReturnValue = Math.Min(d1, d2);
             }
-            else if (scalarCompare.IsInstanceOfType(argument1) && scalarCompare.IsInstanceOfType(argument2))
+            else if (stringCompare.IsInstanceOfType(argument1) && stringCompare.IsInstanceOfType(argument2))
             {
                 string arg1 = argument1.ToString();
                 string arg2 = argument2.ToString();
@@ -166,7 +166,7 @@ namespace kOS.Function
                 double d2 = ((ScalarValue)argument2).GetDoubleValue();
                 ReturnValue = Math.Max(d1, d2);
             }
-            else if (scalarCompare.IsInstanceOfType(argument1) && scalarCompare.IsInstanceOfType(argument2))
+            else if (stringCompare.IsInstanceOfType(argument1) && stringCompare.IsInstanceOfType(argument2))
             {
                 string arg1 = argument1.ToString();
                 string arg2 = argument2.ToString();

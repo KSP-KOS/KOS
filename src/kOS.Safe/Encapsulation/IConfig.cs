@@ -18,6 +18,10 @@ namespace kOS.Safe.Encapsulation
         bool AudibleExceptions { get; set; }
         bool TelnetLoopback { get; set; }
         bool UseBlizzyToolbarOnly { get; set; }
+        int TerminalFontDefaultSize {get; set; }
+        string TerminalFontName {get; set; }
+        double TerminalBrightness {get; set; }
+
 
         /// <summary>
         /// Return the moment in time when the most recent change to any of the
