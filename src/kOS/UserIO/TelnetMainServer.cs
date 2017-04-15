@@ -171,11 +171,6 @@ namespace kOS.UserIO
         
         public void SetConfigEnable(bool newVal)
         {
-            if (bindAddr == null) // when nothing has been set yet, get it from config.
-            {
-                bindAddr = IPAddress.Parse(SafeHouse.Config.TelnetIPAddrString);
-            }
-
             if (newVal == isListening) // nothing changed about the settings on this pass through.
                 return;
 
@@ -208,6 +203,35 @@ namespace kOS.UserIO
             // calling StartListening when already started can cause problems, so quit if already started:
             if (isListening)
                 return;
+
+            // Check to see if the IP address is available (valid) on this computer
+            if (bindAddr == null)
+            {
+                // because bindAddr should be set during Update, if it's null the
+                // stored value was invalid and we shouldn't start the server.
+                // This should only be possible if the config file was manually
+                // edited to contain an invalid IP address, because invalid values
+                // cannot be set from the UI nor by directly setting it on CONFIG
+                Utilities.Utils.DisplayPopupAlert(
+                    "kOS Telnet",
+                    "Selected IP address (\"{0}\") is not valid.  Defaulting to local loopback (\"127.0.0.1\").  Please review the selection from the toolbar kOS control panel.",
+                    SafeHouse.Config.TelnetIPAddrString);
+                SafeHouse.Config.EnableTelnet = false;
+                SafeHouse.Config.TelnetIPAddrString = IPAddress.Loopback.ToString(); // note to @dunbaratu: do we want to default back to loopback, or just prevent starting
+                return;
+            }
+            if (!GetAllAddresses().Contains(bindAddrName))
+            {
+                // This IP address is no longer valid for this computer,
+                // alert the user and don't start the server.
+                Utilities.Utils.DisplayPopupAlert(
+                    "kOS Telnet",
+                    "Selected IP address (\"{0}\") is not currently available on this computer.  Please select a new address and re-enable the telnet server.",
+                    bindAddrName);
+                SafeHouse.Config.EnableTelnet = false;
+                SafeHouse.Config.TelnetIPAddrString = IPAddress.Loopback.ToString(); // note to @dunbaratu: do we want to default back to loopback, or just prevent starting
+                return;
+            }
             
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
