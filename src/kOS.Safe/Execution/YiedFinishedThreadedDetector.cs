@@ -37,14 +37,15 @@ namespace kOS.Safe.Execution
                 childThread.Join();
                 if (childException == null)
                 {
-                    ThreadFinsh();
+                    ThreadFinish();
                 }
                 else
                 {
-                    // If it died due to a compile error, then we won't really be able to switch to program context
-                    // as was implied by calling Cpu.SwitchToProgramContext() up above.  The CPU needs to be
-                    // told that it's still in interpreter context, or else it fails to advance the interpreter's
-                    // instruction pointer and it will just try the "call run()" instruction again:
+                    // If there was an error in the child thread, break execution and then
+                    // throw the exception.  Because we're still executing the same opcode
+                    // throwing will be caught and logged exactly the same as any other error
+                    // in normal code.  It's important to break execution to ensure the
+                    // instruction pointer skips the current opcode that throws the exception.
                     shared.Cpu.BreakExecution(false);
                     throw childException;
                 }
@@ -75,7 +76,14 @@ namespace kOS.Safe.Execution
         public abstract void ThreadInitialize(SafeSharedObjects shared);
 
         /// <summary>
+        /// <para>
+        /// This method is what actually executes in the background.  It should do the majority of the work.
+        /// Remember that the KSP and Unity APIs are not thread safe, so calls to either API should be avoided in this
+        /// method.
+        /// </para>
+        /// <para>
         /// WARNING: THIS METHOD EXECUTES ON A SEPARATE THREAD.  TAKE CARE TO ENSURE THAT IMPLEMENTATIONS ARE THREAD SAFE
+        /// </para>
         /// </summary>
         /// <param name="shared"></param>
         public abstract void ThreadExecute();
@@ -84,6 +92,6 @@ namespace kOS.Safe.Execution
         /// This method is executed after the child thread is finished, when the CPU checks IsFinished.  It is called from
         /// the main thread and is not required to be thread safe with respect to KSP.
         /// </summary>
-        public abstract void ThreadFinsh();
+        public abstract void ThreadFinish();
     }
 }

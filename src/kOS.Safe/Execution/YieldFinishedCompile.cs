@@ -49,7 +49,7 @@ namespace kOS.Safe.Execution
             codeParts = shared.ScriptHandler.Compile(path, startLineNum, content, contextId, options);
         }
 
-        public override void ThreadFinsh()
+        public override void ThreadFinish()
         {
             switch (compileMode)
             {
