@@ -27,6 +27,7 @@ namespace kOS.UserIO
     {
         private TcpListener server = null;
         private IPAddress bindAddr;
+        private string bindAddrName = ""; // used to compare new address values to old
         private Int32 port;
         private readonly List<TelnetSingletonServer> telnets;
         private bool isListening;
@@ -175,25 +176,22 @@ namespace kOS.UserIO
                 bindAddr = IPAddress.Parse(SafeHouse.Config.TelnetIPAddrString);
             }
 
-            bool isLoopback = Equals(bindAddr, IPAddress.Loopback);
-            bool ipAddrChanged = (! (bindAddr.ToString().Equals(SafeHouse.Config.TelnetIPAddrString)) );
+            if (newVal == isListening) // nothing changed about the settings on this pass through.
+                return;
 
-            if (ipAddrChanged)
-                StopListening(); // we'll be forcing a new restart of the telnet server on the new IP address.
-            else
-                if (newVal == isListening) // nothing changed about the settings on this pass through.
-                    return;
-            
             if (newVal)
             {
-                if (tempListenPermission &&
-                    ((tempRealIPPermission || IPAddress.IsLoopback(IPAddress.Parse(SafeHouse.Config.TelnetIPAddrString))))
-                   )
+                bool isLoopback = IPAddress.IsLoopback(bindAddr);
+                if (tempListenPermission && (tempRealIPPermission || isLoopback))
                     StartListening();
                 else
                 {
-                    SafeHouse.Config.EnableTelnet = false; // Turn it right back off, never having allowed the server to turn on.
-                    
+                    // Set the config value back to false without turning the server on.
+                    // This prevents us from continuing to check the value until
+                    // the dialog boxes finish their work.  If permission is accepted
+                    // the dialog box will set EnableTelnet to true again
+                    SafeHouse.Config.EnableTelnet = false;
+
                     // Depending on which reason it was for the denial, activate the proper dialog window:
                     if (!tempListenPermission)
                         activeOptInDialog = true;
@@ -213,8 +211,8 @@ namespace kOS.UserIO
             
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
-            port = SafeHouse.Config.TelnetPort;
-            SetBindAddrFromString(SafeHouse.Config.TelnetIPAddrString);
+            // refresh the port information, don't need to refresh address because it's refreshed every Update
+            port = SafeHouse.Config.TelnetPort; 
 
             server = new TcpListener(bindAddr, port);
             server.Start();
@@ -271,6 +269,7 @@ namespace kOS.UserIO
         
         public void Update()
         {
+            SetBindAddrFromString(SafeHouse.Config.TelnetIPAddrString); // referesh the server address
             SetConfigEnable(SafeHouse.Config.EnableTelnet);
             
             int howManySpawned = 0;
@@ -320,17 +319,22 @@ namespace kOS.UserIO
         /// <returns>false if the address is not formatted well</returns>
         public bool SetBindAddrFromString(string s)
         {
-            IPAddress newAddr;
-            try
+            if (bindAddrName != s)
             {
-                newAddr = IPAddress.Parse(s);
-            }
-            catch (FormatException) // If we only pass in strings that came from querying the PC for its addresses, this shouldn't happen.
-            {
+                IPAddress newAddr;
+                if (IPAddress.TryParse(s, out newAddr)) // try to parse the address
+                {
+                    // the address is valid, so use it and return true to indicate it changed
+                    bindAddr = newAddr;
+                    bindAddrName = bindAddr.ToString();
+                    if (isListening)
+                        StopListening();
+                    return true;
+                }
+                // The string was not a valid IP address, return false to indicate the value has not changed
                 return false;
             }
-            bindAddr = newAddr;
-            return true;
+            return false; // return false to indicate the value has not changed
         }
 
         void OnGUI()
