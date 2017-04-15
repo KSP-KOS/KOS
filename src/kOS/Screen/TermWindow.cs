@@ -1031,6 +1031,7 @@ namespace kOS.Screen
         {
             server.DisconnectFromProcessor();
             telnets.Remove(server);
+            prevTelnetScreens.Remove(server);
         }
         
         public void DetachAllTelnets()

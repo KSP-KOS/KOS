@@ -185,7 +185,7 @@ namespace kOS.UserIO
             if (welcomeMenu != null)
             {
                 welcomeMenu.Detach();
-                GameObject.Destroy(welcomeMenu);
+                Object.Destroy(welcomeMenu);
                 welcomeMenu = null;
             }
         }
@@ -383,6 +383,14 @@ namespace kOS.UserIO
             outThread = null; // dispose old thread.
             
             rawStream.Close();
+
+            // Get rid of the welcome menu too, which has a reference to this server and should prevent GC
+            if (welcomeMenu != null)
+            {
+                welcomeMenu.Detach();
+                Object.Destroy(welcomeMenu);
+                welcomeMenu = null;
+            }
         }
 
         public void StartListening()
