@@ -26,6 +26,14 @@ script:
 - nunit-console -framework=4.0 src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
 # - chmod +x .ci/travis/script-sphinxdocs.sh && ./.ci/travis/script-sphinxdocs.sh
 
+install:
+- nuget restore src/kOS.sln
+- nuget install NUnit.Runners -Version 3.0.1 -OutputDirectory testrunner
+
+script:
+- xbuild /p:Configuration=Release src/kOS.sln
+- mono ./testrunner/NUnit.Runners.3.0.1/tools/nunit-console.exe src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
+
 # Cleanup the downloaded resources
 after_script:
 - chmod +x .ci/travis/after_script.sh && ./.ci/travis/after_script.sh
