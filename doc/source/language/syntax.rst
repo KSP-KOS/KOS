@@ -104,6 +104,34 @@ Suffixes can be chained together, as in this example::
 
 In the above example you'd say "``velocity`` is a suffix of ``ship``", and "``orbit`` is a suffix of ``ship:velocity``", and "``x`` is a suffix of ``ship:velocity:orbit``".
 
+Numbers (scalars)
+-----------------
+
+Numbers in kerboscript are referred to as "scalars", to distinguish
+them from the many cases where a values will be represnted
+as a vectors.  You are allowed to use integers, decimal fractional numbers
+(numbers with a decimal point and a fractional part), and scientific
+notation numbers.
+
+The following are valid scalar syntax::
+
+   12345678
+   12_345_678 (The underscores are ignored as just visual spacers)
+   12345.6789
+   12_345.6789
+   -12345678
+   1.123e12
+   1.234e-12
+
+Kerobscript does not support imaginary numbers or irrational numbers
+or rational numbers that cannot be represented as a finite decimal
+(i.e.  sqrt(-1) returns a Not-a-Number error.  Pi will have to be
+an approximation.  "One third", ends up being something like 0.333333333).)
+
+Under the hood, these numbers are stored as either 32-bit integers or as
+64-bit double floats, depending on the need, but kerboscript attempts
+to hide this detail from the programmer as much as possible.
+
 Braces (statement blocks)
 -------------------------
 

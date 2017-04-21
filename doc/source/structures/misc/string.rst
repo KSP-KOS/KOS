@@ -410,6 +410,11 @@ Structure
     a decimal point with fractional part, and scientific notation
     using "e" as in "1.23e3" for "1230" or "1.23e-3" for "0.00123".
 
+    You may also include optional underscores in the string to
+    help space groups of digits, and they will be ignored.
+    (For example you may write "one thousand" as "1_000" instead
+    of as "1000" if you like".)
+
     Example - using with math::
 
         set str to "16.8".
