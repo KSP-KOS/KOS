@@ -324,19 +324,19 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ALL, regex);
             Tokens.Add(TokenType.ALL);
 
-            regex = new Regex(@"[a-z_][a-z0-9_]*");
+            regex = new Regex(@"[_\p{L}]\w*");
             Patterns.Add(TokenType.IDENTIFIER, regex);
             Tokens.Add(TokenType.IDENTIFIER);
 
-            regex = new Regex(@"[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*");
+            regex = new Regex(@"[_\p{L}]\w*(\.[_\p{L}]\w*)*");
             Patterns.Add(TokenType.FILEIDENT, regex);
             Tokens.Add(TokenType.FILEIDENT);
 
-            regex = new Regex(@"[0-9]+");
+            regex = new Regex(@"\d[_\d]*");
             Patterns.Add(TokenType.INTEGER, regex);
             Tokens.Add(TokenType.INTEGER);
 
-            regex = new Regex(@"[0-9]*\.[0-9]+");
+            regex = new Regex(@"(\d[_\d]*)*\.\d[_\d]*");
             Patterns.Add(TokenType.DOUBLE, regex);
             Tokens.Add(TokenType.DOUBLE);
 
