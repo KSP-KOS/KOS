@@ -58,3 +58,14 @@ print "Same identifier? " + ÆØÅ + " = " + æøå.
 // No idea if "uppercase" even means anything here in this context:
 set シ佅ヂ乶 to "I have no clue about Kanji".
 print シ佅ヂ乶.
+
+print " ".
+
+// Also test case-insensitivity in strings themselves:
+print "Does ÆØÅ = æøå? " +
+      ( "ÆØÅ" = "æøå" ).
+set myLex to Lexicon().
+set myLex["GARÇON"] to "value that should get clobbered on next line".
+set myLex["garçon"] to "newer value".
+print "Does myLex[GARÇON] = myLex[garçon]? " +
+    ( myLex["GARÇON"] = myLex["garçon"] ).

@@ -52,9 +52,24 @@ operator symbols:
 .. highlight:: none
 
 **Identifiers**: Identifiers consist of: a string of (letter, digit, or
-underscore). The first character must be a letter. The rest may be letters, digits or underscores. **Identifiers are case-insensitive**. The following are identical identifiers::
+underscore). The first character must be a letter or an underscore.
+The rest may be letters, digits or underscores.
+**Identifiers are case-insensitive**. The following are identical identifiers::
 
     My_Variable  my_varible  MY_VARAIBLE
+
+.. note::
+  .. versionadded:: 1.1.0
+    Kerboscript accepts Unicode source code, encoded using the UTF-8
+    encoding method.  Because of this, the definition of a "letter"
+    character for an identifier includes letters from many languages'
+    alphabets, including accented Latin alphabet characters, Cyrllic
+    characters, etc.  Not all languages have been tested but in
+    principle they should work as long as they have a Unicode standard
+    accepted definition of what counts as a "letter".  We defer to
+    the .NET libraries' definition of what constitutes the "same" letter
+    in uppercase and lowercase forms, and we hope this is right for
+    most alphabets.
 
 .. highlight:: kerboscript
 
@@ -66,6 +81,16 @@ underscore). The first character must be a letter. The rest may be letters, digi
         } else {
             print "unequal".
         }
+
+.. note::
+  .. versionadded:: 1.1.0
+    Again, depending on the alphabet being used, the concept of
+    "uppercase" and "lowercase" might not make sense in some
+    languages.  kOS defers to .NET's interpretation of what
+    letters in Unicode are paired together as the "upper" and
+    "lower" versions of the same letter.  For obvious reasons,
+    the kOS developers cannot test every language and verify if
+    this is correct or not.
 
 **Suffixes**
     Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (``:``). When this symbol is used, the part on the right-hand side of the colon is called the "suffix"::
