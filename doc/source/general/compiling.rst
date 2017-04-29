@@ -18,7 +18,41 @@ When you try to run your script, the first thing that kOS does is transform your
 
 This process of transforming your script into Machine Language, or "ML" is called "Compiling".
 
-The ":ref:`RUN`" and ":ref:`RUNPATH`" commands do this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.
+The :key:`RUN` and :func:`RUNPATH` commands do this silently, without telling
+you.  The :key:`COMPILE` command explicitly compiles the file and saves it for
+future use.
+
+.. _threaded_compile:
+
+.. note::
+    Compiling scripts takes time, and while the compiler is working it pauses
+    execution much like the :ref:`wait command<wait_mainline_trigger>`.  As such
+    compiling from mainline code will pause mainline code but allow triggers to
+    continue to execute. Compiling from within a trigger will pause both the
+    mainline code and all trigger code. Also be aware that the universe will
+    continue to move during the compilation, so you should not assume that any
+    values for mass, position, velocity, or similar physical properties will
+    remain constant through compilation.
+
+    .. versionchanged:: 1.1.0
+        The universe continues to update during compilation.  Previous versions
+        would freeze the universe while scripts were compiled, effectively
+        making them instantaneous in the universe.
+
+The Compile Keyword
+~~~~~~~~~~~~~~~~~~~
+
+.. keyword:: COMPILE sourcePath [TO destinationPath]
+
+    :parameter sourcePath: Path information pointing to the source script file
+    :parametertype sourcePath: :struct:`String` or bare word string
+    :parameter destinationPath: Path information pointing to the destination
+        compiled machine language file
+    :parametertype destinationPath: *Optional* :struct:`String` or bare word string
+
+    This command will compile the source script file, transforming it from raw
+    text into machine language opcodes.  These opcodes are then encoded,
+    compressed, and saved in the destination file.
 
 Why Do I Care?
 ~~~~~~~~~~~~~~
@@ -31,11 +65,11 @@ The reason it matters is this: Although once it's loaded into memory and running
 
 So, given that the compiled "ML" codes are the only thing your program really needs to be run, why not just store THAT instead of storing the entire script, and then you can put the ML files on your remote probes instead of putting the larger script files on them.
 
-And THAT is the purpose of the COMPILE command.
+And THAT is the purpose of the :key:`COMPILE` command.
 
 It does some, but not all, of the compiling work that the RUN (or RUNPATH) command does, and then stores the results in a file that you can run instead of running the original script.
 
-The output of the COMPILE command is a file in what we call KSM format.
+The output of the :key:`COMPILE` command is a file in what we call KSM format.
 
 KSM stands for "KerboScript Machine code", and it has nearly the same information the program will have when it's loaded and running, minus a few extra steps about relocating it in memory.
 
@@ -91,7 +125,7 @@ But if you just leave the file extension off, and do this::
     // or this alternate way to say it:
     RUN myprog1.
 
-Then the RUN command will first try to run a file called "myprog1.ksm" and if it cannot find such a file, then it will try to run one called "myprog1.ks".
+Then the :key:`RUN` command will first try to run a file called "myprog1.ksm" and if it cannot find such a file, then it will try to run one called "myprog1.ks".
 
 In this way, if you decide to take the plunge and attempt the use of KSM files, you shouldn't have to change the way any of your scripts call each other, provided you just used versions of the filenames without mentioning the file extensions.
 

@@ -48,6 +48,7 @@ namespace kOS.Safe.Execution
         int InstructionsThisUpdate { get; }
         void StartCompileStopwatch();
         void StopCompileStopwatch();
+        IProgramContext SwitchToProgramContext();
 
         /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.
