@@ -388,6 +388,8 @@ Halts execution for a specified amount of time, or until a specific set of crite
 
 Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <physics tick>`.
 
+.. _wait_mainline_trigger:
+
 Difference between wait in mainline code and trigger code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

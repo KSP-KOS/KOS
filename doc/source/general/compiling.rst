@@ -22,14 +22,22 @@ The :key:`RUN` and :func:`RUNPATH` commands do this silently, without telling
 you.  The :key:`COMPILE` command explicitly compiles the file and saves it for
 future use.
 
+.. _threaded_compile:
+
 .. note::
+    Compiling scripts takes time, and while the compiler is working it pauses
+    execution much like the :ref:`wait command<wait_mainline_trigger>`.  As such
+    compiling from mainline code will pause mainline code but allow triggers to
+    continue to execute. Compiling from within a trigger will pause both the
+    mainline code and all trigger code. Also be aware that the universe will
+    continue to move during the compilation, so you should not assume that any
+    values for mass, position, velocity, or similar physical properties will
+    remain constant through compilation.
+
     .. versionchanged:: 1.1.0
-        kOS now performs compilation on a parallel thread (thought to run in a
-        parallel universe).  This means that the universe no longer needs to
-        freeze in order to perform the compilation.  As with the execution of
-        other triggers, compiling from mainline code will not interupt or pause
-        triggers but compiling within a trigger will result in both the mainline
-        and trigger code pausing until the compilation is complete.
+        The universe continues to update during compilation.  Previous versions
+        would freeze the universe while scripts were compiled, effectively
+        making them instantaneous in the universe.
 
 The Compile Keyword
 ~~~~~~~~~~~~~~~~~~~

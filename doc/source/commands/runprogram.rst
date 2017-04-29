@@ -33,11 +33,11 @@ one of the :ref:`runfunctions` or the :ref:`run`.  Supported file types are:
 .. note::
     If you attempt to run the same program twice from within another script,
     the previously compiled version will be executed without attempting to
-    recompile even if the original source script has been modified.  When a
-    program has finished executing and returns to the main terminal input, the
-    memory containing the programs is released.  This means that every time
-    that a script file is run from the terminal it is recompiled, even if the script
-    file has not changed.
+    recompile even if the original source script has been modified.  However
+    once the program has finished executing and returns to the main terminal
+    input, the memory containing the programs is released.  This means that
+    every time that a script file is run from the terminal it is recompiled,
+    even if the script file has not changed.
 
 .. _runfunctions:
 
