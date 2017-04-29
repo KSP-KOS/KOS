@@ -94,7 +94,7 @@ namespace kOS.Function
             string oldName = oldArg.ToString();
             AssertArgBottomAndConsume(shared);
 
-            Volume volume = oldName is Volume ? oldArg as Volume : shared.VolumeMgr.GetVolume(oldArg.ToString());
+            Volume volume = oldArg is Volume ? oldArg as Volume : shared.VolumeMgr.GetVolume(oldName);
 
             shared.Logger.LogWarningAndScreen(
                 string.Format( "WARNING: RENAME VOLUME {0} TO {1} is deprecated as of kOS v1.0.0.  Use SET VOLUME({2}):NAME TO \"{3}\" instead.",

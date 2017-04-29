@@ -12,6 +12,7 @@ If you prefer the tutorial style of explanation, please see the following exampl
     Design Patterns <tutorials/designpatterns>
     PID Loops <tutorials/pidloops>
     Execute Node script <tutorials/exenode>
+    Making a tabbed GUI <tutorials/gui>
 
 Introductory
 ------------
@@ -30,3 +31,6 @@ Intermediate
 
 :doc:`Execute Node script <tutorials/exenode>`
     ZiwKerman describes a generic "execute manuever node" script to be a one-size-fits-all solution to many situations in KSP.  If you can make a manuever node for something, exenode will execute it.
+
+:doc:`Creating Reusable GUI Elements <tutorials/gui>`
+    Creating and using a "TabWidget" to put a lot of functionality in a small amount of screenspace.

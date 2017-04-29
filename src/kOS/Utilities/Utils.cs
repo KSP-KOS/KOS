@@ -109,50 +109,6 @@ namespace kOS.Utilities
             return outAngle;
         }
 
-        public static GUISkin GetSkinCopy(GUISkin toCopy)
-        {
-            // If we just did something like this:
-            //     theSkin = HighLogic.Skin;
-            //     theSkin.label.fontSize=10;
-            // Then theSkin would have just been a reference to the same skin
-            // everybody else uses in KSP and therefore it would have altered
-            // the look of all the KSP windows from stock and all the other mods.
-            // (Yes, this is what happened the first time I tried this).
-            //
-            // Therefore we want to make theSkin a deep copy of HighLogic.Skin, then
-            // alter it after making the copy, but GUISkin has no copy constructor.
-            // The individual GUIStyle's inside it do, however, and that is what
-            // causes this next block of code.  It's starting off theSkin as a deep
-            // copy of HighLogic.Skin, at least as much as it can:
-            //
-            var skin = ScriptableObject.CreateInstance<GUISkin>();
-
-            // This is literally every GUISTyle mentioned in Unity's documention for
-            // GUISkin, as of 11/11/2014.  If Unity updates these, we could be screwed:
-            //
-            skin.box = new GUIStyle(toCopy.box);
-            skin.button = new GUIStyle(toCopy.button);
-            skin.horizontalScrollbar = new GUIStyle(toCopy.horizontalScrollbar);
-            skin.horizontalScrollbarLeftButton = new GUIStyle(toCopy.horizontalScrollbarLeftButton);
-            skin.horizontalScrollbarRightButton = new GUIStyle(toCopy.horizontalScrollbarRightButton);
-            skin.horizontalScrollbarThumb = new GUIStyle(toCopy.horizontalScrollbarThumb);
-            skin.horizontalSlider = new GUIStyle(toCopy.horizontalSlider);
-            skin.horizontalSliderThumb = new GUIStyle(toCopy.horizontalSliderThumb);
-            skin.label = new GUIStyle(toCopy.label);
-            skin.scrollView = new GUIStyle(toCopy.scrollView);
-            skin.textArea = new GUIStyle(toCopy.textArea);
-            skin.textField = new GUIStyle(toCopy.textField);
-            skin.toggle = new GUIStyle(toCopy.toggle);
-            skin.verticalScrollbar = new GUIStyle(toCopy.verticalScrollbar);
-            skin.verticalScrollbarDownButton = new GUIStyle(toCopy.verticalScrollbarDownButton);
-            skin.verticalScrollbarThumb = new GUIStyle(toCopy.verticalScrollbarThumb);
-            skin.verticalScrollbarUpButton = new GUIStyle(toCopy.verticalScrollbarUpButton);
-            skin.verticalSlider = new GUIStyle(toCopy.verticalSlider);
-            skin.verticalSliderThumb = new GUIStyle(toCopy.verticalSliderThumb);
-            skin.window = new GUIStyle(toCopy.window);
-            return skin;
-        }
-
         /// <summary>
         ///   Returns true if body a orbits body b, either directly or through
         ///   a grandparent chain.
@@ -326,6 +282,26 @@ namespace kOS.Utilities
             }
             foundId = 0;
             return false;
+        }
+
+        /// <summary>
+        /// Displays a popup dialog box with the given title, message, and single "OK" button.
+        /// Use to provide simple information to the user that requires no direct input.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        public static void DisplayPopupAlert(string title, string message, params string[] formatArgs)
+        {
+            PopupDialog.SpawnPopupDialog(
+                new MultiOptionDialog(
+                    string.Format(message, formatArgs),
+                    title,
+                    HighLogic.UISkin,
+                    new DialogGUIButton("OK", null, true)
+                    ),
+                true,
+                HighLogic.UISkin
+                );
         }
     }
 }

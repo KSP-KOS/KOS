@@ -12,21 +12,39 @@ namespace kOS
         public ProcessorManager ProcessorMgr { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
+        public List<KOSManagedWindow> ManagedWindows { get; private set; }
         public TransferManager TransferManager { get; set; }
         public AddOns.AddonManager AddonManager { get; set; }
         public Dictionary<int, VoiceValue> AllVoiceValues { get; private set; }
 
         public SharedObjects()
         {
+            ManagedWindows = new List<KOSManagedWindow>();
             AllVoiceValues = new Dictionary<int, VoiceValue>();
-            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
         }
 
-        private void OnVesselDestroy(Vessel data)
+        public void AddWindow(KOSManagedWindow w)
         {
-            if (data.id == Vessel.id)
+            ManagedWindows.Add(w);
+        }
+
+        public void RemoveWindow(KOSManagedWindow w)
+        {
+            ManagedWindows.Remove(w);
+        }
+
+        public void DestroyObjects()
+        {
+            if (BindingMgr != null) { BindingMgr.Dispose(); }
+            if (Window != null) { UnityEngine.Object.Destroy(Window); }
+            if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
+            var props = typeof(SharedObjects).GetProperties();
+            foreach (var prop in props)
             {
-                BindingMgr.Dispose();
+                if (!prop.PropertyType.IsValueType)
+                {
+                    prop.SetValue(this, null, null);
+                }
             }
         }
     }

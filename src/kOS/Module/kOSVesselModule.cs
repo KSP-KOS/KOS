@@ -146,27 +146,27 @@ namespace kOS.Module
             }
         }
 
-        /// <summary>
-        /// Update is called once per UI tick.
-        /// </summary>
-        public void Update()
-        {
-        }
+        // ///<summary>
+        // ///Update is called once per UI tick.
+        // ///</summary>
+        // public void Update()
+        // {
+        // }
 
-        /// <summary>
-        /// LastUpdate is called at the end of the update frame.  Useful if something needs to be
-        /// done after the physics and UI updates have been completed, but before scene or gui rendering.
-        /// </summary>
-        public void LastUpdate()
-        {
-        }
+        // ///<summary>
+        // ///LastUpdate is called at the end of the update frame.  Useful if something needs to be
+        // ///done after the physics and UI updates have been completed, but before scene or gui rendering.
+        // ///</summary>
+        // public void LastUpdate()
+        // {
+        // }
 
-        /// <summary>
-        /// OnGUI is where any vessel specific interface rendering should be done.
-        /// </summary>
-        public void OnGUI()
-        {
-        }
+        // ///<summary>
+        // ///OnGUI is where any vessel specific interface rendering should be done.
+        // ///</summary>
+        // public void OnGUI()
+        // {
+        // }
         #endregion
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace kOS.Module
             // "Require Signal for Control" is enabled.  It's very hacky, and my have unexpected results.
             if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
             {
-                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
             }
         }
@@ -257,7 +257,7 @@ namespace kOS.Module
 
             if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
             {
-                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, cacheControllable);
+                TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
             }
         }
@@ -280,17 +280,20 @@ namespace kOS.Module
             }
         }
 
-        private void cacheControllable()
+        private void CacheControllable()
         {
-            if (commNetParams == null)
+            if (commNetParams == null && HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null)
                 commNetParams = HighLogic.CurrentGame.Parameters.CustomParams<CommNet.CommNetParams>();
             if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
             {
                 // HACK: Get around inability to affect throttle if connection is lost and require
                 if (isControllableField == null)
                     isControllableField = parentVessel.GetType().GetField("isControllable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                isControllableField.SetValue(parentVessel, true);
-                workAroundControllable = true;
+                if (isControllableField != null) // given the above line, this shouldn't be null unless the KSP version changed.
+                {
+                    isControllableField.SetValue(parentVessel, true);
+                    workAroundControllable = true;
+                }
             }
             else
             {

@@ -47,7 +47,7 @@ namespace kOS.Screen
         // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200, 350);
 
-        private static Rect windowRect; // does anybody know why this is ststic?
+        private static Rect windowRect; // does anybody know why this is static?
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private static GUISkin panelSkin;
         private static GUIStyle headingLabelStyle;
@@ -76,6 +76,8 @@ namespace kOS.Screen
         private bool alreadyAwake;
         private bool firstTime = true;
         private bool isOpen;
+        private kOS.Screen.ListPickerDialog fontPicker;
+        private kOS.Screen.ListPickerDialog ipAddrPicker;
 
         private DateTime prevConfigTimeStamp = DateTime.MinValue;
 
@@ -107,10 +109,12 @@ namespace kOS.Screen
             // GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
 
             GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
-            GameEvents.onGUIApplicationLauncherReady.Add(RemoveButton);
+            GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
             GameObject.DontDestroyOnLoad(this);
+
+            fontPicker = null;
         }
 
         // TODO - Remove this next method after verifying KSP 1.1 works without it:
@@ -132,10 +136,9 @@ namespace kOS.Screen
         {
             if (!ApplicationLauncher.Ready) return;
 
-            var useBlizzyOnly = false;
-
-            if (ToolbarManager.ToolbarAvailable)
-                useBlizzyOnly = SafeHouse.Config.UseBlizzyToolbarOnly;
+            var useBlizzyOnly = ToolbarManager.ToolbarAvailable &&
+                                kOSCustomParameters.Instance != null &&
+                                kOSCustomParameters.Instance.useBlizzyToolbarOnly;
 
             if (firstTime)
             {
@@ -166,6 +169,11 @@ namespace kOS.Screen
 
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
+        }
+        
+        public void RemoveButton(GameScenes scene)
+        {
+            RemoveButton();
         }
 
         public void RemoveButton()
@@ -230,8 +238,13 @@ namespace kOS.Screen
                 SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
             }
 
-            if (blizzyButton != null)
-                blizzyButton.Destroy();
+            // force close the font picker window if it was still open:
+            if (fontPicker != null)
+            {
+                fontPicker.Close();
+                Destroy(fontPicker);
+                fontPicker = null;
+            }
         }
 
         public void OnDestroy()
@@ -309,6 +322,21 @@ namespace kOS.Screen
 
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
+            if (launcherButton == null)
+            {
+                if (isTop)
+                {
+                    rectToFit = new Rect(0, 0, UnityEngine.Screen.width - assumeStagingListWidth, UnityEngine.Screen.height);
+                    windowRect = new Rect(UnityEngine.Screen.width, 0, 0, 0);
+                }
+                else
+                {
+                    rectToFit = new Rect(0, 0, UnityEngine.Screen.width - assumeStagingListWidth, UnityEngine.Screen.height - assumeStagingListWidth);
+                    windowRect = new Rect(UnityEngine.Screen.width, UnityEngine.Screen.height, 0, 0);
+                }
+                isOpen = true;
+                return;
+            }
             Vector3 launcherScreenCenteredPos = launcherButton.GetAnchorUL();
 
             // There has *got* to be a method somewhere in Unity that does this transformation
@@ -402,7 +430,7 @@ namespace kOS.Screen
 
             DrawActiveCPUsOnPanel();
 
-            CountBeginVertical();
+            CountBeginVertical("", 150);
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("To access other settings, see the kOS section in KSP's difficulty settings.", tooltipLabelStyle);
             GUILayout.Label("Global VALUES", headingLabelStyle);
@@ -414,18 +442,58 @@ namespace kOS.Screen
 
             foreach (ConfigKey key in SafeHouse.Config.GetConfigKeys())
             {
-                CountBeginHorizontal();
+                bool isFontField = false;
+                if (key.StringKey.Equals("TerminalFontName"))
+                    isFontField = true;
+                bool isIPAddrField = false;
+                if (key.StringKey.Equals("TelnetIPAddrString"))
+                    isIPAddrField = true;
+
+                if (isFontField)
+                {
+                    CountBeginVertical();
+                    GUILayout.Label("_____", panelSkin.label);
+                }
+                else
+                    CountBeginHorizontal();
 
                 string labelText = key.Alias;
                 string toolTipText = key.Name;
 
-                if (key.Value is bool)
+                if (isFontField)
                 {
-                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
+                    toolTipText += " is: " + key.Value;
+                    labelText = "     ^ " + labelText;
+                    DrawFontField(key);
+                }
+                else if (isIPAddrField)
+                {
+                    toolTipText += " is: " + key.Value;
+                    DrawIPAddrField(key);
+                }
+                else if (key.Value is bool)
+                {
+                    key.Value = GUILayout.Toggle((bool)key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
                 }
                 else if (key.Value is int)
                 {
                     key.Value = DrawConfigIntField((int)(key.Value), whichInt++);
+                }
+                else if (key.Value is float || key.Value is double) // if double, the UI will only handle it to float precisions, by the way.
+                {
+                    CountBeginVertical();
+                    float floatValue = Convert.ToSingle(key.Value);
+                    float floatMin = Convert.ToSingle(key.MinValue);
+                    float floatMax = Convert.ToSingle(key.MaxValue);
+                    //Mathf doesn't have a Round to hundreths place, so this is how I'm faking it:
+                    GUILayout.Label(new GUIContent((Mathf.Round(floatValue*100f)/100f).ToString()), panelSkin.label);
+                    floatValue = GUILayout.HorizontalSlider(floatValue, floatMin, floatMax,
+                        GUILayout.MinWidth(50), GUILayout.MaxHeight(4));
+                    if (key.Value is double)
+                        key.Value = (double)floatValue;
+                    else
+                        key.Value = floatValue;
+                    CountEndVertical();
                 }
                 else
                 {
@@ -435,7 +503,10 @@ namespace kOS.Screen
                 GUILayout.Label(new GUIContent(labelText, toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();
 
-                CountEndHorizontal();
+                if (isFontField || isIPAddrField)
+                    CountEndVertical();
+                else
+                    CountEndHorizontal();
             }
             CountEndVertical();
 
@@ -453,6 +524,74 @@ namespace kOS.Screen
             // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
             // provide an unfocus method.
         }
+
+        private void DrawFontField(ConfigKey key)
+        {
+            bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
+            if (clicked)
+            {
+                // Make a new picker if it's closed, or close it if it's already open.
+                if (fontPicker == null)
+                {
+                    fontPicker = this.gameObject.AddComponent<ListPickerDialog>();
+                    kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
+                        {
+                            // If the font is monospaced, we'll accept it, else we'll deny the attempt
+                            // and not commit the change to the config fields:
+                            bool ok = AssetManager.Instance.GetSystemFontByNameAndSize(s, 13, true) != null;
+                            if (ok)
+                                key.Value = s;
+                            return ok;
+                        };
+
+                    kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { fontPicker = null; };
+
+                    fontPicker.Summon(windowRect.x, windowRect.y + windowRect.height, 300,
+                        key.Name, "(Only fonts detected as monospaced are shown.)",
+                        key.Value.ToString(), AssetManager.Instance.GetSystemFontNames(), onChange, onClose
+                        );
+                }
+                else
+                {
+                    fontPicker.Close();
+                    Destroy(fontPicker);
+                    fontPicker = null;
+                }
+            }
+        }
+
+        private void DrawIPAddrField(ConfigKey key)
+        {
+            bool clicked = GUILayout.Button(key.Value.ToString(), panelSkin.button);
+            if (clicked)
+            {
+                // Make a new picker if it's closed, or close it if it's already open.
+                if (ipAddrPicker == null)
+                {
+                    ipAddrPicker = this.gameObject.AddComponent<ListPickerDialog>();
+                    kOS.Screen.ListPickerDialog.ChangeAction onChange = delegate(String s)
+                    {
+                        bool ok = TelnetMainServer.Instance.SetBindAddrFromString(s);
+                        if (ok)
+                            key.Value = s;
+                        return ok;
+                    };
+
+                    kOS.Screen.ListPickerDialog.CloseAction onClose = delegate() { ipAddrPicker = null; };
+
+                    ipAddrPicker.Summon(windowRect.x, windowRect.y + windowRect.height, 300,
+                        "Telnet address (restart telnet to take effect)\n", null, 
+                        "current: " + key.Value.ToString(), TelnetMainServer.GetAllAddresses(), onChange, onClose
+                    );
+                }
+                else
+                {
+                    ipAddrPicker.Close();
+                    ipAddrPicker = null;
+                }
+            }
+        }
+
 
         private int DrawConfigIntField(int keyVal, int whichInt)
         {
@@ -500,11 +639,12 @@ namespace kOS.Screen
             if (!isOn)
                 return "Telnet server disabled.";
 
-            string addr = TelnetMainServer.Instance.BindAddr.ToString();
+            string addr = TelnetMainServer.Instance.GetRunningAddress().ToString();
+            int port = TelnetMainServer.Instance.GetRunningPort();
             int numClients = TelnetMainServer.Instance.ClientCount;
 
-            return String.Format("Telnet server listening on {0}. ({1} client{2} connected).",
-                                 addr, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
+            return String.Format("Telnet server listening on {0} port {1}. ({2} client{3} connected).",
+                                 addr, port, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
         }
 
         private void DrawActiveCPUsOnPanel()
@@ -678,11 +818,14 @@ namespace kOS.Screen
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
         // string in both of them and see if they get the same count here.
-        private void CountBeginVertical(string debugHelp = "")
+        private void CountBeginVertical(string debugHelp = "", float minWidth = -1)
         {
             if (!String.IsNullOrEmpty(debugHelp))
                 SafeHouse.Logger.SuperVerbose("BeginVertical(\"" + debugHelp + "\") Nest " + verticalSectionCount);
-            GUILayout.BeginVertical();
+            if (minWidth < 0)
+                GUILayout.BeginVertical();
+            else
+                GUILayout.BeginVertical(GUILayout.MinWidth(minWidth));
             ++verticalSectionCount;
         }
 
@@ -721,9 +864,7 @@ namespace kOS.Screen
 
         private static GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
-            // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key
-            // fields.  Instead we'll have to set all the GUIStyle's manually everywhere - ugly.
+            GUISkin theSkin = Instantiate(HighLogic.Skin); // Use Instantiate to make a copy of the Skin Object
 
             // Now alter the parts of theSkin that we want to change:
             //
@@ -739,9 +880,7 @@ namespace kOS.Screen
             theSkin.textArea.padding = new RectOffset(0, 0, 0, 0);
             theSkin.textArea.margin = new RectOffset(1, 1, 1, 1);
             theSkin.toggle.fontSize = 10;
-            theSkin.button.fontSize =11;
-            theSkin.button.padding = new RectOffset(0,0,0,0);
-            theSkin.button.margin = new RectOffset(1,1,1,1);
+            theSkin.button.fontSize = 11;
 
             // And these are new styles for our own use in special cases:
             //

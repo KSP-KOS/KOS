@@ -178,6 +178,8 @@
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
+    <Compile Include="Execution\YiedFinishedThreadedDetector.cs" />
+    <Compile Include="Execution\YieldFinishedCompile.cs" />
     <Compile Include="Execution\YieldFinishedDetector.cs" />
     <Compile Include="Execution\YieldFinishedGameTimer.cs" />
     <Compile Include="Execution\YieldFinishedGetChar.cs" />
@@ -267,6 +269,7 @@
     <Compile Include="SafeSharedObjects.cs" />
     <Compile Include="Persistence\PathValue.cs" />
     <Compile Include="Execution\InternalPath.cs" />
+    <Compile Include="Exceptions\KOSTermWidthObsoletionException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

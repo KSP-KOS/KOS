@@ -259,13 +259,13 @@ Method / Operator                                                         Return
             \frac{
                 \vec{v_1}\cdot\vec{v_2}
             }{
-                \left|\vec{v_1}\cdot\vec{v_2}\right|
+                \left|\vec{v_1}\right|\cdot\left|\vec{v_2}\right|
             }
         \right)
 
     or in **KerboScript**::
 
-        arccos( (VDOT(v1,v2) / VDOT(v1,v2):MAG ) )
+        arccos( (VDOT(v1,v2) / (v1:MAG * v2:MAG) ) )
 
 .. function:: VXCL(v1,v2)
 

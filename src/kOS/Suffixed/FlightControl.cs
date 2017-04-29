@@ -286,7 +286,7 @@ namespace kOS.Suffixed
 
         private bool CheckKillRotation(string suffixName, object value)
         {
-            if (suffixName == "KILLROTATION")
+            if (suffixName.Equals("KILLROTATION", StringComparison.OrdinalIgnoreCase))
             {
                 killRotation.Value = bool.Parse(value.ToString());
                 return true;
@@ -296,7 +296,7 @@ namespace kOS.Suffixed
         }
         private bool CheckResetTrim(string suffixName, object value)
         {
-            if (suffixName == "RESETTRIM")
+            if (suffixName.Equals("RESETTRIM", StringComparison.OrdinalIgnoreCase))
             {
                 resetTrim.Value = bool.Parse(value.ToString());
                 return true;
@@ -307,7 +307,7 @@ namespace kOS.Suffixed
 
         private bool CheckNeutral(string suffix, object value)
         {
-            if (suffix == "NEUTRALIZE")
+            if (suffix.Equals("NEUTRALIZE", StringComparison.OrdinalIgnoreCase))
             {
                 ResetControls();
                 neutral.Value = bool.Parse(value.ToString());

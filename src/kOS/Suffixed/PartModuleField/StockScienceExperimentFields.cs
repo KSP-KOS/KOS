@@ -69,30 +69,47 @@ namespace kOS.Suffixed.PartModuleField
 
             module.ResetExperiment();
         }
-          
+
         public override void TransmitData()
         {
             ThrowIfNotCPUVessel();
 
-            IScienceDataContainer container = module as IScienceDataContainer;
+            // This logic is mostly copied to DMScienceExperimentFields, make sure that changes here are copied there
 
             ScienceData[] data = container.GetData();
-
-            List<IScienceDataTransmitter> tranList = module.vessel.FindPartModulesImplementing<IScienceDataTransmitter>();
-            if (tranList.Count() > 0 && data.Count() > 0)
+            ScienceData scienceData;
+            for (int i = 0; i < data.Length; ++i)
             {
-                tranList.OrderBy(ScienceUtil.GetTransmitterScore).First().TransmitData(new List<ScienceData>(data));
+                scienceData = data[i];
+                // By using ExperimentResultDialogPage we ensure that the logic calculating the value is exactly the same
+                // as that used KSP's dialog.  The page type doesn't include any UI code itself, it just does the math to
+                // confirm the values, and stores some callbacks for the UI to call when buttons are pressed.
+                ExperimentResultDialogPage page = new ExperimentResultDialogPage(
+                    module.part, scienceData, scienceData.baseTransmitValue, scienceData.transmitBonus, // the parameters with data we care aboue
+                    false, "", false, // disable transmit warning and reset option, these are used for the UI only
+                    new ScienceLabSearch(module.part.vessel, scienceData), // this is used to calculate the transmit bonus, I think...
+                    null, null, null, null); // null callbacks, no sense in creating objects when we won't actually perform the callback.
+                // The dialog page modifies the referenced object, so our reference has been updated.
+            }
 
-                if (!container.IsRerunnable())
+            // Logic pulled from ModuleScienceExperiment.sendDataToComms
+            IScienceDataTransmitter bestTransmitter = ScienceUtil.GetBestTransmitter(module.vessel);
+            if (bestTransmitter != null)
+            {
+                bestTransmitter.TransmitData(data.ToList());
+                for (int i = 0; i < data.Length; ++i)
                 {
-                    module.SetInoperable();
+                    container.DumpData(data[i]); // DumpData calls endExperiment, and handles setting as inoperable
                 }
-
-                DumpData();
-            } else
+                if (module.useCooldown)
+                {
+                    module.cooldownToGo = module.cooldownTimer;
+                }
+            }
+            else
+            {
                 ScreenMessages.PostScreenMessage("No transmitters available on this vessel or no data to transmit.", 4f, ScreenMessageStyle.UPPER_LEFT);
-
+            }
         }
-            
     }
 }
