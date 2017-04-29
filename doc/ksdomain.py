@@ -33,6 +33,7 @@ ks_sig_re = re.compile(r'''
         \)
     )?
 ''', re.VERBOSE)
+ks_keyword_sig_re = re.compile(r'''(?P<object>[a-zA-Z][\w]*)(?:(?:\s+)(?P<params>(?:.+\((?P<args>.+)\))|(?:.+)))?\.?''', re.VERBOSE)
 
 class KOSObject(ObjectDescription):
     def add_target_and_index(self, name, sig, signode):
@@ -87,7 +88,7 @@ class KOSFunction(KOSObject):
         Field('access', label=l_('Access'), has_arg=False),
         TypedField('parameter', label=l_('Parameters'),
                    names=('param', 'parameter', 'arg', 'argument'),
-                   typerolename='obj', typenames=('paramtype', 'type')),
+                   typerolename='struct', typenames=('paramtype', 'type')),
         Field('returnvalue', label=l_('Returns'), has_arg=False,
               names=('returns', 'return')),
         Field('returntype', label=l_('Return type'), has_arg=False,
@@ -108,6 +109,23 @@ class KOSFunction(KOSObject):
 
     def get_index_text(self, objectname, name):
         return _('{}()'.format(name))
+
+
+class KOSKeyword(KOSObject):
+    doc_field_types = [
+        TypedField('parameter', label=l_('Parameters'),
+                   names=('param', 'parameter', 'arg', 'argument'),
+                   typerolename='struct', typenames=('paramtype', 'type')),
+    ]
+
+    def handle_signature(self, sig, signode):
+        m = ks_keyword_sig_re.match(sig)
+        name = m.group('object')
+        signode += addnodes.desc_name(sig,sig)
+        return name
+
+    def get_index_text(self, objectname, name):
+        return _('{}'.format(name))
 
 class KOSStructure(KOSObject):
     def handle_signature(self, sig, signode):
@@ -235,6 +253,7 @@ class KOSDomain(Domain):
     object_types = {
         'global'   : ObjType(l_('global'   ), 'global'),
         'function' : ObjType(l_('function' ), 'func'  ),
+        'keyword'  : ObjType(l_('keyword'  ), 'key'   ),
         'structure': ObjType(l_('structure'), 'struct'),
         'attribute': ObjType(l_('attribure'), 'attr'  ),
         'method'   : ObjType(l_('method'   ), 'meth'  ),
@@ -242,6 +261,7 @@ class KOSDomain(Domain):
     directives = {
         'global'   : KOSGlobal,
         'function' : KOSFunction,
+        'keyword'  : KOSKeyword,
         'structure': KOSStructure,
         'attribute': KOSAttribute,
         'method'   : KOSMethod,
@@ -249,6 +269,7 @@ class KOSDomain(Domain):
     roles = {
         'global': KOSXRefRole(),
         'func'  : KOSXRefRole(),
+        'key'   : KOSXRefRole(),
         'struct': KOSXRefRole(),
         'attr'  : KOSAttrXRefRole(),
         'meth'  : KOSAttrXRefRole(),
