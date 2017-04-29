@@ -420,6 +420,16 @@ Running Scripts
 
 You may run saved script files using the various :ref:`Run Command<running>`.
 
+Examples::
+
+    RUNPATH("filename", arg1, arg2).
+    RUN filename(arg1, arg2).
+
+The topic of the ``RUNPATH`` and ``RUN`` commands is complex enough to
+warrant its own separate :ref:`Run Command Page<running>`.  Consult that
+page for the full details of how these commands work.
+
+
 LOG TEXT TO PATH
 ~~~~~~~~~~~~~~~~
 
