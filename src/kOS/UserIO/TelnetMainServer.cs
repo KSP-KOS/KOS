@@ -27,6 +27,7 @@ namespace kOS.UserIO
     {
         private TcpListener server = null;
         private IPAddress bindAddr;
+        private string bindAddrName = ""; // used to compare new address values to old
         private Int32 port;
         private readonly List<TelnetSingletonServer> telnets;
         private bool isListening;
@@ -55,7 +56,34 @@ namespace kOS.UserIO
             isListening = false;
             telnets = new List<TelnetSingletonServer>();
         }
-        
+
+        /// <summary>
+        /// Gets the address the server is listening to *right now*, as opposed
+        /// to the one it's configured to listen to *next time it restarts*.
+        /// Returns loopback as a default if it's not currently running.
+        /// </summary>
+        /// <returns>The running address.</returns>
+        public IPAddress GetRunningAddress()
+        {
+            if ( (!IsListening) || server == null || server.Server == null || (!server.Server.IsBound) )
+                return IPAddress.Loopback;
+            return ((IPEndPoint)server.LocalEndpoint).Address;
+        }
+
+        /// <summary>
+        /// Gets the port number the server is listening to *right now*, as opposed
+        /// to the one it's configured to listen to *next time it restarts*.
+        /// Returns 0 as a default if it's not currently running.
+        /// </summary>
+        /// <returns>The running address.</returns>
+        public int GetRunningPort()
+        {
+            if ((!IsListening) || server == null || server.Server == null || (!server.Server.IsBound))
+                return 0;
+            return ((IPEndPoint)server.LocalEndpoint).Port;
+        }
+
+
         /// <summary>
         /// Return the user's permanent ("don't remind me again") status for the 
         /// permission to have telnet listen turned on.  This is stored in the
@@ -143,23 +171,22 @@ namespace kOS.UserIO
         
         public void SetConfigEnable(bool newVal)
         {
-            bool isLoopback = Equals(bindAddr, IPAddress.Loopback);
-            bool loopBackStatusChanged = (isLoopback != SafeHouse.Config.TelnetLoopback);
-            
-            if (loopBackStatusChanged)
-                StopListening(); // we'll be forcing a new restart of the telnet server on the new IP address.
-            else
-                if (newVal == isListening) // nothing changed about the settings on this pass through.
-                    return;
-            
+            if (newVal == isListening) // nothing changed about the settings on this pass through.
+                return;
+
             if (newVal)
             {
-                if (tempListenPermission && ((tempRealIPPermission || SafeHouse.Config.TelnetLoopback)))
+                bool isLoopback = IPAddress.IsLoopback(bindAddr);
+                if (tempListenPermission && (tempRealIPPermission || isLoopback))
                     StartListening();
                 else
                 {
-                    SafeHouse.Config.EnableTelnet = false; // Turn it right back off, never having allowed the server to turn on.
-                    
+                    // Set the config value back to false without turning the server on.
+                    // This prevents us from continuing to check the value until
+                    // the dialog boxes finish their work.  If permission is accepted
+                    // the dialog box will set EnableTelnet to true again
+                    SafeHouse.Config.EnableTelnet = false;
+
                     // Depending on which reason it was for the denial, activate the proper dialog window:
                     if (!tempListenPermission)
                         activeOptInDialog = true;
@@ -176,13 +203,40 @@ namespace kOS.UserIO
             // calling StartListening when already started can cause problems, so quit if already started:
             if (isListening)
                 return;
+
+            // Check to see if the IP address is available (valid) on this computer
+            if (bindAddr == null)
+            {
+                // because bindAddr should be set during Update, if it's null the
+                // stored value was invalid and we shouldn't start the server.
+                // This should only be possible if the config file was manually
+                // edited to contain an invalid IP address, because invalid values
+                // cannot be set from the UI nor by directly setting it on CONFIG
+                Utilities.Utils.DisplayPopupAlert(
+                    "kOS Telnet",
+                    "Selected IP address (\"{0}\") is not valid.  Defaulting to local loopback (\"127.0.0.1\").  Please review the selection from the toolbar kOS control panel.",
+                    SafeHouse.Config.TelnetIPAddrString);
+                SafeHouse.Config.EnableTelnet = false;
+                SafeHouse.Config.TelnetIPAddrString = IPAddress.Loopback.ToString(); // note to @dunbaratu: do we want to default back to loopback, or just prevent starting
+                return;
+            }
+            if (!GetAllAddresses().Contains(bindAddrName))
+            {
+                // This IP address is no longer valid for this computer,
+                // alert the user and don't start the server.
+                Utilities.Utils.DisplayPopupAlert(
+                    "kOS Telnet",
+                    "Selected IP address (\"{0}\") is not currently available on this computer.  Please select a new address and re-enable the telnet server.",
+                    bindAddrName);
+                SafeHouse.Config.EnableTelnet = false;
+                SafeHouse.Config.TelnetIPAddrString = IPAddress.Loopback.ToString(); // note to @dunbaratu: do we want to default back to loopback, or just prevent starting
+                return;
+            }
             
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
-            port = SafeHouse.Config.TelnetPort;
-            bindAddr = SafeHouse.Config.TelnetLoopback ? 
-                IPAddress.Loopback : 
-                GetRealAddress();
+            // refresh the port information, don't need to refresh address because it's refreshed every Update
+            port = SafeHouse.Config.TelnetPort; 
 
             server = new TcpListener(bindAddr, port);
             server.Start();
@@ -199,7 +253,12 @@ namespace kOS.UserIO
 
             SafeHouse.Logger.Log(string.Format("{2} TelnetMainServer stopped listening on {0} {1}", bindAddr, port, KSPLogger.LOGGER_PREFIX));
             server.Stop();
-            foreach (TelnetSingletonServer telnet in telnets)
+
+            // Have to use a temp copy of the list to iterate over because telnet.StopListening()
+            // can remove a telnet from the telnets list (while we're trying to use foreach on it):
+            TelnetSingletonServer[] tempTelnets = new TelnetSingletonServer[telnets.Count];
+            telnets.CopyTo(tempTelnets);
+            foreach (TelnetSingletonServer telnet in tempTelnets)
                 telnet.StopListening();
 
             // If it was only on for the one go, then it needs to get turned off again so
@@ -234,6 +293,7 @@ namespace kOS.UserIO
         
         public void Update()
         {
+            SetBindAddrFromString(SafeHouse.Config.TelnetIPAddrString); // referesh the server address
             SetConfigEnable(SafeHouse.Config.EnableTelnet);
             
             int howManySpawned = 0;
@@ -243,8 +303,13 @@ namespace kOS.UserIO
                 // Doing the command:
                 //     SET CONFIG:TELNET TO FALSE.
                 // should kill any singleton telnet servers that may have been started in the past
-                // when it was true.  This does that:
-                foreach (TelnetSingletonServer singleServer in telnets)
+                // when it was true.  This does that:0
+
+                // Have to use a temp copy of the list to iterate over because we
+                // remove things from the telnets list (while we're trying to use foreach on it):
+                TelnetSingletonServer[] tempTelnets = new TelnetSingletonServer[telnets.Count];
+                telnets.CopyTo(tempTelnets);
+                foreach (TelnetSingletonServer singleServer in tempTelnets)
                 {
                     singleServer.StopListening();
                     telnets.Remove(singleServer);
@@ -269,16 +334,33 @@ namespace kOS.UserIO
             telnets.Add(newServer);
             newServer.StartListening();
         }
-        
-        private IPAddress GetRealAddress()
+
+        /// <summary>
+        /// Tells the telnet server to bind to the given address (as a string) on the
+        /// next time it starts the server.  Note the user has to stop/start the
+        /// server before the change really takes effect though.
+        /// </summary>
+        /// <returns>false if the address is not formatted well</returns>
+        public bool SetBindAddrFromString(string s)
         {
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            if (localIPs.Length > 0)
-                return localIPs[0]; // Hardcoded to only use the first IP it finds - good enough for most home network setups.
-            else
-                return IPAddress.Parse("127.0.0.1");
+            if (bindAddrName != s)
+            {
+                IPAddress newAddr;
+                if (IPAddress.TryParse(s, out newAddr)) // try to parse the address
+                {
+                    // the address is valid, so use it and return true to indicate it changed
+                    bindAddr = newAddr;
+                    bindAddrName = bindAddr.ToString();
+                    if (isListening)
+                        StopListening();
+                    return true;
+                }
+                // The string was not a valid IP address, return false to indicate the value has not changed
+                return false;
+            }
+            return false; // return false to indicate the value has not changed
         }
-        
+
         void OnGUI()
         {
             if (activeOptInDialog)
@@ -307,8 +389,7 @@ namespace kOS.UserIO
                                      " \n" +
                                      "        If this sounds dangerous, remember that you can force this feature to only " +
                                      "work between programs running on your own computer, never allowing access from " +
-                                     "external computers.  This is the default way the mod ships, and the setting " +
-                                     "can be changed with the LOOPBACK config option.\n" +
+                                     "external computers, by using the LOOPBACK address (127.0.0.1) for the telnet server\n" +
                                      " \n" +
                                      "Further information can be found at: \n" +
                                      "        " + HELP_URL + "\n";
@@ -365,18 +446,18 @@ namespace kOS.UserIO
         {
             string realIPText =
                 "You are trying to set the kOS telnet server's IP address to your machine's real IP address " +
-                "of " + GetRealAddress() + " rather than the loopback address of 127.0.0.1.\n" +
+                "of " + bindAddr.ToString() + " rather than the loopback address (127.0.0.1).\n" +
                 " \n" +
-                "The use of the loopback address by default is a safety measure to ensure that only telnet clients on " +
+                "The use of the loopback address is a safety measure to ensure that only telnet clients on " +
                 "your own computer can connect to your KSP game.\n" +
                 " \n" +
                 "If this is a local-only IP address (for example an address in the 192.168 range), or if your " +
                 "computer sits behind a router for which the necessary port forwarding has not been set up, " +
-                "then this is probably safe to turn the LOOPBACK option off, but on the other hand if this is a " +
+                "then this is probably safe to use a non-loopback address, but on the other hand if this is a " +
                 "public IP address you should think of the implications first.\n" +
                 " \n" +
                 "If you want better security, and this is a public IP address, then it's recommended that you " +
-                "leave the LOOPBACK setting turned on and instead provide remote access by the use of an SSH tunnel " +
+                "only let telnet use the loopback address (127.0.0.1) and instead provide remote access by the use of an SSH tunnel " +
                 "you can control access to.  The subject of setting up an SSH tunnel is an advanced but well documented "+
                 "network administrator topic for which help can be found with Internet searches.\n" +
                 " \n" +
@@ -384,7 +465,7 @@ namespace kOS.UserIO
                 "to accept the security implications and take on the responsibility for them yourself.\n" +
                 " \n" +
                 "If you are thinking \"What's the harm? It's just letting people mess with my Kerbal Space Program Game?\", " +
-                "then think about the existence of the kOS LOG command, which writes files on your computer's hard drive.\n" +
+                "then think about the existence of the kOS LOG command, which can write files to your computer's hard drive.\n" +
                 " \n" +
                 "Further information can be found at: \n" +
                 "        " + HELP_URL + "\n";
@@ -407,12 +488,12 @@ namespace kOS.UserIO
                     {
                         // By putting an expandwidth field on either side, it centers the middle part:
                         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
-                        GUILayout.Label("Do you wish to turn off safe loopback mode?", HighLogic.Skin.textArea);
+                        GUILayout.Label("Do you really want to use a non-loopback address?", HighLogic.Skin.textArea);
                         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
                     } GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                     {
-                        bool noClicked = GUILayout.Button("No (loopback stays on)", HighLogic.Skin.button);
+                        bool noClicked = GUILayout.Button("No (address will revert to loopback)", HighLogic.Skin.button);
                         bool yesNeverAgainClicked = GUILayout.Button("Yes\n and never show this message again", HighLogic.Skin.button);
                         bool yesClicked = GUILayout.Button("Yes\n just this once", HighLogic.Skin.button);
                         
@@ -422,13 +503,13 @@ namespace kOS.UserIO
                         
                         if (noClicked)
                         {
-                            SafeHouse.Config.TelnetLoopback = true;
+                            SafeHouse.Config.TelnetIPAddrString = IPAddress.Loopback.ToString();
                             tempRealIPPermission = false;
                         }
 
                         if (yesClicked || yesNeverAgainClicked)
                         {
-                            SafeHouse.Config.TelnetLoopback = false;
+                            SafeHouse.Config.TelnetIPAddrString = bindAddr.ToString();
                             tempRealIPPermission = true;
                             StartListening();
                         }
@@ -440,6 +521,32 @@ namespace kOS.UserIO
                 } GUILayout.EndVertical();
             } GUILayout.EndVertical();            
             GUI.DragWindow();
+        }
+
+        /// <summary>
+        /// Return a list of all the addresses that exist on this
+        /// machine, rendered into strings.  (i.e. "127.0.0.1" as
+        /// a string rather than as 4 integer bytes.)
+        /// </summary>
+        /// <returns>The all addresses.</returns>
+        public static List<string> GetAllAddresses()
+        {
+            List<string> ipAddrList = new List<string>();
+            ipAddrList.Add(IPAddress.Loopback.ToString()); // always ensure loopbacks exist.
+
+            // This seems to be the standard .net way to do this, but I don't like it.
+            // It presumes we have exactly one host name and that we have a functioning
+            // DNS for this machine that may very well be isolated on a local tiny network
+            // without DNS or names of any kind.  But, since this seems to be the standard
+            // answer to the question "how do I list all my IP addresses?", we'll go with it
+            // for now:
+            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+            foreach (IPAddress addr in localIPs)
+            {
+                if (! addr.Equals(IPAddress.Loopback) )
+                    ipAddrList.Add(addr.ToString());
+            }
+            return ipAddrList;
         }
     }
 }

@@ -146,27 +146,27 @@ namespace kOS.Module
             }
         }
 
-        /// <summary>
-        /// Update is called once per UI tick.
-        /// </summary>
-        public void Update()
-        {
-        }
+        // ///<summary>
+        // ///Update is called once per UI tick.
+        // ///</summary>
+        // public void Update()
+        // {
+        // }
 
-        /// <summary>
-        /// LastUpdate is called at the end of the update frame.  Useful if something needs to be
-        /// done after the physics and UI updates have been completed, but before scene or gui rendering.
-        /// </summary>
-        public void LastUpdate()
-        {
-        }
+        // ///<summary>
+        // ///LastUpdate is called at the end of the update frame.  Useful if something needs to be
+        // ///done after the physics and UI updates have been completed, but before scene or gui rendering.
+        // ///</summary>
+        // public void LastUpdate()
+        // {
+        // }
 
-        /// <summary>
-        /// OnGUI is where any vessel specific interface rendering should be done.
-        /// </summary>
-        public void OnGUI()
-        {
-        }
+        // ///<summary>
+        // ///OnGUI is where any vessel specific interface rendering should be done.
+        // ///</summary>
+        // public void OnGUI()
+        // {
+        // }
         #endregion
 
         /// <summary>

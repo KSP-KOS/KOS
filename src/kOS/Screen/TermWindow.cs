@@ -16,7 +16,6 @@ namespace kOS.Screen
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
         private const string CONTROL_LOCKOUT = "kOSTerminal";
-        private const int FONTIMAGE_CHARS_PER_ROW = 16;
 
         private static string root;
         private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
@@ -45,8 +44,22 @@ namespace kOS.Screen
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
         private float cursorBlinkTime;
-        private Texture2D fontImage;
-        private Texture2D [] fontArray;
+
+        private Font font;
+        private int fontSize;
+        private string[] tryFontNames = {
+            "User pick Goes Here", // overwrite this first one with the user selection - the rest are a fallback just in case
+            "Courier New Bold",
+            "Courier Bold",
+            "Courier New",
+            "Courier",
+            "Monaco",
+            "Consolas",
+            "Liberation Mono",
+            "Arial" // very bad, proportional, but guaranteed to exist in Unity no matter what.
+        };
+        private GUISkin terminalLetterSkin;
+            
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
         private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
@@ -67,7 +80,6 @@ namespace kOS.Screen
         private Texture2D resizeButtonImage;
         private Texture2D networkZigZagImage;
         private Texture2D brightnessButtonImage;
-        private Texture2D fontWidthButtonImage;
         private Texture2D fontHeightButtonImage;
         private WWW beepURL;
         private AudioSource beepSource;
@@ -77,7 +89,7 @@ namespace kOS.Screen
         private KOSTextEditPopup popupEditor;
 
         // data stored per telnet client attached:
-        private readonly List<TelnetSingletonServer> telnets; // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
+        private volatile List<TelnetSingletonServer> telnets; // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
         private readonly Dictionary<TelnetSingletonServer, IScreenSnapShot> prevTelnetScreens;
         
         private ExpectNextChar inputExpected = ExpectNextChar.NORMAL;
@@ -112,14 +124,12 @@ namespace kOS.Screen
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
             // Load dummy textures
-            fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            fontWidthButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
             fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
 
             root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
@@ -129,12 +139,8 @@ namespace kOS.Screen
             LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
             LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
-            LoadTexture("GameData/kOS/GFX/font-width-button.png", ref fontWidthButtonImage);
             LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
-            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
-            
-            LoadFontArray();
-            
+
             LoadAudio();
             
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
@@ -146,6 +152,7 @@ namespace kOS.Screen
             popupEditor.SetUniqueId(UniqueId + 5);
             
             customSkin = BuildPanelSkin();
+            terminalLetterSkin = BuildPanelSkin();
 
             GameEvents.onHideUI.Add (OnHideUI);
             GameEvents.onShowUI.Add (OnShowUI);
@@ -158,49 +165,6 @@ namespace kOS.Screen
             Unlock();
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
-        }
-        
-        private void LoadFontArray()
-        {
-            // Calculate image size from the presumption that it is a hardcoded number of char
-            // pictures wide and that each image is square.
-            // Then calculate everything else dynamically from that so that
-            // you can experiment with swapping in different font image files and the code
-            // will still work without a recompile:
-            int charSourceSize = fontImage.width / FONTIMAGE_CHARS_PER_ROW;
-            if (charSourceSize == 0 || !allTexturesFound) // if the size is zero or textures are missing, abort loading the font array
-            {
-                SafeHouse.Logger.LogError("[TermWindow] Aborting LoadFontArray, error in loaded texture");
-                allTexturesFound = false;
-                return;
-            }
-            int numRows = fontImage.width / charSourceSize;
-            int numCharImages = numRows * FONTIMAGE_CHARS_PER_ROW;
-            
-            // Make it hold all possible ASCII values even though many will be blank pictures:
-            fontArray = new Texture2D[numCharImages];
-            
-            for (int i = 0 ; i < numCharImages ; ++i)
-            {
-                // TextureFormat cannot be DXT1 or DXT5 if you want to ever perform a
-                // SetPixel on the texture (which we do).  So we start it off as a ARGB32
-                // first, long enough to perform the SetPixel call, then compress it
-                // afterward into a DXT5:
-                Texture2D charImage = new Texture2D(charSourceSize, charSourceSize, TextureFormat.ARGB32, false);
-
-                int tx = i % FONTIMAGE_CHARS_PER_ROW;
-                int ty = i / FONTIMAGE_CHARS_PER_ROW;
-                
-                // While Unity uses the convention of upside down textures common in
-                // 3D (2D images put orgin at upper-left, 3D uses lower-left), it doesn't seem
-                // to apply this rule to textures loaded from files like the fontImage.
-                // Thus the difference requiring the upside-down Y coord below.
-                charImage.SetPixels(fontImage.GetPixels(tx * charSourceSize, fontImage.height - (ty+1) * charSourceSize, charSourceSize, charSourceSize));
-                charImage.Compress(false);
-                charImage.Apply();
-
-                fontArray[i] = charImage;
-            }
         }
         
         public kOS.Safe.Sound.ISoundMaker GetSoundMaker()
@@ -259,6 +223,23 @@ namespace kOS.Screen
             base.Open();
             BringToFront();
             guiTerminalBeepsPending = 0; // Closing and opening the window will wipe pending beeps from the beep queue.
+
+            GetFontIfChanged();
+        }
+
+        private void GetFontIfChanged()
+        {
+            int newSize = shared.Screen.CharacterPixelHeight;
+            string newName =  SafeHouse.Config.TerminalFontName;
+            if (fontSize != newSize || !(tryFontNames[0].Equals(newName)))
+            {
+                fontSize = newSize;
+                tryFontNames[0] = newName;
+                font = AssetManager.Instance.GetSystemFontByNameAndSize(tryFontNames, fontSize, false);
+
+                terminalLetterSkin.label.font = font;
+                terminalLetterSkin.label.fontSize = fontSize;
+            }
         }
 
         public override void Close()
@@ -332,20 +313,20 @@ namespace kOS.Screen
         void OnGUI()
         {
             if (!IsOpen) return;
+
+            GetFontIfChanged();
             
             ProcessUnconsumedInput();
 
             if (isLocked) ProcessKeyEvents();
-            
-            try
+            if (FlightResultsDialog.isDisplaying) return;
+            if (uiGloballyHidden)
             {
-                if (FlightResultsDialog.isDisplaying) return;
-                if (uiGloballyHidden && kOS.Safe.Utilities.SafeHouse.Config.ObeyHideUI) return;
+                kOS.Safe.Encapsulation.IConfig cfg = kOS.Safe.Utilities.SafeHouse.Config;
+                if (cfg == null || cfg.ObeyHideUI)
+                    return;
             }
-            catch(NullReferenceException)
-            {
-            }
-            
+
             GUI.skin = HighLogic.Skin;
             
             GUI.color = isLocked ? color : colorAlpha;
@@ -545,6 +526,16 @@ namespace kOS.Screen
                 }
             }
         }
+
+        /// <summary>
+        /// A means to get the current terminal font size without
+        /// having to expose the terminal's inner members.
+        /// </summary>
+        /// <returns>The font size.</returns>
+        public int GetFontSize()
+        {
+            return shared.Screen.CharacterPixelHeight;
+        }
         
         /// <summary>
         /// Read all pending input from all telnet clients attached and process it all.
@@ -558,11 +549,20 @@ namespace kOS.Screen
         /// </summary>
         private void ProcessTelnetInput()
         {
-            foreach (var telnet in telnets)
+            // It's possible to close and remove telnets from the list during the processing
+            // of input (if the detach signal Ctrl-D is sent).  Therefore we have to
+            // make this temp copy to prorect against the C# error "Collection was Modified"
+            // during the foreach loop:
+            TelnetSingletonServer[] tempTelnetList = new TelnetSingletonServer[telnets.Count()];
+            telnets.CopyTo(tempTelnetList);
+            foreach (TelnetSingletonServer telnet in tempTelnetList)
             {
-                while (telnet.InputWaiting())
+                if (telnet.ConnectedProcessor != null)
                 {
-                    ProcessOneInputChar(telnet.ReadChar(), telnet);
+                    while (telnet.InputWaiting())
+                    {
+                        ProcessOneInputChar(telnet.ReadChar(), telnet);
+                    }
                 }
             }
         }
@@ -642,7 +642,7 @@ namespace kOS.Screen
                             if (whichTelnet == null)
                                 Close();
                             else
-                                whichTelnet.DisconnectFromProcessor();
+                                DetachTelnet(whichTelnet);
                         }
                         break;
                         
@@ -778,6 +778,7 @@ namespace kOS.Screen
             IScreenBuffer screen = shared.Screen;
             
             GUI.color = isLocked ? color : colorAlpha;
+
             GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
 
             if (telnets.Count > 0)
@@ -790,7 +791,6 @@ namespace kOS.Screen
             Rect rasterBarsButtonRect = new Rect(10, WindowRect.height - 42, 85, 18);
             Rect brightnessRect = new Rect(3, WindowRect.height - 100, 8, 50);
             Rect brightnessButtonRect = new Rect(1, WindowRect.height - 48, brightnessButtonImage.width, brightnessButtonImage.height);
-            Rect fontWidthButtonRect = new Rect(15, WindowRect.height-32, fontWidthButtonImage.width, fontWidthButtonImage.height);
             Rect fontWidthLabelRect = new Rect(35, WindowRect.height-28, 20, 10);
             Rect fontWidthLessButtonRect = new Rect(65, WindowRect.height-28, 10, 10);
             Rect fontWidthMoreButtonRect = new Rect(90, WindowRect.height-28, 10, 10);
@@ -822,18 +822,16 @@ namespace kOS.Screen
             screen.ReverseScreen = GUI.Toggle(reverseButtonRect, screen.ReverseScreen, "Reverse Screen", tinyToggleStyle);
             screen.VisualBeep = GUI.Toggle(visualBeepButtonRect, screen.VisualBeep, "Visual Beep", tinyToggleStyle);
             keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
-            screen.Brightness = GUI.VerticalSlider(brightnessRect, screen.Brightness, 1f, 0f);
+            screen.Brightness = (double) GUI.VerticalSlider(brightnessRect, (float)screen.Brightness, 1f, 0f);
             GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
-
-            int charWidth = screen.CharacterPixelWidth;
-            int charHeight = screen.CharacterPixelHeight;
             
-            GUI.DrawTexture(fontWidthButtonRect, fontWidthButtonImage);
-            GUI.Label(fontWidthLabelRect,charWidth+"px", customSkin.label);
-            if (GUI.Button(fontWidthLessButtonRect, "-", customSkin.button))
-                charWidth = Math.Max(4, charWidth - 2);
-            if (GUI.Button(fontWidthMoreButtonRect, "+", customSkin.button))
-                charWidth = Math.Min(24, charWidth + 2);
+            int charHeight = screen.CharacterPixelHeight;
+
+            CharacterInfo chInfo;
+            terminalLetterSkin.label.font.RequestCharactersInTexture("X"); // Make sure the char in the font is lazy-loaded by Unity.
+            terminalLetterSkin.label.font.GetCharacterInfo('X', out chInfo);
+
+            int charWidth = chInfo.advance;
 
             GUI.DrawTexture(fontHeightButtonRect, fontHeightButtonImage);
             GUI.Label(fontHeightLabelRect,charHeight+"px", customSkin.label);
@@ -842,8 +840,8 @@ namespace kOS.Screen
             if (GUI.Button(fontHeightMoreButtonRect, "+", customSkin.button))
                 charHeight = Math.Min(24, charHeight + 2);
 
-            screen.CharacterPixelWidth = charWidth;
             screen.CharacterPixelHeight = charHeight;
+            screen.CharacterPixelWidth = charWidth;
 
             fontGotResized = false;
             if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)
@@ -864,7 +862,8 @@ namespace kOS.Screen
                 GUI.color = AdjustColor(textColor, screen.Brightness);
                 GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
             }
-            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth, screen.RowCount * charHeight));
+            terminalLetterSkin.label.normal.textColor = AdjustColor(reversingScreen ? bgColor : currentTextColor, screen.Brightness);            
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth + 2, screen.RowCount * charHeight + 2)); // +2's for the sake of safety margin
 
             // When loading a quicksave, it is possible for the teminal window to update even though
             // mostRecentScreen is null.  If that's the case, just skip the screen update.
@@ -877,14 +876,15 @@ namespace kOS.Screen
 
                 for (int row = 0; row < rowsToPaint; row++)
                 {
-                    IScreenBufferLine lineBuffer = buffer[row];
-                    for (int column = 0; column < lineBuffer.Length; column++)
-                    {
-                        char c = lineBuffer[column];
-                        if (c != 0 && c != 9 && c != 32 && c < fontArray.Length)
-                            ShowCharacterByAscii(c, column, row, reversingScreen,
-                                                 charWidth, charHeight, screen.Brightness);
-                    }
+                    // At first the screen is filled with null chars.  So if you do something like
+                    // PRINT "AAA" AT (4,0) you can get a row of the screen like so "\0\0\0\0AAA".
+                    // When the font renderer prints null chars, they don't advance the cursor
+                    // even in a monospoaced font (so "\0\0\0\0AAA" looks just like "AAA" instead
+                    // of looking like "    AAA" when printed).  The reason for the "cooking" of
+                    // the string below is to fix this problem:
+                    string lineString = buffer[row].ToString().Replace( '\0', ' ');
+
+                    GUI.Label(new Rect(0, (row * charHeight), WindowRect.width - 10, charHeight), lineString, terminalLetterSkin.label);
                 }
 
                 bool blinkOn = cursorBlinkTime < 0.5f &&
@@ -894,7 +894,8 @@ namespace kOS.Screen
 
                 if (blinkOn)
                 {
-                    ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
+                    char ch = buffer[screen.CursorRowShow][screen.CursorColumnShow];
+                    DrawCursorAt(ch, screen.CursorColumnShow, screen.CursorRowShow, reversingScreen,
                                          charWidth, charHeight, screen.Brightness);
                 }
             }
@@ -917,10 +918,10 @@ namespace kOS.Screen
             GUI.DragWindow();
         }
         
-        protected Color AdjustColor(Color baseColor, float brightness)
+        protected Color AdjustColor(Color baseColor, double brightness)
         {
             Color newColor = baseColor;
-            newColor.a = brightness; // represent dimness by making it fade into the backround.
+            newColor.a = Convert.ToSingle(brightness); // represent dimness by making it fade into the backround.
             return newColor;
         }
 
@@ -965,11 +966,20 @@ namespace kOS.Screen
             }
         }
         
-        void ShowCharacterByAscii(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, float brightness)
+        void DrawCursorAt(char ch, int x, int y, bool reversingScreen, int charWidth, int charHeight, double brightness)
         {
+            // To emulate inverting the screen character, draw a solid block, then the reversed character atop it:
+            // Solid Block:
             GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
-            GUI.color = AdjustColor(reversingScreen ? bgColor : currentTextColor, brightness);            
-            GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), fontArray[ch], ScaleMode.StretchToFill, true);
+            GUI.color = AdjustColor(reversingScreen ? bgColor : currentTextColor, brightness);
+            GUI.DrawTexture(new Rect(0, 0, charWidth, charHeight), Texture2D.whiteTexture, ScaleMode.StretchToFill, true);
+            GUI.EndGroup();
+            // Inverted Character atop it in the same position:
+            GUI.BeginGroup(new Rect((x * charWidth), (y * charHeight), charWidth, charHeight));
+            GUI.color = AdjustColor(reversingScreen ? currentTextColor : bgColor,
+                2*brightness /*it seems to need slightly higher alpha values to show up atop the solid block*/ );
+            terminalLetterSkin.label.normal.textColor = GUI.color;
+            GUI.Label(new Rect(0, 0, charWidth, charHeight), ch.ToString(), terminalLetterSkin.label);
             GUI.EndGroup();
         }
 
@@ -988,9 +998,9 @@ namespace kOS.Screen
             shared = sharedObj;
             shared.Window = this;
             
-            shared.Screen.CharacterPixelWidth = 8;
-            shared.Screen.CharacterPixelHeight = 8;
-            shared.Screen.Brightness = kOSCustomParameters.Instance.terminalBrightness;
+            shared.Screen.CharacterPixelWidth = 8; // will be overridden later when drawing the font.
+            shared.Screen.CharacterPixelHeight = SafeHouse.Config.TerminalFontDefaultSize;
+            shared.Screen.Brightness = SafeHouse.Config.TerminalBrightness;
             formerCharPixelWidth = shared.Screen.CharacterPixelWidth;
             formerCharPixelHeight = shared.Screen.CharacterPixelHeight;
 
@@ -1021,6 +1031,7 @@ namespace kOS.Screen
         {
             server.DisconnectFromProcessor();
             telnets.Remove(server);
+            prevTelnetScreens.Remove(server);
         }
         
         public void DetachAllTelnets()

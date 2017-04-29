@@ -283,5 +283,25 @@ namespace kOS.Utilities
             foundId = 0;
             return false;
         }
+
+        /// <summary>
+        /// Displays a popup dialog box with the given title, message, and single "OK" button.
+        /// Use to provide simple information to the user that requires no direct input.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        public static void DisplayPopupAlert(string title, string message, params string[] formatArgs)
+        {
+            PopupDialog.SpawnPopupDialog(
+                new MultiOptionDialog(
+                    string.Format(message, formatArgs),
+                    title,
+                    HighLogic.UISkin,
+                    new DialogGUIButton("OK", null, true)
+                    ),
+                true,
+                HighLogic.UISkin
+                );
+        }
     }
 }

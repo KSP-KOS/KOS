@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
+using kOS.Suffixed.Widget;
 using kOS.Sound;
 using kOS.Utilities;
 using FinePrint;
@@ -487,7 +488,20 @@ namespace kOS.Function
             VectorRenderer.ClearAll(shared.UpdateHandler);
         }
     }
-    
+
+    [Function("gui")]
+    public class FunctionWidgets : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int argc = CountRemainingArgs(shared);
+            int height = argc > 1 ? GetInt(PopValueAssert(shared)) : 0;
+            int width = GetInt(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+            ReturnValue = new GUIWidgets(width,height,shared);
+        }
+    }
+
     [Function("positionat")]
     public class FunctionPositionAt : FunctionBase
     {

@@ -17,6 +17,8 @@ These topics discuss the interfacing between **kOS** and **Kerbal Space Program*
 
     Settings Windows    <general/settingsWindows>
 
+    Making User GUIs    <general/gui>
+
     Telnet Server       <general/telnet>
 
     Files & Volumes     <general/volumes>
