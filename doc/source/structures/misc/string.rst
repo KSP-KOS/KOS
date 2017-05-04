@@ -179,7 +179,7 @@ Structure
           - :struct:`Scalar`
           - Number of characters in the string
         * - :meth:`MATCHESPATTERN(pattern)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - Tests whether the string matches the given regex pattern.
         * - :meth:`PADLEFT(width)`
           - :struct:`String`
@@ -307,7 +307,7 @@ Structure
 .. method:: String:MATCHESPATTERN(pattern)
 
     :parameter pattern: :struct:`String` pattern to be matched against the string
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if the string matches the given pattern (regular expression). The match is not anchored to neither the start nor the end of the string.
     That means that pattern ``"foo"`` will match ``"foobar"``, ``"barfoo"`` and ``"barfoobar"`` too. If you want to match from the start,
