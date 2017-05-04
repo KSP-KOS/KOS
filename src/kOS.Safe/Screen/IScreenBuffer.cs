@@ -6,7 +6,7 @@ namespace kOS.Safe.Screen
     {
         int CharacterPixelWidth { get; set; }
         int CharacterPixelHeight { get; set; }
-        float Brightness { get; set; }
+        double Brightness { get; set; } // double is overkill, but floats don't work in KSP config.xml files.
         int CursorRowShow { get; }
         int CursorColumnShow { get; }
         int RowCount { get; }

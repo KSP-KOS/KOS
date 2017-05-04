@@ -149,6 +149,9 @@ namespace kOS.Safe.Execution
                 else
                 {
                     var bootContext = "program";
+                    shared.ScriptHandler.ClearContext(bootContext);
+                    IProgramContext programContext = SwitchToProgramContext();
+                    programContext.Silent = true;
 
                     string bootCommand = string.Format("run \"{0}\".", file.Path);
 
@@ -159,13 +162,8 @@ namespace kOS.Safe.Execution
                         IsCalledFromRun = false
                     };
 
-                    shared.ScriptHandler.ClearContext(bootContext);
-                    List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
-                        1, bootCommand, bootContext, options);
-
-                    IProgramContext programContext = SwitchToProgramContext();
-                    programContext.Silent = true;
-                    programContext.AddParts(parts);
+                    YieldProgram(YieldFinishedCompile.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
+                    
                 }
             }
         }

@@ -92,10 +92,18 @@ Configuration of kOS
           - :struct:`Scalar` (integer)
           - 5410
           - set the port the telnet server will run on
-        * - :attr:`LOOPBACK`
-          - :struct:`Boolean`
-          - True
-          - Force the telnet server to use loopback (127.0.0.1) address
+        * - :attr:`IPADDRESS`
+          - :struct:`String`
+          - "127.0.0.1"
+          - The IP address the telnet server will try to use.
+        * - :attr:`BRIGHTNESS`
+          - :struct:`Scalar`
+          - 0.7 (from range [0.0 .. 1.0])
+          - Default brightness setting of new instances of the in-game terminal
+        * - :attr:`DEFAULTFONTSIZE`
+          - :struct:`Scalar`
+          - 12 (from range [6 .. 20], integers only)
+          - Default font size in pixel height for new instances of the in-game terminal
         * - :attr:`DEBUGEACHOPCODE`
           - :struct:`Boolean`
           - false
@@ -250,24 +258,59 @@ Configuration of kOS
     To make the change take effect you may have to
     stop, then restart the telnet server, as described above.
 
-.. attribute:: Config:LOOPBACK
+.. attribute:: Config:IPADDRESS
 
     :access: Get/Set
-    :type: :struct:`Boolean`
+    :type: :struct:`String`
 
     **GLOBAL SETTING**
 
-    Configures the ``TelnetLoopback`` setting.
+    Configures the ``TelnetIPAddrString`` setting.
 
-    If true, then it tells the
-    `kOS telnet server in game <../../general/telnet.html>`__
-    to refuse to use the computer's actual IP address, and
-    instead use the loopback address (127.0.0.1).  This is
-    the default mode the kOS mod ships in, in order to
-    make it impossible get external access to your computer.
+    This is the IP address the telnet server will attempt to use when
+    it is enabled.  By default it will use the loopback address of
+    "127.0.0.1" unless you change this setting to the computer's
+    actual IP address.  Because most modern PC's have multiple IP
+    addresses, no attempt is made by kOS to guess which of them is "the"
+    right one.  You must tell kOS which one to use if you don't want it
+    to use the loopback address.
 
     To make the change take effect you may have to
     stop, then restart the telnet server, as described above.
+
+.. attribute:: Config:BRIGHTNESS
+
+    :access: Get/Set
+    :type: :struct:`Scalar`. range = [0,1]
+
+    Configures the ``Brightness`` setting.
+
+    This is the default starting brightness setting a new
+    kOS in-game terminal will have when it is invoked.  This
+    is just the default for new terminals.  Individual terminals
+    can have different settings, either by setting the value
+    :attr:`Terminal:BRIGHTNESS` in a script, or by manually moving the
+    brightness slider widget on that terminal.
+
+    The value here must be between 0 (invisible) and 1 (Max brightness).
+
+.. attribute:: Config:DEFAULTFONTSIZE
+
+    :access: Get/Set
+    :type: :struct:`Scalar` integer-only. range = [6,20]
+
+    Configures the ``TerminalFontDefaultSize`` setting.
+
+    This is the default starting font height (in pixels. not "points")
+    for all newly created kOS in-game terminals.  This
+    is just the default for new terminals.  Individual terminals
+    can have different settings, either by setting the value
+    :attr:`Terminal:CHARHEIGHT` in a script, or by manually clicking
+    the font adjustment buttons on that terminal.
+
+    The value here must be at least 6 (nearly impossible to read)
+    and no greater than 30 (very big).  It will be rounded to the
+    nearest integer when setting the value.
 
 .. attribute:: Config:DEBUGEACHOPCODE
 

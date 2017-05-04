@@ -237,6 +237,11 @@ namespace kOS.Safe.Encapsulation
             return returnList;
         }
 
+        public BooleanValue MatchesPattern(string pattern)
+        {
+            return new BooleanValue(Regex.IsMatch(internalString, pattern, RegexOptions.IgnoreCase));
+        }
+
         private void StringInitializeSuffixes()
         {
             AddSuffix("LENGTH",     new NoArgsSuffix<ScalarValue>( () => Length));
@@ -257,7 +262,8 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("TRIM",       new NoArgsSuffix<StringValue>(() => Trim()));
             AddSuffix("TRIMEND",    new NoArgsSuffix<StringValue>(() => TrimEnd()));
             AddSuffix("TRIMSTART",  new NoArgsSuffix<StringValue>(() => TrimStart()));
-            AddSuffix(new[] { "TONUMBER", "TOSCALAR" },   new VarArgsSuffix<ScalarValue, Structure>(ToScalarVarArgsWrapper));
+            AddSuffix("MATCHESPATTERN", new OneArgsSuffix<BooleanValue, StringValue>( one => MatchesPattern(one)));
+            AddSuffix(new[] { "TONUMBER", "TOSCALAR" }, new VarArgsSuffix<ScalarValue, Structure>(ToScalarVarArgsWrapper));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
             AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<ScalarValue, StringValue>   ( one => IndexOf(one)));

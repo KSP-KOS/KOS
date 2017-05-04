@@ -250,5 +250,10 @@ namespace kOS.Safe.Test.Opcode
         {
             throw new NotImplementedException();
         }
+
+        public IProgramContext SwitchToProgramContext()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

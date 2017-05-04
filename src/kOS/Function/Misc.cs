@@ -172,24 +172,7 @@ namespace kOS.Function
 
             if (volumeId != null)
             {
-                Volume targetVolume = shared.VolumeMgr.GetVolume(volumeId);
-                if (targetVolume != null)
-                {
-                    if (shared.ProcessorMgr != null)
-                    {
-                        var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
-
-                        List<CodePart> parts = shared.ScriptHandler.Compile(path, 1, volumeFile.ReadAll().String, "program", options);
-                        var builder = new ProgramBuilder();
-                        builder.AddRange(parts);
-                        List<Opcode> program = builder.BuildProgram();
-                        shared.ProcessorMgr.RunProgramOn(program, targetVolume);
-                    }
-                }
-                else
-                {
-                    throw new KOSFileException("Volume not found");
-                }
+                throw new KOSObsoletionException("v1.0.2", "run [file] on [volume]", "None", "");
             }
             else
             {
@@ -198,32 +181,20 @@ namespace kOS.Function
                 shared.ScriptHandler.ClearContext("program");
                 //string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
-                var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
+                var programContext = shared.Cpu.SwitchToProgramContext();
 
                 List<CodePart> codeParts;
                 if (content.Category == FileCategory.KSM)
                 {
                     string prefix = programContext.Program.Count.ToString();
                     codeParts = content.AsParts(path, prefix);
+                    programContext.AddParts(codeParts);
+                    shared.Cpu.StopCompileStopwatch();
                 }
                 else
                 {
-                    try
-                    {
-                        codeParts = shared.ScriptHandler.Compile(path, 1, content.String, "program", options);
-                    }
-                    catch (Exception)
-                    {
-                        // If it died due to a compile error, then we won't really be able to switch to program context
-                        // as was implied by calling Cpu.SwitchToProgramContext() up above.  The CPU needs to be
-                        // told that it's still in interpreter context, or else it fails to advance the interpreter's
-                        // instruction pointer and it will just try the "call run()" instruction again:
-                        shared.Cpu.BreakExecution(false);
-                        throw;
-                    }
+                    shared.Cpu.YieldProgram(YieldFinishedCompile.RunScript(path, 1, content.String, "program", options));
                 }
-                programContext.AddParts(codeParts);
-                shared.Cpu.StopCompileStopwatch();
             }
 
             // Because run() returns FIRST, and THEN the CPU jumps to the new program's first instruction that it set up,
@@ -253,6 +224,7 @@ namespace kOS.Function
             // (unless it's being called in compile-only mode, in which case it
             // returns the default dummy zero on the stack like everything else does).
 
+            UsesAutoReturn = true;
             bool defaultOutput = false;
             bool justCompiling = false; // is this load() happening to compile, or to run?
             GlobalPath outPath = null;
@@ -286,7 +258,7 @@ namespace kOS.Function
 
             if (skipIfAlreadyCompiled && !justCompiling)
             {
-                var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
+                var programContext = shared.Cpu.SwitchToProgramContext();
                 int programAddress = programContext.GetAlreadyCompiledEntryPoint(path.ToString());
                 if (programAddress >= 0)
                 {
@@ -295,7 +267,7 @@ namespace kOS.Function
                     //     copy of the compiled file from the program context, which right now doesn't exist. (Without
                     //     that, doing something like a loop that re-wrote a file and re-ran it 100 times would leave
                     //     100 old dead copies of the compiled opcodes in memory, only the lastmost copy being really used.)
-                    
+
                     // We're done here.  Skip the compile.  Point the caller at the already-compiled version.
                     shared.Cpu.PushStack(programAddress);
                     this.ReturnValue = true; // tell caller that it already existed.
@@ -325,29 +297,25 @@ namespace kOS.Function
                 {
                     // since we've already read the file content, use the volume from outPath instead of the source path
                     volume = shared.VolumeMgr.GetVolumeFromPath(outPath);
-                    List<CodePart> compileParts = shared.ScriptHandler.Compile(path, 1, fileContent.String, string.Empty, options);
-                    VolumeFile written = volume.SaveFile(outPath, new FileContent(compileParts));
-                    if (written == null)
-                    {
-                        throw new KOSFileException("Can't save compiled file: not enough space or access forbidden");
-                    }
+                    shared.Cpu.YieldProgram(YieldFinishedCompile.CompileScriptToFile(path, 1, fileContent.String, options, volume, outPath));
                 }
                 else
                 {
-                    var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
+                    var programContext = shared.Cpu.SwitchToProgramContext();
                     List<CodePart> parts;
                     if (fileContent.Category == FileCategory.KSM)
                     {
                         string prefix = programContext.Program.Count.ToString();
                         parts = fileContent.AsParts(path, prefix);
+                        int programAddress = programContext.AddObjectParts(parts, path.ToString());
+                        // push the entry point address of the new program onto the stack
+                        shared.Cpu.PushStack(programAddress);
                     }
                     else
                     {
-                        parts = shared.ScriptHandler.Compile(path, 1, fileContent.String, "program", options);
+                        UsesAutoReturn = false;
+                        shared.Cpu.YieldProgram(YieldFinishedCompile.LoadScript(path, 1, fileContent.String, "program", options));
                     }
-                    int programAddress = programContext.AddObjectParts(parts, path.ToString());
-                    // push the entry point address of the new program onto the stack
-                    shared.Cpu.PushStack(programAddress);
                     this.ReturnValue = false; // did not already exist.
                 }
                 shared.Cpu.StopCompileStopwatch();
