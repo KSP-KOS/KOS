@@ -8,6 +8,7 @@ using kOS.Suffixed.Part;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -318,6 +319,20 @@ namespace kOS.Suffixed
             return PartValueFactory.Construct(kspParts.Distinct(), Shared);
         }
 
+        private ListValue GetPartsDubbedPattern(StringValue searchPattern)
+        {
+            // Prepare case-insensivie regex.
+            Regex r = new Regex(searchPattern, RegexOptions.IgnoreCase);
+            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches the pattern.
+            List<global::Part> kspParts = new List<global::Part>();
+            kspParts.AddRange(GetRawPartsNamedPattern(r));
+            kspParts.AddRange(GetRawPartsTitledPattern(r));
+            kspParts.AddRange(GetRawPartsTaggedPattern(r));
+
+            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
+            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
+        }
+
         private ListValue GetPartsNamed(StringValue partName)
         {
             return PartValueFactory.Construct(GetRawPartsNamed(partName), Shared);
@@ -328,6 +343,20 @@ namespace kOS.Suffixed
             // Get the list of all the parts where the part's KSP API title matches:
             return Vessel.parts.FindAll(
                 part => String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        private ListValue GetPartsNamedPattern(StringValue partNamePattern)
+        {
+            // Prepare case-insensivie regex.
+            Regex r = new Regex(partNamePattern, RegexOptions.IgnoreCase);
+            return PartValueFactory.Construct(GetRawPartsNamedPattern(r), Shared);
+        }
+
+        private IEnumerable<global::Part> GetRawPartsNamedPattern(Regex partNamePattern)
+        {
+            // Get the list of all the parts where the part's KSP API title matches the pattern:
+            return Vessel.parts.FindAll(
+                part => partNamePattern.IsMatch(part.name));
         }
 
         private ListValue GetPartsTitled(StringValue partTitle)
@@ -342,6 +371,20 @@ namespace kOS.Suffixed
                 part => String.Equals(part.partInfo.title, partTitle, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        private ListValue GetPartsTitledPattern(StringValue partTitlePattern)
+        {
+            // Prepare case-insensivie regex.
+            Regex r = new Regex(partTitlePattern, RegexOptions.IgnoreCase);
+            return PartValueFactory.Construct(GetRawPartsTitledPattern(r), Shared);
+        }
+
+        private IEnumerable<global::Part> GetRawPartsTitledPattern(Regex partTitlePattern)
+        {
+            // Get the list of all the parts where the part's GUI title matches the pattern:
+            return Vessel.parts.FindAll(
+                part => partTitlePattern.IsMatch(part.partInfo.title));
+        }
+
         private ListValue GetPartsTagged(StringValue tagName)
         {
             return PartValueFactory.Construct(GetRawPartsTagged(tagName), Shared);
@@ -352,6 +395,20 @@ namespace kOS.Suffixed
             return Vessel.parts
                 .Where(p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
+        }
+
+        private ListValue GetPartsTaggedPattern(StringValue tagPattern)
+        {
+            // Prepare case-insensivie regex.
+            Regex r = new Regex(tagPattern, RegexOptions.IgnoreCase);
+            return PartValueFactory.Construct(GetRawPartsTaggedPattern(r), Shared);
+        }
+
+        private IEnumerable<global::Part> GetRawPartsTaggedPattern(Regex tagPattern)
+        {
+            return Vessel.parts
+                .Where(p => p.Modules.OfType<KOSNameTag>()
+                .Any(tag => tagPattern.IsMatch(tag.nameTag)));
         }
 
         /// <summary>
@@ -471,12 +528,16 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue, StringValue>(GetPartsNamed));
+            AddSuffix("PARTSNAMEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsNamedPattern));
             AddSuffix("PARTSTITLED", new OneArgsSuffix<ListValue, StringValue>(GetPartsTitled));
+            AddSuffix("PARTSTITLEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsTitledPattern));
             AddSuffix("PARTSDUBBED", new OneArgsSuffix<ListValue, StringValue>(GetPartsDubbed));
+            AddSuffix("PARTSDUBBEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsDubbedPattern));
             AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue, StringValue>(GetModulesNamed));
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue, StringValue>(GetPartsInGroup));
             AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue, StringValue>(GetModulesInGroup));
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue, StringValue>(GetPartsTagged));
+            AddSuffix("PARTSTAGGEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsTaggedPattern));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
             AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
