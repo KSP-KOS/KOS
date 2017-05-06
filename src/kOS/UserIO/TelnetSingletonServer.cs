@@ -170,13 +170,24 @@ namespace kOS.UserIO
             rawStream = client.GetStream();
             lock (keepAliveAccess)
                 gotSomeRecentTraffic = true;
-            inThread = new Thread(DoInThread);
-            outThread = new Thread(DoOutThread);
             outQueue = new Queue<char>();
             inQueue = new Queue<char>();
+            SpawnWelcomeMenu();
+            inThread = new Thread(DoInThread);
+            outThread = new Thread(DoOutThread);
             ClientWidth = 80; // common default for a lot of terminal progs.  Will allow resize via RFC1073.
             ClientHeight = 24; // common default for a lot of terminal progs.  Will allow resize via RFC1073.
             ClientTerminalType = "INITIAL_UNSET"; // will be set by telnet client as described by RFC 1091
+        }
+
+        ~TelnetSingletonServer()
+        {
+            if (welcomeMenu != null)
+            {
+                welcomeMenu.Detach();
+                Object.Destroy(welcomeMenu);
+                welcomeMenu = null;
+            }
         }
 
         /// <summary>
@@ -206,6 +217,12 @@ namespace kOS.UserIO
                 // That can cause subsequent reconnections from the TelnetWelcomeMenu to end up connecting you to the now dead CPU, with confusing results:
                 ConnectedProcessor = null;
                 alreadyDisconnecting = false;
+
+                // Disconnecting the CPU from this, so connect the welcome menu instead
+                if (welcomeMenu != null)
+                {
+                    welcomeMenu.Attach(this);
+                }
             }
         }
 
@@ -366,6 +383,14 @@ namespace kOS.UserIO
             outThread = null; // dispose old thread.
             
             rawStream.Close();
+
+            // Get rid of the welcome menu too, which has a reference to this server and should prevent GC
+            if (welcomeMenu != null)
+            {
+                welcomeMenu.Detach();
+                Object.Destroy(welcomeMenu);
+                welcomeMenu = null;
+            }
         }
 
         public void StartListening()
@@ -577,25 +602,20 @@ namespace kOS.UserIO
                 StopListening();                    
             }
             
-            if (welcomeMenu == null)
+            if (! welcomeMenu.IsAttached)
             {
                 if (ConnectedProcessor == null)
-                    SpawnWelcomeMenu();
+                    welcomeMenu.Attach(this);
             }
             else if (ConnectedProcessor != null) // welcome menu is attached but we now have a processor picked, so detach it.
             {
-                welcomeMenu.enabled = false; // turn it off so it stops trying to read the input in its Update().
                 welcomeMenu.Detach();
-                welcomeMenu = null ; // let it get garbage collected.  Now it's the ConnectedProcessor's turn to do the work.
-                // If ConnectedProcessor gets disconnected again, a new welcomeMenu instance should get spawned by the check above.
             }
         }
         
         /// <summary>
         /// When the telnet client connects but is not associated with a particular kOSProcessor at the moment,
-        /// this will attach the welcome menu to it instead of having it attached to a kOSProcessor.  This should
-        /// occur BOTH when the telnet client first connects, and whenever it detaches from a kOSProcessor.
-        /// (It should go back to this menu, rather than get disconnected).
+        /// this will attach the welcome menu to it instead of having it attached to a kOSProcessor.
         /// <br/>
         /// The purpose of the welcome menu is to let the user pick which kOSProcessor to attach to.
         /// </summary>
@@ -604,7 +624,7 @@ namespace kOS.UserIO
             var gObj = new GameObject( "TelnetWelcomeMenu_" + MySpawnOrder, typeof(TelnetWelcomeMenu) );
             Object.DontDestroyOnLoad(gObj);
             welcomeMenu = (TelnetWelcomeMenu)gObj.GetComponent(typeof(TelnetWelcomeMenu));
-            welcomeMenu.Setup(this);
+            welcomeMenu.Attach(this);
         }
         
         

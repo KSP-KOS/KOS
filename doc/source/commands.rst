@@ -6,6 +6,7 @@ Command Reference
 .. toctree::
     :maxdepth: 2
 
+    Running Programs <commands/runprogram>
     Flight Control <commands/flight>
     Prediction <commands/prediction>
     Listing Data <commands/list>

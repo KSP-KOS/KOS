@@ -53,6 +53,7 @@ namespace kOS.Safe.Execution
         int InstructionsThisUpdate { get; }
         void StartCompileStopwatch();
         void StopCompileStopwatch();
+        IProgramContext SwitchToProgramContext();
 
         /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.
@@ -64,5 +65,7 @@ namespace kOS.Safe.Execution
 
         List<string> GetCodeFragment(int contextLines);
         void RunProgram(List<Opcode> program);
+
+        bool IsPoppingContext { get; }
     }
 }

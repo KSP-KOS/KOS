@@ -55,14 +55,14 @@ namespace kOS.Communication
 
             double sentAt = Planetarium.GetUniversalTime();
             double receivedAt = sentAt + Delay;
-            queue.Push(Message.Create(content, sentAt, receivedAt, new VesselTarget(shared), shared.Processor.Tag));
+            queue.Push(Message.Create(content, sentAt, receivedAt, VesselTarget.CreateOrGetExisting(shared), shared.Processor.Tag));
 
             return true;
         }
 
         protected override Structure Destination()
         {
-            return new VesselTarget(vessel, shared);
+            return VesselTarget.CreateOrGetExisting(vessel, shared);
         }
     }
 }

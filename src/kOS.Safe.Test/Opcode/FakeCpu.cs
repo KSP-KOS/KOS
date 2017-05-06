@@ -8,6 +8,7 @@ namespace kOS.Safe.Test.Opcode
     public class FakeCpu : ICpu
     {
         private readonly Stack<object> fakeStack;
+        public bool IsPoppingContext { get { return false; } }
 
         public FakeCpu()
         {
@@ -281,6 +282,11 @@ namespace kOS.Safe.Test.Opcode
         }
 
         public Compilation.Opcode GetCurrentOpcode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IProgramContext SwitchToProgramContext()
         {
             throw new NotImplementedException();
         }

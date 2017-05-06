@@ -181,6 +181,8 @@
     <Compile Include="Execution\TriggerInfo.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
+    <Compile Include="Execution\YiedFinishedThreadedDetector.cs" />
+    <Compile Include="Execution\YieldFinishedCompile.cs" />
     <Compile Include="Execution\YieldFinishedDetector.cs" />
     <Compile Include="Execution\YieldFinishedGameTimer.cs" />
     <Compile Include="Execution\YieldFinishedGetChar.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="Exceptions\KOSCannotCallException.cs" />
     <Compile Include="Encapsulation\NoDelegate.cs" />
     <Compile Include="Encapsulation\Suffixes\ThreeArgsSuffix.cs" />
+    <Compile Include="Exceptions\KOSTermWidthObsoletionException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

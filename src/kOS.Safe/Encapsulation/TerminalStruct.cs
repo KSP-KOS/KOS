@@ -147,7 +147,7 @@ namespace kOS.Safe.Encapsulation
                                                                     1f,
                                                                     "Screen Brightness, between 0.0 and 1.0"));
             AddSuffix("CHARWIDTH", new ClampSetSuffix<ScalarValue>(() => Shared.Screen.CharacterPixelWidth,
-                                                                   value => Shared.Screen.CharacterPixelWidth = (int)value,
+                                                                   CannotSetWidth,
                                                                    MINCHARPIXELS,
                                                                    MAXCHARPIXELS,
                                                                    2,
@@ -161,14 +161,18 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("RESIZEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => resizeWatchers));
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
         }
-        
+
+        private void CannotSetWidth(ScalarValue newWidth)
+        {
+            throw new kOS.Safe.Exceptions.KOSTermWidthObsoletionException("1.1");
+        }
+
         public TerminalInput GetTerminalInputInstance()
         {
             if (terminalInput == null)
                 terminalInput = new TerminalInput(shared);
             return terminalInput;
         }
-        
 
         public override string ToString()
         {

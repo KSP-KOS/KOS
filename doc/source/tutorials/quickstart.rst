@@ -189,7 +189,7 @@ By saving the file in ``Ships/Script``, you have actually put it in your archive
 after saving the file from your external text editor program, you will see a listing of your file "hellolaunch" right away. Okay, now copy it to your local drive and give it a try running it from there::
 
     SWITCH TO 1.
-    COPY HELLOLAUNCH FROM 0.
+    COPYPATH("0:/HELLOLAUNCH", ""). // copies from 0 (archive) to current default location (local drive (1)).
     RUN HELLOLAUNCH.
 
 .. figure:: /_images/tutorials/quickstart/example_2_1.png
@@ -235,7 +235,7 @@ Okay now go back into your *text editor of choice* and append a few more lines t
 
 Save this file to hellolaunch.ks again, and re-copy it to your vessel that should still be sitting on the launchpad, then run it, like so::
 
-    COPY HELLOLAUNCH FROM 0.
+    COPYPATH("0:/HELLOLAUNCH", "").
     RUN HELLOLAUNCH. // You could also say RUNPATH("hellolaunch") here.
 
 .. figure:: /_images/tutorials/quickstart/example_2_2.png
@@ -299,7 +299,7 @@ So if you just add this one line to your script, you'll get something that shoul
 Again, copy this and run it, like before. If your craft crashed in the previous step, which it probably did, then revert to the VAB and re-launch it.::
 
     SWITCH TO 1. // should be the default already, but just in case.
-    COPY HELLOLAUNCH FROM 0.
+    COPYPATH("0:/HELLOLAUNCH", "").
     RUN HELLOLAUNCH. // You could also say RUNPATH("hellolaunch") here.
 
 .. figure:: /_images/tutorials/quickstart/example_2_3.png

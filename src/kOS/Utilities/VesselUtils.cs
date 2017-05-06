@@ -151,12 +151,12 @@ namespace kOS.Utilities
 
         public static void SetTarget(ITargetable val, Vessel currentVessel)
         {
-            if (val is Vessel && val == currentVessel)
-                throw new kOS.Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to itself.");
-            else if (val is ITargetable && ((ITargetable)val).GetVessel() == currentVessel)
-                throw new kOS.Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a part of itself.");
-            
-            FlightGlobals.fetch.SetVesselTarget(val);
+            if (val is Vessel && (Vessel)val == currentVessel)
+                throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to itself.");
+            else if (val.GetVessel() == currentVessel)
+                throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a part of itself.");
+
+            FlightGlobals.fetch.SetVesselTarget(val, true);
         }
 
         public static float AngleDelta(float a, float b)

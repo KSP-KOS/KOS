@@ -241,6 +241,8 @@
     <Compile Include="Communication\PlanetariumTimeProvider.cs" />
     <Compile Include="Communication\Message.cs" />
     <Compile Include="Communication\MessageQueue.cs" />
+    <Compile Include="Module\AssetManager.cs" />
+    <Compile Include="Screen\ListPickerDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

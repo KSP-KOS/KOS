@@ -44,6 +44,9 @@ Global
 		$2.EventAddBraceStyle = DoNotChange
 		$2.EventRemoveBraceStyle = DoNotChange
 		$2.StatementBraceStyle = DoNotChange
+		$2.IndentSwitchBody = True
+		$2.AnonymousMethodBraceStyle = DoNotChange
+		$2.StatementBraceStyle = NextLine
 		$2.ElseNewLinePlacement = DoNotCare
 		$2.ElseIfNewLinePlacement = DoNotCare
 		$2.CatchNewLinePlacement = DoNotCare
@@ -52,6 +55,11 @@ Global
 		$2.BeforeMethodDeclarationParentheses = False
 		$2.BeforeMethodCallParentheses = False
 		$2.BeforeConstructorDeclarationParentheses = False
+		$2.EmbeddedStatementPlacement = DoNotCare
+		$2.BeforeMethodDeclarationParentheses = False
+		$2.BeforeMethodCallParentheses = False
+		$2.BeforeConstructorDeclarationParentheses = False
+		$2.BeforeIndexerDeclarationBracket = False
 		$2.BeforeDelegateDeclarationParentheses = False
 		$2.AfterDelegateDeclarationParameterComma = True
 		$2.NewParentheses = False
@@ -59,6 +67,9 @@ Global
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp
+		$0.DotNetNamingPolicy = $3
+		$3.DirectoryNamespaceAssociation = None
+		$3.ResourceNamePolicy = FileFormatDefault
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

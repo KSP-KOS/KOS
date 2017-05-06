@@ -62,6 +62,14 @@ namespace kOS.Safe.Execution
         
         public List<string> ProfileResult { get; private set; }
 
+        /// <summary>
+        /// It's quite bad to abort the PopContext activity partway through while the CPU is
+        /// trying to clean up from a program crash or break, so this advertises when that's the case
+        /// so other parts of the system can decide not to use exceptions when in this fragile state:
+        /// </summary>
+        /// <value><c>true</c> if this CPU is popping context; otherwise, <c>false</c>.</value>
+        public bool IsPoppingContext { get; private set; }
+
         public CPU(SafeSharedObjects shared)
         {
             this.shared = shared;
@@ -144,6 +152,9 @@ namespace kOS.Safe.Execution
                 else
                 {
                     var bootContext = "program";
+                    shared.ScriptHandler.ClearContext(bootContext);
+                    IProgramContext programContext = SwitchToProgramContext();
+                    programContext.Silent = true;
 
                     string bootCommand = string.Format("run \"{0}\".", file.Path);
 
@@ -154,13 +165,8 @@ namespace kOS.Safe.Execution
                         IsCalledFromRun = false
                     };
 
-                    shared.ScriptHandler.ClearContext(bootContext);
-                    List<CodePart> parts = shared.ScriptHandler.Compile(new BootGlobalPath(bootCommand),
-                        1, bootCommand, bootContext, options);
-
-                    IProgramContext programContext = SwitchToProgramContext();
-                    programContext.Silent = true;
-                    programContext.AddParts(parts);
+                    YieldProgram(YieldFinishedCompile.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
+                    
                 }
             }
         }
@@ -190,6 +196,7 @@ namespace kOS.Safe.Execution
         private void PopContext()
         {
             SafeHouse.Logger.Log("Popping context " + contexts.Count);
+            IsPoppingContext = true;
             if (contexts.Any())
             {
                 // remove the last context
@@ -218,6 +225,7 @@ namespace kOS.Safe.Execution
                     shared.Interpreter.SetInputLock(false);
                 }
             }
+            IsPoppingContext = false;
         }
 
         /// <summary>

@@ -159,7 +159,7 @@ namespace kOS.Callback
 			UniqueSetValue<UserDelegate> notifyees = GetSwitchVesselNotifyees();
 			foreach (UserDelegate del in notifyees)
 				if (UserDelgateIsAcceptable(del))
-					Shared.Cpu.AddTrigger(del, new VesselTarget(fromVes, Shared), new VesselTarget(toVes, Shared));
+                    Shared.Cpu.AddTrigger(del, VesselTarget.CreateOrGetExisting(fromVes, Shared), VesselTarget.CreateOrGetExisting(toVes, Shared));
 		}
 
 		// SOIChange:
