@@ -139,7 +139,7 @@ namespace kOS.Function
         {
             string vesselName = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            var result = new VesselTarget(VesselUtils.GetVesselByName(vesselName, shared.Vessel), shared);
+            var result = VesselTarget.CreateOrGetExisting(VesselUtils.GetVesselByName(vesselName, shared.Vessel), shared);
             ReturnValue = result;
         }
     }

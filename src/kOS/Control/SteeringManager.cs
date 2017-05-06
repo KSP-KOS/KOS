@@ -382,7 +382,12 @@ namespace kOS.Control
         public void DisableControl(SharedObjects sharedObj)
         {
             if (enabled && partId != sharedObj.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Cannot unbind Steering Manager on this ship in use by another processor.");
+            {
+                if (sharedObj.Cpu.IsPoppingContext)
+                    return; // popping context calls DisableControl but at a time when we mustn't throw exceptions.
+                else
+                    throw new Safe.Exceptions.KOSException ("Cannot unbind Steering Manager on this ship in use by another processor.");
+            }
             partId = 0;
             Enabled = false;
         }

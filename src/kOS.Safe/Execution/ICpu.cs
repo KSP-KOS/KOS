@@ -60,5 +60,7 @@ namespace kOS.Safe.Execution
 
         List<string> GetCodeFragment(int contextLines);
         void RunProgram(List<Opcode> program);
+
+        bool IsPoppingContext { get; }
     }
 }
