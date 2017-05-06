@@ -1,22 +1,21 @@
 ﻿using kOS.Binding;
+using kOS.Communication;
 using kOS.Module;
+using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
+using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using kOS.Communication;
-using kOS.Serialization;
-using kOS.Safe.Serialization;
-using kOS.Safe;
-using kOS.Safe.Execution;
 
 namespace kOS.Suffixed
 {
@@ -258,7 +257,7 @@ namespace kOS.Suffixed
         public static VesselTarget CreateOrGetExisting(Vessel target, SharedObjects shared)
         {
             if (instanceCache == null)
-                instanceCache = new Dictionary<InstanceKey, WeakReference> ();
+                instanceCache = new Dictionary<InstanceKey, WeakReference>();
 
             InstanceKey key = new InstanceKey { ProcessorId = shared.Processor.KOSCoreId, VesselId = target.id };
             if (instanceCache.ContainsKey(key))
@@ -284,8 +283,8 @@ namespace kOS.Suffixed
         {
             if (!eventsAreHooked)
             {
-                GameEvents.onVesselDestroy.Add (OnVesselDestroy);
-                GameEvents.onVesselPartCountChanged.Add (OnVesselPartCountChanged);
+                GameEvents.onVesselDestroy.Add(OnVesselDestroy);
+                GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
                 eventsAreHooked = true;
             }
         }
@@ -297,8 +296,8 @@ namespace kOS.Suffixed
             // protective boolean check is here:
             if (eventsAreHooked)
             {
-                GameEvents.onVesselDestroy.Remove (OnVesselDestroy);
-                GameEvents.onVesselPartCountChanged.Remove (OnVesselPartCountChanged);
+                GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
+                GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
                 eventsAreHooked = false;
             }
         }
@@ -338,11 +337,13 @@ namespace kOS.Suffixed
         public static string[] ShortCuttableShipSuffixes { get; private set; }
 
         private int linkCount = 0;
+
         public int LinkCount
         {
             get
             {
-                return linkCount; }
+                return linkCount;
+            }
             set
             {
                 linkCount = value;
@@ -629,13 +630,13 @@ namespace kOS.Suffixed
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<ScalarValue>(() => Vessel.verticalSpeed));
             AddSuffix("GROUNDSPEED", new Suffix<ScalarValue>(GetHorizontalSrfSpeed));
-            AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSObsoletionException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
+            AddSuffix("SURFACESPEED", new Suffix<ScalarValue>(() => { throw new KOSObsoletionException("0.18.0", "SURFACESPEED", "GROUNDSPEED", ""); }));
             AddSuffix("AIRSPEED", new Suffix<ScalarValue>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.CoMD)).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<StringValue>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<StringValue>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
             AddSuffix("TERMVELOCITY", new Suffix<ScalarValue>(() => { throw new KOSAtmosphereObsoletionException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
-            AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<ScalarValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
+            AddSuffix(new[] { "DYNAMICPRESSURE", "Q" }, new Suffix<ScalarValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<BooleanValue>(() => Vessel.loaded));
             AddSuffix("UNPACKED", new Suffix<BooleanValue>(() => !Vessel.packed));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
@@ -662,18 +663,21 @@ namespace kOS.Suffixed
         public global::Part GetControlPart()
         {
             global::Part res = Vessel.GetReferenceTransformPart(); //this can actually be null
-            if (res != null) { return res; } 
+            if (res != null) { return res; }
             else { return Vessel.rootPart; } //the root part is used as reference in that case
         }
 
-        public ScalarValue GetCrewCapacity() {
+        public ScalarValue GetCrewCapacity()
+        {
             return Vessel.GetCrewCapacity();
         }
 
-        public ListValue GetCrew() {
+        public ListValue GetCrew()
+        {
             var crew = new ListValue();
 
-            foreach (var crewMember in Vessel.GetVesselCrew()) {
+            foreach (var crewMember in Vessel.GetVesselCrew())
+            {
                 crew.Add(new CrewMember(crewMember, Shared));
             }
 
@@ -724,15 +728,15 @@ namespace kOS.Suffixed
                 Vessel.vesselName = value;
             }
         }
-        
+
         private ScalarValue GetHorizontalSrfSpeed()
         {
-            // NOTE: THIS Function replaces the functionality of the 
+            // NOTE: THIS Function replaces the functionality of the
             // single KSP API CALL:
             //       Vessel.horizontalSrfSpeed;
             // Which broke in KSP 1.0.3, badly, so we're just going to
             // calculate it manually instead.
-            
+
             // The logic, shamefully copied from the Kerbal Engineer mod,
             // which had the same problem, is this:
             //    Run the Pythagorean Theorem slightly backward.
@@ -749,7 +753,7 @@ namespace kOS.Suffixed
             //        speed_2D = sqrt(srfspd^2 - c^2)
             //    Since C in our case is the vertical speed we want to remove, we get the following formula:
 
-            double squared2DSpeed = Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed;
+            double squared2DSpeed = Vessel.srfSpeed * Vessel.srfSpeed - Vessel.verticalSpeed * Vessel.verticalSpeed;
 
             // Due to floating point roundoff errrors in the KSP API, the above expression can sometimes come
             // out slightly negative when it should be nearly zero.  (i.e. -0.0000012).  The Sqrt() would
@@ -859,10 +863,10 @@ namespace kOS.Suffixed
         private struct InstanceKey
         {
             /// <summary>The kOSProcessor Module that built me.</summary>
-            public int ProcessorId { get; set;}
+            public int ProcessorId { get; set; }
 
             /// <summary>The KSP vessel object that I'm wrapping.</summary>
-            public Guid VesselId { get; set;}
+            public Guid VesselId { get; set; }
         }
     }
 }
