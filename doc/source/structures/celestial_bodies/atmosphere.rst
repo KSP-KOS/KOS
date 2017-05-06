@@ -68,8 +68,27 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :type: :ref:`scalar <scalar>` (atm)
     :access: Get only
 
-    Number of Atm's at planet's sea level 1.0 Atm's = same as Kerbin.
+    Pressure at the body's sea level.
+
+    Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
+    If you prefer to see the answer in KiloPascals, multiply the answer by
+    :ref:`Constant:AtmToKPa <Constant:AtmToKPa>`.
     
+.. method:: Atmosphere:ALTITUDEPRESSURE(altitude)
+
+    :parameter altitude: The altitude above sea level (in meters) you want to know the pressure for.
+    :type: :ref:`scalar <scalar>` (atm)
+
+    Number of Atm's of atmospheric pressure at the given altitude.
+    If you pass in zero, you should get the sea level pressure.
+    If you pass in 10000, you get the pressure at altitude=10,000m.
+    This will return zero if the body has no atmosphere, or if the altitude you
+    pass in is above the max atmosphere altitude for the body.
+
+    Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
+    If you prefer to see the answer in KiloPascals, multiply the answer by
+    :ref:`Constant:AtmToKPa <Constant:AtmToKPa>`.
+
 .. attribute:: Atmosphere:HEIGHT
 
     :type: :ref:`scalar <scalar>` (m)
