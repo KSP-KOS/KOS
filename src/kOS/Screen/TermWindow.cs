@@ -419,11 +419,7 @@ namespace kOS.Screen
             }
             else
             {
-                if (beepSource.isPlaying)
-                    return false; // prev beep sound still is happening.
-                
-                // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:
-                beepSource.Play();
+                return soundMaker.BeginFileSound("beep");
             }
             return true;
         }
