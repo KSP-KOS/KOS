@@ -122,6 +122,10 @@ namespace kOS.Suffixed
                       new OneArgsSuffix<ScalarValue, Vector>(
                               AltitudeFromPosition,
                               "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
+            AddSuffix("GEOPOSITION",
+                      new TwoArgsSuffix<GeoCoordinates, ScalarValue, ScalarValue>(
+                              GeoCoordinatesFromLatLng,
+                              "Given latitude and longitude, return the geoposition on this body corresponding to it."));
         }
 
         /// <summary>
@@ -135,6 +139,15 @@ namespace kOS.Suffixed
             double lat = Body.GetLatitude(unityWorldPosition);
             double lng = Body.GetLongitude(unityWorldPosition);
             return new GeoCoordinates(Body, Shared, lat, lng);
+        }
+
+        /// <summary>
+        /// Return a Geocoordinates on this body, given the latitude and longitude
+        /// </summary>
+        /// <returns>The LATLNG (GeoCoordinates) structure.</returns>
+        public GeoCoordinates GeoCoordinatesFromLatLng(ScalarValue latitude, ScalarValue longitude)
+        {
+            return new GeoCoordinates(Body, Shared, latitude, longitude);
         }
 
         /// <summary>

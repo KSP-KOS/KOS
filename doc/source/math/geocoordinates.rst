@@ -18,7 +18,17 @@ Creation
     :parameter lng: (deg) Longitude
     :return: :struct:`GeoCoordinates`
 
-    This function creates a :struct:`GeoCoordinates` object with the given latitude and longitude. Once created it can't be changed. The :attr:`GeoCoordinates:LAT` and :attr:`GeoCoordinates:LNG` suffixes are get-only and cannot be set. To switch to a new location, make a new call to :func:`LATLNG()`.
+    This function creates a :struct:`GeoCoordinates` object with the given
+    latitude and longitude, assuming the current SHIP's Body is the body
+    to make it for.
+    
+    Once created it can't be changed. The :attr:`GeoCoordinates:LAT` and
+    :attr:`GeoCoordinates:LNG` suffixes are get-only (they cannot be
+    set.) To switch to a new location, make a new call to :func:`LATLNG()`.
+
+    If you wish to create a :struct:`GeoCoordinates` object for a latitude
+    and longitude around a *different* body than the ship's current sphere
+    of influence body, see :method:`Body:Geoposition` for a means to do that.
 
     It is also possible to obtain a :struct:`GeoCoordinates` from some suffixes of some other structures. For example::
 
