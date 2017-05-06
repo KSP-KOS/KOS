@@ -42,7 +42,6 @@ namespace kOS.Screen
         private KeyBinding rememberThrottleFullKey;
 
         private bool allTexturesFound = true;
-        private CameraManager cameraManager;
         private float cursorBlinkTime;
 
         private Font font;
@@ -262,8 +261,6 @@ namespace kOS.Screen
             ShowCursor = true;
             BringToFront();
 
-            cameraManager = CameraManager.Instance;
-            cameraManager.enabled = false;
 
             // Exclude the TARGETING ControlType so that we can set the target vessel with the terminal open.
             InputLockManager.SetControlLock(ControlTypes.All & ~ControlTypes.TARGETING, CONTROL_LOCKOUT);
@@ -272,16 +269,6 @@ namespace kOS.Screen
             EditorLogic editor = EditorLogic.fetch;
                 //TODO: POST 0.90 REVIEW
             if (editor != null && InputLockManager.IsUnlocked(ControlTypes.All)) editor.Lock(true, true, true, CONTROL_LOCKOUT);
-
-            // This seems to be the only way to force KSP to let me lock out the "X" throttle
-            // key.  It seems to entirely bypass the logic of every other keypress in the game,
-            // so the only way to fix it is to use the keybindings system from the Setup screen.
-            // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
-            // when its unfocused later, its put back the way it was:
-            rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
-            GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
-            rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
-            GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
         }
 
         private void Unlock()
@@ -292,21 +279,8 @@ namespace kOS.Screen
 
             InputLockManager.RemoveControlLock(CONTROL_LOCKOUT);
 
-            // Apparently Unlock now gets called at a point after the
-            // CameraManager instance changes... so check the reference.
-            cameraManager = CameraManager.Instance;
-            cameraManager.enabled = true;
-
-
             EditorLogic editor = EditorLogic.fetch;
             if (editor != null) editor.Unlock(CONTROL_LOCKOUT);
-
-            // This seems to be the only way to force KSP to let me lock out the "X" throttle
-            // key.  It seems to entirely bypass the logic of every other keypress in the game:
-            if (rememberThrottleCutoffKey != null)
-                GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
-            if (rememberThrottleFullKey != null)
-                GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
 
         }
 
