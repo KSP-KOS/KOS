@@ -76,3 +76,36 @@ Structure
 
     This is :ref:`further explained elsewhere <kosdelegate_bind>`.
 
+
+.. _donothing::
+
+.. structure:: NODelegate
+
+DONOTHING (NODELEGATE)
+----------------------
+
+There is a special keyword `DONOTHING` that refers to a special
+kind of :struct`KosDelegate` called a "NoDelegate".
+
+The type string returned by ``DONOTHING:TYPENAME`` is "NoDelegate".
+
+``DONOTHING``, otherwise known as "the ``NoDelegate``" has the same
+suffixes as a :struct:`KOSDelegate`, although you're not usually
+expected to ever use them, except maybe ``TYPENAME`` to discover
+that it is a ``NoDelegate``.
+
+``DONOTHING`` is used when you're in a situation where you had
+previously assigned a :struct:`KosDelegate` to some callback hook
+the kOS system provides, but now you want the kOS system to stop
+calling it.  To do so, you assign that callback hook to the value
+``DONOTHING``.
+
+``DONOTHING`` is similar to making a :struct:`KosDelegate` that
+consists of just ``{return.}``.  If you attempt to call it from
+your own code, that's how it will behave.  But the one extra
+feature it has is that it allows kOS to understand your intent
+that you wish to disable a callback hook.  kOS can detect when
+the ``KosDelegate`` you assign to something happens to be the
+``DONOTHING`` delegate.  When it is, kOS knows to not even
+bother calling the delegate at all anymore.
+

@@ -128,6 +128,21 @@ Drawing Vectors on the Screen
         * - :attr:`WIDTH`
           - :ref:`scalar <scalar>`
           - width of vector, default is 0.2
+        * - :attr:`STARTUPDATER`
+          - :struct:`KosDelegate`
+          - assigns a delegate to auto-update the START attribute.
+        * - :attr:`VECUPDATER`
+          - :struct:`KosDelegate`
+          - assigns a delegate to auto-update the VEC attribute.
+        * - :attr:`VECTORUPDATER`
+          -
+          - Same as :attr:`VECUPDATER`
+        * - :attr:`COLORUPDATER`
+          - :struct:`KosDelegate`
+          - assigns a delegate to auto-update the COLOR attribute.
+        * - :attr:`COLOURUPDATER`
+          -
+          - Same as :attr:`COLORUPDATER`
 
 
 
@@ -202,3 +217,117 @@ Drawing Vectors on the Screen
     .. versionadded:: 0.19.0
 
         This parameter didn't exist before kOS 0.19.0.
+
+.. attribute:: VecDraw:STARTUPDATER
+
+    :access: Get/Set
+    :type: :struct:`KosDelegate` with no parameters, returning a :struct:`Vector`
+
+    This allows you to tell the VecDraw that you'd like it to update the START position
+    of the vector regularly every update, according to your own scripted code.
+
+    You create a :struct:`KosDelegate` that takes no parameters, and returns a vector,
+    which the system will automatically assign to the :attr:`START` suffix every update.
+    Be aware that this system does eat into the instructions available per update, so if
+    you make this delegate do too much work, it will slow down your script's performance.
+
+    To make the system stop calling your delegate, set this suffix to the magic
+    keyword :ref:`DONOTHING`.
+
+    Example::
+
+        // This example will bounce the arrow up and down over time for a few seconds,
+        // moving the location of the vector's start according to a sine wave over time:
+        set vd to vecdraw(v(0,0,0), ship:north:vector*5, green, "bouncing arrow", 1.0, true, 0.2).
+        print "Moving the arrow up and down for a few seconds.".
+        set vd:startupdater to { return ship:up:vector*3*sin(time:seconds*180). }.
+        wait 5.
+        print "Stopping the arrow movement.".
+        set vd:startupdater to DONOTHING.
+        wait 3.
+        print "Removing the arrow.".
+        set vd to 0.
+
+    .. versionadded:: 1.1.0
+
+        scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+
+.. attribute:: VecDraw:VECUPDATER
+
+    :access: Get/Set
+    :type: :struct:`KosDelegate` with no parameters, returning a :struct:`Vector`
+
+    This allows you to tell the VecDraw that you'd like it to update the ``VEC`` suffix
+    of the vector regularly every update, according to your own scripted code.
+
+    You create a :struct:`KosDelegate` that takes no parameters, and returns a vector,
+    which the system will automatically assign to the :attr:`VEC` suffix every update.
+    Be aware that this system does eat into the instructions available per update, so if
+    you make this delegate do too much work, it will slow down your script's performance.
+
+    To make the system stop calling your delegate, set this suffix to the magic
+    keyword :ref:`DONOTHING`.
+
+    Example::
+
+        // This example will spin the arrow around in a circle by leaving the start
+        // where it is but moving the tip by trig functions:
+        set vd to vecdraw(v(0,0,0), v(5,0,0), green, "spinning arrow", 1.0, true, 0.2).
+        print "Moving the arrow in a circle for a few seconds.".
+        set vd:vecupdater to {
+           return ship:up:vector*5*sin(time:seconds*180) + ship:north:vector*5*cos(time:seconds*180). }.
+        wait 5.
+        print "Stopping the arrow movement.".
+        set vd:vecupdater to DONOTHING.
+        wait 3.
+        print "Removing the arrow.".
+        set vd to 0.
+
+
+    .. versionadded:: 1.1.0
+
+        scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+
+.. attribute:: VecDraw:VECTORUPDATER
+
+    This is just an alias for :attr:`VecDraw:VECUPDATER`.
+
+.. attribute:: VecDraw:COLORUPDATER
+
+    :access: Get/Set
+    :type: :struct:`KosDelegate` with no parameters, returning a :struct:`Color`
+
+    This allows you to tell the VecDraw that you'd like it to update the ``COLOR``/``COLOUR``
+    suffix of the vector regularly every update, according to your own scripted code.
+
+    You create a :struct:`KosDelegate` that takes no parameters, and returns a Color,
+    which the system will automatically assign to the :attr:`COLOR` suffix every update.
+    Be aware that this system does eat into the instructions available per update, so if
+    you make this delegate do too much work, it will slow down your script's performance.
+
+    To make the system stop calling your delegate, set this suffix to the magic
+    keyword :ref:`DONOTHING`.
+
+    Example::
+
+        // This example will change how opaque the arrow is over time by changing
+        // the 'alpha' of its color:
+        set vd to vecdraw(v(0,0,0), ship:north:vector*5, green, "fading arrow", 1.0, true, 0.2).
+        print "Fading the arrow in and out for a few seconds.".
+        set vd:colorupdater to { return RGBA(0,1,0,sin(time:seconds*180)). }.
+        wait 5.
+        print "Stopping the color change.".
+        set vd:colorupdater to DONOTHING.
+        wait 3.
+        print "Removing the arrow.".
+        set vd to 0.
+
+
+    .. versionadded:: 1.1.0
+
+        scripted Delegate callbacks such as this did not exist prior to kOS version 1.1.0
+
+.. attribute:: VecDraw:COLOURUPDATER
+
+    This is just an alias for :attr:`VecDraw:COLORUPDATER`.
+

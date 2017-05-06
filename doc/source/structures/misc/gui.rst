@@ -56,7 +56,7 @@ The same "Hello World" program, version 2 with "callbacks"::
         //
         // This is the technique known as "callbacks" - instead
         // of actively looking again and again to see if a button was
-        // pressed, the script just tells kOS that it shold call a
+        // pressed, the script just tells kOS that it should call a
         // delegate function when it notices the button has done
         // something, and then the program passively waits for that
         // to happen:
