@@ -85,26 +85,26 @@ Let's say that you have 3 programs your probe needs, called:
 And that myprog1 calls myprog2 and myprog3, and you normally would call the progam this way::
 
     SWITCH TO 1.
-    COPY myprog1 from ARCHIVE.
-    COPY myprog2 from ARCHIVE.
-    COPY myprog3 from ARCHIVE.
-    RUNPATH(myprog1, 1, 2, "hello").
+    COPYPATH( "0:/myprog1", "" ).
+    COPYPATH( "0:/myprog2", "" ).
+    COPYPATH( "0:/myprog3", "" ).
+    RUNPATH("myprog1", 1, 2, "hello").
 
 Then you can put just the compiled KSM versions of them on your vessel and run it this way::
 
     SWITCH TO ARCHIVE.
 
-    COMPILE myprog1.ks to myprog1.ksm.
-    COPY myprog1.ksm to 1.
+    COMPILE "myprog1.ks" to "myprog1.ksm".
+    COPYPATH( "0:/myprog1.ksm", "1:/" ).
 
-    COMPILE myprog2. // If you leave the arguments off, it assumes you are going from .ks to .ksm
-    COPY myprog2.ksm to 1.
+    COMPILE "myprog2". // If you leave the arguments off, it assumes you are going from .ks to .ksm
+    COPYPATH( "0:/myprog2.ksm", "1:/" ).
 
-    COMPILE myprog3. // If you leave the arguments off, it assumes you are going from .ks to .ksm
-    COPY myprog2.ksm to 1.
+    COMPILE "myprog3". // If you leave the arguments off, it assumes you are going from .ks to .ksm
+    COPYPATH( "0:/myprog2.ksm", "1:/" ).
 
     SWITCH TO 1.
-    RUNPATH(myprog1, 1, 2, "hello").
+    RUNPATH("myprog1", 1, 2, "hello").
 
 Default File Naming Conventions
 -------------------------------
