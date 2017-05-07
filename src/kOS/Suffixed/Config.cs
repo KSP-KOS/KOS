@@ -69,7 +69,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
             AddConfigKey(PropId.TelnetIPAddrString, new ConfigKey("TelnetIPAddrString", "IPADDRESS", "Telnet IP address string (must restart telnet to take effect)", "127.0.0.1", "n/a", "n/a", typeof(string)));
             AddConfigKey(PropId.TerminalFontDefaultSize, new ConfigKey("TerminalFontDefaultSize", "DEFAULTFONTSIZE", "Initial Terminal:CHARHEIGHT when a terminal is first opened", 12, 6, 20, typeof(int)));
-            AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "Courier New Bold", "n/a", "n/a", typeof(string)));
+            AddConfigKey(PropId.TerminalFontName, new ConfigKey("TerminalFontName", "FONTNAME", "Font Name for terminal window", "_not_chosen_yet_", "n/a", "n/a", typeof(string)));
             AddConfigKey(PropId.TerminalBrightness, new ConfigKey("TerminalBrightness", "BRIGHTNESS", "Initial brightness setting for new terminals", 0.7d, 0d, 1d, typeof(double)));
         }
 

@@ -24,7 +24,10 @@ namespace kOS.Screen
         private Font font;
         // A list of fonts including the user's choice plus a few fallback options if the user's choice isn't working:
         private string[] tryFontNames =
-            new string[] { "_User's choice_", "Courier New Bold", "Courier Bold", "Courier New", "Courier", "Monaco", "Consolas", "Liberation Mono", "Arial" };
+            new string[] {
+               "_User's choice_",
+               "Consolas Bold", "Consolas", "Monaco Bold", "Monaco", "Liberation Mono Bold", "Liberation Mono",
+               "Courier New Bold", "Courier Bold", "Courier New", "Courier", "Arial" };
         private string prevConfigFontName = "";
         private int prevConfigFontSize = 12;
         private Rect innerCoords;

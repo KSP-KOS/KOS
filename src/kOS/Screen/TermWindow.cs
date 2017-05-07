@@ -38,9 +38,6 @@ namespace kOS.Screen
         
         private bool collapseFastBeepsToOneBeep = false; // This is a setting we might want to fiddle with depending on opinion.
 
-        private KeyBinding rememberThrottleCutoffKey;
-        private KeyBinding rememberThrottleFullKey;
-
         private bool allTexturesFound = true;
         private float cursorBlinkTime;
 
@@ -48,13 +45,16 @@ namespace kOS.Screen
         private int fontSize;
         private string[] tryFontNames = {
             "User pick Goes Here", // overwrite this first one with the user selection - the rest are a fallback just in case
-            "Courier New Bold",
+            "Consolas Bold",          // typical Windows good programming font
+            "Consolas",
+            "Monaco Bold",            // typical Mac good programming font
+            "Monaco",
+            "Liberation Mono Bold",   // typical Linux good programming font
+            "Liberation Mono",
+            "Courier New Bold",  // The Courier ones are ugly fallbacks just in case.
             "Courier Bold",
             "Courier New",
             "Courier",
-            "Monaco",
-            "Consolas",
-            "Liberation Mono",
             "Arial" // very bad, proportional, but guaranteed to exist in Unity no matter what.
         };
         private GUISkin terminalLetterSkin;
