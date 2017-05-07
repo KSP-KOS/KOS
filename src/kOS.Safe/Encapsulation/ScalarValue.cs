@@ -19,6 +19,8 @@ namespace kOS.Safe.Encapsulation
 
         abstract public bool IsDouble { get; }
 
+        abstract public bool BooleanMeaning { get; }
+
         public bool IsValid
         {
             get
@@ -356,8 +358,7 @@ namespace kOS.Safe.Encapsulation
 
         bool IConvertible.ToBoolean(IFormatProvider provider)
         {
-            if (GetIntValue() == 0) return false;
-            return true;
+            return BooleanMeaning;
         }
 
         byte IConvertible.ToByte(IFormatProvider provider)
