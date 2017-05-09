@@ -510,7 +510,7 @@ namespace kOS.Screen
                     return;
                 }
                 
-                if (! IsSpecial(c)) // printable characters
+                if (!IsSpecial(c)) // printable characters
                 {
                     if (DebugInternational)
                         c = DebugInternationalMapping(c);
