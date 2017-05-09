@@ -19,6 +19,8 @@ namespace kOS.Safe.Encapsulation
 
         abstract public bool IsDouble { get; }
 
+        abstract public bool BooleanMeaning { get; }
+
         public bool IsValid
         {
             get
@@ -91,6 +93,7 @@ namespace kOS.Safe.Encapsulation
         public static bool TryParse(string str, out ScalarValue result)
         {
             result = null; // default the out value to null
+            str = str.Replace("_","");
           
             bool needsDoubleParse = str.IndexOfAny(doubleCharacters) >= 0;
 
@@ -108,6 +111,7 @@ namespace kOS.Safe.Encapsulation
         {
             result = null; // default the out value to null
             int val;
+            str = str.Replace("_","");
             if (int.TryParse(str, out val))
             {
                 result = new ScalarIntValue(val);
@@ -119,7 +123,7 @@ namespace kOS.Safe.Encapsulation
         public static bool TryParseDouble(string str, out ScalarValue result)
         {
             result = null; // default the out value to null
-            str = trimPattern.Replace(str, "E"); // remove white space around "e"
+            str = trimPattern.Replace(str, "E").Replace("_",""); // remove white space around "e" and strip spacing underscores.
             double val;
             if (double.TryParse(str, out val))
             {
@@ -356,8 +360,7 @@ namespace kOS.Safe.Encapsulation
 
         bool IConvertible.ToBoolean(IFormatProvider provider)
         {
-            if (GetIntValue() == 0) return false;
-            return true;
+            return BooleanMeaning;
         }
 
         byte IConvertible.ToByte(IFormatProvider provider)

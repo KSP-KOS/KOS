@@ -18,6 +18,11 @@
             get { return true; }
         }
 
+        public override bool BooleanMeaning
+        {
+            get { return (int)Value != 0; }
+        }
+
         public ScalarIntValue(int value)
         {
             Value = value;

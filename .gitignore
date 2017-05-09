@@ -9,6 +9,9 @@ packages/
 [Ee]xported[Oo]bj/
 *.userprefs
 
+# VisualStudio Code
+.vscode/
+
 # Unity
 [Ll]ibrary/
 [Tt]emp/

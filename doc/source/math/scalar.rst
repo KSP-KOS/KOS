@@ -24,6 +24,45 @@ kOS tries to be friendly to the new person just playing around with
 simple programming without a lot of expertise, and to that end, the
 difference between these types is abstracted away as much as possible.
 
+.. _scalar_syntax:
+
+Scalar Syntax
+-------------
+
+Scalar numbers are allowed to be represented in any number of ways, both
+in the source code and in strings passed in to the :attr:`String:TOSCALAR`
+method.
+
+Underscores are allowed as visual spacers provided you don't
+lead with an underscore. The purpose of the underscores is to 
+group numbers apart, similar to how some cultures use
+a comma in numbers like '1,234,567' (and others use a
+dot).  There is no enforcement of rules for where you can
+and cannot put the underscores for grouping.  kerboscript
+just strips them out and ignores them anyway::
+
+    // These are all the same number, shown different ways:
+    1234567
+    1_234_567
+    1_2__3456_7
+
+One decimal point is allowed to show fractional parts, but
+you must lead with a digit, even it's just to say "0."::
+
+    1234
+    12.34
+    .1234 
+    0.1234
+    0.123_4 // underscore ignored.
+    
+You may use scientific notation (with an 'e' and an optional
+sign, and a string of digits) to shift the decimal place::
+
+    123.4e4   // = 1234000
+    1.234e+4  // = 12340
+    1.234e-14  // = 0.00000000000001234
+    123_456.78e-4  // = 12.345678  (note, again, the ignored underscore)
+
 Operators
 ---------
 

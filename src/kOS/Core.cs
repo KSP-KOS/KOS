@@ -31,7 +31,7 @@ namespace kOS
         private void InitializeSuffixes()
         {
             AddSuffix("VERSION", new Suffix<VersionInfo>(() => VersionInfo));
-            AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(shared.KSPPart.vessel, shared)));
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(() => VesselTarget.CreateOrGetExisting(shared.KSPPart.vessel, shared)));
             AddSuffix("ELEMENT", new Suffix<ElementValue>(GetEelement));
             AddSuffix("CURRENTVOLUME", new Suffix<Volume>(GetCurrentVolume, "The currently selected volume"));
             AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => new MessageQueueStructure(processor.Messages, shared),
