@@ -1498,7 +1498,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             ScalarValue val;
-            if (ScalarValue.TryParseInt(node.Token.Text, out val))
+            if (ScalarValue.TryParseInt(node.Token.Text.Replace("_",""), out val))
             {
                 AddOpcode(new OpcodePush(val));
             }
@@ -1510,7 +1510,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             ScalarValue val;
-            if (ScalarValue.TryParseDouble(node.Token.Text, out val))
+            if (ScalarValue.TryParseDouble(node.Token.Text.Replace("_",""), out val))
             {
                 AddOpcode(new OpcodePush(val));
             }

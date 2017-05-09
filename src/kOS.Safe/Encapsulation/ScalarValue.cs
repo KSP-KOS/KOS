@@ -93,6 +93,7 @@ namespace kOS.Safe.Encapsulation
         public static bool TryParse(string str, out ScalarValue result)
         {
             result = null; // default the out value to null
+            str = str.Replace("_","");
           
             bool needsDoubleParse = str.IndexOfAny(doubleCharacters) >= 0;
 
@@ -110,6 +111,7 @@ namespace kOS.Safe.Encapsulation
         {
             result = null; // default the out value to null
             int val;
+            str = str.Replace("_","");
             if (int.TryParse(str, out val))
             {
                 result = new ScalarIntValue(val);
@@ -121,7 +123,7 @@ namespace kOS.Safe.Encapsulation
         public static bool TryParseDouble(string str, out ScalarValue result)
         {
             result = null; // default the out value to null
-            str = trimPattern.Replace(str, "E"); // remove white space around "e"
+            str = trimPattern.Replace(str, "E").Replace("_",""); // remove white space around "e" and strip spacing underscores.
             double val;
             if (double.TryParse(str, out val))
             {
