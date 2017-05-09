@@ -23,7 +23,7 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
           - True if this body has an atmosphere
         * - :attr:`OXYGEN`
           - :ref:`boolean <boolean>`
-          - True if oxygen is present                           
+          - True if oxygen is present
         * - :attr:`SCALE`
           - :ref:`scalar <scalar>`
           - Used to find atmospheric density
@@ -41,28 +41,28 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     The Body that this atmosphere is around - as a STRING NAME, not a Body object.
-    
+
 .. attribute:: Atmosphere:EXISTS
 
     :type: :ref:`boolean <boolean>`
     :access: Get only
 
     True if this atmosphere is "real" and not just a dummy placeholder.
-    
+
 .. attribute:: Atmosphere:OXYGEN
 
     :type: :ref:`boolean <boolean>`
     :access: Get only
 
     True if the air has oxygen and could therefore be used by a jet engine's intake.
-    
+
 .. attribute:: Atmosphere:SCALE
 
     :type: :ref:`scalar <scalar>`
     :access: Get only
 
     A math constant plugged into a formula to find atmosphere density.
-    
+
 .. attribute:: Atmosphere:SEALEVELPRESSURE
 
     :type: :ref:`scalar <scalar>` (atm)
@@ -72,8 +72,13 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
 
     Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
     If you prefer to see the answer in KiloPascals, multiply the answer by
-    :ref:`Constant:AtmToKPa <Constant:AtmToKPa>`.
-    
+    :global:`Constant:AtmToKPa`.
+
+    .. warning::
+        .. versionchanged:: 1.1.0
+            Previous versions returned this value in KiloPascals by mistake,
+            which has now been changed to Atmospheres.
+
 .. method:: Atmosphere:ALTITUDEPRESSURE(altitude)
 
     :parameter altitude: The altitude above sea level (in meters) you want to know the pressure for.
@@ -87,14 +92,14 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
 
     Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
     If you prefer to see the answer in KiloPascals, multiply the answer by
-    :ref:`Constant:AtmToKPa <Constant:AtmToKPa>`.
+    :global:`Constant:AtmToKPa`.
 
 .. attribute:: Atmosphere:HEIGHT
 
     :type: :ref:`scalar <scalar>` (m)
     :access: Get only
 
-    The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).   
+    The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
 
 Atmospheric Math
 ----------------
@@ -110,4 +115,3 @@ Atmospheric Math
    much everything that was said here.  Rather than teach people incorrect
    information, it was deemed that no documentation is better than misleading
    documentation, so this section below this point has been removed.
-
