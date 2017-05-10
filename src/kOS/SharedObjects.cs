@@ -42,7 +42,7 @@ namespace kOS
             var props = typeof(SharedObjects).GetProperties();
             foreach (var prop in props)
             {
-                if (!prop.PropertyType.IsValueType)
+                if (!prop.PropertyType.IsValueType && prop.GetSetMethod() != null)
                 {
                     prop.SetValue(this, null, null);
                 }
