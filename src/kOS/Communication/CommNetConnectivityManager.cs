@@ -105,7 +105,7 @@ namespace kOS.Communication
                 return true;
 
             // We next need to query the network to find a connection between the two vessels.
-            // I found no exposed method for accessing chached paths directly, other than the
+            // I found no exposed method for accessing cached paths directly, other than the
             // control path.
 
             // WARNING: In stock this will only work for vessels with a relay antenna installed.
@@ -113,7 +113,7 @@ namespace kOS.Communication
             // there isn't a very good way around it.
             var net = CommNetNetwork.Instance.CommNet;
             tempPath = new CommPath();
-            return net.FindPath(vessel1.Connection.Comm, tempPath, vessel2.Connection.Comm) || net.FindPath(vessel2.Connection.Comm, tempPath, vessel1.Connection.Comm);
+            return vessel1 == vessel2 || net.FindPath(vessel1.Connection.Comm, tempPath, vessel2.Connection.Comm) || net.FindPath(vessel2.Connection.Comm, tempPath, vessel1.Connection.Comm);
         }
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
