@@ -35,6 +35,8 @@ namespace kOS.Function
             stale = true;
             enabled = true;
             updateHandler.AddObserver(this);
+            GameEvents.onStageSeparation.Add(OnHighlightStaleEvent);
+            GameEvents.onVesselPartCountChanged.Add(OnHighlightStaleEvent);
         }
 
         private void InitializeSuffixes()
@@ -111,9 +113,21 @@ namespace kOS.Function
             part.SetHighlight(enabled, false);
         }
 
+        private void OnHighlightStaleEvent(EventReport evt)
+        {
+            stale = true;
+        }
+
+        private void OnHighlightStaleEvent(Vessel ves)
+        {
+            stale = true;
+        }
+
         public void Dispose()
         {
             updateHandler.RemoveObserver(this);
+            GameEvents.onStageSeparation.Remove(OnHighlightStaleEvent);
+            GameEvents.onVesselPartCountChanged.Remove(OnHighlightStaleEvent);
         }
 
         public override string ToString()
