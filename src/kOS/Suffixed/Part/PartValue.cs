@@ -42,7 +42,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<BooleanValue>(() => Part.Modules.OfType<ITargetable>().Any()));
-            AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, Shared)));
+            AddSuffix("SHIP", new Suffix<VesselTarget>(() => VesselTarget.CreateOrGetExisting(Part.vessel, Shared)));
             AddSuffix("HASMODULE", new OneArgsSuffix<BooleanValue, StringValue>(HasModule));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, StringValue>(GetModule));
             AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, ScalarValue>(GetModuleIndex));

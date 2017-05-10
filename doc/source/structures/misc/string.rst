@@ -123,10 +123,10 @@ CASE SENSITIVIY
 ~~~~~~~~~~~~~~~
 
 NOTE: All string comparisons for equality and ordering, all substring
-matches, and all string searches, are currently case **in** sensive,
-meaning that for example the letter "A" and the letter "a" are
-indistinguishable.  There are future plans to add mechanisms that
-will let you choose case-sensitivity when you prefer.
+matches, all pattern matches, and all string searches, are currently
+case **in** sensive, meaning that for example the letter "A" and the
+letter "a" are indistinguishable.  There are future plans to add
+mechanisms that will let you choose case-sensitivity when you prefer.
 
 At the moment the only way to force a case-sensitive comparison is
 to look at the characters one at a time and obtain their numerical
@@ -178,6 +178,9 @@ Structure
         * - :attr:`LENGTH`
           - :struct:`Scalar`
           - Number of characters in the string
+        * - :meth:`MATCHESPATTERN(pattern)`
+          - :struct:`Boolean`
+          - Tests whether the string matches the given regex pattern.
         * - :meth:`PADLEFT(width)`
           - :struct:`String`
           - Returns a new right-aligned version of this string padded to the given width by spaces
@@ -301,6 +304,18 @@ Structure
 
     Number of characters in the string
 
+.. method:: String:MATCHESPATTERN(pattern)
+
+    :parameter pattern: :struct:`String` pattern to be matched against the string
+    :type: :struct:`Boolean`
+
+    True if the string matches the given pattern (regular expression). The match is not anchored to neither the start nor the end of the string.
+    That means that pattern ``"foo"`` will match ``"foobar"``, ``"barfoo"`` and ``"barfoobar"`` too. If you want to match from the start,
+    you have to explicitly specify the start of the string in the pattern, i.e. for example to match strings starting with ``"foo"`` you need to
+    use the pattern ``"^foo"`` (or equivalently ``"^foo.*"`` or even ``"^foo.*$"``).
+
+    Regular expressions are beyond the scope of this documentation. For reference see `Regular Expression Language - Quick Reference <https://msdn.microsoft.com/en-us/library/az24scfc.aspx>`__\ .
+
 .. method:: String:PADLEFT(width)
 
     :parameter width: :struct:`Scalar` (integer) number of characters the resulting string will contain
@@ -409,6 +424,11 @@ Structure
     The valid understood format allows an optional leading sign,
     a decimal point with fractional part, and scientific notation
     using "e" as in "1.23e3" for "1230" or "1.23e-3" for "0.00123".
+
+    You may also include optional underscores in the string to
+    help space groups of digits, and they will be ignored.
+    (For example you may write "one thousand" as "1_000" instead
+    of as "1000" if you like".)
 
     Example - using with math::
 

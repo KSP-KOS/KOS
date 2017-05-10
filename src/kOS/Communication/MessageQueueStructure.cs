@@ -49,7 +49,7 @@ namespace kOS.Communication
             } else
             {
                 double sentAt = Planetarium.GetUniversalTime();
-                messageQueue.Push(Message.Create(content, sentAt, sentAt, new VesselTarget(sharedObjects.Vessel, sharedObjects),
+                messageQueue.Push(Message.Create(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(sharedObjects.Vessel, sharedObjects),
                     sharedObjects.Processor.Tag));
             }
         }

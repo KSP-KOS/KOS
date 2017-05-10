@@ -61,7 +61,7 @@ namespace kOS.Communication
                 return new BooleanValue(false);
             }
 
-            return new VesselTarget(vessel, shared);
+            return VesselTarget.CreateOrGetExisting(vessel, shared);
         }
         
         public BooleanValue GetVesselExists()

@@ -48,6 +48,16 @@ namespace kOS.Module
         private bool firstUpdate = true;
         private bool objectsInitialized = false;
 
+        public float AdditionalMass { get; set; }
+
+        /// How many times have instances of this class been constructed during this process run?
+        private static int constructorCount;
+
+        private int kOSCoreId;
+        /// <summary>Can be used as a unique ID of which processor this is, but unlike Guid,
+        /// it doesn't remain unique across runs so you shouldn't use it for serialization.</summary>
+        public int KOSCoreId { get { return kOSCoreId; } }
+
         private MovingAverage averagePower = new MovingAverage();
 
         // This is the "constant" byte count used when calculating the EC
@@ -78,14 +88,14 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true)]
         public float additionalCost = 0F;
 
-        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true)]
-        public float additionalMass = 0F;
+        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true, guiUnits = "Kg", guiFormat = "0.00")]
+        public float additionalMassGui = 0F;
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
         public float diskSpaceCostFactor = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = false)]
-        public float diskSpaceMassFactor = 0.0000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
+        public float diskSpaceMassFactor = 0.0000000048829F;  //implies approx 0.020kg for 4096bytes of diskSpace
 
         [KSPField(isPersistant = true, guiActive = false)]
         public int MaxPartId = 100;
@@ -110,6 +120,7 @@ namespace kOS.Module
         public kOSProcessor()
         {
             ProcessorMode = ProcessorModes.READY;
+            kOSCoreId = ++constructorCount;
         }
 
         public VolumePath BootFilePath {
@@ -240,7 +251,8 @@ namespace kOS.Module
         {
             float spaceDelta = diskSpace - baseDiskSpace;
             additionalCost = (float)System.Math.Round(spaceDelta * diskSpaceCostFactor, 0);
-            additionalMass = spaceDelta * diskSpaceMassFactor;
+            AdditionalMass = spaceDelta * diskSpaceMassFactor;
+            additionalMassGui = AdditionalMass * 1000;
         }
 
         //implement IPartMassModifier component
@@ -248,7 +260,7 @@ namespace kOS.Module
         {
             // the 'sit' arg is irrelevant to us, but the interface requires it.
             
-            return baseModuleMass + additionalMass;
+            return baseModuleMass + AdditionalMass;
         }
         //implement IPartMassModifier component
         public ModifierChangeWhen GetModuleMassChangeWhen()
@@ -909,7 +921,7 @@ namespace kOS.Module
         public void Send(Structure content)
         {
             double sentAt = Planetarium.GetUniversalTime();
-            Messages.Push(Message.Create(content, sentAt, sentAt, new VesselTarget(shared), Tag));
+            Messages.Push(Message.Create(content, sentAt, sentAt, VesselTarget.CreateOrGetExisting(shared), Tag));
         }
     }
 }
