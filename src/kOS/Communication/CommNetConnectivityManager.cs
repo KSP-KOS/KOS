@@ -113,7 +113,7 @@ namespace kOS.Communication
             // there isn't a very good way around it.
             var net = CommNetNetwork.Instance.CommNet;
             tempPath = new CommPath();
-            return vessel1 == vessel2 || net.FindPath(vessel1.Connection.Comm, tempPath, vessel2.Connection.Comm) || net.FindPath(vessel2.Connection.Comm, tempPath, vessel1.Connection.Comm);
+            return vessel1.id == vessel2.id || net.FindPath(vessel1.Connection.Comm, tempPath, vessel2.Connection.Comm) || net.FindPath(vessel2.Connection.Comm, tempPath, vessel1.Connection.Comm);
         }
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
