@@ -57,9 +57,9 @@ The rest may be letters, digits or underscores.
 
 **Identifiers are case-insensitive**. The following are identical identifiers::
 
-- my_variable
-- My_Variable
-- MY_VARIABLE
+    my_variable
+    My_Variable 
+    MY_VARIABLE 
 
 .. note::
   .. versionadded:: 1.1.0

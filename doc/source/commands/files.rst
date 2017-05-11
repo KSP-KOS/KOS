@@ -477,6 +477,11 @@ Executable <compiling>`.
 EDIT PATH
 ~~~~~~~~~
 
+Arguments:
+
+   argument 1
+       Path of the file for editing.
+
 Edits or creates a program file described by filename :code:`PATH`.
 If the file referred to by :code:`PATH` already exists, then it will
 open that file in the built-in editor.  If the file referred to by
@@ -492,10 +497,6 @@ If you are creating a brand new file from scratch with the :code:`EDIT`
 command, and leave off the :code:`.ks` extension, you will get a file
 created just like you described it (without the extension).
 
-Arguments
-^^^^^^^^^
-
--  argument 1: Path of the file for editing.
 
 .. note::
 
