@@ -122,7 +122,7 @@ namespace kOS.Suffixed
                       new OneArgsSuffix<ScalarValue, Vector>(
                               AltitudeFromPosition,
                               "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
-            AddSuffix("GEOPOSITION",
+            AddSuffix("GEOPOSITIONLATLNG",
                       new TwoArgsSuffix<GeoCoordinates, ScalarValue, ScalarValue>(
                               GeoCoordinatesFromLatLng,
                               "Given latitude and longitude, return the geoposition on this body corresponding to it."));

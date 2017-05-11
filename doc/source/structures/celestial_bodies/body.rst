@@ -73,7 +73,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`MU`                       :ref:`scalar <scalar>` (:math:`m^3 s^{−2}`)
     :attr:`ATM`                      :struct:`Atmosphere`
     :attr:`ANGULARVEL`               :struct:`Vector` in :ref:`SHIP-RAW <ship-raw>`
-    :attr:`GEOPOSITIONOF`            :struct:`GeoCoordinates` given :ref:`SHIP-RAW <ship-raw>` position vector
+    :method:`GEOPOSITIONOF`          :struct:`GeoCoordinates` given :ref:`SHIP-RAW <ship-raw>` position vector
     :method:`GEOPOSITION`            :struct:`GeoCoordinates` given latitude and longitude values
     :attr:`ALTITUDEOF`               :ref:`scalar <scalar>` (m)
     :attr:`SOIRADIUS`                :ref:`scalar <scalar>` (m)
@@ -138,11 +138,17 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
     backward compatibility with older kOS scripts.
 
-.. attribute:: Body:GEOPOSITIONOF
+.. method:: Body:GEOPOSITIONOF(vectorPos)
+
+    :parameter vectorPos: :struct:`Vector` input position in XYZ space.
 
     The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
 
-.. method:: Body:GEOPOSITIONOF(latitude, longitude)
+    (Not to be confused with the :attr:`Orbitable:GEOPOSITION` suffix, which ``Body`` inherits
+    from :struct:`Orbitable`, and which gives the position that this body is directly above
+    on the surface *of its parent body*.)
+
+.. method:: Body:GEOPOSITIONLATLNG(latitude, longitude)
 
     :parameter latitude: :struct:`Scalar` input latitude
     :parameter longitude: :struct:`Scalar` input longitude
@@ -150,6 +156,10 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
     Given a latitude and longitude, this returns a :struct:`GeoCoordinates` structure
     for that position on this body.
+
+    (Not to be confused with the :attr:`Orbitable:GEOPOSITION` suffix, which ``Body`` inherits
+    from :struct:`Orbitable`, and which gives the position that this body is directly above
+    on the surface *of its parent body*.)
 
 .. attribute:: Body:ALTITUDEOF
 

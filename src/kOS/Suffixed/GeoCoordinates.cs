@@ -281,7 +281,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "LATLNG(" + Latitude + ", " + Longitude + ")";
+            return string.Format("{0}:GEOPOSITIONLATLNG({1},{2})", Body.GetName(), Latitude, Longitude);
         }
 
         public void SetSharedObjects(SharedObjects sharedObjects)
