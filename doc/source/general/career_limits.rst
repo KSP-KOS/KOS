@@ -40,9 +40,8 @@ The following are rules invented by kOS that are thematically very similar to st
    because name tags are a sort of semi-advanced feature.
 
 You can see some of these settings by reading the values of the Career() global object,
-for example:
+for example::
 
-::
     print Career():PATCHLIMIT.
     print Career():CANDOACTIONS.
 

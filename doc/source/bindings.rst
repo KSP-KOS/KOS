@@ -364,8 +364,8 @@ properties of the KSP universe, the time that matters is the simulated
 time, which
 is what TIME returns.
 
-It's important to be aware of the `frozen update
-nature <general/CPU_hardware.html#FROZEN>`__ of the kOS
+It's important to be aware of the
+:ref:`frozen update nature <frozen>` of the kOS
 computer when reading TIME.
 
 System Variables

@@ -121,6 +121,8 @@ General Guidelines for kOS Scripts
 
 This section discusses two general guidelines to follow when starting out with more complicated kOS scripts. These are not meant to be absolute and there will certainly be cases when they can be stretched, though one should never totally ignore them.
 
+.. _minimize_trigger_bodies:
+
 1. Minimize Time Spent in WHEN/THEN Blocks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -177,6 +179,8 @@ Understanding why this does not work is important. Everything in a WHEN/THEN blo
 Now this program should work. The variable dthrott had to be set to 0 in the beginning so that the throttle is kept at maximum until 1km, the UNTIL loop operates every 0.1 seconds, and the WHEN/THEN triggers are run only once when the condition is met. The take-away from this example is to keep WHEN/THEN blocks separate from UNTIL loops. Specifically, never put an UNTIL loop inside a WHEN/THEN block and it should be extremely rare to put a WHEN/THEN statement inside an UNTIL loop.
 
 Finally, as a bit of foreshadowing, this bit of code is actually a "`proportional feedback loop <http://en.wikipedia.org/wiki/PID_controller>`__." From an altitude of 1km up to 40km, the total g-force exerted on the ship is kept near 1.2 by constantly adjusting the throttle. The value of 1.2 is called the "setpoint," the measured g-force is called the "process variable," and the mystical 0.05 is called the "proportional gain." Please take a look at the `PID Loop Tutorial <pidloops.html>`__ which takes this script as a starting point and develops a full PID-loop in kOS.
+
+.. _minimize_trigger_conditions:
 
 2. Minimize Trigger Conditions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

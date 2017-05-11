@@ -216,3 +216,27 @@ These terms are referred to as "suffixes". For example ``Velocity`` is a suffix 
     SET n:ETA to 500.
 
 The full list of available suffixes for each type :ref:`can be found here <structures>`.
+
+.. _feature triggers:
+
+Triggers
+--------
+
+One useful feature of kerboscript (but a potentialy confusing one for 
+people new to the language, so we don't recommend you use it at
+first) is the "trigger".  A "trigger" is a block of statements headed by
+a conditional check (much like an IF condition) in which the kOS system
+itself will repeatdly run the conditional check *for you* in the
+background quite frequently without you having to explicitly run it
+yourself.  When the kOS system detects that the condition just became
+true, it will interrupt whatever your program is doing and run the block
+of statements in the trigger, returning control to your main program right
+where it left off.  Example::
+
+    // When the altitude eventually goes above 50,000 at some point later,
+    // interrupt whatever is going on to set off action group 1:
+    WHEN ship:altitude > 50000 then { ag1 on. }
+
+Triggers are created using the :ref:`when <when>` and :ref:`on <on_trigger>`
+statements.  They are complex enough that you should read the documentation
+for those keywords carefully to understand them before you use them.

@@ -54,9 +54,12 @@ operator symbols:
 **Identifiers**: Identifiers consist of: a string of (letter, digit, or
 underscore). The first character must be a letter or an underscore.
 The rest may be letters, digits or underscores.
+
 **Identifiers are case-insensitive**. The following are identical identifiers::
 
-    My_Variable  my_varible  MY_VARAIBLE
+- my_variable
+- My_Variable
+- MY_VARIABLE
 
 .. note::
   .. versionadded:: 1.1.0

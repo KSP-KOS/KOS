@@ -79,7 +79,7 @@ Structure
           - :struct:`Vector`
           - The current position
         * - :attr:`VELOCITY`
-          - :struct:`Vector`
+          - :struct:`OrbitableVelocity`
           - The current velocity
         * - :attr:`NEXTPATCH`
           - :struct:`Orbit`
@@ -219,10 +219,12 @@ Structure
 
 .. attribute:: Orbit:VELOCITY
 
-    :type: :struct:`Vector`
+    :type: :struct:`OrbitableVelocity`
     :access: Get only
 
-    The current velocity of whatever the object is that is in this orbit.
+    The current velocity of whatever the object is that is in this orbit.  Be aware
+    that this is not just a velocity vector, but a structure containing both the
+    orbital and surface velocity vectors as a pair.  (See :struct:`OrbitableVelocity`).
 
 .. attribute:: Orbit:NEXTPATCH
 
