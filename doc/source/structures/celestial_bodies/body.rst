@@ -73,8 +73,8 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`MU`                       :ref:`scalar <scalar>` (:math:`m^3 s^{−2}`)
     :attr:`ATM`                      :struct:`Atmosphere`
     :attr:`ANGULARVEL`               :struct:`Vector` in :ref:`SHIP-RAW <ship-raw>`
-    :method:`GEOPOSITIONOF`          :struct:`GeoCoordinates` given :ref:`SHIP-RAW <ship-raw>` position vector
-    :method:`GEOPOSITION`            :struct:`GeoCoordinates` given latitude and longitude values
+    :meth:`GEOPOSITIONOF`            :struct:`GeoCoordinates` given :ref:`SHIP-RAW <ship-raw>` position vector
+    :meth:`GEOPOSITIONLATLNG`        :struct:`GeoCoordinates` given latitude and longitude values
     :attr:`ALTITUDEOF`               :ref:`scalar <scalar>` (m)
     :attr:`SOIRADIUS`                :ref:`scalar <scalar>` (m)
     :attr:`ROTATIONANGLE`            :ref:`scalar <scalar>` (deg)
