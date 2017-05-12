@@ -3,6 +3,12 @@ kOS Mod Changelog
 
 # v1.1.0 (for KSP 1.2.2) Ewww, everything's GUI.
 
+TODO: When we release for real, move up all the v1.0.90 stuff
+from below up into here for v1.1.0 and get rid of v1.0.90 as a heading.
+
+
+# v1.0.90 (for KSP 1.2.2) Ewww, everything's GUI.
+
 ## TO PEOPLE VIEWING THIS FOR THE PRE-RELEASE:
 
 This v1.1.0 changelog has several TODO's in it because some URLS and links
