@@ -17,6 +17,24 @@ namespace kOS.Screen
     {
         private const string CONTROL_LOCKOUT = "kOSTerminal";
 
+        /// <summary>
+        /// Set to true only when compiling a version specifically for the purpose
+        /// of debugging the use of international Unicode chars on a US-market
+        /// keyboard that cannot type characters above ascii 127.  (The "alt-NNNN" method
+        /// doesn't work in the terminal so you need to actually physically have the keys
+        /// on the keyboard to type the letters.  This turns on a mapping of a few of
+        /// the lesser used ASCII values to some other keys > 127.  This mapping
+        /// will be very wrong to publish in a release, or even to use in a normal
+        /// DEBUG compile (which is why it's not triggering on the DEBUG flag).
+        /// ONLY set to true for testing this one feature, never for anything else.)
+        /// 
+        /// NOTE:  The mapping is only implemented for the in-game terminal, NOT for the
+        /// telnet terminal.  This is because (presumably) the telnet terminal has other
+        /// ways to type these characters (i.e. Putty can obey the ALT-numberpad technique)
+        /// and doesn't need this hack-y test.
+        /// </summary>
+        private const bool DebugInternational = false;
+
         private static string root;
         private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
         private static readonly Color colorAlpha = new Color(1f, 1f, 1f, 0.8f); // slightly less opaque window color when not focused.
@@ -42,7 +60,6 @@ namespace kOS.Screen
         private KeyBinding rememberThrottleFullKey;
 
         private bool allTexturesFound = true;
-        private CameraManager cameraManager;
         private float cursorBlinkTime;
 
         private Font font;
@@ -262,8 +279,6 @@ namespace kOS.Screen
             ShowCursor = true;
             BringToFront();
 
-            cameraManager = CameraManager.Instance;
-            cameraManager.enabled = false;
 
             // Exclude the TARGETING ControlType so that we can set the target vessel with the terminal open.
             InputLockManager.SetControlLock(ControlTypes.All & ~ControlTypes.TARGETING, CONTROL_LOCKOUT);
@@ -272,16 +287,6 @@ namespace kOS.Screen
             EditorLogic editor = EditorLogic.fetch;
                 //TODO: POST 0.90 REVIEW
             if (editor != null && InputLockManager.IsUnlocked(ControlTypes.All)) editor.Lock(true, true, true, CONTROL_LOCKOUT);
-
-            // This seems to be the only way to force KSP to let me lock out the "X" throttle
-            // key.  It seems to entirely bypass the logic of every other keypress in the game,
-            // so the only way to fix it is to use the keybindings system from the Setup screen.
-            // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
-            // when its unfocused later, its put back the way it was:
-            rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
-            GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
-            rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
-            GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
         }
 
         private void Unlock()
@@ -292,21 +297,8 @@ namespace kOS.Screen
 
             InputLockManager.RemoveControlLock(CONTROL_LOCKOUT);
 
-            // Apparently Unlock now gets called at a point after the
-            // CameraManager instance changes... so check the reference.
-            cameraManager = CameraManager.Instance;
-            cameraManager.enabled = true;
-
-
             EditorLogic editor = EditorLogic.fetch;
             if (editor != null) editor.Unlock(CONTROL_LOCKOUT);
-
-            // This seems to be the only way to force KSP to let me lock out the "X" throttle
-            // key.  It seems to entirely bypass the logic of every other keypress in the game:
-            if (rememberThrottleCutoffKey != null)
-                GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
-            if (rememberThrottleFullKey != null)
-                GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
 
         }
 
@@ -419,11 +411,7 @@ namespace kOS.Screen
             }
             else
             {
-                if (beepSource.isPlaying)
-                    return false; // prev beep sound still is happening.
-                
-                // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:
-                beepSource.Play();
+                return soundMaker.BeginFileSound("beep");
             }
             return true;
         }
@@ -492,8 +480,10 @@ namespace kOS.Screen
                     return;
                 }
                 
-                if (0x20 <= c && c < 0x7f) // printable characters
+                if (!IsSpecial(c)) // printable characters
                 {
+                    if (DebugInternational)
+                        c = DebugInternationalMapping(c);
                     ProcessOneInputChar(c, null);
                     consumeEvent = true;
                     cursorBlinkTime = 0.0f; // Don't blink while the user is still actively typing.
@@ -525,6 +515,33 @@ namespace kOS.Screen
                     cursorBlinkTime = 0.0f;// Don't blink while the user is still actively typing.
                 }
             }
+        }
+
+        private static bool IsSpecial(char c)
+        {
+            if (c < 0x0020)
+                return true;
+            if (Enum.IsDefined(typeof(UnicodeCommand), (int)c))
+                return true;
+            return false;
+        }
+
+        private static char DebugInternationalMapping(char c)
+        {
+            // Hex codes are used for the unicode letters here, just
+            // in case some kOS contributor tries to edit this source
+            // file in a non-Unicode-aware editor that would break
+            // the code.  (This way it only would break what's written
+            // in the comment, not the code).
+            if (c == '%')
+                return (char)0x00c6; // 'Æ'
+            if (c == '$')
+                return (char)0x015d; // 'ŝ'
+            if (c == '&')
+                return (char)0x042f; // 'Я'
+            if (c == '~')
+                return (char)0x00f1; // 'ñ'
+            return c;
         }
 
         /// <summary>
@@ -602,12 +619,7 @@ namespace kOS.Screen
                     break;
             }
 
-            // Printable ASCII section of Unicode - the common vanilla situation
-            // (Idea: Since this is all Unicode anyway, should we allow a wider range to
-            // include multi-language accent characters and so on?  Answer: to do so we'd
-            // first need to expand the font pictures in the font image file, so it's a
-            // bigger task than it may first seem.)
-            if (0x0020 <= ch && ch <= 0x007f)
+            if (! IsSpecial(ch))
             {
                  Type(ch, doQueuing);
             }

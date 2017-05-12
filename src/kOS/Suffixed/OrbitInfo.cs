@@ -1,9 +1,8 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using System;
+using kOS.Safe.Exceptions;
 using kOS.Serialization;
-using kOS.Safe.Serialization;
-using kOS.Safe;
+using System;
 
 namespace kOS.Suffixed
 {
@@ -98,14 +97,18 @@ namespace kOS.Suffixed
                 surfVel = new Vector( orbVel.X, orbVel.Y, orbVel.Z );
             return new OrbitableVelocity( orbVel, surfVel );
         }
-        
+
         /// <summary>
         /// Return the next OrbitInfo after this one (i.e. transitional encounter)
         /// </summary>
         /// <returns>an OrbitInfo, or a null if there isn't any.</returns>
         private OrbitInfo GetNextPatch()
         {
-            return ! GetHasNextPatch() ? null : new OrbitInfo(orbit.nextPatch,Shared);
+            if (GetHasNextPatch())
+            {
+                return new OrbitInfo(orbit.nextPatch, Shared);
+            }
+            throw new KOSSituationallyInvalidException("Cannot get next patch when no additional patches exist.  Try checking the HASNEXTPATCH suffix.");
         }
 
         /// <summary>
@@ -118,7 +121,7 @@ namespace kOS.Suffixed
             {
                 return orbit.EndUT - Planetarium.GetUniversalTime();
             }
-            throw new Safe.Exceptions.KOSSituationallyInvalidException("Cannot get eta to next patch when no additional patches exist.  Try checking the HASNEXTPATCH suffix.");
+            throw new KOSSituationallyInvalidException("Cannot get eta to next patch when no additional patches exist.  Try checking the HASNEXTPATCH suffix.");
         }
 
         /// <summary>

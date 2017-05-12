@@ -151,6 +151,8 @@ namespace kOS.Sound
                 return false;
 
             AudioSource source = sounds[name];
+            if (source.clip.loadState != AudioDataLoadState.Loaded)
+                return false; // the clip is not ready
             if (source.isPlaying)
                 source.Stop();
             source.volume = GameSettings.UI_VOLUME * volume;

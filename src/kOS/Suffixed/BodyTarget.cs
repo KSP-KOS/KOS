@@ -50,7 +50,7 @@ namespace kOS.Suffixed
                 if (soiBody.orbit != null)
                     futureOrbitalVel = soiBody.orbit.GetFrameVelAtUT(timeStamp.ToUnixStyleTime());
                 else
-                    futureOrbitalVel = -1 * new VesselTarget(Shared.Vessel, Shared).GetVelocitiesAtUT(timeStamp).Orbital.ToVector3D();
+                    futureOrbitalVel = -1 * VesselTarget.CreateOrGetExisting(Shared.Vessel, Shared).GetVelocitiesAtUT(timeStamp).Orbital.ToVector3D();
                 Vector swappedVel = new Vector(futureOrbitalVel.x, futureOrbitalVel.z, futureOrbitalVel.y); // swap Y and Z because KSP API is weird.
                  // Also invert directions because the above gives vel of my body rel to sun, and I want vel of sun rel to my body:
                 return new OrbitableVelocity( -swappedVel, -swappedVel);

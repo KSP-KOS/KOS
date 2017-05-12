@@ -15,6 +15,11 @@
             get { return false; }
         }
 
+        public override bool BooleanMeaning
+        {
+            get { return (double)Value != 0d; }
+        }
+
         public ScalarDoubleValue(double value)
         {
             Value = value;

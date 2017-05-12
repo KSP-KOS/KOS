@@ -302,6 +302,8 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
 
     DECLARE PARAMETER Kp.
 
+    SWITCH TO 1. // This is the default usually, but just to be sure.
+
     LOCK g TO SHIP:BODY:MU / (SHIP:BODY:RADIUS + SHIP:ALTITUDE)^2.
     LOCK maxtwr TO SHIP:MAXTHRUST / (g * SHIP:MASS).
 
@@ -337,13 +339,13 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
         }
         WAIT 0.001.
     }
-    COPY throttle_log TO 0.
+    COPYPATH("throttle_log", "0:/").
 
 Give this script a short name, something like "tune.txt" so that running is simple:
 
 ::
 
-    copy tune from 0.
+    copypath("0:/tune", "").
     run tune(0.5).
 
 After every launch completes, you'll have to go into the archive directory and rename the output logfile. Something like "throttle\_log.txt" --> "throttle.01.log" will help if you increment the index number each time. To analyze the data, plot the offset (P) as a function of time (t). Here, we show the results for three values of Kp: 0.002, 0.016 and 0.160, including the maximum TWR when Kp = 0.002 as the top x-axis. The maximum TWR dependence on time is different for the three values of Kp, but not by a lot.
