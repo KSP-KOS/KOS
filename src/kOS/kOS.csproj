@@ -71,10 +71,13 @@
     <Compile Include="Binding\BindingConfig.cs" />
     <Compile Include="Binding\BindingManager.cs" />
     <Compile Include="Binding\ColorBinding.cs" />
+    <Compile Include="Binding\DoNothingBinding.cs" />
     <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Callback\GameEventDispatcher.cs" />
+    <Compile Include="Callback\KOSGameEventDispatcher.cs" />
     <Compile Include="Communication\CommNetConnectivityManager.cs" />
     <Compile Include="Communication\ConnectivityManager.cs" />
     <Compile Include="Communication\ControlConnection.cs" />
@@ -277,6 +280,4 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup />
 </Project>

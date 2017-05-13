@@ -11,7 +11,7 @@ entirely GUI-driven vessel controls can be developed.
 .. figure:: /_images/general/gui-HelloWorld.png
     :width: 100%
 
-The "Hello World" program::
+The "Hello World" program, version 1 with "polling"::
 
         // "Hello World" program for kOS GUI.
         //
@@ -25,10 +25,56 @@ The "Hello World" program::
         // Show the GUI.
         gui:SHOW().
         // Handle GUI widget interactions.
-        // Can safely wait and GUI will still be responsive.
-        UNTIL ok:PRESSED { PRINT("Waiting for GUI"). WAIT(0.1). }
+        //
+        // This is the technique known as "polling" - In a loop you
+        // continually check to see if something has happened:
+        LOCAL isDone IS FALSE.
+        UNTIL isDone
+        {
+          if (ok:TAKEPRESS)
+            SET isDone TO TRUE.
+          WAIT 0.1. // No need to waste CPU time checking too often.
+        }
+        print "OK pressed.  Now closing demo.".
         // Hide when done (will also hide if power lost).
         gui:HIDE().
+
+The same "Hello World" program, version 2 with "callbacks"::
+
+        // "Hello World" program for kOS GUI.
+        //
+        // Create a GUI window
+        LOCAL gui IS GUI(200).
+        // Add widgets to the GUI
+        LOCAL label IS gui:ADDLABEL("Hello world!").
+        SET label:STYLE:ALIGN TO "CENTER".
+        SET label:STYLE:HSTRETCH TO True. // Fill horizontally
+        LOCAL ok TO gui:ADDBUTTON("OK").
+        // Show the GUI.
+        gui:SHOW().
+        // Handle GUI widget interactions.
+        //
+        // This is the technique known as "callbacks" - instead
+        // of actively looking again and again to see if a button was
+        // pressed, the script just tells kOS that it should call a
+        // delegate function when it notices the button has done
+        // something, and then the program passively waits for that
+        // to happen:
+        LOCAL isDone IS FALSE.
+        function myClickChecker {
+          SET isDone TO TRUE.
+        }
+        SET ok:ONCLICK TO myClickChecker@. // This could also be an anonymous function instead.
+        wait until isDone.
+
+        print "OK pressed.  Now closing demo.".
+        // Hide when done (will also hide if power lost).
+        gui:HIDE().
+
+Both techniques (the "polling" and the "callbacks" style) of interacting with the GUI are
+supported by the widgets in the system.  The "callbacks" style is supported by the
+use of various "ON" suffixes with names like ``ONCLICK``, ``ONTOGGLE``, and so on.
+
 
 Creating a Window
 -----------------
@@ -42,7 +88,7 @@ The width can be set to 0 to force automatic width resizing too::
         SET gui TO GUI(200).
         SET button TO gui:ADDBUTTON("OK").
         gui:SHOW().
-        UNTIL button:PRESSED WAIT(0.1).
+        UNTIL button:TAKEPRESS WAIT(0.1).
         gui:HIDE().
 
 See the "ADD" functions in the :struct:`BOX` structure for
@@ -124,9 +170,12 @@ following hierarchy:
     :meth:`ADDSCROLLBOX`                  :struct:`ScrollBox`             Creates a nested scrollable Box of widgets.
     :meth:`ADDSPACING(size)`              :struct:`Spacing`               Creates a blank space of the given size (flexible if -1).
     :attr:`WIDGETS`                       :struct:`List(Widget)`          Returns a LIST of the widgets that have been added to the Box.
+    :attr:`RADIOVALUE`                    :struct:`String`                Returns the string name of the currently selected radio button within this box of radio buttons (empty string if no such value).
+    :attr:`ONRADIOCHANGE`                 :struct:`KOSDelegate` (button)  A callback hook you want called whenever the radio button selection within this box changes (it gets called with a parameter: the button that has been switched to).
     :meth:`SHOWONLY(widget)`                                              Hide all but the given widget.
     :meth:`CLEAR`                                                         Dispose all child widgets.
     ===================================== =============================== =============
+
 
 .. structure:: Label
 
@@ -146,29 +195,138 @@ following hierarchy:
 
     ``Button`` objects are created inside Box objects via ADDBUTTON and ADDCHECKBOX methods.
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================== =============
+    Suffix                                Type                                       Description
+    ===================================== ========================================== =============
                    Every suffix of :struct:`LABEL`
-    -----------------------------------------------------------------------------------
-    :attr:`PRESSED`                       :struct:`Boolean`               Has the button been pressed?
-    :attr:`TOGGLE`                        :struct:`Boolean`               Set to True to make the button toggle between pressed and not pressed. See Box:ADDCHECKBOX.
-    :attr:`EXCLUSIVE`                     :struct:`Boolean`               If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
-    ===================================== =============================== =============
+    ----------------------------------------------------------------------------------------------
+    :attr:`PRESSED`                       :struct:`Boolean`                          Is the button currently down?
+    :attr:`TAKEPRESS`                     :struct:`Boolean`                          Return the PRESSED value AND release the button if it's down.
+    :attr:`TOGGLE`                        :struct:`Boolean`                          Set to true to make this button into a toggle-style button (stays down when clicked until clicked again).
+    :attr:`EXCLUSIVE`                     :struct:`Boolean`                          If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
+    :attr:`ONCLICK`                       :struct:`KOSDelegate` (no args)            Your function called whenever the button gets clicked.
+    :attr:`ONTOGGLE`                      :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button's PRESSED state changes.
+    ===================================== ========================================== =============
 
 .. note::
 
-    Unless TOGGLE is set to True, the value of :attr:`PRESSED` resets to False as
-    soon as the value is accessed.
+    Reading the value of the :attr:`PRESSED` suffix will tell you if the button is pressed in (true)
+    or released (false).  But be aware that when :attr:`TOGGLE` is false, then the button will
+    remain pressed-in until such a time as your script detects that it has been pressed (so that
+    way the button won't press in-and-out too quickly for your script to notice).
+
+    **Behaviour when TOGGLE is false (the default):**
+
+    By default, :attr:`TOGGLE` is set to false.  This means the button does not require
+    a second click by the user to pop back out again after being pushed in.
+    The button's :attr:`PRESSED` suffix will only stay true long enough for the kerboscript
+    to tell kOS "Yes I have seen the fact that it was pressed".  (See next paragraph).
+    After that happens, :attr:`PRESSED` will become false again (and the button will pop back
+    out).
+
+    The conditions under which a button will automatically release itself when :attr:`TOGGLE` is
+    set to `False` are:
+
+    - When the script calls the :attr:`TAKEPRESS` suffix method.  When this is done, the
+      button will become false even if it was was previously true.
+    - If the script defines an :attr:`ONCLICK` user delegate.
+      (Then when the :attr:`PRESSED` value becomes true, kOS will immediately set it
+      back to false (too fast for the kerboscript to see it) and instead Call the
+      ``ONCLICK`` delegate.)
+
+    The :attr:`TAKEPRESS` suffix method is intended to be used for non-toggle buttons
+    in scripts that use the "polling" method of looking for a button change.  You can
+    put a check for ``if mybutton:TAKEPRESS { print "do something here". }`` in an
+    ``until`` loop or a ``when`` trigger and TAKEPRESS will only be true long enough
+    for the script to see it once, at which point it will become false again right away.
+
+    The :attr:`ONCLICK` suffix is intended to be used for non-toggle buttons in
+    scripts that use the "callbacks" method of looking for a button change.  This
+    method is more efficient and simpler to use.  To use ONCLICK you set the ONCLICK
+    suffix to a user delegate you create that kOS will call when the button gets clicked.
+    example::
+
+        set mybutton:ONCLICK to { print "Do something here.". }.
+
+    **Behaviour when TOGGLE is true:**
+
+    If TOGGLE is set to True, then the button will **not** automatically release after it is
+    read by the script.  Instead it will need to be clicked by the user a second time to make
+    it pop back out.  In this mode, the button's :attr:`PRESSED` value will never automatically
+    reset to false on its own.
 
     If the Button is created by the Button:ADDCHECKBOX method, it will have a different visual
-    style and it will start already in TOGGLE mode.
+    style (the style called "toggle") and it will start already in TOGGLE mode.
 
     If EXCLUSIVE is set to True, when the button is clicked (or changed programmatically),
-    other buttons with the same parent will be set to False (regardless of if they are EXCLUSIVE).
+    other buttons with the same parent :struct:`Box` will be set to False (regardless of
+    if they are EXCLUSIVE).
 
     If the Button is created by the Button:ADDRADIOBUTTON method, it will have the checkbox
-    style, and it will start already in TOGGLE and EXCLUSIVE modes.
+    style (the style called "toggle"), and it will start already in TOGGLE and EXCLUSIVE modes.
+
+    **Callback hooks ONCLICK, ONTOGGLE:**
+
+    The two suffixes :attr:`ONTOGLE`, and :attr:`ONCLICK` are similar
+    to each other.  They are what is known as a "callback hook".  You can assign them to
+    a :struct:`KOSDelegate` of one of your functions (named or anonymous) and from then on
+    kOS will call that function whenever the button gets changed as described.
+
+    :attr:`ONCLICK` is called with no parameters.  To use it, your function must be
+    written to expect no parameters.
+
+    :attr:`ONTOGGLE` is called with one parameter, the boolean value the button got changed to.
+    To use :attr:`ONTOGGLE`, your function must be written to expect a single boolean parameter.
+    :attr:`ONTOGGLE` is really only useful with buttons where :attr:`TOGGLE` is true.
+
+    Here is an example of using the button callback hooks::
+
+        LOCAL doneYet is FALSE.
+        LOCAL g IS GUI(200).
+
+        // b1 is a normal button that auto-releases itself:
+        // Note that the callback hook, myButtonDetector, is
+        // a named function found elsewhere in this same program:
+        LOCAL b1 IS g:ADDBUTTON("button 1").
+        SET b1:ONCLICK TO myButtonDetector@.
+
+        // b2 is also a normal button that auto-releases itself,
+        // but this time we'll use an anonymous callback hook for it:
+        LOCAL b2 IS g:ADDBUTTON("button 2").
+        SET b2:ONCLICK TO { print "Button Two got pressed". }
+
+        // b3 is a toggle button.
+        // We'll use it to demonstrate how ONTOGGLE callback hooks look:
+        LOCAL b3 IS g:ADDBUTTON("button 3 (toggles)").
+        set b3:style to g:skin:button.
+        SET b3:TOGGLE TO TRUE.
+        SET b3:ONTOGGLE TO myToggleDetector@.
+
+        // b4 is the exit button.  For this we'll use another
+        // anonymous function that just sets a boolean variable
+        // to signal the end of the program:
+        LOCAL b4 IS g:ADDBUTTON("EXIT DEMO").
+        SET b4:ONCLICK TO { set doneYet to true. }
+
+        g:show(). // Start showing the window.
+
+        wait until doneYet. // program will stay here until exit clicked.
+
+        g:hide(). // Finish the demo and close the window.
+
+        //END.
+
+        function myButtonDetector {
+          print "Button One got clicked.".
+        }
+        function myToggleDetector {
+          parameter newState.
+          print "Button Three has just become " + newState.
+        }
+
+    ** TODO - PUT AN EXAMPLE WITH A RADIO BUTTON HERE OR IN BOX: **
+
+    TODO....
 
 .. structure:: PopupMenu
 
@@ -203,32 +361,35 @@ following hierarchy:
 	set popup:value to body.
 
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================= =============
+    Suffix                                Type                                      Description
+    ===================================== ========================================= =============
                    Every suffix of :struct:`BUTTON`
-    -----------------------------------------------------------------------------------
-    :attr:`OPTIONS`                       :struct:`List`                  List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix used for display names. Default = TOSTRING.
-    :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
-    :attr:`VALUE`                         Any                             Returns the current selected value.
-    :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
-    :attr:`CHANGED`                       :struct:`Boolean`               Has the user chosen something?
-    :meth:`CLEAR`                                                         Removes all options.
-    ===================================== =============================== =============
+    ---------------------------------------------------------------------------------------------
+    :attr:`OPTIONS`                       :struct:`List`                            List of options to display.
+    :attr:`OPTIONSUFFIX`                  :struct:`string`                          Name of the suffix used for display names. Default = TOSTRING.
+    :meth:`ADDOPTION(value)`                                                        Add a value to the end of the list of options.
+    :attr:`VALUE`                         Any                                       Returns the current selected value.
+    :attr:`INDEX`                         :struct:`Scalar`                          Returns the index of the current selected value.
+    :attr:`CHANGED`                       :struct:`Boolean`                         Has the user chosen something?
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
+    :meth:`CLEAR`                                                                   Removes all options.
+    ===================================== ========================================= =============
 
 .. structure:: TextField
 
     ``TextField`` objects are created inside Box objects via ADDTEXTFIELD method.
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================= =============
+    Suffix                                Type                                      Description
+    ===================================== ========================================= =============
                    Every suffix of :struct:`LABEL`
-    -----------------------------------------------------------------------------------
-    :attr:`CHANGED`                       :struct:`Boolean`               Has the text been edited?
-    :attr:`CONFIRMED`                     :struct:`Boolean`               Has the user pressed Return in the field?
-    ===================================== =============================== =============
+    ---------------------------------------------------------------------------------------------
+    :attr:`CHANGED`                       :struct:`Boolean`                         Has the text been edited?
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
+    :attr:`CONFIRMED`                     :struct:`Boolean`                         Has the user pressed Return in the field?
+    :attr:`ONCONFIRMED`                   :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CONFIRMED` state changes.
+    ===================================== ========================================= =============
 
 .. note::
 
@@ -238,15 +399,16 @@ following hierarchy:
 
     ``Slider`` objects are created inside Box objects via ADDHSLIDER and ADDVSLIDER methods.
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================= =============
+    Suffix                                Type                                      Description
+    ===================================== ========================================= =============
                    Every suffix of :struct:`WIDGET`
-    -----------------------------------------------------------------------------------
-    :attr:`VALUE`                         :struct:`scalar`                The current value. Initially set to :attr:`MIN`.
-    :attr:`MIN`                           :struct:`scalar`                The minimum value (leftmost on horizontal slider).
-    :attr:`MAX`                           :struct:`scalar`                The maximum value (bottom on vertical slider).
-    ===================================== =============================== =============
+    ---------------------------------------------------------------------------------------------
+    :attr:`VALUE`                         :struct:`scalar`                          The current value. Initially set to :attr:`MIN`.
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`VALUE` changes.
+    :attr:`MIN`                           :struct:`scalar`                          The minimum value (leftmost on horizontal slider).
+    :attr:`MAX`                           :struct:`scalar`                          The maximum value (bottom on vertical slider).
+    ===================================== ========================================= =============
 
 .. structure:: ScrollBox
 
@@ -340,6 +502,7 @@ following hierarchy:
     :attr:`MARGIN`                        :struct:`StyleRectOffset`       Spacing between this and other widgets.
     :attr:`PADDING`                       :struct:`StyleRectOffset`       Spacing between the outside of the widget and its contents (text, etc.).
     :attr:`BORDER`                        :struct:`StyleRectOffset`       Size of the edges in the 9-slice image for BG images in NORMAL, HOVER, etc.
+    :attr:`OVERFLOW`                      :struct:`StyleRectOffset`       Extra space added to the area of the background image. Allows the background to go beyond the widget's rectangle.
     :attr:`ALIGN`                         :struct:`string`                One of "CENTER", "LEFT", or "RIGHT". See note below.
     :attr:`FONT`                          :struct:`string`                The name of the font of the text on the content or "" if the default.
     :attr:`FONTSIZE`                      :struct:`scalar`                The size of the text on the content.
@@ -423,4 +586,3 @@ delay, then your attempts to click on the GUI elements will get the same
 delay). Similarly, changes to values in the GUI will be delayed coming
 back by the same rules. Some things such as GUI creation, adding widgets,
 etc. are immediate for simplicity.
-

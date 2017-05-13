@@ -13,7 +13,13 @@ namespace kOS.Safe.Encapsulation
     public class UserDelegate : KOSDelegate, IUserDelegate
     {
         public IProgramContext ProgContext {get; private set;}
+        
+        /// <summary>
+        /// The entry point to jump to.  Note if it's ever a negative number, then you should not
+        /// call this UserDelegate and instead should treat it as a dummy null delegate.
+        /// </summary>
         public int EntryPoint {get; private set;}
+
         public List<VariableScope> Closure {get; private set;}
         
         /// <summary>
@@ -60,6 +66,27 @@ namespace kOS.Safe.Encapsulation
                                  Cpu, EntryPoint, Closure, base.ToString());
         }
         
+        public override bool Equals(object obj)
+        {
+            UserDelegate other = obj as UserDelegate;
+            if (other == null)
+                return false;
+            return object.Equals(this.ProgContext, other.ProgContext) && this.EntryPoint == other.EntryPoint && object.Equals(this.Closure, other.Closure);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked {
+                if (ProgContext != null)
+                    hashCode += 1000000007 * ProgContext.GetHashCode();
+                hashCode += 1000000009 * EntryPoint.GetHashCode();
+                if (Closure != null)
+                    hashCode += 1000000021 * Closure.GetHashCode();
+            }
+            return hashCode;
+        }
+
         public override void PushUnderArgs()
         {
             // Going to do an indirect call of myself, and indirect calls need
@@ -67,8 +94,8 @@ namespace kOS.Safe.Encapsulation
             // OpcodeCall.StaticExecute() expects to see it.
             Cpu.PushStack(this);
         }
-        
-        public override Structure Call()
+
+        public override Structure CallWithArgsPushedAlready()
         {
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)
@@ -81,6 +108,18 @@ namespace kOS.Safe.Encapsulation
             // responsibility for pushing a return value onto the user code that is
             // about to be jumped into.
             return new KOSPassThruReturn();
+        }
+
+        /// <summary>
+        /// A convienience shortcut to do a Cpu.AddTrigger for this UserDelegate.  See
+        /// Cpu.AddTrigger to see what this is for.  This is useful for cases where you
+        /// want to do an AddTrigger() but don't have access to the Shared.Cpu with which to
+        /// do so (the UserDelegate knows which Cpu it was created with so it can get to
+        /// it directly from that).
+        /// </summary>
+        public TriggerInfo TriggerNextUpdate(params Structure[] args)
+        {
+            return Cpu.AddTrigger(this, args);
         }
     }
 }

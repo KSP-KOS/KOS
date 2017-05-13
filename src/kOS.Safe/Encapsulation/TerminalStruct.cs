@@ -1,9 +1,11 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+﻿using System.Collections.Generic;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Screen;
 
 namespace kOS.Safe.Encapsulation
 {
     [Utilities.KOSNomenclature("Terminal")]
-    public class TerminalStruct : Structure
+    public class TerminalStruct : Structure, IFixedUpdateObserver
     {
         private readonly SafeSharedObjects shared;
         private TerminalInput terminalInput = null;
@@ -15,7 +17,7 @@ namespace kOS.Safe.Encapsulation
         protected const int MAXROWS = 160;
         protected const int MINCOLUMNS = 15;
         protected const int MAXCOLUMNS = 255;
-        
+
         protected const int MINCHARPIXELS = 4;
         protected const int MAXCHARPIXELS = 24;
 
@@ -24,11 +26,94 @@ namespace kOS.Safe.Encapsulation
         //
         // protected bool IsOpen { get { return shared.Window.IsOpen(); } set {if (value) shared.Window.Open(); else shared.Window.Close(); } }
 
+        /// <summary>
+        /// This is what we expose to the user script that the user can manipulate to their heart's content.
+        /// </summary>
+        protected UniqueSetValue<UserDelegate> resizeWatchers;
+
+        protected Queue<TriggerInfo> pendingResizeTriggers;
+        
+        TriggerInfo currentResizeTrigger;
+
         public TerminalStruct(SafeSharedObjects shared)
         {
             this.shared = shared;
+            resizeWatchers = new UniqueSetValue<UserDelegate>();
+            pendingResizeTriggers = new Queue<TriggerInfo>();
 
             InitializeSuffixes();
+
+            Shared.Screen.AddResizeNotifier(NotifyMeOfResize);
+            if (Shared.UpdateHandler != null) Shared.UpdateHandler.AddFixedObserver(this);
+        }
+        
+        public void Dispose()
+        {
+            Shared.UpdateHandler.RemoveFixedObserver(this);
+            Shared.Screen.RemoveResizeNotifier(NotifyMeOfResize);
+        }
+        
+        public int NotifyMeOfResize(IScreenBuffer sb)
+        {
+            foreach (UserDelegate watcher in resizeWatchers)
+            {
+                // If the watcher is dead, take it out of the list, else call it with (cols, rows) as its arguments:
+
+                if (watcher is NoDelegate) // User passed us a pointless "null" delegate
+                    continue;
+
+                List<Structure> argList = new List<Structure>(new Structure[] {(ScalarIntValue)sb.ColumnCount, (ScalarIntValue)sb.RowCount});
+
+                // Normally when you call Shared.Cpu.AddTrigger(), it not only constructs a TriggerInfo, but it
+                // also immediately inserts it into the execution list to start firing off right away.  We want
+                // to delay that, so here's an alternate way to construct a TriggerInfo that isn't running yet,
+                // that we'll wait until a later step to schedule to run:
+                TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.ProgContext, watcher.EntryPoint, argList);
+                pendingResizeTriggers.Enqueue(notYetExecutingTrigger);
+            }
+
+            return 0; // being told about the resize allows a resizer to choose to scroll the window.  We won't give that power to the script code.
+        }
+        
+        public void KOSFixedUpdate(double deltaTime)
+        {
+            // Execute just one hook at a time per update, to keep it sane and to keep the
+            // multiple Shared.Screen.AddResizeNotifier firings that happen per fixedupdate
+            // from resulting in the same hook stepping on top of itself:  This means it may
+            // take a few fixedupdates to finish processing all the fired off events, but
+            // it's less messy to track than the alternative.
+            
+            // Only schedule the call to the next one if the previous one isn't still waiting:
+            if (currentResizeTrigger == null || currentResizeTrigger.CallbackFinished)
+            {
+                if (pendingResizeTriggers.Count == 0)
+                {
+                    currentResizeTrigger = null;
+                }
+                else
+                {
+                    currentResizeTrigger = pendingResizeTriggers.Dequeue();
+
+                    // Try calling it again, and by the way any time we notice an attempt
+                    // to call it again has failed, then go back and trim our list of
+                    // watchers so it won't happen again:
+                    if (Shared.Cpu.AddTrigger(currentResizeTrigger) == null)
+                        TrimStaleWatchers();
+                }
+            }
+        }
+
+        private void TrimStaleWatchers()
+        {
+            // Can't use Linq Where clauses here because UniqueSetValue is our own homemade collection type:
+            
+            List<UserDelegate> deleteUs = new List<UserDelegate>();
+            foreach (UserDelegate watcher in resizeWatchers)
+                if (watcher is NoDelegate || watcher.ProgContext.ContextId != Shared.Cpu.GetCurrentContext().ContextId)
+                    deleteUs.Add(watcher);
+
+            foreach (UserDelegate deadWatcher in deleteUs)
+                resizeWatchers.Remove(deadWatcher);
         }
 
         protected internal SafeSharedObjects Shared
@@ -73,6 +158,7 @@ namespace kOS.Safe.Encapsulation
                                                                     MAXCHARPIXELS,
                                                                     2,
                                                                     "Character height on in-game terminal screen in pixels"));
+            AddSuffix("RESIZEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => resizeWatchers));
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
         }
 

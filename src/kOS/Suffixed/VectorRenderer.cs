@@ -2,6 +2,7 @@
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
+using kOS.Safe.Exceptions;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,13 @@ namespace kOS.Suffixed
         private bool prevIsOnMap;
         private const int MAP_LAYER = 10; // found through trial-and-error
         private const int FLIGHT_LAYER = 15; // Supposedly the layer for UI effects in flight camera.
+        
+        private TriggerInfo StartTrigger = null;
+        private TriggerInfo VectorTrigger = null;
+        private TriggerInfo ColorTrigger = null;
+        private UserDelegate StartDelegate = null;
+        private UserDelegate VectorDelegate = null;
+        private UserDelegate ColorDelegate = null;
 
         public VectorRenderer(UpdateHandler updateHand, SharedObjects shared)
         {
@@ -115,6 +123,8 @@ namespace kOS.Suffixed
             }
             if (!enable) return;
 
+            HandleDelegateUpdates();
+
             GetCamData();
             GetShipCenterCoords();
             PutAtShipRelativeCoords();
@@ -133,6 +143,77 @@ namespace kOS.Suffixed
                 LabelPlacement();
             }
         }
+        
+        private void HandleDelegateUpdates()
+        {
+            // If a UserDelegate went away, throw away any previous trigger handles we may have been waiting to finish:
+            // --------------------------------------------------------------------------------------------------------
+            if (StartDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
+                StartTrigger = null;
+            if (VectorDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
+                VectorTrigger = null;
+            if (ColorDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
+                ColorTrigger = null;
+
+            // For any trigger handles for delegate calls that were in progress already, if they're now done
+            // then update the value to what they returned:
+            // ---------------------------------------------------------------------------------------------
+            bool needToRender = false; // track when to call RenderPointCoords
+            if (StartTrigger != null && StartTrigger.CallbackFinished)
+            {
+                if (StartTrigger.ReturnValue is Vector)
+                {
+                    Start = StartTrigger.ReturnValue as Vector;
+                    needToRender = true;
+                }
+                else
+                    throw new KOSInvalidDelegateType("VECDRAW:STARTDELEGATE", "Vector", StartTrigger.ReturnValue.KOSName);
+            }
+            if (VectorTrigger != null && VectorTrigger.CallbackFinished)
+            {
+                if (VectorTrigger.ReturnValue is Vector)
+                {
+                    Vector = VectorTrigger.ReturnValue as Vector;
+                    needToRender = true;
+                }
+                else
+                    throw new KOSInvalidDelegateType("VECDRAW:VECTORDELEGATE", "Vector", VectorTrigger.ReturnValue.KOSName);
+            }
+            if (needToRender)
+                RenderPointCoords();  // save a little execution time by only rendering once if both start and vec are updated
+
+            if (ColorTrigger != null && ColorTrigger.CallbackFinished)
+            {
+                if (ColorTrigger.ReturnValue is RgbaColor)
+                {
+                    Color = ColorTrigger.ReturnValue as RgbaColor;
+                    RenderColor();
+                }
+                else
+                    throw new KOSInvalidDelegateType("VECDRAW:COLORDELEGATE", "Vector", ColorTrigger.ReturnValue.KOSName);
+            }
+
+            // For those UserDelegates that have been assigned, if there isn't a current UserDelegate call in progress, start a new one:
+            // -------------------------------------------------------------------------------------------------------------------------
+            if (StartDelegate != null && (StartTrigger == null || StartTrigger.CallbackFinished))
+            {
+                StartTrigger = StartDelegate.TriggerNextUpdate();
+                if (StartTrigger == null) // Delegate must be from a stale ProgramContext.  Stop trying to call it.
+                    StartDelegate = null;
+            }
+            if (VectorDelegate != null && (VectorTrigger == null || VectorTrigger.CallbackFinished))
+            {
+                VectorTrigger = VectorDelegate.TriggerNextUpdate();
+                if (VectorTrigger == null) // Delegate must be from a stale ProgramContext.  Stop trying to call it.
+                    VectorDelegate = null;
+            }
+            if (ColorDelegate != null && (ColorTrigger == null || ColorTrigger.CallbackFinished))
+            {
+                ColorTrigger = ColorDelegate.TriggerNextUpdate();
+                if (ColorTrigger == null) // Delegate must be from a stale ProgramContext.  Stop trying to call it.
+                    ColorDelegate = null;
+            }
+        }
 
         private void InitializeSuffixes()
         {
@@ -141,17 +222,32 @@ namespace kOS.Suffixed
                    Vector = value;
                    RenderPointCoords();
                }));
+            AddSuffix(new[] { "VECUPDATER", "VECTORUPDATER" },
+                      new SetSuffix<UserDelegate>(
+                          () => VectorDelegate ?? new NoDelegate(shared.Cpu), // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { VectorDelegate = (value is NoDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                         ));
             AddSuffix(new[] { "COLOR", "COLOUR" }, new SetSuffix<RgbaColor>(() => Color, value =>
                {
                    Color = value;
                    RenderColor();
                }));
+            AddSuffix(new[] { "COLORUPDATER", "COLOURUPDATER" },
+                      new SetSuffix<UserDelegate>(
+                          () => ColorDelegate ?? new NoDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { ColorDelegate = (value is NoDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                         ));
             AddSuffix("SHOW", new SetSuffix<BooleanValue>(() => enable, SetShow));
             AddSuffix("START", new SetSuffix<Vector>(() => new Vector(Start), value =>
             {
                 Start = value;
                 RenderPointCoords();
             }));
+            AddSuffix("STARTUPDATER",
+                      new SetSuffix<UserDelegate>(
+                          () => StartDelegate ?? new NoDelegate(shared.Cpu),  // never return a null to user code - make it a DoNothingDelegate instead.
+                          value => { StartDelegate = (value is NoDelegate ? null : value); } // internally use null in place of DoNothingDelegate.
+                         ));
             AddSuffix("SCALE", new SetSuffix<ScalarValue>(() => Scale, value =>
             {
                 Scale = value;

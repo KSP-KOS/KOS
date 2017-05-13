@@ -1,6 +1,7 @@
 ﻿using kOS.Communication;
 using kOS.Execution;
 using kOS.Screen;
+using kOS.Callback;
 using kOS.Sound;
 using System.Collections.Generic;
 
@@ -15,6 +16,10 @@ namespace kOS
         public List<KOSManagedWindow> ManagedWindows { get; private set; }
         public TransferManager TransferManager { get; set; }
         public AddOns.AddonManager AddonManager { get; set; }
+        public GameEventDispatchManager DispatchManager
+        {
+            get { return (GameEventDispatchManager)GameEventDispatchManager; }
+        }
         public Dictionary<int, VoiceValue> AllVoiceValues { get; private set; }
 
         public SharedObjects()
@@ -39,6 +44,7 @@ namespace kOS
             if (Window != null) { UnityEngine.Object.Destroy(Window); }
             if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
             if (UpdateHandler != null) { UpdateHandler.ClearAllObservers(); }
+            if (GameEventDispatchManager != null) { GameEventDispatchManager.Clear(); }
             var props = typeof(SharedObjects).GetProperties();
             foreach (var prop in props)
             {

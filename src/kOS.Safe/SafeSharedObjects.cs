@@ -1,4 +1,5 @@
 using kOS.Safe.Binding;
+using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Function;
@@ -22,5 +23,6 @@ namespace kOS.Safe
         public IFunctionManager FunctionManager { get; set; }
         public IVolumeManager VolumeMgr { get; set; }
         public ISoundMaker SoundMaker { get; set; }
+        public IGameEventDispatchManager GameEventDispatchManager { get; set; }
     }
 }

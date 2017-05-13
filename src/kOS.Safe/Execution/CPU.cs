@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Binding;
+using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
@@ -85,7 +86,8 @@ namespace kOS.Safe.Execution
         {
             // break all running programs
             currentContext = null;
-            contexts.Clear();
+            contexts.Clear();            
+            if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
             currentRunSection = Section.Main;
             currentTime = 0;
@@ -101,6 +103,7 @@ namespace kOS.Safe.Execution
             if (shared.FunctionManager != null) shared.FunctionManager.Load();
             // load bindings
             if (shared.BindingMgr != null) shared.BindingMgr.Load();
+
             // Booting message
             if (shared.Screen != null)
             {
@@ -182,6 +185,7 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
+            shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)
             {
@@ -198,12 +202,14 @@ namespace kOS.Safe.Execution
                 // remove the last context
                 ProgramContext contextRemove = contexts.Last();
                 contexts.Remove(contextRemove);
+                shared.GameEventDispatchManager.RemoveDispatcherFor(currentContext);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
                 SafeHouse.Logger.Log("Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
                 if (contexts.Any())
                 {
                     currentContext = contexts.Last();
+                    shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
                     currentContext.EnableActiveFlyByWire(shared.BindingMgr);
                     RestorePointers();
                     SafeHouse.Logger.Log("New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
@@ -211,6 +217,7 @@ namespace kOS.Safe.Execution
                 else
                 {
                     currentContext = null;
+                    shared.GameEventDispatchManager.Clear();
                 }
 
                 if (contexts.Count == 1)
@@ -270,6 +277,11 @@ namespace kOS.Safe.Execution
             foreach (VariableScope scope in closureList)
                 scope.IsClosure = true;
             return closureList;
+        }
+
+        public IProgramContext GetCurrentContext()
+        {
+            return currentContext;
         }
 
         /// <summary>
@@ -1084,14 +1096,122 @@ namespace kOS.Safe.Execution
             return stack.GetLogicalSize();
         }
 
-        public void AddTrigger(int triggerFunctionPointer)
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.  This type of trigger must be a function that
+        /// takes zero parameters and returns a BooleanValue.  If its return is true, it will be
+        /// automatically scheduled to run again by being re-inserted with a new AddTrigger()
+        /// when it finishes.  If its return is false, it won't fire off again.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
+        /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
+        public TriggerInfo AddTrigger(int triggerFunctionPointer)
         {
-            currentContext.AddPendingTrigger(triggerFunctionPointer);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer);
+            currentContext.AddPendingTrigger(triggerRef);
+            return triggerRef;
+        }
+
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.<br/>
+        /// <br/>
+        /// This type of trigger must be a UserDelegate
+        /// function which was created using the CPU's current Program Contect.  If it was created
+        /// using a different program context that the one that is currently executing (i.e. if it's
+        /// a delegate from a program that has ended now), then this method will refuse to insert it
+        /// and it won't run.  In this case a null TriggerInfo will be returned.<br/>
+        /// <br/>
+        /// For "fire and forget" callback hook functions that "return void" and you don't care about
+        /// their return value, you can just ignore whether or not the AddTrigger worked and not care
+        /// about the cases where it silently fails because the program got aborted.  The fact that the
+        /// callback won't execute only matters when you were expecting to read its return value.
+        /// </summary>
+        /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
+        /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
+        /// the progress of the function call: To see if it has had a chance to finish executing yet,
+        /// and to see what its return value was if it has finished.  Will be null if the UserDelegate was
+        /// for an "illegal" program context.  Null returns are used instead of throwing an exception
+        /// because this condition is expected to occur often when a program just ended that had callback hooks
+        /// in it.</returns>
+        public TriggerInfo AddTrigger(UserDelegate del, List<Structure> args)
+        {
+            if (del.ProgContext != currentContext)
+                return null;
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, args);
+            currentContext.AddPendingTrigger(callbackRef);
+            return callbackRef;
+        }
+
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.<br/>
+        /// <br/>
+        /// This type of trigger must be a UserDelegate
+        /// function which was created using the CPU's current Program Contect.  If it was created
+        /// using a different program context that the one that is currently executing (i.e. if it's
+        /// a delegate from a program that has ended now), then this method will refuse to insert it
+        /// and it won't run.  In this case a null TriggerInfo will be returned.
+        /// <br/>
+        /// For "fire and forget" callback hook functions that "return void" and you don't care about
+        /// their return value, you can just ignore whether or not the AddTrigger worked and not care
+        /// about the cases where it silently fails because the program got aborted.  The fact that the
+        /// callback won't execute only matters when you were expecting to read its return value.
+        /// </summary>
+        /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
+        /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
+        /// the progress of the function call: To see if it has had a chance to finish executing yet,
+        /// and to see what its return value was if it has finished.  Will be null if the UserDelegate was
+        /// for an "illegal" program context.  Null returns are used instead of throwing an exception
+        /// because this condition is expected to occur often when a program is ended that had callback hooks
+        /// in it.</returns>
+        public TriggerInfo AddTrigger(UserDelegate del, params Structure[] args)
+        {
+            if (del.ProgContext != currentContext)
+                return null;
+            return AddTrigger(del, new List<Structure>(args));
+        }
+
+        /// <summary>
+        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// If multiple such function calls get inserted between ticks, they will behave like
+        /// a nested stack of function calls.  Mainline code will not continue until all such
+        /// functions have finished at least once.<br/>
+        /// <br/>
+        /// This is used for cases where you already built a TriggerInfo yourself and are inserting it,
+        /// or have a handle on a TriggerInfo you got as a return from a previous AddTrigger() call and
+        /// want to re-insert it to schedule another call.<br/>
+        /// If the TriggerInfo you pass in was built for a different ProgramContext than the one that
+        /// is currently running, then this will return null and refuse to do anything.
+        /// </summary>
+        /// <returns>To be in agreement with how the other AddTrigger() methods work, this returns
+        /// a TriggerInfo which is just the same one you passed in.  It will return a null, however,
+        /// in cases where the TriggerInfo you passed in is for a different ProgramContext.</returns>
+        public TriggerInfo AddTrigger(TriggerInfo trigger)
+        {
+            if (trigger.ContextId != currentContext.ContextId)
+                return null;
+            currentContext.AddPendingTrigger(trigger);
+            return trigger;
         }
 
         public void RemoveTrigger(int triggerFunctionPointer)
         {
-            currentContext.RemoveTrigger(triggerFunctionPointer);
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer));
+        }
+
+        public void RemoveTrigger(TriggerInfo trigger)
+        {
+            currentContext.RemoveTrigger(trigger);
         }
 
         public void KOSFixedUpdate(double deltaTime)
@@ -1208,7 +1328,7 @@ namespace kOS.Safe.Execution
             int oldCount = currentContext.Program.Count;
 
             int currentInstructionPointer = currentContext.InstructionPointer;
-            var triggersToBeExecuted = new List<int>();
+            var triggersToBeExecuted = new List<TriggerInfo>();
             
             // To ensure triggers execute in the same order in which they
             // got added (thus ensuring the system favors trying the least
@@ -1218,37 +1338,55 @@ namespace kOS.Safe.Execution
             // order used in the loop below:
             for (int index = currentContext.ActiveTriggerCount() - 1 ; index >= 0 ; --index)
             {
-                int triggerPointer = currentContext.GetTriggerByIndex(index);
+                TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
                 
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
                 // will be invalid.  Only execute the trigger if it still exists.
-                if (currentContext.ContainsTrigger(triggerPointer))
+                if (currentContext.ContainsTrigger(trigger))
                 {
-                    // Insert a faked function call as if the trigger had been called from just
-                    // before whatever opcode was about to get executed, by pusing a context
-                    // record like OpcodeCall would do, and moving the IP to the
-                    // first line of the trigger, like OpcodeCall would do.  Because
-                    // triggers can't take arguments, most of the messy work of
-                    // OpcodeCall.Execute isn't needed:
-                    SubroutineContext contextRecord =
-                        new SubroutineContext(currentInstructionPointer, triggerPointer);
-                    PushAboveStack(contextRecord);
-                    PushStack(new KOSArgMarkerType()); // to go with the faked function call of zero arguments.
+                    if (trigger is NoDelegate)
+                    {
+                        // Don't bother calling it.  Just declare it to be "done" with its default value.
+                        trigger.FinishCallback(new ScalarIntValue(0));
+                        // hypothetically this case shouldn't happen because our own code shouldn't
+                        // be adding triggers for the NoDelegate.  This is a fallback case to not
+                        // blow up when we forget to do that check.
+                    }
+                    else
+                    {
+                        // Insert a faked function call as if the trigger had been called from just
+                        // before whatever opcode was about to get executed, by pusing a context
+                        // record like OpcodeCall would do, and moving the IP to the
+                        // first line of the trigger, like OpcodeCall would do.  Because
+                        // triggers can't take arguments, most of the messy work of
+                        // OpcodeCall.Execute isn't needed:
+                        SubroutineContext contextRecord =
+                            new SubroutineContext(currentInstructionPointer, trigger);
+                        PushAboveStack(contextRecord);
 
-                    triggersToBeExecuted.Add(triggerPointer);
-                    
-                    currentInstructionPointer = triggerPointer;
-                    // Triggers can chain in this loop if more than one fire off at once - the second trigger
-                    // will look like it was a function that was called from the start of the first trigger.
-                    // The third trigger will look like a function that was called from the start of the second, etc.
+                        PushStack(new KOSArgMarkerType());
+
+                        if (trigger.IsCSharpCallback)
+                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
+                                PushStack(trigger.Args[argIndex]);
+                        
+                        triggersToBeExecuted.Add(trigger);
+                        
+                        currentInstructionPointer = trigger.EntryPoint;
+                        // Triggers can chain in this loop if more than one fire off at once - the second trigger
+                        // will look like it was a function that was called from the start of the first trigger.
+                        // The third trigger will look like a function that was called from the start of the second, etc.
+                    }
                 }
             }
             
             // Remove all triggers that will fire.  Any trigger that wants to
             // re-enable itself will do so by returning a boolean true, which
             // will tell OpcodeReturn that it needs to re-add the trigger.
-            foreach (int triggerPointer in triggersToBeExecuted)
-                RemoveTrigger(triggerPointer);
+            foreach (TriggerInfo trigger in triggersToBeExecuted)
+            {
+                RemoveTrigger(trigger);
+            }
 
             currentContext.InstructionPointer = currentInstructionPointer;
         }

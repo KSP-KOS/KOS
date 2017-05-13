@@ -14,28 +14,27 @@ namespace kOS.Safe.Execution
 
         /// <summary>
         /// If this context record is from a trigger call the kOS CPU inserted, then
-        /// this acts as an effective Unique ID for which trigger it was (it's the
-        /// IP of the first line of the trigger).
+        /// this acts as an effective Unique ID for which trigger it was.
         /// </summary>
-        public int TriggerPointer {get; private set;}
+        public TriggerInfo Trigger {get; private set;}
 
         /// <summary>
         /// True if this context record represents a trigger call that was inserted
         /// by the kOS CPU itself rather than from an explicit call in the user's code.
         /// </summary>
-        public bool IsTrigger {get { return (TriggerPointer >= 0); }}
+        public bool IsTrigger {get { return (Trigger != null); }}
 
         /// <summary>Make a new Subroutine Context, with all the required data.</summary>
         /// <param name="cameFromInstPtr">Sets the ComeFromIP field</param>
-        public SubroutineContext(int cameFromInstPtr, int triggerPointer = -1)
+        public SubroutineContext(int cameFromInstPtr, TriggerInfo trigger =  null)
         {
             CameFromInstPtr = cameFromInstPtr;
-            TriggerPointer = triggerPointer;
+            Trigger = trigger;
         }
         
         public override string ToString()
         {
-            return string.Format("SubroutineContext: {{CameFromInstPtr {0}, TriggerPointer {1}}}", CameFromInstPtr, TriggerPointer);
+            return string.Format("SubroutineContext: {{CameFromInstPtr {0}, TriggerPointer {1}}}", CameFromInstPtr, Trigger);
         }
     }
 }

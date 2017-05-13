@@ -54,7 +54,7 @@ namespace kOS.Safe
         {
             LastDeltaFixedTime = deltaTime;
             CurrentFixedTime += deltaTime;
-            
+
             var snapshot = new HashSet<IFixedUpdateObserver>(fixedObservers);
             foreach (var observer in snapshot)
             {

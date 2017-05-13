@@ -36,6 +36,14 @@ Global
 		$1.inheritsScope = text/plain
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
+		$2.AnonymousMethodBraceStyle = DoNotChange
+		$2.PropertyBraceStyle = DoNotChange
+		$2.PropertyGetBraceStyle = DoNotChange
+		$2.PropertySetBraceStyle = DoNotChange
+		$2.EventBraceStyle = DoNotChange
+		$2.EventAddBraceStyle = DoNotChange
+		$2.EventRemoveBraceStyle = DoNotChange
+		$2.StatementBraceStyle = DoNotChange
 		$2.IndentSwitchBody = True
 		$2.AnonymousMethodBraceStyle = DoNotChange
 		$2.StatementBraceStyle = NextLine
@@ -44,6 +52,9 @@ Global
 		$2.CatchNewLinePlacement = DoNotCare
 		$2.FinallyNewLinePlacement = DoNotCare
 		$2.WhileNewLinePlacement = DoNotCare
+		$2.BeforeMethodDeclarationParentheses = False
+		$2.BeforeMethodCallParentheses = False
+		$2.BeforeConstructorDeclarationParentheses = False
 		$2.EmbeddedStatementPlacement = DoNotCare
 		$2.BeforeMethodDeclarationParentheses = False
 		$2.BeforeMethodCallParentheses = False

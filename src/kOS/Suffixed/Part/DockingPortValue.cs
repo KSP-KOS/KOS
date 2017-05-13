@@ -36,6 +36,9 @@ namespace kOS.Suffixed.Part
                                                                "docking ports like the inline docking port."));
             AddSuffix("NODEPOSITION", new Suffix<Vector>(GetNodePosition, "The position of the docking node itself rather than the part's center of mass"));
             AddSuffix("NODETYPE", new Suffix<StringValue>(() => module.nodeType, "The type of the docking node"));
+
+            AddSuffix("DOCKWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetPartCoupleNotifyees(module.part)));
+            AddSuffix("UNDOCKWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetPartUndockNotifyees(module.part)));
         }
 
         public override ITargetable Target

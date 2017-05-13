@@ -1441,7 +1441,12 @@ namespace kOS.Safe.Compilation
 
             IUserDelegate userDelegate = functionPointer as IUserDelegate;
             if (userDelegate != null)
-                functionPointer = userDelegate.EntryPoint;
+            {
+                if (userDelegate is NoDelegate)
+                    functionPointer = userDelegate; // still leave it as a delegate as a flag to not call the entry point.
+                else
+                    functionPointer = userDelegate.EntryPoint;
+            }
 
             BuiltinDelegate builtinDel = functionPointer as BuiltinDelegate;
             if (builtinDel != null && (! calledFromKOSDelegateCall) )
@@ -1501,6 +1506,10 @@ namespace kOS.Safe.Compilation
 
                 delegateReturn = result.Value;
             }
+            else if (functionPointer is NoDelegate)
+            {
+                delegateReturn = ((NoDelegate)functionPointer).CallWithArgsPushedAlready();
+            }
             // TODO:erendrake This else if is likely never used anymore
             else if (functionPointer is Delegate)
             {
@@ -1511,7 +1520,7 @@ namespace kOS.Safe.Compilation
                 throw new KOSNotInvokableException(functionPointer);
             }
 
-            if (functionPointer is ISuffixResult)
+            if (functionPointer is ISuffixResult || functionPointer is NoDelegate)
             {
                 if (! (delegateReturn is KOSPassThruReturn))
                     cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
@@ -1637,14 +1646,22 @@ namespace kOS.Safe.Compilation
             
             // Special case for when the subroutine was really being called as an interrupt
             // trigger from the kOS CPU itself.  In that case we don't want to leave the
-            // return value atop the stack, and instead want to pop it and use it to decide
-            // whether or not the re-insert the trigger for next time:
+            // return value atop the stack, and instead want to pop it and use it:
             if (contextRecord.IsTrigger)
             {
                 cpu.PopStack(); // already got the return value up above, just ignore it.
-                if (returnVal is bool || returnVal is BooleanValue )
-                    if (Convert.ToBoolean(returnVal))
-                        cpu.AddTrigger(contextRecord.TriggerPointer);
+                TriggerInfo trigger = contextRecord.Trigger;
+                // For callbacks, the return value should be preserved in the trigger object
+                // so the C# code can find it there.  For non-callbacks, the return value 
+                // determines whether or not to re-add the trigger so it happens again.
+                // (For C# callbacks, it's always a one-shot call.  The C# code should re-add the
+                // trigger itself if it wants to make the call happen again.)
+                if (trigger.IsCSharpCallback)
+                    trigger.FinishCallback(returnVal);
+                else
+                    if (returnVal is bool || returnVal is BooleanValue )
+                        if (Convert.ToBoolean(returnVal))
+                            cpu.AddTrigger(contextRecord.Trigger.EntryPoint);
             }
             
             int destinationPointer = contextRecord.CameFromInstPtr;

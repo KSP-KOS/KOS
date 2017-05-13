@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
 using UnityEngine;
 
 namespace kOS.Suffixed.Widget
@@ -10,9 +11,25 @@ namespace kOS.Suffixed.Widget
         private bool changed = false;
         private ListValue list;
         private int index = 0;
+        public int Index
+        {
+            get
+            {
+                return index;
+            }
+            private set
+            {
+                int oldIndex = index;
+                index = value;
+                if (oldIndex != index)
+                    ScheduleChangeCallback();
+            }
+        }
+        private int maxVisible = 15;
         private WidgetStyle popupStyle;
         private WidgetStyle itemStyle;
         private string optSuffix = "ToString";
+        public UserDelegate UserOnChange { get ; set; }
 
         public PopupMenu(Box parent) : base(parent,"", parent.FindStyle("popupMenu"))
         {
@@ -30,10 +47,12 @@ namespace kOS.Suffixed.Widget
         {
             AddSuffix("OPTIONS", new SetSuffix<ListValue>(() => list, value => list = value));
             AddSuffix("ADDOPTION", new OneArgsSuffix<Structure>(AddOption));
-            AddSuffix("VALUE", new SetSuffix<Structure>(() => (index >= 0 && index < list.Count()) ? list[index] : new StringValue(""), value => Choose(value)));
-            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => index, value => { index = value; if (index >= 0 && index < list.Count()) SetVisibleText(GetItemString(list[index])); }));
+            AddSuffix("VALUE", new SetSuffix<Structure>(GetValue, value => Choose(value)));
+            AddSuffix("INDEX", new SetSuffix<ScalarIntValue>(() => Index, value => { Index = value; if (Index >= 0 && Index < list.Count()) SetVisibleText(GetItemString(list[Index])); }));
             AddSuffix("CLEAR", new NoArgsVoidSuffix(Clear));
             AddSuffix("CHANGED", new SetSuffix<BooleanValue>(() => TakeChange(), value => changed = value));
+            AddSuffix("MAXVISIBLE", new SetSuffix<ScalarIntValue>(() => maxVisible, value => maxVisible = value));
+            AddSuffix("ONCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnChange), value => UserOnChange = CallbackSetter(value)));
             AddSuffix("OPTIONSUFFIX", new SetSuffix<StringValue>(() => optSuffix, value => optSuffix = value));
         }
 
@@ -43,6 +62,20 @@ namespace kOS.Suffixed.Widget
             SetVisibleText("");
             Communicate(() => changed = true);
             // Note: we leave the index alone so things can be set in any order.
+        }
+
+        public Structure GetValue()
+        {
+            return (Index >= 0 && Index < list.Count()) ? list[Index] : new StringValue("");
+        }
+
+        protected virtual void ScheduleChangeCallback()
+        {
+            if (UserOnChange != null)
+            {
+                UserOnChange.TriggerNextUpdate(GetValue());
+                changed = false;
+            }
         }
 
         public bool TakeChange()
@@ -63,7 +96,7 @@ namespace kOS.Suffixed.Widget
 
         public void AddOption(Structure opt)
         {
-            if (list.Count() == index)
+            if (list.Count() == Index)
                 SetVisibleText(GetItemString(opt));
             list.Add(opt);
             Communicate(() => changed = true);
@@ -71,18 +104,18 @@ namespace kOS.Suffixed.Widget
 
         public void Choose(Structure v)
         {
-            for (index = 0; index < list.Count(); ++index) {
-                if (list[index] == v) {
+            for (Index = 0; Index < list.Count(); ++Index) {
+                if (list[Index] == v) {
                     return;
                 }
             }
             string vs = GetItemString(v);
-            for (index = 0; index < list.Count(); ++index) {
-                if (GetItemString(list[index]) == vs) {
+            for (Index = 0; Index < list.Count(); ++Index) {
+                if (GetItemString(list[Index]) == vs) {
                     return;
                 }
             }
-            index = -1;
+            Index = -1;
         }
 
         public override void DoGUI()
@@ -93,6 +126,8 @@ namespace kOS.Suffixed.Widget
                 Rect r = GUILayoutUtility.GetLastRect();
                 popupRect.position = GUIUtility.GUIToScreenPoint(r.position) + new Vector2(0, r.height);
                 popupRect.width = r.width;
+
+                popupRect.height = CalcPopupViewHeight();
             }
             if (was != PressedVisible) {
                 GUIWidgets gui = FindGUI();
@@ -103,6 +138,33 @@ namespace kOS.Suffixed.Widget
                         gui.UnsetCurrentPopup(this);
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculates the total height in pixels of the visible window of
+        /// the popup scrolling pane.
+        /// </summary>
+        /// <returns>The total height.</returns>
+        private float CalcPopupViewHeight()
+        {
+            int visibleRows = list.Count();
+            bool extendsPastBottom = (maxVisible > 0 && visibleRows > maxVisible);
+            if (extendsPastBottom)
+                visibleRows = maxVisible;
+
+            float itemHeight = itemStyle.ReadOnly.CalcHeight(new GUIContent("XX"), popupRect.width);
+            RectOffset innerPadding = popupStyle.ReadOnly.padding;
+
+            float innerPadHeight = innerPadding.top + innerPadding.bottom;
+            RectOffset windowPadding = parent.FindStyle("window").ReadOnly.padding;
+
+            // Scrollbars still seem to exist when the window fits the content.
+            // The frame has to be bigger than (not just equal to) the size of the content to suppress the scrollbars, it seems.
+            // Thus this little bit of extra pixels to add on when we are trying to show all the content, unscrolled:
+            float fudgeExtraToPreventScrollbar = 5f;
+
+            float framingPadHeight = windowPadding.top + (extendsPastBottom ? 0f : windowPadding.bottom + fudgeExtraToPreventScrollbar);
+            return visibleRows * itemHeight + innerPadHeight + framingPadHeight;
         }
 
         public void PopDown()
@@ -120,19 +182,22 @@ namespace kOS.Suffixed.Widget
         }
 
         public Rect popupRect;
+        private Vector2 rememberScrollSpot = new Vector2();
         public void DoPopupGUI()
         {
+            rememberScrollSpot = GUILayout.BeginScrollView(rememberScrollSpot, popupStyle.ReadOnly);
             GUILayout.BeginVertical(popupStyle.ReadOnly);
             for (int i=0; i<list.Count(); ++i) {
                 if (GUILayout.Button(GetItemString(list[i]), itemStyle.ReadOnly)) {
                     int newindex = i;
-                    Communicate(() => index = newindex);
+                    Communicate(() => Index = newindex);
                     SetVisibleText(GetItemString(list[i]));
                     PopDown();
                     Communicate(() => changed = true);
                 }
             }
             GUILayout.EndVertical();
+            GUILayout.EndScrollView();
         }
 
         public override string ToString()

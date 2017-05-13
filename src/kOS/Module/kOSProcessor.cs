@@ -1,4 +1,5 @@
 using kOS.Binding;
+using kOS.Callback;
 using kOS.Execution;
 using kOS.Communication;
 using kOS.Persistence;
@@ -435,6 +436,7 @@ namespace kOS.Module
             shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
             shared.AddonManager = new AddOns.AddonManager(shared);
+            shared.GameEventDispatchManager = new GameEventDispatchManager(shared);
 
             // Make the window that is going to correspond to this kOS part:
             shared.Window = gameObject.AddComponent<Screen.TermWindow>();
