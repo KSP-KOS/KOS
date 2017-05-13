@@ -61,7 +61,31 @@ namespace kOS.Safe
                 observer.KOSFixedUpdate(deltaTime);
             }
         }
-        
+
+        public void ClearAllObservers()
+        {
+            var snapshot = new HashSet<IUpdateObserver>(observers);
+            foreach (var observer in snapshot)
+            {
+                IDisposable disp = observer as IDisposable;
+                if (disp != null)
+                {
+                    disp.Dispose();
+                }
+            }
+            var snapshotFixed = new HashSet<IFixedUpdateObserver>(fixedObservers);
+            foreach (var observer in snapshotFixed)
+            {
+                IDisposable disp = observer as IDisposable;
+                if (disp != null)
+                {
+                    disp.Dispose();
+                }
+            }
+            observers.Clear();
+            fixedObservers.Clear();
+        }
+
         /// <summary>
         /// Return all the registered fixed update handlers of a particular type
         /// </summary>

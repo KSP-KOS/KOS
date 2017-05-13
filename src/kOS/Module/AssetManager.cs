@@ -86,7 +86,7 @@ namespace kOS.Module
                 if (!FontNames.Contains(fontName))
                 {
                     // Only add those fonts which pass the monospace test:
-                    if (GetSystemFontByNameAndSize(fontName, 13, true, false) != null)
+                    if (GetSystemFontByNameAndSize(fontName, 13, true, false, false) != null)
                         FontNames.Add(fontName);
                 }
                 namesThatNoLongerExist.Remove(fontName);
@@ -120,7 +120,11 @@ namespace kOS.Module
         /// if it's not monospaced.</param>
         /// <param name="doErrorMessage">If true, then if the checkMono check (see above) fails, a message will
         /// appear on screen complaining about this as it returns a null, else it will return null silently.</param>
-        public Font GetSystemFontByNameAndSize(string name, int size, bool checkMono, bool doErrorMessage = true)
+        /// <param name="doDetectedCheck">If true, then protect against trying to use un-detected font names.
+        /// By default, if the font name you use was not discovered when walking the list of all OS font names, this
+        /// method will force a null return.  But if this is being called before that walk is finished, you have to
+        /// bypass that check to make it work at all.</param> 
+        public Font GetSystemFontByNameAndSize(string name, int size, bool checkMono, bool doErrorMessage = true, bool doDetectedCheck = true)
         {
             // Now that a font is asked for, now we'll lazy-load it.
 
@@ -128,6 +132,17 @@ namespace kOS.Module
             string key = MakeKey(name, size);
             if ( (!Fonts.ContainsKey(key)) || Fonts[key] == null)
             {
+                // Font.CreateDynamicFontFromOSFont will never return null just because you
+                // gave it a bogus font name that doesn't exist.  Instead Unity chooses
+                // to return the default Arial font instead when it can't find the font name.
+                // Because our logic requires that we try calling this method again and again
+                // walking through a list of fonts until we find one that works, we need this
+                // to return null when there's no such font.
+                // (Else when the first font in the list of fonts to try fails, we get a
+                // "success" at using Arial, instead of trying the next font.)
+                if (doDetectedCheck && !FontNames.Contains(name))
+                    return null;
+
                 Fonts[key] = Font.CreateDynamicFontFromOSFont(name, size);
             }
 
