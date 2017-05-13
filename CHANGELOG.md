@@ -1,6 +1,116 @@
 kOS Mod Changelog
 =================
 
+# v1.1.0 (for KSP 1.2.2) Ewww, everything's GUI.
+
+TODO: When we release for real, move up all the v1.0.90 stuff
+from below up into here for v1.1.0 and get rid of v1.0.90 as a heading.
+
+
+# v1.0.90 (for KSP 1.2.2) Ewww, everything's GUI.
+
+## TO PEOPLE VIEWING THIS FOR THE PRE-RELEASE:
+
+This v1.1.0 changelog has several TODO's in it because some URLS and links
+are not final and will change when we go to full release.  Rather than
+include the links that will soon become wrong, they're just marked as TODO
+for now, and you'll have to use the documentation search function to
+find the relevant part of the docs on the temporary pre-rlease docs server.)
+
+(TODO: Remove These paragraph when going from pre-release to public release:
+Although this changelog is marked as v1.1.0, remember that v1.1.0 is
+technically not out yet.  What you are seeing is a "pre-release" of v1.1.0,
+and things are subject to change.)
+
+### BREAKING CHANGES
+* Because of changes to make the terminal use a real font from your OS, we had
+  to obsolete TERMINAL:CHARWIDTH.  You can only choose TERMINAL:CHARHEIGHT.
+  Each font has its own hardcoded notion of how wide a letter will be at a
+  given height, which you can't override.
+* CONFIG:BRIGHTNESS was moved back to the global config section, and is no longer
+  set on the "difficulty" options screen, because it's not supposed to be a
+  per-saved-game setting, but a user-interface preference that spans all saved games.
+* ATM:SEALEVELPRESSURE now gives the answer in different units than it used to.
+  (It was in KiloPascals even though the documentation claimed it was in atmospheres.
+  Now it's in atmospheres to agree with the documentation.)
+
+### NEW FEATURES
+* **GUI-making toolkit**. You are now able to make a GUI window that your kerboscript
+  code can control, including buttons, sliders, toggles, checkboxes, etc.  It uses the
+  KSP game's default skin (kind of big letters) but the skin can be customized by the
+  script a bit to change things.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1878)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2006)
+  documentation: search for "GUI" (TODO: replace with URL).
+* **Background compilation**.  Now the game continues its simulation normally and physical
+  events keep happening, while kOS is taking a few seconds to compile a script.
+  (Gets rid of that familiar frozen game effect when you first issue a ``RUN`` command.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1941)
+* **Terminal Font**.  Now the kOS in-game terminal window uses a real font from your OS itself
+  to render the text terminal.  (This allows the display of any Unicode character the font can
+  render, and it allows nicer looking font size changes.)  Previously kOS painted images for
+  letters from a hardcoded texture image file.
+  [pull request 1](https://github.com/KSP-KOS/KOS/pull/1948)
+  [pull request 2](https://github.com/KSP-KOS/KOS/pull/2008)
+* **Allow any unicode**.  The kerboscript parser now allows identifiers and literal strings to
+  contain letters outside the limited ASCII-only range it used to accept.  The in-game terminal now
+  allows you to type any letter your keyboard can type.  (But it does not implement the ALT-numpad
+  technique of entering characters.  You have to have a keyboard that types the character directly.
+  However, the ALT-numpad technique will work through the telnet terminal, if your telnet client's
+  window can do it.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1994)
+* **Regular expression part searches** for part/tag names.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1918), documenation: search for "PARTSTAGGEDPATTERN" (TODO: replace with URL).
+* **Choose the IP address** of the telnet server, from the ones your computer has available, instead
+  of kOS picking one arbitrarily.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1976)
+* **Pressure at a given altitude** is now something you can query from an atmosphere.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2000), documentation: search for "ALTITUDEPRESSURE" (TODO: replace with URL).
+* **Get a LATLNG for some other body than the current one.**
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2001), documentation: search for "GEOPOSITIONLATLNG" (TODO: replace with URL).
+
+### BUG FIXES
+* Fix kOS toolbar button sometimes failing to appear in Blizzy Toolbar Mod.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1902)
+* Fix SKID Chip emulator's sync lag when physics is slow.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1915/commits/c9d9dcd18561903e122531605194b2685fc4fb15)
+* Fix SKID Chip emulator unable to use voices 6 through 9 because of how they were initialized.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1927)
+* Forgot to document GETMODULEBYINDEX.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1962)
+* Fix inability of a script to SET TARGET when KSP game is not the focused window.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1934)
+* Fix iterator that lets you walk the characters in a string with "for" loop.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1938)
+* Removed some Unity hooks that despite being empty and doing nothing,
+  nonetheless still ate up a bit of time to pointlessly call and return from.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1965)
+* Fix use of the min()/max() function on string comparisons
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1967)
+* Fix science data transmissions
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1979)
+* Fix unnessary duplicated of clones of vessel objects (was causing large garbage collection hangs).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1983)
+* Fixed several small documentation errors:
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1928)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1986)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1992)
+* Fixed float->boolean mapping error.  The values no longer round to integer before becoming boolean.
+  (i.e. 0.01 should be True, not get rounded to False (0) like it used to.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1990)
+* Fixed ATM:SEALEVELPRESSURE units to agree with the documentation.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2000)
+* Fixed bug that had made the sounds fail to emit for beep and keyclick.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2003)
+* Fixed vessel:TOSTRING to return "Vessel(blarg)" instead of "Ship(blarg").
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2005)
+* Fixed null-ref errors when using NEXTPATCH when there is no next patch.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2009)
+* Fixed a few bugs related to kOS cleaning up after itself when the vessel splits into two
+  or two vessels join together, or a vessel blows up.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2010)
+
+
 # v1.0.3 (for KSP 1.2.2) Make a little noise! (Part Deux)
 
 This release is nearly identical to v1.0.2, except that it was compiled against
