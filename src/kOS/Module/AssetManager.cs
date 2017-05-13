@@ -142,7 +142,7 @@ namespace kOS.Module
                 // "success" at using Arial, instead of trying the next font.)
                 if (doDetectedCheck && !FontNames.Contains(name))
                     return null;
-                
+
                 Fonts[key] = Font.CreateDynamicFontFromOSFont(name, size);
             }
 
