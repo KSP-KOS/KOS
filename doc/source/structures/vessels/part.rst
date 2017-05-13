@@ -63,6 +63,9 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :meth:`GETMODULE(name)`
           - :struct:`PartModule`
           - Get one of the :struct:`PartModules <PartModule>` by name
+        * - :meth:`GETMODULEBYINDEX(index)`
+          - :struct:`PartModule`
+          - Get one of the :struct:`PartModules <PartModule>` by index
         * - :attr:`MODULES`
           - :struct:`List`
           - Names (:struct:`String`) of all :struct:`PartModules <PartModule>`
@@ -228,6 +231,26 @@ These are the generic properties every PART has. You can obtain a list of values
     :returns: :struct:`PartModule`
 
     Get one of the :struct:`PartModules <PartModule>` attached to this part, given the name of the module. (See :attr:`Part:MODULES` for a list of all the names available).
+
+.. method:: Part:GETMODULEBYINDEX(index)
+
+    :parameter index: (:struct:`Scalar`) Index number of the part module
+    :returns: :struct:`PartModule`
+
+    Get one of the :struct:`PartModules <PartModule>` attached to this part,
+    given the index number of the module. You can use :attr:`Part:MODULES` for a
+    list of names of all modules on the part. The indexes are not guaranteed to
+    always be in the same order. It is recommended to iterate over the indexes
+    with a loop and verify the module name::
+
+        local moduleNames is part:modules.
+        for idx in range(0, moduleNames:length) {
+            if moduleNames[idx] = "test module" {
+                local pm is part:getmodulebyindex(idx).
+                DoSomething(pm).
+            }
+        }
+
 
 .. attribute:: Part:MODULES
 

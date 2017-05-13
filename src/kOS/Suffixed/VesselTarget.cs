@@ -360,7 +360,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "SHIP(\"" + Vessel.vesselName + "\")";
+            return "VESSEL(\"" + Vessel.vesselName + "\")";
         }
 
         public ListValue GetAllParts()

@@ -233,10 +233,10 @@ or their names if they've been given one. Understanding how
 
 Example::
 
-    SWITCH TO 0.                        // Switch to volume 0.
-    SET VOLUME(1):NAME TO AwesomeDisk.  // Name volume 1 as AwesomeDisk.
-    SWITCH TO AwesomeDisk.              // Switch to volume 1.
-    PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
+    SWITCH TO 0.                          // Switch to volume 0.
+    SET VOLUME(1):NAME TO "AwesomeDisk".  // Name volume 1 as AwesomeDisk.
+    SWITCH TO "AwesomeDisk".              // Switch to volume 1.
+    PRINT VOLUME(1):NAME.                 // Prints "AwesomeDisk".
 
 
 Files and directories
