@@ -23,7 +23,7 @@ Drawing Vectors on the Screen
               "See the arrow?",
               1.0,
               TRUE,
-              0.2 
+              0.2
             ).
 
         SET anArrow TO VECDRAWARGS(
@@ -33,7 +33,7 @@ Drawing Vectors on the Screen
               "See the arrow?",
               1.0,
               TRUE,
-              0.2 
+              0.2
             ).
 
     All the parameters of the ``VECDRAW()`` and ``VECDRAWARGS()`` are
@@ -46,7 +46,7 @@ Drawing Vectors on the Screen
 
     .. list-table:: Defaults
             :header-rows: 1
-            :widths: 1 3 
+            :widths: 1 3
 
             * - Suffix
               - Default
@@ -232,7 +232,7 @@ Drawing Vectors on the Screen
     you make this delegate do too much work, it will slow down your script's performance.
 
     To make the system stop calling your delegate, set this suffix to the magic
-    keyword :ref:`DONOTHING`.
+    keyword :global:`DONOTHING`.
 
     Example::
 
@@ -266,7 +266,7 @@ Drawing Vectors on the Screen
     you make this delegate do too much work, it will slow down your script's performance.
 
     To make the system stop calling your delegate, set this suffix to the magic
-    keyword :ref:`DONOTHING`.
+    keyword :global:`DONOTHING`.
 
     Example::
 
@@ -306,7 +306,7 @@ Drawing Vectors on the Screen
     you make this delegate do too much work, it will slow down your script's performance.
 
     To make the system stop calling your delegate, set this suffix to the magic
-    keyword :ref:`DONOTHING`.
+    keyword :global:`DONOTHING`.
 
     Example::
 
@@ -330,4 +330,3 @@ Drawing Vectors on the Screen
 .. attribute:: VecDraw:COLOURUPDATER
 
     This is just an alias for :attr:`VecDraw:COLORUPDATER`.
-

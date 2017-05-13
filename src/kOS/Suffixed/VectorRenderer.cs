@@ -154,16 +154,17 @@ namespace kOS.Suffixed
                 VectorTrigger = null;
             if (ColorDelegate == null) // Note: if the user assigns the NoDelegate, we re-map that to null (See how the SetSuffixes of this class are set up).
                 ColorTrigger = null;
-            
+
             // For any trigger handles for delegate calls that were in progress already, if they're now done
             // then update the value to what they returned:
             // ---------------------------------------------------------------------------------------------
+            bool needToRender = false; // track when to call RenderPointCoords
             if (StartTrigger != null && StartTrigger.CallbackFinished)
             {
                 if (StartTrigger.ReturnValue is Vector)
                 {
                     Start = StartTrigger.ReturnValue as Vector;
-                    RenderPointCoords();
+                    needToRender = true;
                 }
                 else
                     throw new KOSInvalidDelegateType("VECDRAW:STARTDELEGATE", "Vector", StartTrigger.ReturnValue.KOSName);
@@ -173,11 +174,14 @@ namespace kOS.Suffixed
                 if (VectorTrigger.ReturnValue is Vector)
                 {
                     Vector = VectorTrigger.ReturnValue as Vector;
-                    RenderPointCoords();
+                    needToRender = true;
                 }
                 else
                     throw new KOSInvalidDelegateType("VECDRAW:VECTORDELEGATE", "Vector", VectorTrigger.ReturnValue.KOSName);
             }
+            if (needToRender)
+                RenderPointCoords();  // save a little execution time by only rendering once if both start and vec are updated
+
             if (ColorTrigger != null && ColorTrigger.CallbackFinished)
             {
                 if (ColorTrigger.ReturnValue is RgbaColor)
@@ -188,7 +192,7 @@ namespace kOS.Suffixed
                 else
                     throw new KOSInvalidDelegateType("VECDRAW:COLORDELEGATE", "Vector", ColorTrigger.ReturnValue.KOSName);
             }
-            
+
             // For those UserDelegates that have been assigned, if there isn't a current UserDelegate call in progress, start a new one:
             // -------------------------------------------------------------------------------------------------------------------------
             if (StartDelegate != null && (StartTrigger == null || StartTrigger.CallbackFinished))

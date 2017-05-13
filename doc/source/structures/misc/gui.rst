@@ -195,9 +195,9 @@ following hierarchy:
 
     ``Button`` objects are created inside Box objects via ADDBUTTON and ADDCHECKBOX methods.
 
-    ===================================== ===============================            =============
+    ===================================== ========================================== =============
     Suffix                                Type                                       Description
-    ===================================== ===============================            =============
+    ===================================== ========================================== =============
                    Every suffix of :struct:`LABEL`
     ----------------------------------------------------------------------------------------------
     :attr:`PRESSED`                       :struct:`Boolean`                          Is the button currently down?
@@ -206,7 +206,7 @@ following hierarchy:
     :attr:`EXCLUSIVE`                     :struct:`Boolean`                          If true, sibling Buttons will unpress automatically. See Box:ADDRADIOBUTTON.
     :attr:`ONCLICK`                       :struct:`KOSDelegate` (no args)            Your function called whenever the button gets clicked.
     :attr:`ONTOGGLE`                      :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button's PRESSED state changes.
-    ===================================== =============================== =============
+    ===================================== ========================================== =============
 
 .. note::
 
@@ -220,7 +220,7 @@ following hierarchy:
     By default, :attr:`TOGGLE` is set to false.  This means the button does not require
     a second click by the user to pop back out again after being pushed in.
     The button's :attr:`PRESSED` suffix will only stay true long enough for the kerboscript
-    to tell kOS "Yes I have seen the fact that it was pressed".  (See next paragraph). 
+    to tell kOS "Yes I have seen the fact that it was pressed".  (See next paragraph).
     After that happens, :attr:`PRESSED` will become false again (and the button will pop back
     out).
 
@@ -245,7 +245,7 @@ following hierarchy:
     method is more efficient and simpler to use.  To use ONCLICK you set the ONCLICK
     suffix to a user delegate you create that kOS will call when the button gets clicked.
     example::
-    
+
         set mybutton:ONCLICK to { print "Do something here.". }.
 
     **Behaviour when TOGGLE is true:**
@@ -269,7 +269,7 @@ following hierarchy:
 
     The two suffixes :attr:`ONTOGLE`, and :attr:`ONCLICK` are similar
     to each other.  They are what is known as a "callback hook".  You can assign them to
-    a :struct:`KOSDelegate` of one of your functions (named or anonymous) and from then on 
+    a :struct:`KOSDelegate` of one of your functions (named or anonymous) and from then on
     kOS will call that function whenever the button gets changed as described.
 
     :attr:`ONCLICK` is called with no parameters.  To use it, your function must be
@@ -294,7 +294,7 @@ following hierarchy:
         // but this time we'll use an anonymous callback hook for it:
         LOCAL b2 IS g:ADDBUTTON("button 2").
         SET b2:ONCLICK TO { print "Button Two got pressed". }
-        
+
         // b3 is a toggle button.
         // We'll use it to demonstrate how ONTOGGLE callback hooks look:
         LOCAL b3 IS g:ADDBUTTON("button 3 (toggles)").
@@ -307,7 +307,7 @@ following hierarchy:
         // to signal the end of the program:
         LOCAL b4 IS g:ADDBUTTON("EXIT DEMO").
         SET b4:ONCLICK TO { set doneYet to true. }
-        
+
         g:show(). // Start showing the window.
 
         wait until doneYet. // program will stay here until exit clicked.
@@ -361,32 +361,35 @@ following hierarchy:
 	set popup:value to body.
 
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================= =============
+    Suffix                                Type                                      Description
+    ===================================== ========================================= =============
                    Every suffix of :struct:`BUTTON`
-    -----------------------------------------------------------------------------------
-    :attr:`OPTIONS`                       :struct:`List`                  List of options to display.
-    :attr:`OPTIONSUFFIX`                  :struct:`string`                Name of the suffix used for display names. Default = TOSTRING.
-    :meth:`ADDOPTION(value)`                                              Add a value to the end of the list of options.
-    :attr:`VALUE`                         Any                             Returns the current selected value.
-    :attr:`INDEX`                         :struct:`Scalar`                Returns the index of the current selected value.
-    :attr:`CHANGED`                       :struct:`Boolean`               Has the user chosen something?
-    :meth:`CLEAR`                                                         Removes all options.
-    ===================================== =============================== =============
+    ---------------------------------------------------------------------------------------------
+    :attr:`OPTIONS`                       :struct:`List`                            List of options to display.
+    :attr:`OPTIONSUFFIX`                  :struct:`string`                          Name of the suffix used for display names. Default = TOSTRING.
+    :meth:`ADDOPTION(value)`                                                        Add a value to the end of the list of options.
+    :attr:`VALUE`                         Any                                       Returns the current selected value.
+    :attr:`INDEX`                         :struct:`Scalar`                          Returns the index of the current selected value.
+    :attr:`CHANGED`                       :struct:`Boolean`                         Has the user chosen something?
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
+    :meth:`CLEAR`                                                                   Removes all options.
+    ===================================== ========================================= =============
 
 .. structure:: TextField
 
     ``TextField`` objects are created inside Box objects via ADDTEXTFIELD method.
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================= =============
+    Suffix                                Type                                      Description
+    ===================================== ========================================= =============
                    Every suffix of :struct:`LABEL`
-    -----------------------------------------------------------------------------------
-    :attr:`CHANGED`                       :struct:`Boolean`               Has the text been edited?
-    :attr:`CONFIRMED`                     :struct:`Boolean`               Has the user pressed Return in the field?
-    ===================================== =============================== =============
+    ---------------------------------------------------------------------------------------------
+    :attr:`CHANGED`                       :struct:`Boolean`                         Has the text been edited?
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
+    :attr:`CONFIRMED`                     :struct:`Boolean`                         Has the user pressed Return in the field?
+    :attr:`ONCONFIRMED`                   :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CONFIRMED` state changes.
+    ===================================== ========================================= =============
 
 .. note::
 
@@ -396,15 +399,16 @@ following hierarchy:
 
     ``Slider`` objects are created inside Box objects via ADDHSLIDER and ADDVSLIDER methods.
 
-    ===================================== =============================== =============
-    Suffix                                Type                            Description
-    ===================================== =============================== =============
+    ===================================== ========================================= =============
+    Suffix                                Type                                      Description
+    ===================================== ========================================= =============
                    Every suffix of :struct:`WIDGET`
-    -----------------------------------------------------------------------------------
-    :attr:`VALUE`                         :struct:`scalar`                The current value. Initially set to :attr:`MIN`.
-    :attr:`MIN`                           :struct:`scalar`                The minimum value (leftmost on horizontal slider).
-    :attr:`MAX`                           :struct:`scalar`                The maximum value (bottom on vertical slider).
-    ===================================== =============================== =============
+    ---------------------------------------------------------------------------------------------
+    :attr:`VALUE`                         :struct:`scalar`                          The current value. Initially set to :attr:`MIN`.
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`VALUE` changes.
+    :attr:`MIN`                           :struct:`scalar`                          The minimum value (leftmost on horizontal slider).
+    :attr:`MAX`                           :struct:`scalar`                          The maximum value (bottom on vertical slider).
+    ===================================== ========================================= =============
 
 .. structure:: ScrollBox
 
@@ -582,4 +586,3 @@ delay, then your attempts to click on the GUI elements will get the same
 delay). Similarly, changes to values in the GUI will be delayed coming
 back by the same rules. Some things such as GUI creation, adding widgets,
 etc. are immediate for simplicity.
-

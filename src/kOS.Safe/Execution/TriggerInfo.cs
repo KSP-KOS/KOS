@@ -65,7 +65,7 @@ public class TriggerInfo
         Args = new List<Structure>();
         ContextId = context.ContextId;
     }
-    
+
     /// <summary>
     /// Make a new trigger for insertion into the trigger list, which is a callback from C# code.
     /// </summary>
@@ -83,7 +83,7 @@ public class TriggerInfo
         Args = args;
         ContextId = context.ContextId;
     }
-    
+
     /// <summary>
     /// Once the callback trigger is done, call this to populate the return value,
     /// and flag it as finished.
@@ -94,7 +94,7 @@ public class TriggerInfo
         ReturnValue = (Structure) Structure.FromPrimitive(returnedValue);
         CallbackFinished = true;
     }
-    
+
     /// <summary>
     /// Two TriggerInfos shall be considered equivalent (and thus disallowed
     /// from existing simultaneously in collections that demand uniqueness) if
@@ -150,5 +150,4 @@ public class TriggerInfo
     {
         return string.Format("TriggerInfo: {0}:{1}:(arg count: {2})", EntryPoint, (IsCSharpCallback ? "callback" : "non-callback"), Args.Count);
     }
- 
 }

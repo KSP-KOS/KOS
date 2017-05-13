@@ -73,7 +73,7 @@ namespace kOS.Safe.Encapsulation
                 return false;
             return object.Equals(this.ProgContext, other.ProgContext) && this.EntryPoint == other.EntryPoint && object.Equals(this.Closure, other.Closure);
         }
-        
+
         public override int GetHashCode()
         {
             int hashCode = 0;
@@ -86,7 +86,7 @@ namespace kOS.Safe.Encapsulation
             }
             return hashCode;
         }
-        
+
         public override void PushUnderArgs()
         {
             // Going to do an indirect call of myself, and indirect calls need
@@ -94,7 +94,7 @@ namespace kOS.Safe.Encapsulation
             // OpcodeCall.StaticExecute() expects to see it.
             Cpu.PushStack(this);
         }
-        
+
         public override Structure CallWithArgsPushedAlready()
         {
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);

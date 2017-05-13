@@ -40,12 +40,12 @@ namespace kOS.Suffixed.Widget
             gskin.toggle.padding = new RectOffset(27, 0, 3, 0);
             gskin.toggle.margin = new RectOffset(4, 4, 4, 4);
             gskin.toggle.border = new RectOffset(40, 0, 40, 0);
-            gskin.toggle.normal.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_normal", false); ;
-            gskin.toggle.onNormal.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onnormal", false); ;
-            gskin.toggle.active.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onactive", false); ;
-            gskin.toggle.onActive.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_active", false); ;
-            gskin.toggle.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_hover", false); ;
-            gskin.toggle.onHover.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onhover", false); ;
+            gskin.toggle.normal.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_normal", false);
+            gskin.toggle.onNormal.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onnormal", false);
+            gskin.toggle.active.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onactive", false);
+            gskin.toggle.onActive.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_active", false);
+            gskin.toggle.hover.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_hover", false);
+            gskin.toggle.onHover.background = GameDatabase.Instance.GetTexture("kOS/GFX/toggle_bg_onhover", false);
 
             // Get back the style we made in the base initializer.
             gskin.window = ReadOnlyStyle;

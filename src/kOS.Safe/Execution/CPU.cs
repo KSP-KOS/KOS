@@ -278,7 +278,7 @@ namespace kOS.Safe.Execution
                 scope.IsClosure = true;
             return closureList;
         }
-        
+
         public IProgramContext GetCurrentContext()
         {
             return currentContext;

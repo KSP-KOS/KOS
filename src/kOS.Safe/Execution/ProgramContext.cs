@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
-using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Execution
 {
@@ -315,6 +314,5 @@ namespace kOS.Safe.Execution
             
             return "\"" + s.Replace("\"","\"\"") + "\"";
         }
-        
     }
 }

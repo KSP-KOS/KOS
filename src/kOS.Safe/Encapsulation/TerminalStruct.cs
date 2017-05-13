@@ -4,7 +4,7 @@ using kOS.Safe.Screen;
 
 namespace kOS.Safe.Encapsulation
 {
-    [kOS.Safe.Utilities.KOSNomenclature("Terminal")]
+    [Utilities.KOSNomenclature("Terminal")]
     public class TerminalStruct : Structure, IFixedUpdateObserver
     {
         private readonly SafeSharedObjects shared;
@@ -17,7 +17,7 @@ namespace kOS.Safe.Encapsulation
         protected const int MAXROWS = 160;
         protected const int MINCOLUMNS = 15;
         protected const int MAXCOLUMNS = 255;
-        
+
         protected const int MINCHARPIXELS = 4;
         protected const int MAXCHARPIXELS = 24;
 
@@ -25,12 +25,12 @@ namespace kOS.Safe.Encapsulation
         // That's more than I want to do in this update, I'm leaving it as a TODO for me or someone else:
         //
         // protected bool IsOpen { get { return shared.Window.IsOpen(); } set {if (value) shared.Window.Open(); else shared.Window.Close(); } }
-        
+
         /// <summary>
         /// This is what we expose to the user script that the user can manipulate to their heart's content.
         /// </summary>
         protected UniqueSetValue<UserDelegate> resizeWatchers;
-        
+
         protected Queue<TriggerInfo> pendingResizeTriggers;
         
         TriggerInfo currentResizeTrigger;
@@ -42,7 +42,7 @@ namespace kOS.Safe.Encapsulation
             pendingResizeTriggers = new Queue<TriggerInfo>();
 
             InitializeSuffixes();
-            
+
             Shared.Screen.AddResizeNotifier(NotifyMeOfResize);
             if (Shared.UpdateHandler != null) Shared.UpdateHandler.AddFixedObserver(this);
         }
@@ -58,7 +58,7 @@ namespace kOS.Safe.Encapsulation
             foreach (UserDelegate watcher in resizeWatchers)
             {
                 // If the watcher is dead, take it out of the list, else call it with (cols, rows) as its arguments:
-                
+
                 if (watcher is NoDelegate) // User passed us a pointless "null" delegate
                     continue;
 
@@ -111,7 +111,7 @@ namespace kOS.Safe.Encapsulation
             foreach (UserDelegate watcher in resizeWatchers)
                 if (watcher is NoDelegate || watcher.ProgContext.ContextId != Shared.Cpu.GetCurrentContext().ContextId)
                     deleteUs.Add(watcher);
-                
+
             foreach (UserDelegate deadWatcher in deleteUs)
                 resizeWatchers.Remove(deadWatcher);
         }

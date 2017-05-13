@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Execution
 {
