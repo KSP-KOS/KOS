@@ -374,6 +374,8 @@ ship itself, wakes up and performs the following steps, in this order:
 Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.
 
 
+.. _frozen:
+
 The Frozen Universe
 -------------------
 

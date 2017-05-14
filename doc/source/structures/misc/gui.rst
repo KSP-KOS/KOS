@@ -571,7 +571,7 @@ following hierarchy:
     ===================================== =============================== =============
 
 
-.. _widget_delay:
+.. _widgets_delay:
 
 Communication Delay
 -------------------

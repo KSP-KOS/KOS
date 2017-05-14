@@ -15,7 +15,7 @@ they inherit all suffixes from :ref:`ScienceExperimentModule <scienceexperimentm
   SET P TO SHIP:PARTSTAGGED("")[0].
   SET M TO P:GETMODULE("dmmodulescienceanimate").
 
-  PRINT M:ISRERUNNABLE.
+  PRINT M:RERUNNABLE.
   PRINT M:INOPERABLE.
   M:DEPLOY.
   WAIT UNTIL M:HASDATA.

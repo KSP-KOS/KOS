@@ -477,22 +477,37 @@ Executable <compiling>`.
 EDIT PATH
 ~~~~~~~~~
 
-Edits a program pointed to by :code:`PATH`.
+Arguments:
 
-Arguments
-^^^^^^^^^
+   argument 1
+       Path of the file for editing.
 
--  argument 1: Path of the file for editing.
+Edits or creates a program file described by filename :code:`PATH`.
+If the file referred to by :code:`PATH` already exists, then it will
+open that file in the built-in editor.  If the file referred to by
+:code:`PATH` does not already exist, then this command will create it
+from scratch and let you start editing it.
+
+It is important to type the command using the filename's :code:`.ks`
+extension when using this command to create a new file.  (Don't omit
+it like you sometimes can in other places in kOS).  The logic to
+automatically assume the :code:`.ks` extension when the filename has
+no extension only works when kOS can find an existing file by doing so.
+If you are creating a brand new file from scratch with the :code:`EDIT`
+command, and leave off the :code:`.ks` extension, you will get a file
+created just like you described it (without the extension).
+
 
 .. note::
 
     The Edit feature was lost in version 0.11 but is back again after version
-    0.12.2 under a new guise. The new editor is unable to show a monospace
-    font for a series of complex reasons involving how Unity works and how
-    Squad bundled the KSP game. The editor works, but will be in a proportional
-    width font, which isn't ideal for editing code. The best way to edit code
-    remains to use a text editor external to KSP, however for a fast peek at
-    the code during play, this editor is useful.
+    0.12.2 under a new guise. The best way to edit code is still
+    to use a text editor external to KSP.  The on-the-fly editor that
+    this command invokes is still useful however for exploratory test
+    editing and playing around, or for editing a file on a remote probe's
+    local volume (which isn't stored as a normal file on your hard drive
+    like files in the archive are, so it can't be edited with an external
+    text editor program).
 
 Example::
 

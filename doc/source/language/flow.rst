@@ -474,6 +474,16 @@ reads the value of the function.
 *The WHEN and the ON statement are very similar to each other, and so
 they are documented together here.*
 
+.. seealso::
+
+    :ref:`general_guidlines`
+        Before you continue, be aware that there is
+        also a page in the tutorials section describing the best practices
+        to use with these statements, including :ref:`minimizing how long
+        trigger bodies take <minimize_trigger_bodies>`. and :ref:`minimizing
+        how many trigger conditions are active <minimize_trigger_conditions>`.
+        It would be a good idea to read that documentation after reading this
+        section.
 
 ``WHEN`` and ``ON`` both begin checking in the background for
 a condition that will cause some code to execute some statements
