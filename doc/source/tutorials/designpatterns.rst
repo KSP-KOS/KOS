@@ -116,6 +116,8 @@ Bringing It All Together
 
 Typically, the programmer will find all of these constructs are useful at the same time and kOS scripts will naturally contain some sequential parts in combination with long-term and short-term triggers which can modify states in complex loops of varying frequency. If you didn't follow that bit of gobbledygook, don't worry. The next section will discuss a few recommendations for beginning kOS programmers to follow when setting up any program.
 
+.. _general_guidlines:
+
 General Guidelines for kOS Scripts
 ----------------------------------
 
