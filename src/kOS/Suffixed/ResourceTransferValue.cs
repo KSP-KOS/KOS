@@ -387,6 +387,8 @@ namespace kOS.Suffixed
         /// <returns>either the vessel id that is common to all parts, or null</returns>
         private Guid? GetVesselId(IList<global::Part> parts)
         {
+            if (parts.Count == 0)
+                return null;
             var vessel = parts[0].vessel;
             if (parts.All(p => p.vessel == vessel)) return vessel.id;
 
