@@ -35,7 +35,7 @@ namespace kOS.Safe.Execution
         int InstructionPointer { get; set; }
         double SessionTime { get; }
         List<string> ProfileResult { get; }
-        TriggerInfo AddTrigger(int triggerFunctionPointer);
+        TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure);
         TriggerInfo AddTrigger(TriggerInfo trigger);
         TriggerInfo AddTrigger(UserDelegate del, List<Structure> args);
         TriggerInfo AddTrigger(UserDelegate del, params Structure[] args);

@@ -170,7 +170,7 @@ namespace kOS.Safe.Test.Opcode
         {
             get { throw new NotImplementedException(); }
         }
-        public TriggerInfo AddTrigger(int triggerFunctionPointer)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
         {
             throw new NotImplementedException();
         }

@@ -589,14 +589,6 @@ it will only fire off once, no matter how many times you press the
 '1' key.  More will be covered about how to change that further down.
 
 .. warning::
-    With the advent of :ref:`local variable scoping <trigger_scope>` in kOS
-    version 0.17 and above, it's important to note that the variables
-    used within the expression of a WHEN or an ON statement should
-    be GLOBAL variables or the results are unpredictable.  If local
-    variables were used, the results could change depending on where
-    you are within the execution at the time.
-
-.. warning::
     Do not make the body of a ``WHEN``/``THEN`` take a long time to
     execute. If you attempt to run code that lasts too long in the body
     of your ``WHEN``/``THEN`` statement, it will cause the main

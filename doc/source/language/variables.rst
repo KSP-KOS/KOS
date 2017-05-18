@@ -670,14 +670,43 @@ Triggers such as:
 
 and
 
-  - ON <boolean expression> { <statements> }.
+  - ON <any expression> { <statements> }.
 
-Do not work predictably when you use local variables in the
-<boolean expression>
-part of them.  They need to be designed to use global variables only,
-because they outlive the duration of any particular scoping braces.
-You can declare local variables within their <statements> in their bodies,
-just don't use local variables in the trigger conditions.
+Can use local variables in their trigger expressions in thier
+headers or in the statements of their bodies.  The local scope
+they were declared inside of stays present as part of their
+"closure".
+
+Example::
+
+    FUNCTION future_trigger {
+      parameter delay.
+      print "I will fire the trigger after " + delay + " seconds.".
+
+      local trigger_time is time:seconds + delay.
+
+      // Note that the variable trigger_time is local here,
+      // yet this trigger still works after the function
+      // has completed and returned:
+      when time:seconds > trigger_time then {
+        print "I am now firing the trigger off.".
+      }
+    }
+    print "Before calling future_trigger(3).".
+    future_trigger(3).
+    print "After calling future_trigger(3), now waiting 5 seconds.".
+    print "You should see the trigger message during this wait.".
+    wait 5.
+    print "Done waiting.  Program over.".
+
+.. note::
+    .. versionadded:: 1.1.0
+        In the past, triggers such as WHEN and ON were not
+        able to use local variables in their check condintions.
+        They had to use only global variables in order to
+        be trigger-able after the local scope goes away.  Now
+        these triggers preserve their "closure scope" so they
+        can use any local variables.
 
 .. _lazyglobal:
 

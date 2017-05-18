@@ -1106,11 +1106,13 @@ namespace kOS.Safe.Execution
         /// when it finishes.  If its return is false, it won't fire off again.
         /// </summary>
         /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <param name="closure">The closure the trigger should be called with.  If this is
+        /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
         /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
-        public TriggerInfo AddTrigger(int triggerFunctionPointer)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
         {
-            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, closure);
             currentContext.AddPendingTrigger(triggerRef);
             return triggerRef;
         }
@@ -1144,7 +1146,7 @@ namespace kOS.Safe.Execution
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, args);
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, del.Closure, args);
             currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }
@@ -1206,7 +1208,7 @@ namespace kOS.Safe.Execution
 
         public void RemoveTrigger(int triggerFunctionPointer)
         {
-            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer));
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, null));
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
@@ -1357,12 +1359,15 @@ namespace kOS.Safe.Execution
                         // Insert a faked function call as if the trigger had been called from just
                         // before whatever opcode was about to get executed, by pusing a context
                         // record like OpcodeCall would do, and moving the IP to the
-                        // first line of the trigger, like OpcodeCall would do.  Because
-                        // triggers can't take arguments, most of the messy work of
-                        // OpcodeCall.Execute isn't needed:
+                        // first line of the trigger, like OpcodeCall would do.
                         SubroutineContext contextRecord =
                             new SubroutineContext(currentInstructionPointer, trigger);
                         PushAboveStack(contextRecord);
+
+                        // Reverse-push the closure's scope record, if there is one, just after the function return context got put on the stack.
+                        if (trigger.Closure != null)
+                            for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
+                                PushAboveStack(trigger.Closure[i]);
 
                         PushStack(new KOSArgMarkerType());
 
@@ -1371,7 +1376,7 @@ namespace kOS.Safe.Execution
                                 PushStack(trigger.Args[argIndex]);
                         
                         triggersToBeExecuted.Add(trigger);
-                        
+
                         currentInstructionPointer = trigger.EntryPoint;
                         // Triggers can chain in this loop if more than one fire off at once - the second trigger
                         // will look like it was a function that was called from the start of the first trigger.
