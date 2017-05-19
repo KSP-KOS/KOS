@@ -52,7 +52,7 @@ namespace kOS.Safe.Encapsulation
         /// <returns><c>true</c> if this instance is dead (its Program context is GC'ed,
         /// or hasn't GC'ed YET but should soon because the CPU has moved on to a new
         /// program context); otherwise, <c>false</c>.</returns>
-        public bool IsDead()
+        public override bool IsDead()
         {
             return (weakProgContext != null) && // If this is still null then we got called during the constructor and this doesn't count yet.
                 (
@@ -62,10 +62,6 @@ namespace kOS.Safe.Encapsulation
                 );
         }
 
-        private void InitializeSuffixes()
-        {
-            AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (BooleanValue)IsDead()));
-        }
 
         // Making Closure a weak reference is messy because it's a list.  Also, there
         // are times when it's correct for the closure to be the last thing left that's

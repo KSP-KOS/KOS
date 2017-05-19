@@ -39,6 +39,7 @@ namespace kOS.Safe.Encapsulation
         {
             AddSuffix("CALL", new VarArgsSuffix<Structure, Structure>(CallPassingArgs));
             AddSuffix("BIND", new VarArgsSuffix<KOSDelegate, Structure>(Bind));
+            AddSuffix("ISDEAD", new NoArgsSuffix<BooleanValue>(() => (BooleanValue)IsDead()));
         }
 
         public void AddPreBoundArg(Structure arg)
@@ -119,6 +120,14 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         /// <returns>Should return whatever the actual derived type is, not a raw KOSDelegate</returns>
         public abstract KOSDelegate Clone();
+
+        /// <summary>
+        /// Because a delegate can last longer than the program code it's trying to
+        /// jump into, it can be "dead", referring to a stale program that's not there
+        /// anymore.  If that's the case, this should be made to return true.
+        /// </summary>
+        /// <returns><c>true</c> if this instance is dead; otherwise, <c>false</c>.</returns>
+        public abstract bool IsDead();
 
         /// <summary>
         /// This returns a new variant of the delegate that has the first
