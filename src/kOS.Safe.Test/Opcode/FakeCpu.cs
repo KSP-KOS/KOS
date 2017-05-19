@@ -240,6 +240,16 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
+        public void AddPopContextNotifyee(IPopContextNotifyee notifyee)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemovePopContextNotifyee(IPopContextNotifyee notifyee)
+        {
+            throw new NotImplementedException();
+        }
+
         public Compilation.Opcode GetOpcodeAt(int instructionPtr)
         {
             throw new NotImplementedException();

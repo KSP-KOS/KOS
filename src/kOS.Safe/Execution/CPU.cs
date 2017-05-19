@@ -70,6 +70,12 @@ namespace kOS.Safe.Execution
         /// <value><c>true</c> if this CPU is popping context; otherwise, <c>false</c>.</value>
         public bool IsPoppingContext { get; private set; }
 
+        /// <summary>
+        /// The objects which have chosen to register themselves as IPopContextNotifyees
+        /// to be told when popping a context (ending a program).
+        /// </summary>
+        private List<WeakReference> popContextNotifyees;
+
         public CPU(SafeSharedObjects shared)
         {
             this.shared = shared;
@@ -80,6 +86,7 @@ namespace kOS.Safe.Execution
             mainYields = new List<YieldFinishedDetector>();
             triggerYields = new List<YieldFinishedDetector>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
+            popContextNotifyees = new List<WeakReference>();
         }
 
         public void Boot()
@@ -201,6 +208,7 @@ namespace kOS.Safe.Execution
             {
                 // remove the last context
                 ProgramContext contextRemove = contexts.Last();
+                NotifyPopContextNotifyees(contextRemove);
                 contexts.Remove(contextRemove);
                 shared.GameEventDispatchManager.RemoveDispatcherFor(currentContext);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
@@ -226,6 +234,54 @@ namespace kOS.Safe.Execution
                 }
             }
             IsPoppingContext = false;
+        }
+
+        /// <summary>
+        /// Used when an object wants the CPU to call its OnPopContext() callback
+        /// whenever the CPU ends a program context.  Notice that the CPU will
+        /// only use a WEAK refernece to store this, so that registering yourself
+        /// as a notifyee here does not stop you from being orphaned and garbage
+        /// collected if you would normally do so.  It's only if your object happens
+        /// to still be alive when the program context ends that you'll get called
+        /// by the CPU.  Use this if you have some important cleanup work you'd like
+        /// to do when the program dies, or if your object is one that would become
+        /// useless and invalid when the program context ends so you need to shut
+        /// yourself down when that happens.
+        /// </summary>
+        /// <param name="notifyee">Notifyee object that has an OnPopContext() callback.</param>
+        public void AddPopContextNotifyee(IPopContextNotifyee notifyee)
+        {
+            // Not sure what the definition of Equals is for a weak reference,
+            // this walks through looking if it's already registered, to avoid duplicates:
+            for (int i = 0; i < popContextNotifyees.Count; ++i)
+                if (popContextNotifyees[i].Target == notifyee)
+                    return;
+
+            popContextNotifyees.Add(new WeakReference(notifyee));
+        }
+
+        public void RemovePopContextNotifyee(IPopContextNotifyee notifyee)
+        {
+            // Might as well also get rid of any that are stale references while we're here:
+            popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == notifyee);
+        }
+
+        private void NotifyPopContextNotifyees(IProgramContext context)
+        {
+            // Notify them all:
+            for (int i = 0; i < popContextNotifyees.Count; ++i)
+            {
+                WeakReference current = popContextNotifyees[i];
+                if (current.IsAlive) // Avoid resurrecting it if it's gone, and don't call its hook.
+                {
+                    IPopContextNotifyee notifyee = current.Target as IPopContextNotifyee;
+                    if (!notifyee.OnPopContext(context))
+                        current.Target = null; // mark for removal below, because the notifyee wants us to
+                }
+            }
+
+            // Remove the ones flagged for removal or that are stale anyway:
+            popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == null);
         }
 
         /// <summary>
