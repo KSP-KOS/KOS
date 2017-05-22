@@ -1641,6 +1641,11 @@ namespace kOS.Safe.Execution
 
         public void Dispose()
         {
+            while (contexts.Count > 0)
+            {
+                PopContext();
+            }
+            contexts.Clear();
             shared.UpdateHandler.RemoveFixedObserver(this);
         }
 
