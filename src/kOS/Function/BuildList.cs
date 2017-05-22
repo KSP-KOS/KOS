@@ -21,7 +21,7 @@ namespace kOS.Function
                 case "bodies":
                     foreach (CelestialBody cBody in FlightGlobals.fetch.bodies)
                     {                        
-                        list.Add(new BodyTarget(cBody, shared));
+                        list.Add(BodyTarget.CreateOrGetExisting(cBody, shared));
                     }
                     break;
                 case "targets":

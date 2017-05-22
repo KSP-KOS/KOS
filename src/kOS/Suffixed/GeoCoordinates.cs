@@ -260,7 +260,7 @@ namespace kOS.Suffixed
         {
             AddSuffix("LAT", new Suffix<ScalarValue>(()=> Latitude));
             AddSuffix("LNG", new Suffix<ScalarValue>(()=> Longitude));
-            AddSuffix("BODY", new Suffix<BodyTarget>(()=> new BodyTarget(Body, Shared)));
+            AddSuffix("BODY", new Suffix<BodyTarget>(()=> BodyTarget.CreateOrGetExisting(Body, Shared)));
             AddSuffix("TERRAINHEIGHT", new Suffix<ScalarValue>(GetTerrainAltitude));
             AddSuffix("DISTANCE", new Suffix<ScalarValue>(GetDistanceFrom));
             AddSuffix("HEADING", new Suffix<ScalarValue>(GetHeadingFrom));
@@ -295,7 +295,7 @@ namespace kOS.Suffixed
             {
                 {DumpLat, lat},
                 {DumpLng, lng},
-                {DumpBody, new BodyTarget(Body, Shared)}
+                {DumpBody, BodyTarget.CreateOrGetExisting(Body, Shared)}
             };
 
             return dictionary;

@@ -274,6 +274,14 @@ namespace kOS.Suffixed
             return newlyConstructed;
         }
 
+        public static void ClearInstanceCache()
+        {
+            if (instanceCache == null)
+                instanceCache = new Dictionary<InstanceKey, WeakReference>();
+            else
+                instanceCache.Clear();
+        }
+
         public static VesselTarget CreateOrGetExisting(SharedObjects shared)
         {
             return CreateOrGetExisting(shared.Vessel, shared);

@@ -98,7 +98,7 @@ namespace kOS.AddOns.RemoteTech
                 {
                     if (api.GetCelestialBodyGuid(body).Equals(guid))
                     {
-                        return new BodyTarget(body, shared);
+                        return BodyTarget.CreateOrGetExisting(body, shared);
                     }
                 }
 

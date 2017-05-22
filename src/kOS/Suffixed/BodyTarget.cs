@@ -20,6 +20,91 @@ namespace kOS.Suffixed
 
         public override Orbit Orbit { get { return Body.orbit; } }
 
+        private static Dictionary<InstanceKey, WeakReference> instanceCache;
+
+        private BodyTarget(CelestialBody body, SharedObjects shareObj)
+            : base(shareObj)
+        {
+            Body = body;
+            BodyInitializeSuffixes();
+        }
+
+        /// <summary>
+        /// Factory method you should use instead of the constructor for this class.
+        /// This will construct a new instance if and only if there isn't already
+        /// an instance made for this particular kOSProcessor, for the given vessel
+        /// (Uniqueness determinied by the vessel's GUID).
+        /// If an instance already exists it will return a reference to that instead of making
+        /// a new one.
+        /// The reason this enforcement is needed is because VesselTarget has callback hooks
+        /// that prevent orphaning and garbage collection.  (The delegate inserted
+        /// into KSP's GameEvents counts as a reference to the VesselTarget.)
+        /// Using this factory method instead of a constructor prevents having thousands of stale
+        /// instances of VesselTarget, which was the cause of Github issue #1980.
+        /// </summary>
+        /// <returns>The or get.</returns>
+        /// <param name="Target">Target.</param>
+        /// <param name="Shared">Shared.</param>
+        public static BodyTarget CreateOrGetExisting(CelestialBody target, SharedObjects shared)
+        {
+            if (instanceCache == null)
+                instanceCache = new Dictionary<InstanceKey, WeakReference>();
+
+            InstanceKey key = new InstanceKey { ProcessorId = shared.Processor.KOSCoreId, BodyName = target.name };
+            if (instanceCache.ContainsKey(key))
+            {
+                WeakReference weakRef = instanceCache[key];
+                if (weakRef.IsAlive)
+                    return (BodyTarget)weakRef.Target;
+                else
+                    instanceCache.Remove(key);
+            }
+            // If it either wasn't in the cache, or it was but the GC destroyed it by now, make a new one:
+            BodyTarget newlyConstructed = new BodyTarget(target, shared);
+            instanceCache.Add(key, new WeakReference(newlyConstructed));
+            return newlyConstructed;
+        }
+
+        public static void ClearInstanceCache()
+        {
+            if (instanceCache == null)
+                instanceCache = new Dictionary<InstanceKey, WeakReference>();
+            else
+                instanceCache.Clear();
+        }
+
+        public static BodyTarget CreateOrGetExisting(string bodyName, SharedObjects shared)
+        {
+            return CreateOrGetExisting(VesselUtils.GetBodyByName(bodyName), shared);
+        }
+
+        private void BodyInitializeSuffixes()
+        {
+            AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
+            AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
+            AddSuffix("MASS", new Suffix<ScalarValue>(() => Body.Mass));
+            AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Body.orbit.altitude));
+            AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
+            AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
+            AddSuffix("ROTATIONPERIOD", new Suffix<ScalarValue>(() => Body.rotationPeriod));
+            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
+            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
+            AddSuffix("SOIRADIUS", new Suffix<ScalarValue>(() => Body.sphereOfInfluence));
+            AddSuffix("ROTATIONANGLE", new Suffix<ScalarValue>(() => Body.rotationAngle));
+            AddSuffix("GEOPOSITIONOF",
+                      new OneArgsSuffix<GeoCoordinates, Vector>(
+                              GeoCoordinatesFromPosition,
+                              "Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body."));
+            AddSuffix("ALTITUDEOF",
+                      new OneArgsSuffix<ScalarValue, Vector>(
+                              AltitudeFromPosition,
+                              "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
+            AddSuffix("GEOPOSITIONLATLNG",
+                      new TwoArgsSuffix<GeoCoordinates, ScalarValue, ScalarValue>(
+                              GeoCoordinatesFromLatLng,
+                              "Given latitude and longitude, return the geoposition on this body corresponding to it."));
+        }
+
         public override StringValue GetName()
         {
             return Body.name;
@@ -81,51 +166,6 @@ namespace kOS.Suffixed
         {
             CelestialBody parent = Body.KOSExtensionGetParentBody() ?? Body;
             return new Vector(Vector3d.Exclude(GetUpVector(), parent.transform.up));
-        }
-
-        public BodyTarget()
-        {
-            BodyInitializeSuffixes();
-        }
-
-        public BodyTarget(string name, SharedObjects shareObj)
-            : this(VesselUtils.GetBodyByName(name), shareObj)
-        {
-            BodyInitializeSuffixes();
-        }
-
-        public BodyTarget(CelestialBody body, SharedObjects shareObj)
-            : base(shareObj)
-        {
-            Body = body;
-            BodyInitializeSuffixes();
-        }
-
-        private void BodyInitializeSuffixes()
-        {
-            AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
-            AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
-            AddSuffix("MASS", new Suffix<ScalarValue>(() => Body.Mass));
-            AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Body.orbit.altitude));
-            AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
-            AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
-            AddSuffix("ROTATIONPERIOD", new Suffix<ScalarValue>(() => Body.rotationPeriod));
-            AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
-            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
-            AddSuffix("SOIRADIUS", new Suffix<ScalarValue>(() => Body.sphereOfInfluence));
-            AddSuffix("ROTATIONANGLE", new Suffix<ScalarValue>(() => Body.rotationAngle));
-            AddSuffix("GEOPOSITIONOF",
-                      new OneArgsSuffix<GeoCoordinates, Vector>(
-                              GeoCoordinatesFromPosition,
-                              "Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body."));
-            AddSuffix("ALTITUDEOF",
-                      new OneArgsSuffix<ScalarValue, Vector>(
-                              AltitudeFromPosition,
-                              "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
-            AddSuffix("GEOPOSITIONLATLNG",
-                      new TwoArgsSuffix<GeoCoordinates, ScalarValue, ScalarValue>(
-                              GeoCoordinatesFromLatLng,
-                              "Given latitude and longitude, return the geoposition on this body corresponding to it."));
         }
 
         /// <summary>
@@ -265,6 +305,17 @@ namespace kOS.Suffixed
 
             Body = body;
 
+        }
+
+        // The data that identifies a unique instance of this class, for use
+        // with the factory method that avoids duplicate instances:
+        private struct InstanceKey
+        {
+            /// <summary>The kOSProcessor Module that built me.</summary>
+            public int ProcessorId { get; set; }
+
+            /// <summary>The KSP vessel object that I'm wrapping.</summary>
+            public string BodyName { get; set; }
         }
     }
 }

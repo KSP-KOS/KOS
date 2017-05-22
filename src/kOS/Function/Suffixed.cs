@@ -151,7 +151,7 @@ namespace kOS.Function
         {
             string bodyName = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            var result = new BodyTarget(bodyName, shared);
+            var result = BodyTarget.CreateOrGetExisting(bodyName, shared);
             ReturnValue = result;
         }
     }

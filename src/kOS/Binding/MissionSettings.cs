@@ -74,7 +74,7 @@ namespace kOS.Binding
                 var body = currentTarget as CelestialBody;
                 if (body != null)
                 {
-                    return new BodyTarget(body, shared);
+                    return BodyTarget.CreateOrGetExisting(body, shared);
                 }
                 var dockingNode = currentTarget as ModuleDockingNode;
                 if (dockingNode != null)
