@@ -753,7 +753,7 @@ namespace kOS.Safe.Execution
             if (barewordOkay)
             {
                 string strippedIdent = identifier.TrimStart('$');
-                return new Variable { Name = strippedIdent, Value = strippedIdent };
+                return new Variable { Name = strippedIdent, Value = new StringValue(strippedIdent) };
             }
             if (failOkay)
                 return null;
