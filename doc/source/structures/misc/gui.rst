@@ -160,8 +160,8 @@ following hierarchy:
     :meth:`ADDRADIOBUTTON(text,on)`       :struct:`Button`                Creates an exclusive toggleable button in the Box, initially checked if on is true. Sibling buttons will turn off automatically.
     :meth:`ADDTEXTFIELD(text)`            :struct:`TextField`             Creates an editable text field in the Box.
     :meth:`ADDPOPUPMENU`                  :struct:`PopupMenu`             Creates a popup menu.
-    :meth:`ADDHSLIDER(min,max)`           :struct:`Slider`                Creates a horizontal slider in the Box, slidable from min to max.
-    :meth:`ADDVSLIDER(min,max)`           :struct:`Slider`                Creates a vertical slider in the Box, slidable from min to max.
+    :meth:`ADDHSLIDER(init,min,max)`      :struct:`Slider`                Creates a horizontal slider in the Box, starting at init, slidable from min to max.
+    :meth:`ADDVSLIDER(init,min,max)`      :struct:`Slider`                Creates a vertical slider in the Box, starting at init, slidable from min to max.
     :meth:`ADDHLAYOUT`                    :struct:`Box`                   Creates a nested transparent horizontally-arranged Box in the Box.
     :meth:`ADDVLAYOUT`                    :struct:`Box`                   Creates a nested transparent vertically Box in the Box.
     :meth:`ADDHBOX`                       :struct:`Box`                   Creates a nested horizontally-arranged Box in the Box.
@@ -207,13 +207,6 @@ following hierarchy:
     :attr:`ONCLICK`                       :struct:`KOSDelegate` (no args)            Your function called whenever the button gets clicked.
     :attr:`ONTOGGLE`                      :struct:`KOSDelegate` (:struct:`Boolean`)  Your function called whenever the button's PRESSED state changes.
     ===================================== ========================================== =============
-
-.. note::
-
-    Reading the value of the :attr:`PRESSED` suffix will tell you if the button is pressed in (true)
-    or released (false).  But be aware that when :attr:`TOGGLE` is false, then the button will
-    remain pressed-in until such a time as your script detects that it has been pressed (so that
-    way the button won't press in-and-out too quickly for your script to notice).
 
     **Behaviour when TOGGLE is false (the default):**
 
@@ -405,7 +398,7 @@ following hierarchy:
                    Every suffix of :struct:`WIDGET`
     ---------------------------------------------------------------------------------------------
     :attr:`VALUE`                         :struct:`scalar`                          The current value. Initially set to :attr:`MIN`.
-    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`VALUE` changes.
+    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`Scalar`)  Your function called whenever the :attr:`VALUE` changes.
     :attr:`MIN`                           :struct:`scalar`                          The minimum value (leftmost on horizontal slider).
     :attr:`MAX`                           :struct:`scalar`                          The maximum value (bottom on vertical slider).
     ===================================== ========================================= =============
