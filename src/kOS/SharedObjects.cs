@@ -4,6 +4,7 @@ using kOS.Screen;
 using kOS.Callback;
 using kOS.Sound;
 using System.Collections.Generic;
+using System;
 
 namespace kOS
 {
@@ -46,10 +47,16 @@ namespace kOS
             if (UpdateHandler != null) { UpdateHandler.ClearAllObservers(); }
             if (GameEventDispatchManager != null) { GameEventDispatchManager.Clear(); }
             var props = typeof(SharedObjects).GetProperties();
+            IDisposable tempDisp;
             foreach (var prop in props)
             {
                 if (!prop.PropertyType.IsValueType && prop.GetSetMethod() != null)
                 {
+                    tempDisp = prop.GetValue(this, null) as IDisposable;
+                    if (tempDisp != null)
+                    {
+                        tempDisp.Dispose();
+                    }
                     prop.SetValue(this, null, null);
                 }
             }

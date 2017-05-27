@@ -53,7 +53,7 @@ namespace kOS.Binding
                 // be something like "Eta" or "Stage" or something along those lines.)
 
                 if( !shared.BindingMgr.HasGetter(body.name) )
-                    shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
+                    shared.BindingMgr.AddGetter(body.name, () => BodyTarget.CreateOrGetExisting(cBody, shared));
             }
         }
 
