@@ -44,7 +44,7 @@ widget.  For example::
     }
 
 In general, *if you are trying to decide between using the callback or the polling
-technique, you should **prefer using the callback technique** most of the time*.  It
+technique, you should* **prefer using the callback technique** *most of the time*.  It
 takes less CPU time away from the rest of your program and is less of a burden on
 the universe simulation.
 
@@ -199,7 +199,7 @@ of the GUI window.
 
     .. method:: SHOW
 
-        (No parameters).
+        (No parameters, no return value).
 
         Call ``Widget:show()`` when you need to make the widget in question
         start appearing on the screen.  This is identical to setting
@@ -214,7 +214,7 @@ of the GUI window.
 
     .. method:: HIDE
 
-        (No parameters).
+        (No parameters, no return value).
 
         Call ``Widget:hide()`` when you need to make the widget in question
         disappear from the screen.  This is identical to setting
@@ -225,7 +225,7 @@ of the GUI window.
     .. attribute:: VISIBLE
 
         :type: :struct:`Scalar`
-        :accesss: Get/Set
+        :access: Get/Set
 
         This is the setting which can also be changed by calling
         :meth:`Widget:show()` and :meth:`Widget:hide()`.
@@ -257,7 +257,7 @@ of the GUI window.
 
     .. method:: DISPOSE
 
-        (no parameters)
+        (no parameters, no return value)
 
         Call ``Widget:DISPOSE()`` to permanenly make this widget go away.
         Not only will it make it invisible, but it will make it impossible
@@ -298,41 +298,41 @@ of the GUI window.
         To see how to make a modified style, see the documentation
         for :struct:`Style`.
 
-  .. attribute:: GUI
+    .. attribute:: GUI
 
-      :type: :struct:`GUI`
-      :access: Get-only
+	:type: :struct:`GUI`
+	:access: Get-only
 
-      To be useful, all widgets (buttons, labels, textfields, etc) must
-      either be contained inside a :struct:`GUI` widget directly, or be
-      contained inside another :struct:`Widget` which in turn is also
-      contained inside a :struct:`GUI` widget.  (Or contained inside
-      a widget contained inside a widget contained inside a GUI, etc..)
+	To be useful, all widgets (buttons, labels, textfields, etc) must
+	either be contained inside a :struct:`GUI` widget directly, or be
+	contained inside another :struct:`Widget` which in turn is also
+	contained inside a :struct:`GUI` widget.  (Or contained inside
+	a widget contained inside a widget contained inside a GUI, etc..)
 
-      This suffix will find which :struct:`GUI` is the one which ultimately
-      is the one holding this widget.
+	This suffix will find which :struct:`GUI` is the one which ultimately
+	is the one holding this widget.
 
-  .. attribute:: PARENT
+    .. attribute:: PARENT
 
-      :type: :struct:`Box`
-      :access: :Get-only
+	:type: :struct:`Box`
+	:access: :Get-only
 
-      Widgets can be contained inside Boxes that are contained inside
-      other Boxes, etc.  This suffix tells you which :sturuct:`Box` contains
-      this one.  If you attempt to call this suffix on the outermost
-      :struct:`GUI` Box that contains all the others in a panel,
-      you may find that kOS throws a complaining error because there is
-      no parent to the outermost widget.  To protect your code against this,
-      use the :attr:`Widget:HASPARENT` suffix.
+	Widgets can be contained inside Boxes that are contained inside
+	other Boxes, etc.  This suffix tells you which :struct:`Box` contains
+	this one.  If you attempt to call this suffix on the outermost
+	:struct:`GUI` Box that contains all the others in a panel,
+	you may find that kOS throws a complaining error because there is
+	no parent to the outermost widget.  To protect your code against this,
+	use the :attr:`Widget:HASPARENT` suffix.
 
-  .. attribute:: HASPARENT
+    .. attribute:: HASPARENT
 
-      :type: :struct:`Boolean`
-      :access: :Get-only
+	:type: :struct:`Boolean`
+	:access: :Get-only
 
-      If trying to use :attr:`Widget:PARENT` would generate an error because
-      this widget has no parent, then :attr:`HASPARENT` will be false.
-      Otherwise it will be true.
+	If trying to use :attr:`Widget:PARENT` would generate an error because
+	this widget has no parent, then :attr:`HASPARENT` will be false.
+	Otherwise it will be true.
 
 .. structure:: Box
 
@@ -437,7 +437,7 @@ of the GUI window.
         To read which radio button value is the one that is currently on,
         among the whole set of buttons, you can use :attr:`BOX:RADIOVALUE`.
 
-    .. attribute:: ADDTEXTFIELD(text)
+    .. method:: ADDTEXTFIELD(text)
 
         :parameter: initial starting text in the field.
         :type text: :struct:`String`
@@ -551,7 +551,7 @@ of the GUI window.
         vertically (the more widgets you add, the taller the box gets).
 
         (The :struct:`Box` returned by calling the built-in function
-        :funct:`Gui` is a "VLayout" box which arranges things vertically
+        :func:`Gui` is a "VLayout" box which arranges things vertically
         like this.)
 
         There are three reasons you might want to nest one Box inside another Box:
@@ -827,7 +827,7 @@ of the GUI window.
         :type: :struct:`Skin`
         :access: Get/Set
 
-        A :struct:`Skin` is a collection of :struct:`Style`s to be
+        A :struct:`Skin` is a collection of :struct:`Style` objects to be
         used by different types of widgets within the GUI window.  With this
         suffix you can assign a different Skin to the window, which will then
         be used by default by all the widgets of the appropriate type
@@ -862,7 +862,7 @@ of the GUI window.
     :attr:`POSITION`                      :struct:`Vector`                The position of the scrolled content (Z is ignored).
     ===================================== =============================== =============
 
-    .. attribute:: :HALWAYS
+    .. attribute:: HALWAYS
 
         :type: :struct:`Boolean`
         :access: Get/Set
@@ -870,7 +870,7 @@ of the GUI window.
         Set to true if you want the horizontal scrollbar to always appear for the
         box regardless of whether the contents are large enough to require it.
 
-    .. attribute:: :VALWAYS
+    .. attribute:: VALWAYS
 
         :type: :struct:`Boolean`
         :access: Get/Set
@@ -893,26 +893,26 @@ of the GUI window.
 
         You can set this value to force the window to scroll to a new position.
 
-    .. structure:: Label
+.. structure:: Label
 
-        ``Label`` widgets are created inside Box objects via :meth:`BOX:ADDLABEL`.
+    ``Label`` widgets are created inside Box objects via :meth:`BOX:ADDLABEL`.
 
-        A ``Label`` is a widget that just shows a bit of text or an image.  The base
-        type of Label is just used for passive content that can't be edited or
-        interacted with.
+    A ``Label`` is a widget that just shows a bit of text or an image.  The base
+    type of Label is just used for passive content that can't be edited or
+    interacted with.
 
-        (However, other widgets which *are* interactive are derived from ``Label``,
-        such as :struct:`Button` and :struct:`TextField`.)
+    (However, other widgets which *are* interactive are derived from ``Label``,
+    such as :struct:`Button` and :struct:`TextField`.)
 
-        ===================================== =============================== =============
-        Suffix                                Type                            Description
-        ===================================== =============================== =============
-                       Every suffix of :struct:`WIDGET`
-        -----------------------------------------------------------------------------------
-        :attr:`TEXT`                          :struct:`string`                The text on the label.
-        :attr:`IMAGE`                         :struct:`string`                Filename of an image for the label.
-        :attr:`TOOLTIP`                       :struct:`string`                A tooltip for the label.
-        ===================================== =============================== =============
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+		   Every suffix of :struct:`WIDGET`
+    -----------------------------------------------------------------------------------
+    :attr:`TEXT`                          :struct:`string`                The text on the label.
+    :attr:`IMAGE`                         :struct:`string`                Filename of an image for the label.
+    :attr:`TOOLTIP`                       :struct:`string`                A tooltip for the label.
+    ===================================== =============================== =============
 
     .. attribute:: TEXT
 
@@ -949,7 +949,7 @@ of the GUI window.
         wish to read a file in some other format than PNG, you will need
         to give its filename extension explicitly.
 
-    .. attribute:: :TOOLTIP
+    .. attribute:: TOOLTIP
 
         :type: :struct:`String`
         :access: Get/Set
@@ -1111,7 +1111,7 @@ Examples of usage::
 
         This is a :struct:`KOSDelegate` that takes no parameters and returns nothing.
 
-        ``ONCLICK is what is known as a "callback hook".  This suffix allows
+        ``ONCLICK`` is what is known as a "callback hook".  This suffix allows
         you to use the :ref:`callback technique <gui_callback_technique>` of widget
         interaction.
 
@@ -1240,7 +1240,7 @@ Here is a longer example of buttons using the button callback hooks::
     :attr:`VALUE`                         Any                                       Returns the current selected value.
     :attr:`INDEX`                         :struct:`Scalar`                          Returns the index of the current selected value.
     :attr:`CHANGED`                       :struct:`Boolean`                         Has the user chosen something?
-    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
+    :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
     :meth:`CLEAR`                                                                   Removes all options.
     :attr:`MAXVISIBLE`                    :struct:`Scalar` (integer)                How many choices to show at once in the list (if more exist, it makes it scrollable).
     ===================================== ========================================= =============
@@ -1254,7 +1254,7 @@ Here is a longer example of buttons using the button callback hooks::
         to be Strings, but they must be capable of having a string extracted from
         them for display on the list, by use of the :attr"`OPTIONSSUFFIX` suffix.
 
-    .. attribute:: OPTIONSSUFFIX
+    .. attribute:: OPTIONSUFFIX
 
         :type: :struct:`String`
         :access: Get/Set
@@ -1381,9 +1381,9 @@ Here is a longer example of buttons using the button callback hooks::
            Every suffix of :struct:`LABEL`.  Note you read :attr:`Label:TEXT` to see the TextField's current value.
     ---------------------------------------------------------------------------------------------
     :attr:`CHANGED`                       :struct:`Boolean`                         Has the text been edited?
-    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
+    :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CHANGED` state changes.
     :attr:`CONFIRMED`                     :struct:`Boolean`                         Has the user pressed Return in the field?
-    :attr:`ONCONFIRMED`                   :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CONFIRMED` state changes.
+    :attr:`ONCONFIRM`                     :struct:`KOSDelegate` (:struct:`String`)  Your function called whenever the :attr:`CONFIRMED` state changes.
     ===================================== ========================================= =============
 
     .. attribute:: CHANGED
@@ -1408,7 +1408,7 @@ Here is a longer example of buttons using the button callback hooks::
         :ref:`polling technique <gui_polling_technique>` of widget
         interaction.
 
-    .. attribute:: ONCHANGED
+    .. attribute:: ONCHANGE
 
         :type: :struct:`KOSDelegate`
         :access: Get/Set
@@ -1425,7 +1425,7 @@ Here is a longer example of buttons using the button callback hooks::
 
         Example::
 
-            set myTextField:ONCHANGED to {parameter str. print "Value is now: " + str.}.
+            set myTextField:ONCHANGE to {parameter str. print "Value is now: " + str.}.
 
         This suffix is intended to be used with the 
         :ref:`callback technique <gui_callback_technique>` of widget
@@ -1453,7 +1453,7 @@ Here is a longer example of buttons using the button callback hooks::
         :ref:`polling technique <gui_polling_technique>` of widget
         interaction.
 
-    .. attribute:: ONCONFIRMED
+    .. attribute:: ONCONFIRM
 
         :type: :struct:`KOSDelegate`
         :access: Get/Set
@@ -1474,7 +1474,7 @@ Here is a longer example of buttons using the button callback hooks::
 
         Example::
 
-            set myTextField:ONCONFIRMED to {parameter str. print "Value is now: " + str.}.
+            set myTextField:ONCONFIRM to {parameter str. print "Value is now: " + str.}.
 
         This suffix is intended to be used with the 
         :ref:`callback technique <gui_callback_technique>` of widget
@@ -1485,7 +1485,7 @@ Here is a longer example of buttons using the button callback hooks::
 
         The values of :attr:`CHANGED` and :attr:`CONFIRMED` reset to False as soon as their value is accessed.
 
-    .. structure:: Slider
+.. structure:: Slider
 
         ``Slider`` widgets are created via :meth:`BOX:ADDHSLIDER`
         and :meth:`BOX:ADDVSLIDER`.
@@ -1503,7 +1503,7 @@ Here is a longer example of buttons using the button callback hooks::
                    Every suffix of :struct:`WIDGET`
     ---------------------------------------------------------------------------------------------
     :attr:`VALUE`                         :struct:`scalar`                          The current value. Initially set to :attr:`MIN`.
-    :attr:`ONCHANGED`                     :struct:`KOSDelegate` (:struct:`Scalar`)  Your function called whenever the :attr:`VALUE` changes.
+    :attr:`ONCHANGE`                      :struct:`KOSDelegate` (:struct:`Scalar`)  Your function called whenever the :attr:`VALUE` changes.
     :attr:`MIN`                           :struct:`scalar`                          The minimum value (leftmost on horizontal slider).
     :attr:`MAX`                           :struct:`scalar`                          The maximum value (bottom on vertical slider).
     ===================================== ========================================= =============
@@ -1515,7 +1515,7 @@ Here is a longer example of buttons using the button callback hooks::
 
         The current value of the slider.
 
-    .. attribute:: ONCHANGED
+    .. attribute:: ONCHANGE
 
         :type: :struct:`KOSDelegate`
         :access: Get/Set
@@ -1532,7 +1532,7 @@ Here is a longer example of buttons using the button callback hooks::
 
         Example::
 
-            set mySlider:ONCHANGED to whenMySliderChanges@.
+            set mySlider:ONCHANGE to whenMySliderChanges@.
 
             function whenMySliderChanges {
               parameter newValue.
@@ -1577,21 +1577,21 @@ Here is a longer example of buttons using the button callback hooks::
         slide to the left.)
 
 
-    .. structure:: Spacing
+.. structure:: Spacing
 
-        ``Spacing`` widgets are created via :meth:`BOX:ADDSPACING`.
+    ``Spacing`` widgets are created via :meth:`BOX:ADDSPACING`.
 
-        A ``Spacing`` is just an invisible space for the purpose of
-        pushing other widgets further to the right or further
-        down, forcing the layout to come out the way you like.
+    A ``Spacing`` is just an invisible space for the purpose of
+    pushing other widgets further to the right or further
+    down, forcing the layout to come out the way you like.
 
-        ===================================== =============================== =============
-        Suffix                                Type                            Description
-        ===================================== =============================== =============
-                       Every suffix of :struct:`WIDGET`
-        -----------------------------------------------------------------------------------
-        :attr:`AMOUNT`                        :struct:`scalar`                The amount of space, or -1 for flexible spacing.
-        ===================================== =============================== =============
+    ===================================== =============================== =============
+    Suffix                                Type                            Description
+    ===================================== =============================== =============
+		   Every suffix of :struct:`WIDGET`
+    -----------------------------------------------------------------------------------
+    :attr:`AMOUNT`                        :struct:`scalar`                The amount of space, or -1 for flexible spacing.
+    ===================================== =============================== =============
 
     .. attribute:: AMOUNT
 
@@ -2120,9 +2120,10 @@ Here is a longer example of buttons using the button callback hooks::
         defines where the left, right, top and bottom coordinates are
         to mark these 9 sections of the image.
 
-        If set to "", these background images will default to the corresponding non-ON image
-        and if that is also "", it will default to the normal `BG` image,
-        and if that is also "", then it will default to completely transparent.
+        If set to ``""``, these background images will default to the
+        corresponding normal image and if that is also ``""``, it will
+        default to the normal ``BG`` image, and if that is also ``""``,
+        then it will default to completely transparent.
 
     .. attribute:: TEXTCOLOR
 

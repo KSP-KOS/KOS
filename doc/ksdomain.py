@@ -154,12 +154,19 @@ class KOSAttribute(KOSObject):
     def handle_signature(self, sig, signode):
         m = ks_sig_re.match(sig)
         name = m.group('object')
+        struct = None  #might override further down
 
         current_struct = self.env.temp_data.get('ks:structure')
         if m.group('prefix') is None:
             if current_struct is not None:
                 struct = current_struct
                 fullname = current_struct + ':' + name
+            else:
+                raise Exception("Attribute name lacks a prefix and isn't " +
+                    "indented inside a structure section.  Problem " +
+                    "occurred at " + self.env.docname + ", line " +
+                     str(self.lineno) + 
+                     ".")
         else:
             struct = m.group('prefix').split(':')[-1]
             fullname = struct + ':' + name
@@ -190,11 +197,19 @@ class KOSMethod(KOSObject):
     def handle_signature(self, sig, signode):
         m = ks_sig_re.match(sig)
         name = m.group('object')
+        struct = None  #might override further down
 
         current_struct = self.env.temp_data.get('ks:structure')
         if m.group('prefix') is None:
             if current_struct is not None:
+                struct = current_struct
                 fullname = current_struct + ':' + name
+            else:
+                raise Exception("Method name lacks a prefix and isn't " +
+                    "indented inside a structure section.  Problem " +
+                    "occurred at " + self.env.docname + ", line " +
+                     str(self.lineno) + 
+                     ".")
         else:
             struct = m.group('prefix').split(':')[-1]
             fullname = struct + ':' + name
