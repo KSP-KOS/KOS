@@ -1,4 +1,4 @@
-.. _gui:
+.. _gui_overview:
 
 Making GUIs in kOS
 ==================
@@ -16,5 +16,5 @@ feature.  You need to manipulate them with the mouse on-screen in the
 game window.
 
 The topic of how you actually make a GUI widget in kOS is on its
-:ref:`own separate page in these documents. <widgets>`.  The basic
+:ref:`own separate page in these documents. <gui>`.  The basic
 object type you start with is the :struct:`GUI` structure.

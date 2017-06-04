@@ -15,5 +15,6 @@ A general discussion of structures :ref:`can be found here <language structures>
     Communication     <structures/communication>
     Orbits            <structures/orbits>
     Celestial Bodies  <structures/celestial_bodies>
+    GUI Widgets       <structures/gui>
     Miscellaneous     <structures/misc>
     Waypoints         <structures/waypoint>

@@ -33,8 +33,8 @@ Remote Tech and the kOS GUI widgets
 
 .. versionadded:: v1.1.0
 
-The kOS :ref:`GUI widget <widgets>` system tries to
-:ref:`obey the signal delay <widgets_delay>` imposed by RemoteTech,
+The kOS :ref:`GUI widget <gui>` system tries to
+:ref:`obey the signal delay <gui_delay>` imposed by RemoteTech,
 when Remote Tech is installed.  A user's interaction with
 GUI widgets on the screen will be subject to the same
 signal delay rules as the interactive flying controls of the
