@@ -76,7 +76,7 @@ PopupMenu
 
     .. method:: ADDOPTION(value)
 
-        :parameter: - any kind of kOS type, provided it has the suffix mentioned in :attr:`OPTIONSSUFFIX` on it.
+        :parameter value: - any kind of kOS type, provided it has the suffix mentioned in :attr:`OPTIONSSUFFIX` on it.
         :type value: :struct:`Structure`
         :access: Get/Set
 

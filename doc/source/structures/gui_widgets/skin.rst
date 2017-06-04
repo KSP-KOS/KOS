@@ -240,7 +240,7 @@ Skin
 
     .. method:: ADD(name)
 
-        :parameter:
+        :parameter name:
         :type name: :struct:`String`
         :return:
         :rtype: :struct:`Style`
@@ -250,7 +250,7 @@ Skin
 
     .. method:: HAS(name)
 
-        :parameter:
+        :parameter name:
         :type name: :struct:`String`
         :return:
         :rtype: :struct:`Style`
@@ -259,7 +259,7 @@ Skin
 
     .. method:: GET(name)
 
-        :parameter:
+        :parameter name:
         :type name: :struct:`String`
         :return:
         :rtype: :struct:`Style`

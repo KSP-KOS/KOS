@@ -49,7 +49,7 @@ Box
 
     .. method:: ADDLABEL(text)
 
-        :parameter:
+        :parameter text:
         :type text: :struct:`String`
         :return:
         :rtype: :struct:`Label`
@@ -59,7 +59,7 @@ Box
 
     .. method:: ADDBUTTON(text)
 
-        :parameter:
+        :parameter text:
         :type text: :struct:`String`
         :return:
         :rtype: :struct:`Button`
@@ -68,9 +68,9 @@ Box
 
     .. method:: ADDCHECKBOX(text, on)
 
-        :parameter: text to display
+        :parameter text: text to display
         :type text: :struct:`String`
-        :parameter: state of the checkbox initially
+        :parameter on: state of the checkbox initially
         :type on: :struct:`Boolean`
         :return:
         :rtype: :struct:`Button`
@@ -82,9 +82,9 @@ Box
 
     .. method:: ADDRADIOBUTTON(text, on)
 
-        :parameter: text to display
+        :parameter text: text to display
         :type text: :struct:`String`
-        :parameter: state of the checkbox initially
+        :parameter on: state of the checkbox initially
         :type on: :struct:`Boolean`
         :return:
         :rtype: :struct:`Button`
@@ -108,7 +108,7 @@ Box
 
     .. method:: ADDTEXTFIELD(text)
 
-        :parameter: initial starting text in the field.
+        :parameter text: initial starting text in the field.
         :type text: :struct:`String`
         :return:
         :rtype: :struct:`TextField`
@@ -146,11 +146,11 @@ Box
 
     .. method:: ADDHSLIDER(init, min, max)
 
-        :parameter: starting value
+        :parameter init: starting value
         :type init: :struct:`Scalar`
-        :parameter: left endpoint value
+        :parameter min: left endpoint value
         :type min: :struct:`Scalar`
-        :parameter: right endpoint value
+        :parameter max: right endpoint value
         :type max: :struct:`Scalar`
         :return:
         :rtype: :struct:`Slider`
@@ -165,11 +165,11 @@ Box
 
     .. method:: ADDVSLIDER(init, min, max)
 
-        :parameter: starting value
+        :parameter init: starting value
         :type init: :struct:`Scalar`
-        :parameter: top endpoint value
+        :parameter min: top endpoint value
         :type min: :struct:`Scalar`
-        :parameter: bottom endpoint value
+        :parameter max: bottom endpoint value
         :type max: :struct:`Scalar`
         :return:
         :rtype: :struct:`Slider`
@@ -181,9 +181,6 @@ Box
         the ``max`` parameter, in which case the direction of the slider
         will be inverted, with the largest value at the bottom and the smallest
         at the top.
-
-        TODO: FIRE UP THE GAME AND TEST THE DIRECTION HERE.  I AM TYPING FROM MEMORY ABOUT
-        THE DIRECTIONS (TOP BEING SMALLEST NORMALLY) - THAT COULD BE WRONG.
 
     .. method:: ADDHLAYOUT
 
@@ -301,7 +298,8 @@ Box
         
     .. method:: ADDSPACING(size)
 
-        :parameter size: :??: the size of the area to take up with empty space.
+        :parameter size: the size of the area to take up with empty space.
+        :type size: :struct:`Scalar`
         :return:
         :rtype: :struct:`Spacing`
 
@@ -398,7 +396,7 @@ Box
 
     .. method:: SHOWONLY(widget)
 
-        :parameter:
+        :parameter widget:
         :type widget: :struct:`Widget`
 
         When multiple widgets have been placed inside this ``Box``,
