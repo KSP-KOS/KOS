@@ -322,7 +322,7 @@ namespace kOS.Suffixed
             preFlightCheck.AddTest(new CanAffordLaunchTest(ship.InnerTemplate, Funding.Instance));
             preFlightCheck.AddTest(new FacilityOperational(launchSiteName, launchSiteName));
             preFlightCheck.AddTest(new NoControlSources(manifest));
-            preFlightCheck.AddTest(new LaunchSiteClear(launchSiteName, HighLogic.CurrentGame));
+            preFlightCheck.AddTest(new LaunchSiteClear(launchSiteName, launchSiteName, HighLogic.CurrentGame));
             preFlightCheck.RunTests();
             shared.Cpu.GetCurrentOpcode().AbortProgram = true;
             SafeHouse.Logger.Log("Craft waiting for preflight checks!");

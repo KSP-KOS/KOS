@@ -128,6 +128,8 @@ namespace kOS.Module
             }
         }
 
+        public override string DisplaySection => "kOS";
+
         public override string Section
         {
             get
@@ -180,6 +182,7 @@ namespace kOS.Module
                 if (ipu > 0)
                 {
                     kOSSettingsChecker.QueueDialog(new MultiOptionDialog(
+                            "Migration Dialog",
                             MIGRATION_DIALOG_TEXT,
                             "kOS",
                             HighLogic.UISkin,

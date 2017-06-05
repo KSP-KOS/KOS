@@ -93,6 +93,7 @@ namespace kOS.Module
             
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog(
+                    "Legacy kOS",
                     LEGACY_KOS_FOLDER_DESC,
                     "kOS",
                     HighLogic.UISkin,
@@ -121,6 +122,7 @@ namespace kOS.Module
 
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog(
+                    "Legacy kOS Boot",
                     LEGACY_KOS_BOOT_DESC,
                     "kOS",
                     HighLogic.UISkin,
@@ -140,6 +142,7 @@ namespace kOS.Module
             {
                 PopupDialog.SpawnPopupDialog(
                     new MultiOptionDialog(
+                        "UNPICKED_FONT_DESC",
                         UNPICKED_FONT_DESC,
                         "kOS",
                         HighLogic.UISkin,
