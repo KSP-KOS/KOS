@@ -71,7 +71,10 @@ Structure
           - `true anomaly`_ in degrees (not radians)
         * - :attr:`MEANANOMALYATEPOCH`
           - :struct:`Scalar`
-          - `mean anomaly`_ in degrees (not radians)
+          - `mean anomaly`_ in degrees (not radians) at a specific fixed time called :attr:`EPOCH`
+        * - :attr:`EPOCH`
+          - :struct:`Scalar`
+          - The universal timestamp at which :attr:`MEANANOMALYATEPOCH` is measured.
         * - :attr:`TRANSITION`
           - :struct:`String`
           - :ref:`Transition from this orbit <transitions>`
@@ -194,7 +197,7 @@ Structure
 
 .. attribute:: Orbit:MEANANOMALYATEPOCH
 
-    :type: :struct:`Scalar`
+    :type: :struct:`Scalar` degrees
     :access: Get only
 
     `mean anomaly`_  in degrees. Even though orbital parameters are
@@ -202,6 +205,35 @@ Structure
     of making everything into degrees, they are given as degrees by
     kOS.
 
+    Internally, KSP tracks orbit position using :attr:`MEANANOMALYATEPOCH`
+    and :attr:`EPOCH`.  "Epoch" is an arbitrary timestamp expressed in
+    universal time (gameworld seconds from game start, same as ``TIME:SECONDS``
+    uses) at which the mean anomaly of the orbit would be :attr:`MEANANOMALYATEPOCH`.
+
+    Given the mean anomaly at epoch, and the epoch time, and the current time,
+    and the orbital period, it's possible to find out the current mean anomaly.
+    Kerbal Space Program uses this internally to track orbit positions while under
+    time warp without using the full physics system.
+
+.. attribute:: Orbit:EPOCH
+
+    :type: :struct:`Scalar` universal timestamp (seconds)
+    :access: Get only
+
+    Internally, KSP tracks orbit position using :attr:`MEANANOMALYATEPOCH`
+    and :attr:`EPOCH`.  "Epoch" is an arbitrary timestamp expressed in
+    universal time (gameworld seconds from game start, same as ``TIME:SECONDS``
+    uses) at which the mean anomaly of the orbit would be :attr:`MEANANOMALYATEPOCH`.
+
+    Beware, if you are an experienced programmer, you may be aware of the
+    word "Epoch" being used to mean a fixed point in time that never
+    ever changes throughout an entire system.  For example, the Unix
+    timestamp system refers to Jan 1, 1970 as the "epoch".  This is *NOT*
+    how the word is used in KSP's orbit system.  In Kerbal Space Program,
+    the "epoch" is not a true "epoch", in that it often moves and you have to
+    re-check what it is.  It's not a hardcoded constant.
+
+    (The epoch timestamp seems to change when you go on or off from time warp.)
 
 .. attribute:: Orbit:TRANSITION
 
