@@ -32,25 +32,27 @@ namespace kOS.Suffixed
         /// <summary>
         /// Factory method you should use instead of the constructor for this class.
         /// This will construct a new instance if and only if there isn't already
-        /// an instance made for this particular kOSProcessor, for the given vessel
-        /// (Uniqueness determinied by the vessel's GUID).
+        /// an instance made for this particular kOSProcessor, for the given body
+        /// (Uniqueness determinied by the Body's text name.  If someone makes
+        /// a modded solar system with two bodies having the same name, that
+        /// will be a problem (but who would do that??) ).
         /// If an instance already exists it will return a reference to that instead of making
         /// a new one.
-        /// The reason this enforcement is needed is because VesselTarget has callback hooks
+        /// The reason this enforcement is needed is because BodyTarget has callback hooks
         /// that prevent orphaning and garbage collection.  (The delegate inserted
-        /// into KSP's GameEvents counts as a reference to the VesselTarget.)
-        /// Using this factory method instead of a constructor prevents having thousands of stale
-        /// instances of VesselTarget, which was the cause of Github issue #1980.
+        /// into KSP's GameEvents counts as a reference to the BodyTarget.)
+        /// Using this factory method instead of a constructor prevents having multiple
+        /// instances of BodyTarget.
         /// </summary>
         /// <returns>The or get.</returns>
-        /// <param name="Target">Target.</param>
-        /// <param name="Shared">Shared.</param>
-        public static BodyTarget CreateOrGetExisting(CelestialBody target, SharedObjects shared)
+        /// <param name="body">celestial body to make the wrapper for</param>
+        /// <param name="Shared">kOS shared objects reference</param>
+        public static BodyTarget CreateOrGetExisting(CelestialBody body, SharedObjects shared)
         {
             if (instanceCache == null)
                 instanceCache = new Dictionary<InstanceKey, WeakReference>();
 
-            InstanceKey key = new InstanceKey { ProcessorId = shared.Processor.KOSCoreId, BodyName = target.name };
+            InstanceKey key = new InstanceKey { ProcessorId = shared.Processor.KOSCoreId, BodyName = body.name };
             if (instanceCache.ContainsKey(key))
             {
                 WeakReference weakRef = instanceCache[key];
@@ -60,7 +62,7 @@ namespace kOS.Suffixed
                     instanceCache.Remove(key);
             }
             // If it either wasn't in the cache, or it was but the GC destroyed it by now, make a new one:
-            BodyTarget newlyConstructed = new BodyTarget(target, shared);
+            BodyTarget newlyConstructed = new BodyTarget(body, shared);
             instanceCache.Add(key, new WeakReference(newlyConstructed));
             return newlyConstructed;
         }
@@ -314,7 +316,7 @@ namespace kOS.Suffixed
             /// <summary>The kOSProcessor Module that built me.</summary>
             public int ProcessorId { get; set; }
 
-            /// <summary>The KSP vessel object that I'm wrapping.</summary>
+            /// <summary>The KSP Body that I'm wrapping.</summary>
             public string BodyName { get; set; }
         }
     }
