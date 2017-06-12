@@ -240,29 +240,23 @@ Skin
 
     .. method:: ADD(name)
 
-        :parameter name:
-        :type name: :struct:`String`
-        :return:
-        :rtype: :struct:`Style`
+        :parameter name: :struct:`String`
+        :return: :struct:`Style`
         
         Adds a new style to the skin and names it.  The skin holds a list
         of styles by name which you can retrieve later.
 
     .. method:: HAS(name)
 
-        :parameter name:
-        :type name: :struct:`String`
-        :return:
-        :rtype: :struct:`Style`
+        :parameter name: :struct:`String`
+        :return: :struct:`Style`
         
         Does the skin have the named style?
 
     .. method:: GET(name)
 
-        :parameter name:
-        :type name: :struct:`String`
-        :return:
-        :rtype: :struct:`Style`
+        :parameter name: :struct:`String`
+        :return: :struct:`Style`
         
         Gets a style by name (including ADDed styles).
 

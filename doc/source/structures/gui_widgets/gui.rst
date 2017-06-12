@@ -22,6 +22,8 @@ GUI structure
     :attr:`DRAGGABLE`                     :struct:`Boolean`               True = user can move window.
     :attr:`EXTRADELAY`                    :struct:`scalar` (seconds)      Add artificial delay to all communication with this GUI (good for testing before you get into deep space)
     :attr:`SKIN`                          :struct:`Skin`                  The skin defining the default style of widgets in this GUI.
+    :meth:`SHOW`                          none                            Call to make the gui appear
+    :meth:`HIDE`                          none                            Call to make the gui disappear
     ===================================== =============================== =============
 
     .. attribute:: X
@@ -87,4 +89,29 @@ GUI structure
         be used by default by all the widgets of the appropriate type
         inside the window.
 
+    .. method:: SHOW
+
+        Synopsis::
+
+            set g to gui(200).
+            // .. call G:addbutton, G:addslider, etc etc here
+            g:show().
+
+        Call this suffix to make the GUI appear.  (Note this is really just
+        :meth:`Widget:Show` but it's mentioned again here because it's
+        vital when making a GUI to know that it won't show up if you don't
+        call this.)
+
+    .. method:: HIDE
+
+        Synopsis::
+
+            set g to gui(200).
+            // .. call G:addbutton, G:addslider, etc etc here
+            g:show().
+            wait until done. // whatever you decide "done" is.
+            g:hide().
+
+        Call this suffix to make the GUI disappear.  (Note this is really just
+        :meth:`Widget:Show` but it's mentioned again here.)
 

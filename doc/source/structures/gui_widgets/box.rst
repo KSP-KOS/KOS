@@ -49,31 +49,24 @@ Box
 
     .. method:: ADDLABEL(text)
 
-        :parameter text:
-        :type text: :struct:`String`
-        :return:
-        :rtype: :struct:`Label`
+        :parameter text: :struct:`String`
+        :return: :struct:`Label`
 
         Creates a :struct:`Label` widget in this ``Box``.  The label will
         display the text message given in the parameter.
 
     .. method:: ADDBUTTON(text)
 
-        :parameter text:
-        :type text: :struct:`String`
-        :return:
-        :rtype: :struct:`Button`
+        :parameter text: :struct:`String`
+        :return: :struct:`Button`
 
         Creates a *clickable* :struct:`Button` widget in this ``Box``.
 
     .. method:: ADDCHECKBOX(text, on)
 
-        :parameter text: text to display
-        :type text: :struct:`String`
-        :parameter on: state of the checkbox initially
-        :type on: :struct:`Boolean`
-        :return:
-        :rtype: :struct:`Button`
+        :parameter text: :struct:`String` text to display
+        :parameter on: :struct:`Boolean` state of the checkbox initially 
+        :return: :struct:`Button`
 
         Creates a *toggle-able* :struct:`Button` widget in this ``Box``.
         The Button will display the text message given in the parameter.
@@ -82,12 +75,9 @@ Box
 
     .. method:: ADDRADIOBUTTON(text, on)
 
-        :parameter text: text to display
-        :type text: :struct:`String`
-        :parameter on: state of the checkbox initially
-        :type on: :struct:`Boolean`
-        :return:
-        :rtype: :struct:`Button`
+        :parameter text: :struct:`String` text to display
+	:parameter on: :struct:`Boolean` state of the checkbox initially
+        :return: :struct:`Button`
 
         Creates an *exclusive toggle-able* :struct:`Button` widget in this ``Box``.
         The Button will display the text message given in the parameter.
@@ -108,10 +98,8 @@ Box
 
     .. method:: ADDTEXTFIELD(text)
 
-        :parameter text: initial starting text in the field.
-        :type text: :struct:`String`
-        :return:
-        :rtype: :struct:`TextField`
+        :parameter text: struct:`String` initial starting text in the field.
+        :return: :struct:`TextField`
 
         Creates a :struct:`TextField` widget in this ``Box``.
         The textfield will allow the user to type a string into the field
@@ -120,8 +108,7 @@ Box
 
     .. method:: ADDPOPUPMENU
 
-        :return:
-        :rtype: :struct:`PopupMenu`
+        :return: :struct:`PopupMenu`
 
         Creates a special kind of button known as a :struct:`PopupMenu`
         in the Box.  This is a button that, when clicked, brings up a list
@@ -146,14 +133,10 @@ Box
 
     .. method:: ADDHSLIDER(init, min, max)
 
-        :parameter init: starting value
-        :type init: :struct:`Scalar`
-        :parameter min: left endpoint value
-        :type min: :struct:`Scalar`
-        :parameter max: right endpoint value
-        :type max: :struct:`Scalar`
-        :return:
-        :rtype: :struct:`Slider`
+        :parameter init: :struct:`Scalar` starting value
+        :parameter min: :struct:`Scalar` left endpoint value
+        :parameter max: :struct:`Scalar` right endpoint value
+        :return: :struct:`Slider`
 
         Creates a horizontal :struct:`Slider` in the Box that adjusts a
         :struct:`Scalar` value.  The value can take on any fractional
@@ -165,14 +148,10 @@ Box
 
     .. method:: ADDVSLIDER(init, min, max)
 
-        :parameter init: starting value
-        :type init: :struct:`Scalar`
-        :parameter min: top endpoint value
-        :type min: :struct:`Scalar`
-        :parameter max: bottom endpoint value
-        :type max: :struct:`Scalar`
-        :return:
-        :rtype: :struct:`Slider`
+        :parameter init: :struct:`Scalar` starting value
+        :parameter min: :struct:`Scalar` top endpoint value
+        :parameter max: :struct:`Scalar` bottom endpoint value
+        :return: :struct:`Slider`
 
         Creates a vertical :struct:`Slider` in the Box that adjusts a
         :struct:`Scalar` value.  The value can take on any fractional
@@ -184,8 +163,7 @@ Box
 
     .. method:: ADDHLAYOUT
 
-        :return:
-        :rtype: :struct:`Box`
+        :return: :struct:`Box`
         
         Creates a nested transparent horizontally-arranged :struct:`Box` in
         this :struct:`Box`.  You can't see any visual evidence of this
@@ -205,8 +183,7 @@ Box
 
     .. method:: ADDVLAYOUT
 
-        :return:
-        :rtype: :struct:`Box`
+        :return: :struct:`Box`
         
         Creates a nested transparent vertically-arranged :struct:`Box` in
         this :struct:`Box`.  You can't see any visual evidence of this
@@ -230,8 +207,7 @@ Box
 
     .. method:: ADDHBOX
 
-        :return:
-        :rtype: :struct:`Box`
+        :return: :struct:`Box`
         
         This is identical to :meth:`BOX:ADDHLAYOUT`, other than the
         fact that it uses a different graphical style which lets you
@@ -239,8 +215,7 @@ Box
 
     .. method:: ADDVBOX
 
-        :return:
-        :rtype: :struct:`Box`
+        :return: :struct:`Box`
         
         This is identical to :meth:`BOX:ADDVLAYOUT`, other than the
         fact that it uses a different graphical style which lets you
@@ -248,8 +223,7 @@ Box
 
     .. method:: ADDSTACK
 
-        :return:
-        :rtype: :struct:`Box`
+        :return: :struct:`Box`
         
         Creates a nested stacked Box in this Box. (a Box which 
         can be swapped for other similarly created boxes that
@@ -278,8 +252,7 @@ Box
 
     .. method:: ADDSCROLLBOX
 
-        :return:
-        :rtype: :struct:`ScrollBox`
+        :return: :struct:`ScrollBox`
         
         Creates a nested scrollable box of widgets. 
 
@@ -298,10 +271,8 @@ Box
         
     .. method:: ADDSPACING(size)
 
-        :parameter size: the size of the area to take up with empty space.
-        :type size: :struct:`Scalar`
-        :return:
-        :rtype: :struct:`Spacing`
+        :parameter size: :struct:`Scalar` the size of the area to take up with empty space.
+        :return: :struct:`Spacing`
 
         Creates blank space of the given size in pixels (flexible if -1).
 

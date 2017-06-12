@@ -202,7 +202,7 @@ Method / Operator                                                         Return
     :parameter v1: (:struct:`Vector`)
     :parameter v2: (:struct:`Vector`)
     :return: The `vector dot-product <vecdot>`_
-    :rtype: scalar
+    :rtype: :struct:`scalar`
 
     This is the `dot product <vecdot>`_ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
 
