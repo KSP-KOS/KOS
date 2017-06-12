@@ -12,6 +12,11 @@ GUI structure
     widgets must be put inside of a ``GUI`` box, or in inside of another
     :struct:`Box` which in turn is inside a ``GUI`` box, etc.
 
+    (To get rid of all GUIs that you created from this CPU, you can use
+    the :func:`CLEARGUI` built-in-function, which is a shorthand
+    for calling :attr:`Widget:HIDE` and :attr:`Widget:DISPOSE` on each
+    of them.)
+
     ===================================== =============================== =============
     Suffix                                Type                            Description
     ===================================== =============================== =============

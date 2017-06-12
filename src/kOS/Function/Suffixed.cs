@@ -489,6 +489,16 @@ namespace kOS.Function
         }
     }
 
+    [Function("clearguis")]
+    public class FunctionClearAllGuis : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+            GUIWidgets.ClearAll(shared);
+        }
+    }
+
     [Function("gui")]
     public class FunctionWidgets : FunctionBase
     {

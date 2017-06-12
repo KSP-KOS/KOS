@@ -34,6 +34,11 @@ namespace kOS.Screen
 
         public bool ShowCursor { get; set; }
 
+        public bool IsForShared(SharedObjects s)
+        {
+            return (s == shared);
+        }
+
         public void Awake()
         {
             // Transparent - leave the widget inside it to draw background if it wants to.
@@ -69,7 +74,7 @@ namespace kOS.Screen
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
         }
-        
+
         void OnHideUI()
         {
             uiGloballyHidden = true;

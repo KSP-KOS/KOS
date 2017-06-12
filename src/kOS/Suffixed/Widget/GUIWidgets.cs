@@ -25,8 +25,15 @@ namespace kOS.Suffixed.Widget
         private GUIWindow window;
         public WidgetSkin Skin { get; private set; }
 
+        /// <summary>
+        /// All instances of this widget which have ever been constructed.
+        /// Weak references used so this won't prevent them from being GC'ed.
+        /// </summary>
+        private static List<WeakReference> instances = new List<WeakReference>();
+
         public GUIWidgets(int width, int height, SharedObjects shared) : base(Box.LayoutMode.Vertical,new WidgetStyle(new GUIStyle(HighLogic.Skin.window)))
         {
+            instances.Add(new WeakReference(this));
             var gskin = UnityEngine.Object.Instantiate(HighLogic.Skin);
 
             // Use Arial as that's what used in other KSP GUIs
@@ -109,6 +116,21 @@ namespace kOS.Suffixed.Widget
             InitializeSuffixes();
         }
 
+        // Remove me from the list of instances, if I'm in them:
+        ~GUIWidgets()
+        {
+            // iterating in inverse order because we're deleting from
+            // the list as we go, and doing it this way doesn't break
+            // the index iteration as things get deleted
+            for (int i = instances.Count - 1; i >= 0; --i)
+            {
+                if (instances[i].Target == this)
+                {
+                    instances.RemoveAt(i);
+                }
+            }
+        }
+
         public override void DoGUI()
         {
             var prevSkin = GUI.skin;
@@ -181,6 +203,29 @@ namespace kOS.Suffixed.Widget
         public void ClearCommunication(Widget w)
         {
             window.ClearCommunication(w);
+        }
+
+        // Find all instances of me and wipe them all out:
+        public static void ClearAll(SharedObjects shared)
+        {
+            // Iterating in inverse order so the deletions
+            // tend to happen in nested order from the
+            // creations:
+            for (int i = instances.Count - 1; i >= 0; --i)
+            {
+                if (instances[i].IsAlive)
+                {
+                    GUIWidgets g = instances[i].Target as GUIWidgets;
+                    if (g.window.IsForShared(shared))
+                    {
+                        if (g != null) // should always be true
+                        {
+                            g.Hide();
+                            g.Dispose();
+                        }
+                    }
+                }
+            }
         }
 
         public override string ToString()

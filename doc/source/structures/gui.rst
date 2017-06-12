@@ -140,6 +140,26 @@ resizing in both dimensions will often lead to a look you won't like.
 You may find that to have some control over the layout you will need to
 specify one of the two dimensions and only let it resize the other.
 
+
+Removing all Windows
+--------------------
+
+.. function:: CLEARGUIS()
+
+If you want to conveniently clear away all GUI windows that you
+created from this CPU, you can do so with the ``CLEARGUIS()``
+built-in function.  It will call :meth:`GUI:HIDE` and :meth:`GUI:DISPOSE`
+for all the gui windows that were made using this particular CPU part.
+(If you have multiple kOS CPUs, and some GUIs are showing that were made
+by other kOS CPUs, those will not be cleared by this.)
+
+.. note::
+
+    This built-in function was added mainly so you have a way
+    to easily clean up after a program has crashed which left
+    behind some GUI windows that are now unresponsive because
+    the program isn't running anymore.
+
 .. _gui_delay:
 
 Communication Delay
