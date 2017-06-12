@@ -101,6 +101,7 @@
     <Compile Include="Module\KOSNameTag.cs" />
     <Compile Include="Module\kOSSettingsChecker.cs" />
     <Compile Include="Module\kOSVesselModule.cs" />
+    <Compile Include="Module\SceneChangeCleaner.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Persistence\ConnectivityVolumeManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

@@ -21,6 +21,10 @@ You also get a `KOSDelegate` when you use the
 A KOSDelegate is a reference to the function that can be used to
 call the function later elsewhere in the code.
 
+Be aware, however, that it will not let you call the function
+after the program is gone and you are back at the interactive
+prompt again.  (See :attr:`ISDEAD`).
+
 The full explanation of the delegate feature
 :ref:`is explained elsewhere <delegates>`.  This page just
 documents the members of the KOSDelegate structure for completeness.
@@ -46,6 +50,9 @@ Structure
         * - :meth:`BIND(varying arguments)`
           - another KOSDelegate
           - creates a new KOSDelegate with some arguments predefined.
+        * - :attr:`ISDEAD`
+          - :atruct:`Boolean`
+          - True if the delegate refers to a program that's gone.
 
 .. method:: KOSDelegate:CALL(varying arguments)
 
@@ -75,6 +82,37 @@ Structure
     call to ``:BIND``.
 
     This is :ref:`further explained elsewhere <kosdelegate_bind>`.
+
+.. attribute:: KOSDelegate:ISDEAD
+
+    :type: :struct:`Boolean`
+    :access: Get only
+
+    It is possible for a KOSDelegate to refer to some
+    user code that no longer exists in memory because that
+    program completed and exited.  If so, then ISDEAD will
+    be true.
+    
+    This can happen because kOS lets global variables
+    continue to live past the end of the program that
+    made them.  So you can do something like this::
+
+        function some_function {
+            print "hello".
+        }
+        // NOTE: my_delegate is global so it keeps existing
+        // after this program ends:
+        set my_delegate to some_function@.
+
+    If you run that program and get back to the interactive
+    terminal prompt, then my_delegate is still a KOSDelegate,
+    but now it refers to some code that is gone.  The body
+    of some_function isn't there anymore.
+
+    If you attempt to call my_delegate() at this point from
+    the interpreter, it will complain with an error message
+    because it knows the function it's trying to call isn't
+    there.
 
 .. _donothing:
 

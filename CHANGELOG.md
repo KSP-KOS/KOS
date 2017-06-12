@@ -64,6 +64,11 @@ and things are subject to change.)
 * **Choose the IP address** of the telnet server, from the ones your computer has available, instead
   of kOS picking one arbitrarily.
   [pull request](https://github.com/KSP-KOS/KOS/pull/1976)
+* **Allow local variables in triggers** In order to support the kOS callback
+  system used by the GUI, we also finally had to add support for proper local
+  variable scoping to triggers like WHEN and ON.  A trigger's condition
+  variables are no longer limited to having to be global.
+  [pull request](TODO URL HERE BEFORE RELEASE)
 * **Pressure at a given altitude** is now something you can query from an atmosphere.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2000), documentation: search for "ALTITUDEPRESSURE" (TODO: replace with URL).
 * **Get a LATLNG for some other body than the current one.**
@@ -109,7 +114,6 @@ and things are subject to change.)
 * Fixed a few bugs related to kOS cleaning up after itself when the vessel splits into two
   or two vessels join together, or a vessel blows up.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2010)
-
 
 # v1.0.3 (for KSP 1.2.2) Make a little noise! (Part Deux)
 

@@ -37,7 +37,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<StringValue>(() => name));
             AddSuffix("APOAPSIS", new Suffix<ScalarValue>(() => orbit.ApA));
             AddSuffix("PERIAPSIS", new Suffix<ScalarValue>(() => orbit.PeA));
-            AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(orbit.referenceBody, Shared)));
+            AddSuffix("BODY", new Suffix<BodyTarget>(() => BodyTarget.CreateOrGetExisting(orbit.referenceBody, Shared)));
             AddSuffix("PERIOD", new Suffix<ScalarValue>(() => orbit.period));
             AddSuffix("INCLINATION", new Suffix<ScalarValue>(() => orbit.inclination));
             AddSuffix("ECCENTRICITY", new Suffix<ScalarValue>(() => orbit.eccentricity));

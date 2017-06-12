@@ -181,7 +181,7 @@ namespace kOS.Callback
             UniqueSetValue<UserDelegate> notifyees = GetSOIChangeNotifyees(evt.host);
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, new BodyTarget(evt.@from, Shared), new BodyTarget(evt.to, Shared));
+                    Shared.Cpu.AddTrigger(del, BodyTarget.CreateOrGetExisting(evt.@from, Shared), BodyTarget.CreateOrGetExisting(evt.to, Shared));
         }
 
         // PartCouple:

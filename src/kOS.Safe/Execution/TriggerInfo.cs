@@ -15,6 +15,9 @@ public class TriggerInfo
     /// Where OpcodeCall should jump to in the program to run this trigger.
     /// </summary>
     public int EntryPoint { get; private set; }
+
+    public List<VariableScope> Closure {get; private set;}
+
     /// <summary>
     /// If true, this is a callback invoked by our own C# code, which will
     /// be awaiting the answer the user's code returns.
@@ -55,8 +58,10 @@ public class TriggerInfo
     /// <param name="context">The ProgramContext under which this Trigger is meant to run.</param>
     /// <param name="entryPoint">Address within the program context where the routine starts that
     /// needs to be called when the trigger needs to be invoked.</param>
+    /// <param name="closure">If not-null, this is the closure the trigger should be called with.
+    /// If null, the trigger will only reliably be able to see global variables.</param> 
     /// <param name="isCSharpCallback">set to true to tell the system this trigger is meant to be a callback</param>
-    public TriggerInfo(IProgramContext context, int entryPoint, bool isCSharpCallback = false)
+    public TriggerInfo(IProgramContext context, int entryPoint, List<VariableScope> closure, bool isCSharpCallback = false)
     {
         EntryPoint = entryPoint;
         IsCSharpCallback = isCSharpCallback;
@@ -64,6 +69,7 @@ public class TriggerInfo
         CallbackFinished = false;
         Args = new List<Structure>();
         ContextId = context.ContextId;
+        Closure = closure;
     }
 
     /// <summary>
@@ -72,9 +78,11 @@ public class TriggerInfo
     /// <param name="context">The ProgramContext under which this Trigger is meant to run.</param>
     /// <param name="entryPoint">Address within the program context where the routine starts that
     /// needs to be called when the trigger needs to be invoked.</param>
+    /// <param name="closure">If not-null, this is the closure the trigger should be called with.
+    /// If null, the trigger will only reliably be able to see global variables.</param> 
     /// <param name="args">list of the arguments to pass in to the function.  Note, the existence of
     /// arguments mandates that this is a callback trigger.</param>
-    public TriggerInfo(IProgramContext context, int entryPoint, List<Structure> args)
+    public TriggerInfo(IProgramContext context, int entryPoint, List<VariableScope> closure, List<Structure> args)
     {
         EntryPoint = entryPoint;
         IsCSharpCallback = true;
@@ -82,6 +90,7 @@ public class TriggerInfo
         CallbackFinished = false;
         Args = args;
         ContextId = context.ContextId;
+        Closure = closure;
     }
 
     /// <summary>
@@ -101,6 +110,10 @@ public class TriggerInfo
     /// they are non-callback triggers that refer to the same entry
     /// point.  For callback triggers, ANY two callbacks that are not the
     /// same reference shall be consided unequal.
+    /// The closure field is not compared because it should be hypothetically
+    /// impossible for two triggers that call the same IP location to have
+    /// differing closures unless we really did something wrong when we created
+    /// those closures in the first place.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>

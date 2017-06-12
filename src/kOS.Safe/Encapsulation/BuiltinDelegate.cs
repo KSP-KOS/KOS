@@ -27,6 +27,11 @@ namespace kOS.Safe.Encapsulation
         {
             return new BuiltinDelegate(this);
         }
+
+        public override bool IsDead()
+        {
+            return false; // builtins cannot be dead.
+        }
         
         public override string ToString()
         {

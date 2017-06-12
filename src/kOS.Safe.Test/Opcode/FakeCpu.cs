@@ -170,7 +170,7 @@ namespace kOS.Safe.Test.Opcode
         {
             get { throw new NotImplementedException(); }
         }
-        public TriggerInfo AddTrigger(int triggerFunctionPointer)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
         {
             throw new NotImplementedException();
         }
@@ -236,6 +236,16 @@ namespace kOS.Safe.Test.Opcode
         }
         
         public IProgramContext GetCurrentContext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddPopContextNotifyee(IPopContextNotifyee notifyee)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemovePopContextNotifyee(IPopContextNotifyee notifyee)
         {
             throw new NotImplementedException();
         }

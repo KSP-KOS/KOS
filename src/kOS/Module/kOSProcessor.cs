@@ -526,6 +526,8 @@ namespace kOS.Module
 
             if (shared != null)
             {
+                shared.Cpu.BreakExecution(false);
+                shared.Cpu.Dispose();
                 shared.DestroyObjects();
                 shared = null;
             }

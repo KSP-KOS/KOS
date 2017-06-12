@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using kOS.Safe.Compilation;
+using System.Collections.Generic;
+using System;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -10,9 +13,14 @@ namespace kOS.Safe.Encapsulation
     /// (As opposed to being a C# delegate, implemented in C# code).<br/>
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("UserDelegate")]
-    public class UserDelegate : KOSDelegate, IUserDelegate
+    public class UserDelegate : KOSDelegate, IUserDelegate, IPopContextNotifyee
     {
-        public IProgramContext ProgContext {get; private set;}
+        private WeakReference weakProgContext;
+        public IProgramContext ProgContext
+        {
+            get { return (IProgramContext)weakProgContext.Target; }
+            private set { weakProgContext = new WeakReference(value); }
+        }
         
         /// <summary>
         /// The entry point to jump to.  Note if it's ever a negative number, then you should not
@@ -20,8 +28,100 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         public int EntryPoint {get; private set;}
 
-        public List<VariableScope> Closure {get; private set;}
-        
+        private List<VariableScope> closure;
+        public List<VariableScope> Closure
+        {
+            get
+            {
+                CheckForDead(false);
+                return closure;
+            }
+            private set
+            {
+                if (!CheckForDead(false))
+                    closure = value;
+            }
+        }
+
+        /// <summary>
+        /// It is possible for a UserDelegate to continue existing after the
+        /// program that contained it died.  (i.e. if you passed it to a
+        /// part of the system as a callback hook)  In this case the UserDelegate
+        /// shouldn't be called ever again.
+        /// </summary>
+        /// <returns><c>true</c> if this instance is dead (its Program context is GC'ed,
+        /// or hasn't GC'ed YET but should soon because the CPU has moved on to a new
+        /// program context); otherwise, <c>false</c>.</returns>
+        public override bool IsDead()
+        {
+            return (weakProgContext != null) && // If this is still null then we got called during the constructor and this doesn't count yet.
+                (
+                    (!weakProgContext.IsAlive) ||
+                    (weakProgContext.Target == null) ||
+                    (((IProgramContext)weakProgContext.Target).ContextId != Cpu.GetCurrentContext().ContextId)
+                );
+        }
+
+
+        // Making Closure a weak reference is messy because it's a list.  Also, there
+        // are times when it's correct for the closure to be the last thing left that's
+        // keeping a variable alive, so we can't use weak references for it.  Instead we check it
+        // regularly to see if it *should* be cleared out.  Essentially it should get cleared
+        // any time the program context is stale.
+        // Once the program context is stale, you can't call the UserDelegate anyway.
+        // (The opcodes at the target instruction pointer have been cleared and possibly
+        // replaced with something else so it would be a catastrophic bug to try).
+        // The variables in the closure can be safely orphaned for GC'ing at that point.
+        private bool CheckForDead(bool throwException)
+        {
+            bool dead = IsDead();
+            if (dead)
+            {
+                DeadCleanup();
+                if (throwException)
+                    throw new KOSInvalidDelegateContextException("one program run", "another");
+            }
+            return dead;
+        }
+
+        /// <summary>
+        /// Cleans up the references I hold (to allow GC to  happen on them) because I
+        /// know I can never be called again at this point.
+        /// (Note, this is called because of Cpu.AddPopContextNotifyee()).
+        /// </summary>
+        public bool OnPopContext(IProgramContext context)
+        {
+            // Just in case we ever add more contexts later than just interpreter
+            // and program, we want to be sure we don't invoke the cleanup code
+            // unless it's *our* program context (the one this UserDelegate is from)
+            // that's being removed.  That's the reason for these checks here:
+            if (weakProgContext.IsAlive)
+            {
+                if (weakProgContext.Target == context)
+                {
+                    DeadCleanup();
+                    return false;
+                }
+                return true; // act like this never fired off.  It's not for our program context.
+            }
+            // If we already orphaned our program context for some other reason (I don't
+            // know what that would be), then at least clean up what's still left:
+            DeadCleanup();
+            return false;
+        }
+
+        /// <summary>
+        /// Call when this UserDelegate is confirmed to be dead, so it frees everything
+        /// up and doesn't prevent things from garbage collecting:
+        /// </summary>
+        private void DeadCleanup()
+        {
+            if (weakProgContext != null)
+                weakProgContext.Target = null;
+            if (closure != null)
+                closure.Clear();
+        }
+
         /// <summary>
         /// Make a new UserDelegate given the current state of the CPU and its stack, and
         /// the entry point location of the function to call.
@@ -41,6 +141,7 @@ namespace kOS.Safe.Encapsulation
                 CaptureClosure();
             else
                 Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everwywhere.
+            Cpu.AddPopContextNotifyee(this);
         }
 
         public UserDelegate(UserDelegate oldCopy) : base(oldCopy)
@@ -48,6 +149,7 @@ namespace kOS.Safe.Encapsulation
             ProgContext = oldCopy.ProgContext;
             EntryPoint = oldCopy.EntryPoint;
             Closure = oldCopy.Closure;
+            Cpu.AddPopContextNotifyee(this);
         }
         
         public override KOSDelegate Clone()
@@ -89,6 +191,7 @@ namespace kOS.Safe.Encapsulation
 
         public override void PushUnderArgs()
         {
+            CheckForDead(true);
             // Going to do an indirect call of myself, and indirect calls need
             // to have the delegate underneath the args.  That's how
             // OpcodeCall.StaticExecute() expects to see it.
@@ -97,6 +200,7 @@ namespace kOS.Safe.Encapsulation
 
         public override Structure CallWithArgsPushedAlready()
         {
+            CheckForDead(true);
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)
                 Cpu.InstructionPointer = absoluteJumpTo - 1; // -1 because it increments by 1 automatically between instructions.
@@ -119,6 +223,8 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         public TriggerInfo TriggerNextUpdate(params Structure[] args)
         {
+            if (CheckForDead(false))
+                return null;
             return Cpu.AddTrigger(this, args);
         }
     }

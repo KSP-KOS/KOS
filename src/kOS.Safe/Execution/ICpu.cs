@@ -35,7 +35,7 @@ namespace kOS.Safe.Execution
         int InstructionPointer { get; set; }
         double SessionTime { get; }
         List<string> ProfileResult { get; }
-        TriggerInfo AddTrigger(int triggerFunctionPointer);
+        TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure);
         TriggerInfo AddTrigger(TriggerInfo trigger);
         TriggerInfo AddTrigger(UserDelegate del, List<Structure> args);
         TriggerInfo AddTrigger(UserDelegate del, params Structure[] args);
@@ -47,6 +47,8 @@ namespace kOS.Safe.Execution
         void YieldProgram(YieldFinishedDetector yieldTracker);
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         IProgramContext GetCurrentContext();
+        void AddPopContextNotifyee(IPopContextNotifyee notifyee);
+        void RemovePopContextNotifyee(IPopContextNotifyee notifyee);
         Opcode GetCurrentOpcode();
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
