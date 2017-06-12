@@ -24,4 +24,11 @@ Unless otherwise stated, all controls that a **kOS** CPU attempts will be done o
 
 .. warning:: **SAS OVERRIDES kOS**
 
-    With the current implementation of flight control, you may now leave ``SAS`` turned on in ``"STABILITYASSIST"`` mode, and it will not override **kOS**'s attempts to steer the ship. However, it will fight and/or override **kOS**'s attempts to steer when using any other mode.  In order for **kOS** to be able to turn the ship in other modes, you need to set ``SAS OFF`` or ``SET SASMODE TO "STABILITYASSIST"``. You should take care in your scripts to manage the use of ``SAS`` and ``SASMODE`` appropriately. It is common for people writing **kOS** scripts to explicitly start them with a use of the ``SAS OFF`` and/or ``SET SASMODE TO "STABILITYASSIST"`` commands just in case you forgot to turn it off before running the script.  You could also store the current state in a temporary variable, and re-set it at the conclusion of your script.
+    However, SAS will tend to fight and/or override **kOS**'s attempts to
+    steer.  In order for **kOS** to be able to turn the ship, you need to
+    set ``SAS OFF``. You should take care in your scripts to manage the
+    use of ``SAS`` appropriately. It is common for people writing
+    **kOS** scripts to explicitly start them with a use of the
+    ``SAS OFF` command just in case you forgot to turn it off before
+    running the script.  You could also store the current state in a
+    temporary variable, and re-set it at the conclusion of your script.
