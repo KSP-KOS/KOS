@@ -31,6 +31,7 @@ namespace kOS.Safe.Encapsulation
         DateTime TimeStamp { get; }
 
         bool DebugEachOpcode { get; set; }
+        bool PauseOnCompile { get; set; }
 
         void SaveConfig();
         IList<ConfigKey> GetConfigKeys();

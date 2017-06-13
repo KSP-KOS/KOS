@@ -1,8 +1,8 @@
 ﻿using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace kOS.Safe.Execution
 {
@@ -73,6 +73,11 @@ namespace kOS.Safe.Execution
                 default:
                     break;
             }
+        }
+
+        protected override bool RunOnCaller()
+        {
+            return SafeHouse.Config.PauseOnCompile;
         }
 
         public static YieldFinishedCompile RunScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)

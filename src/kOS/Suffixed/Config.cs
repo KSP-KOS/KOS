@@ -31,6 +31,7 @@ namespace kOS.Suffixed
         public string TerminalFontName {get { return GetPropValue<string>(PropId.TerminalFontName); } set { SetPropValue(PropId.TerminalFontName, value); } }
         public bool UseBlizzyToolbarOnly { get { return kOSCustomParameters.Instance.useBlizzyToolbarOnly; } set { kOSCustomParameters.Instance.useBlizzyToolbarOnly = value; } }
         public bool DebugEachOpcode { get { return kOSCustomParameters.Instance.debugEachOpcode; } set { kOSCustomParameters.Instance.debugEachOpcode = value; } }
+        public bool PauseOnCompile { get { return kOSCustomParameters.Instance.pauseOnCompile; } set { kOSCustomParameters.Instance.pauseOnCompile = value; } }
 
         // NOTE TO FUTURE MAINTAINERS:  If it looks like overkill to use a double instead of a float for this next field, you're right.
         // But KSP seems to have a bug where single-precision floats don't get saved in the config XML file.  Doubles seem to work, though.
@@ -61,6 +62,7 @@ namespace kOS.Suffixed
             AddSuffix("BLIZZY", new SetSuffix<BooleanValue>(() => UseBlizzyToolbarOnly, value => UseBlizzyToolbarOnly = value));
             AddSuffix("BRIGHTNESS", new ClampSetSuffix<ScalarValue>(() => TerminalBrightness, value => TerminalBrightness = value, 0f, 1f, 0.01f));
             AddSuffix("DEFAULTFONTSIZE", new ClampSetSuffix<ScalarValue>(() => TerminalFontDefaultSize, value => TerminalFontDefaultSize = value, 6f, 30f, 1f));
+            AddSuffix("PAUSEONCOMPILE", new SetSuffix<BooleanValue>(() => PauseOnCompile, value => PauseOnCompile = value));
         }
 
         private void BuildValuesDictionary()

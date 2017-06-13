@@ -112,6 +112,10 @@ namespace kOS.Module
                                          "an opcode is executed in the virtual machine.  Very laggy.")]
         public bool debugEachOpcode = false;
 
+        [GameParameters.CustomParameterUI("Pause when compile",
+            toolTip = "A game will be frozen while kOS compiles script.")]
+        public bool pauseOnCompile = false;
+
         public override GameParameters.GameMode GameMode
         {
             get
