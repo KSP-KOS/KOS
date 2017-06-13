@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>FileContent &mdash; kOS 1.0.3 documentation</title>
+  <title>FileContent &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Volumes and files" href="../volumes_and_files.html"/>
         <link rel="next" title="Path" href="path.html"/>
         <link rel="prev" title="Volumes and files" href="../volumes_and_files.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">FileContent</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">FileContent</a></li>
 <li class="toctree-l3"><a class="reference internal" href="path.html">Path</a></li>
 <li class="toctree-l3"><a class="reference internal" href="volume.html">Volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="volumedirectory.html">VolumeDirectory</a></li>
@@ -116,6 +116,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
@@ -146,7 +147,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -206,11 +207,11 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:FILECONTENT:LENGTH" title="FILECONTENT:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>File length (in bytes)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:FILECONTENT:EMPTY" title="FILECONTENT:EMPTY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EMPTY</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 <td>True if the file is empty</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:FILECONTENT:TYPE" title="FILECONTENT:TYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></code></a></td>
@@ -240,7 +241,7 @@ FileContent:<code class="descname">LENGTH</code><a class="headerlink" href="#att
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -256,7 +257,7 @@ FileContent:<code class="descname">EMPTY</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -285,7 +286,7 @@ FileContent:<code class="descname">TYPE</code><a class="headerlink" href="#attri
 <dt>ASCII</dt>
 <dd>A file containing ASCII text, like the result of a LOG command.</dd>
 <dt>KSM</dt>
-<dd>A type of file containing KerboMachineLanguage compiled code, that was created from the <a class="reference internal" href="../../general/compiling.html#compiling"><span class="std std-ref">COMPILE command</span></a>.</dd>
+<dd>A type of file containing KerboMachineLanguage compiled code, that was created from the <a class="reference internal" href="../../general/compiling.html#compiling"><span>COMPILE command</span></a>.</dd>
 <dt>BINARY</dt>
 <dd>Any other type of file.</dd>
 </dl>
@@ -366,7 +367,7 @@ FileContent:<code class="descname">ITERATOR</code><a class="headerlink" href="#a
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

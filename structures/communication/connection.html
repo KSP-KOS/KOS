@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Connection &mdash; kOS 1.0.3 documentation</title>
+  <title>Connection &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Communication" href="../communication.html"/>
         <link rel="next" title="Message" href="message.html"/>
         <link rel="prev" title="Communication" href="../communication.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -106,7 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../communication.html">Communication</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Connection</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Connection</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="message.html">Message</a></li>
@@ -115,6 +115,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
@@ -145,7 +146,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -239,7 +240,7 @@ Connection:<code class="descname">ISCONNECTED</code><a class="headerlink" href="
 </tbody>
 </table>
 <p>True if the connection is opened and messages can be sent. For CPU connections this will be always true if the destionation CPU belongs to the same vessel as the current CPU.
-For vessel connections this will be always true in stock game. <a class="reference internal" href="../../addons/RemoteTech.html#remotetech"><span class="std std-ref">RemoteTech</span></a> introduces the concept of connectivity and may cause this to be false.
+For vessel connections this will be always true in stock game. <a class="reference internal" href="../../addons/RemoteTech.html#remotetech"><span>RemoteTech</span></a> introduces the concept of connectivity and may cause this to be false.
 The connection has to be opened only in the moment of sending the message in order for it to arrive. If connection is lost after the message was sent,
 but before it arrives at its destination it will have no effect on whether the message will reach its destination or not.</p>
 </dd></dl>
@@ -249,7 +250,7 @@ but before it arrives at its destination it will have no effect on whether the m
 Connection:<code class="descname">DELAY</code><a class="headerlink" href="#attribute:CONNECTION:DELAY" title="Permalink to this definition">¶</a></dt>
 <dd><p>The number of seconds that it will take for messages sent using this connection to arrive at their destination. This value will be equal to -1 if connection is not opened.
 For CPU connections this will be always equal to 0 if the destination CPU belongs to the same vessel as the current CPU.  Otherwise it will be equal to -1.
-For vessel connections this will be always zero in stock game as messages arrive instantaneously. <a class="reference internal" href="../../addons/RemoteTech.html#remotetech"><span class="std std-ref">RemoteTech</span></a> introduces the concept of
+For vessel connections this will be always zero in stock game as messages arrive instantaneously. <a class="reference internal" href="../../addons/RemoteTech.html#remotetech"><span>RemoteTech</span></a> introduces the concept of
 connectivity and may cause this to be a positive number (if there is some signal delay due to the large distance between the vessels) or -1 (if there is no connection
 between the vessels).</p>
 </dd></dl>
@@ -334,7 +335,7 @@ This method will fail to send the message and return false if <a class="referenc
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

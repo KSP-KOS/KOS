@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Note &mdash; kOS 1.0.3 documentation</title>
+  <title>Note &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="PIDLoop" href="pidloop.html"/>
         <link rel="prev" title="Vessel Load Distance" href="loaddistance.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -108,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
@@ -117,7 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Note</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Note</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
@@ -159,7 +160,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -188,7 +189,7 @@
   <div class="section" id="note">
 <h1>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h1>
 <p>Notes are structures that get passed in to the
-<a class="reference internal" href="../../general/skid.html#skid"><span class="std std-ref">SKID chip</span></a> to tell it what tone to play
+<a class="reference internal" href="../../general/skid.html#skid"><span>SKID chip</span></a> to tell it what tone to play
 and for how long.</p>
 <p>All the suffixes of a <a class="reference internal" href="#structure:NOTE" title="NOTE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Note</span></code></a> are read-only,
 and you&#8217;re only ever expected to set them by
@@ -204,7 +205,7 @@ function, or the built-in SlideNote() function:</p>
 <dd><strong>Mandatory</strong>: The frequency can be given as either a number or a
 string.  If it is a number, then it is the frequency in Hertz.
 If it is a string, then it&#8217;s using the letter notation
-<a class="reference internal" href="../../general/skid.html#skid-letter-frequency"><span class="std std-ref">described here</span></a>.</dd>
+<a class="reference internal" href="../../general/skid.html#skid-letter-frequency"><span>described here</span></a>.</dd>
 <dt><code class="docutils literal"><span class="pre">duration</span></code></dt>
 <dd><strong>Mandatory</strong>: The total amount of time the note takes up before
 the next note can begin, <em>including</em> the small gap between the end
@@ -215,7 +216,7 @@ it gets played.</dd>
 <dt><code class="docutils literal"><span class="pre">keyDownLength</span></code></dt>
 <dd><strong>Optional</strong>: The amount of time the note takes up before the
 &#8220;synthesizer key&#8221; is released.  In terms of the
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a>, this is the portion of
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a>, this is the portion of
 the note&#8217;s time taken up by the Attack, Decay, and Sustain part
 of the note, but not including the Release part of the note.  In
 order to hear the note fade away during its Release portion, the
@@ -260,12 +261,12 @@ across the duration of the note.</p>
 <dd><strong>Mandatory</strong>: This is the frequency the sliding note begins at.
 If it is a number, then it is the frequency in Hertz.
 If it is a string, then it&#8217;s using the letter notation
-<a class="reference internal" href="../../general/skid.html#skid-letter-frequency"><span class="std std-ref">described here</span></a>.</dd>
+<a class="reference internal" href="../../general/skid.html#skid-letter-frequency"><span>described here</span></a>.</dd>
 <dt><code class="docutils literal"><span class="pre">endFrequency</span></code></dt>
 <dd><strong>Mandatory</strong>: This is the frequency the sliding note ends at.
 If it is a number, then it is the frequency in Hertz.
 If it is a string, then it&#8217;s using the letter notation
-<a class="reference internal" href="../../general/skid.html#skid-letter-frequency"><span class="std std-ref">described here</span></a>.</dd>
+<a class="reference internal" href="../../general/skid.html#skid-letter-frequency"><span>described here</span></a>.</dd>
 <dt><code class="docutils literal"><span class="pre">duration</span></code></dt>
 <dd><strong>Mandatory</strong>: Same as the duration for the <a class="reference internal" href="#function:NOTE" title="NOTE function"><code class="xref ks ks-func docutils literal"><span class="pre">NOTE()</span></code></a>
 built-in function.  If it is missing it will be the same thing
@@ -381,7 +382,7 @@ Note:<code class="descname">KEYDOWNLENGTH</code><a class="headerlink" href="#att
 </tbody>
 </table>
 <p>The amount of time that the &#8220;synthesizer key&#8221; is held down for.  In the
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a> this represents the total of the
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a> this represents the total of the
 &#8220;attack&#8221;, &#8220;decay&#8221;, and &#8220;sustain&#8221; components.</p>
 </dd></dl>
 
@@ -399,7 +400,7 @@ Note:<code class="descname">DURATION</code><a class="headerlink" href="#attribut
 </tbody>
 </table>
 <p>The total time of the note, encompassing the entire
-<a class="reference internal" href="../../general/skid.html#skid-envelope"><span class="std std-ref">ADSR Envelope</span></a> including the &#8220;release&#8221; component.</p>
+<a class="reference internal" href="../../general/skid.html#skid-envelope"><span>ADSR Envelope</span></a> including the &#8220;release&#8221; component.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -466,7 +467,7 @@ value excessively may result in audio distortion.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

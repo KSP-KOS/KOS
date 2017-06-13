@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript Machine Code &mdash; kOS 1.0.3 documentation</title>
+  <title>KerboScript Machine Code &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Using the Sound/Kerbal Interface Device (SKID)" href="skid.html"/>
         <link rel="prev" title="Files and Volumes" href="volumes.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -102,9 +102,10 @@
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Machine Code</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Machine Code</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="skid.html">Sound Chip (SKID)</a></li>
@@ -143,7 +144,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -184,7 +185,57 @@
 <p>The commands you actually write when you say something like <code class="docutils literal"><span class="pre">SET</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.0.</span></code> are really a euphemism for these &#8220;machine language&#8221; opcodes under the surface.</p>
 <p>When you try to run your script, the first thing that kOS does is transform your script into this ancient and arcane &#8220;machine language&#8221; form, storing it in its memory, and from then on it runs using that.</p>
 <p>This process of transforming your script into Machine Language, or &#8220;ML&#8221; is called &#8220;Compiling&#8221;.</p>
-<p>The &#8220;<a class="reference internal" href="../commands/files.html#run"><span class="std std-ref">RUN</span></a>&#8221; and &#8220;<a class="reference internal" href="../commands/files.html#runpath"><span class="std std-ref">RUNPATH and RUNONCEPATH</span></a>&#8221; commands do this silently, without telling you. This is why you may have noticed the universe slightly stutter for a moment when you first run your program. Compiling is hard work for the universe to do.</p>
+<p>The <a class="reference internal" href="../commands/runprogram.html#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal"><span class="pre">RUN</span></code></a> and <a class="reference internal" href="../commands/runprogram.html#function:RUNPATH" title="RUNPATH function"><code class="xref ks ks-func docutils literal"><span class="pre">RUNPATH</span></code></a> commands do this silently, without telling
+you.  The <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> command explicitly compiles the file and saves it for
+future use.</p>
+<div class="admonition note" id="threaded-compile">
+<p class="first admonition-title">Note</p>
+<p>Compiling scripts takes time, and while the compiler is working it pauses
+execution much like the <a class="reference internal" href="../language/flow.html#wait-mainline-trigger"><span>wait command</span></a>.  As such
+compiling from mainline code will pause mainline code but allow triggers to
+continue to execute. Compiling from within a trigger will pause both the
+mainline code and all trigger code. Also be aware that the universe will
+continue to move during the compilation, so you should not assume that any
+values for mass, position, velocity, or similar physical properties will
+remain constant through compilation.</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 1.1.0: </span>The universe continues to update during compilation.  Previous versions
+would freeze the universe while scripts were compiled, effectively
+making them instantaneous in the universe.</p>
+</div>
+</div>
+<div class="section" id="the-compile-keyword">
+<h3>The Compile Keyword<a class="headerlink" href="#the-compile-keyword" title="Permalink to this headline">¶</a></h3>
+<dl class="keyword">
+<dt id="keyword:COMPILE">
+<code class="descname">COMPILE sourcePath [TO destinationPath]</code><a class="headerlink" href="#keyword:COMPILE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sourcePath</strong> &#8211; Path information pointing to the source script file</li>
+<li><strong>destinationPath</strong> &#8211; Path information pointing to the destination
+compiled machine language file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Parametertype sourcePath:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first"><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> or bare word string</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Parametertype destinationPath:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first last"><em>Optional</em> <a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> or bare word string</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This command will compile the source script file, transforming it from raw
+text into machine language opcodes.  These opcodes are then encoded,
+compressed, and saved in the destination file.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="why-do-i-care">
 <h3>Why Do I Care?<a class="headerlink" href="#why-do-i-care" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
@@ -193,9 +244,9 @@
 </div>
 <p>The reason it matters is this: Although once it&#8217;s loaded into memory and running, these opcodes actually have a lot of baggage and take up a lot of space, when they&#8217;re stored passively on the disk not doing anything, they can be smaller than your script programs are. For one thing, they don&#8217;t care about your comments (only other Kerbals reading your script do), and they don&#8217;t care about your indenting (only other Kerbals reading your script do).</p>
 <p>So, given that the compiled &#8220;ML&#8221; codes are the only thing your program really needs to be run, why not just store THAT instead of storing the entire script, and then you can put the ML files on your remote probes instead of putting the larger script files on them.</p>
-<p>And THAT is the purpose of the COMPILE command.</p>
+<p>And THAT is the purpose of the <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> command.</p>
 <p>It does some, but not all, of the compiling work that the RUN (or RUNPATH) command does, and then stores the results in a file that you can run instead of running the original script.</p>
-<p>The output of the COMPILE command is a file in what we call KSM format.</p>
+<p>The output of the <a class="reference internal" href="#keyword:COMPILE" title="COMPILE keyword"><code class="xref ks ks-key docutils literal"><span class="pre">COMPILE</span></code></a> command is a file in what we call KSM format.</p>
 <p>KSM stands for &#8220;KerboScript Machine code&#8221;, and it has nearly the same information the program will have when it&#8217;s loaded and running, minus a few extra steps about relocating it in memory.</p>
 </div>
 </div>
@@ -209,26 +260,26 @@
 </ul>
 <p>And that myprog1 calls myprog2 and myprog3, and you normally would call the progam this way:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
-<span class="k">COPY</span> <span class="nv">myprog1</span> <span class="k">from</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
-<span class="k">COPY</span> <span class="nv">myprog2</span> <span class="k">from</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
-<span class="k">COPY</span> <span class="nv">myprog3</span> <span class="k">from</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
-<span class="nv">RUNPATH</span><span class="p">(</span><span class="nv">myprog1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
+<span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog1&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">).</span>
+<span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog2&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">).</span>
+<span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog3&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">).</span>
+<span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Then you can put just the compiled KSM versions of them on your vessel and run it this way:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="nv">ARCHIVE</span><span class="p">.</span>
 
-<span class="k">COMPILE</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ks</span> <span class="ow">to</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ksm</span><span class="p">.</span>
-<span class="k">COPY</span> <span class="nv">myprog1</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+<span class="k">COMPILE</span> <span class="s">&quot;myprog1.ks&quot;</span> <span class="ow">to</span> <span class="s">&quot;myprog1.ksm&quot;</span><span class="p">.</span>
+<span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog1.ksm&quot;</span><span class="p">,</span> <span class="s">&quot;1:/&quot;</span> <span class="p">).</span>
 
-<span class="k">COMPILE</span> <span class="nv">myprog2</span><span class="p">.</span> <span class="c1">// If you leave the arguments off, it assumes you are going from .ks to .ksm</span>
-<span class="k">COPY</span> <span class="nv">myprog2</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+<span class="k">COMPILE</span> <span class="s">&quot;myprog2&quot;</span><span class="p">.</span> <span class="c1">// If you leave the arguments off, it assumes you are going from .ks to .ksm</span>
+<span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog2.ksm&quot;</span><span class="p">,</span> <span class="s">&quot;1:/&quot;</span> <span class="p">).</span>
 
-<span class="k">COMPILE</span> <span class="nv">myprog3</span><span class="p">.</span> <span class="c1">// If you leave the arguments off, it assumes you are going from .ks to .ksm</span>
-<span class="k">COPY</span> <span class="nv">myprog2</span><span class="p">.</span><span class="nv">ksm</span> <span class="ow">to</span> <span class="mf">1</span><span class="p">.</span>
+<span class="k">COMPILE</span> <span class="s">&quot;myprog3&quot;</span><span class="p">.</span> <span class="c1">// If you leave the arguments off, it assumes you are going from .ks to .ksm</span>
+<span class="nv">COPYPATH</span><span class="p">(</span> <span class="s">&quot;0:/myprog2.ksm&quot;</span><span class="p">,</span> <span class="s">&quot;1:/&quot;</span> <span class="p">).</span>
 
 <span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
-<span class="nv">RUNPATH</span><span class="p">(</span><span class="nv">myprog1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
+<span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;myprog1&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
 </div>
@@ -250,7 +301,7 @@
 <span class="k">RUN</span> <span class="nv">myprog1</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Then the RUN command will first try to run a file called &#8220;myprog1.ksm&#8221; and if it cannot find such a file, then it will try to run one called &#8220;myprog1.ks&#8221;.</p>
+<p>Then the <a class="reference internal" href="../commands/runprogram.html#keyword:RUN" title="RUN keyword"><code class="xref ks ks-key docutils literal"><span class="pre">RUN</span></code></a> command will first try to run a file called &#8220;myprog1.ksm&#8221; and if it cannot find such a file, then it will try to run one called &#8220;myprog1.ks&#8221;.</p>
 <p>In this way, if you decide to take the plunge and attempt the use of KSM files, you shouldn&#8217;t have to change the way any of your scripts call each other, provided you just used versions of the filenames without mentioning the file extensions.</p>
 </div>
 <div class="section" id="downsides-to-using-ksm-files">
@@ -308,7 +359,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

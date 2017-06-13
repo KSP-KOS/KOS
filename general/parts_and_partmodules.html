@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Parts and PartModules &mdash; kOS 1.0.3 documentation</title>
+  <title>Ship Parts and PartModules &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Career Limits" href="career_limits.html"/>
         <link rel="prev" title="The Name Tag System" href="nametag.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -102,12 +102,13 @@
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="skid.html">Sound Chip (SKID)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Parts &amp; PartModules</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Parts &amp; PartModules</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
@@ -143,7 +144,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -241,8 +242,12 @@ has a length of zero:</p>
 <span class="p">}.</span>
 </pre></div>
 </div>
+<div class="section" id="pattern-matching">
+<h4>Pattern matching<a class="headerlink" href="#pattern-matching" title="Permalink to this headline">¶</a></h4>
+<p>For even more advanced part selection you can use the <code class="docutils literal"><span class="pre">*PATTERN</span></code> variants of the suffixes mentioned above (see <a class="reference internal" href="../structures/vessels/vessel.html#method:VESSEL:PARTSTAGGEDPATTERN" title="VESSEL:PARTSTAGGEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSTAGGEDPATTERN</span></code></a>, <a class="reference internal" href="../structures/vessels/vessel.html#method:VESSEL:PARTSTITLEDPATTERN" title="VESSEL:PARTSTITLEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSTITLEDPATTERN</span></code></a>, <a class="reference internal" href="../structures/vessels/vessel.html#method:VESSEL:PARTSNAMEDPATTERN" title="VESSEL:PARTSNAMEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSNAMEDPATTERN</span></code></a> and <a class="reference internal" href="../structures/vessels/vessel.html#method:VESSEL:PARTSDUBBEDPATTERN" title="VESSEL:PARTSDUBBEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Vessel:PARTSDUBBEDPATTERN</span></code></a>). They enable you to select parts based on regular expression matching, giving you ultimate power over your parts.</p>
 <div class="figure align-right">
 <img alt="../_images/ship_parts_tree.png" src="../_images/ship_parts_tree.png" />
+</div>
 </div>
 </div>
 <div class="section" id="accessing-the-parts-list-as-a-tree">
@@ -410,7 +415,7 @@ has a length of zero:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DMagic Orbital Science &mdash; kOS 1.0.3 documentation</title>
+  <title>DMagic Orbital Science &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Trajectories" href="Trajectories.html"/>
         <link rel="prev" title="Infernal Robotics" href="IR.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -106,7 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IR.html">Infernal Robotics</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DMagic Orbital Science</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">DMagic Orbital Science</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Trajectories.html">Trajectories</a></li>
 </ul>
 </li>
@@ -135,7 +135,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -162,17 +162,17 @@
   <div class="section" id="dmagic-orbital-science">
 <span id="orbitalscience"></span><h1>DMagic Orbital Science<a class="headerlink" href="#dmagic-orbital-science" title="Permalink to this headline">¶</a></h1>
 <p>DMagic Orbital Science is a modification for Squad’s &#8220;Kerbal Space Program&#8221; (KSP) which adds extra science experiments to the game. Those experiments under the hood work differently
-than stock ones and require dedicated support (see <a class="reference internal" href="../structures/vessels/scienceexperiment.html#scienceexperimentmodule"><span class="std std-ref">ScienceExperimentModule</span></a>).</p>
+than stock ones and require dedicated support (see <a class="reference internal" href="../structures/vessels/scienceexperiment.html#scienceexperimentmodule"><span>ScienceExperimentModule</span></a>).</p>
 <ul class="simple">
 <li>Download: <a class="reference external" href="http://spacedock.info/mod/128/DMagic%20Orbital%20Science">http://spacedock.info/mod/128/DMagic%20Orbital%20Science</a> or <a class="reference external" href="https://github.com/DMagic1/Orbital-Science/releases">https://github.com/DMagic1/Orbital-Science/releases</a></li>
 <li>Sources: <a class="reference external" href="https://github.com/DMagic1/Orbital-Science">https://github.com/DMagic1/Orbital-Science</a></li>
 </ul>
 <p>Most of the time Orbital Science experiments should work exactly like stock ones,
-they inherit all suffixes from <a class="reference internal" href="../structures/vessels/scienceexperiment.html#scienceexperimentmodule"><span class="std std-ref">ScienceExperimentModule</span></a>:</p>
+they inherit all suffixes from <a class="reference internal" href="../structures/vessels/scienceexperiment.html#scienceexperimentmodule"><span>ScienceExperimentModule</span></a>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">P</span> <span class="ow">TO</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">PARTSTAGGED</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span>
 <span class="k">SET</span> <span class="nv">M</span> <span class="ow">TO</span> <span class="nv">P</span><span class="p">:</span><span class="nv">GETMODULE</span><span class="p">(</span><span class="s">&quot;dmmodulescienceanimate&quot;</span><span class="p">).</span>
 
-<span class="k">PRINT</span> <span class="nv">M</span><span class="p">:</span><span class="nv">ISRERUNNABLE</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="nv">M</span><span class="p">:</span><span class="nv">RERUNNABLE</span><span class="p">.</span>
 <span class="k">PRINT</span> <span class="nv">M</span><span class="p">:</span><span class="nv">INOPERABLE</span><span class="p">.</span>
 <span class="nv">M</span><span class="p">:</span><span class="nv">DEPLOY</span><span class="p">.</span>
 <span class="k">WAIT</span> <span class="k">UNTIL</span> <span class="nv">M</span><span class="p">:</span><span class="nv">HASDATA</span><span class="p">.</span>
@@ -240,7 +240,7 @@ lights on and off:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

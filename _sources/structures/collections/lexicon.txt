@@ -214,6 +214,7 @@ Structure
     of every complex object inside the Lexicon.
 
     i.e::
+
         // Just gives a shallow list:
         print mylexicon.
         

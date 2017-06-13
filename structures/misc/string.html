@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>String &mdash; kOS 1.0.3 documentation</title>
+  <title>String &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Terminal" href="terminal.html"/>
         <link rel="prev" title="SteeringManager" href="steeringmanager.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -108,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
@@ -121,7 +122,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">String</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">String</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
@@ -161,7 +162,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -205,13 +206,53 @@ of existing strings. For example:</p>
 <span class="k">SET</span> <span class="nv">t</span> <span class="ow">TO</span> <span class="nv">s</span><span class="p">:</span><span class="nv">REPLACE</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Goodbye&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Strings are iterable. This scripts prints the string&#8217;s characters one per line:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">str</span> <span class="ow">TO</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
+</div>
+<div class="section" id="accessing-individual-characters">
+<h2>ACCESSING INDIVIDUAL CHARACTERS<a class="headerlink" href="#accessing-individual-characters" title="Permalink to this headline">¶</a></h2>
+<p>There&#8217;s two main ways to access the individual characters
+of a string - using an iterator or using index numbers:</p>
+<div class="section" id="using-an-iterator-for">
+<h3>Using an Iterator (FOR)<a class="headerlink" href="#using-an-iterator-for" title="Permalink to this headline">¶</a></h3>
+<p>Strings can be treated a little bit like iterable lists
+of characters. This allows them to be used in FOR loops
+as in the example below:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
 
 <span class="k">FOR</span> <span class="nv">c</span> <span class="nv">IN</span> <span class="nv">str</span> <span class="p">{</span>
-  <span class="k">PRINT</span> <span class="nv">c</span><span class="p">.</span>
+  <span class="k">PRINT</span> <span class="nv">c</span><span class="p">.</span>  <span class="c1">// prints &quot;a&quot; the first time, then &quot;b&quot;, etc.</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<p>The reason you can use Strings with the FOR loop like this is
+because you can obatain an <a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a> of a string with the
+<code class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></code> suffix mentioned below.  (Any type that
+implements the ITERATOR suffix can do this.)</p>
+</div>
+<div class="section" id="using-an-index-i">
+<h3>Using an Index ( [i] )<a class="headerlink" href="#using-an-index-i" title="Permalink to this headline">¶</a></h3>
+<p>Strings can also be treated a little bit like lists in that
+they allow you to use the square-brackets operator <cite>[</cite>..`]`
+to choose one character by its index number (numbers start
+counting at zero).  Here&#8217;s an example that does the same thing
+as the FOR loop above, but using index notation:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
+<span class="k">local</span> <span class="nv">index</span> <span class="ow">is</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">until</span> <span class="nv">index</span> <span class="o">=</span> <span class="nv">str</span><span class="p">:</span><span class="nv">LENGTH</span> <span class="p">{</span>
+  <span class="k">print</span> <span class="nv">str</span><span class="p">[</span><span class="nv">index</span><span class="p">].</span>
+  <span class="k">set</span> <span class="nv">index</span> <span class="ow">to</span> <span class="nv">index</span> <span class="o">+</span> <span class="mf">1</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Be aware that despite being able to read the characters this way,
+you cannot set them this way.  The following will give
+an error:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">LOCAL</span> <span class="nv">str</span> <span class="ow">is</span> <span class="s">&quot;abcde&quot;</span><span class="p">.</span>
+
+<span class="c1">// The following line gives an error because you can&#39;t</span>
+<span class="c1">// change the characters inside a string:</span>
+<span class="k">set</span> <span class="nv">str</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="ow">to</span> <span class="s">&quot;X&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="boolean-operators">
@@ -246,11 +287,11 @@ give), and the two will be compared as strings.  Example:</p>
 </pre></div>
 </div>
 <p>In the first example, both sides of the <code class="docutils literal"><span class="pre">&lt;</span></code> operator are
-<a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalars</span></a>, so the comparison is done numerically,
+<a class="reference internal" href="../../math/scalar.html#scalar"><span>scalars</span></a>, so the comparison is done numerically,
 and 1234 is much bigger than 99.</p>
 <p>In the second example, one side of the <code class="docutils literal"><span class="pre">&lt;</span></code> operator is a
-string, so the other side is converted from the <a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a>
-<code class="docutils literal"><span class="pre">99</span></code> into the <a class="reference internal" href="#string"><span class="std std-ref">string</span></a> <code class="docutils literal"><span class="pre">&quot;99&quot;</span></code> to perform the
+string, so the other side is converted from the <a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a>
+<code class="docutils literal"><span class="pre">99</span></code> into the <a class="reference internal" href="#string"><span>string</span></a> <code class="docutils literal"><span class="pre">&quot;99&quot;</span></code> to perform the
 comparison, and then the string comparison looks one character at
 a time and notices that &#8220;1&#8221; is less than &#8220;9&#8221; and calls &#8220;1234&#8221; the
 lesser value.</p>
@@ -259,10 +300,10 @@ lesser value.</p>
 <div class="section" id="case-sensitiviy">
 <h3>CASE SENSITIVIY<a class="headerlink" href="#case-sensitiviy" title="Permalink to this headline">¶</a></h3>
 <p>NOTE: All string comparisons for equality and ordering, all substring
-matches, and all string searches, are currently case <strong>in</strong> sensive,
-meaning that for example the letter &#8220;A&#8221; and the letter &#8220;a&#8221; are
-indistinguishable.  There are future plans to add mechanisms that
-will let you choose case-sensitivity when you prefer.</p>
+matches, all pattern matches, and all string searches, are currently
+case <strong>in</strong> sensive, meaning that for example the letter &#8220;A&#8221; and the
+letter &#8220;a&#8221; are indistinguishable.  There are future plans to add
+mechanisms that will let you choose case-sensitivity when you prefer.</p>
 <p>At the moment the only way to force a case-sensitive comparison is
 to look at the characters one at a time and obtain their numerical
 ordinal Unicode value with the <a class="reference internal" href="../../math/basic.html#function:UNCHAR" title="UNCHAR function"><code class="xref ks ks-func docutils literal"><span class="pre">unchar(a)</span></code></a> function.</p>
@@ -288,11 +329,11 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:CONTAINS" title="STRING:CONTAINS method"><code class="xref ks ks-meth docutils literal"><span class="pre">CONTAINS(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if the given string is contained within this string</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:ENDSWITH" title="STRING:ENDSWITH method"><code class="xref ks ks-meth docutils literal"><span class="pre">ENDSWITH(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if this string ends with the given string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:FIND" title="STRING:FIND method"><code class="xref ks ks-meth docutils literal"><span class="pre">FIND(string)</span></code></a></td>
@@ -319,13 +360,21 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Returns a new string with the given string inserted at the given index into this string</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:STRING:LASTINDEXOF" title="STRING:LASTINDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">LASTINDEXOF(string)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STRING:ITERATOR" title="STRING:ITERATOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></code></a></td>
+<td><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a></td>
+<td>generates an iterator object the elements</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:LASTINDEXOF" title="STRING:LASTINDEXOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">LASTINDEXOF(string)</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Alias for FINDLAST(string)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STRING:LENGTH" title="STRING:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STRING:LENGTH" title="STRING:LENGTH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Number of characters in the string</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:MATCHESPATTERN" title="STRING:MATCHESPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">MATCHESPATTERN(pattern)</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>Tests whether the string matches the given regex pattern.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:PADLEFT" title="STRING:PADLEFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">PADLEFT(width)</span></code></a></td>
 <td><a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
@@ -348,7 +397,7 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <td>Breaks this string up into a list of smaller strings on each occurrence of the given separator</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:STRING:STARTSWITH" title="STRING:STARTSWITH method"><code class="xref ks ks-meth docutils literal"><span class="pre">STARTSWITH(string)</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if this string starts with the given string</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:STRING:SUBSTRING" title="STRING:SUBSTRING method"><code class="xref ks ks-meth docutils literal"><span class="pre">SUBSTRING(start,</span> <span class="pre">count)</span></code></a></td>
@@ -379,7 +428,7 @@ ordinal Unicode value with the <a class="reference internal" href="../../math/ba
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Parse the string into a number that can be used for mathematics.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref ks ks-meth docutils literal"><span class="pre">TOSCALAR(defaultIfError)</span></code></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:STRING:TOSCALAR" title="STRING:TOSCALAR method"><code class="xref ks ks-meth docutils literal"><span class="pre">TOSCALAR(defaultIfError)</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">TONUMBER</span></code></a></td>
 </tr>
@@ -399,7 +448,7 @@ String:<code class="descname">CONTAINS</code><span class="sig-paren">(</span>str
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -419,7 +468,7 @@ String:<code class="descname">ENDSWITH</code><span class="sig-paren">(</span>str
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -536,6 +585,26 @@ String:<code class="descname">INSERT</code><span class="sig-paren">(</span>index
 <p>Returns a new string with the given string inserted at the given index into this string</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:STRING:ITERATOR">
+String:<code class="descname">ITERATOR</code><a class="headerlink" href="#attribute:STRING:ITERATOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>An alternate means of iterating over a string&#8217;s characters
+(See: <a class="reference internal" href="../collections/iterator.html#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a>).</p>
+<p>For most programs you won&#8217;t have to use this directly.  It&#8217;s just
+what enables you to use a string with a FOR loop to get access
+to its characters one at a time.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="method:STRING:LASTINDEXOF">
 String:<code class="descname">LASTINDEXOF</code><span class="sig-paren">(</span>string<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:LASTINDEXOF" title="Permalink to this definition">¶</a></dt>
@@ -556,6 +625,30 @@ String:<code class="descname">LENGTH</code><a class="headerlink" href="#attribut
 </tbody>
 </table>
 <p>Number of characters in the string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:STRING:MATCHESPATTERN">
+String:<code class="descname">MATCHESPATTERN</code><span class="sig-paren">(</span>pattern<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:MATCHESPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pattern</strong> &#8211; <a class="reference internal" href="#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> pattern to be matched against the string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>True if the string matches the given pattern (regular expression). The match is not anchored to neither the start nor the end of the string.
+That means that pattern <code class="docutils literal"><span class="pre">&quot;foo&quot;</span></code> will match <code class="docutils literal"><span class="pre">&quot;foobar&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;barfoo&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;barfoobar&quot;</span></code> too. If you want to match from the start,
+you have to explicitly specify the start of the string in the pattern, i.e. for example to match strings starting with <code class="docutils literal"><span class="pre">&quot;foo&quot;</span></code> you need to
+use the pattern <code class="docutils literal"><span class="pre">&quot;^foo&quot;</span></code> (or equivalently <code class="docutils literal"><span class="pre">&quot;^foo.*&quot;</span></code> or even <code class="docutils literal"><span class="pre">&quot;^foo.*$&quot;</span></code>).</p>
+<p>Regular expressions are beyond the scope of this documentation. For reference see <a class="reference external" href="https://msdn.microsoft.com/en-us/library/az24scfc.aspx">Regular Expression Language - Quick Reference</a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -673,7 +766,7 @@ String:<code class="descname">STARTSWITH</code><span class="sig-paren">(</span>s
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#boolean"><span class="std std-ref">boolean</span></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -812,6 +905,10 @@ an error that stops the script instead of returning a value.</p>
 <p>The valid understood format allows an optional leading sign,
 a decimal point with fractional part, and scientific notation
 using &#8220;e&#8221; as in &#8220;1.23e3&#8221; for &#8220;1230&#8221; or &#8220;1.23e-3&#8221; for &#8220;0.00123&#8221;.</p>
+<p>You may also include optional underscores in the string to
+help space groups of digits, and they will be ignored.
+(For example you may write &#8220;one thousand&#8221; as &#8220;1_000&#8221; instead
+of as &#8220;1000&#8221; if you like&#8221;.)</p>
 <p>Example - using with math:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">str</span> <span class="ow">to</span> <span class="s">&quot;16.8&quot;</span><span class="p">.</span>
 <span class="k">print</span> <span class="s">&quot;half of &quot;</span> <span class="o">+</span> <span class="nv">str</span> <span class="o">+</span> <span class="s">&quot; is &quot;</span> <span class="o">+</span> <span class="nv">str</span><span class="p">:</span><span class="nv">tonumber</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2</span><span class="p">.</span>
@@ -837,8 +934,8 @@ using &#8220;e&#8221; as in &#8220;1.23e3&#8221; for &#8220;1230&#8221; or &#822
 </dd></dl>
 
 <dl class="method">
-<dt>
-String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>defaultIfError<span class="sig-paren">)</span></dt>
+<dt id="method:STRING:TOSCALAR">
+String:<code class="descname">TOSCALAR</code><span class="sig-paren">(</span>defaultIfError<span class="sig-paren">)</span><a class="headerlink" href="#method:STRING:TOSCALAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#method:STRING:TONUMBER" title="STRING:TONUMBER method"><code class="xref ks ks-meth docutils literal"><span class="pre">String:TONUMBER(defaultIfError)</span></code></a></p>
 </dd></dl>
 
@@ -855,7 +952,7 @@ String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>def
 <p><code class="docutils literal"><span class="pre">FOR</span> <span class="pre">VAR</span> <span class="pre">IN</span> <span class="pre">STRING</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}.</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="../../language/flow.html#flow"><span class="std std-ref">A type of loop</span></a> in which var iterates over all the characters of the string from 0 to LENGTH-1.</li>
+<li><a class="reference internal" href="../../language/flow.html#flow"><span>A type of loop</span></a> in which var iterates over all the characters of the string from 0 to LENGTH-1.</li>
 </ul>
 </div></blockquote>
 <p>Examples:</p>
@@ -943,7 +1040,7 @@ String:<code class="descname">TONUMBER</code><span class="sig-paren">(</span>def
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

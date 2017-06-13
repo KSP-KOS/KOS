@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS CPU hardware &mdash; kOS 1.0.3 documentation</title>
+  <title>The kOS CPU hardware &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html"/>
         <link rel="prev" title="CPU Vessel (SHIP)" href="cpu_vessel.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -99,11 +99,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">CPU Hardware</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">CPU Hardware</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
@@ -143,7 +144,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -261,7 +262,7 @@ speed up to normal speed again when it needs to wake up and do something.</p>
 <p>In kOS, this concept is simplified by just draining electric charge by
 &#8220;micropayments&#8221; of charge per instruction executed.</p>
 <p>To change this setting if you want to re-balance the system, see the
-page about <a class="reference internal" href="kospartmodule.html#ecperinstruction"><span class="std std-ref">kOSProcessor part config values</span></a>.</p>
+page about <a class="reference internal" href="kospartmodule.html#ecperinstruction"><span>kOSProcessor part config values</span></a>.</p>
 <p>The shorthand version is this:  The more instructions per update
 actually get executed, the more power is drained.  This can be reduced
 by either lowering <code class="docutils literal"><span class="pre">CONFIG:IPU</span></code> or by making sure your main loop
@@ -307,7 +308,7 @@ etc), but not other LOCKS.</li>
 trigger routines get run, including those locks that are always
 re-evaluated by the cooked steering, and the <code class="docutils literal"><span class="pre">ON</span></code> and <code class="docutils literal"><span class="pre">WHEN</span></code>
 triggers.  (This isn&#8217;t <em>quite</em> true.  The real answer is more
-complex than that - see <a class="reference internal" href="#cpu-update-loop"><span class="std std-ref">CPU Update Loop</span></a>
+complex than that - see <a class="reference internal" href="#cpu-update-loop"><span>CPU Update Loop</span></a>
 elsewhere on this page).</p>
 <p>Each of the steering locks behaves like a function that returns
 a value, and is re-called to get the new value for this <strong>physics
@@ -509,7 +510,7 @@ has had a chance to go again.</li>
 <p>Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.</p>
 </div>
 <div class="section" id="the-frozen-universe">
-<h2><a class="toc-backref" href="#id12">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
+<span id="frozen"></span><h2><a class="toc-backref" href="#id12">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
 <p>Each <strong>physics</strong> <em>tick</em>, the kOS mod wakes up and runs through all the currently loaded CPU parts that are in &#8220;physics range&#8221; (i.e. 2.5 km), and executes a batch of instructions from your script code that&#8217;s on them. It is important to note that during the running of this batch of instructions, because no <strong>physics ticks</strong> are happening during it, none of the values that you might query from the KSP system will change. The clock time returned from the TIME variable will keep the same value throughout. The amount of fuel left will remain fixed throughout. The position and velocity of the vessel will remaining fixed throughout. It&#8217;s not until the next physics tick occurs that those values will change to new numbers. It&#8217;s typical that several lines of your kerboscript code will run during a single physics tick.</p>
 <p>Effectively, as far as the <em>simulated</em> universe can tell, it&#8217;s as if your script runs several instructions in literally zero amount of time, and then pauses for a fraction of a second, and then runs more instructions in literally zero amount of time, then pauses for a fraction of a second, and so on, rather than running the program in a smoothed out continuous way.</p>
 <p>This is a vital difference between how a kOS CPU behaves versus how a real world computer behaves. In a real world computer, you would know for certain that time will pass, even if it&#8217;s just a few picoseconds, between the execution of one statement and the next.</p>
@@ -557,7 +558,7 @@ has had a chance to go again.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

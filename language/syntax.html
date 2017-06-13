@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript Syntax Specification &mdash; kOS 1.0.3 documentation</title>
+  <title>KerboScript Syntax Specification &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Flow Control" href="flow.html"/>
         <link rel="prev" title="General Features of the KerboScript Language" href="features.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -99,7 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Language Syntax</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Language Syntax</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
@@ -140,7 +140,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -171,12 +171,13 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#general-rules" id="id1">General Rules</a></li>
-<li><a class="reference internal" href="#braces-statement-blocks" id="id2">Braces (statement blocks)</a></li>
-<li><a class="reference internal" href="#functions-built-in" id="id3">Functions (built-in)</a></li>
-<li><a class="reference internal" href="#suffixes-as-functions-methods" id="id4">Suffixes as Functions (Methods)</a></li>
-<li><a class="reference internal" href="#user-functions" id="id5">User Functions</a></li>
-<li><a class="reference internal" href="#built-in-special-variable-names" id="id6">Built-In Special Variable Names</a></li>
-<li><a class="reference internal" href="#what-does-not-exist-yet" id="id7">What does not exist (yet?)</a></li>
+<li><a class="reference internal" href="#numbers-scalars" id="id2">Numbers (scalars)</a></li>
+<li><a class="reference internal" href="#braces-statement-blocks" id="id3">Braces (statement blocks)</a></li>
+<li><a class="reference internal" href="#functions-built-in" id="id4">Functions (built-in)</a></li>
+<li><a class="reference internal" href="#suffixes-as-functions-methods" id="id5">Suffixes as Functions (Methods)</a></li>
+<li><a class="reference internal" href="#user-functions" id="id6">User Functions</a></li>
+<li><a class="reference internal" href="#built-in-special-variable-names" id="id7">Built-In Special Variable Names</a></li>
+<li><a class="reference internal" href="#what-does-not-exist-yet" id="id8">What does not exist (yet?)</a></li>
 </ul>
 </div>
 <div class="section" id="general-rules">
@@ -213,9 +214,28 @@ unlock unset until volume wait when
 </pre></div>
 </div>
 <p><strong>Identifiers</strong>: Identifiers consist of: a string of (letter, digit, or
-underscore). The first character must be a letter. The rest may be letters, digits or underscores. <strong>Identifiers are case-insensitive</strong>. The following are identical identifiers:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>My_Variable  my_varible  MY_VARAIBLE
+underscore). The first character must be a letter or an underscore.
+The rest may be letters, digits or underscores.</p>
+<p><strong>Identifiers are case-insensitive</strong>. The following are identical identifiers:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>my_variable
+My_Variable
+MY_VARIABLE
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.1.0: </span>Kerboscript accepts Unicode source code, encoded using the UTF-8
+encoding method.  Because of this, the definition of a &#8220;letter&#8221;
+character for an identifier includes letters from many languages&#8217;
+alphabets, including accented Latin alphabet characters, Cyrllic
+characters, etc.  Not all languages have been tested but in
+principle they should work as long as they have a Unicode standard
+accepted definition of what counts as a &#8220;letter&#8221;.  We defer to
+the .NET libraries&#8217; definition of what constitutes the &#8220;same&#8221; letter
+in uppercase and lowercase forms, and we hope this is right for
+most alphabets.</p>
+</div>
 </div>
 <dl class="docutils">
 <dt><strong>case-insensitivity</strong></dt>
@@ -228,6 +248,20 @@ underscore). The first character must be a letter. The rest may be letters, digi
 </pre></div>
 </div>
 </dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.1.0: </span>Again, depending on the alphabet being used, the concept of
+&#8220;uppercase&#8221; and &#8220;lowercase&#8221; might not make sense in some
+languages.  kOS defers to .NET&#8217;s interpretation of what
+letters in Unicode are paired together as the &#8220;upper&#8221; and
+&#8220;lower&#8221; versions of the same letter.  For obvious reasons,
+the kOS developers cannot test every language and verify if
+this is correct or not.</p>
+</div>
+</div>
+<dl class="docutils">
 <dt><strong>Suffixes</strong></dt>
 <dd><p class="first">Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (<code class="docutils literal"><span class="pre">:</span></code>). When this symbol is used, the part on the right-hand side of the colon is called the &#8220;suffix&#8221;:</p>
 <div class="last highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">list</span> <span class="nv">parts</span> <span class="nv">in</span> <span class="nv">mylist</span><span class="p">.</span>
@@ -242,8 +276,33 @@ underscore). The first character must be a letter. The rest may be letters, digi
 </div>
 <p>In the above example you&#8217;d say &#8220;<code class="docutils literal"><span class="pre">velocity</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship</span></code>&#8221;, and &#8220;<code class="docutils literal"><span class="pre">orbit</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship:velocity</span></code>&#8221;, and &#8220;<code class="docutils literal"><span class="pre">x</span></code> is a suffix of <code class="docutils literal"><span class="pre">ship:velocity:orbit</span></code>&#8221;.</p>
 </div>
+<div class="section" id="numbers-scalars">
+<h2><a class="toc-backref" href="#id2">Numbers (scalars)</a><a class="headerlink" href="#numbers-scalars" title="Permalink to this headline">¶</a></h2>
+<p>Numbers in kerboscript are referred to as &#8220;scalars&#8221;, to distinguish
+them from the many cases where a values will be represnted
+as a vectors.  You are allowed to use integers, decimal fractional numbers
+(numbers with a decimal point and a fractional part), and scientific
+notation numbers.</p>
+<p>The following are valid scalar syntax:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="mf">12345678</span>
+<span class="err">12_345_678</span> <span class="p">(</span><span class="nv">The</span> <span class="nv">underscores</span> <span class="nv">are</span> <span class="nv">ignored</span> <span class="nv">as</span> <span class="nv">just</span> <span class="nv">visual</span> <span class="nv">spacers</span><span class="p">)</span>
+<span class="mf">12345</span><span class="p">.</span><span class="mf">6789</span>
+<span class="err">12_345</span><span class="p">.</span><span class="mf">6789</span>
+<span class="o">-</span><span class="mf">12345678</span>
+<span class="mf">1.123e12</span>
+<span class="mf">1.234e-12</span>
+</pre></div>
+</div>
+<p>Kerobscript does not support imaginary numbers or irrational numbers
+or rational numbers that cannot be represented as a finite decimal
+(i.e.  sqrt(-1) returns a Not-a-Number error.  Pi will have to be
+an approximation.  &#8220;One third&#8221;, ends up being something like 0.333333333).)</p>
+<p>Under the hood, these numbers are stored as either 32-bit integers or as
+64-bit double floats, depending on the need, but kerboscript attempts
+to hide this detail from the programmer as much as possible.</p>
+</div>
 <div class="section" id="braces-statement-blocks">
-<h2><a class="toc-backref" href="#id2">Braces (statement blocks)</a><a class="headerlink" href="#braces-statement-blocks" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Braces (statement blocks)</a><a class="headerlink" href="#braces-statement-blocks" title="Permalink to this headline">¶</a></h2>
 <p>Anywhere you feel like, you may insert braces around a list of statements
 to get the language to treat them all as a single statement block.</p>
 <p>For example: the IF statement expects one statement as its body, like so:</p>
@@ -288,12 +347,12 @@ language does not require it, as shown below:</p>
 </pre></div>
 </div>
 <p>The usual reason for doing this is to create a
-<a class="reference internal" href="variables.html#scope"><span class="std std-ref">local scope section</span></a> for yourself.
+<a class="reference internal" href="variables.html#scope"><span>local scope section</span></a> for yourself.
 In the above example, there are actually 3 <em>different</em>
 variables called &#8216;x&#8217; - each with a different scope.</p>
 </div>
 <div class="section" id="functions-built-in">
-<h2><a class="toc-backref" href="#id3">Functions (built-in)</a><a class="headerlink" href="#functions-built-in" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Functions (built-in)</a><a class="headerlink" href="#functions-built-in" title="Permalink to this headline">¶</a></h2>
 <p>There exist a number of built-in functions you can call using their names. When you do so, you can do it like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">functionName</span><span class="p">(</span> <span class="o">*</span><span class="nv">arguments</span> <span class="nv">with</span> <span class="nv">commas</span> <span class="nv">between</span> <span class="nv">them</span><span class="o">*</span> <span class="p">).</span>
 </pre></div>
@@ -314,7 +373,7 @@ variables called &#8216;x&#8217; - each with a different scope.</p>
 </div>
 </div>
 <div class="section" id="suffixes-as-functions-methods">
-<h2><a class="toc-backref" href="#id4">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this headline">¶</a></h2>
 <p>Some suffixes are actually functions you can call. When that is the case, these suffixes are called &#8220;method suffixes&#8221;. Here are some examples:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">partsnamed</span><span class="p">(</span><span class="s">&quot;rtg&quot;</span><span class="p">).</span>
 <span class="k">print</span> <span class="nv">x</span><span class="p">:</span><span class="nv">length</span><span class="p">().</span>
@@ -324,7 +383,7 @@ variables called &#8216;x&#8217; - each with a different scope.</p>
 </div>
 </div>
 <div class="section" id="user-functions">
-<span id="syntax-functions"></span><h2><a class="toc-backref" href="#id5">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
+<span id="syntax-functions"></span><h2><a class="toc-backref" href="#id6">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
@@ -377,14 +436,14 @@ DECLARE FUNCTION command, which is structured as follows:</p>
 <blockquote>
 <div><code class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></code> <em>identifier</em> <code class="docutils literal"><span class="pre">{</span></code> <em>statements</em> <code class="docutils literal"><span class="pre">}</span></code> <em>optional dot (.)</em></div></blockquote>
 <p>Functions are a long enough topic as to require a
-<a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">separate documentation page, here.</span></a></p>
+<a class="reference internal" href="user_functions.html#user-functions"><span>separate documentation page, here.</span></a></p>
 </div>
 <div class="section" id="built-in-special-variable-names">
-<h2><a class="toc-backref" href="#id6">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
-<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span class="std std-ref">The full list of reserved variable names is on its own page</span></a>.</p>
+<h2><a class="toc-backref" href="#id7">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
+<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><span>The full list of reserved variable names is on its own page</span></a>.</p>
 </div>
 <div class="section" id="what-does-not-exist-yet">
-<h2><a class="toc-backref" href="#id7">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
 <p>Concepts that many other languages have, that are missing from <strong>KerboScript</strong>, are listed below. Many of these are things that could be supported some day, but at the moment with the limited amount of developer time available they haven&#8217;t become essential enough to spend the time on supporting them.</p>
 <dl class="docutils">
 <dt><strong>user-made structures or classes</strong></dt>
@@ -434,7 +493,7 @@ DECLARE FUNCTION command, which is structured as follows:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

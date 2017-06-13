@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RemoteTech &mdash; kOS 1.0.3 documentation</title>
+  <title>RemoteTech &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Kerbal Alarm Clock" href="KAC.html"/>
         <link rel="prev" title="Action Groups Extended" href="AGX.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -103,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">RemoteTech</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">RemoteTech</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
@@ -137,7 +137,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -163,7 +163,7 @@
             
   <div class="section" id="remotetech">
 <span id="id1"></span><h1>RemoteTech<a class="headerlink" href="#remotetech" title="Permalink to this headline">¶</a></h1>
-<p>RemoteTech is a modification for Squad’s &#8220;Kerbal Space Program&#8221; (KSP) which overhauls the unmanned space program. It does this by requiring unmanned vessels have a connection to Kerbal Space Center (KSC) to be able to be controlled. This adds a new layer of difficulty that compensates for the lack of live crew members.</p>
+<p>RemoteTech is a modification for Squad&#8217;s &#8220;Kerbal Space Program&#8221; (KSP) which overhauls the unmanned space program. It does this by requiring unmanned vessels have a connection to Kerbal Space Center (KSC) to be able to be controlled. This adds a new layer of difficulty that compensates for the lack of live crew members.</p>
 <ul class="simple">
 <li>Download: <a class="reference external" href="http://spacedock.info/mod/520/RemoteTech">http://spacedock.info/mod/520/RemoteTech</a></li>
 <li>Sources: <a class="reference external" href="https://github.com/RemoteTechnologiesGroup/RemoteTech">https://github.com/RemoteTechnologiesGroup/RemoteTech</a></li>
@@ -178,13 +178,25 @@ current game installation by usng the boolean expression
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
 <p><span class="versionmodified">New in version v1.0.2: </span>kOS now supports access to connection informaion from a unified location.
-See <a class="reference internal" href="../commands/communication.html#connectivitymanagers"><span class="std std-ref">Connectivity Managers</span></a> for more
+See <a class="reference internal" href="../commands/communication.html#connectivitymanagers"><span>Connectivity Managers</span></a> for more
 information. All of the previous implementation as detailed on this page
 remains supported.</p>
 </div>
 </div>
 <p>When you have RemoteTech installed you can only interact with the core&#8217;s terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.</p>
 <p>If you launch a manned craft while using RemoteTech, you are still able to input commands from the terminal even if you do not have a connection to the KSC.  The archive will still be inaccessible without a connection to the KSC.  Under the current implementation, there is no delay when accessing the archive with a local terminal.  This implementation may change in the future to account for delays in reading and writing data over the connection.</p>
+<div class="section" id="remote-tech-and-the-kos-gui-widgets">
+<h3>Remote Tech and the kOS GUI widgets<a class="headerlink" href="#remote-tech-and-the-kos-gui-widgets" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified">New in version v1.1.0.</span></p>
+</div>
+<p>The kOS <a class="reference internal" href="../structures/gui.html#gui"><span>GUI widget</span></a> system tries to
+<a class="reference internal" href="../structures/gui.html#gui-delay"><span>obey the signal delay</span></a> imposed by RemoteTech,
+when Remote Tech is installed.  A user&#8217;s interaction with
+GUI widgets on the screen will be subject to the same
+signal delay rules as the interactive flying controls of the
+ship.</p>
+</div>
 <div class="section" id="antennas">
 <h3>Antennas<a class="headerlink" href="#antennas" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to activate/deactivate RT antennas, as well as set their targets using kOS:</p>
@@ -210,7 +222,7 @@ remains supported.</p>
 </div>
 <div class="section" id="communication">
 <h3>Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
-<p>When installed RemoteTech will influence <a class="reference internal" href="../commands/communication.html#communication"><span class="std std-ref">communication</span></a> between vessels. In order to send a message to another vessel a valid RemoteTech connection will have to exist between them
+<p>When installed RemoteTech will influence <a class="reference internal" href="../commands/communication.html#communication"><span>communication</span></a> between vessels. In order to send a message to another vessel a valid RemoteTech connection will have to exist between them
 and of course messages will arrive to their destination with a proper delay. Documentation of <a class="reference internal" href="../structures/communication/connection.html#structure:CONNECTION" title="CONNECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Connection</span></code></a> class contains further information on how RemoteTech will change the behaviour
 of some of its suffixes.</p>
 </div>
@@ -466,7 +478,7 @@ RTAddon:<code class="descname">GROUNDSTATIONS</code><span class="sig-paren">(</s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

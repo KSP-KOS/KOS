@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS Telnet Server &mdash; kOS 1.0.3 documentation</title>
+  <title>The kOS Telnet Server &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,10 +35,10 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Files and Volumes" href="volumes.html"/>
-        <link rel="prev" title="kOS Settings Windows" href="settingsWindows.html"/> 
+        <link rel="prev" title="Making GUIs in kOS" href="gui.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -102,7 +102,8 @@
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kospartmodule.html">Game Part</a></li>
 <li class="toctree-l2"><a class="reference internal" href="settingsWindows.html">Settings Windows</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Telnet Server</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Making User GUIs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Telnet Server</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
@@ -143,7 +144,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -240,8 +241,8 @@ issue the command:</p>
 <li><p class="first">The very first time you do this, you will get a warning message, as per
 <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/87843-Forum-Rules-Add-on-Posting-Rules-August-21st-2014">SQUAD&#8217;s rule number 5 about mods that run network services</a>.
 After accepting and clicking &#8220;yes&#8221;, the server will be running on loopback
-127.0.0.1 (if you want to make it run on the non-loopback address, you will
-get a secondary warning message about that too.</p>
+127.0.0.1 (if you want to make it run on a non-loopback address, you will
+get a secondary warning message about that too.)</p>
 </li>
 <li><p class="first">Launch your telnet client (there is a list of telnet clients that are known
 to work listed below.</p>
@@ -454,15 +455,15 @@ really there, we decided to make it obvious that there&#8217;s no security by no
 even implementing a name and password for connecting to the kOS telnet server.</p>
 <p>The purpose is to make it clear that if you want to open up your kOS telnet
 server, you need to be careful about how you do it.</p>
-<p>The default settings that kOS ships with restricts your kOS telnet server to
-only operating on the loopback address (127.0.0.1) so that you won&#8217;t accidentally
+<p>The default settings that kOS ships with sets your kOS telnet server to
+operate on the loopback address (127.0.0.1) so that you won&#8217;t accidentally
 open anything up to the public without thinking about it and making a conscious
 decision to do so.  If you don&#8217;t know what that means, it means this:
 Any server that runs on the magic special address 127.0.0.1, known as &#8220;loopback&#8221;,
 is incapable of taking connections from other computers besides itself.</p>
 <p>In order to allow your kOS telnet server to take connections from other
 computers, you will typically need to do one of two things:</p>
-<p>Either turn off the CONFIG:LOOPBACK option in your kOS install and then
+<p>Either set the CONFIG:IPADDRESS option to the address of your computer and then
 restart your telnet server (turn it off and on again using the button on the
 control panel), or (much better), set up a remote ssh tunnel that will map
 from your current machine&#8217;s loopback address on the port number of your server to
@@ -477,7 +478,7 @@ from there and nowhere else.  You can forward from your own machine&#8217;s
 Then anyone on the remote machine could telnet to ITS 127.0.0.1, port 54100 and
 end up talking to your machine&#8217;s port 5410 on its loopback address.</p>
 <p><strong>Port forwarding</strong></p>
-<p>If you opt to turn off the loopback-only mode on your kOS telnet server, then you
+<p>If you opt to use a non-loopback address on your kOS telnet server, then you
 will probably also, if you have a typical home network setup, need to enable
 port forwarding on your router if you want people from outside your house to
 connect to it.  (Again, think about the implications of doing so before you do it).
@@ -633,7 +634,7 @@ should be able to capture and ignore it.</p>
         <a href="volumes.html" class="btn btn-neutral float-right" title="Files and Volumes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="settingsWindows.html" class="btn btn-neutral" title="kOS Settings Windows" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="gui.html" class="btn btn-neutral" title="Making GUIs in kOS" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -664,7 +665,7 @@ should be able to capture and ignore it.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

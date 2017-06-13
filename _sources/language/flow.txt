@@ -388,6 +388,8 @@ Halts execution for a specified amount of time, or until a specific set of crite
 
 Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <physics tick>`.
 
+.. _wait_mainline_trigger:
+
 Difference between wait in mainline code and trigger code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -472,6 +474,16 @@ reads the value of the function.
 *The WHEN and the ON statement are very similar to each other, and so
 they are documented together here.*
 
+.. seealso::
+
+    :ref:`general_guidlines`
+        Before you continue, be aware that there is
+        also a page in the tutorials section describing the best practices
+        to use with these statements, including :ref:`minimizing how long
+        trigger bodies take <minimize_trigger_bodies>`. and :ref:`minimizing
+        how many trigger conditions are active <minimize_trigger_conditions>`.
+        It would be a good idea to read that documentation after reading this
+        section.
 
 ``WHEN`` and ``ON`` both begin checking in the background for
 a condition that will cause some code to execute some statements
@@ -575,14 +587,6 @@ If you run the above examples, you will see that they actually only
 happen once, and then stop happening again.  In the ON AG1 example,
 it will only fire off once, no matter how many times you press the
 '1' key.  More will be covered about how to change that further down.
-
-.. warning::
-    With the advent of :ref:`local variable scoping <trigger_scope>` in kOS
-    version 0.17 and above, it's important to note that the variables
-    used within the expression of a WHEN or an ON statement should
-    be GLOBAL variables or the results are unpredictable.  If local
-    variables were used, the results could change depending on where
-    you are within the execution at the time.
 
 .. warning::
     Do not make the body of a ``WHEN``/``THEN`` take a long time to

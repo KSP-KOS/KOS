@@ -22,13 +22,55 @@ of existing strings. For example::
     SET s TO "Hello, Strings!".
     SET t TO s:REPLACE("Hello", "Goodbye").
 
-Strings are iterable. This scripts prints the string's characters one per line::
+ACCESSING INDIVIDUAL CHARACTERS
+-------------------------------
 
-  SET str TO "abcde".
+There's two main ways to access the individual characters
+of a string - using an iterator or using index numbers:
+
+Using an Iterator (FOR)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Strings can be treated a little bit like iterable lists
+of characters. This allows them to be used in FOR loops
+as in the example below::
+
+  LOCAL str is "abcde".
 
   FOR c IN str {
-    PRINT c.
+    PRINT c.  // prints "a" the first time, then "b", etc.
   }
+
+The reason you can use Strings with the FOR loop like this is
+because you can obatain an :struct:`Iterator` of a string with the
+:attr:`ITERATOR` suffix mentioned below.  (Any type that
+implements the ITERATOR suffix can do this.)
+
+Using an Index ( [i] )
+~~~~~~~~~~~~~~~~~~~~~~
+
+Strings can also be treated a little bit like lists in that
+they allow you to use the square-brackets operator `[`..`]`
+to choose one character by its index number (numbers start
+counting at zero).  Here's an example that does the same thing
+as the FOR loop above, but using index notation::
+
+  LOCAL str is "abcde".
+  local index is 0.
+  until index = str:LENGTH {
+    print str[index].
+    set index to index + 1.
+  }
+
+Be aware that despite being able to read the characters this way,
+you cannot set them this way.  The following will give
+an error::
+
+  LOCAL str is "abcde".
+
+  // The following line gives an error because you can't
+  // change the characters inside a string:
+  set str[0] to "X".
 
 Boolean Operators
 -----------------
@@ -81,10 +123,10 @@ CASE SENSITIVIY
 ~~~~~~~~~~~~~~~
 
 NOTE: All string comparisons for equality and ordering, all substring
-matches, and all string searches, are currently case **in** sensive,
-meaning that for example the letter "A" and the letter "a" are
-indistinguishable.  There are future plans to add mechanisms that
-will let you choose case-sensitivity when you prefer.
+matches, all pattern matches, and all string searches, are currently
+case **in** sensive, meaning that for example the letter "A" and the
+letter "a" are indistinguishable.  There are future plans to add
+mechanisms that will let you choose case-sensitivity when you prefer.
 
 At the moment the only way to force a case-sensitive comparison is
 to look at the characters one at a time and obtain their numerical
@@ -104,10 +146,10 @@ Structure
           - Description
 
         * - :meth:`CONTAINS(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if the given string is contained within this string
         * - :meth:`ENDSWITH(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if this string ends with the given string
         * - :meth:`FIND(string)`
           - :struct:`Scalar`
@@ -127,12 +169,18 @@ Structure
         * - :meth:`INSERT(index, string)`
           - :struct:`String`
           - Returns a new string with the given string inserted at the given index into this string
+        * - :attr:`ITERATOR`
+          - :struct:`Iterator`
+          - generates an iterator object the elements
         * - :meth:`LASTINDEXOF(string)`
           - :struct:`Scalar`
           - Alias for FINDLAST(string)
         * - :attr:`LENGTH`
           - :struct:`Scalar`
           - Number of characters in the string
+        * - :meth:`MATCHESPATTERN(pattern)`
+          - :struct:`Boolean`
+          - Tests whether the string matches the given regex pattern.
         * - :meth:`PADLEFT(width)`
           - :struct:`String`
           - Returns a new right-aligned version of this string padded to the given width by spaces
@@ -149,7 +197,7 @@ Structure
           - :struct:`String`
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
-          - :ref:`boolean <boolean>`
+          - :struct:`Boolean`
           - True if this string starts with the given string
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
@@ -180,14 +228,14 @@ Structure
 .. method:: String:CONTAINS(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if this string ends with the given string.
 
@@ -233,6 +281,18 @@ Structure
 
     Returns a new string with the given string inserted at the given index into this string
 
+.. attribute:: String:ITERATOR
+
+    :type: :struct:`Iterator`
+    :access: Get only
+
+    An alternate means of iterating over a string's characters
+    (See: :struct:`Iterator`).
+
+    For most programs you won't have to use this directly.  It's just
+    what enables you to use a string with a FOR loop to get access
+    to its characters one at a time.
+
 .. method:: String:LASTINDEXOF(string)
 
     Alias for FINDLAST(string)
@@ -243,6 +303,18 @@ Structure
     :access: Get only
 
     Number of characters in the string
+
+.. method:: String:MATCHESPATTERN(pattern)
+
+    :parameter pattern: :struct:`String` pattern to be matched against the string
+    :type: :struct:`Boolean`
+
+    True if the string matches the given pattern (regular expression). The match is not anchored to neither the start nor the end of the string.
+    That means that pattern ``"foo"`` will match ``"foobar"``, ``"barfoo"`` and ``"barfoobar"`` too. If you want to match from the start,
+    you have to explicitly specify the start of the string in the pattern, i.e. for example to match strings starting with ``"foo"`` you need to
+    use the pattern ``"^foo"`` (or equivalently ``"^foo.*"`` or even ``"^foo.*$"``).
+
+    Regular expressions are beyond the scope of this documentation. For reference see `Regular Expression Language - Quick Reference <https://msdn.microsoft.com/en-us/library/az24scfc.aspx>`__\ .
 
 .. method:: String:PADLEFT(width)
 
@@ -285,7 +357,7 @@ Structure
 .. method:: String:STARTSWITH(string)
 
     :parameter string: :struct:`String` to look for
-    :type: :ref:`boolean <boolean>`
+    :type: :struct:`Boolean`
 
     True if this string starts with the given string .
 
@@ -353,6 +425,11 @@ Structure
     a decimal point with fractional part, and scientific notation
     using "e" as in "1.23e3" for "1230" or "1.23e-3" for "0.00123".
 
+    You may also include optional underscores in the string to
+    help space groups of digits, and they will be ignored.
+    (For example you may write "one thousand" as "1_000" instead
+    of as "1000" if you like".)
+
     Example - using with math::
 
         set str to "16.8".
@@ -375,7 +452,7 @@ Structure
        set val to str:tonumber().  // the script dies with error here.
        print "value is " + val. // the script never gets this far.
 
-.. method:: String:TONUMBER(defaultIfError)
+.. method:: String:TOSCALAR(defaultIfError)
 
     Alias for :meth:`String:TONUMBER(defaultIfError)`
 

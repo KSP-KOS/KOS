@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Anonymous Functions (A kind of Delegate) &mdash; kOS 1.0.3 documentation</title>
+  <title>Anonymous Functions (A kind of Delegate) &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Delegates (function references)" href="delegates.html"/>
         <link rel="prev" title="KerboScript User Functions" href="user_functions.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -103,7 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Anonymous User Functions</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Anonymous User Functions</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="delegates.html">Delegates (function references)</a></li>
@@ -140,7 +140,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -184,7 +184,7 @@ this page did not exist prior to kOS 1.0.0</p>
 </div>
 <div class="section" id="overview">
 <h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>There is a certain kind of <a class="reference internal" href="delegates.html#delegates"><span class="std std-ref">Delegate</span></a> in which you
+<p>There is a certain kind of <a class="reference internal" href="delegates.html#delegates"><span>Delegate</span></a> in which you
 don&#8217;t need to actually name the function in question, and can just
 assign it right into a variable <em>as</em> a delegate to begin with, or
 pass it <em>as</em> a delegate to another function call.</p>
@@ -194,7 +194,7 @@ pass it <em>as</em> a delegate to another function call.</p>
 <div class="section" id="syntax">
 <h2><a class="toc-backref" href="#id2">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
 <p>In kerboscript, you can use this ability and it looks like this:</p>
-<p>Given any <a class="reference internal" href="user_functions.html#user-functions"><span class="std std-ref">user function</span></a> like so:</p>
+<p>Given any <a class="reference internal" href="user_functions.html#user-functions"><span>user function</span></a> like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">my_function_name</span> <span class="p">{</span>
   <span class="c1">// ---.</span>
   <span class="c1">//    |</span>
@@ -229,7 +229,7 @@ the curly braces by itself, like in this example:</p>
 <h2><a class="toc-backref" href="#id3">Passing in to other functions</a><a class="headerlink" href="#passing-in-to-other-functions" title="Permalink to this headline">¶</a></h2>
 <p>Where this is often useful is in passing a small function into another
 function.  Here&#8217;s an example.  Let&#8217;s say you have a function that
-returns a list of all the <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span class="std std-ref">bodies</span></a> in your game that fit
+returns a list of all the <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><span>bodies</span></a> in your game that fit
 some criteria that are unspecified until it gets used, like so:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">select_bodies</span> <span class="p">{</span>
 
@@ -271,7 +271,7 @@ some criteria that are unspecified until it gets used, like so:</p>
 <span class="k">print</span> <span class="nv">small_bodies</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Anywhere a <a class="reference internal" href="delegates.html#delegates"><span class="std std-ref">Delegate</span></a> was expected to be used, you can use
+<p>Anywhere a <a class="reference internal" href="delegates.html#delegates"><span>Delegate</span></a> was expected to be used, you can use
 an anonymous function in its place instead.</p>
 </div>
 <div class="section" id="lexicon-of-functions">
@@ -349,7 +349,7 @@ a piece of data, a lot of possibilities open up.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

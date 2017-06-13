@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 1.0.3 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Part Highlighting" href="highlight.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -108,10 +108,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Configuration of kOS</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Configuration of kOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
@@ -159,7 +160,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -215,8 +216,8 @@ further migrations should happen.  (Note the old config file is
 still actively used for global settings such as the telnet settings,
 even after you&#8217;ve done this, so don&#8217;t delete it.)</p>
 </div>
-<p>The options here can also be set by using the <a class="reference internal" href="../../general/settingsWindows.html#applauncher"><span class="std std-ref">App Control Panel</span></a>
-or the <a class="reference internal" href="../../general/settingsWindows.html#settingswindow"><span class="std std-ref">kOS section of KSP&#8217;s Difficulty Settings</span></a></p>
+<p>The options here can also be set by using the <a class="reference internal" href="../../general/settingsWindows.html#applauncher"><span>App Control Panel</span></a>
+or the <a class="reference internal" href="../../general/settingsWindows.html#settingswindow"><span>kOS section of KSP&#8217;s Difficulty Settings</span></a></p>
 <p>Because the Telnet server runs as a global instance for KSP, the telnet
 specific settings are stored globally in kOS&#8217;s external config file.  These
 values are noted as <strong>global</strong> below, but all other values may be presumed
@@ -293,10 +294,20 @@ to be local to the current save file.</p>
 <td>5410</td>
 <td>set the port the telnet server will run on</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></code></a></td>
-<td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
-<td>True</td>
-<td>Force the telnet server to use loopback (127.0.0.1) address</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:IPADDRESS" title="CONFIG:IPADDRESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IPADDRESS</span></code></a></td>
+<td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>&#8220;127.0.0.1&#8221;</td>
+<td>The IP address the telnet server will try to use.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:BRIGHTNESS" title="CONFIG:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BRIGHTNESS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>0.7 (from range [0.0 .. 1.0])</td>
+<td>Default brightness setting of new instances of the in-game terminal</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="CONFIG:DEFAULTFONTSIZE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTFONTSIZE</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>12 (from range [6 .. 20], integers only)</td>
+<td>Default font size in pixel height for new instances of the in-game terminal</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:DEBUGEACHOPCODE" title="CONFIG:DEBUGEACHOPCODE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEBUGEACHOPCODE</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
@@ -321,7 +332,7 @@ Config:<code class="descname">IPU</code><a class="headerlink" href="#attribute:C
 </tbody>
 </table>
 <p>Configures the <code class="docutils literal"><span class="pre">InstructionsPerUpdate</span></code> setting.</p>
-<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span class="std std-ref">physics update tick</span></a>.</p>
+<p>This is the number of kRISC psuedo-machine-langauge instructions that each kOS CPU will attempt to execute from the main program per <a class="reference internal" href="../../general/cpu_hardware.html#cpu-hardware"><span>physics update tick</span></a>.</p>
 <p>This value is constrained to stay within the range [50..2000]. If you set it to a value outside that range, it will reset itself to remain in that range.</p>
 </dd></dl>
 
@@ -358,7 +369,7 @@ Config:<code class="descname">STAT</code><a class="headerlink" href="#attribute:
 <p>Configures the <code class="docutils literal"><span class="pre">showStatistics</span></code> setting.</p>
 <p>If true, then executing a program will log numbers to the screen showing execution speed statistics.</p>
 <p>When this is set to true, it also makes the use of the
-<a class="reference internal" href="../../bindings.html#profileresult"><span class="std std-ref">ProfileResult()</span></a> function available, for
+<a class="reference internal" href="../../bindings.html#profileresult"><span>ProfileResult()</span></a> function available, for
 deep analysis of your program run, if you are so inclined.</p>
 </dd></dl>
 
@@ -533,28 +544,77 @@ stop, then restart the telnet server, as described above.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:CONFIG:LOOPBACK">
-Config:<code class="descname">LOOPBACK</code><a class="headerlink" href="#attribute:CONFIG:LOOPBACK" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CONFIG:IPADDRESS">
+Config:<code class="descname">IPADDRESS</code><a class="headerlink" href="#attribute:CONFIG:IPADDRESS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 </tr>
 </tbody>
 </table>
 <p><strong>GLOBAL SETTING</strong></p>
-<p>Configures the <code class="docutils literal"><span class="pre">TelnetLoopback</span></code> setting.</p>
-<p>If true, then it tells the
-<a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a>
-to refuse to use the computer&#8217;s actual IP address, and
-instead use the loopback address (127.0.0.1).  This is
-the default mode the kOS mod ships in, in order to
-make it impossible get external access to your computer.</p>
+<p>Configures the <code class="docutils literal"><span class="pre">TelnetIPAddrString</span></code> setting.</p>
+<p>This is the IP address the telnet server will attempt to use when
+it is enabled.  By default it will use the loopback address of
+&#8220;127.0.0.1&#8221; unless you change this setting to the computer&#8217;s
+actual IP address.  Because most modern PC&#8217;s have multiple IP
+addresses, no attempt is made by kOS to guess which of them is &#8220;the&#8221;
+right one.  You must tell kOS which one to use if you don&#8217;t want it
+to use the loopback address.</p>
 <p>To make the change take effect you may have to
 stop, then restart the telnet server, as described above.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:BRIGHTNESS">
+Config:<code class="descname">BRIGHTNESS</code><a class="headerlink" href="#attribute:CONFIG:BRIGHTNESS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>. range = [0,1]</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <code class="docutils literal"><span class="pre">Brightness</span></code> setting.</p>
+<p>This is the default starting brightness setting a new
+kOS in-game terminal will have when it is invoked.  This
+is just the default for new terminals.  Individual terminals
+can have different settings, either by setting the value
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:BRIGHTNESS" title="TERMINAL:BRIGHTNESS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:BRIGHTNESS</span></code></a> in a script, or by manually moving the
+brightness slider widget on that terminal.</p>
+<p>The value here must be between 0 (invisible) and 1 (Max brightness).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:DEFAULTFONTSIZE">
+Config:<code class="descname">DEFAULTFONTSIZE</code><a class="headerlink" href="#attribute:CONFIG:DEFAULTFONTSIZE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> integer-only. range = [6,20]</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <code class="docutils literal"><span class="pre">TerminalFontDefaultSize</span></code> setting.</p>
+<p>This is the default starting font height (in pixels. not &#8220;points&#8221;)
+for all newly created kOS in-game terminals.  This
+is just the default for new terminals.  Individual terminals
+can have different settings, either by setting the value
+<a class="reference internal" href="terminal.html#attribute:TERMINAL:CHARHEIGHT" title="TERMINAL:CHARHEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Terminal:CHARHEIGHT</span></code></a> in a script, or by manually clicking
+the font adjustment buttons on that terminal.</p>
+<p>The value here must be at least 6 (nearly impossible to read)
+and no greater than 30 (very big).  It will be rounded to the
+nearest integer when setting the value.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -622,7 +682,7 @@ the kOS dev team.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

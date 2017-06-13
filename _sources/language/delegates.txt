@@ -86,6 +86,7 @@ Here's the full example::
     print aaa:call(1, 2).  // Now you see the number 3 printed,
                            // just like calling myfunc directly.
 
+
 Omitting :CALL
 ~~~~~~~~~~~~~~
 
@@ -264,6 +265,24 @@ matches given criteria, and so on.
 
 Advanced topics
 ===============
+
+Can't call dead delegates
+-------------------------
+
+You might store a KOSDelegate in a global variable.
+Global varibles continue existing even after all the programs
+are done and you are back at the terminal interpreter.
+
+This makes it possible to have a (global) variable 
+that contains a KOSDelegate that refers to user program
+code that no longer exists.
+
+But you can't actually call that delegate.
+If you have such a situation, that delegate is
+referred to as "DEAD" and trying to call it will cause an
+error.  You can test for this with the :attr:`KOSDelegate:ISDEAD`
+suffix.
+
 
 .. _kosdelegate_bind:
 

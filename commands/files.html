@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>File I/O &mdash; kOS 1.0.3 documentation</title>
+  <title>File I/O &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Terminal and game environment" href="terminalgui.html"/>
         <link rel="prev" title="Querying a vessel’s parts" href="parts.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -100,11 +100,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../commands.html">Commands</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="runprogram.html">Running Programs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flight.html">Flight Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prediction.html">Prediction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">File I/O</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="">File I/O</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
@@ -140,7 +141,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -167,54 +168,54 @@
   <div class="section" id="file-i-o">
 <span id="files"></span><h1>File I/O<a class="headerlink" href="#file-i-o" title="Permalink to this headline">¶</a></h1>
 <p>For information about where files are kept and how to deal with volumes see the
-<a class="reference internal" href="../general/volumes.html#volumes"><span class="std std-ref">Volumes</span></a> page in the general topics section of this
+<a class="reference internal" href="../general/volumes.html#volumes"><span>Volumes</span></a> page in the general topics section of this
 documentation.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#understanding-directories" id="id4">Understanding directories</a></li>
-<li><a class="reference internal" href="#paths" id="id5">Paths</a><ul>
-<li><a class="reference internal" href="#absolute-paths" id="id6">Absolute paths</a></li>
-<li><a class="reference internal" href="#current-directory" id="id7">Current directory</a></li>
-<li><a class="reference internal" href="#relative-paths" id="id8">Relative paths</a></li>
-<li><a class="reference internal" href="#paths-and-bareword-arguments" id="id9">Paths and bareword arguments</a></li>
-<li><a class="reference internal" href="#other-data-types-as-paths" id="id10">Other data types as paths</a></li>
-<li><a class="reference internal" href="#path-pathstring" id="id11">path(pathString)</a></li>
-<li><a class="reference internal" href="#scriptpath" id="id12">scriptpath()</a></li>
+<li><a class="reference internal" href="#understanding-directories" id="id3">Understanding directories</a></li>
+<li><a class="reference internal" href="#paths" id="id4">Paths</a><ul>
+<li><a class="reference internal" href="#absolute-paths" id="id5">Absolute paths</a></li>
+<li><a class="reference internal" href="#current-directory" id="id6">Current directory</a></li>
+<li><a class="reference internal" href="#relative-paths" id="id7">Relative paths</a></li>
+<li><a class="reference internal" href="#paths-and-bareword-arguments" id="id8">Paths and bareword arguments</a></li>
+<li><a class="reference internal" href="#other-data-types-as-paths" id="id9">Other data types as paths</a></li>
+<li><a class="reference internal" href="#path-pathstring" id="id10">path(pathString)</a></li>
+<li><a class="reference internal" href="#scriptpath" id="id11">scriptpath()</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#volumes" id="id13">Volumes</a><ul>
-<li><a class="reference internal" href="#volume-volumeidorname" id="id14">volume(volumeIdOrName)</a></li>
-<li><a class="reference internal" href="#switch-to-volume-volumeid-volumename" id="id15">SWITCH TO Volume|volumeId|volumeName.</a></li>
+<li><a class="reference internal" href="#volumes" id="id12">Volumes</a><ul>
+<li><a class="reference internal" href="#volume-volumeidorname" id="id13">volume(volumeIdOrName)</a></li>
+<li><a class="reference internal" href="#switch-to-volume-volumeid-volumename" id="id14">SWITCH TO Volume|volumeId|volumeName.</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#files-and-directories" id="id16">Files and directories</a><ul>
-<li><a class="reference internal" href="#list" id="id17">LIST</a></li>
-<li><a class="reference internal" href="#cd-path" id="id18">CD(PATH)</a></li>
-<li><a class="reference internal" href="#copypath-frompath-topath" id="id19">COPYPATH(FROMPATH, TOPATH)</a></li>
-<li><a class="reference internal" href="#movepath-frompath-topath" id="id20">MOVEPATH(FROMPATH, TOPATH)</a></li>
-<li><a class="reference internal" href="#deletepath-path" id="id21">DELETEPATH(PATH)</a></li>
-<li><a class="reference internal" href="#exists-path" id="id22">EXISTS(PATH)</a></li>
-<li><a class="reference internal" href="#create-path" id="id23">CREATE(PATH)</a></li>
-<li><a class="reference internal" href="#createdir-path" id="id24">CREATEDIR(PATH)</a></li>
-<li><a class="reference internal" href="#open-path" id="id25">OPEN(PATH)</a></li>
+<li><a class="reference internal" href="#files-and-directories" id="id15">Files and directories</a><ul>
+<li><a class="reference internal" href="#list" id="id16">LIST</a></li>
+<li><a class="reference internal" href="#cd-path" id="id17">CD(PATH)</a></li>
+<li><a class="reference internal" href="#copypath-frompath-topath" id="id18">COPYPATH(FROMPATH, TOPATH)</a></li>
+<li><a class="reference internal" href="#movepath-frompath-topath" id="id19">MOVEPATH(FROMPATH, TOPATH)</a></li>
+<li><a class="reference internal" href="#deletepath-path" id="id20">DELETEPATH(PATH)</a></li>
+<li><a class="reference internal" href="#exists-path" id="id21">EXISTS(PATH)</a></li>
+<li><a class="reference internal" href="#create-path" id="id22">CREATE(PATH)</a></li>
+<li><a class="reference internal" href="#createdir-path" id="id23">CREATEDIR(PATH)</a></li>
+<li><a class="reference internal" href="#open-path" id="id24">OPEN(PATH)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#json" id="id26">JSON</a><ul>
-<li><a class="reference internal" href="#writejson-object-path" id="id27">WRITEJSON(OBJECT, PATH)</a></li>
-<li><a class="reference internal" href="#readjson-path" id="id28">READJSON(PATH)</a></li>
+<li><a class="reference internal" href="#json" id="id25">JSON</a><ul>
+<li><a class="reference internal" href="#writejson-object-path" id="id26">WRITEJSON(OBJECT, PATH)</a></li>
+<li><a class="reference internal" href="#readjson-path" id="id27">READJSON(PATH)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#miscellaneous" id="id29">Miscellaneous</a><ul>
-<li><a class="reference internal" href="#run-program" id="id30">RUN &#8220;program&#8221;.</a></li>
-<li><a class="reference internal" href="#log-text-to-path" id="id31">LOG TEXT TO PATH</a></li>
-<li><a class="reference internal" href="#compile-program-to-compiledprogram" id="id32">COMPILE PROGRAM (TO COMPILEDPROGRAM)</a></li>
-<li><a class="reference internal" href="#edit-path" id="id33">EDIT PATH</a></li>
+<li><a class="reference internal" href="#miscellaneous" id="id28">Miscellaneous</a><ul>
+<li><a class="reference internal" href="#running-scripts" id="id29">Running Scripts</a></li>
+<li><a class="reference internal" href="#log-text-to-path" id="id30">LOG TEXT TO PATH</a></li>
+<li><a class="reference internal" href="#compile-program-to-compiledprogram" id="id31">COMPILE PROGRAM (TO COMPILEDPROGRAM)</a></li>
+<li><a class="reference internal" href="#edit-path" id="id32">EDIT PATH</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="understanding-directories">
-<span id="directories"></span><h2><a class="toc-backref" href="#id4">Understanding directories</a><a class="headerlink" href="#understanding-directories" title="Permalink to this headline">¶</a></h2>
+<span id="directories"></span><h2><a class="toc-backref" href="#id3">Understanding directories</a><a class="headerlink" href="#understanding-directories" title="Permalink to this headline">¶</a></h2>
 <p>kOS, just as real life filesystems, has the ability to group files into
 directories. Directories can contain other directories, which can result in
 a tree-like structure.</p>
@@ -222,7 +223,7 @@ a tree-like structure.</p>
 you can have as many directories on your volume as you want.</p>
 </div>
 <div class="section" id="paths">
-<h2><a class="toc-backref" href="#id5">Paths</a><a class="headerlink" href="#paths" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Paths</a><a class="headerlink" href="#paths" title="Permalink to this headline">¶</a></h2>
 <p>kOS uses strings of a specific format as a way of describing the location
 of files and directories. We will call them path strings or simply - paths.
 They will look familiar to users of most real operating systems. On Windows
@@ -241,8 +242,15 @@ for example you might have seen something like this:</p>
 <p>There are two types of paths in kOS. Absolute paths explicitly state all data
 needed to locate an item. Relative paths describe the location of an item
 relative to the current directory or current volume.</p>
+<div class="admonition warning" id="filename-case-warning">
+<p class="first admonition-title">Warning</p>
+<p><strong>Limitations on file names</strong></p>
+<p class="last">On case-sensitive filesystems typically found on Linux and Mac, you should
+name entirely with lowercase-only filenames or the system may fail to find
+them when you try to access the path.</p>
+</div>
 <div class="section" id="absolute-paths">
-<h3><a class="toc-backref" href="#id6">Absolute paths</a><a class="headerlink" href="#absolute-paths" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3><a class="toc-backref" href="#id5">Absolute paths</a><a class="headerlink" href="#absolute-paths" title="Permalink to this headline">¶</a></h3>
 <p>Absolute paths have the following format:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">volumeIdOrName</span><span class="p">:[</span><span class="o">/</span><span class="nv">directory</span><span class="o">/</span><span class="nv">subdirectory</span><span class="o">/</span><span class="p">...]</span><span class="o">/</span><span class="nv">filename</span>
 </pre></div>
@@ -270,7 +278,7 @@ invalid. Those paths are all invalid:</p>
 </div>
 </div>
 <div class="section" id="current-directory">
-<h3><a class="toc-backref" href="#id7">Current directory</a><a class="headerlink" href="#current-directory" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">Current directory</a><a class="headerlink" href="#current-directory" title="Permalink to this headline">¶</a></h3>
 <p>To facilitate the way you interact with volumes, directories and files kOS
 has a concept of current directory. That means you can make a certain directory
 a <cite>default</cite> one and kOS will look for files you pass on to kOS commands in that
@@ -290,7 +298,7 @@ directories you need by using their relative paths (read more below).</p>
 <code class="code docutils literal"><span class="pre">LIST</span></code> command (which is a shortcut for <code class="code docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span></code>).</p>
 </div>
 <div class="section" id="relative-paths">
-<h3><a class="toc-backref" href="#id8">Relative paths</a><a class="headerlink" href="#relative-paths" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3><a class="toc-backref" href="#id7">Relative paths</a><a class="headerlink" href="#relative-paths" title="Permalink to this headline">¶</a></h3>
 <p>Relative paths are the second way you can create paths. Those paths are
 transformed by kOS into absolute paths by adding them to the current directory.</p>
 <p>Let&#8217;s say that you&#8217;ve changed your current directory to <code class="code docutils literal"><span class="pre">0:/scripts</span></code>.
@@ -311,7 +319,7 @@ directory&#8217;s volume and add it to the relative path:</p>
 </div>
 </div>
 <div class="section" id="paths-and-bareword-arguments">
-<h3><a class="toc-backref" href="#id9">Paths and bareword arguments</a><a class="headerlink" href="#paths-and-bareword-arguments" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">Paths and bareword arguments</a><a class="headerlink" href="#paths-and-bareword-arguments" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">kOS has historically always allowed you to omit quotes for file names in certain
@@ -350,22 +358,19 @@ on these systems, you will only be able to do so by quoting it.</li>
 </ul>
 <p>Putting the above rules together, you can create paths in any of
 the following ways:</p>
-<ul class="simple">
-<li>COPYPATH(myfilename, &#8220;1:&#8221;). // This is an example of a bareword filename.</li>
-<li>COPYPATH(&#8220;myfilename&#8221;, &#8220;1:&#8221;). // This is an example of an EXPRESSION
-filename.</li>
-<li>COPYPATH(myfilename.ks, &#8220;1:&#8221;). // This is an example of a bareword
-filename.</li>
-<li>COPYPATH(myfilename.txt, &#8220;1:&#8221;). // This is an example of a bareword
-filename.</li>
-<li>COPYPATH(&#8220;myfilename.ks&#8221;, &#8220;1:&#8221;). // This is an example of an EXPRESSION
-filename</li>
-<li>SET str TO &#8220;myfile&#8221; + &#8220;name&#8221; + &#8221;.ks&#8221;. COPYPATH(str, &#8220;1:&#8221;). // This is an
-example of an EXPRESSION filename</li>
-</ul>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">COPYPATH</span><span class="p">(</span><span class="nv">myfilename</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of a bareword filename.</span>
+<span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;myfilename&quot;</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of an EXPRESSION filename.</span>
+<span class="nv">COPYPATH</span><span class="p">(</span><span class="nv">myfilename</span><span class="p">.</span><span class="nv">ks</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of a bareword filename.</span>
+<span class="nv">COPYPATH</span><span class="p">(</span><span class="nv">myfilename</span><span class="p">.</span><span class="nv">txt</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of a bareword filename.</span>
+<span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;myfilename.ks&quot;</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of an EXPRESSION filename</span>
+<span class="k">SET</span> <span class="nv">str</span> <span class="ow">TO</span> <span class="s">&quot;myfile&quot;</span> <span class="o">+</span> <span class="s">&quot;name&quot;</span> <span class="o">+</span> <span class="s">&quot;.ks&quot;</span><span class="p">.</span>
+<span class="nv">COPYPATH</span><span class="p">(</span><span class="nv">str</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of an EXPRESSION filename</span>
+<span class="nv">COPYPATH</span><span class="p">(</span><span class="s">&quot;myfile&quot;</span> <span class="o">+</span> <span class="s">&quot;name&quot;</span> <span class="o">+</span> <span class="s">&quot;.ks&quot;</span><span class="p">,</span> <span class="s">&quot;1:&quot;</span><span class="p">).</span> <span class="c1">// This is an example of an EXPRESSION filename</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="other-data-types-as-paths">
-<h3><a class="toc-backref" href="#id10">Other data types as paths</a><a class="headerlink" href="#other-data-types-as-paths" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Other data types as paths</a><a class="headerlink" href="#other-data-types-as-paths" title="Permalink to this headline">¶</a></h3>
 <p>Whenever kOS expects a path string as an argument you can actually pass
 one of the following data types instead:</p>
 <ul class="simple">
@@ -376,41 +381,41 @@ one of the following data types instead:</p>
 </ul>
 </div>
 <div class="section" id="path-pathstring">
-<span id="path-command"></span><h3><a class="toc-backref" href="#id11">path(pathString)</a><a class="headerlink" href="#path-pathstring" title="Permalink to this headline">¶</a></h3>
+<span id="path-command"></span><h3><a class="toc-backref" href="#id10">path(pathString)</a><a class="headerlink" href="#path-pathstring" title="Permalink to this headline">¶</a></h3>
 <p>Will create a <a class="reference internal" href="../structures/volumes_and_files/path.html#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Path</span></code></a> structure representing the given path string. You
 can omit the argument to create a <a class="reference internal" href="../structures/volumes_and_files/path.html#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Path</span></code></a> for the current directory.</p>
 </div>
 <div class="section" id="scriptpath">
-<h3><a class="toc-backref" href="#id12">scriptpath()</a><a class="headerlink" href="#scriptpath" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">scriptpath()</a><a class="headerlink" href="#scriptpath" title="Permalink to this headline">¶</a></h3>
 <p>Will return a <a class="reference internal" href="../structures/volumes_and_files/path.html#structure:PATH" title="PATH structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Path</span></code></a> structure representing the path to the currently
 running script.</p>
 </div>
 </div>
 <div class="section" id="volumes">
-<h2><a class="toc-backref" href="#id13">Volumes</a><a class="headerlink" href="#volumes" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Volumes</a><a class="headerlink" href="#volumes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="volume-volumeidorname">
-<h3><a class="toc-backref" href="#id14">volume(volumeIdOrName)</a><a class="headerlink" href="#volume-volumeidorname" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id13">volume(volumeIdOrName)</a><a class="headerlink" href="#volume-volumeidorname" title="Permalink to this headline">¶</a></h3>
 <p>Will return a <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a> structure representing the volume with a given
 id or name. You can omit the argument to create a <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>
 for the current volume.</p>
 </div>
 <div class="section" id="switch-to-volume-volumeid-volumename">
-<h3><a class="toc-backref" href="#id15">SWITCH TO Volume|volumeId|volumeName.</a><a class="headerlink" href="#switch-to-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id14">SWITCH TO Volume|volumeId|volumeName.</a><a class="headerlink" href="#switch-to-volume-volumeid-volumename" title="Permalink to this headline">¶</a></h3>
 <p>Changes the current directory to the root directory of the specified volume.
 Volumes can be referenced by instances of <a class="reference internal" href="../structures/volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a>, their ID numbers
 or their names if they&#8217;ve been given one. Understanding how
-<a class="reference internal" href="../general/volumes.html#volumes"><span class="std std-ref">volumes work</span></a> is important to understanding this command.</p>
+<a class="reference internal" href="../general/volumes.html#volumes"><span>volumes work</span></a> is important to understanding this command.</p>
 <p>Example:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>                        <span class="c1">// Switch to volume 0.</span>
-<span class="k">SET</span> <span class="k">VOLUME</span><span class="p">(</span><span class="mf">1</span><span class="p">):</span><span class="nv">NAME</span> <span class="ow">TO</span> <span class="nv">AwesomeDisk</span><span class="p">.</span>  <span class="c1">// Name volume 1 as AwesomeDisk.</span>
-<span class="k">SWITCH</span> <span class="ow">TO</span> <span class="nv">AwesomeDisk</span><span class="p">.</span>              <span class="c1">// Switch to volume 1.</span>
-<span class="k">PRINT</span> <span class="k">VOLUME</span><span class="p">:</span><span class="nv">NAME</span><span class="p">.</span>                  <span class="c1">// Prints &quot;AwesomeDisk&quot;.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SWITCH</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>                          <span class="c1">// Switch to volume 0.</span>
+<span class="k">SET</span> <span class="k">VOLUME</span><span class="p">(</span><span class="mf">1</span><span class="p">):</span><span class="nv">NAME</span> <span class="ow">TO</span> <span class="s">&quot;AwesomeDisk&quot;</span><span class="p">.</span>  <span class="c1">// Name volume 1 as AwesomeDisk.</span>
+<span class="k">SWITCH</span> <span class="ow">TO</span> <span class="s">&quot;AwesomeDisk&quot;</span><span class="p">.</span>              <span class="c1">// Switch to volume 1.</span>
+<span class="k">PRINT</span> <span class="k">VOLUME</span><span class="p">(</span><span class="mf">1</span><span class="p">):</span><span class="nv">NAME</span><span class="p">.</span>                 <span class="c1">// Prints &quot;AwesomeDisk&quot;.</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="files-and-directories">
-<h2><a class="toc-backref" href="#id16">Files and directories</a><a class="headerlink" href="#files-and-directories" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">Files and directories</a><a class="headerlink" href="#files-and-directories" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <div class="last versionchanged">
@@ -422,29 +427,29 @@ more flexible commands that could deal with both files and directories.
 The old syntax was not designed with directories in mind. It would also
 make it difficult for the kOS parser to properly handle paths.</p>
 <p>Please update your scripts to use the new commands:
-<a class="reference internal" href="#movepath"><span class="std std-ref">movepath(frompath, topath)</span></a>,
-<a class="reference internal" href="#copypath"><span class="std std-ref">copypath(frompath, topath)</span></a> and
-<a class="reference internal" href="#deletepath"><span class="std std-ref">deletepath(path)</span></a>.
-<a class="reference internal" href="#runpath"><span class="std std-ref">runpath(path)</span></a>.</p>
+<a class="reference internal" href="#movepath"><span>movepath(frompath, topath)</span></a>,
+<a class="reference internal" href="#copypath"><span>copypath(frompath, topath)</span></a> and
+<a class="reference internal" href="#deletepath"><span>deletepath(path)</span></a>.
+<a class="reference internal" href="runprogram.html#runpath"><span>runpath(path)</span></a>.</p>
 </div>
 </div>
 <div class="section" id="list">
-<h3><a class="toc-backref" href="#id17">LIST</a><a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">LIST</a><a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
 <p>Shows a printed list of the files and subdirectories in
 the current working directory.</p>
 <p>This is actually a shorthand for the longer <code class="code docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span></code> command.</p>
 <p>To get the files into a <a class="reference internal" href="../structures/collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LIST</span></code></a> structure you can read in a script (rather
-than just printed to the screen), use the <a class="reference internal" href="list.html#list-files"><span class="std std-ref">list files in ...</span></a>
+than just printed to the screen), use the <a class="reference internal" href="list.html#list-files"><span>list files in ...</span></a>
 command.</p>
 </div>
 <div class="section" id="cd-path">
-<h3><a class="toc-backref" href="#id18">CD(PATH)</a><a class="headerlink" href="#cd-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id17">CD(PATH)</a><a class="headerlink" href="#cd-path" title="Permalink to this headline">¶</a></h3>
 <p>Changes the current directory to the one pointed to by the <code class="code docutils literal"><span class="pre">PATH</span></code>
 argument. This command will fail if the path is invalid or does not point
 to an existing directory.</p>
 </div>
 <div class="section" id="copypath-frompath-topath">
-<span id="copypath"></span><h3><a class="toc-backref" href="#id19">COPYPATH(FROMPATH, TOPATH)</a><a class="headerlink" href="#copypath-frompath-topath" title="Permalink to this headline">¶</a></h3>
+<span id="copypath"></span><h3><a class="toc-backref" href="#id18">COPYPATH(FROMPATH, TOPATH)</a><a class="headerlink" href="#copypath-frompath-topath" title="Permalink to this headline">¶</a></h3>
 <p>Copies the file or directory pointed to by <code class="code docutils literal"><span class="pre">FROMPATH</span></code> to the location
 pointed to <code class="code docutils literal"><span class="pre">TOPATH</span></code>. Depending on what kind of items both paths point
 to the exact behaviour of this command will differ:</p>
@@ -489,46 +494,46 @@ contents of the directory pointed to by <code class="code docutils literal"><spa
 </ol>
 </div>
 <div class="section" id="movepath-frompath-topath">
-<span id="movepath"></span><h3><a class="toc-backref" href="#id20">MOVEPATH(FROMPATH, TOPATH)</a><a class="headerlink" href="#movepath-frompath-topath" title="Permalink to this headline">¶</a></h3>
+<span id="movepath"></span><h3><a class="toc-backref" href="#id19">MOVEPATH(FROMPATH, TOPATH)</a><a class="headerlink" href="#movepath-frompath-topath" title="Permalink to this headline">¶</a></h3>
 <p>Moves the file or directory pointed to by <code class="code docutils literal"><span class="pre">FROMPATH</span></code> to the location
 pointed to <code class="code docutils literal"><span class="pre">TOPATH</span></code>. Depending on what kind of items both paths point
 to the exact behaviour of this command will differ, see <code class="code docutils literal"><span class="pre">COPYPATH</span></code> above.</p>
 </div>
 <div class="section" id="deletepath-path">
-<span id="deletepath"></span><h3><a class="toc-backref" href="#id21">DELETEPATH(PATH)</a><a class="headerlink" href="#deletepath-path" title="Permalink to this headline">¶</a></h3>
+<span id="deletepath"></span><h3><a class="toc-backref" href="#id20">DELETEPATH(PATH)</a><a class="headerlink" href="#deletepath-path" title="Permalink to this headline">¶</a></h3>
 <p>Deleted the file or directory pointed to by <code class="code docutils literal"><span class="pre">FROMPATH</span></code>. Directories are
 removed along with all the items they contain.</p>
 </div>
 <div class="section" id="exists-path">
-<h3><a class="toc-backref" href="#id22">EXISTS(PATH)</a><a class="headerlink" href="#exists-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">EXISTS(PATH)</a><a class="headerlink" href="#exists-path" title="Permalink to this headline">¶</a></h3>
 <p>Returns true if there exists a file or a directory under the given path,
 otherwise returns false. Also see <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:EXISTS" title="VOLUME:EXISTS method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:EXISTS</span></code></a>.</p>
 </div>
 <div class="section" id="create-path">
-<h3><a class="toc-backref" href="#id23">CREATE(PATH)</a><a class="headerlink" href="#create-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">CREATE(PATH)</a><a class="headerlink" href="#create-path" title="Permalink to this headline">¶</a></h3>
 <p>Creates a file under the given path. Will create parent directories if needed.
 It will fail if a file or a directory already exists under the given path.
 Also see <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:CREATE" title="VOLUME:CREATE method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:CREATE</span></code></a>.</p>
 </div>
 <div class="section" id="createdir-path">
-<h3><a class="toc-backref" href="#id24">CREATEDIR(PATH)</a><a class="headerlink" href="#createdir-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">CREATEDIR(PATH)</a><a class="headerlink" href="#createdir-path" title="Permalink to this headline">¶</a></h3>
 <p>Creates a directory under the given path. Will create parent directories
 if needed. It will fail if a file or a directory already exists under the
 given path. Also see <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:CREATEDIR" title="VOLUME:CREATEDIR method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:CREATEDIR</span></code></a>.</p>
 </div>
 <div class="section" id="open-path">
-<h3><a class="toc-backref" href="#id25">OPEN(PATH)</a><a class="headerlink" href="#open-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id24">OPEN(PATH)</a><a class="headerlink" href="#open-path" title="Permalink to this headline">¶</a></h3>
 <p>Will return a <a class="reference internal" href="../structures/volumes_and_files/volumefile.html#structure:VOLUMEFILE" title="VOLUMEFILE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeFile</span></code></a> or <a class="reference internal" href="../structures/volumes_and_files/volumedirectory.html#structure:VOLUMEDIRECTORY" title="VOLUMEDIRECTORY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VolumeDirectory</span></code></a> representing the item
 pointed to by <code class="code docutils literal"><span class="pre">PATH</span></code>. It will return a <a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> false if there&#8217;s
 nothing present under the given path. Also see <a class="reference internal" href="../structures/volumes_and_files/volume.html#method:VOLUME:OPEN" title="VOLUME:OPEN method"><code class="xref ks ks-meth docutils literal"><span class="pre">Volume:OPEN</span></code></a>.</p>
 </div>
 </div>
 <div class="section" id="json">
-<h2><a class="toc-backref" href="#id26">JSON</a><a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id25">JSON</a><a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="writejson-object-path">
-<span id="writejson"></span><h3><a class="toc-backref" href="#id27">WRITEJSON(OBJECT, PATH)</a><a class="headerlink" href="#writejson-object-path" title="Permalink to this headline">¶</a></h3>
+<span id="writejson"></span><h3><a class="toc-backref" href="#id26">WRITEJSON(OBJECT, PATH)</a><a class="headerlink" href="#writejson-object-path" title="Permalink to this headline">¶</a></h3>
 <p>Serializes the given object to JSON format and saves it under the given path.</p>
-<p>Go to <a class="reference internal" href="serialization.html#serialization"><span class="std std-ref">Serialization page</span></a> to read more about serialization.</p>
+<p>Go to <a class="reference internal" href="serialization.html#serialization"><span>Serialization page</span></a> to read more about serialization.</p>
 <p>Usage example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">L</span> <span class="ow">TO</span> <span class="nv">LEXICON</span><span class="p">().</span>
 <span class="k">SET</span> <span class="nv">NESTED</span> <span class="ow">TO</span> <span class="nv">QUEUE</span><span class="p">().</span>
@@ -543,9 +548,9 @@ nothing present under the given path. Also see <a class="reference internal" hre
 </div>
 </div>
 <div class="section" id="readjson-path">
-<h3><a class="toc-backref" href="#id28">READJSON(PATH)</a><a class="headerlink" href="#readjson-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id27">READJSON(PATH)</a><a class="headerlink" href="#readjson-path" title="Permalink to this headline">¶</a></h3>
 <p>Reads the contents of a file previously created using <code class="docutils literal"><span class="pre">WRITEJSON</span></code> and deserializes them.</p>
-<p>Go to <a class="reference internal" href="serialization.html#serialization"><span class="std std-ref">Serialization page</span></a> to read more about serialization.</p>
+<p>Go to <a class="reference internal" href="serialization.html#serialization"><span>Serialization page</span></a> to read more about serialization.</p>
 <p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">L</span> <span class="ow">TO</span> <span class="nv">READJSON</span><span class="p">(</span><span class="s">&quot;output.json&quot;</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="nv">L</span><span class="p">[</span><span class="s">&quot;key1&quot;</span><span class="p">].</span>
@@ -554,181 +559,24 @@ nothing present under the given path. Also see <a class="reference internal" hre
 </div>
 </div>
 <div class="section" id="miscellaneous">
-<h2><a class="toc-backref" href="#id29">Miscellaneous</a><a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="run-program">
-<span id="running"></span><h3><a class="toc-backref" href="#id30">RUN &#8220;program&#8221;.</a><a class="headerlink" href="#run-program" title="Permalink to this headline">¶</a></h3>
-<p>When you want to run another kerboscript program, you can do so
-with one of these 3 variations of the <code class="code docutils literal"><span class="pre">RUN</span></code> command:</p>
-<ul class="simple">
-<li><code class="docutils literal"><span class="pre">RUNPATH(</span></code> <em>program_file</em> <em>[</em> <code class="docutils literal"><span class="pre">,</span></code> <em>comma-separated-arguments</em>. <em>]</em> <code class="docutils literal"><span class="pre">).</span></code></li>
-<li><code class="docutils literal"><span class="pre">RUNONCEPATH(</span></code> <em>program_file</em> <em>[</em> <code class="docutils literal"><span class="pre">,</span></code> <em>comma-separated-arguments</em>. <em>]</em> <code class="docutils literal"><span class="pre">).</span></code></li>
-<li><code class="docutils literal"><span class="pre">RUN</span></code> <em>[</em> <code class="docutils literal"><span class="pre">ONCE</span></code> <em>]</em> <em>program_file that must be a bare word or literal string in quotes</em> <em>[</em> <code class="docutils literal"><span class="pre">(</span></code> <em>comma-separated-arguments</em> <code class="docutils literal"><span class="pre">)</span></code>.</li>
-</ul>
-<p>All of these 3 variations run the specified file as a program, optionally passing
-information to the program in the form of a comma-separated list of arguments.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 1.0.0: </span>The <code class="docutils literal"><span class="pre">RUNPATH</span></code> and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> functions were added in
-version 1.0.0.  Previously, only the more limited <code class="docutils literal"><span class="pre">RUN</span></code>
-command existed.</p>
-</div>
-</div>
-<div class="section" id="you-should-prefer-runpath-over-run">
-<h4>You should prefer RUNPATH over RUN<a class="headerlink" href="#you-should-prefer-runpath-over-run" title="Permalink to this headline">¶</a></h4>
-<p>The <code class="docutils literal"><span class="pre">RUN</span></code> command is older, and less powerful than the newer <code class="docutils literal"><span class="pre">RUNPATH</span></code> (or
-<code class="docutils literal"><span class="pre">RUNONCEPATH</span></code>) functions, and is kept around mostly for backward compatibility.
-See below for what this difference is and how they work:</p>
-<p><em>(Due to a parsing ambiguity issue, it was impossible to make ``RUN`` work with
-any arbitrary expression as the filename without changing its syntax a little in
-a way that would break every old kOS script.  Therefore it was deemed better to
-just add a new function that uses the new syntax instead of changing the syntax of
-``RUN``.)</em></p>
-</div>
-<div class="section" id="runpath-and-runoncepath">
-<span id="runoncepath"></span><span id="runpath"></span><h4>RUNPATH and RUNONCEPATH<a class="headerlink" href="#runpath-and-runoncepath" title="Permalink to this headline">¶</a></h4>
-<p>(The <code class="docutils literal"><span class="pre">RUNPATH</span></code> or <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> functions are identical to each other
-except for what is described below under the heading &#8220;The ONCE Keyword&#8221;.)</p>
-<p><code class="docutils literal"><span class="pre">RUNPATH</span></code> or <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> take a list of arguments, the first of
-which is the filename of the program to run, and must evaluate to a
-string.  Any additional arguments after that are optional, and are
-passed in to the program as its parameters it can read:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span> <span class="s">&quot;myfile.ks&quot;</span> <span class="p">).</span> <span class="c1">// Run a program called myfile.ks.</span>
-<span class="nv">RUNPATH</span><span class="p">(</span> <span class="s">&quot;myfile&quot;</span> <span class="p">).</span> <span class="c1">// Run a program called myfile, where kOS will guess</span>
-                     <span class="c1">// the filename extension you meant, and probably</span>
-                     <span class="c1">// pick &quot;.ks&quot; for you.</span>
-<span class="nv">RUNPATH</span><span class="p">(</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span> <span class="p">).</span> <span class="c1">// Run a program called myfile.ks, and</span>
-                              <span class="c1">// pass in the values 1 and 2 as its first</span>
-                              <span class="c1">// two parameters.</span>
+<h2><a class="toc-backref" href="#id28">Miscellaneous</a><a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-scripts">
+<h3><a class="toc-backref" href="#id29">Running Scripts</a><a class="headerlink" href="#running-scripts" title="Permalink to this headline">¶</a></h3>
+<p>You may run saved script files using the various <a class="reference internal" href="runprogram.html#running"><span>Run Command</span></a>.</p>
+<p>Examples:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;filename&quot;</span><span class="p">,</span> <span class="nv">arg1</span><span class="p">,</span> <span class="nv">arg2</span><span class="p">).</span>
+<span class="k">RUN</span> <span class="nv">filename</span><span class="p">(</span><span class="nv">arg1</span><span class="p">,</span> <span class="nv">arg2</span><span class="p">).</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">RUNPATH</span></code> or <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> can also work with any expression for the
-filename as long as it results in a string:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">file_base</span> <span class="ow">to</span> <span class="s">&quot;prog_num_&quot;</span><span class="p">.</span>
-<span class="k">SET</span> <span class="nv">file_num</span> <span class="ow">to</span> <span class="mf">3</span><span class="p">.</span>
-<span class="k">SET</span> <span class="nv">file_ending</span> <span class="ow">to</span> <span class="s">&quot;.ks&quot;</span><span class="p">.</span>
-<span class="nv">RUNPATH</span><span class="p">(</span> <span class="nv">file_base</span> <span class="o">+</span> <span class="nv">file_num</span> <span class="o">+</span> <span class="nv">file_ending</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span> <span class="p">).</span>
-    <span class="c1">// The above has the same effect as if you had done:</span>
-    <span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;prog_num_3.ks&quot;</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">).</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="run">
-<span id="id1"></span><h4>RUN<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h4>
-<p>On the other hand, the older <code class="docutils literal"><span class="pre">RUN</span></code> command is only capable of
-using hard-coded program names that were known at the time you wrote
-the script, and expressed as a simple bare word or literal string in
-quotes.  For example, you can do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">.</span>
-<span class="k">RUN</span> <span class="nv">myfile</span><span class="p">.</span><span class="nv">ks</span><span class="p">.</span> <span class="c1">// or this works too.</span>
-</pre></div>
-</div>
-<p>But you can&#8217;t do this:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">filename_variable</span> <span class="ow">TO</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">.</span>
-<span class="k">RUN</span> <span class="nv">filename_variable</span><span class="p">.</span> <span class="c1">// Error: a file called &quot;filename_variable&quot; not found.</span>
-
-<span class="k">RUN</span> <span class="s">&quot;my&quot;</span> <span class="o">+</span> <span class="s">&quot;file&quot;</span> <span class="o">+</span> <span class="s">&quot;.ks&quot;</span><span class="p">.</span>  <span class="c1">// Syntax error - a single literal string expected,</span>
-                            <span class="c1">// not an expression that returns a string.</span>
-</pre></div>
-</div>
-<p>(The above techniques would work with the <code class="docutils literal"><span class="pre">RUNONCE</span></code> command.)</p>
-<p>Once upon a time this limitation was built into kOS - kOS had to know the names
-of every program you&#8217;re going to invoke and it had to know them when it was
-compiling your script, before your script began executing the first statement.
-Thus it couldn&#8217;t come from an expression evaluated at run-time.</p>
-<p>For <code class="docutils literal"><span class="pre">RUN</span></code>, if you wish to pass arguments to the program, you may
-optionally add a set of parentheses with an argument list to the
-end of the syntax, like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// All 3 of these work:</span>
-<span class="k">RUN</span> <span class="nv">myfile</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
-<span class="k">RUN</span> <span class="nv">myfile</span><span class="p">.</span><span class="nv">ks</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
-<span class="nv">RUM</span> <span class="s">&quot;myfile.ks&quot;</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="the-once-keyword">
-<span id="run-once"></span><h4>THE &#8220;ONCE&#8221; KEYWORD<a class="headerlink" href="#the-once-keyword" title="Permalink to this headline">¶</a></h4>
-<p>If the <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> function is used instead of the <code class="docutils literal"><span class="pre">RUNPATH</span></code> function, or
-the optional <code class="docutils literal"><span class="pre">ONCE</span></code> keyword is added to the <code class="docutils literal"><span class="pre">RUN</span></code> command, it means the run
-will not actually occur if the program has already been run once during the
-current program context.  This is intended mostly for loading library program
-files that may have mainline code in them for initialization purposes that you
-don&#8217;t want to get run a second time just because you use the library in two
-different subprograms.</p>
-<p><code class="docutils literal"><span class="pre">RUN</span> <span class="pre">ONCE</span></code> and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code> mean &#8220;Run unless it&#8217;s already been run, in which
-case skip it.&#8221;</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p><em>Limitations on file names used for programs</em></p>
-<p class="last">On case-sensitive filesystems typically found on Linux and Mac, you should
-name program files used with the <code class="docutils literal"><span class="pre">run</span></code> command entirely with
-lowercase-only filenames or the system may fail to find them when you
-use the <code class="docutils literal"><span class="pre">run</span></code> command.</p>
-</div>
-</div>
-<div class="section" id="arguments">
-<h4>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h4>
-<p>Although the syntax is a bit different for <code class="docutils literal"><span class="pre">RUN</span></code> versus
-<code class="docutils literal"><span class="pre">RUNPATH</span></code> (and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code>), all 3 techniques allow you to
-pass arguments into the program that it sees as its main script
-<a class="reference internal" href="../language/variables.html#declare-parameter"><span class="std std-ref">parameter</span></a> values.</p>
-<p>The following commands do equivalent things:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">RUN</span> <span class="s">&quot;AutoLaunch.ks&quot;</span><span class="p">(</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
-<span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;AutoLaunch.ksm&quot;</span><span class="p">,</span> <span class="mf">75000</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span> <span class="p">).</span>
-</pre></div>
-</div>
-<p>In both of the above examples, had the program &#8220;AutoLaunch.ks&#8221;
-started with these lines:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// AutoLaunch.ks program file:</span>
-<span class="kd">parameter</span> <span class="nv">final_alt</span><span class="p">,</span> <span class="nv">do_countdown</span><span class="p">,</span> <span class="nv">message</span><span class="p">.</span>
-<span class="c1">//</span>
-<span class="c1">// rest of program not shown...</span>
-<span class="c1">//</span>
-</pre></div>
-</div>
-<p>Then inside AutoLaunch.ks, <code class="docutils literal"><span class="pre">final_alt</span></code> would be <code class="docutils literal"><span class="pre">75000</span></code>,
-and <code class="docutils literal"><span class="pre">do_countdown</span></code> would be <code class="docutils literal"><span class="pre">true</span></code>, and <code class="docutils literal"><span class="pre">message</span></code>
-would be <code class="docutils literal"><span class="pre">&quot;hello&quot;</span></code>.</p>
-</div>
-<div class="section" id="full-path-information-is-allowed">
-<h4>Full path information is allowed<a class="headerlink" href="#full-path-information-is-allowed" title="Permalink to this headline">¶</a></h4>
-<p>You are allowed to use directory path information
-in the string filename you are running (even with
-the older <code class="docutils literal"><span class="pre">RUN</span></code> command):</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Absolute path names are allowed.</span>
-<span class="k">RUN</span> <span class="s">&quot;0:/archive_lib/myfile.ks&quot;</span><span class="p">.</span>
-<span class="k">RUN</span> <span class="k">ONCE</span> <span class="s">&quot;0:/archive_lib/myfile.ks&quot;</span><span class="p">.</span>
-<span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;0:/archive_lib/myfile.ks&quot;</span><span class="p">).</span>
-<span class="nv">RUNONCEPATH</span><span class="p">(</span><span class="s">&quot;0:/archive_lib/myfile.ks&quot;</span><span class="p">).</span>
-
-<span class="c1">// Relative path names are also allowed.</span>
-<span class="k">RUN</span> <span class="s">&quot;../dir1/myfile.ks&quot;</span><span class="p">(</span><span class="nv">arg1</span><span class="p">,</span> <span class="nv">arg2</span><span class="p">).</span>
-<span class="nv">RUNPATH</span><span class="p">(</span><span class="s">&quot;../dir1/myfile.ks&quot;</span><span class="p">,</span> <span class="nv">arg1</span><span class="p">,</span> <span class="nv">arg2</span><span class="p">).</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="automatic-guessing-of-full-filename">
-<h4>Automatic guessing of full filename<a class="headerlink" href="#automatic-guessing-of-full-filename" title="Permalink to this headline">¶</a></h4>
-<p>For all 3 types of run command (<code class="docutils literal"><span class="pre">RUN</span></code>, <code class="docutils literal"><span class="pre">RUNPATH</span></code>, and <code class="docutils literal"><span class="pre">RUNONCEPATH</span></code>),
-the following filename &#8220;guess&#8221; rules are used when the filename given is
-incomplete:</p>
-<ul class="simple">
-<li>1: If no path information was present in the filename, then assume the
-file is in the current directory (that&#8217;s pretty much standard for all
-filename commands).</li>
-<li>2: Assume if no filename extension such as &#8221;.ks&#8221; or &#8221;.ksm&#8221; was given,
-and there is no file found that lacks an extension in the way the
-filename was given, then first try to find a file with the &#8221;.ksm&#8221;
-extension appended to it, and if that file is not found then try
-to find a file with the &#8221;.ks&#8221; extension appended to it.</li>
-</ul>
-</div>
+<p>The topic of the <code class="docutils literal"><span class="pre">RUNPATH</span></code> and <code class="docutils literal"><span class="pre">RUN</span></code> commands is complex enough to
+warrant its own separate <a class="reference internal" href="runprogram.html#running"><span>Run Command Page</span></a>.  Consult that
+page for the full details of how these commands work.</p>
 </div>
 <div class="section" id="log-text-to-path">
-<h3><a class="toc-backref" href="#id31">LOG TEXT TO PATH</a><a class="headerlink" href="#log-text-to-path" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id30">LOG TEXT TO PATH</a><a class="headerlink" href="#log-text-to-path" title="Permalink to this headline">¶</a></h3>
 <p>Logs the selected text to a file. Can print strings, or the result of an expression.</p>
-<div class="section" id="id2">
-<h4>Arguments<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="arguments">
+<h4>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
 <li>argument 1: Value you would like to log.</li>
 <li>argument 2: Path pointing to the file to log into.</li>
@@ -742,7 +590,7 @@ to find a file with the &#8221;.ks&#8221; extension appended to it.</li>
 </div>
 </div>
 <div class="section" id="compile-program-to-compiledprogram">
-<h3><a class="toc-backref" href="#id32">COMPILE PROGRAM (TO COMPILEDPROGRAM)</a><a class="headerlink" href="#compile-program-to-compiledprogram" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id31">COMPILE PROGRAM (TO COMPILEDPROGRAM)</a><a class="headerlink" href="#compile-program-to-compiledprogram" title="Permalink to this headline">¶</a></h3>
 <p><strong>(experimental)</strong></p>
 <p>Arguments:</p>
 <blockquote>
@@ -753,7 +601,7 @@ to find a file with the &#8221;.ks&#8221; extension appended to it.</li>
 <dd>Path to the destination file. If the optional argument 2 is missing, it will assume it&#8217;s the same as argument 1, but with a file extension changed to <code class="docutils literal"><span class="pre">*.ksm</span></code>.</dd>
 </dl>
 </div></blockquote>
-<p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><span class="std std-ref">Kerboscript ML Executable
+<p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><span>Kerboscript ML Executable
 image</span></a> that can be used
 instead of executing the program script directly.</p>
 <p>The RUN, RUNPATH, or RUNONCEPATH commands (mentioned elsewhere
@@ -761,26 +609,41 @@ on this page) can work with either *.ks script files or *.ksm
 compiled files.</p>
 <p>The full details of this process are long and complex enough to be
 placed on a separate page.</p>
-<p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><span class="std std-ref">the details of the Kerboscript ML
+<p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><span>the details of the Kerboscript ML
 Executable</span></a>.</p>
 </div>
 <div class="section" id="edit-path">
-<h3><a class="toc-backref" href="#id33">EDIT PATH</a><a class="headerlink" href="#edit-path" title="Permalink to this headline">¶</a></h3>
-<p>Edits a program pointed to by <code class="code docutils literal"><span class="pre">PATH</span></code>.</p>
-<div class="section" id="id3">
-<h4>Arguments<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
-<ul class="simple">
-<li>argument 1: Path of the file for editing.</li>
-</ul>
+<h3><a class="toc-backref" href="#id32">EDIT PATH</a><a class="headerlink" href="#edit-path" title="Permalink to this headline">¶</a></h3>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>argument 1</dt>
+<dd>Path of the file for editing.</dd>
+</dl>
+</div></blockquote>
+<p>Edits or creates a program file described by filename <code class="code docutils literal"><span class="pre">PATH</span></code>.
+If the file referred to by <code class="code docutils literal"><span class="pre">PATH</span></code> already exists, then it will
+open that file in the built-in editor.  If the file referred to by
+<code class="code docutils literal"><span class="pre">PATH</span></code> does not already exist, then this command will create it
+from scratch and let you start editing it.</p>
+<p>It is important to type the command using the filename&#8217;s <code class="code docutils literal"><span class="pre">.ks</span></code>
+extension when using this command to create a new file.  (Don&#8217;t omit
+it like you sometimes can in other places in kOS).  The logic to
+automatically assume the <code class="code docutils literal"><span class="pre">.ks</span></code> extension when the filename has
+no extension only works when kOS can find an existing file by doing so.
+If you are creating a brand new file from scratch with the <code class="code docutils literal"><span class="pre">EDIT</span></code>
+command, and leave off the <code class="code docutils literal"><span class="pre">.ks</span></code> extension, you will get a file
+created just like you described it (without the extension).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The Edit feature was lost in version 0.11 but is back again after version
-0.12.2 under a new guise. The new editor is unable to show a monospace
-font for a series of complex reasons involving how Unity works and how
-Squad bundled the KSP game. The editor works, but will be in a proportional
-width font, which isn&#8217;t ideal for editing code. The best way to edit code
-remains to use a text editor external to KSP, however for a fast peek at
-the code during play, this editor is useful.</p>
+0.12.2 under a new guise. The best way to edit code is still
+to use a text editor external to KSP.  The on-the-fly editor that
+this command invokes is still useful however for exploratory test
+editing and playing around, or for editing a file on a remote probe&#8217;s
+local volume (which isn&#8217;t stored as a normal file on your hard drive
+like files in the archive are, so it can&#8217;t be edited with an external
+text editor program).</p>
 </div>
 <p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">EDIT</span> <span class="nv">filename</span><span class="p">.</span>       <span class="c1">// edits filename.ks</span>
@@ -789,7 +652,6 @@ the code during play, this editor is useful.</p>
 <span class="k">EDIT</span> <span class="s">&quot;filename&quot;</span><span class="p">.</span>     <span class="c1">// edits filename.ks</span>
 <span class="k">EDIT</span> <span class="s">&quot;filename.txt&quot;</span><span class="p">.</span> <span class="c1">// edits filename.txt</span>
 </pre></div>
-</div>
 </div>
 </div>
 </div>
@@ -836,7 +698,7 @@ the code during play, this editor is useful.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

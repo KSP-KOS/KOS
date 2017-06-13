@@ -89,6 +89,11 @@ Examples::
       somechute:GETMODULE("ModuleParachute"):SETFIELD("DEPLOYALTITUDE", 1500).
     }.
 
+Pattern matching
+^^^^^^^^^^^^^^^^
+
+For even more advanced part selection you can use the ``*PATTERN`` variants of the suffixes mentioned above (see :meth:`Vessel:PARTSTAGGEDPATTERN`, :meth:`Vessel:PARTSTITLEDPATTERN`, :meth:`Vessel:PARTSNAMEDPATTERN` and :meth:`Vessel:PARTSDUBBEDPATTERN`). They enable you to select parts based on regular expression matching, giving you ultimate power over your parts.
+
 .. figure:: /_images/ship_parts_tree.png
   :align: right
 

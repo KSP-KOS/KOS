@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Atmosphere &mdash; kOS 1.0.3 documentation</title>
+  <title>Atmosphere &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Body" href="body.html"/>
         <link rel="prev" title="Celestial Bodies" href="../celestial_bodies.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -108,12 +108,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Atmosphere</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Atmosphere</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="body.html">Body</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
@@ -144,7 +145,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -190,27 +191,31 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ATMOSPHERE:BODY" title="ATMOSPHERE:BODY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BODY</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 <td>Name of the celestial body</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:EXISTS" title="ATMOSPHERE:EXISTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXISTS</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 <td>True if this body has an atmosphere</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ATMOSPHERE:OXYGEN" title="ATMOSPHERE:OXYGEN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OXYGEN</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 <td>True if oxygen is present</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:SCALE" title="ATMOSPHERE:SCALE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Used to find atmospheric density</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ATMOSPHERE:SEALEVELPRESSURE" title="ATMOSPHERE:SEALEVELPRESSURE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SEALEVELPRESSURE</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (atm)</td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (atm)</td>
 <td>pressure at sea level</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:HEIGHT" title="ATMOSPHERE:HEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HEIGHT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:ATMOSPHERE:ALTITUDEPRESSURE" title="ATMOSPHERE:ALTITUDEPRESSURE method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALTITUDEPRESSURE(altitude)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (atm)</td>
+<td>pressure at the givel altitude</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ATMOSPHERE:HEIGHT" title="ATMOSPHERE:HEIGHT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HEIGHT</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 <td>advertised atmospheric height</td>
 </tr>
 </tbody>
@@ -224,7 +229,7 @@ Atmosphere:<code class="descname">BODY</code><a class="headerlink" href="#attrib
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -240,7 +245,7 @@ Atmosphere:<code class="descname">EXISTS</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -256,7 +261,7 @@ Atmosphere:<code class="descname">OXYGEN</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -272,7 +277,7 @@ Atmosphere:<code class="descname">SCALE</code><a class="headerlink" href="#attri
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -288,13 +293,50 @@ Atmosphere:<code class="descname">SEALEVELPRESSURE</code><a class="headerlink" h
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (atm)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (atm)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>Number of Atm&#8217;s at planet&#8217;s sea level 1.0 Atm&#8217;s = same as Kerbin.</p>
+<p>Pressure at the body&#8217;s sea level.</p>
+<p>Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
+If you prefer to see the answer in KiloPascals, multiply the answer by
+<a class="reference internal" href="../../math/basic.html#global:CONSTANT:ATMTOKPA" title="CONSTANT:ATMTOKPA global"><code class="xref ks ks-global docutils literal"><span class="pre">Constant:AtmToKPa</span></code></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 1.1.0: </span>Previous versions returned this value in KiloPascals by mistake,
+which has now been changed to Atmospheres.</p>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:ATMOSPHERE:ALTITUDEPRESSURE">
+Atmosphere:<code class="descname">ALTITUDEPRESSURE</code><span class="sig-paren">(</span>altitude<span class="sig-paren">)</span><a class="headerlink" href="#method:ATMOSPHERE:ALTITUDEPRESSURE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>altitude</strong> &#8211; The altitude above sea level (in meters) you want to know the pressure for.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (atm)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Number of Atm&#8217;s of atmospheric pressure at the given altitude.
+If you pass in zero, you should get the sea level pressure.
+If you pass in 10000, you get the pressure at altitude=10,000m.
+This will return zero if the body has no atmosphere, or if the altitude you
+pass in is above the max atmosphere altitude for the body.</p>
+<p>Result is returned in Atmospheres.  1.0 Atmosphere = same as Kerbin or Earth.
+If you prefer to see the answer in KiloPascals, multiply the answer by
+<a class="reference internal" href="../../math/basic.html#global:CONSTANT:ATMTOKPA" title="CONSTANT:ATMTOKPA global"><code class="xref ks ks-global docutils literal"><span class="pre">Constant:AtmToKPa</span></code></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -304,7 +346,7 @@ Atmosphere:<code class="descname">HEIGHT</code><a class="headerlink" href="#attr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (m)</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -370,7 +412,7 @@ documentation, so this section below this point has been removed.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

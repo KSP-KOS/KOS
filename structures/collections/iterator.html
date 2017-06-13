@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Iterator &mdash; kOS 1.0.3 documentation</title>
+  <title>Iterator &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Collections" href="../collections.html"/>
         <link rel="next" title="Lexicon" href="lexicon.html"/>
         <link rel="prev" title="Enumerable" href="enumerable.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -104,7 +104,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../collections.html">Collections</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="enumerable.html">Enumerable</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Iterator</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Iterator</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="lexicon.html">Lexicon</a></li>
 <li class="toctree-l3"><a class="reference internal" href="list.html">List</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue</a></li>
@@ -118,6 +120,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
@@ -148,7 +151,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -176,27 +179,51 @@
             
   <div class="section" id="iterator">
 <span id="id1"></span><h1>Iterator<a class="headerlink" href="#iterator" title="Permalink to this headline">¶</a></h1>
-<p>An iterator can be obtained from <code class="xref ks ks-attr docutils literal"><span class="pre">List:ITERATOR</span></code>. Once a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> has given you an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a> object, you can use it to access elements inside the <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a>. An ITERATOR is a <a class="reference external" href="http://en.wikipedia.org/wiki/Iterator">generic computer programming concept</a>. In the general case it&#8217;s a variable type that allows you to get the value at a position in some collection, as well as increment to the next item in the collection in order to operate on all objects in the collection one at a time. In kOS it operates on <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></code></a>.</p>
+<p>An iterator can be obtained from <code class="xref ks ks-attr docutils literal"><span class="pre">List:ITERATOR</span></code> as well as from other places.
+An ITERATOR is a
+<a class="reference external" href="http://en.wikipedia.org/wiki/Iterator">generic computer programming concept</a>.
+In the general case it&#8217;s a variable type that allows you to get
+the value at a position in some collection, as well as increment
+to the next item in the collection in order to operate on all
+objects in the collection one at a time. In kOS it operates
+on <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></code></a> and most other collection types.</p>
 <p>A loop using an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></code></a> on a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> might look like this:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Starting with a list that was built like this</span>
 <span class="k">SET</span> <span class="nv">MyList</span> <span class="ow">To</span> <span class="k">LIST</span><span class="p">(</span> <span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Aloha&quot;</span><span class="p">,</span> <span class="s">&quot;Bonjour&quot;</span><span class="p">).</span>
 
 <span class="c1">// It could be looped over like this</span>
 <span class="k">SET</span> <span class="nv">MyCurrent</span> <span class="ow">TO</span> <span class="nv">MyList</span><span class="p">:</span><span class="nv">ITERATOR</span><span class="p">.</span>
-<span class="nv">MyCurrent</span><span class="p">:</span><span class="nv">RESET</span><span class="p">().</span>
-<span class="k">PRINT</span> <span class="s">&quot;After reset, position = &quot;</span> <span class="o">+</span> <span class="nv">MyCurrent</span><span class="p">:</span><span class="nv">INDEX</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="s">&quot;before the first NEXT, position = &quot;</span> <span class="o">+</span> <span class="nv">MyCurrent</span><span class="p">:</span><span class="nv">INDEX</span><span class="p">.</span>
 <span class="k">UNTIL</span> <span class="ow">NOT</span> <span class="nv">MyCurrent</span><span class="p">:</span><span class="nv">NEXT</span> <span class="p">{</span>
     <span class="k">PRINT</span> <span class="s">&quot;Item at position &quot;</span> <span class="o">+</span> <span class="nv">MyIter</span><span class="p">:</span><span class="nv">INDEX</span> <span class="o">+</span> <span class="s">&quot; is [&quot;</span> <span class="o">+</span> <span class="nv">MyIter</span><span class="p">:</span><span class="nv">VALUE</span> <span class="o">+</span> <span class="s">&quot;].&quot;</span><span class="p">.</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Which would result in this output:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>After reset, position = -1.
+<div class="highlight-none"><div class="highlight"><pre><span></span>before the first NEXT, position = -1.
 Item at position 0 is [Hello].
 Item at position 1 is [Aloha].
 Item at position 2 is [Bonjour].
 </pre></div>
 </div>
+<p>When you first create an iterator by using an ITERATOR suffix of some collection
+type like <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a>, <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a>, or even <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>, the
+initial position of the index is always -1, and the current value is always
+invalid.  This represents a position just <em>before the start</em> of the list of
+items.  Only after the first time <code class="xref ks ks-attr docutils literal"><span class="pre">NEXT</span></code> is called does the value of
+<code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code> become usable as the first thing in the collection.</p>
+<div class="section" id="rewinding-no-longer-supported">
+<h2>Rewinding No Longer Supported<a class="headerlink" href="#rewinding-no-longer-supported" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There used to be a :RESET method for iterators, but it has been
+removed as it was not always implemented and sometimes gave an
+error.  Now to start the enumeration over you need to obtain a
+new iterator.</p>
+</div>
+</div>
+<div class="section" id="members">
+<h2>Members<a class="headerlink" href="#members" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
 <dt id="structure:ITERATOR">
 <em class="property">structure </em><code class="descname">Iterator</code><a class="headerlink" href="#structure:ITERATOR" title="Permalink to this definition">¶</a></dt>
@@ -215,19 +242,19 @@ Item at position 2 is [Bonjour].
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#method:ITERATOR:RESET" title="ITERATOR:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">RESET</span></code></a></td>
-<td>&nbsp;</td>
-<td>Rewind to the just before the beginning</td>
+<td>n/a</td>
+<td>(This method has been removed)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal"><span class="pre">NEXT</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 <td>Move iterator to the next item</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ITERATOR:ATEND" title="ITERATOR:ATEND attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATEND</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 <td>Check if iterator is at the end of the list</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">INDEX</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Current index starting from zero</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ITERATOR:VALUE" title="ITERATOR:VALUE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code></a></td>
@@ -241,7 +268,25 @@ Item at position 2 is [Bonjour].
 <dl class="method">
 <dt id="method:ITERATOR:RESET">
 Iterator:<code class="descname">RESET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:ITERATOR:RESET" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this to rewind the iterator to just before the beginning of the list. After a call to <a class="reference internal" href="#method:ITERATOR:RESET" title="ITERATOR:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">Iterator:RESET</span></code></a>, the iterator must be moved with <a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal"><span class="pre">Iterator:NEXT</span></code></a> before it gets to the first value in the list.</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">n/a</td>
+</tr>
+</tbody>
+</table>
+<p>This suffix has been deleted from kOS.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Previous versions of kOS had a <code class="docutils literal"><span class="pre">:RESET</span></code> suffix for Iterators.  This doesn&#8217;t
+exist anymore and is being left in the documentation here just so people trying
+to search for it will find this message explaining where it went.  kOS had to
+drop it because it&#8217;s no longer as easy to implement it under the hood with
+newer versions of .Net.</p>
+</div>
+<p>(If you want to restart an iteration you must call the <code class="docutils literal"><span class="pre">:ITERATOR</span></code> suffix of
+the collection again to obtain a new iterator.)</p>
 </dd></dl>
 
 <dl class="method">
@@ -251,7 +296,7 @@ Iterator:<code class="descname">NEXT</code><span class="sig-paren">(</span><span
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -267,7 +312,7 @@ Iterator:<code class="descname">ATEND</code><a class="headerlink" href="#attribu
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -283,14 +328,14 @@ Iterator:<code class="descname">INDEX</code><a class="headerlink" href="#attribu
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a> (integer)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (integer)</td>
 </tr>
 </tbody>
 </table>
 <p>Returns the numerical index of how far you are into the list, starting the counting at 0 for the first item in the list. The last item in the list is numbered N-1, where N is the number of items in the list.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you have just used <a class="reference internal" href="#method:ITERATOR:RESET" title="ITERATOR:RESET method"><code class="xref ks ks-meth docutils literal"><span class="pre">Iterator:RESET</span></code></a> or have just created the ITERATOR, then the value of <a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Iterator:INDEX</span></code></a> is -1. It only becomes 0 after the first call to <a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal"><span class="pre">Iterator:NEXT</span></code></a>.</p>
+<p class="last">If you have just created the ITERATOR, then the value of <a class="reference internal" href="#attribute:ITERATOR:INDEX" title="ITERATOR:INDEX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Iterator:INDEX</span></code></a> is -1. It only becomes 0 after the first call to <a class="reference internal" href="#method:ITERATOR:NEXT" title="ITERATOR:NEXT method"><code class="xref ks ks-meth docutils literal"><span class="pre">Iterator:NEXT</span></code></a>.</p>
 </div>
 </dd></dl>
 
@@ -310,6 +355,7 @@ Iterator:<code class="descname">VALUE</code><a class="headerlink" href="#attribu
 <p>Returns the thing stored at the current position in the list.</p>
 </dd></dl>
 
+</div>
 </div>
 
 
@@ -353,7 +399,7 @@ Iterator:<code class="descname">VALUE</code><a class="headerlink" href="#attribu
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

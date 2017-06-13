@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Resource &mdash; kOS 1.0.3 documentation</title>
+  <title>Resource &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="ScienceData" href="sciencedatavalue.html"/>
         <link rel="prev" title="PartModule" href="partmodule.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -119,7 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Resource</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Resource</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sciencedatavalue.html">ScienceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
@@ -131,6 +131,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
@@ -161,7 +162,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -207,27 +208,27 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:NAME" title="RESOURCE:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
-<td><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<td><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 <td>Resource name</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Amount of this resource left</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:DENSITY" title="RESOURCE:DENSITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DENSITY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Density of this resource</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Maximum amount of this resource</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Can this tank be removed from the fuel flow</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></code></a></td>
-<td><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 <td>Is this tank currently in the fuel flow</td>
 </tr>
 </tbody>
@@ -243,7 +244,7 @@ Resource:<code class="descname">NAME</code><a class="headerlink" href="#attribut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span class="std std-ref">string</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#string"><span>string</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -259,7 +260,7 @@ Resource:<code class="descname">AMOUNT</code><a class="headerlink" href="#attrib
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -275,7 +276,7 @@ Resource:<code class="descname">DENSITY</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -294,7 +295,7 @@ Resource:<code class="descname">CAPACITY</code><a class="headerlink" href="#attr
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span class="std std-ref">scalar</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -310,7 +311,7 @@ Resource:<code class="descname">TOGGLEABLE</code><a class="headerlink" href="#at
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -326,7 +327,7 @@ Resource:<code class="descname">ENABLED</code><a class="headerlink" href="#attri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span class="std std-ref">Boolean</span></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#boolean"><span>Boolean</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -376,7 +377,7 @@ Resource:<code class="descname">ENABLED</code><a class="headerlink" href="#attri
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

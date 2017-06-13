@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Orbit &mdash; kOS 1.0.3 documentation</title>
+  <title>Orbit &mdash; kOS 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.0.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Orbits" href="../orbits.html"/>
         <link rel="next" title="Orbitable (Vessels and Bodies)" href="orbitable.html"/>
         <link rel="prev" title="Orbits" href="../orbits.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0.3
+                1.1.0
               </div>
             
           
@@ -107,7 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../orbits.html">Orbits</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Orbit</a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Orbit</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="orbitable.html">Orbitable (Vessels and Bodies)</a></li>
@@ -115,6 +115,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 </ul>
@@ -145,7 +146,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -261,29 +262,33 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:MEANANOMALYATEPOCH" title="ORBIT:MEANANOMALYATEPOCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MEANANOMALYATEPOCH</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
-<td><a class="reference external" href="http://en.wikipedia.org/wiki/Mean_anomaly">mean anomaly</a> in degrees (not radians)</td>
+<td><a class="reference external" href="http://en.wikipedia.org/wiki/Mean_anomaly">mean anomaly</a> in degrees (not radians) at a specific fixed time called <a class="reference internal" href="#attribute:ORBIT:EPOCH" title="ORBIT:EPOCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EPOCH</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:TRANSITION" title="ORBIT:TRANSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRANSITION</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:EPOCH" title="ORBIT:EPOCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EPOCH</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>The universal timestamp at which <a class="reference internal" href="#attribute:ORBIT:MEANANOMALYATEPOCH" title="ORBIT:MEANANOMALYATEPOCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MEANANOMALYATEPOCH</span></code></a> is measured.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:TRANSITION" title="ORBIT:TRANSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRANSITION</span></code></a></td>
 <td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
-<td><a class="reference internal" href="#transitions"><span class="std std-ref">Transition from this orbit</span></a></td>
+<td><a class="reference internal" href="#transitions"><span>Transition from this orbit</span></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:POSITION" title="ORBIT:POSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:POSITION" title="ORBIT:POSITION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></code></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 <td>The current position</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:VELOCITY" title="ORBIT:VELOCITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></code></a></td>
-<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:VELOCITY" title="ORBIT:VELOCITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></code></a></td>
+<td><a class="reference internal" href="orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></code></a></td>
 <td>The current velocity</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:NEXTPATCH" title="ORBIT:NEXTPATCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTPATCH</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:NEXTPATCH" title="ORBIT:NEXTPATCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTPATCH</span></code></a></td>
 <td><a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a></td>
 <td>Next <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:NEXTPATCHETA" title="ORBIT:NEXTPATCHETA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTPATCHETA</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:NEXTPATCHETA" title="ORBIT:NEXTPATCHETA attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTPATCHETA</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>ETA to next <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBIT:HASNEXTPATCH" title="ORBIT:HASNEXTPATCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASNEXTPATCH</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBIT:HASNEXTPATCH" title="ORBIT:HASNEXTPATCH attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASNEXTPATCH</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Has a next <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a></td>
 </tr>
@@ -459,7 +464,7 @@ the orbit crosses the body&#8217;s equator from its southern hemisphere to
 its northern hemisphere</p>
 <p>Note that the &#8220;celestial longitude&#8221; in this case is NOT the planetary
 longitude of the orbit body.  &#8220;Celestial longitudes&#8221; are expressed
-as the angle from the <a class="reference internal" href="../../bindings.html#solarprimevector"><span class="std std-ref">Solar Prime Vector</span></a>,
+as the angle from the <a class="reference internal" href="../../bindings.html#solarprimevector"><span>Solar Prime Vector</span></a>,
 not from the body&#8217;s longitude.  In order to find out where it is
 relative to the body&#8217;s longitude, you will have to take into account
 <code class="docutils literal"><span class="pre">body:rotationangle</span></code>, and take into account that the body will
@@ -508,7 +513,7 @@ Orbit:<code class="descname">MEANANOMALYATEPOCH</code><a class="headerlink" href
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> degrees</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -518,6 +523,41 @@ Orbit:<code class="descname">MEANANOMALYATEPOCH</code><a class="headerlink" href
 traditionally done in radians, in keeping with the kOS standard
 of making everything into degrees, they are given as degrees by
 kOS.</p>
+<p>Internally, KSP tracks orbit position using <code class="xref ks ks-attr docutils literal"><span class="pre">MEANANOMALYATEPOCH</span></code>
+and <code class="xref ks ks-attr docutils literal"><span class="pre">EPOCH</span></code>.  &#8220;Epoch&#8221; is an arbitrary timestamp expressed in
+universal time (gameworld seconds from game start, same as <code class="docutils literal"><span class="pre">TIME:SECONDS</span></code>
+uses) at which the mean anomaly of the orbit would be <code class="xref ks ks-attr docutils literal"><span class="pre">MEANANOMALYATEPOCH</span></code>.</p>
+<p>Given the mean anomaly at epoch, and the epoch time, and the current time,
+and the orbital period, it&#8217;s possible to find out the current mean anomaly.
+Kerbal Space Program uses this internally to track orbit positions while under
+time warp without using the full physics system.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ORBIT:EPOCH">
+Orbit:<code class="descname">EPOCH</code><a class="headerlink" href="#attribute:ORBIT:EPOCH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> universal timestamp (seconds)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Internally, KSP tracks orbit position using <code class="xref ks ks-attr docutils literal"><span class="pre">MEANANOMALYATEPOCH</span></code>
+and <code class="xref ks ks-attr docutils literal"><span class="pre">EPOCH</span></code>.  &#8220;Epoch&#8221; is an arbitrary timestamp expressed in
+universal time (gameworld seconds from game start, same as <code class="docutils literal"><span class="pre">TIME:SECONDS</span></code>
+uses) at which the mean anomaly of the orbit would be <code class="xref ks ks-attr docutils literal"><span class="pre">MEANANOMALYATEPOCH</span></code>.</p>
+<p>Beware, if you are an experienced programmer, you may be aware of the
+word &#8220;Epoch&#8221; being used to mean a fixed point in time that never
+ever changes throughout an entire system.  For example, the Unix
+timestamp system refers to Jan 1, 1970 as the &#8220;epoch&#8221;.  This is <em>NOT</em>
+how the word is used in KSP&#8217;s orbit system.  In Kerbal Space Program,
+the &#8220;epoch&#8221; is not a true &#8220;epoch&#8221;, in that it often moves and you have to
+re-check what it is.  It&#8217;s not a hardcoded constant.</p>
+<p>(The epoch timestamp seems to change when you go on or off from time warp.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -533,7 +573,7 @@ Orbit:<code class="descname">TRANSITION</code><a class="headerlink" href="#attri
 </tr>
 </tbody>
 </table>
-<p>Describes the way in which this orbit will end and become a different orbit, with a value taken <a class="reference internal" href="#transitions"><span class="std std-ref">from this list</span></a>.</p>
+<p>Describes the way in which this orbit will end and become a different orbit, with a value taken <a class="reference internal" href="#transitions"><span>from this list</span></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -559,13 +599,15 @@ Orbit:<code class="descname">VELOCITY</code><a class="headerlink" href="#attribu
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>The current velocity of whatever the object is that is in this orbit.</p>
+<p>The current velocity of whatever the object is that is in this orbit.  Be aware
+that this is not just a velocity vector, but a structure containing both the
+orbital and surface velocity vectors as a pair.  (See <a class="reference internal" href="orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></code></a>).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -705,7 +747,7 @@ Orbit:<code class="descname">PATCHES</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.3',
+            VERSION:'1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
