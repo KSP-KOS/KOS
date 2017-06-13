@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Vessels and Parts &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Structure Reference" href="../structures.html"/>
+        <link rel="next" title="AggregateResource" href="vessels/aggregateresource.html"/>
+        <link rel="prev" title="VolumeItem" href="volumes_and_files/volumeitem.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Vessels &amp; Parts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vessels/aggregateresource.html">AggregateResource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/alt.html">ALT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/core.html">Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/crafttemplate.html">CraftTemplate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/dockingport.html">DockingPort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/element.html">Element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/engine.html">Engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/eta.html">ETA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/gimbal.html">Gimbal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/node.html">Maneuver Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/part.html">Part</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/partmodule.html">PartModule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/sciencedatavalue.html">ScienceData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/scienceexperiment.html">ScienceExperimentModule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/sensor.html">Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/stage.html">Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/vessel.html">Vessel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vessels/vesselsensors.html">VesselSensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="communication.html">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">GUI Widgets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waypoint.html">Waypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../structures.html">Structure Reference</a> &raquo;</li>
+      
+    <li>Vessels and Parts</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/structures/vessels.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vessels-and-parts">
+<span id="vessels"></span><h1>Vessels and Parts<a class="headerlink" href="#vessels-and-parts" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vessels/aggregateresource.html">AggregateResource</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/alt.html">ALT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/crafttemplate.html">CraftTemplate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/crewmember.html">CrewMember</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/dockingport.html">DockingPort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/element.html">Element</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/engine.html">Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/eta.html">ETA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/gimbal.html">Gimbal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/node.html">Maneuver Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/part.html">Part</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/partmodule.html">PartModule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/resource.html">Resource</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/sciencedatavalue.html">ScienceData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/scienceexperiment.html">ScienceExperimentModule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/sensor.html">Sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/stage.html">Stage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/vessel.html">Vessel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/vesselsensors.html">VesselSensors</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vessels/aggregateresource.html" class="btn btn-neutral float-right" title="AggregateResource" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="volumes_and_files/volumeitem.html" class="btn btn-neutral" title="VolumeItem" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

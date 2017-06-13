@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Creating GUIs &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Structure Reference" href="../structures.html"/>
+        <link rel="next" title="Box" href="gui_widgets/box.html"/>
+        <link rel="prev" title="Body" href="celestial_bodies/body.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="communication.html">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">GUI Widgets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/box.html">Box</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/button.html">Button</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/button.html#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/gui.html">GUI structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/label.html">Label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/label.html#rich-text">Rich Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/popupmenu.html">PopupMenu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/scrollbox.html">Scrollbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/skin.html">Skin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/slider.html">Slider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/spacing.html">Spacing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/style.html">Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/stylerecoffset.html">StyleRectOffset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/stylestate.html">StyleState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/textfield.html">TextField</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui_widgets/widget.html">Widget</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waypoint.html">Waypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../structures.html">Structure Reference</a> &raquo;</li>
+      
+    <li>Creating GUIs</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/structures/gui.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="creating-guis">
+<span id="gui"></span><h1>Creating GUIs<a class="headerlink" href="#creating-guis" title="Permalink to this headline">¶</a></h1>
+<p>You can create an object that represents a GUI drawn on the
+user&#8217;s screen (not in the terminal window). It can have buttons,
+labels, and the usual GUI elements. In combination with a <a class="reference internal" href="../general/volumes.html#boot"><span>boot file</span></a>,
+entirely GUI-driven vessel controls can be developed.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../_images/gui-HelloWorld.png"><img alt="../_images/gui-HelloWorld.png" src="../_images/gui-HelloWorld.png" style="width: 100%;" /></a>
+</div>
+<div class="section" id="gui-callbacks-versus-polling">
+<h2>GUI Callbacks versus Polling<a class="headerlink" href="#gui-callbacks-versus-polling" title="Permalink to this headline">¶</a></h2>
+<p>There are two general styles of interacting with GUI widgets,
+called &#8220;callbacks&#8221; and &#8220;polling&#8221;.</p>
+<p id="gui-callback-technique">The <strong>callback technique</strong> is when you create <a class="reference internal" href="misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> objects
+that are either anonymous functions or named user functions, and then
+assign them to different widgets&#8217; &#8220;hook suffixes&#8221;.  In this technique you
+are telling the widget &#8220;Here is a function in my program that I want you to
+call whenever you notice this particular thing has happened.&#8221;  For example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">thisButton</span><span class="p">:</span><span class="nv">ONCLICK</span> <span class="ow">to</span> <span class="nv">myclickFunction</span><span class="p">@.</span>
+<span class="c1">// Program continues on, executing further commands after this.</span>
+</pre></div>
+</div>
+<p>will interrupt whatever else you are doing and call a function you wrote
+called <code class="docutils literal"><span class="pre">myClickFunction</span></code> whenever that button is clicked.</p>
+<p id="gui-polling-technique">The <strong>polling technique</strong> is when you actively keep checking the widget
+again and again in your own script, to see if anything has happened.  In
+this technique, you are choosing when to pay attention to the GUI
+widget.  For example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">until</span> <span class="nv">thisButton</span><span class="p">:</span><span class="nv">TAKEPRESS</span> <span class="p">{</span>
+  <span class="c1">// button still isn&#39;t pressed yet, let&#39;s keep waiting.</span>
+  <span class="k">wait</span> <span class="mf">0</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In general, <em>if you are trying to decide between using the callback or the polling
+technique, you should</em> <strong>prefer using the callback technique</strong> <em>most of the time</em>.  It
+takes less CPU time away from the rest of your program and is less of a burden on
+the universe simulation.</p>
+<p>Below are longer examples of the two techniques, and how the scripts that
+use them would look.  The suffixes and built-in functions used in these
+examples will be explained in detail later.</p>
+<p>The &#8220;Hello World&#8221; program, version 1 with &#8220;callbacks&#8221;:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// &quot;Hello World&quot; program for kOS GUI.</span>
+<span class="c1">//</span>
+<span class="c1">// Create a GUI window</span>
+<span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="c1">// Add widgets to the GUI</span>
+<span class="k">LOCAL</span> <span class="nv">label</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">ALIGN</span> <span class="ow">TO</span> <span class="s">&quot;CENTER&quot;</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">HSTRETCH</span> <span class="ow">TO</span> <span class="nb">True</span><span class="p">.</span> <span class="c1">// Fill horizontally</span>
+<span class="k">LOCAL</span> <span class="nv">ok</span> <span class="ow">TO</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
+<span class="c1">// Show the GUI.</span>
+<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<span class="c1">// Handle GUI widget interactions.</span>
+<span class="c1">//</span>
+<span class="c1">// This is the technique known as &quot;callbacks&quot; - instead</span>
+<span class="c1">// of actively looking again and again to see if a button was</span>
+<span class="c1">// pressed, the script just tells kOS that it should call a</span>
+<span class="c1">// delegate function when it notices the button has done</span>
+<span class="c1">// something, and then the program passively waits for that</span>
+<span class="c1">// to happen:</span>
+<span class="k">LOCAL</span> <span class="nv">isDone</span> <span class="ow">IS</span> <span class="nb">FALSE</span><span class="p">.</span>
+<span class="kd">function</span> <span class="nv">myClickChecker</span> <span class="p">{</span>
+  <span class="k">SET</span> <span class="nv">isDone</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
+<span class="p">}</span>
+<span class="k">SET</span> <span class="nv">ok</span><span class="p">:</span><span class="nv">ONCLICK</span> <span class="ow">TO</span> <span class="nv">myClickChecker</span><span class="p">@.</span> <span class="c1">// This could also be an anonymous function instead.</span>
+<span class="k">wait</span> <span class="k">until</span> <span class="nv">isDone</span><span class="p">.</span>
+
+<span class="k">print</span> <span class="s">&quot;OK pressed.  Now closing demo.&quot;</span><span class="p">.</span>
+<span class="c1">// Hide when done (will also hide if power lost).</span>
+<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>The same &#8220;Hello World&#8221; program, version 2 with &#8220;polling&#8221;:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// &quot;Hello World&quot; program for kOS GUI.</span>
+<span class="c1">//</span>
+<span class="c1">// Create a GUI window</span>
+<span class="k">LOCAL</span> <span class="nv">gui</span> <span class="ow">IS</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="c1">// Add widgets to the GUI</span>
+<span class="k">LOCAL</span> <span class="nv">label</span> <span class="ow">IS</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDLABEL</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">ALIGN</span> <span class="ow">TO</span> <span class="s">&quot;CENTER&quot;</span><span class="p">.</span>
+<span class="k">SET</span> <span class="nv">label</span><span class="p">:</span><span class="nv">STYLE</span><span class="p">:</span><span class="nv">HSTRETCH</span> <span class="ow">TO</span> <span class="nb">True</span><span class="p">.</span> <span class="c1">// Fill horizontally</span>
+<span class="k">LOCAL</span> <span class="nv">ok</span> <span class="ow">TO</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
+<span class="c1">// Show the GUI.</span>
+<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<span class="c1">// Handle GUI widget interactions.</span>
+<span class="c1">//</span>
+<span class="c1">// This is the technique known as &quot;polling&quot; - In a loop you</span>
+<span class="c1">// continually check to see if something has happened:</span>
+<span class="k">LOCAL</span> <span class="nv">isDone</span> <span class="ow">IS</span> <span class="nb">FALSE</span><span class="p">.</span>
+<span class="k">UNTIL</span> <span class="nv">isDone</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">ok</span><span class="p">:</span><span class="nv">TAKEPRESS</span><span class="p">)</span>
+    <span class="k">SET</span> <span class="nv">isDone</span> <span class="ow">TO</span> <span class="nb">TRUE</span><span class="p">.</span>
+  <span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">.</span> <span class="c1">// No need to waste CPU time checking too often.</span>
+<span class="p">}</span>
+<span class="k">print</span> <span class="s">&quot;OK pressed.  Now closing demo.&quot;</span><span class="p">.</span>
+<span class="c1">// Hide when done (will also hide if power lost).</span>
+<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-a-window">
+<h2>Creating a Window<a class="headerlink" href="#creating-a-window" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="function:GUI">
+<code class="descname">GUI</code><span class="sig-paren">(</span>width [, height]<span class="sig-paren">)</span><a class="headerlink" href="#function:GUI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is the first place any GUI control panel starts.</p>
+<p>The GUI built-in function creates a new <a class="reference internal" href="gui_widgets/gui.html#structure:GUI" title="GUI structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GUI</span></code></a> object that you can then
+manipulate to build up a GUI. If no height is specified, it will resize
+automatically to fit the contents you put inside it.  The width can be set
+to 0 to force automatic width resizing too:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">gui</span> <span class="ow">TO</span> <span class="nv">GUI</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="k">SET</span> <span class="nv">button</span> <span class="ow">TO</span> <span class="nv">gui</span><span class="p">:</span><span class="nv">ADDBUTTON</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">).</span>
+<span class="nv">gui</span><span class="p">:</span><span class="nv">SHOW</span><span class="p">().</span>
+<span class="k">UNTIL</span> <span class="nv">button</span><span class="p">:</span><span class="nv">TAKEPRESS</span> <span class="k">WAIT</span><span class="p">(</span><span class="mf">0</span><span class="p">.</span><span class="mf">1</span><span class="p">).</span>
+<span class="nv">gui</span><span class="p">:</span><span class="nv">HIDE</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>See the &#8220;ADD&#8221; functions in the <a class="reference internal" href="gui_widgets/box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">BOX</span></code></a> structure for
+the other widgets you can add.</p>
+<p>Warning: Setting BOTH width and height to 0 to let it choose automatic
+resizing in both dimensions will often lead to a look you won&#8217;t like.
+You may find that to have some control over the layout you will need to
+specify one of the two dimensions and only let it resize the other.</p>
+</div>
+<div class="section" id="removing-all-windows">
+<h2>Removing all Windows<a class="headerlink" href="#removing-all-windows" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="function:CLEARGUIS">
+<code class="descname">CLEARGUIS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#function:CLEARGUIS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If you want to conveniently clear away all GUI windows that you
+created from this CPU, you can do so with the <code class="docutils literal"><span class="pre">CLEARGUIS()</span></code>
+built-in function.  It will call <a class="reference internal" href="gui_widgets/gui.html#method:GUI:HIDE" title="GUI:HIDE method"><code class="xref ks ks-meth docutils literal"><span class="pre">GUI:HIDE</span></code></a> and <code class="xref ks ks-meth docutils literal"><span class="pre">GUI:DISPOSE</span></code>
+for all the gui windows that were made using this particular CPU part.
+(If you have multiple kOS CPUs, and some GUIs are showing that were made
+by other kOS CPUs, those will not be cleared by this.)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This built-in function was added mainly so you have a way
+to easily clean up after a program has crashed which left
+behind some GUI windows that are now unresponsive because
+the program isn&#8217;t running anymore.</p>
+</div>
+</div>
+<div class="section" id="communication-delay">
+<span id="gui-delay"></span><h2>Communication Delay<a class="headerlink" href="#communication-delay" title="Permalink to this headline">¶</a></h2>
+<p>If communication delay is enabled (eg. using RemoteTech), you will still be
+able to interact with a GUI, but changes to values and messages will incur
+the same sort of signal delay that interactive control over the vessel would
+incur.  (If your vessel can be controlled immediately because there&#8217;s a
+kerbal on board, then your GUI for the vessel can be controlled immediately,
+but if your attempts to control the vessel are being subject to a signal
+delay, then your attempts to click on the GUI elements will get the same
+delay). Similarly, changes to values in the GUI will be delayed coming
+back by the same rules. Some things such as GUI creation, adding widgets,
+etc. are immediate for simplicity.</p>
+<p>If you want to test or experiment with what your GUI would be like under
+a signal delay even though you don&#8217;t <em>really</em> have a signal delay, you
+can simulate the effect by setting the <a class="reference internal" href="gui_widgets/gui.html#attribute:GUI:EXTRADELAY" title="GUI:EXTRADELAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GUI:EXTRADELAY</span></code></a> suffix
+of the GUI window.</p>
+</div>
+<div class="section" id="structure-reference">
+<h2>Structure Reference<a class="headerlink" href="#structure-reference" title="Permalink to this headline">¶</a></h2>
+<p>The GUI elements, including the GUI type itself are in the
+following hierarchy:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="gui_widgets/widget.html#structure:WIDGET" title="WIDGET structure"><code class="xref ks ks-struct docutils literal"><span class="pre">WIDGET</span></code></a> - base type of all other elements.</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="gui_widgets/box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">BOX</span></code></a> - a rectangular widget that contains other widgets</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="gui_widgets/gui.html#structure:GUI" title="GUI structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GUI</span></code></a> - the outermost <code class="docutils literal"><span class="pre">Box</span></code> that represents the GUI window panel.</li>
+<li><a class="reference internal" href="gui_widgets/scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SCROLLBOX</span></code></a> - a <code class="docutils literal"><span class="pre">Box</span></code> that shows only a subset of itself at a time and can be scrolled.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="gui_widgets/label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LABEL</span></code></a> - text (or image) for display</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="gui_widgets/button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">BUTTON</span></code></a> - label that notices when it&#8217;s clicked or toggled.</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="gui_widgets/popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">POPUPMENU</span></code></a> - button that when clicked shows a list to pick from.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><a class="reference internal" href="gui_widgets/textfield.html#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a> - label that is edit-able by the user.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><a class="reference internal" href="gui_widgets/slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SLIDER</span></code></a> - vertical or horizontal movable handle that edits a <a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a> value.</p>
+</li>
+<li><p class="first"><a class="reference internal" href="gui_widgets/spacing.html#structure:SPACING" title="SPACING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SPACING</span></code></a> - empty whitespace area within the box for layout reasons.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/box.html">Box</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/button.html">Button</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/button.html#example">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/gui.html">GUI structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/label.html">Label</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/label.html#rich-text">Rich Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/popupmenu.html">PopupMenu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/scrollbox.html">Scrollbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/skin.html">Skin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/slider.html">Slider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/spacing.html">Spacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/style.html">Style</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/stylerecoffset.html">StyleRectOffset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/stylestate.html">StyleState</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/textfield.html">TextField</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_widgets/widget.html">Widget</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gui_widgets/box.html" class="btn btn-neutral float-right" title="Box" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="celestial_bodies/body.html" class="btn btn-neutral" title="Body" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

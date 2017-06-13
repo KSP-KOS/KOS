@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Execute Node Script &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Tutorials" href="../tutorials.html"/>
+        <link rel="next" title="Creating Reusable GUI Elements" href="gui.html"/>
+        <link rel="prev" title="PID Loops in kOS" href="pidloops.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pidloops.html">PID Loops</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Execute Node script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">Making a tabbed GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
+      
+    <li>Execute Node Script</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/exenode.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="execute-node-script">
+<span id="exenode"></span><h1>Execute Node Script<a class="headerlink" href="#execute-node-script" title="Permalink to this headline">¶</a></h1>
+<p>Let&#8217;s try to automate one of the most common tasks in orbital maneuvering - execution of the maneuver node. In this tutorial I&#8217;ll try to show you how to write a script for somewhat precise maneuver node execution.</p>
+<p>So to start our script we need to get the next available <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><span>maneuver node</span></a>:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">nd</span> <span class="ow">to</span> <span class="nv">nextnode</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>Our next step is to calculate how much time our vessel needs to burn at full throttle to execute the node:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//print out node&#39;s basic parameters - ETA and deltaV</span>
+<span class="k">print</span> <span class="s">&quot;Node in: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">nd</span><span class="p">:</span><span class="nv">eta</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;, DeltaV: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span><span class="p">).</span>
+
+<span class="c1">//calculate ship&#39;s max acceleration</span>
+<span class="k">set</span> <span class="nv">max_acc</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">maxthrust</span><span class="o">/</span><span class="nv">ship</span><span class="p">:</span><span class="nv">mass</span><span class="p">.</span>
+
+<span class="c1">// Now we just need to divide deltav:mag by our ship&#39;s max acceleration</span>
+<span class="c1">// to get the estimated time of the burn.</span>
+<span class="c1">//</span>
+<span class="c1">// Please note, this is not exactly correct.  The real calculation</span>
+<span class="c1">// needs to take into account the fact that the mass will decrease</span>
+<span class="c1">// as you lose fuel during the burn.  In fact throwing the fuel out</span>
+<span class="c1">// the back of the engine very fast is the entire reason you&#39;re able</span>
+<span class="c1">// to thrust at all in space.  The proper calculation for this</span>
+<span class="c1">// can be found easily enough online by searching for the phrase</span>
+<span class="c1">//   &quot;Tsiolkovsky rocket equation&quot;.</span>
+<span class="c1">// This example here will keep it simple for demonstration purposes,</span>
+<span class="c1">// but if you&#39;re going to build a serious node execution script, you</span>
+<span class="c1">// need to look into the Tsiolkovsky rocket equation to account for</span>
+<span class="c1">// the change in mass over time as you burn.</span>
+<span class="c1">//</span>
+<span class="k">set</span> <span class="nv">burn_duration</span> <span class="ow">to</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span><span class="o">/</span><span class="nv">max_acc</span><span class="p">.</span>
+<span class="k">print</span> <span class="s">&quot;Crude Estimated burn duration: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">burn_duration</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;s&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>So now we have our node&#8217;s deltav vector, ETA to the node and we calculated our burn duration. All that is left for us to do is wait until we are close to node&#8217;s ETA less half of our burn duration. But we want to write a universal script, and some of our current and/or future ships can be quite slow to turn, so let&#8217;s give us some time, 60 seconds, to prepare for the maneuver burn:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">wait</span> <span class="k">until</span> <span class="nv">node</span><span class="p">:</span><span class="nv">eta</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nv">burn_duration</span><span class="o">/</span><span class="mf">2</span> <span class="o">+</span> <span class="mf">60</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>This wait can be tedious and you&#8217;ll most likely end up warping some time, but we&#8217;ll leave kOS automation of warping for a given period of time to our readers.</p>
+<p>The wait has finished, and now we need to start turning our ship in the direction of the burn:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">np</span> <span class="ow">to</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">.</span> <span class="c1">//points to node, don&#39;t care about the roll direction.</span>
+<span class="k">lock</span> <span class="nv">steering</span> <span class="ow">to</span> <span class="nv">np</span><span class="p">.</span>
+
+<span class="c1">//now we need to wait until the burn vector and ship&#39;s facing are aligned</span>
+<span class="k">wait</span> <span class="k">until</span> <span class="nv">abs</span><span class="p">(</span><span class="nv">np</span><span class="p">:</span><span class="nv">pitch</span> <span class="o">-</span> <span class="nv">facing</span><span class="p">:</span><span class="nv">pitch</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">15</span> <span class="ow">and</span> <span class="nv">abs</span><span class="p">(</span><span class="nv">np</span><span class="p">:</span><span class="nv">yaw</span> <span class="o">-</span> <span class="nv">facing</span><span class="p">:</span><span class="nv">yaw</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">15</span><span class="p">.</span>
+
+<span class="c1">//the ship is facing the right direction, let&#39;s wait for our burn time</span>
+<span class="k">wait</span> <span class="k">until</span> <span class="nv">node</span><span class="p">:</span><span class="nv">eta</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nv">burn_duration</span><span class="o">/</span><span class="mf">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we are ready to burn. It is usually done in the <cite>until</cite> loop, checking main parameters of the burn every iteration until the burn is complete:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//we only need to lock throttle once to a certain variable in the beginning of the loop, and adjust only the variable itself inside it</span>
+<span class="k">set</span> <span class="nv">tset</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+<span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="nv">tset</span><span class="p">.</span>
+
+<span class="k">set</span> <span class="nv">done</span> <span class="ow">to</span> <span class="nb">False</span><span class="p">.</span>
+<span class="c1">//initial deltav</span>
+<span class="k">set</span> <span class="nv">dv0</span> <span class="ow">to</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">.</span>
+<span class="k">until</span> <span class="nv">done</span>
+<span class="p">{</span>
+    <span class="c1">//recalculate current max_acceleration, as it changes while we burn through fuel</span>
+    <span class="k">set</span> <span class="nv">max_acc</span> <span class="ow">to</span> <span class="nv">ship</span><span class="p">:</span><span class="nv">maxthrust</span><span class="o">/</span><span class="nv">ship</span><span class="p">:</span><span class="nv">mass</span><span class="p">.</span>
+
+    <span class="c1">//throttle is 100% until there is less than 1 second of time left to burn</span>
+    <span class="c1">//when there is less than 1 second - decrease the throttle linearly</span>
+    <span class="k">set</span> <span class="nv">tset</span> <span class="ow">to</span> <span class="nv">min</span><span class="p">(</span><span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span><span class="o">/</span><span class="nv">max_acc</span><span class="p">,</span> <span class="mf">1</span><span class="p">).</span>
+
+    <span class="c1">//here&#39;s the tricky part, we need to cut the throttle as soon as our nd:deltav and initial deltav start facing opposite directions</span>
+    <span class="c1">//this check is done via checking the dot product of those 2 vectors</span>
+    <span class="k">if</span> <span class="nv">vdot</span><span class="p">(</span><span class="nv">dv0</span><span class="p">,</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span>
+    <span class="p">{</span>
+        <span class="k">print</span> <span class="s">&quot;End burn, remain dv &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;m/s, vdot: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">vdot</span><span class="p">(</span><span class="nv">dv0</span><span class="p">,</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">),</span><span class="mf">1</span><span class="p">).</span>
+        <span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+        <span class="k">break</span><span class="p">.</span>
+    <span class="p">}</span>
+
+    <span class="c1">//we have very little left to burn, less then 0.1m/s</span>
+    <span class="k">if</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">1</span>
+    <span class="p">{</span>
+        <span class="k">print</span> <span class="s">&quot;Finalizing burn, remain dv &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;m/s, vdot: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">vdot</span><span class="p">(</span><span class="nv">dv0</span><span class="p">,</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">),</span><span class="mf">1</span><span class="p">).</span>
+        <span class="c1">//we burn slowly until our node vector starts to drift significantly from initial vector</span>
+        <span class="c1">//this usually means we are on point</span>
+        <span class="k">wait</span> <span class="k">until</span> <span class="nv">vdot</span><span class="p">(</span><span class="nv">dv0</span><span class="p">,</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span>
+
+        <span class="k">lock</span> <span class="nv">throttle</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span>
+        <span class="k">print</span> <span class="s">&quot;End burn, remain dv &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">:</span><span class="nv">mag</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;m/s, vdot: &quot;</span> <span class="o">+</span> <span class="nv">round</span><span class="p">(</span><span class="nv">vdot</span><span class="p">(</span><span class="nv">dv0</span><span class="p">,</span> <span class="nv">nd</span><span class="p">:</span><span class="nv">deltav</span><span class="p">),</span><span class="mf">1</span><span class="p">).</span>
+        <span class="k">set</span> <span class="nv">done</span> <span class="ow">to</span> <span class="nb">True</span><span class="p">.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">unlock</span> <span class="nv">steering</span><span class="p">.</span>
+<span class="k">unlock</span> <span class="nv">throttle</span><span class="p">.</span>
+<span class="k">wait</span> <span class="mf">1</span><span class="p">.</span>
+
+<span class="c1">//we no longer need the maneuver node</span>
+<span class="k">remove</span> <span class="nv">nd</span><span class="p">.</span>
+
+<span class="c1">//set throttle to 0 just in case.</span>
+<span class="k">SET</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">CONTROL</span><span class="p">:</span><span class="nv">PILOTMAINTHROTTLE</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>That is all, this short script can execute any maneuver node with 0.1 m/s dv precision or even better.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gui.html" class="btn btn-neutral float-right" title="Creating Reusable GUI Elements" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pidloops.html" class="btn btn-neutral" title="PID Loops in kOS" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

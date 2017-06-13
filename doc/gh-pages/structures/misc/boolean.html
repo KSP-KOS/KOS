@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Boolean &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="Colors" href="colors.html"/>
+        <link rel="prev" title="Configurations and Miscellany" href="../misc.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Boolean</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration of kOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="note.html">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>Boolean</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/structures/misc/boolean.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bool">
+<span id="boolean"></span><span id="id1"></span><h1>Boolean<a class="headerlink" href="#bool" title="Permalink to this headline">¶</a></h1>
+<dl class="structure">
+<dt id="structure:BOOLEAN">
+<em class="property">structure </em><code class="descname">Boolean</code><a class="headerlink" href="#structure:BOOLEAN" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">(Boolean values have no suffixes, other than the <a class="reference internal" href="../reflection/structure.html#structure:STRUCTURE" title="STRUCTURE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Structure</span></code></a> suffixes all values have.)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>A Boolean value is the smallest unit of data possible in a computer program.
+It can contain one of exactly two values, either <code class="docutils literal"><span class="pre">True</span></code>, or <code class="docutils literal"><span class="pre">False</span></code>.</p>
+<p>When setting a Boolean value, you can use the special keywords <code class="docutils literal"><span class="pre">true</span></code> or
+<code class="docutils literal"><span class="pre">false</span></code> to give it a value:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myVariable</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">myVariable</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>You can also set it equal to the value of any true/false expression,
+for example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">x</span> <span class="ow">to</span> <span class="mf">781</span><span class="p">.</span>
+<span class="k">set</span> <span class="nv">itHas3Digits</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">x</span> <span class="o">&gt;=</span> <span class="mf">100</span> <span class="ow">and</span> <span class="nv">x</span> <span class="o">&lt;=</span> <span class="mf">999</span><span class="p">).</span>
+<span class="k">print</span> <span class="nv">itHas3Digits</span><span class="p">.</span>
+<span class="nb">True</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>If printed to the terminal, a Boolean value will return the string
+<code class="docutils literal"><span class="pre">&quot;True&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;False&quot;</span></code>.</p>
+<div class="section" id="operators">
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h2>
+<p>Boolean expressions can use any of the following operators:</p>
+<p>These all assume both <cite>a</cite> and <cite>b</cite> are Boolean values:</p>
+<ul class="simple">
+<li><cite>not a</cite> returns true if a is false, or false if a is true.</li>
+<li><cite>a and b</cite> returns true if and only if both a and b are true, else returns false.</li>
+<li><cite>a or b</cite> returns false if either a is true, b is true, or both are true.
+Only returns false with both a and b are false.</li>
+</ul>
+<p>The order of operations is as shown above.  First it performs <cite>not</cite>, then
+<cite>and</cite>, then <cite>or</cite>.  Parentheses can be used to force the order of operations
+to be the way you want, as usual.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Boolean values stored in a variable can be used in place of any conditional
+check syntax anywhere.  Example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">should_stage</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span>
+
+<span class="c1">// set should_stage to true if the ship has no active engines right now:</span>
+<span class="c1">//</span>
+<span class="k">set</span> <span class="nv">should_stage</span> <span class="ow">to</span> <span class="p">(</span><span class="nv">ship</span><span class="p">:</span><span class="nv">maxthrust</span> <span class="o">=</span> <span class="mf">0</span><span class="p">).</span>
+
+<span class="c1">// set should_stage to true if any of the active engines are flamed out,</span>
+<span class="c1">// which should cover most &quot;asparagus staging&quot; strategies:</span>
+<span class="c1">//</span>
+<span class="k">list</span> <span class="nv">engines</span> <span class="nv">in</span> <span class="nv">englist</span><span class="p">.</span>
+<span class="k">for</span> <span class="nv">eng</span> <span class="nv">in</span> <span class="nv">englist</span> <span class="p">{</span>
+
+  <span class="c1">// note, eng:flameout is a Boolean value here, being used as the</span>
+  <span class="c1">// conditional check of this if-statement:</span>
+  <span class="c1">//</span>
+  <span class="k">if</span> <span class="nv">eng</span><span class="p">:</span><span class="nv">flameout</span> <span class="p">{</span>
+    <span class="k">set</span> <span class="nv">should_stage</span> <span class="ow">to</span> <span class="nb">true</span><span class="p">.</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Note &#39;should_stage&#39; is a Boolean value here, being used as the</span>
+<span class="c1">// conditional check of this if-statement:</span>
+<span class="c1">//</span>
+<span class="k">if</span> <span class="nv">should_stage</span> <span class="p">{</span>
+  <span class="k">stage</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="colors.html" class="btn btn-neutral float-right" title="Colors" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../misc.html" class="btn btn-neutral" title="Configurations and Miscellany" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

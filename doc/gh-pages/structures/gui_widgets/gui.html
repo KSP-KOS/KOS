@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GUI structure &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Creating GUIs" href="../gui.html"/>
+        <link rel="next" title="Label" href="label.html"/>
+        <link rel="prev" title="Button" href="button.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../gui.html">GUI Widgets</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="box.html">Box</a></li>
+<li class="toctree-l3"><a class="reference internal" href="button.html">Button</a></li>
+<li class="toctree-l3"><a class="reference internal" href="button.html#example">Example</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">GUI structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="label.html">Label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="label.html#rich-text">Rich Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="popupmenu.html">PopupMenu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scrollbox.html">Scrollbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="skin.html">Skin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slider.html">Slider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spacing.html">Spacing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="style.html">Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stylerecoffset.html">StyleRectOffset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stylestate.html">StyleState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="textfield.html">TextField</a></li>
+<li class="toctree-l3"><a class="reference internal" href="widget.html">Widget</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../gui.html">Creating GUIs</a> &raquo;</li>
+      
+    <li>GUI structure</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/structures/gui_widgets/gui.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gui-structure">
+<span id="id1"></span><h1>GUI structure<a class="headerlink" href="#gui-structure" title="Permalink to this headline">¶</a></h1>
+<dl class="structure">
+<dt id="structure:GUI">
+<em class="property">structure </em><code class="descname">GUI</code><a class="headerlink" href="#structure:GUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>This object is created with the <a class="reference internal" href="../gui.html#function:GUI" title="GUI function"><code class="xref ks ks-func docutils literal"><span class="pre">GUI(width,height)</span></code></a> function.</p>
+<p>A GUI object is a kind of <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> that is the outermost
+window that holds all the other widgets.  In order to work at all, all
+widgets must be put inside of a <code class="docutils literal"><span class="pre">GUI</span></code> box, or in inside of another
+<a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> which in turn is inside a <code class="docutils literal"><span class="pre">GUI</span></code> box, etc.</p>
+<p>(To get rid of all GUIs that you created from this CPU, you can use
+the <a class="reference internal" href="../gui.html#function:CLEARGUIS" title="CLEARGUIS function"><code class="xref ks ks-func docutils literal"><span class="pre">CLEARGUIS</span></code></a> built-in-function, which is a shorthand
+for calling <code class="xref ks ks-attr docutils literal"><span class="pre">Widget:HIDE</span></code> and <code class="xref ks ks-attr docutils literal"><span class="pre">Widget:DISPOSE</span></code> on each
+of them.)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="18%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Every suffix of <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">BOX</span></code></a>.  Note, to add widgets to this window, see the BOX suffixes.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GUI:X" title="GUI:X attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">X</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (pixels)</td>
+<td>X-position of the window. Negative values measure from the right.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GUI:Y" title="GUI:Y attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Y</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (pixels)</td>
+<td>Y-position of the window. Negative values measure from the bottom.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GUI:DRAGGABLE" title="GUI:DRAGGABLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DRAGGABLE</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>True = user can move window.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GUI:EXTRADELAY" title="GUI:EXTRADELAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">EXTRADELAY</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (seconds)</td>
+<td>Add artificial delay to all communication with this GUI (good for testing before you get into deep space)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:GUI:SKIN" title="GUI:SKIN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SKIN</span></code></a></td>
+<td><a class="reference internal" href="skin.html#structure:SKIN" title="SKIN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Skin</span></code></a></td>
+<td>The skin defining the default style of widgets in this GUI.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:GUI:SHOW" title="GUI:SHOW method"><code class="xref ks ks-meth docutils literal"><span class="pre">SHOW</span></code></a></td>
+<td>none</td>
+<td>Call to make the gui appear</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:GUI:HIDE" title="GUI:HIDE method"><code class="xref ks ks-meth docutils literal"><span class="pre">HIDE</span></code></a></td>
+<td>none</td>
+<td>Call to make the gui disappear</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="attribute:GUI:X">
+GUI:<code class="descname">X</code><a class="headerlink" href="#attribute:GUI:X" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>This is the X position of upper-left corner of window, in pixels.</p>
+<p>You can alter this value to move the window.</p>
+<p>If you use a negative value for the coordinate, then the coordiante will be
+measured in the reverse direction, from the right edge of the screen.  (i.e.
+setting it to -200 means 200 pixels away from the right edge of the screen.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:GUI:Y">
+GUI:<code class="descname">Y</code><a class="headerlink" href="#attribute:GUI:Y" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>This is the Y position of upper-left corner of window, in pixels.</p>
+<p>You can alter this value to move the window.</p>
+<p>If you use a negative value for the coordinate, then the coordiante will be
+measured in the reverse direction, from the bottom edge of the screen.  (i.e.
+setting it to -200 means 200 pixels away from the bottom edge of the screen.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:GUI:DRAGGABLE">
+GUI:<code class="descname">DRAGGABLE</code><a class="headerlink" href="#attribute:GUI:DRAGGABLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Set to true to allow the window to be moved by the user dragging it.  If
+set to false, it can still be moved by the script setting <a class="reference internal" href="#attribute:GUI:X" title="GUI:X attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GUI:X</span></code></a>
+and <a class="reference internal" href="#attribute:GUI:Y" title="GUI:Y attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GUI:Y</span></code></a>, but can&#8217;t be moved by the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:GUI:EXTRADELAY">
+GUI:<code class="descname">EXTRADELAY</code><a class="headerlink" href="#attribute:GUI:EXTRADELAY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>This is the number of extra seconds of delay to add to
+the GUI for testing purposes.</p>
+<p>If Remote Tech is installed, the GUI system <a class="reference internal" href="../gui.html#gui-delay"><span>obeys the signal delay</span></a>
+of the Remote Tech mod such that when you click a widget it can take
+time before the script notices you did so.  If you want to test how
+your GUI will work under a signal delay you can use this suffix to
+force a simulated additional signal delay even if you are not using
+RemoteTech.  (Or when you are using RemoteTech but are testing your GUI in
+situations where there isn&#8217;t a noticable signal delay, like in Kerbin
+low orbit).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:GUI:SKIN">
+GUI:<code class="descname">SKIN</code><a class="headerlink" href="#attribute:GUI:SKIN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="skin.html#structure:SKIN" title="SKIN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Skin</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>A <a class="reference internal" href="skin.html#structure:SKIN" title="SKIN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Skin</span></code></a> is a collection of <a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a> objects to be
+used by different types of widgets within the GUI window.  With this
+suffix you can assign a different Skin to the window, which will then
+be used by default by all the widgets of the appropriate type
+inside the window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:GUI:SHOW">
+GUI:<code class="descname">SHOW</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:GUI:SHOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synopsis:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">g</span> <span class="ow">to</span> <span class="nv">gui</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="c1">// .. call G:addbutton, G:addslider, etc etc here</span>
+<span class="nv">g</span><span class="p">:</span><span class="nv">show</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>Call this suffix to make the GUI appear.  (Note this is really just
+<a class="reference internal" href="widget.html#method:WIDGET:SHOW" title="WIDGET:SHOW method"><code class="xref ks ks-meth docutils literal"><span class="pre">Widget:Show</span></code></a> but it&#8217;s mentioned again here because it&#8217;s
+vital when making a GUI to know that it won&#8217;t show up if you don&#8217;t
+call this.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:GUI:HIDE">
+GUI:<code class="descname">HIDE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:GUI:HIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synopsis:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">g</span> <span class="ow">to</span> <span class="nv">gui</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span>
+<span class="c1">// .. call G:addbutton, G:addslider, etc etc here</span>
+<span class="nv">g</span><span class="p">:</span><span class="nv">show</span><span class="p">().</span>
+<span class="k">wait</span> <span class="k">until</span> <span class="nv">done</span><span class="p">.</span> <span class="c1">// whatever you decide &quot;done&quot; is.</span>
+<span class="nv">g</span><span class="p">:</span><span class="nv">hide</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>Call this suffix to make the GUI disappear.  (Note this is really just
+<a class="reference internal" href="widget.html#method:WIDGET:SHOW" title="WIDGET:SHOW method"><code class="xref ks ks-meth docutils literal"><span class="pre">Widget:Show</span></code></a> but it&#8217;s mentioned again here.)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="label.html" class="btn btn-neutral float-right" title="Label" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="button.html" class="btn btn-neutral" title="Button" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

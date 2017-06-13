@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Resource Transfer &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="SteeringManager" href="steeringmanager.html"/>
+        <link rel="prev" title="PIDLoop" href="pidloop.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI Widgets</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="boolean.html">Boolean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="colors.html">Colors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration of kOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="highlight.html">Part Highlighting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kosdelegate.html">KOSDelegate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kuniverse.html">KUniverse 4th wall methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loaddistance.html">Vessel Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loaddistance.html#situation-load-distance">Situation Load Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="note.html">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pidloop.html">PIDLoop</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Resource Transfer</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="steeringmanager.html">SteeringManager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="string.html">String</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminal.html">Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminalinput.html">Terminal Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time.html">Time Span</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timewarp.html">WARP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vecdraw.html">Drawing Vectors on the Screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voice.html">Voice</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>Resource Transfer</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/structures/misc/resource_transfer.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="resource-transfer">
+<span id="id1"></span><h1>Resource Transfer<a class="headerlink" href="#resource-transfer" title="Permalink to this headline">¶</a></h1>
+<p>Usage is covered elsewhere &lt;../commands/resource_transfer.html&gt;`__</p>
+<div class="section" id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<dl class="structure">
+<dt id="structure:RESOURCETRANSFER">
+<em class="property">structure </em><code class="descname">ResourceTransfer</code><a class="headerlink" href="#structure:RESOURCETRANSFER" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">Members</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type (units)</th>
+<th class="head">Access</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:STATUS" title="RESOURCETRANSFER:STATUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></code></a></td>
+<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+<td>Get only</td>
+<td>The <a class="reference internal" href="string.html#string"><span>string</span></a> status of the transfer (eg &#8220;Inactive&#8221;, &#8220;Transferring&#8221;, &#8220;Failed&#8221;, &#8220;Finished&#8221;)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:MESSAGE" title="RESOURCETRANSFER:MESSAGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGE</span></code></a></td>
+<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+<td>Get only</td>
+<td>A message about the current status</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:GOAL" title="RESOURCETRANSFER:GOAL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GOAL</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Get only</td>
+<td>This is how much of the resource will be transferred.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:TRANSFERRED" title="RESOURCETRANSFER:TRANSFERRED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRANSFERRED</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+<td>Get only</td>
+<td>This is how much of the resource has been transferred.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:RESOURCE" title="RESOURCETRANSFER:RESOURCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESOURCE</span></code></a></td>
+<td><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+<td>Get only</td>
+<td>The name of the resource (eg oxidizer, liquidfuel)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCETRANSFER:ACTIVE" title="RESOURCETRANSFER:ACTIVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVE</span></code></a></td>
+<td><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+<td>Get / Set</td>
+<td>Setting this value will either start, pause or restart a transfer. Default is false.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:RESOURCETRANSFER:STATUS">
+RESOURCETRANSFER:<code class="descname">STATUS</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:STATUS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>This enumerated type shows the status of the transfer. the possible values are:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Inactive (default)</dt>
+<dd><ul class="first last simple">
+<li>Transfer is stopped</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Finished</dt>
+<dd><ul class="first last simple">
+<li>Transfer has reached its goal</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Failed</dt>
+<dd><ul class="first last simple">
+<li>There was an error in the transfer, see <code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGE</span></code> for details</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Transferring</dt>
+<dd><ul class="first last simple">
+<li>The transfer is in progress.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:RESOURCETRANSFER:MESSAGE">
+RESOURCETRANSFER:<code class="descname">MESSAGE</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:MESSAGE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>This shows the detail related to <code class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:RESOURCETRANSFER:GOAL">
+RESOURCETRANSFER:<code class="descname">GOAL</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:GOAL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>If you specified an amount to transfer in your transfer request, it will be shown here.
+If you did not, this will return the sentinel value -1.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:RESOURCETRANSFER:TRANSFERRED">
+RESOURCETRANSFER:<code class="descname">TRANSFERRED</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:TRANSFERRED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns the amount of the specified resource that has been transferred by this resource transfer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:RESOURCETRANSFER:RESOURCE">
+RESOURCETRANSFER:<code class="descname">RESOURCE</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="string.html#string"><span>string</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>The name of the resource that will be transferred. (eg, oxidizer, liquidfuel)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:RESOURCETRANSFER:ACTIVE">
+RESOURCETRANSFER:<code class="descname">ACTIVE</code><a class="headerlink" href="#attribute:RESOURCETRANSFER:ACTIVE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get / Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>When getting, this suffix is simply a shortcut to tell you if <code class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></code> is Transferring.
+Setting true will change the status of the transfer to Transferring, setting false will change status to inactive.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="steeringmanager.html" class="btn btn-neutral float-right" title="SteeringManager" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pidloop.html" class="btn btn-neutral" title="PIDLoop" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

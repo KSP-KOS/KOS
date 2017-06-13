@@ -1,0 +1,882 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Skin &mdash; kOS 1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/kos_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 1.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Creating GUIs" href="../gui.html"/>
+        <link rel="next" title="Slider" href="slider.html"/>
+        <link rel="prev" title="Scrollbox" href="scrollbox.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents.html" class="icon icon-home"> kOS
+          
+
+          
+            
+            <img src="../../_static/kos_logo_small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contents.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reflection.html">Generic Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collections.html">Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes_and_files.html">Volumes &amp; Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communication.html">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../gui.html">GUI Widgets</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="box.html">Box</a></li>
+<li class="toctree-l3"><a class="reference internal" href="button.html">Button</a></li>
+<li class="toctree-l3"><a class="reference internal" href="button.html#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gui.html">GUI structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="label.html">Label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="label.html#rich-text">Rich Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="popupmenu.html">PopupMenu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scrollbox.html">Scrollbox</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Skin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slider.html">Slider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spacing.html">Spacing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="style.html">Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stylerecoffset.html">StyleRectOffset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stylestate.html">StyleState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="textfield.html">TextField</a></li>
+<li class="toctree-l3"><a class="reference internal" href="widget.html">Widget</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../contents.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../gui.html">Creating GUIs</a> &raquo;</li>
+      
+    <li>Skin</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/structures/gui_widgets/skin.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skin">
+<span id="gui-skin"></span><h1>Skin<a class="headerlink" href="#skin" title="Permalink to this headline">¶</a></h1>
+<dl class="structure">
+<dt id="structure:SKIN">
+<em class="property">structure </em><code class="descname">Skin</code><a class="headerlink" href="#structure:SKIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal"><span class="pre">Skin</span></code> is a set of <a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a> settings defined for various
+widget types. It defines what default style will be used for each
+type of widget inside the GUI.  Changes to the styles on a GUI:SKIN
+will affect the subsequently created widgets inside that GUI window.
+Note that some of the styles are used by subparts of widgets, such as the
+HORIZONTALSLIDERTHUMB, which is used by a SLIDER when oriented horizontally.</p>
+<p>If you create your own composite widgets, you can use ADD and GET to centralize setting
+up the style of your composite widgets.</p>
+<p>If you wish to make a complete new Skin, the cleanest method would be to put all
+the graphics in a directory, along with a kOS script that given a GUI:SKIN, changes
+everything in that skin as needed, allowing users to run your script with their GUI:SKIN
+to make it use your custom skin.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="17%" />
+<col width="58%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Suffix</td>
+<td>Type</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:BOX" title="SKIN:BOX attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BOX</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:BUTTON" title="SKIN:BUTTON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">BUTTON</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Button</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:HORIZONTALSCROLLBAR" title="SKIN:HORIZONTALSCROLLBAR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HORIZONTALSCROLLBAR</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the horizontal scrollbar of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:HORIZONTALSCROLLBARLEFTBUTTON" title="SKIN:HORIZONTALSCROLLBARLEFTBUTTON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HORIZONTALSCROLLBARLEFTBUTTON</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the horizontal scrollbar left button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:HORIZONTALSCROLLBARRIGHTBUTTON" title="SKIN:HORIZONTALSCROLLBARRIGHTBUTTON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HORIZONTALSCROLLBARRIGHTBUTTON</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the horizontal scrollbar right button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:HORIZONTALSCROLLBARTHUMB" title="SKIN:HORIZONTALSCROLLBARTHUMB attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HORIZONTALSCROLLBARTHUMB</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the horizontal scrollbar thumb of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:HORIZONTALSLIDER" title="SKIN:HORIZONTALSLIDER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HORIZONTALSLIDER</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for horizontal <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:HORIZONTALSLIDERTHUMB" title="SKIN:HORIZONTALSLIDERTHUMB attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HORIZONTALSLIDERTHUMB</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the thumb of horizontal <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:VERTICALSCROLLBAR" title="SKIN:VERTICALSCROLLBAR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSCROLLBAR</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the vertical scrollbar of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:VERTICALSCROLLBARLEFTBUTTON" title="SKIN:VERTICALSCROLLBARLEFTBUTTON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSCROLLBARLEFTBUTTON</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the vertical scrollbar left button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:VERTICALSCROLLBARRIGHTBUTTON" title="SKIN:VERTICALSCROLLBARRIGHTBUTTON attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSCROLLBARRIGHTBUTTON</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the vertical scrollbar right button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:VERTICALSCROLLBARTHUMB" title="SKIN:VERTICALSCROLLBARTHUMB attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSCROLLBARTHUMB</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the vertical scrollbar thumb of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:VERTICALSLIDER" title="SKIN:VERTICALSLIDER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSLIDER</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for vertical <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:VERTICALSLIDERTHUMB" title="SKIN:VERTICALSLIDERTHUMB attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSLIDERTHUMB</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the thumb of vertical <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:LABEL" title="SKIN:LABEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LABEL</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:SCROLLVIEW" title="SKIN:SCROLLVIEW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SCROLLVIEW</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:TEXTFIELD" title="SKIN:TEXTFIELD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TEXTFIELD</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="textfield.html#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TextField</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:TOGGLE" title="SKIN:TOGGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOGGLE</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Button</span></code></a> widgets in toggle mode (GUI:ADDCHECKBOX and GUI:ADDRADIOBUTTON).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:FLATLAYOUT" title="SKIN:FLATLAYOUT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FLATLAYOUT</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> transparent widgets (GUI:ADDHLAYOUT and GUI:ADDVLAYOUT).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:POPUPMENU" title="SKIN:POPUPMENU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POPUPMENU</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PopupMenu</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:POPUPWINDOW" title="SKIN:POPUPWINDOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POPUPWINDOW</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the popup window of <a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PopupMenu</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:POPUPMENUITEM" title="SKIN:POPUPMENUITEM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POPUPMENUITEM</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for the menu items of <a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PopupMenu</span></code></a> widgets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:LABELTIPOVERLAY" title="SKIN:LABELTIPOVERLAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LABELTIPOVERLAY</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for tooltips overlayed on <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a> widgets.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:WINDOW" title="SKIN:WINDOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WINDOW</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Style for <a class="reference internal" href="gui.html#structure:GUI" title="GUI structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GUI</span></code></a> windows.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SKIN:FONT" title="SKIN:FONT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FONT</span></code></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
+<td>The name of the font used (if STYLE:FONT does not change it for an element).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SKIN:SELECTIONCOLOR" title="SKIN:SELECTIONCOLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SELECTIONCOLOR</span></code></a></td>
+<td><a class="reference internal" href="../misc/colors.html#colors"><span>Color</span></a></td>
+<td>The background color of selected text (eg. TEXTFIELD).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:SKIN:ADD" title="SKIN:ADD method"><code class="xref ks ks-meth docutils literal"><span class="pre">ADD(name)</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Adds a new style.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:SKIN:HAS" title="SKIN:HAS method"><code class="xref ks ks-meth docutils literal"><span class="pre">HAS(name)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>Does the skin have the named style?</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:SKIN:GET" title="SKIN:GET method"><code class="xref ks ks-meth docutils literal"><span class="pre">GET(name)</span></code></a></td>
+<td><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+<td>Gets a style by name (including ADDed styles).</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="attribute:SKIN:BOX">
+Skin:<code class="descname">BOX</code><a class="headerlink" href="#attribute:SKIN:BOX" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:BUTTON">
+Skin:<code class="descname">BUTTON</code><a class="headerlink" href="#attribute:SKIN:BUTTON" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Button</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:HORIZONTALSCROLLBAR">
+Skin:<code class="descname">HORIZONTALSCROLLBAR</code><a class="headerlink" href="#attribute:SKIN:HORIZONTALSCROLLBAR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the horizontal scrollbar of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:HORIZONTALSCROLLBARLEFTBUTTON">
+Skin:<code class="descname">HORIZONTALSCROLLBARLEFTBUTTON</code><a class="headerlink" href="#attribute:SKIN:HORIZONTALSCROLLBARLEFTBUTTON" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the horizontal scrollbar left button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:HORIZONTALSCROLLBARRIGHTBUTTON">
+Skin:<code class="descname">HORIZONTALSCROLLBARRIGHTBUTTON</code><a class="headerlink" href="#attribute:SKIN:HORIZONTALSCROLLBARRIGHTBUTTON" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the horizontal scrollbar right button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:HORIZONTALSCROLLBARTHUMB">
+Skin:<code class="descname">HORIZONTALSCROLLBARTHUMB</code><a class="headerlink" href="#attribute:SKIN:HORIZONTALSCROLLBARTHUMB" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the horizontal scrollbar thumb of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:HORIZONTALSLIDER">
+Skin:<code class="descname">HORIZONTALSLIDER</code><a class="headerlink" href="#attribute:SKIN:HORIZONTALSLIDER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for horizontal <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:HORIZONTALSLIDERTHUMB">
+Skin:<code class="descname">HORIZONTALSLIDERTHUMB</code><a class="headerlink" href="#attribute:SKIN:HORIZONTALSLIDERTHUMB" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the thumb of horizontal <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:VERTICALSCROLLBAR">
+Skin:<code class="descname">VERTICALSCROLLBAR</code><a class="headerlink" href="#attribute:SKIN:VERTICALSCROLLBAR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the vertical scrollbar of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:VERTICALSCROLLBARLEFTBUTTON">
+Skin:<code class="descname">VERTICALSCROLLBARLEFTBUTTON</code><a class="headerlink" href="#attribute:SKIN:VERTICALSCROLLBARLEFTBUTTON" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the vertical scrollbar left button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:VERTICALSCROLLBARRIGHTBUTTON">
+Skin:<code class="descname">VERTICALSCROLLBARRIGHTBUTTON</code><a class="headerlink" href="#attribute:SKIN:VERTICALSCROLLBARRIGHTBUTTON" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the vertical scrollbar right button of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:VERTICALSCROLLBARTHUMB">
+Skin:<code class="descname">VERTICALSCROLLBARTHUMB</code><a class="headerlink" href="#attribute:SKIN:VERTICALSCROLLBARTHUMB" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the vertical scrollbar thumb of <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:VERTICALSLIDER">
+Skin:<code class="descname">VERTICALSLIDER</code><a class="headerlink" href="#attribute:SKIN:VERTICALSLIDER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for vertical <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:VERTICALSLIDERTHUMB">
+Skin:<code class="descname">VERTICALSLIDERTHUMB</code><a class="headerlink" href="#attribute:SKIN:VERTICALSLIDERTHUMB" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the thumb of vertical <a class="reference internal" href="slider.html#structure:SLIDER" title="SLIDER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Slider</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:LABEL">
+Skin:<code class="descname">LABEL</code><a class="headerlink" href="#attribute:SKIN:LABEL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:SCROLLVIEW">
+Skin:<code class="descname">SCROLLVIEW</code><a class="headerlink" href="#attribute:SKIN:SCROLLVIEW" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="scrollbox.html#structure:SCROLLBOX" title="SCROLLBOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">ScrollBox</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:TEXTFIELD">
+Skin:<code class="descname">TEXTFIELD</code><a class="headerlink" href="#attribute:SKIN:TEXTFIELD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="textfield.html#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TextField</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:TOGGLE">
+Skin:<code class="descname">TOGGLE</code><a class="headerlink" href="#attribute:SKIN:TOGGLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="button.html#structure:BUTTON" title="BUTTON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Button</span></code></a> widgets in toggle mode (GUI:ADDCHECKBOX and GUI:ADDRADIOBUTTON).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:FLATLAYOUT">
+Skin:<code class="descname">FLATLAYOUT</code><a class="headerlink" href="#attribute:SKIN:FLATLAYOUT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="box.html#structure:BOX" title="BOX structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Box</span></code></a> transparent widgets (GUI:ADDHLAYOUT and GUI:ADDVLAYOUT).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:POPUPMENU">
+Skin:<code class="descname">POPUPMENU</code><a class="headerlink" href="#attribute:SKIN:POPUPMENU" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PopupMenu</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:POPUPWINDOW">
+Skin:<code class="descname">POPUPWINDOW</code><a class="headerlink" href="#attribute:SKIN:POPUPWINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the popup window of <a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PopupMenu</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:POPUPMENUITEM">
+Skin:<code class="descname">POPUPMENUITEM</code><a class="headerlink" href="#attribute:SKIN:POPUPMENUITEM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for the menu items of <a class="reference internal" href="popupmenu.html#structure:POPUPMENU" title="POPUPMENU structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PopupMenu</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:LABELTIPOVERLAY">
+Skin:<code class="descname">LABELTIPOVERLAY</code><a class="headerlink" href="#attribute:SKIN:LABELTIPOVERLAY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for tooltips overlayed on <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a> widgets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:WINDOW">
+Skin:<code class="descname">WINDOW</code><a class="headerlink" href="#attribute:SKIN:WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Style for <a class="reference internal" href="gui.html#structure:GUI" title="GUI structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GUI</span></code></a> windows.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:FONT">
+Skin:<code class="descname">FONT</code><a class="headerlink" href="#attribute:SKIN:FONT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The name of the font used (if STYLE:FONT does not change it for an element).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SKIN:SELECTIONCOLOR">
+Skin:<code class="descname">SELECTIONCOLOR</code><a class="headerlink" href="#attribute:SKIN:SELECTIONCOLOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/colors.html#colors"><span>Color</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The background color of selected text (eg. TEXTFIELD).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:SKIN:ADD">
+Skin:<code class="descname">ADD</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:SKIN:ADD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Adds a new style to the skin and names it.  The skin holds a list
+of styles by name which you can retrieve later.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:SKIN:HAS">
+Skin:<code class="descname">HAS</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:SKIN:HAS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Does the skin have the named style?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:SKIN:GET">
+Skin:<code class="descname">GET</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:SKIN:GET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="style.html#structure:STYLE" title="STYLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Style</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Gets a style by name (including ADDed styles).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="slider.html" class="btn btn-neutral float-right" title="Slider" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="scrollbox.html" class="btn btn-neutral" title="Scrollbox" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
