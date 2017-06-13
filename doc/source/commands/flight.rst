@@ -29,6 +29,6 @@ Unless otherwise stated, all controls that a **kOS** CPU attempts will be done o
     set ``SAS OFF``. You should take care in your scripts to manage the
     use of ``SAS`` appropriately. It is common for people writing
     **kOS** scripts to explicitly start them with a use of the
-    ``SAS OFF` command just in case you forgot to turn it off before
+    ``SAS OFF`` command just in case you forgot to turn it off before
     running the script.  You could also store the current state in a
     temporary variable, and re-set it at the conclusion of your script.
