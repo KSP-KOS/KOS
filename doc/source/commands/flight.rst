@@ -24,7 +24,7 @@ Unless otherwise stated, all controls that a **kOS** CPU attempts will be done o
 
 .. warning:: **SAS OVERRIDES kOS**
 
-    However, SAS will tend to fight and/or override **kOS**'s attempts to
+    However, SAS will tend to fight and/or override kOS's attempts to
     steer.  In order for **kOS** to be able to turn the ship, you need to
     set ``SAS OFF``. You should take care in your scripts to manage the
     use of ``SAS`` appropriately. It is common for people writing
