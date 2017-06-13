@@ -3,25 +3,6 @@ kOS Mod Changelog
 
 # v1.1.0 (for KSP 1.2.2) Ewww, everything's GUI.
 
-TODO: When we release for real, move up all the v1.0.90 stuff
-from below up into here for v1.1.0 and get rid of v1.0.90 as a heading.
-
-
-# v1.0.90 (for KSP 1.2.2) Ewww, everything's GUI.
-
-## TO PEOPLE VIEWING THIS FOR THE PRE-RELEASE:
-
-This v1.1.0 changelog has several TODO's in it because some URLS and links
-are not final and will change when we go to full release.  Rather than
-include the links that will soon become wrong, they're just marked as TODO
-for now, and you'll have to use the documentation search function to
-find the relevant part of the docs on the temporary pre-rlease docs server.)
-
-(TODO: Remove These paragraph when going from pre-release to public release:
-Although this changelog is marked as v1.1.0, remember that v1.1.0 is
-technically not out yet.  What you are seeing is a "pre-release" of v1.1.0,
-and things are subject to change.)
-
 ### BREAKING CHANGES
 * Because of changes to make the terminal use a real font from your OS, we had
   to obsolete TERMINAL:CHARWIDTH.  You can only choose TERMINAL:CHARHEIGHT.
@@ -41,7 +22,7 @@ and things are subject to change.)
   script a bit to change things.
   [pull request](https://github.com/KSP-KOS/KOS/pull/1878)
   [pull request](https://github.com/KSP-KOS/KOS/pull/2006)
-  documentation: search for "GUI" (TODO: replace with URL).
+  documentation: search for "GUI" (http://ksp-kos.github.io/KOS_DOC/structures/gui.html).
 * **Background compilation**.  Now the game continues its simulation normally and physical
   events keep happening, while kOS is taking a few seconds to compile a script.
   (Gets rid of that familiar frozen game effect when you first issue a ``RUN`` command.)
@@ -60,7 +41,7 @@ and things are subject to change.)
   window can do it.)
   [pull request](https://github.com/KSP-KOS/KOS/pull/1994)
 * **Regular expression part searches** for part/tag names.
-  [pull request](https://github.com/KSP-KOS/KOS/pull/1918), documenation: search for "PARTSTAGGEDPATTERN" (TODO: replace with URL).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/1918), documenation: search for "PARTSTAGGEDPATTERN" (http://ksp-kos.github.io/KOS_DOC/structures/vessels/vessel.html#method:VESSEL:PARTSTAGGEDPATTERN).
 * **Choose the IP address** of the telnet server, from the ones your computer has available, instead
   of kOS picking one arbitrarily.
   [pull request](https://github.com/KSP-KOS/KOS/pull/1976)
@@ -68,11 +49,11 @@ and things are subject to change.)
   system used by the GUI, we also finally had to add support for proper local
   variable scoping to triggers like WHEN and ON.  A trigger's condition
   variables are no longer limited to having to be global.
-  [pull request](TODO URL HERE BEFORE RELEASE)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2031)
 * **Pressure at a given altitude** is now something you can query from an atmosphere.
-  [pull request](https://github.com/KSP-KOS/KOS/pull/2000), documentation: search for "ALTITUDEPRESSURE" (TODO: replace with URL).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2000), documentation: search for "ALTITUDEPRESSURE" (http://ksp-kos.github.io/KOS_DOC/structures/celestial_bodies/atmosphere.html#method:ATMOSPHERE:ALTITUDEPRESSURE).
 * **Get a LATLNG for some other body than the current one.**
-  [pull request](https://github.com/KSP-KOS/KOS/pull/2001), documentation: search for "GEOPOSITIONLATLNG" (TODO: replace with URL).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2001), documentation: search for "GEOPOSITIONLATLNG" (http://ksp-kos.github.io/KOS_DOC/structures/celestial_bodies/body.html#method:BODY:GEOPOSITIONLATLNG).
 
 ### BUG FIXES
 * Fix kOS toolbar button sometimes failing to appear in Blizzy Toolbar Mod.

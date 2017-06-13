@@ -24,6 +24,44 @@ release.
 
 ****
 
+Changes in 1.1.0
+----------------
+
+GUI
+:::
+
+The :ref:`GUI system <gui>` was added new with version 1.1.0.
+
+Terminal Font
+:::::::::::::
+
+Now that the terminal can display any font from your OS, you
+can now display any Unicode character you like.
+
+Regex Part Searches
+:::::::::::::::::::
+
+You may now use :meth:`Vessel:PARTSTAGGEDPATTERN` to perform regular
+expression searches for part tags.
+
+Triggers take locals
+::::::::::::::::::::
+
+The previous restriction that triggers such as WHEN and ON must only
+use global variables in their check expressions has been removed.
+Now they can use local variables and will remember their closures.
+
+Altitude pressure
+:::::::::::::::::
+
+:meth:`Atmosphere:ALTITUDEPRESSURE` added.
+
+LATLNG of other body
+::::::::::::::::::::
+
+New suffix :meth:`Body:GEOPOSITIONLATLNG` lets you get a LATLNG from a body
+other than the current body you are orbiting.
+
 Changes in 1.0.3
 ----------------
 

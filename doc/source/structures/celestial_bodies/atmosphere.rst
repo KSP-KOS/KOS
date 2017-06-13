@@ -30,6 +30,9 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
         * - :attr:`SEALEVELPRESSURE`
           - :ref:`scalar <scalar>` (atm)
           - pressure at sea level
+        * - :meth:`ALTITUDEPRESSURE(altitude)`
+          - :ref:`scalar <scalar>` (atm)
+          - pressure at the givel altitude
         * - :attr:`HEIGHT`
           - :ref:`scalar <scalar>` (m)
           - advertised atmospheric height
