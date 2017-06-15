@@ -64,7 +64,7 @@ namespace kOS.Communication
             }
         }
 
-        public override string DisplaySection => "kOS";
+        public override string DisplaySection { get { return "kOS"; } }
 
         public override string Section
         {
