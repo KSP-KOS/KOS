@@ -605,6 +605,7 @@ Brad White (hvacengi) https://github.com/hvacengi
 Chris Woerz (erendrake) https://github.com/erendrake  (repository owner)
 (name not public in github profile) (alchemist_ch) https://github.com/AlchemistCH
 (name not public in github profile) (tdw89) https://github.com/TDW89
+Philip Kin (pipakin) https://github.com/pipakin
 
 # v0.18.2
 
