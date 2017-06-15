@@ -9,6 +9,7 @@ to the KSP API to make it work with KSP 1.3.
 Also updated the included ModuleManager to version 2.8, which
 is a necessity for compatibility with KSP 1.3.
 
+
 # v1.1.0 (for KSP 1.2.2) Ewww, everything's GUI.
 
 ### BREAKING CHANGES
