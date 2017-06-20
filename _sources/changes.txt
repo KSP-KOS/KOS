@@ -24,6 +24,11 @@ release.
 
 ****
 
+Changes in 1.1.1
+----------------
+
+None:  This was a pure compatibility with KSP 1.3 update, nothing more.
+
 Changes in 1.1.0
 ----------------
 
