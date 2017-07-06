@@ -444,10 +444,14 @@ namespace kOS.Screen
             Event e = Event.current;
             if (e.type == EventType.KeyDown)
             {
-                // Unity handles some keys in a particular way
-                // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
-                var c = (char)(e.character & 0x007f);
-
+                // This ugly hack is here to solve a bug with Unity mapping
+                // Keycodes to Unicode chars incorrectly on its Linux version:
+                char c;
+                if ((e.character & 0xff00) == 0xff00) // Only trigger on Unicode values 0xff00 through 0xffff, to avoid issue #2061
+                    c = (char)(e.character & 0x007f); // When doing this to solve issue #206
+                else
+                    c = e.character;
+                
                 // command sequences
                 if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
                 {
