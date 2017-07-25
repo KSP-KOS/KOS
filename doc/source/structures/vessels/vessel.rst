@@ -215,13 +215,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
 
-.. attribute:: Vessel:TERMVELOCITY
-
-    :type: :ref:`scalar <scalar>` (m/s)
-    :access: Get only
-
-    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
-
 .. attribute:: Vessel:SHIPNAME
 
     :type: :ref:`string <string>`
