@@ -309,7 +309,7 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
 
     // feedback based on atmospheric efficiency
     LOCK surfspeed TO SHIP:VELOCITY:SURFACE:MAG.
-    LOCK atmoeff TO surfspeed / SHIP:TERMVELOCITY.
+    LOCK atmoeff TO surfspeed / SHIP:TERMVELOCITY.  //Using deprecated TERMVELOCITY syntax
     LOCK P TO 1.0 - atmoeff.
 
     SET t0 TO TIME:SECONDS.
