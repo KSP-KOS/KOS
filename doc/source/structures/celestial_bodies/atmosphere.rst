@@ -24,7 +24,7 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
         * - :attr:`OXYGEN`
           - :ref:`boolean <boolean>`
           - True if oxygen is present
-        * - :attr:`SCALE`
+        * - :attr:`SCALE` (DEPRECATED)
           - :ref:`scalar <scalar>`
           - Used to find atmospheric density
         * - :attr:`SEALEVELPRESSURE`
