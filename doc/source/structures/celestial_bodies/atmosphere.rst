@@ -59,13 +59,6 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
 
     True if the air has oxygen and could therefore be used by a jet engine's intake.
 
-.. attribute:: Atmosphere:SCALE
-
-    :type: :ref:`scalar <scalar>`
-    :access: Get only
-
-    A math constant plugged into a formula to find atmosphere density.
-
 .. attribute:: Atmosphere:SEALEVELPRESSURE
 
     :type: :ref:`scalar <scalar>` (atm)
@@ -103,6 +96,23 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Atmosphere:SCALE
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get only
+
+    A math constant plugged into a formula to find atmosphere density.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+            To get the same functionality, you must use :attr:`Vessel:PATCHES`  which is a suffix of the :struct:`Vessel` itself.
+
 
 Atmospheric Math
 ----------------
