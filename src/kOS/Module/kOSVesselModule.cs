@@ -245,6 +245,7 @@ namespace kOS.Module
             {
                 TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
+                workAroundEventsEnabled = true;
             }
         }
 
@@ -255,10 +256,11 @@ namespace kOS.Module
         {
             ConnectivityManager.RemoveAutopilotHook(parentVessel, UpdateAutopilot);
 
-            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
+            if (workAroundEventsEnabled)
             {
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
+                workAroundEventsEnabled = false;
             }
         }
 
@@ -269,6 +271,7 @@ namespace kOS.Module
         // top of the file as our normal convention dictates.  These are specific to the hack and when
         // we remove the hack the diff will make more sense if we wipe out a single contiguous block.
         private bool workAroundControllable = false;
+        private bool workAroundEventsEnabled = false; // variable to track the extra event hooks used by the work around
         private CommNet.CommNetParams commNetParams;
         private System.Reflection.FieldInfo isControllableField;
 
@@ -284,7 +287,12 @@ namespace kOS.Module
         {
             if (commNetParams == null && HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null)
                 commNetParams = HighLogic.CurrentGame.Parameters.CustomParams<CommNet.CommNetParams>();
-            if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
+            if (parentVessel == null)
+            {
+                SafeHouse.Logger.LogError("kOSVesselModule.CacheControllable called with null parentVessel, contact kOS developers");
+                workAroundControllable = false;
+            }
+            else if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
             {
                 // HACK: Get around inability to affect throttle if connection is lost and require
                 if (isControllableField == null)

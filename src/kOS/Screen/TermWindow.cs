@@ -94,6 +94,10 @@ namespace kOS.Screen
         private Texture2D terminalImage;
         private Texture2D terminalFrameImage;
         private Texture2D terminalFrameActiveImage;
+        private GUIStyle terminalImageStyle;
+        private GUIStyle terminalFrameStyle;
+        private GUIStyle terminalFrameActiveStyle;
+
         private Texture2D resizeButtonImage;
         private Texture2D networkZigZagImage;
         private Texture2D brightnessButtonImage;
@@ -158,6 +162,10 @@ namespace kOS.Screen
             LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
             LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
 
+            terminalImageStyle = Create9SliceStyle(terminalImage);
+            terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
+            terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
+
             LoadAudio();
             
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
@@ -175,6 +183,29 @@ namespace kOS.Screen
             GameEvents.onShowUI.Add (OnShowUI);
 
             soundMaker = gameObject.AddComponent<Sound.SoundMaker>();
+        }
+
+
+        /// <summary>
+        /// Unity lacks gui styles for GUI.DrawTexture(), so to make it do
+        /// 9-slice stretching, we have to draw the 9slice image as a GUI.Label.
+        /// But GUI.Labels that render a Texture2D instead of text, won't stretch\
+        /// larger than the size of the image file no matter what you do (only smaller).
+        /// So to make it stretch the image in a label, the image has to be implemented
+        /// as part of the label's background defined in the GUIStyle insteade of as a
+        /// normal image element.  This sets up that style, which you can then render
+        /// by making a GUILabel use this style and have dummy empty string content.
+        /// </summary>
+        /// <returns>The slice style.</returns>
+        /// <param name="fromTexture">From texture.</param>
+        private GUIStyle Create9SliceStyle(Texture2D fromTexture)
+        {
+            GUIStyle style = new GUIStyle();
+            style.normal.background = fromTexture;
+            style.border = new RectOffset(10, 10, 10, 10);
+            style.stretchWidth = true;
+            style.stretchHeight = true;
+            return style;
         }
 
         public void OnDestroy()
@@ -795,8 +826,7 @@ namespace kOS.Screen
             
             GUI.color = isLocked ? color : colorAlpha;
 
-            GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
-
+            GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             if (telnets.Count > 0)
                 DrawTelnetStatus();
 
@@ -923,9 +953,9 @@ namespace kOS.Screen
             // Draw the rounded corner frame atop the chars field, so it covers the sqaure corners of the character zone
             // if they bleed over a bit.  Also, change which variant is used depending on focus:
             if (isLocked)
-                GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalFrameActiveImage);            
+                GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalFrameActiveStyle);
             else
-                GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalFrameImage);            
+                GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalFrameStyle);
 
             GUI.Label(new Rect(WindowRect.width/2-40, WindowRect.height-12,100,10), screen.ColumnCount+"x"+screen.RowCount, customSkin.label);
 
