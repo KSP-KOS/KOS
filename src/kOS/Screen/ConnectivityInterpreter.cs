@@ -23,19 +23,32 @@ namespace kOS.Screen
         public ConnectivityInterpreter(SharedObjects shared) : base(shared)
         {
             Shared.UpdateHandler.AddObserver(this);
-            CreateProgressBarSubBuffer();
+            CreateProgressBarSubBuffer(this);
+            AddResizeNotifier(CreateProgressBarSubBuffer);
         }
 
-        private void CreateProgressBarSubBuffer()
+        ~ConnectivityInterpreter()
         {
-            progressBarSubBuffer = new SubBuffer();
+            RemoveResizeNotifier(CreateProgressBarSubBuffer);
+        }
+
+        /// <summary>Whenever the terminal resizes, resize the progress bar,</summary>
+        /// <param name="sb">The method operates on self (this), and the parameter sb would
+        /// be unnecessary if it wasn't required by AddResizeNotifyer().</parm>
+        private int CreateProgressBarSubBuffer(IScreenBuffer sb)
+        {
+            if (progressBarSubBuffer == null)
+            {
+                progressBarSubBuffer = new SubBuffer();
+                progressBarSubBuffer.WillTruncate = true;
+                AddSubBuffer(progressBarSubBuffer);
+            }
             progressBarSubBuffer.SetSize(3, ColumnCount);
             progressBarSubBuffer.Fixed = true;
             progressBarSubBuffer.PositionRow = RowCount - progressBarSubBuffer.RowCount;
-            AddSubBuffer(progressBarSubBuffer);
-
             var separator = new string('-', progressBarSubBuffer.ColumnCount);
             progressBarSubBuffer.Buffer[0].ArrayCopyFrom(separator.ToCharArray(), 0, 0);
+            return 0;
         }
 
         protected override void ProcessCommand(string commandText)
@@ -80,6 +93,10 @@ namespace kOS.Screen
 
         private void StartDeployment()
         {
+            // Make a new progress bar each time, orphaning the old.
+            // Then it matches the current terminal size when the command was entered:
+            CreateProgressBarSubBuffer(this);
+
             deploymentInProgress = true;
             progressBarSubBuffer.Enabled = (waitTotal > 0.5);
             deploymentMessage = deployingBatch ? "Deploying batch." : "Deploying command.";
@@ -171,7 +188,6 @@ namespace kOS.Screen
                 var bars = Math.Max((int)((ColumnCount) * elapsed / total), 0);
                 var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
                 string statusText = deploymentMessage + new string(' ', ColumnCount - time.Length - deploymentMessage.Length) + time;
-                UnityEngine.Debug.LogError("bars: " + bars.ToString());
                 var barsText = new string('|', bars);
                 DrawStatus(statusText);
                 DrawBars(barsText);
