@@ -62,7 +62,7 @@ namespace kOS.Safe.Screen
         /// Replaces Buffer with one of the new current size, copying old contents
         /// over.
         /// </summary>
-        /// <returns>The buffer.</returns>
+        /// <returns>(Not implemented, hardcoded to zero) The new row to scroll to if need be.</returns>
         protected virtual int ResizeBuffer()
         {
             // This method also is being left open for potential overriding in subclasses

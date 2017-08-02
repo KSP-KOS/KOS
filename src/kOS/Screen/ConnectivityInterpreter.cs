@@ -93,10 +93,6 @@ namespace kOS.Screen
 
         private void StartDeployment()
         {
-            // Make a new progress bar each time, orphaning the old.
-            // Then it matches the current terminal size when the command was entered:
-            CreateProgressBarSubBuffer(this);
-
             deploymentInProgress = true;
             progressBarSubBuffer.Enabled = (waitTotal > 0.5);
             deploymentMessage = deployingBatch ? "Deploying batch." : "Deploying command.";
