@@ -42,19 +42,15 @@ namespace kOS.Suffixed.PartModuleField
         protected virtual void Deploy()
         {
             ThrowIfNotCPUVessel();
-
-            var gatherDataMethod = module.GetType().GetMethod("gatherData",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-
-            object result = gatherDataMethod.Invoke(module, new object[] { false });
-
-            IEnumerator e = result as IEnumerator;
-
-            module.StartCoroutine(e);
+            module.DeployExperiment();
         }
             
         public override bool Inoperable()
         {
+            BaseEvent deployAction = module.Events["DeployExperiment"];
+            if (deployAction == null || ! deployAction.active)
+                return true;
+
             return module.Inoperable;
         }
 
