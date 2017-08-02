@@ -21,9 +21,9 @@ namespace kOS.Safe.Screen
         /// if the new size is too small to hold the contents, and WillTruncate is false,
         /// then it will refuse to make it that small, and will use more rows than you
         /// requested as needed to preserve contents.
-        /// You can override this by setting this SubBuffer's WillTrungate property to true.
+        /// You can override this by setting this SubBuffer's WillTruncate property to true.
         /// </summary>
-        /// <param name="rowCount">Requested new number of rows (only guaranteed to be obeyed if truncateOkay is true)</param>
+        /// <param name="rowCount">Requested new number of rows (only guaranteed to be obeyed if WillTruncate is true)</param>
         /// <param name="columnCount">Desired new number of columns (this will be adhered to faithfully).</param>
         public void SetSize(int rowCount, int columnCount)
         {
