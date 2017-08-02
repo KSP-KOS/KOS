@@ -40,7 +40,8 @@ namespace kOS.Safe.Execution
 
         public override void ThreadInitialize(SafeSharedObjects shared)
         {
-            programContext = shared.Cpu.SwitchToProgramContext();
+            if (compileMode != CompileMode.FILE)
+                programContext = shared.Cpu.SwitchToProgramContext(); // only switch the context if executing
             codeParts = new List<CodePart>();
         }
 
