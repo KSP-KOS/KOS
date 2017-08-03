@@ -518,4 +518,4 @@ Deprecated Suffix
 
         .. deprecated:: 0.17.2
 
-            Removed to account for the numerous changes to the planetary atmosphere introduced in KSP 1.0
+            Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0

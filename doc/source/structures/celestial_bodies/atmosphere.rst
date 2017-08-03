@@ -111,7 +111,7 @@ Deprecated Suffix
 
         .. deprecated:: 0.17.2
 
-            To get the same functionality, you must use :attr:`Vessel:PATCHES`  which is a suffix of the :struct:`Vessel` itself.
+            Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0
 
 
 Atmospheric Math
