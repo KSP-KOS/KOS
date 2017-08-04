@@ -255,9 +255,16 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Call this method to start tracking the object.  This is functionally the
     same as clicking on the "Start Tracking" button in the Tracking Station
-    interface.  The primary purpose is to change asteroids from the type 
-    ``"Unknown"`` to ``"SpaceObject"``.  By doing so, the asteroid will not be
-    de-spawned by KSP's asteroid management system.
+    interface.  The primary purpose is to change asteroids from being displayed
+    in the tracking station or on the map as ``"Unknown"`` to being displayed as
+    ``"SpaceObject"``.  By doing so, the asteroid will not be de-spawned by
+    KSP's asteroid management system.
+
+    .. note::
+        This does not change the value returned by :attr:`Vessel:TYPE`.  KSP
+        internally manages the "discovery information" for vessels, including
+        assteroids, in a different system. As a result, the value kOS reads for
+        ``TYPE`` may be different from that displayed on the map.
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 
