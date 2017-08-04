@@ -49,6 +49,7 @@ namespace kOS.Screen
         private bool resizeMouseDown;
         private int formerCharPixelHeight;
         private int formerCharPixelWidth;
+        private int postponedCharPixelHeight;
         
         private bool consumeEvent;
         private bool fontGotResized;
@@ -240,11 +241,12 @@ namespace kOS.Screen
             base.Open();
             BringToFront();
             guiTerminalBeepsPending = 0; // Closing and opening the window will wipe pending beeps from the beep queue.
-
-            GetFontIfChanged();
         }
-
-        private void GetFontIfChanged()
+            
+        /// <param name="recalcWidth">If true, recalc the font width from height if there's any font change.
+        /// Setting this to true should only be done from inside an OnGUI call.
+        /// If you call this from outside an OnGUI context, set this to false.</param>
+        private void GetFontIfChanged(bool recalcWidth)
         {
             int newSize = shared.Screen.CharacterPixelHeight;
             string newName =  SafeHouse.Config.TerminalFontName;
@@ -256,6 +258,15 @@ namespace kOS.Screen
 
                 terminalLetterSkin.label.font = font;
                 terminalLetterSkin.label.fontSize = fontSize;
+                if (recalcWidth)
+                {
+                    CharacterInfo chInfo;
+                    terminalLetterSkin.label.font.RequestCharactersInTexture("X"); // Make sure the char in the font is lazy-loaded by Unity.
+                    terminalLetterSkin.label.font.GetCharacterInfo('X', out chInfo);
+                    shared.Screen.CharacterPixelWidth = chInfo.advance;
+
+                    NotifyOfScreenResize(shared.Screen);
+                }
             }
         }
 
@@ -306,8 +317,8 @@ namespace kOS.Screen
         {
             if (!IsOpen) return;
 
-            GetFontIfChanged();
-            
+            GetFontIfChanged(true);
+
             ProcessUnconsumedInput();
 
             if (isLocked) ProcessKeyEvents();
@@ -333,7 +344,6 @@ namespace kOS.Screen
                 consumeEvent = false;
                 Event.current.Use();
             }
-
         }
         
         void Update()
@@ -768,7 +778,6 @@ namespace kOS.Screen
 
         void TerminalGui(int windowId)
         {
-
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
@@ -803,13 +812,10 @@ namespace kOS.Screen
             Rect rasterBarsButtonRect = new Rect(10, WindowRect.height - 42, 85, 18);
             Rect brightnessRect = new Rect(3, WindowRect.height - 100, 8, 50);
             Rect brightnessButtonRect = new Rect(1, WindowRect.height - 48, brightnessButtonImage.width, brightnessButtonImage.height);
-            Rect fontWidthLabelRect = new Rect(35, WindowRect.height-28, 20, 10);
-            Rect fontWidthLessButtonRect = new Rect(65, WindowRect.height-28, 10, 10);
-            Rect fontWidthMoreButtonRect = new Rect(90, WindowRect.height-28, 10, 10);
-            Rect fontHeightButtonRect = new Rect(140, WindowRect.height-32, fontHeightButtonImage.width, fontHeightButtonImage.height);
-            Rect fontHeightLabelRect = new Rect(160, WindowRect.height-28, 20, 10);
-            Rect fontHeightLessButtonRect = new Rect(185, WindowRect.height-28, 10, 10);
-            Rect fontHeightMoreButtonRect = new Rect(210, WindowRect.height-28, 10, 10);
+            Rect fontHeightButtonRect = new Rect(30, WindowRect.height-33, fontHeightButtonImage.width, fontHeightButtonImage.height);
+            Rect fontHeightLabelRect = new Rect(45, WindowRect.height-33, 20, 13);
+            Rect fontHeightLessButtonRect = new Rect(75, WindowRect.height-37, 12, 13);
+            Rect fontHeightMoreButtonRect = new Rect(100, WindowRect.height-37, 12, 13);
 
             resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
                                           WindowRect.height-resizeButtonImage.height,
@@ -836,24 +842,21 @@ namespace kOS.Screen
             keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
             screen.Brightness = (double) GUI.VerticalSlider(brightnessRect, (float)screen.Brightness, 1f, 0f);
             GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
-            
+
             int charHeight = screen.CharacterPixelHeight;
+            int charWidth = screen.CharacterPixelWidth;
 
-            CharacterInfo chInfo;
-            terminalLetterSkin.label.font.RequestCharactersInTexture("X"); // Make sure the char in the font is lazy-loaded by Unity.
-            terminalLetterSkin.label.font.GetCharacterInfo('X', out chInfo);
-
-            int charWidth = chInfo.advance;
-
+            // Note, pressing these buttons causes a change *next* OnGUI, not on this pass.
+            // Changing it in the midst of this pass confuses the terminal to change
+            // it's mind about how wide the window should be halfway through painting the
+            // components that make it up:
             GUI.DrawTexture(fontHeightButtonRect, fontHeightButtonImage);
             GUI.Label(fontHeightLabelRect,charHeight+"px", customSkin.label);
+            postponedCharPixelHeight = -1; // -1 means "font size buttons weren't clicked on this pass".
             if (GUI.Button(fontHeightLessButtonRect, "-", customSkin.button))
-                charHeight = Math.Max(4, charHeight - 2);
+                postponedCharPixelHeight = Math.Max(4, charHeight - 2);
             if (GUI.Button(fontHeightMoreButtonRect, "+", customSkin.button))
-                charHeight = Math.Min(24, charHeight + 2);
-
-            screen.CharacterPixelHeight = charHeight;
-            screen.CharacterPixelWidth = charWidth;
+                postponedCharPixelHeight = Math.Min(24, charHeight + 2);
 
             fontGotResized = false;
             if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)
@@ -928,6 +931,8 @@ namespace kOS.Screen
             if (!fontGotResized)
                 CheckResizeDrag(); // Has to occur before DragWindow or else DragWindow will consume the event and prevent drags from being seen by the resize icon.
             GUI.DragWindow();
+            if (postponedCharPixelHeight >= 0)
+                shared.Screen.CharacterPixelHeight = postponedCharPixelHeight; // next OnGUI will repaint in the new size.
         }
         
         protected Color AdjustColor(Color baseColor, double brightness)
