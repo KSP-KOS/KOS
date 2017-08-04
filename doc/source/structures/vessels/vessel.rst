@@ -51,6 +51,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
     :attr:`STATUS`                           :struct:`string`                Current ship status
     :attr:`TYPE`                             :struct:`string`                Ship type
+    :meth:`STARTTRACKING`                    None                            Start tracking the "vessel" via the tracking statin
     :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`ANGULARVEL`                       :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`SENSORS`                          :struct:`VesselSensors`         Sensor data
@@ -247,6 +248,16 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get/Set
 
     The ship's type as described `on the KSP wiki <http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types>`_.
+
+.. method:: Vessel:STARTTRACKING
+
+    :return: None
+
+    Call this method to start tracking the object.  This is functionally the
+    same as clicking on the "Start Tracking" button in the Tracking Station
+    interface.  The primary purpose is to change asteroids from the type 
+    ``"Unknown"`` to ``"SpaceObject"``.  By doing so, the asteroid will not be
+    de-spawned by KSP's asteroid management system.
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 
