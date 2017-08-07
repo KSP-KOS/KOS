@@ -1568,12 +1568,21 @@ namespace kOS.Safe.Compilation.KS
 
             if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
             {
-                bool remember = identifierIsSuffix;
+                // Some of the flags remembering the context of
+                // what we were inside of in the parse tree aren't
+                // appropriate to be using while evaluating the function's
+                // argument terms in the list:
+                bool rememberIsSuffix = identifierIsSuffix;
                 identifierIsSuffix = false;
+                bool rememberCompilingSetDestination = compilingSetDestination;
+                compilingSetDestination = false;
 
+                // Now compile the arguments in the list:
                 VisitNode(trailerNode.Nodes[1]);
 
-                identifierIsSuffix = remember;
+                // And then return the flags to their original condition:
+                compilingSetDestination = rememberCompilingSetDestination;
+                identifierIsSuffix = rememberIsSuffix;
             }
 
             if (isDirect)
@@ -1587,6 +1596,7 @@ namespace kOS.Safe.Compilation.KS
                 var op = new OpcodeCall(string.Empty) { Direct = false };
                 AddOpcode(op);
             }
+
         }
 
         private void VisitArgList(ParseNode node)
