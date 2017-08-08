@@ -30,6 +30,7 @@ namespace kOS.Safe.Screen
         List<IScreenBufferLine> GetBuffer();
         void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
         void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
+        void RemoveAllResizeNotifiers();
         string DebugDump();
     }
 }

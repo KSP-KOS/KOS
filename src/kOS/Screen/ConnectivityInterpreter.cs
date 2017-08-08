@@ -27,11 +27,6 @@ namespace kOS.Screen
             AddResizeNotifier(CreateProgressBarSubBuffer);
         }
 
-        ~ConnectivityInterpreter()
-        {
-            RemoveResizeNotifier(CreateProgressBarSubBuffer);
-        }
-
         /// <summary>Whenever the terminal resizes, resize the progress bar,</summary>
         /// <param name="sb">The method operates on self (this), and the parameter sb would
         /// be unnecessary if it wasn't required by AddResizeNotifyer().</parm>
