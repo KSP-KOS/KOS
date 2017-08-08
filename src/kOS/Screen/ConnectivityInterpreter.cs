@@ -27,6 +27,18 @@ namespace kOS.Screen
             AddResizeNotifier(CreateProgressBarSubBuffer);
         }
 
+        ~ConnectivityInterpreter()
+        {
+            // Normally this design pattern would fail because the notifier hooks
+            // would be references that prevent orphaning and thus we can't remove
+            // them in the destructor.
+            // 
+            // But in this case it probably can work, because this reference is
+            // circularly from the object to *itself* (these hooks are inside this
+            // instance itself), and thus probably don't prevent orphaning:
+            RemoveAllResizeNotifiers();
+        }
+
         /// <summary>Whenever the terminal resizes, resize the progress bar,</summary>
         /// <param name="sb">The method operates on self (this), and the parameter sb would
         /// be unnecessary if it wasn't required by AddResizeNotifyer().</parm>
