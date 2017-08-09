@@ -137,18 +137,14 @@ namespace kOS.Binding
 
         public void UnBindAll()
         {
-            if (flightControl != null)
-            {
-                flightControl.UnBind();
-            }
+            // TODO: Remove this method
+            // Do nothing, left over from old steering logic
         }
 
         public void Dispose()
         {
-            if (flightControl != null)
-            {
-                flightControl.Dispose();
-            }
+            // TODO: Remove this method
+            // Do nothing, left over from old steering logic
         }
 
         public void SelectAutopilotMode(string autopilotMode)
