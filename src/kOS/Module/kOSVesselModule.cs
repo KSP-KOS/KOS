@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using kOS.Safe.Utilities;
 using kOS.Communication;
+using kOS.Suffixed;
 
 namespace kOS.Module
 {
@@ -18,6 +19,7 @@ namespace kOS.Module
     public class kOSVesselModule : VesselModule
     {
         private bool initialized = false;
+        private bool flightParametersAdded = false;
         private Vessel parentVessel;
         /// <summary>How often to re-attempt the autopilot hook, expressed as a number of physics updates</summary>
         private const int autopilotRehookPeriod = 25;
@@ -57,7 +59,6 @@ namespace kOS.Module
                 if (parentVessel != null)
                 {
                     allInstances[ID] = this;
-                    AddDefaultParameters();
                 }
                 SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.vesselName, ID));
             }
@@ -109,6 +110,7 @@ namespace kOS.Module
                 {
                     RemoveFlightControlParameter(key);
                 }
+                flightParametersAdded = false;
                 parentVessel = null;
                 if (allInstances.Count == 0)
                 {
@@ -228,7 +230,17 @@ namespace kOS.Module
         /// </summary>
         private void AddDefaultParameters()
         {
+            if (flightControlParameters != null)
+            {
+                flightControlParameters.Clear();
+            }
+            flightControlParameters = new Dictionary<string, IFlightControlParameter>();
             AddFlightControlParameter("steering", new SteeringManager(parentVessel));
+            AddFlightControlParameter("throttle", new ThrottleManager(parentVessel));
+            AddFlightControlParameter("wheelsteer", new WheelSteeringManager(parentVessel));
+            AddFlightControlParameter("wheelthrottle", new WheelThrottleManager(parentVessel));
+            AddFlightControlParameter("flightcontrol", new FlightControl(parentVessel));
+            flightParametersAdded = true;
         }
 
         /// <summary>
@@ -396,6 +408,10 @@ namespace kOS.Module
         /// <returns></returns>
         public IFlightControlParameter GetFlightControlParameter(string name)
         {
+            if (!flightParametersAdded)
+            {
+                AddDefaultParameters();
+            }
             name = name.ToLower();
             if (!flightControlParameters.ContainsKey(name))
                 throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.vesselName, name));
@@ -409,6 +425,10 @@ namespace kOS.Module
         /// <returns></returns>
         public bool HasFlightControlParameter(string name)
         {
+            if (!flightParametersAdded)
+            {
+                AddDefaultParameters();
+            }
             name = name.ToLower();
             return flightControlParameters.ContainsKey(name);
         }

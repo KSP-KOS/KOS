@@ -713,7 +713,8 @@ namespace kOS.Suffixed
         public FlightControl GetFlightControl()
         {
             ThrowIfNotCPUVessel();
-            return FlightControlManager.GetControllerByVessel(Vessel);
+            var flightControl = kOSVesselModule.GetInstance(Shared.Vessel).GetFlightControlParameter("flightcontrol") as FlightControl;
+            return flightControl;
         }
 
         public ScalarValue GetAvailableThrustAt(ScalarValue atmPressure)
