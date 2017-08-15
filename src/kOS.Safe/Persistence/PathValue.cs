@@ -94,6 +94,39 @@ namespace kOS.Safe
         {
             return Path.ToString();
         }
+
+        public override bool Equals(object other)
+        {
+            Console.WriteLine("eraseme: PathValue.Equals(): this = " + this.ToString() + ", other = " + other.ToString());
+            PathValue pVal = other as PathValue;
+            if (!ReferenceEquals(pVal,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return Path == pVal.Path;
+            GlobalPath gVal = other as GlobalPath;
+            if (!ReferenceEquals(gVal,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return Path == gVal;
+
+            // fallback:
+            return base.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            if (!ReferenceEquals(Path,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return Path.GetHashCode();
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(PathValue left, PathValue right)
+        {
+            if (ReferenceEquals(left,null) || ReferenceEquals(right,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return ReferenceEquals(left, null) && ReferenceEquals(right, null); // ReferenceEquals prevents infinite recursion with overloaded == operator.
+            return left.Equals(right);
+        }
+        public static bool operator !=(PathValue left, PathValue right)
+        {
+            return !(left == right);
+        }
+
     }
 }
 
