@@ -18,7 +18,7 @@ namespace kOS.Safe.Encapsulation
         static private int sameHashForAllInstances =
             ("All EmptyDelegate Instances are Equal 0987654321.123456789").GetHashCode();
 
-        public NoDelegate(ICpu cpu) : base(cpu, cpu.GetCurrentContext(), -1, false)
+        public NoDelegate(ICpu cpu) : base(cpu, (cpu == null ? null : cpu.GetCurrentContext()), -1, false)
         {
         }
 
