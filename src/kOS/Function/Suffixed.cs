@@ -631,17 +631,30 @@ namespace kOS.Function
             if (wpm == null)
                 throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no waypoints exist");
             
+            // If this name has a greek letter in it's spelling like "alpha", "beta", etc, then it
+            // is probably part of a waypoint cluster.
+            // Waypoint clusters are actually 1 waypoint with an array of "children" by index number.
+            // where the waypoint's name is just the base part with the "alpha", "beta", etc suffix removed.
             string baseName;
             int index;
             bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
-            if (hasGreek)
-                pointName = baseName;
-            Waypoint point = wpm.Waypoints.FirstOrDefault(
-                p => string.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
-            
-            // We can't communicate the concept of a lookup fail to the script in a way it can catch (can't do
-            // nulls), so bomb out here:
-            if (point ==null)
+
+            Waypoint point = null;
+            if (hasGreek) // Attempt to find it as part of a waypoint cluster.
+            {
+                point = wpm.Waypoints.FirstOrDefault(
+                    p => string.Equals(p.name, baseName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+                if (point != null) // Will be null if this name is not really a waypoint cluster.
+                    pointName = baseName;
+            }
+            if (point == null) // Either it had no greek letter, or it did but wasn't a waypoint cluster.  Try it as a vanilla waypoint:
+            {
+                point = wpm.Waypoints.FirstOrDefault(
+                    p => string.Equals(p.name, pointName, StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
+            }
+
+            // If it's still null at this point then give up - we can't find such a waypoint name:
+            if (point == null)
                 throw new KOSInvalidArgumentException("waypoint", "\""+pointName+"\"", "no such waypoint");
 
             ReturnValue = new WaypointValue(point, shared);
