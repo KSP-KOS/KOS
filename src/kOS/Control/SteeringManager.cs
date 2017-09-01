@@ -281,6 +281,31 @@ namespace kOS.Control
 
             adjustTorqueWriter = null;
 
+            ResetToDefault();
+
+            InitializeSuffixes();
+        }
+
+        public void ResetToDefault()
+        {
+            pitchPI.Ts = 2;
+            yawPI.Ts = 2;
+            rollPI.Ts = 2;
+            // only neet to reset the PI's I value, other values are not accessible to users to modify
+            pitchPI.ResetI();
+            yawPI.ResetI();
+            rollPI.ResetI();
+
+            pitchRatePI.Kp = 1;
+            pitchRatePI.Ki = 0.1;
+            pitchRatePI.Kd = 0;
+            yawRatePI.Kp = 1;
+            yawRatePI.Ki = 0.1;
+            yawRatePI.Kd = 0;
+            rollRatePI.Kp = 1;
+            rollRatePI.Ki = 0.1;
+            rollRatePI.Kd = 0;
+
             adjustTorque = Vector3d.zero;
 
             EnableTorqueAdjust = false;
@@ -295,8 +320,6 @@ namespace kOS.Control
             PitchTorqueFactor = 1;
             YawTorqueFactor = 1;
             RollTorqueFactor = 1;
-
-            InitializeSuffixes();
         }
 
         public void InitializeSuffixes()
@@ -307,6 +330,7 @@ namespace kOS.Control
             AddSuffix("ENABLED", new Suffix<BooleanValue>(() => Enabled));
             AddSuffix("TARGET", new Suffix<Direction>(() => TargetDirection));
             AddSuffix("RESETPIDS", new NoArgsVoidSuffix(ResetIs));
+            AddSuffix("RESETTODEFAULT", new NoArgsVoidSuffix(ResetToDefault));
             AddSuffix("SHOWFACINGVECTORS", new SetSuffix<BooleanValue>(() => ShowFacingVectors, value => ShowFacingVectors = value));
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
             AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() =>
