@@ -359,8 +359,6 @@ namespace kOS.Control
 
         public void EnableControl(SharedObjects sharedObj)
         {
-            if (enabled && partId != sharedObj.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
             shared = sharedObj;
             partId = sharedObj.KSPPart.flightID;
             ResetIs();
@@ -375,6 +373,7 @@ namespace kOS.Control
 
         public void DisableControl()
         {
+            shared = null;
             partId = 0;
             Enabled = false;
         }
@@ -383,13 +382,10 @@ namespace kOS.Control
         {
             if (enabled && partId != sharedObj.KSPPart.flightID)
             {
-                if (sharedObj.Cpu.IsPoppingContext)
-                    return; // popping context calls DisableControl but at a time when we mustn't throw exceptions.
-                else
-                    throw new Safe.Exceptions.KOSException ("Cannot unbind Steering Manager on this ship in use by another processor.");
+                // trying to disable control from a part that didn't win control last update, ignore.
+                return;
             }
-            partId = 0;
-            Enabled = false;
+            DisableControl();
         }
 
         public VectorRenderer InitVectorRenderer(Color c, double width, SharedObjects sharedObj)
@@ -440,6 +436,10 @@ namespace kOS.Control
 
         private void Update(FlightCtrlState c)
         {
+            if (!Enabled)
+            {
+                return; // skip update if not enabled
+            }
             if (Value == null)
             {
                 SafeHouse.Logger.SuperVerbose("SteeringManager.Update: Value is <null>");
@@ -1323,8 +1323,12 @@ namespace kOS.Control
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
         {
-            if (enabled && partId != shared.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
+            if (!Enabled) // if control was somehow disabled by another processor, re-enable it
+            {
+                EnableControl(shared);
+            }
+            this.shared = shared; // set shared on every call to UpdateValue, the last processor to call wins.
+            partId = shared.KSPPart.flightID;
             Value = GetDirectionFromValue(value);
         }
 

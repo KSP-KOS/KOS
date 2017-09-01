@@ -54,21 +54,16 @@ namespace kOS.Control
 
         void IFlightControlParameter.DisableControl()
         {
+            controlShared = null;
             controlPartId = 0;
             Enabled = false;
         }
 
         void IFlightControlParameter.DisableControl(SharedObjects shared)
         {
-            if (Enabled && controlPartId != shared.KSPPart.flightID)  // we can only disable control if the request came from the controlling processor
-            {
-                if (controlShared.Cpu.IsPoppingContext)
-                    return; // popping context calls DisableControl but at a time when we mustn't throw exceptions.
-                else
-                    throw new Safe.Exceptions.KOSException("Cannot unbind Throttle Manager on this ship in use by another processor.");
-            }
-            controlPartId = 0;
-            Enabled = false;
+            if (shared.KSPPart.flightID == controlPartId)
+                return;
+            ((IFlightControlParameter)this).DisableControl();
         }
 
         void IFlightControlParameter.EnableControl(SharedObjects shared)
@@ -94,7 +89,7 @@ namespace kOS.Control
 
         void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
         {
-            c.mainThrottle = (float)Safe.Utilities.KOSMath.Clamp(Value, 0, 1);
+            c.mainThrottle = (float)Value;
         }
 
         void IFlightControlParameter.UpdateState()
@@ -103,11 +98,12 @@ namespace kOS.Control
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
         {
-            if (Enabled && controlPartId != shared.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Throttle Manager on this ship is already in use by another processor.");
+            if (!Enabled)
+                ((IFlightControlParameter)this).EnableControl(shared);
+
             try
             {
-                Value = Convert.ToDouble(value);
+                Value = KOSMath.Clamp(Convert.ToDouble(value), 0, 1);
             }
             catch
             {
