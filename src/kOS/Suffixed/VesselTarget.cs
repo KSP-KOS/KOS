@@ -667,6 +667,8 @@ namespace kOS.Suffixed
             AddSuffix("CONNECTION", new NoArgsSuffix<VesselConnection>(() => new VesselConnection(Vessel, Shared)));
             AddSuffix("MESSAGES", new NoArgsSuffix<MessageQueueStructure>(() => GetMessages()));
 
+            AddSuffix("STARTTRACKING", new NoArgsVoidSuffix(StartTracking));
+
             AddSuffix("SOICHANGEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetSOIChangeNotifyees(Vessel)));
         }
 
@@ -788,6 +790,17 @@ namespace kOS.Suffixed
         {
             return new Vector(VesselUtils.GetFacing(Vessel).Rotation *
                               new Vector3d(angularVelFromKSP.x, -angularVelFromKSP.z, angularVelFromKSP.y));
+        }
+
+        private void StartTracking()
+        {
+            if (Vessel != null)
+            {
+                if (!Vessel.DiscoveryInfo.HaveKnowledgeAbout(DiscoveryLevels.Appearance))
+                {
+                    KSP.UI.Screens.SpaceTracking.StartTrackingObject(Vessel);
+                }
+            }
         }
 
         public override ISuffixResult GetSuffix(string suffixName)
