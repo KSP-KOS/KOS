@@ -333,22 +333,6 @@ namespace kOS.Control
             AddSuffix("RESETTODEFAULT", new NoArgsVoidSuffix(ResetToDefault));
             AddSuffix("SHOWFACINGVECTORS", new SetSuffix<BooleanValue>(() => ShowFacingVectors, value => ShowFacingVectors = value));
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
-            AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
-                },
-                value =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
-                }));
-            AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
-                },
-                value =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
-                }));
             AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<BooleanValue>(() => ShowSteeringStats, value => ShowSteeringStats = value));
             AddSuffix("WRITECSVFILES", new SetSuffix<BooleanValue>(() => WriteCSVFiles, value => WriteCSVFiles = value));
             AddSuffix("PITCHTS", new SetSuffix<ScalarValue>(() => pitchPI.Ts, value => pitchPI.Ts = value));
@@ -434,24 +418,7 @@ namespace kOS.Control
             rollRatePI.ResetI();
         }
 
-        public void Update(Vessel vsl)
-        {
-            //if (vessel != vsl) vessel = vsl;
-            // Eventually I would like to update the vectors regardless of if flybywire is called,
-            // so that the vector renderers will still update in time warp, but it doesn't work now.
-            //UpdateStateVectors();
-            //UpdateTorque();
-            //UpdatePrediction();
-            //UpdateVectorRenders();
-            //PrintDebug();
-        }
-
         public void OnFlyByWire(FlightCtrlState c)
-        {
-            Update(c);
-        }
-
-        public void OnRemoteTechPilot(FlightCtrlState c)
         {
             Update(c);
         }
@@ -724,14 +691,6 @@ namespace kOS.Control
             m.m22 = left.z * right.z;
         }
         #endregion
-
-        public Transform FindParentTransform(Transform transform, string name, Transform topLevel)
-        {
-            if (transform.parent.name == name) return transform.parent;
-            else if (transform.parent == null) return null;
-            else if (transform.parent == topLevel) return null;
-            else return FindParentTransform(transform.parent, name, topLevel);
-        }
 
         // Update prediction based on PI controls, sets the target angular velocity and the target torque for the vessel
         public void UpdatePredictionPI()

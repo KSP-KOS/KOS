@@ -86,11 +86,6 @@ namespace kOS.Suffixed
             return base.SetSuffix(suffixName, value);
         }
 
-        public void UpdateVessel(Vessel toUpdate)
-        {
-            Vessel = toUpdate;
-        }
-
         public void Dispose()
         {
         }
