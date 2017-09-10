@@ -112,6 +112,7 @@ namespace kOS.Screen
             GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
             GameEvents.onHideUI.Add(OnHideUI);
             GameEvents.onShowUI.Add(OnShowUI);
+            GameEvents.onGameStateSave.Add(OnGameStateSave);
             GameObject.DontDestroyOnLoad(this);
 
             fontPicker = null;
@@ -254,6 +255,7 @@ namespace kOS.Screen
 
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
+            GameEvents.onGameStateSave.Remove(OnGameStateSave);
 
             GoAway();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
@@ -404,6 +406,18 @@ namespace kOS.Screen
         void OnShowUI()
         {
             uiGloballyHidden = false;
+        }
+
+        // As long as the user can get this toolbar menu dialog to show up, that means
+        // they can change a setting in it.  Those changes should be persisted even when
+        // there's no KOSProcessor modules loaded in the scene.  (Thus why the config
+        // save is done here as well as in KOSProcessor.)
+        void OnGameStateSave(ConfigNode node) // ConfigNode ignored.
+        {
+            if (SafeHouse.Config != null)
+            {
+                SafeHouse.Config.SaveConfig();
+            }
         }
 
         public void OnGUI()

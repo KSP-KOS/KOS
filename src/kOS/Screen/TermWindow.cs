@@ -49,6 +49,7 @@ namespace kOS.Screen
         private bool resizeMouseDown;
         private int formerCharPixelHeight;
         private int formerCharPixelWidth;
+        private int postponedCharPixelHeight;
         
         private bool consumeEvent;
         private bool fontGotResized;
@@ -94,6 +95,10 @@ namespace kOS.Screen
         private Texture2D terminalImage;
         private Texture2D terminalFrameImage;
         private Texture2D terminalFrameActiveImage;
+        private GUIStyle terminalImageStyle;
+        private GUIStyle terminalFrameStyle;
+        private GUIStyle terminalFrameActiveStyle;
+
         private Texture2D resizeButtonImage;
         private Texture2D networkZigZagImage;
         private Texture2D brightnessButtonImage;
@@ -158,6 +163,10 @@ namespace kOS.Screen
             LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
             LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
 
+            terminalImageStyle = Create9SliceStyle(terminalImage);
+            terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
+            terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
+
             LoadAudio();
             
             tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
@@ -175,6 +184,29 @@ namespace kOS.Screen
             GameEvents.onShowUI.Add (OnShowUI);
 
             soundMaker = gameObject.AddComponent<Sound.SoundMaker>();
+        }
+
+
+        /// <summary>
+        /// Unity lacks gui styles for GUI.DrawTexture(), so to make it do
+        /// 9-slice stretching, we have to draw the 9slice image as a GUI.Label.
+        /// But GUI.Labels that render a Texture2D instead of text, won't stretch\
+        /// larger than the size of the image file no matter what you do (only smaller).
+        /// So to make it stretch the image in a label, the image has to be implemented
+        /// as part of the label's background defined in the GUIStyle insteade of as a
+        /// normal image element.  This sets up that style, which you can then render
+        /// by making a GUILabel use this style and have dummy empty string content.
+        /// </summary>
+        /// <returns>The slice style.</returns>
+        /// <param name="fromTexture">From texture.</param>
+        private GUIStyle Create9SliceStyle(Texture2D fromTexture)
+        {
+            GUIStyle style = new GUIStyle();
+            style.normal.background = fromTexture;
+            style.border = new RectOffset(10, 10, 10, 10);
+            style.stretchWidth = true;
+            style.stretchHeight = true;
+            return style;
         }
 
         public void OnDestroy()
@@ -240,11 +272,12 @@ namespace kOS.Screen
             base.Open();
             BringToFront();
             guiTerminalBeepsPending = 0; // Closing and opening the window will wipe pending beeps from the beep queue.
-
-            GetFontIfChanged();
         }
-
-        private void GetFontIfChanged()
+            
+        /// <param name="recalcWidth">If true, recalc the font width from height if there's any font change.
+        /// Setting this to true should only be done from inside an OnGUI call.
+        /// If you call this from outside an OnGUI context, set this to false.</param>
+        private void GetFontIfChanged(bool recalcWidth)
         {
             int newSize = shared.Screen.CharacterPixelHeight;
             string newName =  SafeHouse.Config.TerminalFontName;
@@ -256,6 +289,15 @@ namespace kOS.Screen
 
                 terminalLetterSkin.label.font = font;
                 terminalLetterSkin.label.fontSize = fontSize;
+                if (recalcWidth)
+                {
+                    CharacterInfo chInfo;
+                    terminalLetterSkin.label.font.RequestCharactersInTexture("X"); // Make sure the char in the font is lazy-loaded by Unity.
+                    terminalLetterSkin.label.font.GetCharacterInfo('X', out chInfo);
+                    shared.Screen.CharacterPixelWidth = chInfo.advance;
+
+                    NotifyOfScreenResize(shared.Screen);
+                }
             }
         }
 
@@ -306,8 +348,8 @@ namespace kOS.Screen
         {
             if (!IsOpen) return;
 
-            GetFontIfChanged();
-            
+            GetFontIfChanged(true);
+
             ProcessUnconsumedInput();
 
             if (isLocked) ProcessKeyEvents();
@@ -333,7 +375,6 @@ namespace kOS.Screen
                 consumeEvent = false;
                 Event.current.Use();
             }
-
         }
         
         void Update()
@@ -444,9 +485,13 @@ namespace kOS.Screen
             Event e = Event.current;
             if (e.type == EventType.KeyDown)
             {
-                // Unity handles some keys in a particular way
-                // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
-                var c = (char)(e.character & 0x007f);
+                // This ugly hack is here to solve a bug with Unity mapping
+                // Keycodes to Unicode chars incorrectly on its Linux version:
+                char c;
+                if ((e.character & 0xff00) == 0xff00) // Only trigger on Unicode values 0xff00 through 0xffff, to avoid issue #2061
+                    c = (char)(e.character & 0x007f); // When doing this to solve issue #206 (yes, #206, separate from #2061 above)
+                else
+                    c = e.character;
 
                 // command sequences
                 if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
@@ -768,7 +813,6 @@ namespace kOS.Screen
 
         void TerminalGui(int windowId)
         {
-
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
@@ -791,8 +835,7 @@ namespace kOS.Screen
             
             GUI.color = isLocked ? color : colorAlpha;
 
-            GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
-
+            GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             if (telnets.Count > 0)
                 DrawTelnetStatus();
 
@@ -803,13 +846,10 @@ namespace kOS.Screen
             Rect rasterBarsButtonRect = new Rect(10, WindowRect.height - 42, 85, 18);
             Rect brightnessRect = new Rect(3, WindowRect.height - 100, 8, 50);
             Rect brightnessButtonRect = new Rect(1, WindowRect.height - 48, brightnessButtonImage.width, brightnessButtonImage.height);
-            Rect fontWidthLabelRect = new Rect(35, WindowRect.height-28, 20, 10);
-            Rect fontWidthLessButtonRect = new Rect(65, WindowRect.height-28, 10, 10);
-            Rect fontWidthMoreButtonRect = new Rect(90, WindowRect.height-28, 10, 10);
-            Rect fontHeightButtonRect = new Rect(140, WindowRect.height-32, fontHeightButtonImage.width, fontHeightButtonImage.height);
-            Rect fontHeightLabelRect = new Rect(160, WindowRect.height-28, 20, 10);
-            Rect fontHeightLessButtonRect = new Rect(185, WindowRect.height-28, 10, 10);
-            Rect fontHeightMoreButtonRect = new Rect(210, WindowRect.height-28, 10, 10);
+            Rect fontHeightButtonRect = new Rect(30, WindowRect.height-33, fontHeightButtonImage.width, fontHeightButtonImage.height);
+            Rect fontHeightLabelRect = new Rect(45, WindowRect.height-33, 20, 13);
+            Rect fontHeightLessButtonRect = new Rect(75, WindowRect.height-37, 12, 13);
+            Rect fontHeightMoreButtonRect = new Rect(100, WindowRect.height-37, 12, 13);
 
             resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
                                           WindowRect.height-resizeButtonImage.height,
@@ -836,24 +876,21 @@ namespace kOS.Screen
             keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
             screen.Brightness = (double) GUI.VerticalSlider(brightnessRect, (float)screen.Brightness, 1f, 0f);
             GUI.DrawTexture(brightnessButtonRect, brightnessButtonImage);
-            
+
             int charHeight = screen.CharacterPixelHeight;
+            int charWidth = screen.CharacterPixelWidth;
 
-            CharacterInfo chInfo;
-            terminalLetterSkin.label.font.RequestCharactersInTexture("X"); // Make sure the char in the font is lazy-loaded by Unity.
-            terminalLetterSkin.label.font.GetCharacterInfo('X', out chInfo);
-
-            int charWidth = chInfo.advance;
-
+            // Note, pressing these buttons causes a change *next* OnGUI, not on this pass.
+            // Changing it in the midst of this pass confuses the terminal to change
+            // it's mind about how wide the window should be halfway through painting the
+            // components that make it up:
             GUI.DrawTexture(fontHeightButtonRect, fontHeightButtonImage);
             GUI.Label(fontHeightLabelRect,charHeight+"px", customSkin.label);
+            postponedCharPixelHeight = -1; // -1 means "font size buttons weren't clicked on this pass".
             if (GUI.Button(fontHeightLessButtonRect, "-", customSkin.button))
-                charHeight = Math.Max(4, charHeight - 2);
+                postponedCharPixelHeight = Math.Max(4, charHeight - 2);
             if (GUI.Button(fontHeightMoreButtonRect, "+", customSkin.button))
-                charHeight = Math.Min(24, charHeight + 2);
-
-            screen.CharacterPixelHeight = charHeight;
-            screen.CharacterPixelWidth = charWidth;
+                postponedCharPixelHeight = Math.Min(24, charHeight + 2);
 
             fontGotResized = false;
             if (formerCharPixelWidth != screen.CharacterPixelWidth || formerCharPixelHeight != screen.CharacterPixelHeight)
@@ -919,15 +956,17 @@ namespace kOS.Screen
             // Draw the rounded corner frame atop the chars field, so it covers the sqaure corners of the character zone
             // if they bleed over a bit.  Also, change which variant is used depending on focus:
             if (isLocked)
-                GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalFrameActiveImage);            
+                GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalFrameActiveStyle);
             else
-                GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalFrameImage);            
+                GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalFrameStyle);
 
             GUI.Label(new Rect(WindowRect.width/2-40, WindowRect.height-12,100,10), screen.ColumnCount+"x"+screen.RowCount, customSkin.label);
 
             if (!fontGotResized)
                 CheckResizeDrag(); // Has to occur before DragWindow or else DragWindow will consume the event and prevent drags from being seen by the resize icon.
             GUI.DragWindow();
+            if (postponedCharPixelHeight >= 0)
+                shared.Screen.CharacterPixelHeight = postponedCharPixelHeight; // next OnGUI will repaint in the new size.
         }
         
         protected Color AdjustColor(Color baseColor, double brightness)
