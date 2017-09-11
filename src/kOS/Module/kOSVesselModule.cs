@@ -167,10 +167,6 @@ namespace kOS.Module
                     HarvestParts();
                     partCount = Vessel.Parts.Count;
                 }
-                if (Vessel.loaded)
-                {
-                    UpdateParameterState();
-                }
                 CheckRehookAutopilot();
             }
         }
@@ -234,7 +230,7 @@ namespace kOS.Module
             flightControlParameters = new Dictionary<string, IFlightControlParameter>();
             AddFlightControlParameter("steering", new SteeringManager(Vessel));
             AddFlightControlParameter("throttle", new ThrottleManager(Vessel));
-            AddFlightControlParameter("wheelsteer", new WheelSteeringManager(Vessel));
+            AddFlightControlParameter("wheelsteering", new WheelSteeringManager(Vessel));
             AddFlightControlParameter("wheelthrottle", new WheelThrottleManager(Vessel));
             AddFlightControlParameter("flightcontrol", new FlightControl(Vessel));
             flightParametersAdded = true;
@@ -344,17 +340,6 @@ namespace kOS.Module
             else
             {
                 autopilotRehookCounter = autopilotRehookPeriod - 2;
-            }
-        }
-
-        /// <summary>
-        /// Update the current stte of the each IFlightControlParameter.  This is called during FixedUpdate
-        /// </summary>
-        private void UpdateParameterState()
-        {
-            foreach (var parameter in flightControlParameters.Values)
-            {
-                if (parameter.Enabled) parameter.UpdateState();
             }
         }
 

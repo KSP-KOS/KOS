@@ -13,7 +13,6 @@ namespace kOS.Control
         void UpdateValue(object value, SharedObjects shared);
         object GetValue();
         SharedObjects GetShared();
-        void UpdateState();
         void UpdateAutopilot(FlightCtrlState c);
         void EnableControl(SharedObjects shared);
         void DisableControl(SharedObjects shared);

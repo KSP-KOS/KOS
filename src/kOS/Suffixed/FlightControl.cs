@@ -387,11 +387,6 @@ namespace kOS.Suffixed
             return null;
         }
 
-        void IFlightControlParameter.UpdateState()
-        {
-            // Do nothing
-        }
-
         void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
         {
             OnFlyByWire(c);

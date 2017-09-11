@@ -92,11 +92,6 @@ namespace kOS.Control
             c.wheelThrottle = (float)KOSMath.Clamp(Value, -1, 1);
         }
 
-        void IFlightControlParameter.UpdateState()
-        {
-            throw new NotImplementedException();
-        }
-
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
         {
             if (!Enabled)
