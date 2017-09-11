@@ -87,6 +87,9 @@
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="Control\IFlightControlParameter.cs" />
+    <Compile Include="Control\ThrottleManager.cs" />
+    <Compile Include="Control\WheelSteeringManager.cs" />
+    <Compile Include="Control\WheelThrottleManager.cs" />
     <Compile Include="Function\BuildList.cs" />
     <Compile Include="Function\HighlightStructure.cs" />
     <Compile Include="Function\Math.cs" />

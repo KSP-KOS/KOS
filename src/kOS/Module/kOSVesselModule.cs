@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using kOS.Safe.Utilities;
 using kOS.Communication;
+using kOS.Suffixed;
 
 namespace kOS.Module
 {
@@ -18,7 +19,7 @@ namespace kOS.Module
     public class kOSVesselModule : VesselModule
     {
         private bool initialized = false;
-        private Vessel parentVessel;
+        private bool flightParametersAdded = false;
         /// <summary>How often to re-attempt the autopilot hook, expressed as a number of physics updates</summary>
         private const int autopilotRehookPeriod = 25;
         private int autopilotRehookCounter = autopilotRehookPeriod - 2; // make sure it starts out ready to trigger soon
@@ -27,13 +28,11 @@ namespace kOS.Module
         {
             get
             {
-                if (parentVessel != null) return parentVessel.id;
+                if (Vessel != null) return Vessel.id;
                 return Guid.Empty;
             }
         }
 
-        private Guid baseId = Guid.Empty;
-        public Guid BaseId { get { return baseId; } }
 
         private static Dictionary<Guid, kOSVesselModule> allInstances = new Dictionary<Guid, kOSVesselModule>();
         private static Dictionary<uint, kOSVesselModule> partLookup = new Dictionary<uint, kOSVesselModule>();
@@ -50,16 +49,20 @@ namespace kOS.Module
         protected override void OnAwake()
         {
             base.OnAwake();
+            initialized = false;
+            flightParametersAdded = false;
+            autopilotRehookCounter = autopilotRehookPeriod - 2; // make sure it starts out ready to trigger soon
+            flightControlParameters = new Dictionary<string, IFlightControlParameter>();
+            childParts = new List<uint>();
+
             if (SafeHouse.Logger != null)
             {
-                SafeHouse.Logger.SuperVerbose("kOSVesselModule Awake()!");
-                parentVessel = GetComponent<Vessel>();
-                if (parentVessel != null)
+                SafeHouse.Logger.SuperVerbose("kOSVesselModule OnAwake()!");
+                if (Vessel != null)
                 {
                     allInstances[ID] = this;
-                    AddDefaultParameters();
                 }
-                SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", parentVessel.vesselName, ID));
+                SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Awake() finished on {0} ({1})", Vessel.vesselName, ID));
             }
         }
 
@@ -70,21 +73,54 @@ namespace kOS.Module
         /// </summary>
         protected override void OnStart()
         {
-            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule Start()!  On {0} ({1})", parentVessel.vesselName, ID));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnStart()!  On {0} ({1})", Vessel.vesselName, ID));
+        }
+
+        public override void OnLoadVessel()
+        {
+            base.OnLoadVessel();
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0} ({1})", Vessel.vesselName, ID));
+
             // Vessel modules now load when the vessel is not loaded, including when not in the flight
             // scene.  So we now wait to attach to events and attempt to harvest parts until after
             // the vessel itself has loaded.
-            if (parentVessel.loaded && parentVessel.vesselType != VesselType.SpaceObject)
-            {
-                HarvestParts();
-                HookEvents();
-                initialized = true;
-            }
+
+
+            allInstances[ID] = this;
+            AddDefaultParameters();
+            HarvestParts();
+            HookEvents();
+            initialized = true;
+        }
+
+        public override void OnUnloadVessel()
+        {
+            base.OnUnloadVessel();
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnUnloadVessel()!  On {0} ({1})", Vessel.vesselName, ID));
+
+            ClearParts();
+            UnHookEvents();
+            initialized = false;
+        }
+
+        public override void OnGoOffRails()
+        {
+            base.OnGoOffRails();
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnGoOffRails()!  On {0} ({1})", Vessel.vesselName, ID));
+
+            HookEvents();
+        }
+
+        public override void OnGoOnRails()
+        {
+            base.OnGoOnRails();
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnGoOnRails()!  On {0} ({1})", Vessel.vesselName, ID));
         }
 
         protected override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoad()!  On {0}", Vessel.vesselName));
         }
 
         /// <summary>
@@ -101,7 +137,7 @@ namespace kOS.Module
                     UnHookEvents();
                     ClearParts();
                 }
-                if (parentVessel != null && allInstances.ContainsKey(ID))
+                if (Vessel != null && allInstances.ContainsKey(ID) && ReferenceEquals(allInstances[ID], this))
                 {
                     allInstances.Remove(ID);
                 }
@@ -109,7 +145,7 @@ namespace kOS.Module
                 {
                     RemoveFlightControlParameter(key);
                 }
-                parentVessel = null;
+                flightParametersAdded = false;
                 if (allInstances.Count == 0)
                 {
                     partLookup.Clear();
@@ -125,24 +161,17 @@ namespace kOS.Module
         {
             if (initialized)
             {
-                if (parentVessel.Parts.Count != partCount)
+                if (Vessel.Parts.Count != partCount)
                 {
                     ClearParts();
                     HarvestParts();
-                    partCount = parentVessel.Parts.Count;
+                    partCount = Vessel.Parts.Count;
                 }
-                if (parentVessel.loaded)
+                if (Vessel.loaded)
                 {
                     UpdateParameterState();
                 }
                 CheckRehookAutopilot();
-            }
-            else if (parentVessel.loaded && parentVessel.vesselType != VesselType.SpaceObject)
-            {
-                // if not initialized, check to see if the vessel has loaded.  See note in OnStart()
-                HarvestParts();
-                HookEvents();
-                initialized = true;
             }
         }
 
@@ -174,44 +203,14 @@ namespace kOS.Module
         /// </summary>
         private void HarvestParts()
         {
-            var proccessorModules = parentVessel.FindPartModulesImplementing<kOSProcessor>();
+            var proccessorModules = Vessel.FindPartModulesImplementing<kOSProcessor>();
             foreach (var proc in proccessorModules)
             {
-                childParts.Add(proc.part.flightID);
                 uint id = proc.part.flightID;
-                if (partLookup.ContainsKey(id) && partLookup[id].ID != ID)
-                {
-                    // If the part is already known and not associated with this module, then
-                    // it is appearing as a result of a staging or undocking event (or something
-                    // similar).  As such, we need to copy the information from the flight parameters
-                    // on the originating module.
-                    foreach (string key in flightControlParameters.Keys)
-                    {
-                        if (partLookup[id].HasFlightControlParameter(key))
-                        {
-                            // Only copy the data if the previous vessel module still has the parameter.
-                            IFlightControlParameter paramDestination = flightControlParameters[key];
-                            IFlightControlParameter paramOrigin = partLookup[id].GetFlightControlParameter(key);
-                            // We only want to copy the parameters themselves once (because they are vessel dependent
-                            // not part dependent) but we still need to iterate through each part since "control"
-                            // itself is part dependent.
-                            if (partLookup[id].ID != BaseId) paramDestination.CopyFrom(paramOrigin);
-                            if (paramOrigin.Enabled && paramOrigin.ControlPartId == id)
-                            {
-                                // If this parameter was previously controlled by this part, re-enable
-                                // control, copy it's Value setpoint, and disable control on the old parameter.
-                                SharedObjects shared = paramOrigin.GetShared();
-                                paramDestination.EnableControl(shared);
-                                paramDestination.UpdateValue(paramOrigin.GetValue(), shared);
-                                paramOrigin.DisableControl();
-                            }
-                        }
-                    }
-                    baseId = partLookup[id].ID; // Keep track of which vessel the parameters are based on.
-                }
+                childParts.Add(id);
                 partLookup[id] = this;
             }
-            partCount = parentVessel.Parts.Count;
+            partCount = Vessel.Parts.Count;
         }
 
         /// <summary>
@@ -228,7 +227,18 @@ namespace kOS.Module
         /// </summary>
         private void AddDefaultParameters()
         {
-            AddFlightControlParameter("steering", new SteeringManager(parentVessel));
+            if (flightControlParameters != null)
+            {
+                flightControlParameters.Clear();
+            }
+            flightControlParameters = new Dictionary<string, IFlightControlParameter>();
+            AddFlightControlParameter("steering", new SteeringManager(Vessel));
+            AddFlightControlParameter("throttle", new ThrottleManager(Vessel));
+            AddFlightControlParameter("wheelsteer", new WheelSteeringManager(Vessel));
+            AddFlightControlParameter("wheelthrottle", new WheelThrottleManager(Vessel));
+            AddFlightControlParameter("flightcontrol", new FlightControl(Vessel));
+            flightParametersAdded = true;
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule AddDefaultParameters()!  On {0}", Vessel.vesselName));
         }
 
         /// <summary>
@@ -236,12 +246,12 @@ namespace kOS.Module
         /// </summary>
         private void HookEvents()
         {
-            ConnectivityManager.AddAutopilotHook(parentVessel, UpdateAutopilot);
+            ConnectivityManager.AddAutopilotHook(Vessel, UpdateAutopilot);
 
             // HACK: The following events and their methods are a hack to work around KSP's limitation that
             // blocks our autopilot from having control of the vessel if out of signal and the setting
             // "Require Signal for Control" is enabled.  It's very hacky, and my have unexpected results.
-            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject)
+            if (Vessel.vesselType != VesselType.Unknown && Vessel.vesselType != VesselType.SpaceObject && !workAroundEventsEnabled)
             {
                 TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, CacheControllable);
                 TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, resetControllable);
@@ -254,7 +264,7 @@ namespace kOS.Module
         /// </summary>
         private void UnHookEvents()
         {
-            ConnectivityManager.RemoveAutopilotHook(parentVessel, UpdateAutopilot);
+            ConnectivityManager.RemoveAutopilotHook(Vessel, UpdateAutopilot);
 
             if (workAroundEventsEnabled)
             {
@@ -279,7 +289,7 @@ namespace kOS.Module
         {
             if (workAroundControllable && isControllableField != null)
             {
-                isControllableField.SetValue(parentVessel, false);
+                isControllableField.SetValue(Vessel, false);
             }
         }
 
@@ -287,19 +297,19 @@ namespace kOS.Module
         {
             if (commNetParams == null && HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null)
                 commNetParams = HighLogic.CurrentGame.Parameters.CustomParams<CommNet.CommNetParams>();
-            if (parentVessel == null)
+            if (Vessel == null)
             {
                 SafeHouse.Logger.LogError("kOSVesselModule.CacheControllable called with null parentVessel, contact kOS developers");
                 workAroundControllable = false;
             }
-            else if (!parentVessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
+            else if (!Vessel.packed && !Vessel.IsControllable && commNetParams != null && commNetParams.requireSignalForControl)
             {
                 // HACK: Get around inability to affect throttle if connection is lost and require
                 if (isControllableField == null)
-                    isControllableField = parentVessel.GetType().GetField("isControllable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    isControllableField = Vessel.GetType().GetField("isControllable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 if (isControllableField != null) // given the above line, this shouldn't be null unless the KSP version changed.
                 {
-                    isControllableField.SetValue(parentVessel, true);
+                    isControllableField.SetValue(Vessel, true);
                     workAroundControllable = true;
                 }
             }
@@ -328,7 +338,7 @@ namespace kOS.Module
             {
                 if (++autopilotRehookCounter > autopilotRehookPeriod)
                 {
-                    ConnectivityManager.AddAutopilotHook(parentVessel, UpdateAutopilot);
+                    ConnectivityManager.AddAutopilotHook(Vessel, UpdateAutopilot);
                 }
             }
             else
@@ -396,9 +406,13 @@ namespace kOS.Module
         /// <returns></returns>
         public IFlightControlParameter GetFlightControlParameter(string name)
         {
+            if (flightControlParameters == null || !flightParametersAdded)
+            {
+                AddDefaultParameters();
+            }
             name = name.ToLower();
             if (!flightControlParameters.ContainsKey(name))
-                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", parentVessel.vesselName, name));
+                throw new Exception(string.Format("kOSVesselModule on {0} does not contain a parameter named {1}", Vessel.vesselName, name));
             return flightControlParameters[name];
         }
 
@@ -409,6 +423,10 @@ namespace kOS.Module
         /// <returns></returns>
         public bool HasFlightControlParameter(string name)
         {
+            if (flightControlParameters == null || !flightParametersAdded)
+            {
+                return false;
+            }
             name = name.ToLower();
             return flightControlParameters.ContainsKey(name);
         }
@@ -424,6 +442,7 @@ namespace kOS.Module
             {
                 var fc = flightControlParameters[name];
                 flightControlParameters.Remove(name);
+                fc.DisableControl();
                 IDisposable dispose = fc as IDisposable;
                 if (dispose != null) dispose.Dispose();
             }
