@@ -106,11 +106,6 @@ namespace kOS.Control
             }
         }
 
-        void IFlightControlParameter.UpdateState()
-        {
-            throw new NotImplementedException();
-        }
-
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
         {
             if (!Enabled)
