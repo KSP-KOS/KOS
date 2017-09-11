@@ -45,12 +45,10 @@ namespace kOS.Binding
             shared.BindingMgr.AddBoundVariable("THROTTLE", GetThrottleValue, SetThrottleValue);
             shared.BindingMgr.AddBoundVariable("STEERING", GetSteeringValue, SetSteeringValue);
             shared.BindingMgr.AddBoundVariable("WHEELSTEERING", GetWheelSteeringValue, SetWheelSteeringValue);
-            shared.BindingMgr.AddBoundVariable("WHEELTHROTTLE", GetSteeringValue, SetSteeringValue);
+            shared.BindingMgr.AddBoundVariable("WHEELTHROTTLE", GetWheelThrottleValue, SetWheelThrottleValue);
 
             shared.BindingMgr.AddBoundVariable("SASMODE", GetAutopilotModeName, SelectAutopilotMode);
             shared.BindingMgr.AddBoundVariable("NAVMODE", GetNavModeName, SetNavMode);
-            shared.BindingMgr.AddSetter("NAVMODE", value => SetNavMode(value));
-            shared.BindingMgr.AddGetter("NAVMODE", () => GetNavModeName());
         }
 
         private object GetThrottleValue()
@@ -59,10 +57,10 @@ namespace kOS.Binding
             return throttleManager.GetValue();
         }
 
-        private void SetThrottleValue(object value)
+        private void SetThrottleValue(object val)
         {
             var throttleManager = kOSVesselModule.GetInstance(Shared.Vessel).GetFlightControlParameter("throttle");
-            throttleManager.UpdateValue(value, Shared);
+            throttleManager.UpdateValue(val, Shared);
         }
 
         private object GetSteeringValue()

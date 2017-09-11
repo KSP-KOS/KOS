@@ -64,7 +64,7 @@ namespace kOS.Control
 
         void IFlightControlParameter.DisableControl(SharedObjects shared)
         {
-            if (shared.KSPPart.flightID == controlPartId)
+            if (shared.KSPPart.flightID != controlPartId)
                 return;
             ((IFlightControlParameter)this).DisableControl();
         }
