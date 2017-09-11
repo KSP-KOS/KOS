@@ -143,7 +143,7 @@ namespace kOS.Control
                 catch
                 {
                     throw new KOSWrongControlValueTypeException(
-                        "WHEELSTEER",
+                        "WHEELSTEERING",
                         KOSNomenclature.GetKOSName(value.GetType()),
                         string.Format(
                             "{0}, {1}, or {2} (compass heading)",
