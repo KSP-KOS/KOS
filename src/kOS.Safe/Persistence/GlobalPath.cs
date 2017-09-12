@@ -192,7 +192,6 @@ namespace kOS.Safe.Persistence
 
         public override bool Equals(object other)
         {
-            Console.WriteLine("eraseme: GlobalPath.Equals(): does " + this.ToString() + " == " + other.ToString() + " ?");
             GlobalPath otherPath = other as GlobalPath;
 
             if (ReferenceEquals(otherPath, null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
@@ -200,7 +199,6 @@ namespace kOS.Safe.Persistence
                 return false;
             }
             bool result =  VolumeId.Equals(otherPath.VolumeId) && Segments.SequenceEqual(otherPath.Segments);
-            Console.WriteLine("eraseme: Result = " + result);
             return result;
         }
 

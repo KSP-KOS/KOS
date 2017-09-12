@@ -97,7 +97,6 @@ namespace kOS.Safe
 
         public override bool Equals(object other)
         {
-            Console.WriteLine("eraseme: PathValue.Equals(): this = " + this.ToString() + ", other = " + other.ToString());
             PathValue pVal = other as PathValue;
             if (!ReferenceEquals(pVal,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
                 return Path == pVal.Path;
