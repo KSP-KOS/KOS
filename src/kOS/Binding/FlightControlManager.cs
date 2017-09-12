@@ -89,14 +89,14 @@ namespace kOS.Binding
 
         private object GetWheelThrottleValue()
         {
-            var wheelSteeringManager = kOSVesselModule.GetInstance(Shared.Vessel).GetFlightControlParameter("wheelthrottle");
-            return wheelSteeringManager.GetValue();
+            var wheelThrottleManager = kOSVesselModule.GetInstance(Shared.Vessel).GetFlightControlParameter("wheelthrottle");
+            return wheelThrottleManager.GetValue();
         }
 
         private void SetWheelThrottleValue(object val)
         {
-            var wheelSteeringManager = kOSVesselModule.GetInstance(Shared.Vessel).GetFlightControlParameter("wheelthrottle");
-            wheelSteeringManager.UpdateValue(val, Shared);
+            var wheelThrottleManager = kOSVesselModule.GetInstance(Shared.Vessel).GetFlightControlParameter("wheelthrottle");
+            wheelThrottleManager.UpdateValue(val, Shared);
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
