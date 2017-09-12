@@ -879,6 +879,7 @@ namespace kOS.Module
 
                 case ProcessorModes.OFF:
                 case ProcessorModes.STARVED:
+                    if (shared.Cpu != null) shared.Cpu.BreakExecution(true);
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
