@@ -41,7 +41,6 @@ namespace kOS
 
         public void DestroyObjects()
         {
-            if (BindingMgr != null) { BindingMgr.Dispose(); }
             if (Window != null) { UnityEngine.Object.Destroy(Window); }
             if (SoundMaker != null) { SoundMaker.StopAllVoices(); }
             if (UpdateHandler != null) { UpdateHandler.ClearAllObservers(); }

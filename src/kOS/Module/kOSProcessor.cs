@@ -881,7 +881,6 @@ namespace kOS.Module
                 case ProcessorModes.STARVED:
                     if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
                     if (shared.Window != null) shared.Window.IsPowered = false;
-                    if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll();
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;
                     break;
