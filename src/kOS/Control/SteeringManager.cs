@@ -281,6 +281,31 @@ namespace kOS.Control
 
             adjustTorqueWriter = null;
 
+            ResetToDefault();
+
+            InitializeSuffixes();
+        }
+
+        public void ResetToDefault()
+        {
+            pitchPI.Ts = 2;
+            yawPI.Ts = 2;
+            rollPI.Ts = 2;
+            // only neet to reset the PI's I value, other values are not accessible to users to modify
+            pitchPI.ResetI();
+            yawPI.ResetI();
+            rollPI.ResetI();
+
+            pitchRatePI.Kp = 1;
+            pitchRatePI.Ki = 0.1;
+            pitchRatePI.Kd = 0;
+            yawRatePI.Kp = 1;
+            yawRatePI.Ki = 0.1;
+            yawRatePI.Kd = 0;
+            rollRatePI.Kp = 1;
+            rollRatePI.Ki = 0.1;
+            rollRatePI.Kd = 0;
+
             adjustTorque = Vector3d.zero;
 
             EnableTorqueAdjust = false;
@@ -295,8 +320,6 @@ namespace kOS.Control
             PitchTorqueFactor = 1;
             YawTorqueFactor = 1;
             RollTorqueFactor = 1;
-
-            InitializeSuffixes();
         }
 
         public void InitializeSuffixes()
@@ -307,24 +330,9 @@ namespace kOS.Control
             AddSuffix("ENABLED", new Suffix<BooleanValue>(() => Enabled));
             AddSuffix("TARGET", new Suffix<Direction>(() => TargetDirection));
             AddSuffix("RESETPIDS", new NoArgsVoidSuffix(ResetIs));
+            AddSuffix("RESETTODEFAULT", new NoArgsVoidSuffix(ResetToDefault));
             AddSuffix("SHOWFACINGVECTORS", new SetSuffix<BooleanValue>(() => ShowFacingVectors, value => ShowFacingVectors = value));
             AddSuffix("SHOWANGULARVECTORS", new SetSuffix<BooleanValue>(() => ShowAngularVectors, value => ShowAngularVectors = value));
-            AddSuffix("SHOWTHRUSTVECTORS", new SetSuffix<BooleanValue>(() =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
-                },
-                value =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWTHRUSTVECTORS", "None, function removed", "");
-                }));
-            AddSuffix("SHOWRCSVECTORS", new SetSuffix<BooleanValue>(() =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
-                },
-                value =>
-                {
-                    throw new Safe.Exceptions.KOSObsoletionException("v0.20.3", "STEERINGMANAGER:SHOWRCSVECTORS", "None, function removed", "");
-                }));
             AddSuffix("SHOWSTEERINGSTATS", new SetSuffix<BooleanValue>(() => ShowSteeringStats, value => ShowSteeringStats = value));
             AddSuffix("WRITECSVFILES", new SetSuffix<BooleanValue>(() => WriteCSVFiles, value => WriteCSVFiles = value));
             AddSuffix("PITCHTS", new SetSuffix<ScalarValue>(() => pitchPI.Ts, value => pitchPI.Ts = value));
@@ -359,8 +367,6 @@ namespace kOS.Control
 
         public void EnableControl(SharedObjects sharedObj)
         {
-            if (enabled && partId != sharedObj.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
             shared = sharedObj;
             partId = sharedObj.KSPPart.flightID;
             ResetIs();
@@ -375,6 +381,7 @@ namespace kOS.Control
 
         public void DisableControl()
         {
+            shared = null;
             partId = 0;
             Enabled = false;
         }
@@ -383,13 +390,10 @@ namespace kOS.Control
         {
             if (enabled && partId != sharedObj.KSPPart.flightID)
             {
-                if (sharedObj.Cpu.IsPoppingContext)
-                    return; // popping context calls DisableControl but at a time when we mustn't throw exceptions.
-                else
-                    throw new Safe.Exceptions.KOSException ("Cannot unbind Steering Manager on this ship in use by another processor.");
+                // trying to disable control from a part that didn't win control last update, ignore.
+                return;
             }
-            partId = 0;
-            Enabled = false;
+            DisableControl();
         }
 
         public VectorRenderer InitVectorRenderer(Color c, double width, SharedObjects sharedObj)
@@ -414,24 +418,7 @@ namespace kOS.Control
             rollRatePI.ResetI();
         }
 
-        public void Update(Vessel vsl)
-        {
-            //if (vessel != vsl) vessel = vsl;
-            // Eventually I would like to update the vectors regardless of if flybywire is called,
-            // so that the vector renderers will still update in time warp, but it doesn't work now.
-            //UpdateStateVectors();
-            //UpdateTorque();
-            //UpdatePrediction();
-            //UpdateVectorRenders();
-            //PrintDebug();
-        }
-
         public void OnFlyByWire(FlightCtrlState c)
-        {
-            Update(c);
-        }
-
-        public void OnRemoteTechPilot(FlightCtrlState c)
         {
             Update(c);
         }
@@ -440,6 +427,10 @@ namespace kOS.Control
 
         private void Update(FlightCtrlState c)
         {
+            if (!Enabled)
+            {
+                return; // skip update if not enabled
+            }
             if (Value == null)
             {
                 SafeHouse.Logger.SuperVerbose("SteeringManager.Update: Value is <null>");
@@ -700,14 +691,6 @@ namespace kOS.Control
             m.m22 = left.z * right.z;
         }
         #endregion
-
-        public Transform FindParentTransform(Transform transform, string name, Transform topLevel)
-        {
-            if (transform.parent.name == name) return transform.parent;
-            else if (transform.parent == null) return null;
-            else if (transform.parent == topLevel) return null;
-            else return FindParentTransform(transform.parent, name, topLevel);
-        }
 
         // Update prediction based on PI controls, sets the target angular velocity and the target torque for the vessel
         public void UpdatePredictionPI()
@@ -1323,19 +1306,18 @@ namespace kOS.Control
 
         void IFlightControlParameter.UpdateValue(object value, SharedObjects shared)
         {
-            if (enabled && partId != shared.KSPPart.flightID)
-                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
+            if (!Enabled) // if control was somehow disabled by another processor, re-enable it
+            {
+                EnableControl(shared);
+            }
+            this.shared = shared; // set shared on every call to UpdateValue, the last processor to call wins.
+            partId = shared.KSPPart.flightID;
             Value = GetDirectionFromValue(value);
         }
 
         object IFlightControlParameter.GetValue()
         {
             return Value;
-        }
-
-        void IFlightControlParameter.UpdateState()
-        {
-            //throw new NotImplementedException();
         }
 
         void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)

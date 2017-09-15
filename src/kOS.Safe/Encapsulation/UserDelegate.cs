@@ -56,6 +56,8 @@ namespace kOS.Safe.Encapsulation
         {
             return (weakProgContext != null) && // If this is still null then we got called during the constructor and this doesn't count yet.
                 (
+                    (Cpu == null) ||
+                    (ProgContext == null) ||
                     (!weakProgContext.IsAlive) ||
                     (weakProgContext.Target == null) ||
                     (((IProgramContext)weakProgContext.Target).ContextId != Cpu.GetCurrentContext().ContextId)
@@ -139,9 +141,8 @@ namespace kOS.Safe.Encapsulation
             EntryPoint = entryPoint;
             if (useClosure)
                 CaptureClosure();
-            else
-                Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everwywhere.
-            Cpu.AddPopContextNotifyee(this);
+            if (Cpu != null)
+                Cpu.AddPopContextNotifyee(this);
         }
 
         public UserDelegate(UserDelegate oldCopy) : base(oldCopy)
@@ -149,7 +150,8 @@ namespace kOS.Safe.Encapsulation
             ProgContext = oldCopy.ProgContext;
             EntryPoint = oldCopy.EntryPoint;
             Closure = oldCopy.Closure;
-            Cpu.AddPopContextNotifyee(this);
+            if (Cpu != null)
+                Cpu.AddPopContextNotifyee(this);
         }
         
         public override KOSDelegate Clone()
@@ -159,13 +161,16 @@ namespace kOS.Safe.Encapsulation
 
         private void CaptureClosure()
         {
-            Closure = Cpu.GetCurrentClosure();
+            if (Cpu != null)
+                Closure = Cpu.GetCurrentClosure();
+            else
+                Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everwywhere.
         }
         
         public override string ToString()
         {
             return string.Format("UserDelegate(cpu={0}, entryPoint={1}, Closure={2},\n   {3})",
-                                 Cpu, EntryPoint, Closure, base.ToString());
+                (Cpu == null ? "(No CPU)" : Cpu.ToString()), EntryPoint, Closure, base.ToString());
         }
         
         public override bool Equals(object obj)
@@ -191,6 +196,8 @@ namespace kOS.Safe.Encapsulation
 
         public override void PushUnderArgs()
         {
+            if (Cpu == null)
+                throw new KOSCannotCallException();
             CheckForDead(true);
             // Going to do an indirect call of myself, and indirect calls need
             // to have the delegate underneath the args.  That's how
@@ -200,6 +207,8 @@ namespace kOS.Safe.Encapsulation
 
         public override Structure CallWithArgsPushedAlready()
         {
+            if (Cpu == null)
+                throw new KOSCannotCallException();
             CheckForDead(true);
             int absoluteJumpTo = OpcodeCall.StaticExecute(Cpu, false, "", true);
             if (absoluteJumpTo >= 0)

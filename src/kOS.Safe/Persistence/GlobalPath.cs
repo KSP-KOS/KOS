@@ -194,17 +194,30 @@ namespace kOS.Safe.Persistence
         {
             GlobalPath otherPath = other as GlobalPath;
 
-            if (otherPath == null)
+            if (ReferenceEquals(otherPath, null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
             {
                 return false;
             }
+            bool result =  VolumeId.Equals(otherPath.VolumeId) && Segments.SequenceEqual(otherPath.Segments);
+            return result;
+        }
 
-            return VolumeId.Equals(otherPath.VolumeId) && Segments.SequenceEqual(otherPath.Segments);
+        public static bool operator ==(GlobalPath left, GlobalPath right)
+        {
+            if (ReferenceEquals(left,null) || ReferenceEquals(right,null)) // ReferenceEquals prevents infinite recursion with overloaded == operator.
+                return ReferenceEquals(left, null) && ReferenceEquals(right, null); // ReferenceEquals prevents infinite recursion with overloaded == operator.
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(GlobalPath left, GlobalPath right)
+        {
+            return !(left == right);
         }
 
         public override string ToString()
         {
             return VolumeId + ":" + base.ToString();
         }
+
     }
 }

@@ -49,6 +49,8 @@ namespace kOS.Safe.Encapsulation
 
         public Structure CallPassingArgs(params Structure[] args)
         {
+            if (Cpu == null)
+                throw new KOSCannotCallException();
             PushUnderArgs();
             Cpu.PushStack(new KOSArgMarkerType());
             foreach (Structure arg in PreBoundArgs)
@@ -78,6 +80,8 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         public void InsertPreBoundArgs()
         {
+            if (Cpu == null)
+                throw new KOSCannotCallException();
             Stack<object> aboveArgs = new Stack<object>();
             object arg = ""; // doesn't matter what it is as long as it's non-null for the while check below.
             while (arg != null && !(arg is KOSArgMarkerType))

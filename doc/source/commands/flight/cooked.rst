@@ -7,6 +7,16 @@ Cooked Control
     :local:
     :depth: 1
 
+.. note::
+
+    It is possible for more than one processor part to control the cooked
+    steering methods at any given time.  Whichever processor is the last to
+    update the value of the given control will take priority.
+
+    .. versionchanged:: v1.1.3
+        kOS no longer throws an error if multiple parts attempt to set the value
+        of the same control.
+
 For more information, check out the documentation for the :struct:`SteeringManager` structure.
 
 In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:

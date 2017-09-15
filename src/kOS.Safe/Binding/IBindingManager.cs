@@ -14,8 +14,6 @@ namespace kOS.Safe.Binding
         void PreUpdate();
         void PostUpdate();
         void ToggleFlyByWire(string paramName, bool enabled);
-        void UnBindAll();
-        void Dispose();
         void SelectAutopilotMode(string autopilotMode);
     }
 }
