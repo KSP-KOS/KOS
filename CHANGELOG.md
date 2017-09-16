@@ -17,8 +17,8 @@ kOS Mod Changelog
   [pull request](https://github.com/KSP-KOS/KOS/pull/2077)
 
 ### BUG FIXES
-* A large refactor of the steering manager's tracking of which
-  vessel it controls.  This appears to have fixed a lot of
+* A large refactor of how the various flight control methods track
+  which vessel they control.  This appears to have fixed a lot of
   bugs where kOS lost the ability to control the ship unless
   you reloaded the scene.  (After a docking, undocking, staging,
   vessel switch, or scene switch, this would sometimes happen,
