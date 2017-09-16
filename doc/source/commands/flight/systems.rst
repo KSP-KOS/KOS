@@ -45,7 +45,8 @@ RCS and SAS
         Be aware that having KSP's ``SAS`` turned on *will* conflict
         with using "cooked control" (the ``lock steering`` command).  You
         should not use these two modes of steering control at the same time.
-        For further information see :ref:`lock steering<LOCK STEERING>`.
+        For further information see the
+        :ref:`warning in lock steering documentation<locksteeringsaswarning>`.
 
 .. _sasmode:
 
@@ -74,7 +75,8 @@ RCS and SAS
         Be aware that having KSP's ``SAS`` turned on *will* conflict
         with using "cooked control" (the ``lock steering`` command).  You
         should not use these two modes of steering control at the same time.
-        For further information see :ref:`lock steering<LOCK STEERING>`.
+        For further information see the
+        :ref:`warning in lock steering documentation<locksteeringsaswarning>`.
 
 .. _navmode:
 

@@ -37,7 +37,7 @@ The special LOCK variables for cooked steering
 .. warning::
 
     Do not use both ``SAS`` and ``lock steering`` at the same time.
-    See the explanation below.
+    See the :ref:`warning below<locksteeringsaswarning>`.
 
 .. warning::
 
@@ -90,22 +90,14 @@ The special LOCK variables for cooked steering
 
 Like all ``LOCK`` expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other ``LOCK`` expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other ``LOCK`` expressions only get executed when you try to read the value of the variable. The reason is that the **kOS** computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.
 
+.. _locksteeringsaswarning:
 .. warning::
 
-    **About ``lock steering`` and ``SAS``**:  Both kOS's ``lock steering``,
-    and stock KSP's ``SAS`` are steering controllers that attempt to
-    compensate for "unknown" rotational forces (drag, offcenter thrust, etc)
-    and fight them by moving the controls to counter their effects when they
-    notice them happening.  The problem is that SAS is unaware that what
-    kOS is triyng to do is deliberate and it sees it as something that
-    has to be countered.  (i.e. kOS causes the ship to start rotating to the
-    left to seek a new heading, then SAS sees this rotation and not knowing 
-    that it's deliberate, it tries to fight it by steering harder to the
-    right.) The effect of this in-fighting is that if you ``lock steering``
-    while ``sas`` is on, you will end up seeing the craft spin around
-    wildly in a seemingly nonsensical way.  It is a good idea to 
-    get in the habit of doing ``sas off.`` whenever you ``lock steering``
-    to something.
+    **About** ``lock steering`` **and** ``SAS`` **:**  While kOS had previously supported
+    enabling SAS at the same time as locking steering, this functionality broke
+    when the underlying KSP method was changed in a version upgrade.  It is our
+    hope to evenentually restore this functionality.  Please check github issue
+    `#2117 <https://github.com/KSP-KOS/KOS/issues/2117>`_ for updates.
 
 .. _LOCK WHEELTHROTTLE:
 .. object:: LOCK WHEELTHROTTLE TO expression. // value range [-1.0 .. 1.0]
