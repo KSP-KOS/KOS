@@ -24,6 +24,17 @@ release.
 
 ****
 
+Changes in 1.2.2.0
+------------------
+
+Made documentation of how SAS fights with lock steering more prominent
+and mentioned in more places.
+
+Documentation for :meth:`Skin:ADD` fixed to mention the second parameter.
+
+Documentation no longer implies TERMVELOCITY is a suffix (it was obsoleted,
+but the documentation wasn't removed).
+
 Changes in 1.1.1
 ----------------
 

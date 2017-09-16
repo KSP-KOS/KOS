@@ -1,6 +1,5 @@
 kOS Mod Changelog
 =================
-
 # v1.1.2.1 (for KSP 1.2.2) Backward compatibility version of v1.1.2
 
 ### Only use if you are stuck on KSP 1.2.2.
@@ -22,13 +21,79 @@ than bug fixes, but after that, its all bug fixes).  This was in a vain
 hope that doing so would get a release out faster than normal.
 
 ### BREAKING CHANGES
-* TODO
+
+(Can't think of any.)
 
 ### NEW FEATURES
-* TODO
+* Terminal input using any Unicode character, not just ASCII.
+  (Technically not a new feature, but a bug fix to a feature
+  from the previous version, but since the bug made the feature
+  never work *at all* in the past, it feels like a new feature).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2062)
+* New StartTracking suffix for "unknown objects" (asteroids).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2077)
 
 ### BUG FIXES
-* TODO
+* A large refactor of how the various flight control methods track
+  which vessel they control.  This appears to have fixed a lot of
+  bugs where kOS lost the ability to control the ship unless
+  you reloaded the scene.  (After a docking, undocking, staging,
+  vessel switch, or scene switch, this would sometimes happen,
+  but not consistently enough to be easy to debug).
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2100)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2063)
+* Program aborts caused by external events such as poweroff,
+  shutdown, or control-C no longer leave garbage behind in
+  memory still hooked into parts of kOS.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2019)
+* Documentation now more explicitly mentions how SAS and lock steering
+  fight with each other.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2111)
+* Documentation for GUIskin:add() was wrong.  Fixed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2098)
+* The waypoint() constructor used to fail on waypoints which
+  were *not* part of a cluster yet were named as if they
+  were part of a cluster anyway ("my waypoint Alpha",
+  "my waypoint Beta", "my waypoint Gamma", etc).  This doesn't
+  happen in stock, but does happen with several mods that use
+  ContractConfigurator.  kOS will now deal with such waypoints.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2093)
+* Documentation that claimed obsoleted TERMVELOCITY still
+  exists has been removed or edited.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2067)
+* Trying to examine the NoDelegate object no longer causes
+  nullref error.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2082)
+* Equality operator ( == ) when comparing a Path to a Path now
+  fires off correctly.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2089)
+* GUI's ONRADIOCHANGE callback hook now no longer depends
+  on the existence of an ONTOGGLE hook to fire off.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2088)
+* Compiler no longer creates incorrect opcodes for indexed
+  collections used as arguments to a function call that's
+  on the lefthand side of an assignment statement.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2079)
+* Font resizing in scripts no longer causes the terminal to mangle
+  its size and width/height character count
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2081)
+* Signal delay progress bar (when using Remote Tech) will now resize
+  properly when you have a nonstandard sized terminal window.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2076)
+* Compile command now works properly when run from the interpreter.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2071)
+* Vessel:isDead working properly now
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2070)
+* Stretching the terminal to a large size no longer causes
+  the rounded corner to obscure text in the window.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2060)
+* Full unicode keyboard and file save support was getting
+  mangled by wiping out the high byte leaving only the 8-bit
+  ASCII part left.  Fixed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2062)
+* Toolbar Panel setting changes no longer require there to
+  exist a kOS part loaded into the scene.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2058)
 
 # v1.1.1 (for KSP 1.3) KSP 1.3 compatibility recompile.
 
@@ -724,6 +789,7 @@ Steering Much Betterer
 * Unlock anything inside a Trigger body was broken ( https://github.com/KSP-KOS/KOS/issues/1151 )
 * Replaced KSP's incorrect ground speed with our own calculation ( https://github.com/KSP-KOS/KOS/issues/1097 )
 * SASMODE "radialin" and "raidialout" were swapped in the KSP API ( https://github.com/KSP-KOS/KOS/issues/1130 )
+
 * Bug with remote tech allowing access without antenna in one case ( https://github.com/KSP-KOS/KOS/pull/1171 )
 * Wheelsteering by integer compass heading was broken ( https://github.com/KSP-KOS/KOS/issues/1141 )
 * SHUTDOWN didn't shut down immediately ( https://github.com/KSP-KOS/KOS/issues/1120 )
