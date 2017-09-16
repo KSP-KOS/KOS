@@ -25,7 +25,9 @@ RCS and SAS
 
     Turns the RCS **on** or **off**, like using ``R`` at the keyboard::
 
-        RCS ON.
+        RCS ON. // same as SET RCS TO TRUE.
+        RCS OFF. // same as SET RCS TO FALSE.
+        PRINT RCS.  // prints either "True" or "False".
 
 .. global:: SAS
 
@@ -34,7 +36,17 @@ RCS and SAS
 
     Turns the SAS **on** or **off**, like using ``T`` at the keybaord::
 
-        SAS ON.
+        SAS ON. // same as SET SAS TO TRUE.
+        SAS OFF. // same as SET SAS TO FALSE.
+        PRINT SAS.  // prints either "True" or "False".
+
+    .. warning::
+
+        Be aware that having KSP's ``SAS`` turned on *will* conflict
+        with using "cooked control" (the ``lock steering`` command).  You
+        should not use these two modes of steering control at the same time.
+        For further information see the
+        :ref:`warning in lock steering documentation<locksteeringsaswarning>`.
 
 .. _sasmode:
 
@@ -57,6 +69,14 @@ RCS and SAS
     .. warning:: SASMODE does not work with RemoteTech
 
         Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.
+
+    .. warning:: SASMODE should not be used with LOCK STEERING
+
+        Be aware that having KSP's ``SAS`` turned on *will* conflict
+        with using "cooked control" (the ``lock steering`` command).  You
+        should not use these two modes of steering control at the same time.
+        For further information see the
+        :ref:`warning in lock steering documentation<locksteeringsaswarning>`.
 
 .. _navmode:
 
