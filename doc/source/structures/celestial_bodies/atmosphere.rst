@@ -24,7 +24,7 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
         * - :attr:`OXYGEN`
           - :ref:`boolean <boolean>`
           - True if oxygen is present
-        * - :attr:`SCALE`
+        * - :attr:`SCALE` (DEPRECATED)
           - :ref:`scalar <scalar>`
           - Used to find atmospheric density
         * - :attr:`SEALEVELPRESSURE`
@@ -58,13 +58,6 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     True if the air has oxygen and could therefore be used by a jet engine's intake.
-
-.. attribute:: Atmosphere:SCALE
-
-    :type: :ref:`scalar <scalar>`
-    :access: Get only
-
-    A math constant plugged into a formula to find atmosphere density.
 
 .. attribute:: Atmosphere:SEALEVELPRESSURE
 
@@ -103,6 +96,23 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Atmosphere:SCALE
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get only
+
+    A math constant plugged into a formula to find atmosphere density.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+            Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0
+
 
 Atmospheric Math
 ----------------

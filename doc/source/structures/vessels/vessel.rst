@@ -46,7 +46,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`VERTICALSPEED`                    :struct:`scalar` (m/s)          How fast the ship is moving "up"
     :attr:`GROUNDSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
     :attr:`AIRSPEED`                         :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
-    :attr:`TERMVELOCITY`                     :struct:`scalar` (m/s)          terminal velocity of the vessel
+    :attr:`TERMVELOCITY`(DEPRECATED)         :struct:`scalar` (m/s)          terminal velocity of the vessel
     :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
     :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
     :attr:`STATUS`                           :struct:`string`                Current ship status
@@ -216,13 +216,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
-
-.. attribute:: Vessel:TERMVELOCITY
-
-    :type: :ref:`scalar <scalar>` (m/s)
-    :access: Get only
-
-    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
 
 .. attribute:: Vessel:SHIPNAME
 
@@ -528,3 +521,19 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`MessageQueue`
 
     Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Vessel:TERMVELOCITY
+
+    :type: :ref:`scalar <scalar>` (m/s)
+    :access: Get only
+
+    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+            Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0
