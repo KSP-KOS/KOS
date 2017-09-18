@@ -15,7 +15,7 @@
 - [ ] Ensure that all required resources are in place (module manager)
 - [ ] Create zip file with a root starting in the `\Resources\` directory
 - [ ] The zip file should have the GameData folder in the root
-- [ ] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.zip` (eg kOS-v0.14.2.zip )
+- [ ] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.<build>.zip` (eg kOS-v1.1.3.0.zip )
 - [ ] Build the documentation in `\docs\`
 - [ ] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering
 
