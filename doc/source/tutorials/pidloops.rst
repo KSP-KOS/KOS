@@ -15,7 +15,7 @@ PID Loops in kOS
     hood.  It's probably a good idea to use the built-in
     :struct:`pidloop` instead of the program shown here, once you
     understand the topic this page describes.  However, it's also
-    a good idea to have a read through this page to get an 
+    a good idea to have a read through this page to get an
     understanding of what that built-in feature is really doing.
 
 This tutorial covers how one can implement a `PID loop`_ using kOS. A P-loop, or "proportional feedback loop" was already introduced in the second section of the :ref:`Design Patterns Tutorial <designpatterns>`, and that will serve as our starting point. After some code rearrangement, the integral and derivative terms will be added and discussed in turn. Next, a couple extra features will be added to the full PID-loop. Lastly, we'll show a case-study in tuning a full PID loop using the Ziegler-Nichols method. We'll use the LOG method to dump telemetry from KSP into a file and our favorite graphing software to visualize the data.
@@ -33,7 +33,7 @@ Those fuel-tank adapters are from the `Modular Rocket Systems (MRS) addon`_, but
 .. contents:: Contents
     :local:
     :depth: 2
-    
+
 Proportional Feedback Loop (P-loop)
 -----------------------------------
 
@@ -186,18 +186,18 @@ As mentioned earlier, kOS 0.18.1 introduced a new structure called :struct:`pidl
     SET g TO KERBIN:MU / KERBIN:RADIUS^2.
     LOCK accvec TO SHIP:SENSORS:ACC - SHIP:SENSORS:GRAV.
     LOCK gforce TO accvec:MAG / g.
-    
+
     SET Kp TO 0.01.
     SET Ki TO 0.006.
     SET Kd TO 0.006.
     SET PID TO PIDLOOP(Kp, Kp, Kd).
     SET PID:SETPOINT TO 1.2.
-    
+
     SET thrott TO 1.
     LOCK THROTTLE TO thrott.
 
     UNTIL SHIP:ALTITUDE > 40000 {
-        SET thrott TO thrott + PID:UPDATE(TIME:SECONDS, gforce). 
+        SET thrott TO thrott + PID:UPDATE(TIME:SECONDS, gforce).
         // pid:update() is given the input time and input and returns the output. gforce is the input.
         WAIT 0.001.
     }
@@ -212,7 +212,7 @@ Final Touches
 
 There are a few modifications that can make PID loops very robust. The following code example adds three range limits:
 
-#. bounds on the Integral term which addresses possible `integral windup`_ 
+#. bounds on the Integral term which addresses possible `integral windup`_
 #. bounds on the throttle since it must stay in the range 0 to 1
 #. a `deadband`_ to avoid changing the throttle due to small fluctuations
 
@@ -253,15 +253,15 @@ Of course, KSP is a simulator and small fluctuations are not observed in this pa
             IF NOT in_deadband {
                 SET I TO I + P * dt.
                 SET D TO (P - P0) / dt.
-                
+
                 // If Ki is non-zero, then limit Ki*I to [-1,1]
                 IF Ki > 0 {
                     SET I TO MIN(1.0/Ki, MAX(-1.0/Ki, I)).
                 }
-                
+
                 // set throttle but keep in range [0,1]
                 SET thrott to MIN(1, MAX(0, thrott + dthrott)).
-                
+
                 SET P0 TO P.
                 SET t0 TO TIME:SECONDS.
             }
@@ -320,7 +320,7 @@ An immediate problem to overcome with this method is that it assumes a steady st
     atmospheric model which has now been obsoleted,
     and this example won't quite work as described if
     you try using it today.
-    
+
     Please note the warning at the start of this section.
 
 The script we'll use to tune the highly overpowered rocket shown will launch the rocket straight up (using SAS) and will log data to an output file until it reaches 30km at which point the log file will be copied to the archive and the program will terminate. Also, this time the feedback loop will be based on the more realistic "atmospheric efficiency." The log file will contain three columns: time since launch, offset of atmospheric efficiency from the ideal (in this case, 1.0) and the ship's maximum thrust. The maximum thrust will increase monotonically with time (this rocket has only one stage) and we'll use both as the x-axis when plotting the offset on the y-axis.
@@ -330,7 +330,7 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
     The example program here uses the suffix ``SHIP:TERMVELOCITY``,
     which no longer exists in kOS because of changes to the base
     game's atmospheric model.
-    
+
     Please note the warning at the start of this section.
 
 ::
@@ -383,14 +383,14 @@ Give this script a short name, something like "tune.txt" so that running is simp
     copypath("0:/tune", "").
     run tune(0.5).
 
-After every launch completes, you'll have to go into the archive directory and rename the output logfile. Something like "throttle\_log.txt" --> "throttle.01.log" will help if you increment the index number each time. To analyze the data, plot the offset (P) as a function of time (t). Here, we show the results for three values of Kp: 0.002, 0.016 and 0.160, including the maximum TWR when Kp = 0.002 as the top x-axis. The maximum TWR dependence on time is different for the three values of Kp, but not by a lot.
-
 .. sidebar:: Obsolete, deprecated
 
     These data values wouldn't quite come out this
     way if you tried using this example today.
-    
+
     Please note the warning at the start of this section.
+
+After every launch completes, you'll have to go into the archive directory and rename the output logfile. Something like "throttle\_log.txt" --> "throttle.01.log" will help if you increment the index number each time. To analyze the data, plot the offset (P) as a function of time (t). Here, we show the results for three values of Kp: 0.002, 0.016 and 0.160, including the maximum TWR when Kp = 0.002 as the top x-axis. The maximum TWR dependence on time is different for the three values of Kp, but not by a lot.
 
 .. figure:: /_images/tutorials/pidloops/pidtune1.png
 
@@ -400,30 +400,21 @@ The value of 0.002 is obviously too low. The settling time is well over 20 secon
 
     These data values wouldn't quite come out this
     way if you tried using this example today.
-    
-    Please note the warning at the start of this section.
 
-.. figure:: /_images/tutorials/pidloops/pidtune2.png
+    Please note the warning at the start of this section.
 
 This is done for each value of Kp and the slopes of the fitted lines are plotted as a function of Kp in the following plot:
 
-.. sidebar:: Obsolete, deprecated
-
-    These data values wouldn't quite come out this
-    way if you tried using this example today.
-    
-    Please note the warning at the start of this section.
-
 .. figure:: /_images/tutorials/pidloops/pidtune3.png
 
-The period of oscillation was averaged over the interval and plotted on top of the amplitude change over time. Notice the turn over that occurs when Kp reaches approximately 0.26. This will mark the "ultimate gain" and 3.1 seconds will be used as the associated period of oscillation. It is left as an exercise for the reader to implement a full PID-loop using the classic PID values (see table above): Kp = 0.156, Ki = 0.101, Kd = 0.060, producing this behavior:
-
 .. sidebar:: Obsolete, deprecated
 
     These data values wouldn't quite come out this
     way if you tried using this example today.
-    
+
     Please note the warning at the start of this section.
+
+The period of oscillation was averaged over the interval and plotted on top of the amplitude change over time. Notice the turn over that occurs when Kp reaches approximately 0.26. This will mark the "ultimate gain" and 3.1 seconds will be used as the associated period of oscillation. It is left as an exercise for the reader to implement a full PID-loop using the classic PID values (see table above): Kp = 0.156, Ki = 0.101, Kd = 0.060, producing this behavior:
 
 .. figure:: /_images/tutorials/pidloops/pidtune4.png
 
