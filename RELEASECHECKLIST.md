@@ -24,7 +24,7 @@
 - [ ] Build Github release with changelog and title
 - [ ] Copy Github release to [Curseforge](http://kerbal.curseforge.com/projects/kos-scriptable-autopilot-system?gameCategorySlug=ksp-mods&projectID=220265)
 - [ ] Copy Github release to [Spacedock](http://spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System)
-- [ ] Update [Forum thread](http://forum.kerbalspaceprogram.com/index.php?/topic/61827-/) with new change log, release date and version
+- [ ] Update [Forum thread](https://forum.kerbalspaceprogram.com/index.php?/topic/165628-13-kos-v1130-kos-scriptable-autopilot-system/) with new change log, release date and version
 - [ ] Post update in the forum thread
 - [ ] Post update on [reddit board](http://www.reddit.com/r/kos)
 - [ ] Push the gh-pages branch to KSP-KOS/KOS_DOC

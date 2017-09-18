@@ -1,19 +1,19 @@
 kOS Mod Changelog
 =================
-# v1.1.2.1 (for KSP 1.2.2) Backward compatibility version of v1.1.2
+# v1.1.3.1 (for KSP 1.2.2) Backward compatibility version of v1.1.3.0
 
 ### Only use if you are stuck on KSP 1.2.2.
 
-If you are on KSP 1.3, use kOS v1.1.2.0 instead of this one.
+If you are on KSP 1.3, use kOS v1.1.3.0 instead of this one.
 This version *will fail* if you use it on KSP 1.3.
 
-This is identical to kOS v1.1.2.0 except that code specific to KSP 1.3
+This is identical to kOS v1.1.3.0 except that code specific to KSP 1.3
 was removed, and it was re-compiled against KSP 1.2.2 libraries.
 
 (The incentive to make such a release available was mostly because
 Realism Overhaul typically stays a version behind for quite a while).
 
-# v1.1.2.0 (for KSP 1.3) Bug Swatting Release
+# v1.1.3.0 (for KSP 1.3) Bug Swatting Release
 
 For this release we instituted a rule partway through that only bug fixes
 should be allowed (some of the first few changes were enhancements rather
@@ -94,6 +94,13 @@ hope that doing so would get a release out faster than normal.
 * Toolbar Panel setting changes no longer require there to
   exist a kOS part loaded into the scene.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2058)
+
+# v1.1.2 (for KSP 1.3) No change - just fixing version.
+
+There was a version number problem in our CKAN files that
+required us to issue an update and doing so required a
+version number increase.  There is no other change in
+this version.
 
 # v1.1.1 (for KSP 1.3) KSP 1.3 compatibility recompile.
 

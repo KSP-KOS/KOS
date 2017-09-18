@@ -42,7 +42,7 @@ There are two good places to go for help and sharing of ideas with other
 users of kOS, and the developers of the mod frequent those locations too:
 
 - `/r/kos on reddit <https://www.reddit.com/r/kos>`__
-- `On Kerbal Space Program's forum <http://forum.kerbalspaceprogram.com/index.php?/topic/61827-/>`__
+- `On Kerbal Space Program's forum <https://forum.kerbalspaceprogram.com/index.php?/topic/165628/>`__
 
 Of these two locations, the Reddit one tends to be more active because it
 allows multiple sub-threads about kOS.  On the Kerbal Space Program
