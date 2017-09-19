@@ -7,12 +7,14 @@ namespace kOS.Safe.Encapsulation
     {
         private readonly int major;
         private readonly int minor;
+        private readonly int patch;
         private readonly int build;
 
-        public VersionInfo(int major, int minor, int build)
+        public VersionInfo(int major, int minor, int patch, int build)
         {
             this.major = major;
             this.minor = minor;
+            this.patch = patch;
             this.build = build;
             VersionInitializeSuffixes();
         }
@@ -21,12 +23,13 @@ namespace kOS.Safe.Encapsulation
         {
             AddSuffix("MAJOR", new StaticSuffix<ScalarValue>(() => major));
             AddSuffix("MINOR", new StaticSuffix<ScalarValue>(() => minor));
+            AddSuffix("PATCH", new StaticSuffix<ScalarValue>(() => patch));
             AddSuffix("BUILD", new StaticSuffix<ScalarValue>(() => build));
         }
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}.{2}", major, minor, build);
+            return string.Format("{0}.{1}.{2}.{3}", major, minor, patch, build);
         }
     }
 }
