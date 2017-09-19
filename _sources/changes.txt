@@ -24,7 +24,7 @@ release.
 
 ****
 
-Changes in 1.2.3.0
+Changes in 1.1.3.0
 ------------------
 
 Made documentation of how SAS fights with lock steering more prominent
