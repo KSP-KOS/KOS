@@ -7,6 +7,16 @@ Cooked Control
     :local:
     :depth: 1
 
+.. note::
+
+    It is possible for more than one processor part to control the cooked
+    steering methods at any given time.  Whichever processor is the last to
+    update the value of the given control will take priority.
+
+    .. versionchanged:: v1.1.3
+        kOS no longer throws an error if multiple parts attempt to set the value
+        of the same control.
+
 For more information, check out the documentation for the :struct:`SteeringManager` structure.
 
 In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:
@@ -26,15 +36,18 @@ The special LOCK variables for cooked steering
 
 .. warning::
 
+    Do not use both ``SAS`` and ``lock steering`` at the same time.
+    See the :ref:`warning below<locksteeringsaswarning>`.
+
+.. warning::
+
     It's a very bad idea to``WAIT`` during the execution of the expression in a
     LOCK THROTTLE.  See the note in the next section below.
 
 .. _LOCK STEERING:
 .. object:: LOCK STEERING TO expression.
 
-   This sets the direction **kOS** should point the ship where *expression* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
-
-    :ref:`Rotation <rotation>`
+    This sets the direction **kOS** should point the ship where *expression* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
 
         A Rotation expressed as ``R(pitch,yaw,roll)``. Note that pitch, yaw and roll are not based on the horizon, but based on an internal coordinate system used by **KSP** that is hard to use. Thankfully, you can force the rotation into a sensible frame of reference by adding a rotation to a known direction first.
 
@@ -74,13 +87,17 @@ The special LOCK variables for cooked steering
         which tells the steering manager to attempt to stop any vessel rotation,
         much like the stock SAS's stability assist mode.
 
+
 Like all ``LOCK`` expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other ``LOCK`` expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other ``LOCK`` expressions only get executed when you try to read the value of the variable. The reason is that the **kOS** computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.
 
+.. _locksteeringsaswarning:
 .. warning::
 
-    It's a very bad idea to ``WAIT`` during the execution of the expression in a
-    LOCK STEERING.  See the note in the next section below.
-
+    **About** ``lock steering`` **and** ``SAS`` **:**  While kOS had previously supported
+    enabling SAS at the same time as locking steering, this functionality broke
+    when the underlying KSP method was changed in a version upgrade.  It is our
+    hope to evenentually restore this functionality.  Please check github issue
+    `#2117 <https://github.com/KSP-KOS/KOS/issues/2117>`_ for updates.
 
 .. _LOCK WHEELTHROTTLE:
 .. object:: LOCK WHEELTHROTTLE TO expression. // value range [-1.0 .. 1.0]

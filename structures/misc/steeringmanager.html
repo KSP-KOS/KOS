@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SteeringManager &mdash; kOS 1.1.2 documentation</title>
+  <title>SteeringManager &mdash; kOS 1.1.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="String" href="string.html"/>
         <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.2
+                1.1.3.0
               </div>
             
           
@@ -246,79 +246,83 @@ portion of the steering system.</p>
 <td>none</td>
 <td>Called to call <cite>RESET</cite> on all steering PID loops.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWFACINGVECTORS" title="STEERINGMANAGER:SHOWFACINGVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWFACINGVECTORS</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:STEERINGMANAGER:RESETTODEFAULT" title="STEERINGMANAGER:RESETTODEFAULT method"><code class="xref ks ks-meth docutils literal"><span class="pre">RESETTODEFAULT()</span></code></a></td>
+<td>none</td>
+<td>Called to reset all steering tuning parameters.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWFACINGVECTORS" title="STEERINGMANAGER:SHOWFACINGVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWFACINGVECTORS</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
 <td>Enable/disable display of ship facing, target, and world coordinates vectors.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWANGULARVECTORS" title="STEERINGMANAGER:SHOWANGULARVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWANGULARVECTORS</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWANGULARVECTORS" title="STEERINGMANAGER:SHOWANGULARVECTORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWANGULARVECTORS</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
 <td>Enable/disable display of angular rotation vectors</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWSTEERINGSTATS" title="STEERINGMANAGER:SHOWSTEERINGSTATS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWSTEERINGSTATS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWSTEERINGSTATS" title="STEERINGMANAGER:SHOWSTEERINGSTATS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SHOWSTEERINGSTATS</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
 <td>Enable/disable printing of the steering information on the terminal</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:WRITECSVFILES" title="STEERINGMANAGER:WRITECSVFILES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WRITECSVFILES</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:WRITECSVFILES" title="STEERINGMANAGER:WRITECSVFILES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">WRITECSVFILES</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">boolean</span></code></a></td>
 <td>Enable/disable logging steering to csv files.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTS" title="STEERINGMANAGER:PITCHTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHTS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTS" title="STEERINGMANAGER:PITCHTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHTS</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (s)</td>
 <td>Settling time for the pitch torque calculation.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTS" title="STEERINGMANAGER:YAWTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWTS</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTS" title="STEERINGMANAGER:YAWTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWTS</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (s)</td>
 <td>Settling time for the yaw torque calculation.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTS" title="STEERINGMANAGER:ROLLTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLTS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTS" title="STEERINGMANAGER:ROLLTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLTS</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (s)</td>
 <td>Settling time for the roll torque calculation.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:MAXSTOPPINGTIME" title="STEERINGMANAGER:MAXSTOPPINGTIME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:MAXSTOPPINGTIME" title="STEERINGMANAGER:MAXSTOPPINGTIME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (s)</td>
 <td>The maximum amount of stopping time to limit angular turn rate.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLCONTROLANGLERANGE" title="STEERINGMANAGER:ROLLCONTROLANGLERANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLCONTROLANGLERANGE</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLCONTROLANGLERANGE" title="STEERINGMANAGER:ROLLCONTROLANGLERANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLCONTROLANGLERANGE</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (deg)</td>
 <td>The maximum value of <a class="reference internal" href="#attribute:STEERINGMANAGER:ANGLEERROR" title="STEERINGMANAGER:ANGLEERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGLEERROR</span></code></a> for which to control roll.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ANGLEERROR" title="STEERINGMANAGER:ANGLEERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGLEERROR</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ANGLEERROR" title="STEERINGMANAGER:ANGLEERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGLEERROR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (deg)</td>
 <td>The angle between vessel:facing and target directions</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHERROR" title="STEERINGMANAGER:PITCHERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHERROR</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHERROR" title="STEERINGMANAGER:PITCHERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHERROR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (deg)</td>
 <td>The angular error in the pitch direction</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWERROR" title="STEERINGMANAGER:YAWERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWERROR</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWERROR" title="STEERINGMANAGER:YAWERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWERROR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (deg)</td>
 <td>The angular error in the yaw direction</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLERROR" title="STEERINGMANAGER:ROLLERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLERROR</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLERROR" title="STEERINGMANAGER:ROLLERROR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLERROR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (deg)</td>
 <td>The angular error in the roll direction</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTORQUEADJUST" title="STEERINGMANAGER:PITCHTORQUEADJUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHTORQUEADJUST</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTORQUEADJUST" title="STEERINGMANAGER:PITCHTORQUEADJUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHTORQUEADJUST</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (kN)</td>
 <td>Additive adjustment to pitch torque (calculated)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTORQUEADJUST" title="STEERINGMANAGER:YAWTORQUEADJUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWTORQUEADJUST</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTORQUEADJUST" title="STEERINGMANAGER:YAWTORQUEADJUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWTORQUEADJUST</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (kN)</td>
 <td>Additive adjustment to yaw torque (calculated)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTORQUEADJUST" title="STEERINGMANAGER:ROLLTORQUEADJUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLTORQUEADJUST</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTORQUEADJUST" title="STEERINGMANAGER:ROLLTORQUEADJUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLTORQUEADJUST</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (kN)</td>
 <td>Additive adjustment to roll torque (calculated)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTORQUEFACTOR" title="STEERINGMANAGER:PITCHTORQUEFACTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHTORQUEFACTOR</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTORQUEFACTOR" title="STEERINGMANAGER:PITCHTORQUEFACTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PITCHTORQUEFACTOR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Multiplicative adjustment to pitch torque (calculated)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTORQUEFACTOR" title="STEERINGMANAGER:YAWTORQUEFACTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWTORQUEFACTOR</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTORQUEFACTOR" title="STEERINGMANAGER:YAWTORQUEFACTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">YAWTORQUEFACTOR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Multiplicative adjustment to yaw torque (calculated)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTORQUEFACTOR" title="STEERINGMANAGER:ROLLTORQUEFACTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLTORQUEFACTOR</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTORQUEFACTOR" title="STEERINGMANAGER:ROLLTORQUEFACTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROLLTORQUEFACTOR</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Multiplicative adjustment to roll torque (calculated)</td>
 </tr>
@@ -435,6 +439,22 @@ SteeringManager:<code class="descname">RESETPIDS</code><span class="sig-paren">(
 </tbody>
 </table>
 <p>Resets the integral sum to zero for all six steering PID Loops.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:STEERINGMANAGER:RESETTODEFAULT">
+SteeringManager:<code class="descname">RESETTODEFAULT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:STEERINGMANAGER:RESETTODEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+<p>Resets the various tuning parameters of the <a class="reference internal" href="#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a> to
+their default values as if the ship had just been loaded.  This internally
+will also call <a class="reference internal" href="#method:STEERINGMANAGER:RESETPIDS" title="STEERINGMANAGER:RESETPIDS method"><code class="xref ks ks-meth docutils literal"><span class="pre">SteeringManager:RESETPIDS</span></code></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -795,7 +815,7 @@ SteeringManager:<code class="descname">ROLLTORQUEFACTOR</code><a class="headerli
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.2',
+            VERSION:'1.1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

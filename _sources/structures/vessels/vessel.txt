@@ -46,11 +46,12 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`VERTICALSPEED`                    :struct:`scalar` (m/s)          How fast the ship is moving "up"
     :attr:`GROUNDSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
     :attr:`AIRSPEED`                         :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
-    :attr:`TERMVELOCITY`                     :struct:`scalar` (m/s)          terminal velocity of the vessel
+    :attr:`TERMVELOCITY`(DEPRECATED)         :struct:`scalar` (m/s)          terminal velocity of the vessel
     :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
     :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
     :attr:`STATUS`                           :struct:`string`                Current ship status
     :attr:`TYPE`                             :struct:`string`                Ship type
+    :meth:`STARTTRACKING`                    None                            Start tracking the "vessel" via the tracking statin
     :attr:`ANGULARMOMENTUM`                  :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`ANGULARVEL`                       :struct:`Vector`                In :ref:`SHIP_RAW <ship-raw>`
     :attr:`SENSORS`                          :struct:`VesselSensors`         Sensor data
@@ -216,13 +217,6 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     How fast the ship is moving relative to the air. KSP models atmosphere as simply a solid block of air "glued" to the planet surface (the weather on Kerbin is boring and there's no wind). Therefore airspeed is generally the same thing as as the magnitude of the surface velocity.
 
-.. attribute:: Vessel:TERMVELOCITY
-
-    :type: :ref:`scalar <scalar>` (m/s)
-    :access: Get only
-
-    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
-
 .. attribute:: Vessel:SHIPNAME
 
     :type: :ref:`string <string>`
@@ -247,6 +241,23 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get/Set
 
     The ship's type as described `on the KSP wiki <http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types>`_.
+
+.. method:: Vessel:STARTTRACKING
+
+    :return: None
+
+    Call this method to start tracking the object.  This is functionally the
+    same as clicking on the "Start Tracking" button in the Tracking Station
+    interface.  The primary purpose is to change asteroids from being displayed
+    in the tracking station or on the map as ``"Unknown"`` to being displayed as
+    ``"SpaceObject"``.  By doing so, the asteroid will not be de-spawned by
+    KSP's asteroid management system.
+
+    .. note::
+        This does not change the value returned by :attr:`Vessel:TYPE`.  KSP
+        internally manages the "discovery information" for vessels, including
+        assteroids, in a different system. As a result, the value kOS reads for
+        ``TYPE`` may be different from that displayed on the map.
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 
@@ -510,3 +521,19 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`MessageQueue`
 
     Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Vessel:TERMVELOCITY
+
+    :type: :ref:`scalar <scalar>` (m/s)
+    :access: Get only
+
+    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+            Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0

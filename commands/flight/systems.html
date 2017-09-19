@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Systems &mdash; kOS 1.1.2 documentation</title>
+  <title>Ship Systems &mdash; kOS 1.1.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Predictions of Flight Path" href="../prediction.html"/>
         <link rel="prev" title="Pilot Input" href="pilot.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.2
+                1.1.3.0
               </div>
             
           
@@ -203,7 +203,9 @@ method.  You may retrieve the current control part using the
 </tbody>
 </table>
 <p>Turns the RCS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal"><span class="pre">R</span></code> at the keyboard:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">RCS</span> <span class="nb">ON</span><span class="p">.</span> <span class="c1">// same as SET RCS TO TRUE.</span>
+<span class="nv">RCS</span> <span class="nb">OFF</span><span class="p">.</span> <span class="c1">// same as SET RCS TO FALSE.</span>
+<span class="k">PRINT</span> <span class="nv">RCS</span><span class="p">.</span>  <span class="c1">// prints either &quot;True&quot; or &quot;False&quot;.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -222,8 +224,18 @@ method.  You may retrieve the current control part using the
 </tbody>
 </table>
 <p>Turns the SAS <strong>on</strong> or <strong>off</strong>, like using <code class="docutils literal"><span class="pre">T</span></code> at the keybaord:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">SAS</span> <span class="nb">ON</span><span class="p">.</span> <span class="c1">// same as SET SAS TO TRUE.</span>
+<span class="nv">SAS</span> <span class="nb">OFF</span><span class="p">.</span> <span class="c1">// same as SET SAS TO FALSE.</span>
+<span class="k">PRINT</span> <span class="nv">SAS</span><span class="p">.</span>  <span class="c1">// prints either &quot;True&quot; or &quot;False&quot;.</span>
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Be aware that having KSP&#8217;s <code class="docutils literal"><span class="pre">SAS</span></code> turned on <em>will</em> conflict
+with using &#8220;cooked control&#8221; (the <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> command).  You
+should not use these two modes of steering control at the same time.
+For further information see the
+<a class="reference internal" href="cooked.html#locksteeringsaswarning"><span>warning in lock steering documentation</span></a>.</p>
 </div>
 </dd></dl>
 
@@ -255,6 +267,15 @@ Velocity-related modes also reset back to stability assist when the velocity get
 <p class="first admonition-title">Warning</p>
 <p>SASMODE does not work with RemoteTech</p>
 <p class="last">Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>SASMODE should not be used with LOCK STEERING</p>
+<p class="last">Be aware that having KSP&#8217;s <code class="docutils literal"><span class="pre">SAS</span></code> turned on <em>will</em> conflict
+with using &#8220;cooked control&#8221; (the <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> command).  You
+should not use these two modes of steering control at the same time.
+For further information see the
+<a class="reference internal" href="cooked.html#locksteeringsaswarning"><span>warning in lock steering documentation</span></a>.</p>
 </div>
 </dd></dl>
 
@@ -787,7 +808,7 @@ description for details.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.2',
+            VERSION:'1.1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

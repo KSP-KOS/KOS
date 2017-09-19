@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Atmosphere &mdash; kOS 1.1.2 documentation</title>
+  <title>Atmosphere &mdash; kOS 1.1.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Body" href="body.html"/>
         <link rel="prev" title="Celestial Bodies" href="../celestial_bodies.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.2
+                1.1.3.0
               </div>
             
           
@@ -202,7 +202,7 @@
 <td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
 <td>True if oxygen is present</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:SCALE" title="ATMOSPHERE:SCALE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ATMOSPHERE:SCALE" title="ATMOSPHERE:SCALE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></code></a> (DEPRECATED)</td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
 <td>Used to find atmospheric density</td>
 </tr>
@@ -268,22 +268,6 @@ Atmosphere:<code class="descname">OXYGEN</code><a class="headerlink" href="#attr
 </tbody>
 </table>
 <p>True if the air has oxygen and could therefore be used by a jet engine&#8217;s intake.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:ATMOSPHERE:SCALE">
-Atmosphere:<code class="descname">SCALE</code><a class="headerlink" href="#attribute:ATMOSPHERE:SCALE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>A math constant plugged into a formula to find atmosphere density.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -355,6 +339,31 @@ Atmosphere:<code class="descname">HEIGHT</code><a class="headerlink" href="#attr
 <p>The altitude at which the atmosphere is &#8220;officially&#8221; advertised as ending. (actual ending value differs, see below).</p>
 </dd></dl>
 
+<div class="section" id="deprecated-suffix">
+<h2>Deprecated Suffix<a class="headerlink" href="#deprecated-suffix" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="attribute:ATMOSPHERE:SCALE">
+Atmosphere:<code class="descname">SCALE</code><a class="headerlink" href="#attribute:ATMOSPHERE:SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A math constant plugged into a formula to find atmosphere density.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last deprecated">
+<p><span class="versionmodified">Deprecated since version 0.17.2: </span>Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0</p>
+</div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="atmospheric-math">
 <h2>Atmospheric Math<a class="headerlink" href="#atmospheric-math" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
@@ -412,7 +421,7 @@ documentation, so this section below this point has been removed.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.2',
+            VERSION:'1.1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

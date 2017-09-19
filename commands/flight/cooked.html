@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Cooked Control &mdash; kOS 1.1.2 documentation</title>
+  <title>Cooked Control &mdash; kOS 1.1.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Raw Control" href="raw.html"/>
         <link rel="prev" title="Flight Control" href="../flight.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.2
+                1.1.3.0
               </div>
             
           
@@ -178,17 +178,27 @@
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#the-special-lock-variables-for-cooked-steering" id="id1">The special LOCK variables for cooked steering</a></li>
-<li><a class="reference internal" href="#don-t-wait-during-cooked-control-calculation" id="id2">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a></li>
-<li><a class="reference internal" href="#unlocking-controls" id="id3">Unlocking controls</a></li>
-<li><a class="reference internal" href="#tuning-cooked-steering" id="id4">Tuning cooked steering</a></li>
-<li><a class="reference internal" href="#advantages-disadvantages" id="id5">Advantages/Disadvantages</a></li>
+<li><a class="reference internal" href="#the-special-lock-variables-for-cooked-steering" id="id2">The special LOCK variables for cooked steering</a></li>
+<li><a class="reference internal" href="#don-t-wait-during-cooked-control-calculation" id="id3">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a></li>
+<li><a class="reference internal" href="#unlocking-controls" id="id4">Unlocking controls</a></li>
+<li><a class="reference internal" href="#tuning-cooked-steering" id="id5">Tuning cooked steering</a></li>
+<li><a class="reference internal" href="#advantages-disadvantages" id="id6">Advantages/Disadvantages</a></li>
 </ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is possible for more than one processor part to control the cooked
+steering methods at any given time.  Whichever processor is the last to
+update the value of the given control will take priority.</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version v1.1.3: </span>kOS no longer throws an error if multiple parts attempt to set the value
+of the same control.</p>
+</div>
 </div>
 <p>For more information, check out the documentation for the <a class="reference internal" href="../../structures/misc/steeringmanager.html#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a> structure.</p>
 <p>In this style of controlling the craft, you do not steer the craft directly, but instead select a goal direction and let kOS pick the way to steer toward that goal. This method of controlling the craft consists primarily of the following two commands:</p>
 <div class="section" id="the-special-lock-variables-for-cooked-steering">
-<h2><a class="toc-backref" href="#id1">The special LOCK variables for cooked steering</a><a class="headerlink" href="#the-special-lock-variables-for-cooked-steering" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">The special LOCK variables for cooked steering</a><a class="headerlink" href="#the-special-lock-variables-for-cooked-steering" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="lock-throttle"></span><dl class="object">
 <dt>
 <code class="descname">LOCK THROTTLE TO expression. // value range [0.0 .. 1.0]</code></dt>
@@ -200,6 +210,11 @@ in the range [0..1].</p>
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
+<p class="last">Do not use both <code class="docutils literal"><span class="pre">SAS</span></code> and <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> at the same time.
+See the <a class="reference internal" href="#locksteeringsaswarning"><span>warning below</span></a>.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
 <p class="last">It&#8217;s a very bad idea to``WAIT`` during the execution of the expression in a
 LOCK THROTTLE.  See the note in the next section below.</p>
 </div>
@@ -207,8 +222,6 @@ LOCK THROTTLE.  See the note in the next section below.</p>
 <dt>
 <code class="descname">LOCK STEERING TO expression.</code></dt>
 <dd><p>This sets the direction <strong>kOS</strong> should point the ship where <em>expression</em> is a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> or a <a class="reference internal" href="../../math/direction.html#direction"><span>Direction</span></a> created from a <a class="reference internal" href="../../math/direction.html#rotation"><span>Rotation</span></a> or <a class="reference internal" href="../../math/direction.html#heading"><span>Heading</span></a>:</p>
-<blockquote>
-<div><p><a class="reference internal" href="../../math/direction.html#rotation"><span>Rotation</span></a></p>
 <blockquote>
 <div><p>A Rotation expressed as <code class="docutils literal"><span class="pre">R(pitch,yaw,roll)</span></code>. Note that pitch, yaw and roll are not based on the horizon, but based on an internal coordinate system used by <strong>KSP</strong> that is hard to use. Thankfully, you can force the rotation into a sensible frame of reference by adding a rotation to a known direction first.</p>
 <p>To select a direction that is 20 degrees off from straight up:</p>
@@ -248,14 +261,16 @@ LOCK THROTTLE.  See the note in the next section below.</p>
 <div>Steering may also be locked to the special string value of <code class="docutils literal"><span class="pre">&quot;kill&quot;</span></code>
 which tells the steering manager to attempt to stop any vessel rotation,
 much like the stock SAS&#8217;s stability assist mode.</div></blockquote>
-</div></blockquote>
 </dd></dl>
 
 <p>Like all <code class="docutils literal"><span class="pre">LOCK</span></code> expressions, the steering and throttle continually update on their own when using this style of control. If you lock your steering to velocity, then as your velocity changes, your steering will change to match it. Unlike with other <code class="docutils literal"><span class="pre">LOCK</span></code> expressions, the steering and throttle are special in that the lock expression gets executed automatically all the time in the background, while other <code class="docutils literal"><span class="pre">LOCK</span></code> expressions only get executed when you try to read the value of the variable. The reason is that the <strong>kOS</strong> computer is constantly querying the lock expression multiple times per second as it adjusts the steering and throttle in the background.</p>
-<div class="admonition warning">
+<div class="admonition warning" id="locksteeringsaswarning">
 <p class="first admonition-title">Warning</p>
-<p class="last">It&#8217;s a very bad idea to <code class="docutils literal"><span class="pre">WAIT</span></code> during the execution of the expression in a
-LOCK STEERING.  See the note in the next section below.</p>
+<p class="last"><strong>About</strong> <code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span></code> <strong>and</strong> <code class="docutils literal"><span class="pre">SAS</span></code> <strong>:</strong>  While kOS had previously supported
+enabling SAS at the same time as locking steering, this functionality broke
+when the underlying KSP method was changed in a version upgrade.  It is our
+hope to evenentually restore this functionality.  Please check github issue
+<a class="reference external" href="https://github.com/KSP-KOS/KOS/issues/2117">#2117</a> for updates.</p>
 </div>
 <span class="target" id="lock-wheelthrottle"></span><dl class="object">
 <dt>
@@ -337,7 +352,7 @@ LOCK WHEELSTEERING.  See the note in the next section below.</p>
 </div>
 </div>
 <div class="section" id="don-t-wait-during-cooked-control-calculation">
-<h2><a class="toc-backref" href="#id2">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a><a class="headerlink" href="#don-t-wait-during-cooked-control-calculation" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Don&#8217;t &#8216;WAIT&#8217; during cooked control calculation</a><a class="headerlink" href="#don-t-wait-during-cooked-control-calculation" title="Permalink to this headline">¶</a></h2>
 <p>Be aware that because LOCK THROTTLE, LOCK STEERING, LOCK
 WHEELTHROTTLE, and LOCK WHEELSTEERING are actually
 <a class="reference internal" href="../../general/cpu_hardware.html#triggers"><span>triggers</span></a> that cause your expression
@@ -374,7 +389,7 @@ normal LOCKs, these LOCKs will be executed again and again even when
 you&#8217;re not explicitly trying to get their values.</p>
 </div>
 <div class="section" id="unlocking-controls">
-<h2><a class="toc-backref" href="#id3">Unlocking controls</a><a class="headerlink" href="#unlocking-controls" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Unlocking controls</a><a class="headerlink" href="#unlocking-controls" title="Permalink to this headline">¶</a></h2>
 <p>If you <code class="docutils literal"><span class="pre">LOCK</span></code> the <code class="docutils literal"><span class="pre">THROTTLE</span></code> or <code class="docutils literal"><span class="pre">STEERING</span></code>, be aware that this prevents the user from manually controlling them. Until they unlock, the manual controls are prevented from working. You can free up the controls by issuing these two commands:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">UNLOCK</span> <span class="nv">STEERING</span><span class="p">.</span>
 <span class="k">UNLOCK</span> <span class="nv">THROTTLE</span><span class="p">.</span>
@@ -383,7 +398,7 @@ you&#8217;re not explicitly trying to get their values.</p>
 <p>When the program ends, these automatically unlock as well, which means that to control a craft you must make sure the program doesn&#8217;t end. The moment it ends it lets go of the controls.</p>
 </div>
 <div class="section" id="tuning-cooked-steering">
-<span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id4">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this headline">¶</a></h2>
+<span id="cooked-tuning"></span><h2><a class="toc-backref" href="#id5">Tuning cooked steering</a><a class="headerlink" href="#tuning-cooked-steering" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
@@ -643,7 +658,7 @@ PITCHTORQUEFACTOR, YAWTORQUEFACTOR, ROLLTORQUEFACTOR</p>
 </div>
 </div>
 <div class="section" id="advantages-disadvantages">
-<h2><a class="toc-backref" href="#id5">Advantages/Disadvantages</a><a class="headerlink" href="#advantages-disadvantages" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Advantages/Disadvantages</a><a class="headerlink" href="#advantages-disadvantages" title="Permalink to this headline">¶</a></h2>
 <p>The advantage of &#8220;Cooked&#8221; control is that it is simpler to write scripts
 for, but the disadvantage is that you have only partial control over
 the details of the motion.</p>
@@ -700,7 +715,7 @@ or to make your own steering control from scratch using raw steering.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.2',
+            VERSION:'1.1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

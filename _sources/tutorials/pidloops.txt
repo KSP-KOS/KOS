@@ -15,7 +15,7 @@ PID Loops in kOS
     hood.  It's probably a good idea to use the built-in
     :struct:`pidloop` instead of the program shown here, once you
     understand the topic this page describes.  However, it's also
-    a good idea to have a read through this page to get an 
+    a good idea to have a read through this page to get an
     understanding of what that built-in feature is really doing.
 
 This tutorial covers how one can implement a `PID loop`_ using kOS. A P-loop, or "proportional feedback loop" was already introduced in the second section of the :ref:`Design Patterns Tutorial <designpatterns>`, and that will serve as our starting point. After some code rearrangement, the integral and derivative terms will be added and discussed in turn. Next, a couple extra features will be added to the full PID-loop. Lastly, we'll show a case-study in tuning a full PID loop using the Ziegler-Nichols method. We'll use the LOG method to dump telemetry from KSP into a file and our favorite graphing software to visualize the data.
@@ -33,7 +33,7 @@ Those fuel-tank adapters are from the `Modular Rocket Systems (MRS) addon`_, but
 .. contents:: Contents
     :local:
     :depth: 2
-    
+
 Proportional Feedback Loop (P-loop)
 -----------------------------------
 
@@ -186,18 +186,18 @@ As mentioned earlier, kOS 0.18.1 introduced a new structure called :struct:`pidl
     SET g TO KERBIN:MU / KERBIN:RADIUS^2.
     LOCK accvec TO SHIP:SENSORS:ACC - SHIP:SENSORS:GRAV.
     LOCK gforce TO accvec:MAG / g.
-    
+
     SET Kp TO 0.01.
     SET Ki TO 0.006.
     SET Kd TO 0.006.
     SET PID TO PIDLOOP(Kp, Kp, Kd).
     SET PID:SETPOINT TO 1.2.
-    
+
     SET thrott TO 1.
     LOCK THROTTLE TO thrott.
 
     UNTIL SHIP:ALTITUDE > 40000 {
-        SET thrott TO thrott + PID:UPDATE(TIME:SECONDS, gforce). 
+        SET thrott TO thrott + PID:UPDATE(TIME:SECONDS, gforce).
         // pid:update() is given the input time and input and returns the output. gforce is the input.
         WAIT 0.001.
     }
@@ -212,7 +212,7 @@ Final Touches
 
 There are a few modifications that can make PID loops very robust. The following code example adds three range limits:
 
-#. bounds on the Integral term which addresses possible `integral windup`_ 
+#. bounds on the Integral term which addresses possible `integral windup`_
 #. bounds on the throttle since it must stay in the range 0 to 1
 #. a `deadband`_ to avoid changing the throttle due to small fluctuations
 
@@ -253,15 +253,15 @@ Of course, KSP is a simulator and small fluctuations are not observed in this pa
             IF NOT in_deadband {
                 SET I TO I + P * dt.
                 SET D TO (P - P0) / dt.
-                
+
                 // If Ki is non-zero, then limit Ki*I to [-1,1]
                 IF Ki > 0 {
                     SET I TO MIN(1.0/Ki, MAX(-1.0/Ki, I)).
                 }
-                
+
                 // set throttle but keep in range [0,1]
                 SET thrott to MIN(1, MAX(0, thrott + dthrott)).
-                
+
                 SET P0 TO P.
                 SET t0 TO TIME:SECONDS.
             }
@@ -271,6 +271,24 @@ Of course, KSP is a simulator and small fluctuations are not observed in this pa
 
 Tuning a PID-loop
 -----------------
+
+.. warning::
+
+    **Obsolete Atmospheric Model Assumed Here.**
+
+    The following section was written prior to Kerbal Space Program 1.0, when
+    the game's atmospheric model was drastically different than it is today.
+    Much of what it says is no longer applicable.  Most importantly, it is
+    built on the assumption that the most efficient speed for a rocket to
+    travel at is exactly at the edge of terminal velocity.  This isn't true
+    in the real world, and it's no longer true in Kerbal Space Program either
+    (although it was when this section was first written).
+
+    Please take that under advisement when reading this section.  Although
+    what it says is good for teaching PID loop tuning, the goal it is trying
+    to seek, of holding the rocket at terminal velocity, is no longer a
+    good goal to try to achieve.  A new replacement for this section should
+    be written, but has not been yet.
 
 We are going to start with the same rocket design we have been using so far and actually tune the PID-loop using the Ziegler-Nichols method. This is where we turn off the integral and derivative terms in the loop and bring the proportional gain (Kp) up from zero to the point where the loop causes a steady oscillation with a measured period (Tu). At this point, the proportional gain is called the "ultimate gain" (Ku) and the actual gains (Kp, Ki and Kd) are set according to this table `taken from wikipedia`_:
 
@@ -296,7 +314,24 @@ We are going to start with the same rocket design we have been using so far and 
 
 An immediate problem to overcome with this method is that it assumes a steady state can be achieved. With rockets, there is never a steady state: fuel is being consumed, altitude and therefore gravity and atmosphere is changing, staging can cause major upsets in the feedback loop. So, this tuning method will be some approximation which should come as no surprise since it will come from experimental observation. All we need is enough of a steady state that we can measure the oscillations - both the change in amplitude and the period.
 
+.. sidebar:: Obsolete, deprecated
+
+    This example assumes Kerbal Space Program's old
+    atmospheric model which has now been obsoleted,
+    and this example won't quite work as described if
+    you try using it today.
+
+    Please note the warning at the start of this section.
+
 The script we'll use to tune the highly overpowered rocket shown will launch the rocket straight up (using SAS) and will log data to an output file until it reaches 30km at which point the log file will be copied to the archive and the program will terminate. Also, this time the feedback loop will be based on the more realistic "atmospheric efficiency." The log file will contain three columns: time since launch, offset of atmospheric efficiency from the ideal (in this case, 1.0) and the ship's maximum thrust. The maximum thrust will increase monotonically with time (this rocket has only one stage) and we'll use both as the x-axis when plotting the offset on the y-axis.
+
+.. sidebar:: Obsolete, deprecated
+
+    The example program here uses the suffix ``SHIP:TERMVELOCITY``,
+    which no longer exists in kOS because of changes to the base
+    game's atmospheric model.
+
+    Please note the warning at the start of this section.
 
 ::
 
@@ -309,7 +344,7 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
 
     // feedback based on atmospheric efficiency
     LOCK surfspeed TO SHIP:VELOCITY:SURFACE:MAG.
-    LOCK atmoeff TO surfspeed / SHIP:TERMVELOCITY.
+    LOCK atmoeff TO surfspeed / SHIP:TERMVELOCITY. // OBSOLETED EXAMPLE! SHIP:TERMVELOCITY No longer exists
     LOCK P TO 1.0 - atmoeff.
 
     SET t0 TO TIME:SECONDS.
@@ -321,8 +356,8 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
     LOG "# t P maxtwr" TO throttle_log.
 
     LOCK logline TO (TIME:SECONDS - start_time)
-            + " " + P
-            + " " + maxtwr.
+	    + " " + P
+	    + " " + maxtwr.
 
     SET thrott TO 1.
     LOCK THROTTLE TO thrott.
@@ -331,13 +366,13 @@ The script we'll use to tune the highly overpowered rocket shown will launch the
     WAIT 3.
 
     UNTIL SHIP:ALTITUDE > 30000 {
-        SET dt TO TIME:SECONDS - t0.
-        IF dt > 0 {
-            SET thrott TO MIN(1,MAX(0,thrott + dthrott)).
-            SET t0 TO TIME:SECONDS.
-            LOG logline TO throttle_log.
-        }
-        WAIT 0.001.
+	SET dt TO TIME:SECONDS - t0.
+	IF dt > 0 {
+	    SET thrott TO MIN(1,MAX(0,thrott + dthrott)).
+	    SET t0 TO TIME:SECONDS.
+	    LOG logline TO throttle_log.
+	}
+	WAIT 0.001.
     }
     COPYPATH("throttle_log", "0:/").
 
@@ -348,17 +383,36 @@ Give this script a short name, something like "tune.txt" so that running is simp
     copypath("0:/tune", "").
     run tune(0.5).
 
+.. sidebar:: Obsolete, deprecated
+
+    These data values wouldn't quite come out this
+    way if you tried using this example today.
+
+    Please note the warning at the start of this section.
+
 After every launch completes, you'll have to go into the archive directory and rename the output logfile. Something like "throttle\_log.txt" --> "throttle.01.log" will help if you increment the index number each time. To analyze the data, plot the offset (P) as a function of time (t). Here, we show the results for three values of Kp: 0.002, 0.016 and 0.160, including the maximum TWR when Kp = 0.002 as the top x-axis. The maximum TWR dependence on time is different for the three values of Kp, but not by a lot.
 
 .. figure:: /_images/tutorials/pidloops/pidtune1.png
 
 The value of 0.002 is obviously too low. The settling time is well over 20 seconds and the loop can't keep up with the increase in terminal velocity at the higher altitudes reached after one minute. When Kp = 0.016, the behavior is far more well behaved, and though some oscillation exists, it's damped and slow with a period of about 10 seconds. At Kp = 0.160, the oscillations are prominent and we can start to measure the change in amplitude along with the period of the oscillations. This plot shows the data for Kp = 0.160 from 20 to 40 seconds after ignition. The peaks are found and are fit to a line.
 
-.. figure:: /_images/tutorials/pidloops/pidtune2.png
+.. sidebar:: Obsolete, deprecated
+
+    These data values wouldn't quite come out this
+    way if you tried using this example today.
+
+    Please note the warning at the start of this section.
 
 This is done for each value of Kp and the slopes of the fitted lines are plotted as a function of Kp in the following plot:
 
 .. figure:: /_images/tutorials/pidloops/pidtune3.png
+
+.. sidebar:: Obsolete, deprecated
+
+    These data values wouldn't quite come out this
+    way if you tried using this example today.
+
+    Please note the warning at the start of this section.
 
 The period of oscillation was averaged over the interval and plotted on top of the amplitude change over time. Notice the turn over that occurs when Kp reaches approximately 0.26. This will mark the "ultimate gain" and 3.1 seconds will be used as the associated period of oscillation. It is left as an exercise for the reader to implement a full PID-loop using the classic PID values (see table above): Kp = 0.156, Ki = 0.101, Kd = 0.060, producing this behavior:
 

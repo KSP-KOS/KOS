@@ -33,6 +33,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`ENABLED`                      :struct:`boolean`         Returns true if the `SteeringManager` is currently controlling the vessel
     :attr:`TARGET`                       :struct:`Direction`       The direction that the vessel is currently steering towards
     :meth:`RESETPIDS()`                  none                      Called to call `RESET` on all steering PID loops.
+    :meth:`RESETTODEFAULT()`             none                      Called to reset all steering tuning parameters.
     :attr:`SHOWFACINGVECTORS`            :struct:`boolean`         Enable/disable display of ship facing, target, and world coordinates vectors.
     :attr:`SHOWANGULARVECTORS`           :struct:`boolean`         Enable/disable display of angular rotation vectors
     :attr:`SHOWSTEERINGSTATS`            :struct:`boolean`         Enable/disable printing of the steering information on the terminal
@@ -109,6 +110,14 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :return: none
 
     Resets the integral sum to zero for all six steering PID Loops.
+
+.. method:: SteeringManager:RESETTODEFAULT
+
+    :return: none
+
+    Resets the various tuning parameters of the :struct:`SteeringManager` to
+    their default values as if the ship had just been loaded.  This internally
+    will also call :meth:`SteeringManager:RESETPIDS`.
 
 .. attribute:: SteeringManager:SHOWFACINGVECTORS
 

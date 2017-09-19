@@ -50,7 +50,7 @@ Skin
     :attr:`FONT`                           :struct:`string`            The name of the font used (if STYLE:FONT does not change it for an element).
     :attr:`SELECTIONCOLOR`                 :ref:`Color <colors>`       The background color of selected text (eg. TEXTFIELD).
 
-    :meth:`ADD(name)`                      :struct:`Style`             Adds a new style.
+    :meth:`ADD(name, style)`               :struct:`Style`             Adds a new style.
     :meth:`HAS(name)`                      :struct:`Boolean`           Does the skin have the named style?
     :meth:`GET(name)`                      :struct:`Style`             Gets a style by name (including ADDed styles).
     ====================================== =========================== =============
@@ -238,13 +238,16 @@ Skin
         
         The background color of selected text (eg. TEXTFIELD).
 
-    .. method:: ADD(name)
+    .. method:: ADD(name, style)
 
         :parameter name: :struct:`String`
-        :return: :struct:`Style`
+        :parameter style: :struct:`Style` - a style to clone here.
+        :return: :struct:`Style` - the copy of the style that was made.
         
         Adds a new style to the skin and names it.  The skin holds a list
-        of styles by name which you can retrieve later.
+        of styles by name which you can retrieve later.  Note, this makes
+        a copy of the style you pass in, so changes you make to this new
+        style afterward shouldn't affect the one you passed in, and visa versa.
 
     .. method:: HAS(name)
 

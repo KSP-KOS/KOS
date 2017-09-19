@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessel &mdash; kOS 1.1.2 documentation</title>
+  <title>Vessel &mdash; kOS 1.1.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.2 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.3.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="VesselSensors" href="vesselsensors.html"/>
         <link rel="prev" title="Stage" href="stage.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.2
+                1.1.3.0
               </div>
             
           
@@ -124,7 +124,9 @@
 <li class="toctree-l3"><a class="reference internal" href="scienceexperiment.html">ScienceExperimentModule</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensor.html">Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stage.html">Stage</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Vessel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Vessel</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="vesselsensors.html">VesselSensors</a></li>
 </ul>
 </li>
@@ -292,7 +294,7 @@
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (m/s)</td>
 <td>How fast the ship is moving relative to the air</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:TERMVELOCITY" title="VESSEL:TERMVELOCITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TERMVELOCITY</span></code></a></td>
+<tr class="row-odd"><td>:attr:<a href="#id2"><span class="problematic" id="id3">`</span></a>TERMVELOCITY`(DEPRECATED)</td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> (m/s)</td>
 <td>terminal velocity of the vessel</td>
 </tr>
@@ -312,123 +314,127 @@
 <td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">string</span></code></a></td>
 <td>Ship type</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:STARTTRACKING" title="VESSEL:STARTTRACKING method"><code class="xref ks ks-meth docutils literal"><span class="pre">STARTTRACKING</span></code></a></td>
+<td>None</td>
+<td>Start tracking the &#8220;vessel&#8221; via the tracking statin</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></code></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 <td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP_RAW</span></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 <td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP_RAW</span></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></code></a></td>
 <td><a class="reference internal" href="vesselsensors.html#structure:VESSELSENSORS" title="VESSELSENSORS structure"><code class="xref ks ks-struct docutils literal"><span class="pre">VesselSensors</span></code></a></td>
 <td>Sensor data</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:LOADED" title="VESSEL:LOADED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOADED</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:LOADED" title="VESSEL:LOADED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOADED</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>loaded into KSP physics engine or &#8220;on rails&#8221;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:UNPACKED" title="VESSEL:UNPACKED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UNPACKED</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:UNPACKED" title="VESSEL:UNPACKED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">UNPACKED</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>The ship has individual parts unpacked</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:LOADDISTANCE" title="VESSEL:LOADDISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOADDISTANCE</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:LOADDISTANCE" title="VESSEL:LOADDISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">LOADDISTANCE</span></code></a></td>
 <td><a class="reference internal" href="../misc/loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></code></a></td>
 <td>the <a class="reference internal" href="../misc/loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></code></a> object for this vessel</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ISDEAD" title="VESSEL:ISDEAD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISDEAD</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ISDEAD" title="VESSEL:ISDEAD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISDEAD</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>True if the vessel refers to a ship that has gone away.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:PATCHES" title="VESSEL:PATCHES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:PATCHES" title="VESSEL:PATCHES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="../orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a> patches</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ROOTPART" title="VESSEL:ROOTPART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROOTPART</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ROOTPART" title="VESSEL:ROOTPART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROOTPART</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 <td>Root <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> of this vessel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:CONTROLPART" title="VESSEL:CONTROLPART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONTROLPART</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:CONTROLPART" title="VESSEL:CONTROLPART attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONTROLPART</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 <td>Control reference <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> of this vessel</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:PARTS" title="VESSEL:PARTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PARTS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:PARTS" title="VESSEL:PARTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PARTS</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>all <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:DOCKINGPORTS" title="VESSEL:DOCKINGPORTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DOCKINGPORTS</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:DOCKINGPORTS" title="VESSEL:DOCKINGPORTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DOCKINGPORTS</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>all <a class="reference internal" href="dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPorts</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ELEMENTS" title="VESSEL:ELEMENTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ELEMENTS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ELEMENTS" title="VESSEL:ELEMENTS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ELEMENTS</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>all <a class="reference internal" href="element.html#structure:ELEMENT" title="ELEMENT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Elements</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:RESOURCES" title="VESSEL:RESOURCES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:RESOURCES" title="VESSEL:RESOURCES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>all <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">AggrgateResources</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSNAMED" title="VESSEL:PARTSNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMED(name)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSNAMED" title="VESSEL:PARTSNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMED(name)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:NAME" title="PART:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSNAMEDPATTERN" title="VESSEL:PARTSNAMEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMEDPATTERN(namePattern)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSNAMEDPATTERN" title="VESSEL:PARTSNAMEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMEDPATTERN(namePattern)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:NAME" title="PART:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a> regex pattern</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSTITLED" title="VESSEL:PARTSTITLED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTITLED(title)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSTITLED" title="VESSEL:PARTSTITLED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTITLED(title)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:TITLE" title="PART:TITLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TITLE</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSTITLEDPATTERN" title="VESSEL:PARTSTITLEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTITLEDPATTERN(titlePattern)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSTITLEDPATTERN" title="VESSEL:PARTSTITLEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTITLEDPATTERN(titlePattern)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:TITLE" title="PART:TITLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TITLE</span></code></a> regex pattern</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSTAGGED" title="VESSEL:PARTSTAGGED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTAGGED(tag)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSTAGGED" title="VESSEL:PARTSTAGGED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTAGGED(tag)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:TAG" title="PART:TAG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSTAGGEDPATTERN" title="VESSEL:PARTSTAGGEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTAGGEDPATTERN(tagPattern)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSTAGGEDPATTERN" title="VESSEL:PARTSTAGGEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSTAGGEDPATTERN(tagPattern)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:TAG" title="PART:TAG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></code></a> regex pattern</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSDUBBED" title="VESSEL:PARTSDUBBED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSDUBBED(name)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSDUBBED" title="VESSEL:PARTSDUBBED method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSDUBBED(name)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:NAME" title="PART:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a>, <a class="reference internal" href="part.html#attribute:PART:TITLE" title="PART:TITLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TITLE</span></code></a> or <a class="reference internal" href="part.html#attribute:PART:TAG" title="PART:TAG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSDUBBEDPATTERN" title="VESSEL:PARTSDUBBEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSDUBBEDPATTERN(namePattern)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSDUBBEDPATTERN" title="VESSEL:PARTSDUBBEDPATTERN method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSDUBBEDPATTERN(namePattern)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by <a class="reference internal" href="part.html#attribute:PART:NAME" title="PART:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a>, <a class="reference internal" href="part.html#attribute:PART:TITLE" title="PART:TITLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TITLE</span></code></a> or <a class="reference internal" href="part.html#attribute:PART:TAG" title="PART:TAG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></code></a>  regex pattern</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:MODULESNAMED" title="VESSEL:MODULESNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">MODULESNAMED(name)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:MODULESNAMED" title="VESSEL:MODULESNAMED method"><code class="xref ks ks-meth docutils literal"><span class="pre">MODULESNAMED(name)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></code></a> by <a class="reference internal" href="partmodule.html#attribute:PARTMODULE:NAME" title="PARTMODULE:NAME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:PARTSINGROUP" title="VESSEL:PARTSINGROUP method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSINGROUP(group)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:PARTSINGROUP" title="VESSEL:PARTSINGROUP method"><code class="xref ks ks-meth docutils literal"><span class="pre">PARTSINGROUP(group)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> by action group</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:MODULESINGROUP" title="VESSEL:MODULESINGROUP method"><code class="xref ks ks-meth docutils literal"><span class="pre">MODULESINGROUP(group)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:MODULESINGROUP" title="VESSEL:MODULESINGROUP method"><code class="xref ks ks-meth docutils literal"><span class="pre">MODULESINGROUP(group)</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></code></a> by action group</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:ALLPARTSTAGGED" title="VESSEL:ALLPARTSTAGGED method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALLPARTSTAGGED()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:ALLPARTSTAGGED" title="VESSEL:ALLPARTSTAGGED method"><code class="xref ks ks-meth docutils literal"><span class="pre">ALLPARTSTAGGED()</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a> that have non-blank nametags</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:CREWCAPACITY" title="VESSEL:CREWCAPACITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CREWCAPACITY</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:CREWCAPACITY" title="VESSEL:CREWCAPACITY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CREWCAPACITY</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></td>
 <td>Crew capacity of this vessel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:CREW" title="VESSEL:CREW method"><code class="xref ks ks-meth docutils literal"><span class="pre">CREW()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:VESSEL:CREW" title="VESSEL:CREW method"><code class="xref ks ks-meth docutils literal"><span class="pre">CREW()</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>all <a class="reference internal" href="crewmember.html#structure:CREWMEMBER" title="CREWMEMBER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CrewMembers</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:CONNECTION" title="VESSEL:CONNECTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONNECTION</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:CONNECTION" title="VESSEL:CONNECTION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONNECTION</span></code></a></td>
 <td><a class="reference internal" href="../communication/connection.html#structure:CONNECTION" title="CONNECTION structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Connection</span></code></a></td>
 <td>Returns your connection to this vessel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:MESSAGES" title="VESSEL:MESSAGES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGES</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:MESSAGES" title="VESSEL:MESSAGES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGES</span></code></a></td>
 <td><a class="reference internal" href="../communication/message_queue.html#structure:MESSAGEQUEUE" title="MESSAGEQUEUE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">MessageQueue</span></code></a></td>
 <td>This vessel&#8217;s message queue</td>
 </tr>
@@ -721,22 +727,6 @@ Vessel:<code class="descname">AIRSPEED</code><a class="headerlink" href="#attrib
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:VESSEL:TERMVELOCITY">
-Vessel:<code class="descname">TERMVELOCITY</code><a class="headerlink" href="#attribute:VESSEL:TERMVELOCITY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<p>terminal velocity of the vessel in freefall through atmosphere, based on the vessel&#8217;s current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="attribute:VESSEL:SHIPNAME">
 Vessel:<code class="descname">SHIPNAME</code><a class="headerlink" href="#attribute:VESSEL:SHIPNAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -788,6 +778,32 @@ Vessel:<code class="descname">TYPE</code><a class="headerlink" href="#attribute:
 </tbody>
 </table>
 <p>The ship&#8217;s type as described <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types">on the KSP wiki</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:VESSEL:STARTTRACKING">
+Vessel:<code class="descname">STARTTRACKING</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:VESSEL:STARTTRACKING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p>Call this method to start tracking the object.  This is functionally the
+same as clicking on the &#8220;Start Tracking&#8221; button in the Tracking Station
+interface.  The primary purpose is to change asteroids from being displayed
+in the tracking station or on the map as <code class="docutils literal"><span class="pre">&quot;Unknown&quot;</span></code> to being displayed as
+<code class="docutils literal"><span class="pre">&quot;SpaceObject&quot;</span></code>.  By doing so, the asteroid will not be de-spawned by
+KSP&#8217;s asteroid management system.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This does not change the value returned by <a class="reference internal" href="#attribute:VESSEL:TYPE" title="VESSEL:TYPE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:TYPE</span></code></a>.  KSP
+internally manages the &#8220;discovery information&#8221; for vessels, including
+assteroids, in a different system. As a result, the value kOS reads for
+<code class="docutils literal"><span class="pre">TYPE</span></code> may be different from that displayed on the map.</p>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -1348,6 +1364,31 @@ Vessel:<code class="descname">MESSAGES</code><a class="headerlink" href="#attrib
 <p>Returns this vessel&#8217;s message queue. You can only access this attribute for your current vessel (using for example <cite>SHIP:MESSAGES</cite>).</p>
 </dd></dl>
 
+<div class="section" id="deprecated-suffix">
+<h2>Deprecated Suffix<a class="headerlink" href="#deprecated-suffix" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="attribute:VESSEL:TERMVELOCITY">
+Vessel:<code class="descname">TERMVELOCITY</code><a class="headerlink" href="#attribute:VESSEL:TERMVELOCITY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m/s)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>terminal velocity of the vessel in freefall through atmosphere, based on the vessel&#8217;s current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last deprecated">
+<p><span class="versionmodified">Deprecated since version 0.17.2: </span>Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0</p>
+</div>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -1391,7 +1432,7 @@ Vessel:<code class="descname">MESSAGES</code><a class="headerlink" href="#attrib
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.2',
+            VERSION:'1.1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
