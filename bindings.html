@@ -716,10 +716,11 @@ outside the simulated universe of the game and are more about
 the game&#8217;s user interface or the kOS mod itself.  They represent things
 that slightly &#8220;break the fourth wall&#8221; and let your script access
 something entirely outside the in-character experience.</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. e.g. 0.8.6</span>
-<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0</span>
-<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 8</span>
-<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">BUILD</span><span class="p">.</span>      <span class="c1">// Returns build version number. e.g. 6</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. e.g. 0.1.2.3</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0 if version is 0.1.2.3</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 1 if version is 0.1.2.3</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">PATCH</span><span class="p">.</span>      <span class="c1">// Returns patch version number. e.g. 2 if version is 0.1.2.3</span>
+<span class="k">PRINT</span> <span class="nv">VERSION</span><span class="p">:</span><span class="nv">BUILD</span><span class="p">.</span>      <span class="c1">// Returns build version number. e.g. 3 if version is 0.1.2.3</span>
 <span class="k">PRINT</span> <span class="nv">SESSIONTIME</span><span class="p">.</span>        <span class="c1">// Returns amount of time, in seconds, from vessel load.</span>
 </pre></div>
 </div>
