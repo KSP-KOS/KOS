@@ -49,7 +49,8 @@ namespace kOS.AddOns.RemoteTech
         {
             if (!RemoteTechHook.IsAvailable(vessel.id))
                 return -1; // default to no connection if the vessel isn't configured for RT.
-            return RemoteTechUtility.GetInputWaitTime(vessel);
+            if (RemoteTechHook.Instance.HasLocalControl(vessel.id)) return 0d;
+            return RemoteTechHook.Instance.GetShortestSignalDelay(vessel.id);
         }
 
         public double GetDelayToHome(Vessel vessel)
@@ -77,7 +78,7 @@ namespace kOS.AddOns.RemoteTech
         {
             if (!RemoteTechHook.IsAvailable(vessel.id))
                 return false; // default to no connection if the vessel isn't configured for RT.
-            return RemoteTechHook.Instance.HasAnyConnection(vessel.id);
+            return RemoteTechHook.Instance.HasAnyConnection(vessel.id) || RemoteTechHook.Instance.HasLocalControl(vessel.id);
         }
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
