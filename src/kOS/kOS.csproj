@@ -63,7 +63,6 @@
     <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechUtility.cs" />
     <Compile Include="AddOns\Trajectories\Addon.cs" />
     <Compile Include="AddOns\Trajectories\TRWrapper.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
