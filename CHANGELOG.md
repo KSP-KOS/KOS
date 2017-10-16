@@ -1,5 +1,15 @@
 kOS Mod Changelog
 =================
+# v1.1.3.2 (for KSP 1.3.1) New KSP version HOTFIX
+This version is functionally identical to v1.1.3.0, however the binaries are
+compiled against KSP 1.3.1 to allow it to properly load with the updated version
+of KSP
+### BREAKING CHANGES:
+- This build will not work on previous versions of KSP.
+### NEW FEATURES:
+(None)
+### BUG FIXES:
+(None)
 # v1.1.3.1 (for KSP 1.2.2) Backward compatibility version of v1.1.3.0
 
 ### Only use if you are stuck on KSP 1.2.2.
