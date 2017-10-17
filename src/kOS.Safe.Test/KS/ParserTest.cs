@@ -17,15 +17,15 @@ namespace kOS.Safe.Test.KS
         [SetUp]
         public void Setup()
         {
-          scanner = new Scanner();
-          parser = new Parser(scanner);
+            scanner = new Scanner();
+            parser = new Parser(scanner);
         }
 
         [Test, Timeout(2000)]
         public void ParsesLargeNumbers()
         {
-          parser.Parse("012345678901234567890123456789");
-          parser.Parse("// 012345678901234567890123456789");
+            parser.Parse("012345678901234567890123456789");
+            parser.Parse("// 012345678901234567890123456789");
         }
     }
 }
