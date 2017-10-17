@@ -82,6 +82,7 @@
     <Compile Include="Persistence\HarddiskToHarddiskCopyAndMoveTest.cs" />
     <Compile Include="Persistence\ArchiveAndHarddiskCopyAndMoveTest.cs" />
     <Compile Include="Persistence\ArchiveToHarddiskCopyAndMoveTest.cs" />
+    <Compile Include="KS\ParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
@@ -93,7 +94,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

@@ -336,7 +336,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.INTEGER, regex);
             Tokens.Add(TokenType.INTEGER);
 
-            regex = new Regex(@"(\d[_\d]*)*\.\d[_\d]*");
+            regex = new Regex(@"(\d+(?:_\d*)*)\.\d+(?:_\d*)*");
             Patterns.Add(TokenType.DOUBLE, regex);
             Tokens.Add(TokenType.DOUBLE);
 

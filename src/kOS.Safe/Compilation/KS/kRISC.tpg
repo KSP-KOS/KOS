@@ -81,7 +81,7 @@ ALL          -> @"\ball\b";
 IDENTIFIER   -> @"[_\p{L}]\w*";
 FILEIDENT    -> @"[_\p{L}]\w*(\.[_\p{L}]\w*)*";
 INTEGER      -> @"\d[_\d]*";
-DOUBLE       -> @"(\d[_\d]*)*\.\d[_\d]*";
+DOUBLE       -> @"(\d+(?:_\d*)*)\.\d+(?:_\d*)*";
 STRING       -> @"@?\""(\""\""|[^\""])*\""";
 EOI          -> @"\.";
 //Compiler Directives
