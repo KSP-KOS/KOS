@@ -1498,7 +1498,9 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             ScalarValue val;
-            if (ScalarValue.TryParseInt(node.Token.Text.Replace("_",""), out val))
+            if (ScalarValue.TryParseInt(node.Token.Text.Replace("_", ""), out val) ||
+                ScalarValue.TryParseDouble(node.Token.Text.Replace("_", ""), out val) // fallback if number is too big for an integer.
+               )
             {
                 AddOpcode(new OpcodePush(val));
             }
