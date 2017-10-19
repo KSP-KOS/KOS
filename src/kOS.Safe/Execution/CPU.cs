@@ -793,7 +793,6 @@ namespace kOS.Safe.Execution
         /// <returns>the value that was found</returns>
         private Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
         {
-            identifier = identifier.ToLower();
             VariableScope foundDict = GetNestedDictionary(identifier);
             if (foundDict != null)
                 return foundDict.Variables[identifier];
@@ -831,8 +830,6 @@ namespace kOS.Safe.Execution
         /// <param name="overwrite">true if it's okay to overwrite an existing variable</param>
         public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
         {
-            identifier = identifier.ToLower();
-
             if (!identifier.StartsWith("$"))
             {
                 identifier = "$" + identifier;
@@ -863,7 +860,6 @@ namespace kOS.Safe.Execution
         /// <param name="identifier">varible to remove.</param>
         public void RemoveVariable(string identifier)
         {
-            identifier = identifier.ToLower();
             VariableScope foundDict = GetNestedDictionary(identifier);
             if (foundDict != null && VariableIsRemovable(foundDict.Variables[identifier]))
             {
