@@ -6,10 +6,11 @@ namespace kOS.Safe.Execution
     {
         void Push(object item);
         object Pop();
+        void PushAbove(object item);
+        object PopAbove();
         object Peek(int digDepth);
         bool PeekCheck(int digDepth, out object item);
         int GetLogicalSize();
-        void MoveStackPointer(int delta);
         void Clear();
         string Dump();
         List<int> GetCallTrace();

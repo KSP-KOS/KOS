@@ -8,7 +8,6 @@ namespace kOS.Safe.Execution
     {
         void PushStack(object item);
         object PopStack();
-        void MoveStackPointer(int delta);
         void PushAboveStack(object thing);
         object PopAboveStack(int howMany);
         List<VariableScope> GetCurrentClosure();
