@@ -13,7 +13,12 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public override ISuffixResult Get()
         {
-            return new DelegateSuffixResult(del);
+            return new DelegateSuffixResult(del, call);
+        }
+
+        private object call(object[] args)
+        {
+            return (TReturn)del((TParam[])args[0]);
         }
     }
 }
