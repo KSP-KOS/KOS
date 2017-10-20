@@ -6,7 +6,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Safe.Execution
 {
-    public class Stack
+    public class Stack : IStack
     {
         private const int MAX_STACK_SIZE = 3000;
         private readonly object[] stack = new object[MAX_STACK_SIZE];
