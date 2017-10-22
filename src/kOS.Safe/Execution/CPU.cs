@@ -1498,8 +1498,8 @@ namespace kOS.Safe.Execution
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
-        {            
+        private bool ExecuteInstruction(ProgramContext context, bool doProfiling)
+        {
             Opcode opcode = context.Program[context.InstructionPointer];
             
             if (SafeHouse.Config.DebugEachOpcode)
