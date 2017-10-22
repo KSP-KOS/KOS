@@ -6,10 +6,10 @@ namespace kOS.Safe.Execution
     {
         void Push(object item);
         object Pop();
-        void PushAbove(object item);
-        object PopAbove();
         object Peek(int digDepth);
         bool PeekCheck(int digDepth, out object item);
+        void PushScope(object item);
+        object PopScope();
         int GetLogicalSize();
         void Clear();
         string Dump();

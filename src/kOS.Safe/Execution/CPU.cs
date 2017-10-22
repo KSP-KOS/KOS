@@ -285,24 +285,24 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Push a single thing onto the secret "over" stack.
+        /// Push a single thing onto the scope stack.
         /// </summary>
-        public void PushAboveStack(object thing)
+        public void PushScopeStack(object thing)
         {
-            stack.PushAbove(thing);
+            stack.PushScope(thing);
         }
 
         /// <summary>
-        /// Pop one or more things from the secret "over" stack, only returning the
+        /// Pop one or more things from the scope stack, only returning the
         /// finalmost thing popped.  (i.e if you pop 3 things then you get:
         /// pop once and throw away, pop again and throw away, pop again and return the popped thing.)
         /// </summary>
-        public object PopAboveStack(int howMany)
+        public object PopScopeStack(int howMany)
         {
             object returnVal = new int(); // bogus return val if given a bogus "pop zero things" request.
             while (howMany > 0)
             {
-                returnVal = stack.PopAbove();
+                returnVal = stack.PopScope();
                 --howMany;
             }
 
@@ -1409,12 +1409,12 @@ namespace kOS.Safe.Execution
                         // first line of the trigger, like OpcodeCall would do.
                         SubroutineContext contextRecord =
                             new SubroutineContext(currentInstructionPointer, trigger);
-                        PushAboveStack(contextRecord);
+                        PushScopeStack(contextRecord);
 
                         // Reverse-push the closure's scope record, if there is one, just after the function return context got put on the stack.
                         if (trigger.Closure != null)
                             for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
-                                PushAboveStack(trigger.Closure[i]);
+                                PushScopeStack(trigger.Closure[i]);
 
                         PushStack(new KOSArgMarkerType());
 

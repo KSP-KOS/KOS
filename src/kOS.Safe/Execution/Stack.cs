@@ -11,15 +11,15 @@ namespace kOS.Safe.Execution
         private const int MAX_STACK_SIZE = 3000;
         private readonly object[] stack = new object[MAX_STACK_SIZE];
         private int count = 0;
-        private readonly object[] aboveStack = new object[MAX_STACK_SIZE];
-        private int aboveCount = 0;
+        private readonly object[] scopeStack = new object[MAX_STACK_SIZE];
+        private int scopeCount = 0;
 
         private int triggerContextCount = 0;
 
         public void Push(object item)
         {
             ThrowIfInvalid(item);
-            if (count + aboveCount >= MAX_STACK_SIZE) {
+            if (count + scopeCount >= MAX_STACK_SIZE) {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
             }
@@ -43,28 +43,28 @@ namespace kOS.Safe.Execution
             return item;
         }
 
-        public void PushAbove(object item)
+        public void PushScope(object item)
         {
             ThrowIfInvalid(item);
-            if (count + aboveCount >= MAX_STACK_SIZE)
+            if (count + scopeCount >= MAX_STACK_SIZE)
             {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
             }
-            aboveStack[aboveCount++] = ProcessItem(item);
+            scopeStack[scopeCount++] = ProcessItem(item);
 
             checkTrigger(item, +1); 
         }
 
-        public object PopAbove()
+        public object PopScope()
         {
-            if (aboveCount == 0)
+            if (scopeCount == 0)
             {
                 return null;
             }
 
-            object item = aboveStack[--aboveCount];
-            aboveStack[aboveCount] = 0;
+            object item = scopeStack[--scopeCount];
+            scopeStack[scopeCount] = 0;
 
             checkTrigger(item, -1);
 
@@ -167,11 +167,11 @@ namespace kOS.Safe.Execution
             item = null;
             if (digDepth < 0)
             {
-                int index = aboveCount + digDepth; // -1 means top of stack
+                int index = scopeCount + digDepth; // -1 means top of stack
                 if (index >= 0)
                 {
                     returnVal = true;
-                    item = aboveStack[index];
+                    item = scopeStack[index];
                 }
             }
             else
@@ -202,10 +202,10 @@ namespace kOS.Safe.Execution
                 count--;
                 stack[count] = null; // remove our references to the items
             }
-            while (aboveCount > 0)
+            while (scopeCount > 0)
             {
-                aboveCount--;
-                aboveStack[aboveCount] = null;
+                scopeCount--;
+                scopeStack[scopeCount] = null;
             }
             triggerContextCount = 0;
         }
@@ -215,20 +215,22 @@ namespace kOS.Safe.Execution
             try
             {
                 var builder = new StringBuilder();
-                builder.AppendLine("Stack dump: count = " + count + ", aboveCount = " + aboveCount);
+                builder.AppendLine("Stack dump:");
 
-                // To simulate a single stack with the SP in the middle, we go through the aboveStack bottom up, then
-                // the normal stack top down
-                for (int index = 0; index < aboveCount; index++)
-                {
-                    object item = aboveStack[index];
-                    dumpItem(count + aboveCount - index - 1, false, item, builder);
-                }
+                builder.AppendLine("Stack: count = " + count);
                 for (int index = count - 1; index >= 0; index--)
                 {
                     object item = stack[index];
                     dumpItem(index, index == count - 1, item, builder);
                 }
+
+                builder.AppendLine("Scope Stack: count = " + scopeCount);
+                for (int index = scopeCount - 1; index >= 0; index--)
+                {
+                    object item = scopeStack[index];
+                    dumpItem(index, false, item, builder);
+                }
+
 
                 return builder.ToString();
             }
@@ -268,11 +270,11 @@ namespace kOS.Safe.Execution
         public List<int> GetCallTrace()
         {
             var trace = new List<int>();
-            for (int index = aboveCount - 1; index >= 0; --index)
+            for (int index = scopeCount - 1; index >= 0; --index)
             {
-                if (aboveStack[index] is SubroutineContext)
+                if (scopeStack[index] is SubroutineContext)
                 {
-                    trace.Add(((SubroutineContext)(aboveStack[index])).CameFromInstPtr - 1);
+                    trace.Add(((SubroutineContext)(scopeStack[index])).CameFromInstPtr - 1);
                 }
             }
             return trace;

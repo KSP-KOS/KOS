@@ -8,8 +8,8 @@ namespace kOS.Safe.Execution
     {
         void PushStack(object item);
         object PopStack();
-        void PushAboveStack(object thing);
-        object PopAboveStack(int howMany);
+        void PushScopeStack(object thing);
+        object PopScopeStack(int howMany);
         List<VariableScope> GetCurrentClosure();
         IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure);
         void AssertValidDelegateCall(IUserDelegate userDelegate);
