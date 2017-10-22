@@ -1420,14 +1420,14 @@ namespace kOS.Safe.Compilation
             if (functionPointer is string || functionPointer is StringValue)
             {
                 string functionName = functionPointer.ToString();
-                if (functionName.EndsWith("()"))
+                if (StringUtil.EndsWith(functionName, "()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 if (!(cpu.BuiltInExists(functionName)))
                 {
                     // It is not a built-in, so instead get its value as a user function pointer variable, despite
                     // the fact that it's being called AS IF it was direct.
-                    if (!functionName.EndsWith("*")) functionName = functionName + "*";
-                    if (!functionName.StartsWith("$")) functionName = "$" + functionName;
+                    if (!StringUtil.EndsWith(functionName, "*")) functionName = functionName + "*";
+                    if (!StringUtil.StartsWith(functionName, "$")) functionName = "$" + functionName;
                     functionPointer = cpu.GetValue(functionName);
                 }
             }
@@ -1482,7 +1482,7 @@ namespace kOS.Safe.Compilation
                 // might want to change that.
                 var name = functionPointer as string;
                 string functionName = name;
-                if (functionName.EndsWith("()"))
+                if (StringUtil.EndsWith(functionName, "()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 cpu.CallBuiltinFunction(functionName);
 
