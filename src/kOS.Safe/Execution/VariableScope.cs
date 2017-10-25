@@ -45,7 +45,7 @@ namespace kOS.Safe.Execution
             ScopeId = scopeId;
             ParentScopeId = parentScopeId;
             ParentSkipLevels = 1; // the default case is to just move one stack level.
-            Variables = new Dictionary<string, Variable>();
+            Variables = new Dictionary<string, Variable>(StringComparer.OrdinalIgnoreCase);
             IsClosure = false;
         }
     }
