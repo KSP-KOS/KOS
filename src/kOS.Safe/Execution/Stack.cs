@@ -9,25 +9,73 @@ namespace kOS.Safe.Execution
     public class Stack : IStack
     {
         private const int MAX_STACK_SIZE = 3000;
-        private readonly List<object> stack = new List<object>();
-        private int stackPointer = -1;
+        private readonly object[] stack = new object[MAX_STACK_SIZE];
+        private int count = 0;
+        private readonly object[] scopeStack = new object[MAX_STACK_SIZE];
+        private int scopeCount = 0;
+
         private int triggerContextCount = 0;
 
         public void Push(object item)
         {
             ThrowIfInvalid(item);
-            stackPointer++;
-            if (stack.Count < MAX_STACK_SIZE)
-            {
-                stack.Insert(stackPointer, ProcessItem(item));
-
-                SubroutineContext sr = item as SubroutineContext;
-                if (sr != null && sr.IsTrigger)
-                    ++triggerContextCount;            
-            }
-            else
+            if (count + scopeCount >= MAX_STACK_SIZE) {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
+            }
+            stack[count++] = ProcessItem(item);
+
+            checkTrigger(item, +1);
+        }
+
+        public object Pop()
+        {
+            if (count == 0)
+            {
+                return null;
+            }
+
+            object item = stack[--count];
+            stack[count] = 0; // remove our reference to the item
+
+            checkTrigger(item, -1);
+
+            return item;
+        }
+
+        public void PushScope(object item)
+        {
+            ThrowIfInvalid(item);
+            if (count + scopeCount >= MAX_STACK_SIZE)
+            {
+                // TODO: make an IKOSException for this:
+                throw new Exception("Stack overflow!!");
+            }
+            scopeStack[scopeCount++] = ProcessItem(item);
+
+            checkTrigger(item, +1); 
+        }
+
+        public object PopScope()
+        {
+            if (scopeCount == 0)
+            {
+                return null;
+            }
+
+            object item = scopeStack[--scopeCount];
+            scopeStack[scopeCount] = 0;
+
+            checkTrigger(item, -1);
+
+            return item;
+        }
+
+        private void checkTrigger(object item, int diff) {
+            SubroutineContext sr = item as SubroutineContext;
+            if (sr != null && sr.IsTrigger) {
+                triggerContextCount += diff;
+            }
         }
 
         private void ThrowIfInvalid(object item)
@@ -78,27 +126,6 @@ namespace kOS.Safe.Execution
             return item;
         }
 
-        public object Pop()
-        {
-            object item = null;
-
-            if (stack.Count > 0)
-            {
-                item = stack[stackPointer];
-                stack.RemoveAt(stackPointer);
-                stackPointer--;
-            }
-
-            if (triggerContextCount > 0)
-            {
-                SubroutineContext sr = item as SubroutineContext;
-                if (sr != null && sr.IsTrigger)
-                    --triggerContextCount;
-            }
-
-            return item;
-        }
-
         /// <summary>
         /// Slightly "cheats" and breaks out of the 'stack' model by allowing you to view the contents of
         /// somewhere on the stack that is underneath the topmost thing.  You can only peek, but not pop
@@ -136,9 +163,26 @@ namespace kOS.Safe.Execution
         /// to peek too far and went past the top or bottom of the stack.</returns>
         public bool PeekCheck(int digDepth, out object item)
         {
-            int index = stackPointer - digDepth;
-            bool returnVal = (index >= 0 && index < stack.Count);
-            item = returnVal ? stack[index] : null;
+            bool returnVal = false;
+            item = null;
+            if (digDepth < 0)
+            {
+                int index = scopeCount + digDepth; // -1 means top of stack
+                if (index >= 0)
+                {
+                    returnVal = true;
+                    item = scopeStack[index];
+                }
+            }
+            else
+            {
+                int index = count - digDepth - 1; // 0 means top of stack
+                if (index >= 0)
+                {
+                    returnVal = true;
+                    item = stack[index];
+                }
+            }
             return returnVal;
         }
 
@@ -148,18 +192,21 @@ namespace kOS.Safe.Execution
         /// <returns>How many items are currently on the stack.</returns>
         public int GetLogicalSize()
         {
-            return stackPointer + 1;
-        }
-
-        public void MoveStackPointer(int delta)
-        {
-            stackPointer += delta;
+            return count; // This doesn't count the secret stack
         }
 
         public void Clear()
         {
-            stack.Clear();
-            stackPointer = -1;
+            while (count > 0)
+            {
+                count--;
+                stack[count] = null; // remove our references to the items
+            }
+            while (scopeCount > 0)
+            {
+                scopeCount--;
+                scopeStack[scopeCount] = null;
+            }
             triggerContextCount = 0;
         }
 
@@ -168,38 +215,50 @@ namespace kOS.Safe.Execution
             try
             {
                 var builder = new StringBuilder();
-                builder.AppendLine("Stack dump: stackPointer = " + stackPointer);
+                builder.AppendLine("Stack dump:");
 
-                // Print in reverse order so the top of the stack is on top of the printout:
-                // (actually given the double nature of the stack, one of the two sub-stacks
-                // inside it will always be backwardly printed):
-                for (int index = stack.Count - 1; index >= 0; --index)
+                builder.AppendLine("Stack: count = " + count);
+                for (int index = count - 1; index >= 0; index--)
                 {
                     object item = stack[index];
-                    builder.AppendLine(string.Format("{0:000} {1,4} {2} (type: {3})", index, (index == stackPointer ? "SP->" : ""),
-                                                     (item == null ? "<null>" : item.ToString()),
-                                                     (item == null ? "<n/a>" : KOSNomenclature.GetKOSName(item.GetType()))));
-                    VariableScope dict = item as VariableScope;
-                    if (dict != null)
-                    {
-                        builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
-                                             dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
-                        builder.AppendLine();
-                        // Dump the local variable context stored here on the stack:
-                        foreach (string varName in dict.Variables.Keys)
-                        {
-                            var value = dict.Variables[varName].Value;
-                            builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
-                            builder.AppendLine();
-                        }
-                    }
+                    dumpItem(index, index == count - 1, item, builder);
                 }
+
+                builder.AppendLine("Scope Stack: count = " + scopeCount);
+                for (int index = scopeCount - 1; index >= 0; index--)
+                {
+                    object item = scopeStack[index];
+                    dumpItem(index, false, item, builder);
+                }
+
 
                 return builder.ToString();
             }
             catch (Exception ex)
             {
                 return string.Format("Error creating stack dump, contact kOS devs.\n{0}\n\n{1}", ex.Message, ex.StackTrace);
+            }
+        }
+
+        private void dumpItem(int index, bool isSP, object item, StringBuilder builder)
+        {
+            builder.AppendLine(string.Format("{0:000} {1,4} {2} (type: {3})", index, (isSP ? "SP->" : ""),
+                                             (item == null ? "<null>" : item.ToString()),
+                                             (item == null ? "<n/a>" : KOSNomenclature.GetKOSName(item.GetType()))));
+            builder.AppendLine();
+            VariableScope dict = item as VariableScope;
+            if (dict != null)
+            {
+                builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
+                                             dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
+                builder.AppendLine();
+                // Dump the local variable context stored here on the stack:
+                foreach (string varName in dict.Variables.Keys)
+                {
+                    var value = dict.Variables[varName].Value;
+                    builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
+                    builder.AppendLine();
+                }
             }
         }
 
@@ -211,11 +270,11 @@ namespace kOS.Safe.Execution
         public List<int> GetCallTrace()
         {
             var trace = new List<int>();
-            for (int index = stackPointer + 1; index < stack.Count; ++index)
+            for (int index = scopeCount - 1; index >= 0; --index)
             {
-                if (stack[index] is SubroutineContext)
+                if (scopeStack[index] is SubroutineContext)
                 {
-                    trace.Add(((SubroutineContext)(stack[index])).CameFromInstPtr - 1);
+                    trace.Add(((SubroutineContext)(scopeStack[index])).CameFromInstPtr - 1);
                 }
             }
             return trace;

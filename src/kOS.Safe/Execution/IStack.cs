@@ -8,8 +8,9 @@ namespace kOS.Safe.Execution
         object Pop();
         object Peek(int digDepth);
         bool PeekCheck(int digDepth, out object item);
+        void PushScope(object item);
+        object PopScope();
         int GetLogicalSize();
-        void MoveStackPointer(int delta);
         void Clear();
         string Dump();
         List<int> GetCallTrace();

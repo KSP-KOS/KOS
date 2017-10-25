@@ -1466,13 +1466,13 @@ namespace kOS.Safe.Compilation
                 var contextRecord = new SubroutineContext(cpu.InstructionPointer+1);
                 newIP = Convert.ToInt32(functionPointer);
                 
-                cpu.PushAboveStack(contextRecord);
+                cpu.PushScopeStack(contextRecord);
                 if (userDelegate != null)
                 {
                     cpu.AssertValidDelegateCall(userDelegate);
                     // Reverse-push the closure's scope record, just after the function return context got put on the stack.
                     for (int i = userDelegate.Closure.Count - 1 ; i >= 0 ; --i)
-                        cpu.PushAboveStack(userDelegate.Closure[i]);
+                        cpu.PushScopeStack(userDelegate.Closure[i]);
                 }
             }
             else if (functionPointer is string)
@@ -1632,10 +1632,10 @@ namespace kOS.Safe.Compilation
             VariableScope peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
             while (okay && peeked != null && peeked.IsClosure)
             {
-                cpu.PopAboveStack(1);
+                cpu.PopScopeStack(1);
                 peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
             }
-            object shouldBeContextRecord = cpu.PopAboveStack(1);
+            object shouldBeContextRecord = cpu.PopScopeStack(1);
             if ( !(shouldBeContextRecord is SubroutineContext) )
             {
                 // This should never happen with any user code:
@@ -1964,7 +1964,7 @@ namespace kOS.Safe.Compilation
         
         public override void Execute(ICpu cpu)
         {
-            cpu.PushAboveStack(new VariableScope(ScopeId,ParentScopeId));
+            cpu.PushScopeStack(new VariableScope(ScopeId,ParentScopeId));
         }
 
         public override string ToString()
@@ -2025,7 +2025,7 @@ namespace kOS.Safe.Compilation
         /// <param name="levels">number of levels to popscope.</param>
         public static void DoPopScope(ICpu cpuObj, Int16 levels)
         {
-            cpuObj.PopAboveStack(levels);
+            cpuObj.PopScopeStack(levels);
         }
 
         public override string ToString()

@@ -35,17 +35,12 @@ namespace kOS.Safe.Test.Opcode
             return fakeStack.Pop();
         }
 
-        public void MoveStackPointer(int delta)
+        public void PushScopeStack(object thing)
         {
             throw new NotImplementedException();
         }
 
-        public void PushAboveStack(object thing)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object PopAboveStack(int howMany)
+        public object PopScopeStack(int howMany)
         {
             throw new NotImplementedException();
         }
