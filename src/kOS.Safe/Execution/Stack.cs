@@ -32,7 +32,7 @@ namespace kOS.Safe.Execution
         /// It is implemented as a fixed capacity array regardless of how much is used,
         /// for speed reasons.
         /// </summary>
-        private readonly object[] scopeStack = new object[MAX_ARGUMENT_STACK_SIZE];
+        private readonly object[] scopeStack = new object[MAX_SCOPE_STACK_SIZE];
         /// <summary>
         /// The count of how much of the scope stack is in use.  It is the index
         /// of where the next push will happen, just above the top of the stack.
@@ -82,7 +82,7 @@ namespace kOS.Safe.Execution
         public void PushScope(object item)
         {
             ThrowIfInvalid(item);
-            if (scopeCount >= MAX_ARGUMENT_STACK_SIZE)
+            if (scopeCount >= MAX_SCOPE_STACK_SIZE)
             {
                 throw new KOSStackOverflowException("Scope");
             }
