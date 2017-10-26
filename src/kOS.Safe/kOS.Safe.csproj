@@ -277,6 +277,7 @@
     <Compile Include="Encapsulation\Suffixes\ThreeArgsSuffix.cs" />
     <Compile Include="Exceptions\KOSTermWidthObsoletionException.cs" />
     <Compile Include="Execution\IPopContextNotifyee.cs" />
+    <Compile Include="Exceptions\KOSStackOverflowException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
