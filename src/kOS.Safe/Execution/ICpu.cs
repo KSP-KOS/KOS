@@ -6,23 +6,24 @@ namespace kOS.Safe.Execution
 {
     public interface ICpu : IFixedUpdateObserver
     {
-        void PushStack(object item);
-        object PopStack();
+        void PushArgumentStack(object item);
+        object PopArgumentStack();
         void PushScopeStack(object thing);
         object PopScopeStack(int howMany);
         List<VariableScope> GetCurrentClosure();
         IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure);
         void AssertValidDelegateCall(IUserDelegate userDelegate);
         object GetValue(object testValue, bool barewordOkay = false);
-        object PopValue(bool barewordOkay = false);
-        object PeekValue(int digDepth, bool barewordOkay = false);
-        object PeekRaw(int digDepth, out bool checkOkay);
-        object PopValueEncapsulated(bool barewordOkay = false);
-        object PeekValueEncapsulated(int digDepth, bool barewordOkay = false);
-        Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false);
-        Structure PopStructureEncapsulated(bool barewordOkay = false);
-        Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false);
-        int GetStackSize();
+        object PopValueArgument(bool barewordOkay = false);
+        object PeekValueArgument(int digDepth, bool barewordOkay = false);
+        object PeekRawArgument(int digDepth, out bool checkOkay);
+        object PeekRawScope(int digDepth, out bool checkOkay);
+        object PopValueEncapsulatedArgument(bool barewordOkay = false);
+        object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false);
+        Structure GetStructureEncapsulatedArgument(Structure testValue, bool barewordOkay = false);
+        Structure PopStructureEncapsulatedArgument(bool barewordOkay = false);
+        Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false);
+        int GetArgumentStackSize();
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);
         void SetNewLocal(string identifier, object value);

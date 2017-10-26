@@ -46,7 +46,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             CpuUtility.ReverseStackArgs(cpu, false);
             for (int i = 0; i < paramArray.Length; ++i)
             {
-                object arg = cpu.PopValue();
+                object arg = cpu.PopValueArgument();
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
 
@@ -112,9 +112,9 @@ namespace kOS.Safe.Encapsulation.Suffixes
             {
                 bool foundArgMarker = false;
                 int numExtraArgs = 0;
-                while (cpu.GetStackSize() > 0 && !foundArgMarker)
+                while (cpu.GetArgumentStackSize() > 0 && !foundArgMarker)
                 {
-                    object marker = cpu.PopValue();
+                    object marker = cpu.PopValueArgument();
                     if (marker != null && marker.GetType() == CpuUtility.ArgMarkerType)
                         foundArgMarker = true;
                     else

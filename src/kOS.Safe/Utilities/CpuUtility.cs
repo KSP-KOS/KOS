@@ -22,12 +22,12 @@ namespace kOS.Safe.Utilities
         public static void ReverseStackArgs(ICpu cpu, bool direct)
         {
             List<object> args = new List<object>();
-            object arg = cpu.PopValue();
-            while (cpu.GetStackSize() > 0 && arg.GetType() != ArgMarkerType)
+            object arg = cpu.PopValueArgument();
+            while (cpu.GetArgumentStackSize() > 0 && arg.GetType() != ArgMarkerType)
             {
                 args.Add(arg);
 
-                // It's important to dereference with PopValue, not using PopStack, because the function
+                // It's important to dereference with PopValue, not using PopArgumentStack, because the function
                 // being called might not even be able to see the variable in scope anyway.
                 // In other words, if calling a function like so:
                 //     declare foo to 3.
@@ -36,15 +36,15 @@ namespace kOS.Safe.Utilities
                 //     myfunc(3).
                 // It has to be unaware of the fact that the name of the argument was 'foo'.  It just needs to
                 // see the contents that were inside foo.
-                arg = cpu.PopValue();
+                arg = cpu.PopValueArgument();
             }
             if (! direct)
-                cpu.PopStack(); // throw away the delegate or KOSDelegate info - we already snarfed it by now.
+                cpu.PopArgumentStack(); // throw away the delegate or KOSDelegate info - we already snarfed it by now.
             // Push the arg marker back on again.
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             // Push the arguments back on again, which will invert their order:
             foreach (object item in args)
-                cpu.PushStack(item);
+                cpu.PushArgumentStack(item);
         }
     }
 }

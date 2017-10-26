@@ -202,7 +202,7 @@ namespace kOS.Safe.Encapsulation
             // Going to do an indirect call of myself, and indirect calls need
             // to have the delegate underneath the args.  That's how
             // OpcodeCall.StaticExecute() expects to see it.
-            Cpu.PushStack(this);
+            Cpu.PushArgumentStack(this);
         }
 
         public override Structure CallWithArgsPushedAlready()

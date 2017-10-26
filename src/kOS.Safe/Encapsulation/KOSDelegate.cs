@@ -52,14 +52,14 @@ namespace kOS.Safe.Encapsulation
             if (Cpu == null)
                 throw new KOSCannotCallException();
             PushUnderArgs();
-            Cpu.PushStack(new KOSArgMarkerType());
+            Cpu.PushArgumentStack(new KOSArgMarkerType());
             foreach (Structure arg in PreBoundArgs)
             {
-                Cpu.PushStack(arg);
+                Cpu.PushArgumentStack(arg);
             }
             foreach (Structure arg in args)
             {
-                Cpu.PushStack(arg);
+                Cpu.PushArgumentStack(arg);
             }
             return CallWithArgsPushedAlready();
         }
@@ -86,7 +86,7 @@ namespace kOS.Safe.Encapsulation
             object arg = ""; // doesn't matter what it is as long as it's non-null for the while check below.
             while (arg != null && !(arg is KOSArgMarkerType))
             {
-                arg = Cpu.PopStack();
+                arg = Cpu.PopArgumentStack();
                 if (!(arg is KOSArgMarkerType))
                     aboveArgs.Push(arg);
             }
@@ -95,14 +95,14 @@ namespace kOS.Safe.Encapsulation
                                        "Contact the kOS devs.  This message should 'never' happen.");
             // Now re-push the args back, putting the preBound ones at the bottom
             // where they belong:
-            Cpu.PushStack(new KOSArgMarkerType());
+            Cpu.PushArgumentStack(new KOSArgMarkerType());
             foreach (Structure item in PreBoundArgs)
             {
-                Cpu.PushStack(item);
+                Cpu.PushArgumentStack(item);
             }
             foreach (object item in aboveArgs) // Because this was pushed to a stack, this should show in reverse order.
             {
-                Cpu.PushStack(item);
+                Cpu.PushArgumentStack(item);
             }
         }
 

@@ -202,12 +202,12 @@ namespace kOS.Function
             // program it's calling:
             UsesAutoReturn = false;
 
-            shared.Cpu.PushStack(0); // dummy return that all functions have.
+            shared.Cpu.PushArgumentStack(0); // dummy return that all functions have.
 
             // Put the args for the program being called back on in the same order they were in before (so read the list backward):
-            shared.Cpu.PushStack(new KOSArgMarkerType());
+            shared.Cpu.PushArgumentStack(new KOSArgMarkerType());
             for (int i = argc - 1; i >= 0; --i)
-                shared.Cpu.PushStack(progArgs[i]);
+                shared.Cpu.PushArgumentStack(progArgs[i]);
         }
     }
 
@@ -269,7 +269,7 @@ namespace kOS.Function
                     //     100 old dead copies of the compiled opcodes in memory, only the lastmost copy being really used.)
 
                     // We're done here.  Skip the compile.  Point the caller at the already-compiled version.
-                    shared.Cpu.PushStack(programAddress);
+                    shared.Cpu.PushArgumentStack(programAddress);
                     this.ReturnValue = true; // tell caller that it already existed.
                     return;
                 }
@@ -309,7 +309,7 @@ namespace kOS.Function
                         parts = fileContent.AsParts(path, prefix);
                         int programAddress = programContext.AddObjectParts(parts, path.ToString());
                         // push the entry point address of the new program onto the stack
-                        shared.Cpu.PushStack(programAddress);
+                        shared.Cpu.PushArgumentStack(programAddress);
                     }
                     else
                     {

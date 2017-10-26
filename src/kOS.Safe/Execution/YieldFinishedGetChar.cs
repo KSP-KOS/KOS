@@ -29,8 +29,8 @@ namespace kOS.Safe.Execution
                 // Now that we're done waiting, the next Opcode
                 // (that expects the expression atop the stack to be
                 // the char that was read) is going to execute:
-                shared.Cpu.PopStack();
-                shared.Cpu.PushStack(new StringValue(ch));
+                shared.Cpu.PopArgumentStack();
+                shared.Cpu.PushArgumentStack(new StringValue(ch));
 
                 return true;
             }

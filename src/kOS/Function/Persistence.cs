@@ -47,9 +47,9 @@ namespace kOS.Function
             // Redirect into a call to the copypath function, so as to keep all
             // the copy file logic there in one unified location.  This is slightly slow,
             // but we don't care because this is just to support deprecation:
-            shared.Cpu.PushStack(new kOS.Safe.Execution.KOSArgMarkerType());
-            shared.Cpu.PushStack(fromName);
-            shared.Cpu.PushStack(toName);
+            shared.Cpu.PushArgumentStack(new kOS.Safe.Execution.KOSArgMarkerType());
+            shared.Cpu.PushArgumentStack(fromName);
+            shared.Cpu.PushArgumentStack(toName);
             shared.Cpu.CallBuiltinFunction("copypath");
         }
     }
@@ -74,9 +74,9 @@ namespace kOS.Function
             // Redirect into a call to the movepath function, so as to keep all
             // the file logic there in one unified location.  This is slightly slow,
             // but we don't care because this is just to support deprecation:
-            shared.Cpu.PushStack(new kOS.Safe.Execution.KOSArgMarkerType());
-            shared.Cpu.PushStack(oldName);
-            shared.Cpu.PushStack(newName);
+            shared.Cpu.PushArgumentStack(new kOS.Safe.Execution.KOSArgMarkerType());
+            shared.Cpu.PushArgumentStack(oldName);
+            shared.Cpu.PushArgumentStack(newName);
             shared.Cpu.CallBuiltinFunction("movepath");
         }
     }
@@ -126,8 +126,8 @@ namespace kOS.Function
             // Redirect into a call to the deletepath function, so as to keep all
             // the file logic there in one unified location.  This is slightly slow,
             // but we don't care because this is just to support deprecation:
-            shared.Cpu.PushStack(new kOS.Safe.Execution.KOSArgMarkerType());
-            shared.Cpu.PushStack(pathName);
+            shared.Cpu.PushArgumentStack(new kOS.Safe.Execution.KOSArgMarkerType());
+            shared.Cpu.PushArgumentStack(pathName);
             shared.Cpu.CallBuiltinFunction("deletepath");
         }
     }

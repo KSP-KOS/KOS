@@ -546,14 +546,14 @@ namespace kOS.Safe.Execution
             triggerYields.Clear();
         }
         
-        public void PushStack(object item)
+        public void PushArgumentStack(object item)
         {
-            stack.Push(item);
+            stack.PushArgument(item);
         }
 
-        public object PopStack()
+        public object PopArgumentStack()
         {
-            return stack.Pop();
+            return stack.PopArgument();
         }
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
@@ -606,7 +606,7 @@ namespace kOS.Safe.Execution
             object stackItem = true; // any non-null value will do here, just to get the loop started.
             for (var rawStackDepth = 0; stackItem != null && peekDepth >= 0; ++rawStackDepth)
             {
-                stackItem = stack.Peek(-1 - rawStackDepth);
+                stackItem = stack.PeekScope(rawStackDepth);
                 if (stackItem is VariableScope)
                     --peekDepth;
                 if (stackItem is SubroutineContext)
@@ -640,7 +640,7 @@ namespace kOS.Safe.Execution
             while (true) /*all of this loop's exits are explicit break or return statements*/
             {
                 object stackItem;
-                bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
+                bool stackExhausted = !(stack.PeekCheckScope(rawStackDepth, out stackItem));
                 if (stackExhausted)
                     break;
                 var localDict = stackItem as VariableScope;
@@ -688,7 +688,7 @@ namespace kOS.Safe.Execution
                         ++skippedLevels;
                         ++rawStackDepth;
                     }
-                    stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
+                    stackExhausted = !(stack.PeekCheckScope(rawStackDepth, out stackItem));
                 }
 
                 // Record how many levels had to be skipped for that to work.  In future calls of this
@@ -997,20 +997,20 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Pop a value off the stack, and if it's a variable name then get its value,
+        /// Pop a value off the argument stack, and if it's a variable name then get its value,
         /// else just return it as it is.
         /// </summary>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PopValue(bool barewordOkay = false)
+        public object PopValueArgument(bool barewordOkay = false)
         {
-            return GetValue(PopStack(), barewordOkay);
+            return GetValue(PopArgumentStack(), barewordOkay);
         }
 
         /// <summary>
-        /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
+        /// Peek at a value atop the argument stack without popping it, and if it's a variable name then get its value,
         /// else just return it as it is.<br/>
         /// <br/>
         /// NOTE: Evaluating variables when you don't really need to is pointlessly expensive, as it
@@ -1022,9 +1022,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PeekValue(int digDepth, bool barewordOkay = false)
+        public object PeekValueArgument(int digDepth, bool barewordOkay = false)
         {
-            return GetValue(stack.Peek(digDepth), barewordOkay);
+            return GetValue(stack.PeekArgument(digDepth), barewordOkay);
         }
 
         /// <summary>
@@ -1040,9 +1040,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PopStructureEncapsulated(bool barewordOkay = false)
+        public Structure PopStructureEncapsulatedArgument(bool barewordOkay = false)
         {
-            return Structure.FromPrimitiveWithAssert( PopValue(barewordOkay) );
+            return Structure.FromPrimitiveWithAssert( PopValueArgument(barewordOkay) );
         }
 
         /// <summary>
@@ -1059,9 +1059,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        public Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitiveWithAssert(PeekValueArgument(digDepth, barewordOkay));
         }
 
         /// <summary>
@@ -1083,7 +1083,7 @@ namespace kOS.Safe.Execution
         ///   is the value?
         /// </param>
         /// <returns>The value after the steps described have been performed.</returns>
-        public Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false)
+        public Structure GetStructureEncapsulatedArgument(Structure testValue, bool barewordOkay = false)
         {
             return Structure.FromPrimitiveWithAssert(GetValue(testValue, barewordOkay));
         }
@@ -1100,9 +1100,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PopValueEncapsulated(bool barewordOkay = false)
+        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
         {
-            return Structure.FromPrimitive( PopValue(barewordOkay) );
+            return Structure.FromPrimitive( PopValueArgument(barewordOkay) );
         }
 
         /// <summary>
@@ -1118,29 +1118,42 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitive(PeekValueArgument(digDepth, barewordOkay));
         }
 
         /// <summary>
-        /// Peek at a value atop the stack without popping it, and without evaluating it to get the variable's
+        /// Peek at a value atop the argument stack without popping it, and without evaluating it to get the variable's
         /// value.  (i.e. if the thing in the stack is $foo, and the variable foo has value 5, you'll get the string
         /// "$foo" returned, not the integer 5).
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
         /// <returns>value off the stack</returns>
-        public object PeekRaw(int digDepth, out bool checkOkay)
+        public object PeekRawArgument(int digDepth, out bool checkOkay)
         {
             object returnValue;
-            checkOkay = stack.PeekCheck(digDepth, out returnValue);
+            checkOkay = stack.PeekCheckArgument(digDepth, out returnValue);
             return returnValue;
         }
 
-        public int GetStackSize()
+        /// <summary>
+        /// Peek at a value atop the scope stack without popping it.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
+        /// <returns>value off the stack</returns>
+        public object PeekRawScope(int digDepth, out bool checkOkay)
         {
-            return stack.GetLogicalSize();
+            object returnValue;
+            checkOkay = stack.PeekCheckScope(digDepth, out returnValue);
+            return returnValue;
+        }
+
+        public int GetArgumentStackSize()
+        {
+            return stack.GetArgumentStackSize();
         }
 
         /// <summary>
@@ -1416,11 +1429,11 @@ namespace kOS.Safe.Execution
                             for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
                                 PushScopeStack(trigger.Closure[i]);
 
-                        PushStack(new KOSArgMarkerType());
+                        PushArgumentStack(new KOSArgMarkerType());
 
                         if (trigger.IsCSharpCallback)
                             for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
-                                PushStack(trigger.Args[argIndex]);
+                                PushArgumentStack(trigger.Args[argIndex]);
                         
                         triggersToBeExecuted.Add(trigger);
 
