@@ -8,10 +8,11 @@ namespace kOS.Safe.Execution
 {
     public class Stack : IStack
     {
-        private const int MAX_STACK_SIZE = 3000;
-        private readonly object[] stack = new object[MAX_STACK_SIZE];
+        private const int MAX_ARGUMENT_STACK_SIZE = 3000;
+        private const int MAX_SCOPE_STACK_SIZE = 3000;
+        private readonly object[] stack = new object[MAX_ARGUMENT_STACK_SIZE];
         private int count = 0;
-        private readonly object[] scopeStack = new object[MAX_STACK_SIZE];
+        private readonly object[] scopeStack = new object[MAX_ARGUMENT_STACK_SIZE];
         private int scopeCount = 0;
 
         private int triggerContextCount = 0;
@@ -19,7 +20,7 @@ namespace kOS.Safe.Execution
         public void Push(object item)
         {
             ThrowIfInvalid(item);
-            if (count + scopeCount >= MAX_STACK_SIZE) {
+            if (count + scopeCount >= MAX_ARGUMENT_STACK_SIZE) {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
             }
@@ -46,7 +47,7 @@ namespace kOS.Safe.Execution
         public void PushScope(object item)
         {
             ThrowIfInvalid(item);
-            if (count + scopeCount >= MAX_STACK_SIZE)
+            if (count + scopeCount >= MAX_ARGUMENT_STACK_SIZE)
             {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
