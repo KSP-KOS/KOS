@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
@@ -8,6 +9,7 @@ namespace kOS.Safe.Execution
     {
         void PushArgumentStack(object item);
         object PopArgumentStack();
+        void PushNewScope(Int16 scopeId, Int16 parentScopeId);
         void PushScopeStack(object thing);
         object PopScopeStack(int howMany);
         List<VariableScope> GetCurrentClosure();

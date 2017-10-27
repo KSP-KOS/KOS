@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace kOS.Safe.Execution
 {
@@ -17,5 +18,7 @@ namespace kOS.Safe.Execution
         string Dump();
         List<int> GetCallTrace();
         bool HasTriggerContexts();
+        VariableScope FindScope(Int16 scopeId);
+        VariableScope GetCurrentScope();
     }
 }

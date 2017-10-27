@@ -1964,7 +1964,7 @@ namespace kOS.Safe.Compilation
         
         public override void Execute(ICpu cpu)
         {
-            cpu.PushScopeStack(new VariableScope(ScopeId,ParentScopeId));
+            cpu.PushNewScope(ScopeId,ParentScopeId);
         }
 
         public override string ToString()
