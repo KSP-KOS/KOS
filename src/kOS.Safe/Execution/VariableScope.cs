@@ -17,19 +17,8 @@ namespace kOS.Safe.Execution
         /// An ID of 0 means global.
         /// </summary>
         public Int16 ScopeId {get;set;}
-        
-        /// <summary>
-        /// The unique ID of this variable scope's parent scope.
-        /// An ID of 0 means global.
-        /// </summary>
-        public Int16 ParentScopeId {get;set;}
 
-        /// <summary>
-        /// Once the ParentId has been used once to detect which VaraibleScope
-        /// is the parent of this scope, you can store the result here so you
-        /// can jump there quicker next time without scanning the scope stack.
-        /// </summary>
-        public Int16 ParentSkipLevels {get;set;}
+        public VariableScope ParentScope {get;set;}
         
         /// <summary>
         /// Set this to true to indicate that this scope is part of a closure
@@ -38,15 +27,75 @@ namespace kOS.Safe.Execution
         /// </summary>
         public bool IsClosure {get;set;}
 
-        public Dictionary<string, Variable>  Variables;
+        private Dictionary<string, Variable>  Variables;
         
-        public VariableScope(Int16 scopeId, Int16 parentScopeId)
+        public VariableScope(Int16 scopeId, VariableScope parentScope)
         {
             ScopeId = scopeId;
-            ParentScopeId = parentScopeId;
-            ParentSkipLevels = 1; // the default case is to just move one stack level.
+            ParentScope = parentScope;
             Variables = new Dictionary<string, Variable>(StringComparer.OrdinalIgnoreCase);
             IsClosure = false;
+        }
+
+        public IEnumerable<KeyValuePair<string, Variable>> Locals
+        {
+            get
+            {
+                return Variables;
+            }
+        }
+
+        public void Clear()
+        {
+            Variables.Clear();
+        }
+
+        public void Add(string name, Variable value)
+        {
+            Variables[name] = value;
+        }
+
+        public bool Remove(string name)
+        {
+            return Variables.Remove(name);
+        }
+
+        public Variable RemoveNested(string name)
+        {
+            Variable res = null;
+
+            if (!Variables.TryGetValue(name, out res))
+            {
+                return ParentScope.RemoveNested(name);
+            }
+            Variables.Remove(name);
+
+            return res;
+        }
+
+        public bool Contains(string name)
+        {
+            return Variables.ContainsKey(name);
+        }
+
+        public Variable GetNested(string name)
+        {
+            Variable res;
+            if (!Variables.TryGetValue(name, out res) && ParentScope != null)
+            {
+                res = ParentScope.GetNested(name);
+            }
+            return res;
+        }
+
+        public Variable GetLocal(string name)
+        {
+            Variable res = null;
+
+            // Just return null if this doesn't fill it
+            Variables.TryGetValue(name, out res);
+
+            return res;
         }
     }
 }

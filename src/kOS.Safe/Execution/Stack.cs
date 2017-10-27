@@ -333,17 +333,48 @@ namespace kOS.Safe.Execution
             VariableScope dict = item as VariableScope;
             if (dict != null)
             {
-                builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
-                                             dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
+                Int16 parentScopeId = -1;
+                if (dict.ParentScope != null)
+                {
+                    parentScopeId = dict.ParentScope.ScopeId;
+                }
+
+                builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, IsClosure={2}",
+                                             dict.ScopeId, parentScopeId, dict.IsClosure);
                 builder.AppendLine();
                 // Dump the local variable context stored here on the stack:
-                foreach (string varName in dict.Variables.Keys)
+                foreach (var entry in dict.Locals)
                 {
-                    var value = dict.Variables[varName].Value;
-                    builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
+                    builder.AppendFormat("            local var {0} is {1} with value = {2}", entry.Key, KOSNomenclature.GetKOSName(entry.Value.GetType()), entry.Value);
                     builder.AppendLine();
                 }
             }
+        }
+
+        public VariableScope FindScope(Int16 ScopeId)
+        {
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var scope = scopeStack[index] as VariableScope;
+                if (scope != null && scope.ScopeId == ScopeId)
+                {
+                    return scope;
+                }
+            }
+            return null;
+        }
+
+        public VariableScope GetCurrentScope()
+        {
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var scope = scopeStack[index] as VariableScope;
+                if (scope != null)
+                {
+                    return scope;
+                }
+            }
+            return null;
         }
 
         /// <summary>
