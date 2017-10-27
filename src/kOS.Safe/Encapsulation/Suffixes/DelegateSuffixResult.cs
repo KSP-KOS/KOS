@@ -9,7 +9,21 @@ namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class DelegateSuffixResult : ISuffixResult
     {
+        /// <summary>
+        /// The C# delegate that implements this built-in suffix.
+        /// </summary>
         private readonly Delegate del;
+        /// <summary>
+        /// Although the delegate `del` knows via reflection how many
+        /// arguments it should expect, using reflection to invoke it is
+        /// slow.  This delegate `call` is a wrapper around `del` that
+        /// can be called with a fixed argument array of known length
+        /// without having to dynamically query the delegate signature
+        /// with reflection at runtime.  (i.e. OneArgSuffix can hardcode
+        /// at compile time that its `call` expects exactly 1 argument.
+        /// TwoArgSuffix can hardcode at compile time that it's `call`
+        /// expects exactly 2 arguments, etc.)
+        /// </summary>
         private readonly CallDel call;
         private Structure value;
 
