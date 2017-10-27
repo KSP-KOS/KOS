@@ -10,6 +10,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
     public class DelegateSuffixResult : ISuffixResult
     {
         private readonly Delegate del;
+        private readonly CallDel call;
         private Structure value;
 
         public Delegate Del
@@ -22,9 +23,12 @@ namespace kOS.Safe.Encapsulation.Suffixes
             get { return value; }
         }
 
-        public DelegateSuffixResult(Delegate del)
+        public delegate object CallDel(object[] args);
+
+        public DelegateSuffixResult(Delegate del, CallDel call)
         {
             this.del = del;
+            this.call = call;
         }
 
         public bool HasValue
@@ -128,34 +132,14 @@ namespace kOS.Safe.Encapsulation.Suffixes
             // there are no arguments to pass:
             object[] argArray = (args.Count > 0) ? args.ToArray() : null;
 
-            try
+            object val = call(argArray);
+            if (methInfo.ReturnType == typeof(void))
             {
-                // I could find no documentation on what DynamicInvoke returns when the delegate
-                // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
-                // problem, I split this into these two cases:
-                if (methInfo.ReturnType == typeof(void))
-                {
-                    del.DynamicInvoke(argArray);
-                    value = ScalarValue.Create(0);
-                    // By adding this we can unconditionally assume all functionshave a return value
-                    // to be used or popped away, even if "void".  In order to mainain consistency with
-                    // the void return value of functions, and to ensure that we don't accidentally pass
-                    // a value back to the user that they cannot interact with (null), we return zero.
-                }
-                else
-                {
-                    // Convert a primitive return type to a structure.  This is done in the opcode, since
-                    // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                    value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
-                }
+                value = ScalarValue.Create(0);
             }
-            catch (TargetInvocationException e)
+            else
             {
-                // Annoyingly, calling DynamicInvoke on a delegate wraps any exceptions the delegate throws inside
-                // this TargetInvocationException, which hides them from the kOS user unless we do this:
-                if (e.InnerException != null)
-                    throw e.InnerException;
-                throw;
+                value = Structure.FromPrimitiveWithAssert(val);
             }
         }
 
