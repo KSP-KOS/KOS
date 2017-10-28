@@ -463,9 +463,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeEval());
             AddOpcode(new OpcodeDup());
             // Put one of those two copies of the new value into the old value identifier for next time:
-            AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal(triggerObject.OldValueIdentifier));
             // Use the other dup'ed copy of the new value to actually do the equals
             // comparison with the old value that's still under it on the stack:
             AddOpcode(new OpcodeCompareEqual());
@@ -479,9 +477,8 @@ namespace kOS.Safe.Compilation.KS
             // defaults to true = removal should happen.
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
-            AddOpcode(new OpcodePush(triggerKeepName));
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
 
             VisitNode(node.Nodes[2]);
 
@@ -515,9 +512,8 @@ namespace kOS.Safe.Compilation.KS
             // defaults to true = removal should happen.
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
-            AddOpcode(new OpcodePush(triggerKeepName));
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
 
             VisitNode(node.Nodes[3]);
 
@@ -724,9 +720,8 @@ namespace kOS.Safe.Compilation.KS
                     var branch = new OpcodeBranchIfTrue();
                     branch.Distance = 4;
                     AddOpcode(branch);
-                    AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(userFuncObject.ScopelessPointerIdentifier));
                 }
                 else
                 {
@@ -802,10 +797,9 @@ namespace kOS.Safe.Compilation.KS
             lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
             List<Opcode> rememberCurrentCodeSection = currentCodeSection;
             currentCodeSection = triggerObject.Code;
-            AddOpcode(new OpcodePush("$" + func.ScopelessIdentifier));
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // need these for all locks now.
             AddOpcode(new OpcodeCall(func.ScopelessPointerIdentifier));
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal("$" + func.ScopelessIdentifier));
             AddOpcode(new OpcodePush(true)); // always preserve this particular kind of trigger.
             AddOpcode(new OpcodeReturn((short)0));
             lastLine = rememberLastLine;
@@ -2095,27 +2089,30 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="toThis">The righthand-side expression to set it to</param>
         private void ProcessSetOperation(ParseNode setThis, ParseNode toThis)
         {
-            // destination
-            compilingSetDestination = true;
-            VisitNode(setThis);
-            compilingSetDestination = false;
-            // expression
-            VisitNode(toThis);
+            bool isSuffix = VarIdentifierEndsWithSuffix(setThis);
+            bool isIndex = VarIdentifierEndsWithIndex(setThis);
+            if (isSuffix || isIndex)
+            {
+                // destination
+                compilingSetDestination = true;
+                VisitNode(setThis);
+                compilingSetDestination = false;
+                // expression
+                VisitNode(toThis);
 
-            if (VarIdentifierEndsWithSuffix(setThis))
-            {
-                AddOpcode(new OpcodeSetMember());
-            }
-            else if (VarIdentifierEndsWithIndex(setThis))
-            {
-                AddOpcode(new OpcodeSetIndex());
+                AddOpcode(isSuffix ? (Opcode)new OpcodeSetMember() : (Opcode)new OpcodeSetIndex());
             }
             else
             {
+                // normal variable set
+                VisitNode(toThis);
+
+                string varName = "$" + GetIdentifierText(setThis);
+
                 if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(varName));
                 else
-                    AddOpcode(new OpcodeStoreExist());
+                    AddOpcode(new OpcodeStoreExist(varName));
             }
         }
 
@@ -2406,8 +2403,7 @@ namespace kOS.Safe.Compilation.KS
                 // for all functions just in case they may get used this way.  It's unneded overhead
                 // to do so most of the time, but it makes the algorithm simple for the few cases
                 // where it is needed.
-                
-                AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
+
                 AddOpcode(new OpcodePushDelegateRelocateLater(null,true), func.GetFuncLabel());
 
                 // Where the function should go, according to the rules of GLOBAL, LOCAL, and LAZYGLOBAL:
@@ -2415,9 +2411,9 @@ namespace kOS.Safe.Compilation.KS
 
                 // But make a weird exception for file scope - they are always global unless explicitly stated to be local:
                 if (isFileScope && whereToPut != StorageModifier.LOCAL)
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(func.ScopelessPointerIdentifier));
                 else
-                    AddOpcode(CreateAppropriateStoreCode(whereToPut, true));
+                    AddOpcode(CreateAppropriateStoreCode(whereToPut, true, func.ScopelessPointerIdentifier));
             }
         }
 
@@ -2436,9 +2432,8 @@ namespace kOS.Safe.Compilation.KS
 
             string functionLabel = lockObject.GetUserFunctionLabel(expressionHash);
             // lock variable
-            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
             AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionLabel);
-            AddOpcode(CreateAppropriateStoreCode(whereToStore, allowLazyGlobal));
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, allowLazyGlobal, lockObject.ScopelessPointerIdentifier));
 
             if (lockObject.IsSystemLock())
             {
@@ -2509,12 +2504,11 @@ namespace kOS.Safe.Compilation.KS
 
             // unlock variable
             // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
-            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
             AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
             if (allowLazyGlobal)
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStore(lockObject.ScopelessPointerIdentifier));
             else
-                AddOpcode(new OpcodeStoreExist());
+                AddOpcode(new OpcodeStoreExist(lockObject.ScopelessPointerIdentifier));
         }
 
         private void VisitOnStatement(ParseNode node)
@@ -2527,9 +2521,8 @@ namespace kOS.Safe.Compilation.KS
             if (triggerObject.IsInitialized())
             {
                 // Store the current value into the old value to prep for the first use of the ON trigger:
-                AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
                 VisitNode(node.Nodes[1]); // the expression in the on statement.
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStore(triggerObject.OldValueIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger());
             }
@@ -2581,9 +2574,8 @@ namespace kOS.Safe.Compilation.KS
             //    DECLARE [GLOBAL|LOCAL] identifier TO expr.
             if (lastSubNode.Token.Type == TokenType.declare_identifier_clause)
             {
-                VisitNode(lastSubNode.Nodes[0]);
                 VisitNode(lastSubNode.Nodes[2]);
-                AddOpcode(CreateAppropriateStoreCode(whereToStore, true));
+                AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[0])));
             }
             
             // If the declare statement is of the form:
@@ -2652,9 +2644,7 @@ namespace kOS.Safe.Compilation.KS
 
                 branchSkippingInit.DestinationLabel = GetNextLabel(false);
             }
-            VisitNode(identifierNode);
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(CreateAppropriateStoreCode(whereToStore, true));                
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(identifierNode)));
         }
                 
         /// <summary>
@@ -2666,19 +2656,19 @@ namespace kOS.Safe.Compilation.KS
         /// false if it should not.  NOTE that it should always be true when
         /// doing DECLARE operations and only vary when doing SET operations.</param>
         /// <returns>the new opcode you should add</returns>
-        private Opcode CreateAppropriateStoreCode(StorageModifier kind, bool lazyGlobal)
+        private Opcode CreateAppropriateStoreCode(StorageModifier kind, bool lazyGlobal, string identifier)
         {
             switch (kind)
             {
                 case StorageModifier.LOCAL:
-                    return new OpcodeStoreLocal();
+                    return new OpcodeStoreLocal(identifier);
                 case StorageModifier.GLOBAL:
-                    return new OpcodeStoreGlobal();
+                    return new OpcodeStoreGlobal(identifier);
                 default:
                     if (lazyGlobal)
-                        return new OpcodeStore();
+                        return new OpcodeStore(identifier);
                     else
-                        return new OpcodeStoreExist();
+                        return new OpcodeStoreExist(identifier);
             }
         }
         
@@ -2764,14 +2754,14 @@ namespace kOS.Safe.Compilation.KS
         private void VisitToggleStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            VisitVarIdentifier(node.Nodes[1]);
+            string varName = "$" + GetIdentifierText(node.Nodes[1]);
             VisitVarIdentifier(node.Nodes[1]);
             AddOpcode(new OpcodeLogicToBool());
             AddOpcode(new OpcodeLogicNot());
             if (allowLazyGlobal)
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStore(varName));
             else
-                AddOpcode(new OpcodeStoreExist());
+                AddOpcode(new OpcodeStoreExist(varName));
         }
 
         private void VisitPrintStatement(ParseNode node)
@@ -3066,16 +3056,16 @@ namespace kOS.Safe.Compilation.KS
             if (hasIn)
             {
                 // destination variable
-                VisitVariableNode(node.Nodes[3]);
+                string varName = "$" + GetIdentifierText(node.Nodes[3]);
                 // list type
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);
                 // build list
                 AddOpcode(new OpcodeCall("buildlist()"));
                 if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(varName));
                 else
-                    AddOpcode(new OpcodeStoreExist());
+                    AddOpcode(new OpcodeStoreExist(varName));
             }
             else
             {
@@ -3162,9 +3152,8 @@ namespace kOS.Safe.Compilation.KS
                 throw new KOSPreserveInvalidHereException(new LineCol(lastLine, lastColumn));
 
             string flagName = PeekTriggerKeepName();
-            AddOpcode(new OpcodePush(flagName));
             AddOpcode(new OpcodePush(true));
-            AddOpcode(new OpcodeStore());
+            AddOpcode(new OpcodeStore(flagName));
         }
 
         private void VisitRebootStatement(ParseNode node)
@@ -3198,11 +3187,10 @@ namespace kOS.Safe.Compilation.KS
 
             PushBreakList(braceNestLevel);
 
-            AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodePush("iterator"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeStoreLocal());
+            AddOpcode(new OpcodeStoreLocal(iteratorIdentifier));
             // loop condition
             Opcode condition = AddOpcode(new OpcodePush(iteratorIdentifier));
             string conditionLabel = condition.Label;
@@ -3212,11 +3200,11 @@ namespace kOS.Safe.Compilation.KS
             Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
             AddToBreakList(branch);
             // assign value to iteration variable
-            VisitVariableNode(node.Nodes[1]);
+            string varName = "$" + GetIdentifierText(node.Nodes[1]);
             AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodePush("value"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeStoreLocal());
+            AddOpcode(new OpcodeStoreLocal(varName));
             // instructions in FOR body
             VisitNode(node.Nodes[4]);
             // jump to condition

@@ -86,5 +86,17 @@ namespace kOS.Safe.Test.Execution
                 "True"
             );
         }
+
+        [Test]
+        public void TestLock()
+        {
+            // Test that locks in the same file works
+            RunScript("integration/lock.ks");
+            RunSingleStep();
+            AssertOutput(
+                "3",
+                "4"
+            );
+        }
     }
 }

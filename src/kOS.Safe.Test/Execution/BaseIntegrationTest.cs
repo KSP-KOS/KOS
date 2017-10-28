@@ -95,7 +95,7 @@ namespace kOS.Safe.Test.Execution
 
         protected void RunSingleStep()
         {
-            cpu.KOSFixedUpdate(0.01);
+            shared.UpdateHandler.UpdateFixedObservers(0.01);
 
             if (cpu.InstructionsThisUpdate == SafeHouse.Config.InstructionsPerUpdate)
             {

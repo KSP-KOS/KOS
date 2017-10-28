@@ -492,6 +492,33 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// The base class for opcodes that operate on an identifier.
+    /// </summary>
+    public abstract class OpcodeIdentifierBase : Opcode
+    {
+        [MLField(1, false)]
+        public string Identifier { get; set; }
+
+        protected OpcodeIdentifierBase(string identifier)
+        {
+            Identifier = identifier;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception(String.Format("Saved field in ML file for {0} seems to be missing.  Version mismatch?", Name));
+            Identifier = (string)fields[0];
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} {1}", Name, (string)Identifier);
+        }
+    }
+
     #endregion
 
     #region General
@@ -513,18 +540,23 @@ namespace kOS.Safe.Compilation
     /// that hasn't been given an initial value.  Its the act of storing a value into
     /// the variable that causues it to exist.  This is deliberate design.
     /// </summary>
-    public class OpcodeStore : Opcode
+    public class OpcodeStore : OpcodeIdentifierBase
     {
         protected override string Name { get { return "store"; } }
         public override ByteCode Code { get { return ByteCode.STORE; } }
 
+        public OpcodeStore(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStore() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetValue(identifier, value);
+            cpu.SetValue(Identifier, value);
         }
     }
 
@@ -565,18 +597,23 @@ namespace kOS.Safe.Compilation
     /// error.  (It corresponds to kerboscript's @LAZYGLOBAL OFF directive).<br/>
     /// <br/>
     /// </summary>
-    public class OpcodeStoreExist : Opcode
+    public class OpcodeStoreExist : OpcodeIdentifierBase
     {
         protected override string Name { get { return "storeexist"; } }
         public override ByteCode Code { get { return ByteCode.STOREEXIST; } }
 
+        public OpcodeStoreExist(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStoreExist() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetValueExists(identifier, value);
+            cpu.SetValueExists(Identifier, value);
         }
     }
     
@@ -600,18 +637,23 @@ namespace kOS.Safe.Compilation
     /// that hasn't been given an initial value.  Its the act of storing a value into
     /// the variable that causues it to exist.  This is deliberate design.
     /// </summary>
-    public class OpcodeStoreLocal : Opcode
+    public class OpcodeStoreLocal : OpcodeIdentifierBase
     {
         protected override string Name { get { return "storelocal"; } }
         public override ByteCode Code { get { return ByteCode.STORELOCAL; } }
 
+        public OpcodeStoreLocal(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStoreLocal() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetNewLocal(identifier, value);
+            cpu.SetNewLocal(Identifier, value);
         }
     }
 
@@ -629,18 +671,23 @@ namespace kOS.Safe.Compilation
     /// Its the act of storing a value into the variable that causues it to exist.
     /// This is deliberate design.
     /// </summary>
-    public class OpcodeStoreGlobal : Opcode
+    public class OpcodeStoreGlobal : OpcodeIdentifierBase
     {
         protected override string Name { get { return "storeglobal"; } }
         public override ByteCode Code { get { return ByteCode.STOREGLOBAL; } }
 
+        public OpcodeStoreGlobal(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStoreGlobal() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetGlobal(identifier, value);
+            cpu.SetGlobal(Identifier, value);
         }
     }
 
