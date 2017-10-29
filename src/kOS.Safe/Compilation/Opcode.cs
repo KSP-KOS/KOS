@@ -2073,7 +2073,7 @@ namespace kOS.Safe.Compilation
 
         public override string ToString()
         {
-            return Name + " " + EntryPoint.ToString();
+            return Name + " " + EntryPoint.ToString() + (WithClosure ? " closure" : "");
         }
     }
         

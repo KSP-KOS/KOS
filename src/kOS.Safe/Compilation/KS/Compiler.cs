@@ -813,12 +813,14 @@ namespace kOS.Safe.Compilation.KS
         }
 
         /// <summary>
-        /// Get the instruction_block this node is immediately inside of.
+        /// Get the instruction_block (or file Start block at outermost level) this node is immediately inside of.
         /// Gives a null if the node isn't in one (it's global).
         /// </summary>
         private ParseNode GetContainingBlockNode(ParseNode node)
         {
-            while (node != null && node.Token.Type != TokenType.instruction_block)
+            while (node != null && 
+                   node.Token.Type != TokenType.instruction_block &&
+                   node.Token.Type != TokenType.Start)
                 node = node.Parent;
             return node;
         }
@@ -967,6 +969,7 @@ namespace kOS.Safe.Compilation.KS
             {
                 // List all the types of parse node that open a new variable scope here:
                 // ---------------------------------------------------------------------
+                case TokenType.Start: // Here because all programs start with an outer scope block
                 case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.
                 case TokenType.declare_lock_clause: // here because the lock body needs a scope in order to work with closures.  The scope remembers the lexical id.
                 case TokenType.instruction_block:
@@ -1213,8 +1216,12 @@ namespace kOS.Safe.Compilation.KS
         
         private void VisitStartStatement(ParseNode node)
         {
-            AddFunctionJumpVars(null);
             int argbottomSpot = (options.IsCalledFromRun) ? FindArgBottomSpot(node) : -1;
+
+            NodeStartHousekeeping(node);
+            BeginScope(node);
+
+            AddFunctionJumpVars(node, true);
 
             // For each child node, but interrupting for the spot
             // where to insert the argbottom opcode:
@@ -1225,6 +1232,8 @@ namespace kOS.Safe.Compilation.KS
                 
                 VisitNode(node.Nodes[i]); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above.
             }
+
+            EndScope(node);
         }
 
         private void VisitChildNodes(ParseNode node)
@@ -2245,7 +2254,7 @@ namespace kOS.Safe.Compilation.KS
             if (nextBraceWasFunction)
                 PushReturnList();
             
-            AddFunctionJumpVars(node);
+            AddFunctionJumpVars(node, false);
             
             int argbottomSpot = -1;
             if (nextBraceWasFunction)
@@ -2363,7 +2372,10 @@ namespace kOS.Safe.Compilation.KS
         /// for the given function names defined in this scope.  Pass a NULL to mean global scope.
         /// </summary>
         /// <param name="node"></param>
-        private void AddFunctionJumpVars(ParseNode node)
+        /// <param name="isFileScope">A few special exceptions are needed for functions at the outermost file scope.
+        /// If a function is at the outermost file scope level, then it needs to default to global identifier,
+        /// else it needs to default to local identifier.  This weird rule is needed for backward compatibility.</param>
+        private void AddFunctionJumpVars(ParseNode node, bool isFileScope)
         {
             // All the functions for which this scope is where they live, and this file is where they live:
             IEnumerable<UserFunction> theseFuncs =
@@ -2371,14 +2383,8 @@ namespace kOS.Safe.Compilation.KS
                     item =>
                         item.IsFunction &&                                     // This might be redundant?
                         item.ScopeNode == node &&                              // Preprocessing found this function here in this set of scope braces.
-                        (node != null || context.UserFunctions.IsNew(item)));  // If global, ensure it's not from a previously compiled script's global scope.
+                        ((! isFileScope) || context.UserFunctions.IsNew(item)));  // If global, ensure it's not from a previously compiled script's global scope.
 
-            // NOTE: IF WE EVER IMPLEMENT FILE SCOPING!
-            // ----------------------------------------
-            // That last check above is needed because the "scope" of a global function in one script and
-            // a global function in another script are the same scope, since we don't nest files in their own scope.
-            // If we ever change the design to create file scoping, the lastmost check above can probably go away.
-            //
             // That last check deliberately takes advantage of short-circuiting to avoid the expense of IsNew() if it can.
 
             foreach (UserFunction func in theseFuncs)
@@ -2403,13 +2409,15 @@ namespace kOS.Safe.Compilation.KS
                 
                 AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
                 AddOpcode(new OpcodePushDelegateRelocateLater(null,true), func.GetFuncLabel());
-                if (node == null) // global scope, so unconditionally use a normal Store:
-                    AddOpcode(new OpcodeStore()); //
+
+                // Where the function should go, according to the rules of GLOBAL, LOCAL, and LAZYGLOBAL:
+                StorageModifier whereToPut = GetStorageModifierFor(func.OriginalNode);
+
+                // But make a weird exception for file scope - they are always global unless explicitly stated to be local:
+                if (isFileScope && whereToPut != StorageModifier.LOCAL)
+                    AddOpcode(new OpcodeStore());
                 else
-                {
-                    StorageModifier whereToPut = GetStorageModifierFor(func.OriginalNode);
                     AddOpcode(CreateAppropriateStoreCode(whereToPut, true));
-                }
             }
         }
 
@@ -2707,10 +2715,14 @@ namespace kOS.Safe.Compilation.KS
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
 
             // Default varies depending on which kind of statement it is.
-            // locks are default global while everything else is 
-            // default local:
-            StorageModifier modifier =
-                (lastSubNode.Token.Type == TokenType.declare_lock_clause ? StorageModifier.GLOBAL : StorageModifier.LOCAL);
+            // locks are default global while everything else is default local:
+            StorageModifier modifier = StorageModifier.LOCAL;
+            if (lastSubNode.Token.Type == TokenType.declare_lock_clause ||
+                lastSubNode.Token.Type == TokenType.declare_function_clause)
+            {
+                modifier = StorageModifier.GLOBAL;
+            }
+
             bool storageKeywordMissing = true;
             
             foreach (ParseNode t in node.Nodes)
@@ -2738,12 +2750,6 @@ namespace kOS.Safe.Compilation.KS
                                                          "a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
                                                          "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
                                                          "in a file where the default @LAZYGLOBAL behavior is on");
-            }
-            if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-            {
-                LineCol location = GetLineCol(node);
-                throw new KOSCommandInvalidHereException(location, "GLOBAL",
-                                                         "in a function declaration", "in a variable declaration");
             }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
