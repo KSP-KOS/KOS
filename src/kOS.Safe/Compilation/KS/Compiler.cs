@@ -2715,7 +2715,8 @@ namespace kOS.Safe.Compilation.KS
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
 
             // Default varies depending on which kind of statement it is.
-            // locks are default global while everything else is default local:
+            // locks are default global, and functions declared at file
+            // scope are default global, while everything else is default local:
             StorageModifier modifier = StorageModifier.LOCAL;
             if (lastSubNode.Token.Type == TokenType.declare_lock_clause ||
                 lastSubNode.Token.Type == TokenType.declare_function_clause)
