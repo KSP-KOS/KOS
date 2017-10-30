@@ -1,0 +1,258 @@
+<% @TinyPG Namespace="kOS.Safe.Compilation.KS" Language="C#"%>
+
+// Terminals
+// ===================================================
+//Math
+PLUSMINUS    -> @"(\+|-)";
+MULT         -> @"\*";
+DIV          -> @"/";
+POWER        -> @"\^";
+E            -> @"\be((?=\d)|\b)";
+//Logic
+NOT          -> @"\bnot\b";
+AND          -> @"\band\b";
+OR           -> @"\bor\b";
+TRUEFALSE    -> @"\btrue\b|\bfalse\b";
+COMPARATOR   -> @"<>|>=|<=|=|>|<";
+//Instructions tokens
+SET          -> @"\bset\b";
+TO           -> @"\bto\b";
+IS           -> @"\bis\b";
+IF           -> @"\bif\b";
+ELSE         -> @"\belse\b";
+UNTIL        -> @"\buntil\b";
+STEP         -> @"\bstep\b";
+DO           -> @"\bdo\b";
+LOCK         -> @"\block\b";
+UNLOCK       -> @"\bunlock\b";
+PRINT        -> @"\bprint\b";
+AT           -> @"\bat\b";
+ON           -> @"\bon\b";
+TOGGLE       -> @"\btoggle\b";
+WAIT         -> @"\bwait\b";
+WHEN         -> @"\bwhen\b";
+THEN         -> @"\bthen\b";
+OFF          -> @"\boff\b";
+STAGE        -> @"\bstage\b";
+CLEARSCREEN  -> @"\bclearscreen\b";
+ADD          -> @"\badd\b";
+REMOVE       -> @"\bremove\b";
+LOG          -> @"\blog\b";
+BREAK        -> @"\bbreak\b";
+PRESERVE     -> @"\bpreserve\b";
+DECLARE      -> @"\bdeclare\b";
+DEFINED      -> @"\bdefined\b";
+LOCAL        -> @"\blocal\b";
+GLOBAL       -> @"\bglobal\b";
+PARAMETER    -> @"\bparameter\b";
+FUNCTION     -> @"\bfunction\b";
+RETURN       -> @"\breturn\b";
+SWITCH       -> @"\bswitch\b";
+COPY         -> @"\bcopy\b";
+FROM         -> @"\bfrom\b";
+RENAME       -> @"\brename\b";
+VOLUME       -> @"\bvolume\b";
+FILE         -> @"\bfile\b";
+DELETE       -> @"\bdelete\b";
+EDIT         -> @"\bedit\b";
+RUN          -> @"\brun\b";
+RUNPATH      -> @"\brunpath\b";
+RUNONCEPATH  -> @"\brunoncepath\b";
+ONCE         -> @"\bonce\b";
+COMPILE      -> @"\bcompile\b";
+LIST         -> @"\blist\b";
+REBOOT       -> @"\breboot\b";
+SHUTDOWN     -> @"\bshutdown\b";
+FOR          -> @"\bfor\b";
+UNSET        -> @"\bunset\b";
+
+//Generic
+BRACKETOPEN  -> @"\(";
+BRACKETCLOSE -> @"\)";
+CURLYOPEN    -> @"\{";
+CURLYCLOSE   -> @"\}";
+SQUAREOPEN   -> @"\[";
+SQUARECLOSE  -> @"\]";
+COMMA        -> @",";
+COLON        -> @":";
+IN           -> @"\bin\b";
+ARRAYINDEX   -> @"#";
+ALL          -> @"\ball\b";
+IDENTIFIER   -> @"[_\p{L}]\w*";
+FILEIDENT    -> @"[_\p{L}]\w*(\.[_\p{L}]\w*)*";
+INTEGER      -> @"\d[_\d]*";
+DOUBLE       -> @"(\d+(?:_\d*)*)?\.\d+(?:_\d*)*";
+STRING       -> @"@?\""(\""\""|[^\""])*\""";
+EOI          -> @"\.";
+//Compiler Directives
+ATSIGN       -> @"@";
+LAZYGLOBAL   -> @"\blazyglobal\b";
+//Special
+EOF          -> @"^$";
+[Skip]
+WHITESPACE   -> @"\s+";
+[Skip]
+COMMENTLINE  -> @"//[^\n]*\n?";
+
+// Rules
+// ===================================================
+Start -> (instruction)* EOF;
+instruction_block -> CURLYOPEN instruction* CURLYCLOSE;
+instruction -> empty_stmt |
+               set_stmt | 
+               if_stmt |
+               until_stmt |
+               fromloop_stmt |
+               unlock_stmt |
+               print_stmt |
+               on_stmt |
+               toggle_stmt |
+               wait_stmt |
+               when_stmt |
+               stage_stmt |
+               clear_stmt |
+               add_stmt |
+               remove_stmt |
+               log_stmt |
+               break_stmt |
+               preserve_stmt |
+               declare_stmt |
+               return_stmt |
+               switch_stmt |
+               copy_stmt |
+               rename_stmt |
+               delete_stmt |
+               edit_stmt |
+               run_stmt |
+               runpath_stmt |
+               runoncepath_stmt |
+               compile_stmt |
+               list_stmt |
+               reboot_stmt |
+               shutdown_stmt |
+               for_stmt |
+               unset_stmt |
+               instruction_block |
+               identifier_led_stmt | // any statement that starts with an identifier.
+               directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
+
+// ------------ directives --------------------
+lazyglobal_directive -> ATSIGN LAZYGLOBAL onoff_trailer EOI;
+directive            -> lazyglobal_directive; // Add to this list later if we make other directives.
+
+// ------------ statements --------------------
+
+empty_stmt     -> EOI;
+set_stmt       -> SET varidentifier TO expr EOI;
+if_stmt        -> IF expr instruction EOI? (ELSE instruction EOI?)?;
+until_stmt     -> UNTIL expr instruction EOI?;
+fromloop_stmt  -> FROM instruction_block UNTIL expr STEP instruction_block DO instruction EOI?;
+unlock_stmt    -> UNLOCK (IDENTIFIER | ALL) EOI;
+print_stmt     -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
+on_stmt        -> ON varidentifier instruction EOI?;
+toggle_stmt    -> TOGGLE varidentifier EOI;
+wait_stmt      -> WAIT UNTIL? expr EOI;
+when_stmt      -> WHEN expr THEN instruction EOI?;
+onoff_stmt     -> varidentifier onoff_trailer EOI;
+onoff_trailer  -> (ON | OFF);
+stage_stmt     -> STAGE EOI;
+clear_stmt     -> CLEARSCREEN EOI;
+add_stmt       -> ADD expr EOI;
+remove_stmt    -> REMOVE expr EOI;
+log_stmt       -> LOG expr TO expr EOI;
+break_stmt     -> BREAK EOI;
+preserve_stmt  -> PRESERVE EOI;
+declare_identifier_clause -> IDENTIFIER (TO|IS) expr EOI;
+declare_parameter_clause  -> PARAMETER IDENTIFIER ((TO|IS) expr)? (COMMA IDENTIFIER ((TO|IS) expr)?)* EOI;
+declare_function_clause   -> FUNCTION IDENTIFIER instruction_block EOI?;
+declare_lock_clause       -> LOCK IDENTIFIER TO expr EOI;
+declare_stmt   -> // declare|global|local are all optional for function and parameter,
+                  // but mandatory for declaring an identifier.  This was the only
+                  // way to get the LL(1) parser to understand that without barfing on
+                  // ambiguity.
+                  (   
+                      declare_parameter_clause |
+                      declare_function_clause |
+                      declare_lock_clause |
+                      (
+                          (
+                              (DECLARE (LOCAL|GLOBAL)?) |
+                              (LOCAL|GLOBAL)
+                          )
+                          (
+                              declare_parameter_clause |
+                              declare_function_clause |
+                              declare_identifier_clause |
+                              declare_lock_clause
+                          )
+                      )
+                  );
+return_stmt    -> RETURN expr? EOI;
+switch_stmt    -> SWITCH TO expr EOI;
+copy_stmt      -> COPY expr (FROM | TO) expr EOI;
+rename_stmt    -> RENAME (VOLUME | FILE)? expr TO expr EOI;
+delete_stmt    -> DELETE expr (FROM expr)? EOI;
+edit_stmt      -> EDIT expr EOI;
+run_stmt       -> RUN (ONCE)? (FILEIDENT|STRING) (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
+runpath_stmt   -> RUNPATH BRACKETOPEN expr (COMMA arglist)? BRACKETCLOSE EOI;
+runoncepath_stmt -> RUNONCEPATH BRACKETOPEN expr (COMMA arglist)? BRACKETCLOSE EOI;
+compile_stmt   -> COMPILE expr (TO expr)? EOI;
+list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
+reboot_stmt    -> REBOOT EOI;
+shutdown_stmt  -> SHUTDOWN EOI;
+for_stmt       -> FOR IDENTIFIER IN varidentifier instruction EOI?;
+unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
+
+
+// ---------- expressions ---------------------------
+
+arglist            -> expr (COMMA expr)*;
+expr               -> (or_expr|instruction_block);
+or_expr            -> and_expr (OR and_expr)*;
+and_expr           -> compare_expr (AND compare_expr)*;
+compare_expr       -> arith_expr (COMPARATOR arith_expr)*;
+arith_expr         -> multdiv_expr (PLUSMINUS multdiv_expr)*;
+multdiv_expr       -> unary_expr ((MULT|DIV) unary_expr)*;
+unary_expr         -> (PLUSMINUS|NOT|DEFINED)? factor;
+factor             -> suffix (POWER suffix)*;
+suffix             -> suffixterm (suffix_trailer)*;
+suffix_trailer     -> (COLON suffixterm);
+
+suffixterm         -> atom suffixterm_trailer*;
+suffixterm_trailer -> (function_trailer | array_trailer);
+
+function_trailer   -> (BRACKETOPEN arglist? BRACKETCLOSE) | ATSIGN;
+array_trailer      -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
+
+atom               -> ( sci_number |
+                        TRUEFALSE |
+                        IDENTIFIER |
+                        FILEIDENT |
+                        BRACKETOPEN expr BRACKETCLOSE
+                      ) | STRING;
+sci_number         -> number (E PLUSMINUS? INTEGER)?;
+number             -> (INTEGER | DOUBLE);
+
+// varidentifier:
+// --------------
+// The subset of expressions that are legal as the lefthand side of an assignment statement:
+// This isn't 100% right.  Technically this allows the following syntax:
+//   SET functionCall() to val.
+// Which shouldn't be allowed.  But fixing it in the grammar file makes TinyPG's LL(1) parser's
+// little head spin in a sea of ambiguous confusion, so it will have to be dealt with by the
+// compiler checking if the lefthand side of an assignment statement ended up being a
+// function call, and if so raise a syntax exception.
+
+varidentifier  -> suffix;
+
+// identifier_led_stmt
+// -------------------
+// Any of the expressions which might start with an identifier and might be used as
+// an actual statement on their own (function calls, etc).  These had to be pulled
+// out of the normal expression tree because they cause LL(1) ambiguities at the
+// topmost level in the definition of the instruction rule if it just allowed all
+// generic expressions there.  It had to be limited to only allowing the types of
+// expressions which are led by an identifier and are guaranteed to have SOMETHING
+// after the identifier - parens, colons, etc:
+identifier_led_stmt -> identifier_led_expr EOI;
+identifier_led_expr -> suffix (onoff_trailer)?;

@@ -1,0 +1,39 @@
+# VisualStudio
+[Bb]in/
+[Oo]bj/
+*.suo
+packages/
+/src/kOS.sln.ide
+
+# Monodevelop
+[Ee]xported[Oo]bj/
+*.userprefs
+
+# VisualStudio Code
+.vscode/
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+/*.pidb
+/*.user
+
+# Build products and files generated during gameplay
+[Rr]esources/GameData/kOS/Plugins/
+[Rr]esources/*.dll
+[Rr]esources/GameData/*.dll
+!Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll
+
+# Symlink to KSP directory
+KSPdirlink
+
+# OS Specific
+.DS_STORE*
+[Tt]humbs.db
+
+#netkan for generating ckan test files
+netkan.exe
+*.ckan
+
+#zip files for archived art assets
+*.zip

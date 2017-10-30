@@ -1,0 +1,31 @@
+language: csharp
+solution: src/kOS.sln
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - python-sphinx
+    - nunit-console
+
+env:
+  global:
+  - KSP_VERSION="1.3.1"
+
+# Pre-shared token for pushing notifications to slack chat
+notifications:
+  slack: ksp-kos:51DTQ4ZBP9SlGNnLWJ5D84vp
+
+# Before the install the library dlls need to be downloaded
+before_script:
+- chmod +x .ci/travis/before_script.sh && ./.ci/travis/before_script.sh
+
+script:
+- xbuild /p:Configuration=Release $TRAVIS_SOLUTION
+# I know framework 4.0 is wrong, just trying it to see if it fixes the test
+- nunit-console -framework=4.0 src/kOS.Safe.Test/bin/Release/kOS.Safe.Test.dll
+# - chmod +x .ci/travis/script-sphinxdocs.sh && ./.ci/travis/script-sphinxdocs.sh
+
+# Cleanup the downloaded resources
+after_script:
+- chmod +x .ci/travis/after_script.sh && ./.ci/travis/after_script.sh
