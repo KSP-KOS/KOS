@@ -50,26 +50,19 @@ DECLARE FUNCTION
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
 
-  [``declare``] [``local``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
+  [``declare``] [``local``|``global``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
 
 The statement is called a "declare function" statement even when the optional
 word "declare" was left off.
 
-The following are all identical in meaning::
+::
 
     declare function hi { print "hello". }
     declare local function hi { print "hello". }
+    declare global function hi { print "hello". }
     local function hi { print "hello". }
+    global function hi { print "hello". }
     function hi { print "hello". }
-
-Functions are presumed to have scope local to the location where
-they are declared when the explicit local scope keyword is missing.
-
-At the moment, it is redundant to mention the ``local`` keyword,
-although it is allowed.
-
-It is best to just leave all the optional keywords of and merely say
-``function`` by itself.
 
 Example::
 
@@ -99,9 +92,34 @@ Example::
 
     print_corner(4,"That's me in the corner").
 
+Default varies when local or global are omitted
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When the explicit ``local`` or ``global`` scope keyword is missing,
+the default that is chosen depends on where the function is declared.
+If the function was declared in the outermost file scope, it will be
+assumed to be global.  If it was declared inside some braces, it will
+be assumed to be local to those braces::
+
+    // f1 behaves as if it was declared global
+    // because this is the outermost file scope:
+    function f1 {
+       print "I am in f1".
+    }
+    if true {
+      // f2 behaves as if it was declared local
+      // because this is inside some braces ("{","}"):
+      function f2 {
+       print "I am in f2".
+      }
+      f2(). // can be called from here.
+    }
+    f2(). // This throws an error because f2 was local to the "if true" braces.
+    
 A declare function command can appear anywhere in a kerboscript program,
 and once its been "parsed" by the compiler, the function can be called
-from anywhere in the program.
+from anywhere in the program that is able to see the function according
+to the scoping rules.
 
 The best design pattern is probably to create your library of function
 calls as one or more separate .ks files that contain just function
