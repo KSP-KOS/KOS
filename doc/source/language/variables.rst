@@ -127,11 +127,11 @@ Initializer required in DECLARE
 .. note::
     .. versionadded:: 0.17
         The syntax without the initializer, looking like so:
-    
+
         .. code-block:: kerboscript
-        
+
             DECLARE x. // no initializer like "TO 1."
-        
+
         is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
@@ -561,12 +561,12 @@ thing is, as described next:
 
 ``FUNCTION`` **not in curly braces**: Functions that are declared at the outermost
 file scope, (i.e. outside of any curly braces) and don't mention ``global``
- or ``local`` in their declaration behave as if they have the ``global`` keyword
+or ``local`` in their declaration behave as if they have the ``global`` keyword
 on them.  They can be called from any other program after this program has
 been run.
 
 ``FUNCTION`` **in curly braces**: Functions that are declared anywhere *inside* of some
-curly braces and don't mention ``global`` or ``local`` in their 
+curly braces and don't mention ``global`` or ``local`` in their
 declaration behave as if they have the ``local`` keyword on them.
 They can only be called from the local scope of those curly braces
 or deeper.
