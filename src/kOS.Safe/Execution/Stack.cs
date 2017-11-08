@@ -351,6 +351,12 @@ namespace kOS.Safe.Execution
             }
         }
 
+        /// <summary>
+        /// Finds a scope with the given ID number, from the top down.
+        /// If no such scope is found, it returns null.
+        /// </summary>
+        /// <returns>The scope.</returns>
+        /// <param name="ScopeId">Scope identifier.</param>
         public VariableScope FindScope(Int16 ScopeId)
         {
             for (int index = scopeCount - 1; index >= 0; --index)

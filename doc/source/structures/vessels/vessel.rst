@@ -46,7 +46,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :attr:`VERTICALSPEED`                    :struct:`scalar` (m/s)          How fast the ship is moving "up"
     :attr:`GROUNDSPEED`                      :struct:`scalar` (m/s)          How fast the ship is moving "horizontally"
     :attr:`AIRSPEED`                         :struct:`scalar` (m/s)          How fast the ship is moving relative to the air
-    :attr:`TERMVELOCITY`(DEPRECATED)         :struct:`scalar` (m/s)          terminal velocity of the vessel
+    :attr:`TERMVELOCITY` (DEPRECATED)        :struct:`scalar` (m/s)          terminal velocity of the vessel
     :attr:`SHIPNAME`                         :struct:`string`                The name of the vessel
     :attr:`NAME`                             :struct:`string`                Synonym for SHIPNAME
     :attr:`STATUS`                           :struct:`string`                Current ship status
