@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using kOS.Safe.Compilation;
+﻿using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace kOS.Safe.Function
 {
@@ -274,7 +274,6 @@ namespace kOS.Safe.Function
                 {
                     throw new KOSFileException("Can't append to file: not enough space or access forbidden");
                 }
-
             }
         }
     }
@@ -354,52 +353,11 @@ namespace kOS.Safe.Function
             StringBuilder sb = new StringBuilder();
             foreach (string textLine in shared.Cpu.ProfileResult)
             {
-                if (sb.Length > 0 )
+                if (sb.Length > 0)
                     sb.Append("\n");
                 sb.Append(textLine);
             }
             ReturnValue = sb.ToString();
-        }
-    }
-
-    [Function("pidloop")]
-    public class PIDLoopConstructor : SafeFunctionBase
-    {
-        public override void Execute(SafeSharedObjects shared)
-        {
-            int args = CountRemainingArgs(shared);
-            double kd;
-            double ki;
-            double kp;
-            double maxoutput;
-            double minoutput;
-            switch (args)
-            {
-            case 0:
-                this.ReturnValue = new PIDLoop();
-                break;
-            case 1:
-                kp = GetDouble(PopValueAssert(shared));
-                this.ReturnValue = new PIDLoop(kp, 0, 0);
-                break;
-            case 3:
-                kd = GetDouble(PopValueAssert(shared));
-                ki = GetDouble(PopValueAssert(shared));
-                kp = GetDouble(PopValueAssert(shared));
-                this.ReturnValue = new PIDLoop(kp, ki, kd);
-                break;
-            case 5:
-                maxoutput = GetDouble(PopValueAssert(shared));
-                minoutput = GetDouble(PopValueAssert(shared));
-                kd = GetDouble(PopValueAssert(shared));
-                ki = GetDouble(PopValueAssert(shared));
-                kp = GetDouble(PopValueAssert(shared));
-                this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput);
-                break;
-            default:
-                throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
-            }
-            AssertArgBottomAndConsume(shared);
         }
     }
 
