@@ -60,19 +60,19 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.E, regex);
             Tokens.Add(TokenType.E);
 
-            regex = new Regex(@"\G(?:\bnot\b)");
+            regex = new Regex(@"\G(?:not\b)");
             Patterns.Add(TokenType.NOT, regex);
             Tokens.Add(TokenType.NOT);
 
-            regex = new Regex(@"\G(?:\band\b)");
+            regex = new Regex(@"\G(?:and\b)");
             Patterns.Add(TokenType.AND, regex);
             Tokens.Add(TokenType.AND);
 
-            regex = new Regex(@"\G(?:\bor\b)");
+            regex = new Regex(@"\G(?:or\b)");
             Patterns.Add(TokenType.OR, regex);
             Tokens.Add(TokenType.OR);
 
-            regex = new Regex(@"\G(?:\btrue\b|\bfalse\b)");
+            regex = new Regex(@"\G(?:true\b|\bfalse\b)");
             Patterns.Add(TokenType.TRUEFALSE, regex);
             Tokens.Add(TokenType.TRUEFALSE);
 
@@ -80,203 +80,203 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COMPARATOR, regex);
             Tokens.Add(TokenType.COMPARATOR);
 
-            regex = new Regex(@"\G(?:\bset\b)");
+            regex = new Regex(@"\G(?:set\b)");
             Patterns.Add(TokenType.SET, regex);
             Tokens.Add(TokenType.SET);
 
-            regex = new Regex(@"\G(?:\bto\b)");
+            regex = new Regex(@"\G(?:to\b)");
             Patterns.Add(TokenType.TO, regex);
             Tokens.Add(TokenType.TO);
 
-            regex = new Regex(@"\G(?:\bis\b)");
+            regex = new Regex(@"\G(?:is\b)");
             Patterns.Add(TokenType.IS, regex);
             Tokens.Add(TokenType.IS);
 
-            regex = new Regex(@"\G(?:\bif\b)");
+            regex = new Regex(@"\G(?:if\b)");
             Patterns.Add(TokenType.IF, regex);
             Tokens.Add(TokenType.IF);
 
-            regex = new Regex(@"\G(?:\belse\b)");
+            regex = new Regex(@"\G(?:else\b)");
             Patterns.Add(TokenType.ELSE, regex);
             Tokens.Add(TokenType.ELSE);
 
-            regex = new Regex(@"\G(?:\buntil\b)");
+            regex = new Regex(@"\G(?:until\b)");
             Patterns.Add(TokenType.UNTIL, regex);
             Tokens.Add(TokenType.UNTIL);
 
-            regex = new Regex(@"\G(?:\bstep\b)");
+            regex = new Regex(@"\G(?:step\b)");
             Patterns.Add(TokenType.STEP, regex);
             Tokens.Add(TokenType.STEP);
 
-            regex = new Regex(@"\G(?:\bdo\b)");
+            regex = new Regex(@"\G(?:do\b)");
             Patterns.Add(TokenType.DO, regex);
             Tokens.Add(TokenType.DO);
 
-            regex = new Regex(@"\G(?:\block\b)");
+            regex = new Regex(@"\G(?:lock\b)");
             Patterns.Add(TokenType.LOCK, regex);
             Tokens.Add(TokenType.LOCK);
 
-            regex = new Regex(@"\G(?:\bunlock\b)");
+            regex = new Regex(@"\G(?:unlock\b)");
             Patterns.Add(TokenType.UNLOCK, regex);
             Tokens.Add(TokenType.UNLOCK);
 
-            regex = new Regex(@"\G(?:\bprint\b)");
+            regex = new Regex(@"\G(?:print\b)");
             Patterns.Add(TokenType.PRINT, regex);
             Tokens.Add(TokenType.PRINT);
 
-            regex = new Regex(@"\G(?:\bat\b)");
+            regex = new Regex(@"\G(?:at\b)");
             Patterns.Add(TokenType.AT, regex);
             Tokens.Add(TokenType.AT);
 
-            regex = new Regex(@"\G(?:\bon\b)");
+            regex = new Regex(@"\G(?:on\b)");
             Patterns.Add(TokenType.ON, regex);
             Tokens.Add(TokenType.ON);
 
-            regex = new Regex(@"\G(?:\btoggle\b)");
+            regex = new Regex(@"\G(?:toggle\b)");
             Patterns.Add(TokenType.TOGGLE, regex);
             Tokens.Add(TokenType.TOGGLE);
 
-            regex = new Regex(@"\G(?:\bwait\b)");
+            regex = new Regex(@"\G(?:wait\b)");
             Patterns.Add(TokenType.WAIT, regex);
             Tokens.Add(TokenType.WAIT);
 
-            regex = new Regex(@"\G(?:\bwhen\b)");
+            regex = new Regex(@"\G(?:when\b)");
             Patterns.Add(TokenType.WHEN, regex);
             Tokens.Add(TokenType.WHEN);
 
-            regex = new Regex(@"\G(?:\bthen\b)");
+            regex = new Regex(@"\G(?:then\b)");
             Patterns.Add(TokenType.THEN, regex);
             Tokens.Add(TokenType.THEN);
 
-            regex = new Regex(@"\G(?:\boff\b)");
+            regex = new Regex(@"\G(?:off\b)");
             Patterns.Add(TokenType.OFF, regex);
             Tokens.Add(TokenType.OFF);
 
-            regex = new Regex(@"\G(?:\bstage\b)");
+            regex = new Regex(@"\G(?:stage\b)");
             Patterns.Add(TokenType.STAGE, regex);
             Tokens.Add(TokenType.STAGE);
 
-            regex = new Regex(@"\G(?:\bclearscreen\b)");
+            regex = new Regex(@"\G(?:clearscreen\b)");
             Patterns.Add(TokenType.CLEARSCREEN, regex);
             Tokens.Add(TokenType.CLEARSCREEN);
 
-            regex = new Regex(@"\G(?:\badd\b)");
+            regex = new Regex(@"\G(?:add\b)");
             Patterns.Add(TokenType.ADD, regex);
             Tokens.Add(TokenType.ADD);
 
-            regex = new Regex(@"\G(?:\bremove\b)");
+            regex = new Regex(@"\G(?:remove\b)");
             Patterns.Add(TokenType.REMOVE, regex);
             Tokens.Add(TokenType.REMOVE);
 
-            regex = new Regex(@"\G(?:\blog\b)");
+            regex = new Regex(@"\G(?:log\b)");
             Patterns.Add(TokenType.LOG, regex);
             Tokens.Add(TokenType.LOG);
 
-            regex = new Regex(@"\G(?:\bbreak\b)");
+            regex = new Regex(@"\G(?:break\b)");
             Patterns.Add(TokenType.BREAK, regex);
             Tokens.Add(TokenType.BREAK);
 
-            regex = new Regex(@"\G(?:\bpreserve\b)");
+            regex = new Regex(@"\G(?:preserve\b)");
             Patterns.Add(TokenType.PRESERVE, regex);
             Tokens.Add(TokenType.PRESERVE);
 
-            regex = new Regex(@"\G(?:\bdeclare\b)");
+            regex = new Regex(@"\G(?:declare\b)");
             Patterns.Add(TokenType.DECLARE, regex);
             Tokens.Add(TokenType.DECLARE);
 
-            regex = new Regex(@"\G(?:\bdefined\b)");
+            regex = new Regex(@"\G(?:defined\b)");
             Patterns.Add(TokenType.DEFINED, regex);
             Tokens.Add(TokenType.DEFINED);
 
-            regex = new Regex(@"\G(?:\blocal\b)");
+            regex = new Regex(@"\G(?:local\b)");
             Patterns.Add(TokenType.LOCAL, regex);
             Tokens.Add(TokenType.LOCAL);
 
-            regex = new Regex(@"\G(?:\bglobal\b)");
+            regex = new Regex(@"\G(?:global\b)");
             Patterns.Add(TokenType.GLOBAL, regex);
             Tokens.Add(TokenType.GLOBAL);
 
-            regex = new Regex(@"\G(?:\bparameter\b)");
+            regex = new Regex(@"\G(?:parameter\b)");
             Patterns.Add(TokenType.PARAMETER, regex);
             Tokens.Add(TokenType.PARAMETER);
 
-            regex = new Regex(@"\G(?:\bfunction\b)");
+            regex = new Regex(@"\G(?:function\b)");
             Patterns.Add(TokenType.FUNCTION, regex);
             Tokens.Add(TokenType.FUNCTION);
 
-            regex = new Regex(@"\G(?:\breturn\b)");
+            regex = new Regex(@"\G(?:return\b)");
             Patterns.Add(TokenType.RETURN, regex);
             Tokens.Add(TokenType.RETURN);
 
-            regex = new Regex(@"\G(?:\bswitch\b)");
+            regex = new Regex(@"\G(?:switch\b)");
             Patterns.Add(TokenType.SWITCH, regex);
             Tokens.Add(TokenType.SWITCH);
 
-            regex = new Regex(@"\G(?:\bcopy\b)");
+            regex = new Regex(@"\G(?:copy\b)");
             Patterns.Add(TokenType.COPY, regex);
             Tokens.Add(TokenType.COPY);
 
-            regex = new Regex(@"\G(?:\bfrom\b)");
+            regex = new Regex(@"\G(?:from\b)");
             Patterns.Add(TokenType.FROM, regex);
             Tokens.Add(TokenType.FROM);
 
-            regex = new Regex(@"\G(?:\brename\b)");
+            regex = new Regex(@"\G(?:rename\b)");
             Patterns.Add(TokenType.RENAME, regex);
             Tokens.Add(TokenType.RENAME);
 
-            regex = new Regex(@"\G(?:\bvolume\b)");
+            regex = new Regex(@"\G(?:volume\b)");
             Patterns.Add(TokenType.VOLUME, regex);
             Tokens.Add(TokenType.VOLUME);
 
-            regex = new Regex(@"\G(?:\bfile\b)");
+            regex = new Regex(@"\G(?:file\b)");
             Patterns.Add(TokenType.FILE, regex);
             Tokens.Add(TokenType.FILE);
 
-            regex = new Regex(@"\G(?:\bdelete\b)");
+            regex = new Regex(@"\G(?:delete\b)");
             Patterns.Add(TokenType.DELETE, regex);
             Tokens.Add(TokenType.DELETE);
 
-            regex = new Regex(@"\G(?:\bedit\b)");
+            regex = new Regex(@"\G(?:edit\b)");
             Patterns.Add(TokenType.EDIT, regex);
             Tokens.Add(TokenType.EDIT);
 
-            regex = new Regex(@"\G(?:\brun\b)");
+            regex = new Regex(@"\G(?:run\b)");
             Patterns.Add(TokenType.RUN, regex);
             Tokens.Add(TokenType.RUN);
 
-            regex = new Regex(@"\G(?:\brunpath\b)");
+            regex = new Regex(@"\G(?:runpath\b)");
             Patterns.Add(TokenType.RUNPATH, regex);
             Tokens.Add(TokenType.RUNPATH);
 
-            regex = new Regex(@"\G(?:\brunoncepath\b)");
+            regex = new Regex(@"\G(?:runoncepath\b)");
             Patterns.Add(TokenType.RUNONCEPATH, regex);
             Tokens.Add(TokenType.RUNONCEPATH);
 
-            regex = new Regex(@"\G(?:\bonce\b)");
+            regex = new Regex(@"\G(?:once\b)");
             Patterns.Add(TokenType.ONCE, regex);
             Tokens.Add(TokenType.ONCE);
 
-            regex = new Regex(@"\G(?:\bcompile\b)");
+            regex = new Regex(@"\G(?:compile\b)");
             Patterns.Add(TokenType.COMPILE, regex);
             Tokens.Add(TokenType.COMPILE);
 
-            regex = new Regex(@"\G(?:\blist\b)");
+            regex = new Regex(@"\G(?:list\b)");
             Patterns.Add(TokenType.LIST, regex);
             Tokens.Add(TokenType.LIST);
 
-            regex = new Regex(@"\G(?:\breboot\b)");
+            regex = new Regex(@"\G(?:reboot\b)");
             Patterns.Add(TokenType.REBOOT, regex);
             Tokens.Add(TokenType.REBOOT);
 
-            regex = new Regex(@"\G(?:\bshutdown\b)");
+            regex = new Regex(@"\G(?:shutdown\b)");
             Patterns.Add(TokenType.SHUTDOWN, regex);
             Tokens.Add(TokenType.SHUTDOWN);
 
-            regex = new Regex(@"\G(?:\bfor\b)");
+            regex = new Regex(@"\G(?:for\b)");
             Patterns.Add(TokenType.FOR, regex);
             Tokens.Add(TokenType.FOR);
 
-            regex = new Regex(@"\G(?:\bunset\b)");
+            regex = new Regex(@"\G(?:unset\b)");
             Patterns.Add(TokenType.UNSET, regex);
             Tokens.Add(TokenType.UNSET);
 
@@ -312,7 +312,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COLON, regex);
             Tokens.Add(TokenType.COLON);
 
-            regex = new Regex(@"\G(?:\bin\b)");
+            regex = new Regex(@"\G(?:in\b)");
             Patterns.Add(TokenType.IN, regex);
             Tokens.Add(TokenType.IN);
 
@@ -320,7 +320,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ARRAYINDEX, regex);
             Tokens.Add(TokenType.ARRAYINDEX);
 
-            regex = new Regex(@"\G(?:\ball\b)");
+            regex = new Regex(@"\G(?:all\b)");
             Patterns.Add(TokenType.ALL, regex);
             Tokens.Add(TokenType.ALL);
 
@@ -352,7 +352,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ATSIGN, regex);
             Tokens.Add(TokenType.ATSIGN);
 
-            regex = new Regex(@"\G(?:\blazyglobal\b)");
+            regex = new Regex(@"\G(?:lazyglobal\b)");
             Patterns.Add(TokenType.LAZYGLOBAL, regex);
             Tokens.Add(TokenType.LAZYGLOBAL);
 
