@@ -1,9 +1,9 @@
-﻿using System;
-using kOS.Safe.Compilation;
+﻿using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Persistence;
 using kOS.Safe.Serialization;
+using System;
 
 namespace kOS.Safe.Function
 {
@@ -11,6 +11,7 @@ namespace kOS.Safe.Function
      * A couple of syntaxes from kRISC.tpg were deprecated when subdirectories where introduced. It will be possible to
      * remove these function below as well any metions of delete/rename file/rename volume/copy from kRISC.tpg in the future.
      */
+
     [Function("copy_deprecated")]
     public class FunctionCopyDeprecated : SafeFunctionBase
     {
@@ -35,7 +36,7 @@ namespace kOS.Safe.Function
             }
 
             shared.Logger.LogWarningAndScreen(
-                string.Format( "WARNING: COPY {0} {1} {2} is deprecated as of kOS v1.0.0.  Use COPYPATH(\"{3}\", \"{4}\") instead.",
+                string.Format("WARNING: COPY {0} {1} {2} is deprecated as of kOS v1.0.0.  Use COPYPATH(\"{3}\", \"{4}\") instead.",
                               arg1.ToString(), arg2.ToString(), arg3.ToString(), fromName, toName));
 
             // Redirect into a call to the copypath function, so as to keep all
@@ -62,7 +63,7 @@ namespace kOS.Safe.Function
             AssertArgBottomAndConsume(shared);
 
             shared.Logger.LogWarningAndScreen(
-                string.Format( "WARNING: RENAME FILE {0} TO {1} is deprecated as of kOS v1.0.0.  Use MOVEPATH(\"{2}\", \"{3}\") instead.",
+                string.Format("WARNING: RENAME FILE {0} TO {1} is deprecated as of kOS v1.0.0.  Use MOVEPATH(\"{2}\", \"{3}\") instead.",
                               oldName, newName, oldName, newName));
 
             // Redirect into a call to the movepath function, so as to keep all
@@ -91,7 +92,7 @@ namespace kOS.Safe.Function
             Volume volume = oldArg is Volume ? oldArg as Volume : shared.VolumeMgr.GetVolume(oldName);
 
             shared.Logger.LogWarningAndScreen(
-                string.Format( "WARNING: RENAME VOLUME {0} TO {1} is deprecated as of kOS v1.0.0.  Use SET VOLUME({2}):NAME TO \"{3}\" instead.",
+                string.Format("WARNING: RENAME VOLUME {0} TO {1} is deprecated as of kOS v1.0.0.  Use SET VOLUME({2}):NAME TO \"{3}\" instead.",
                               oldName, newName, volume.Name, newName));
 
             volume.Name = newName;
@@ -114,7 +115,7 @@ namespace kOS.Safe.Function
                 pathName = fileName.ToString();
 
             shared.Logger.LogWarningAndScreen(
-                string.Format( "WARNING: DELETE {0}{1} is deprecated as of kOS v1.0.0.  Use DELETEPATH(\"{2}\") instead.",
+                string.Format("WARNING: DELETE {0}{1} is deprecated as of kOS v1.0.0.  Use DELETEPATH(\"{2}\") instead.",
                               fileName.ToString(), (volumeId == null ? "" : (" FROM " + volumeId.ToString())), pathName));
 
             // Redirect into a call to the deletepath function, so as to keep all
@@ -123,62 +124,6 @@ namespace kOS.Safe.Function
             shared.Cpu.PushArgumentStack(new kOS.Safe.Execution.KOSArgMarkerType());
             shared.Cpu.PushArgumentStack(pathName);
             shared.Cpu.CallBuiltinFunction("deletepath");
-        }
-    }
-
-    [Function("path")]
-    public class FunctionPath : SafeFunctionBase
-    {
-        public override void Execute(SafeSharedObjects shared)
-        {
-            int remaining = CountRemainingArgs(shared);
-
-            GlobalPath path;
-
-            if (remaining == 0)
-            {
-                path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path,
-                                                 shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume));
-            }
-            else
-            {
-                object pathObject = PopValueAssert(shared, true);
-                path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
-            }
-
-            AssertArgBottomAndConsume(shared);
-
-            ReturnValue = new PathValue(path, shared);
-        }
-    }
-
-    [Function("volume")]
-    public class FunctionVolume : SafeFunctionBase
-    {
-        public override void Execute(SafeSharedObjects shared)
-        {
-            int remaining = CountRemainingArgs(shared);
-
-            Volume volume;
-
-            if (remaining == 0)
-            {
-                volume = shared.VolumeMgr.CurrentVolume;
-            }
-            else
-            {
-                object volumeId = PopValueAssert(shared, true);
-                volume = shared.VolumeMgr.GetVolume(volumeId);
-
-                if (volume == null)
-                {
-                    throw new KOSPersistenceException("Could not find volume: " + volumeId);
-                }
-            }
-
-            AssertArgBottomAndConsume(shared);
-
-            ReturnValue = volume;
         }
     }
 
@@ -245,7 +190,6 @@ namespace kOS.Safe.Function
                 {
                     throw new KOSException("Invalid directory: " + pathObject);
                 }
-
             }
 
             AssertArgBottomAndConsume(shared);
