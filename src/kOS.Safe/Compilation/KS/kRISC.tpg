@@ -7,7 +7,7 @@ PLUSMINUS    -> @"(\+|-)";
 MULT         -> @"\*";
 DIV          -> @"/";
 POWER        -> @"\^";
-E            -> @"\be((?=\d)|\b)";
+E            -> @"e((?=\d)|\b)";
 //Logic
 NOT          -> @"\bnot\b";
 AND          -> @"\band\b";
@@ -88,7 +88,7 @@ EOI          -> @"\.";
 ATSIGN       -> @"@";
 LAZYGLOBAL   -> @"\blazyglobal\b";
 //Special
-EOF          -> @"^$";
+EOF          -> @"$";
 [Skip]
 WHITESPACE   -> @"\s+";
 [Skip]
