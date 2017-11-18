@@ -4,6 +4,7 @@ using kOS.Safe.Persistence;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Encapsulation;
 using System.Linq;
+using kOS.Safe.Function;
 
 namespace kOS.Safe
 {
@@ -17,6 +18,32 @@ namespace kOS.Safe
     [kOS.Safe.Utilities.KOSNomenclature("Path")]
     public class PathValue : SerializableStructure, IHasSafeSharedObjects
     {
+        [Function("path")]
+        public class FunctionPath : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+                int remaining = CountRemainingArgs(shared);
+
+                GlobalPath path;
+
+                if (remaining == 0)
+                {
+                    path = GlobalPath.FromVolumePath(shared.VolumeMgr.CurrentDirectory.Path,
+                                                     shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume));
+                }
+                else
+                {
+                    object pathObject = PopValueAssert(shared, true);
+                    path = shared.VolumeMgr.GlobalPathFromObject(pathObject);
+                }
+
+                AssertArgBottomAndConsume(shared);
+
+                ReturnValue = new PathValue(path, shared);
+            }
+        }
+
         private const string DumpPath = "path";
 
         public GlobalPath Path { get; private set; }

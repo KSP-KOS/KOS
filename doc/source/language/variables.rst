@@ -42,11 +42,20 @@ The following alternate versions have identical meaning to each other:
 
 .. warning::
     .. versionadded:: 0.17
-        ***BREAKING CHANGE**
+        ** BREAKING CHANGE: **
         The meaning, and syntax, of this statement changed considerably
         in this update.  Prior to this version, DECLARE always created
         global variables no matter where it appeared in the script.
         See 'initializer required' below.
+
+.. warning::
+    .. versionadded:: 1.5
+        ** BREAKING CHANGE: **
+        Previously the outermost level of a program file was the global
+        scope.  Now each file has its own scope and the outermost level
+        is still nested "one scope inside" the global scope.  You now only
+        get global variables when you explicitly declare a variable as global,
+        or when you rely on the lazyglobal system to make them for you.
 
 Detailed Description of the syntax:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -91,12 +100,13 @@ See Scoping:
 
 .. note::
     It is implied that the outermost scope of a program file is
-    the global scope.  Therefore if you make a LOCAL variable at
-    the outermost nesting level of your program it really ends up
-    being GLOBAL.  Note that GLOBAL variables are not only shared
+    also a local scope, as if the entire program file had been
+    wrapped inside an invisible set of curly braces.
+    Note that GLOBAL variables are not only shared
     between functions of your script, but also can be seen by
     other programs you run from the current program, and visa
-    versa.
+    versa.  But local variables you make at the outermost scope
+    of a file won't be.
 
 Alternatively, a variable can be implicitly declared by any ``SET`` or
 ``LOCK`` statement, however doing so causes the variable to always have
@@ -117,11 +127,11 @@ Initializer required in DECLARE
 .. note::
     .. versionadded:: 0.17
         The syntax without the initializer, looking like so:
-    
+
         .. code-block:: kerboscript
-        
+
             DECLARE x. // no initializer like "TO 1."
-        
+
         is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
@@ -247,14 +257,15 @@ only gets executed if the system needed to pad a missing argument.
 
     The following paragraph is important for people familiar with other programming languages. If you are new to programming and don't understand what it is saying, that's okay you can ignore it.
 
-    At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don't exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that kOS lets you use a colon suffix with), then the parameters will behave exactly like being passed by reference because all you're passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.
+    At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don't exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that isn't just a single scalar, boolean, or string), then the parameters will behave exactly like being passed by reference because all you're passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.
 
 .. _set:
 
 ``SET``
 -------
 
-Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist::
+Sets the value of a variable. Implicitly creates a global variable if it doesn't already exist,
+unless :ref:`the @lazyglobal off<lazyglobal>` directive has been given::
 
     SET X TO 1.
     SET X TO y*2 - 1.
@@ -511,7 +522,7 @@ Local Scope
     local to a function, but are in fact actually local to JUST
     the current curly-brace block of statements, even if that block
     of statements is, say, the body of an IF check, or the body of
-    an UNTIL loop.
+    an UNTIL loop.  A program file also has its own local scope.
 
 Why limit scope?
     You might be wondering why it's useful to limit the scope of a
@@ -542,13 +553,23 @@ Presumed defaults
 The DECLARE keyword and the LOCK keyword have some default
 presumed scoping behaviors:
 
-``DECLARE`` Is assumed to always be LOCAL when not otherwise specified.
+``DECLARE`` is assumed to always be LOCAL when used with a variable
+if the words ``local`` or ``global`` have been left off.
+When used with something that is not a variable, the presumed default
+(whether it's local versus global) varies depending on what the declared
+thing is, as described next:
 
-``FUNCTION`` Must always be LOCAL.  Declaring it as global has no effect,
-so the only way to make it be global is to declare it while at outermost
-scope.  This is because functions always remember their closures, and
-so to declare a function as global while it holds closure information
-about local variables would be contradictory.
+``FUNCTION`` **not in curly braces**: Functions that are declared at the outermost
+file scope, (i.e. outside of any curly braces) and don't mention ``global``
+or ``local`` in their declaration behave as if they have the ``global`` keyword
+on them.  They can be called from any other program after this program has
+been run.
+
+``FUNCTION`` **in curly braces**: Functions that are declared anywhere *inside* of some
+curly braces and don't mention ``global`` or ``local`` in their
+declaration behave as if they have the ``local`` keyword on them.
+They can only be called from the local scope of those curly braces
+or deeper.
 
 ``PARAMETER`` Cannot be anything but LOCAL to the location it's mentioned.
 It is an error to attempt to declare a parameter with the GLOBAL keyword.
@@ -568,10 +589,12 @@ igorned, see above under 'Presumed defaults'.)::
     //
     // These are all synonymous with each other:
     //
+    DECLARE X IS 1.
     DECLARE X TO 1.
+    DECLARE LOCAL X IS 1.
     DECLARE LOCAL X TO 1.
-    LOCAL X TO 1. // 'declare' is implied and optional when scoping words are used
     LOCAL X IS 1. // 'declare' is implied and optional when scoping words are used
+    LOCAL X TO 1. // 'declare' is implied and optional when scoping words are used
     //
     // These are all synonymous with each other:
     //
@@ -595,31 +618,29 @@ turned off LAZYGLOBAL.  (This only applies to trying to make
 a variable with **declare identifier to value**, and not to
 ``declare parameter`` or ``declare function``.)
 
+Program files also have an outer local scope
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Locals stated at the global level are global
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Note that if you put a statement at the outermost scope
-of the program, then there is effectively no difference
-between a ``DECLARE LOCAL`` (or just ``LOCAL`` for short)
-and a ``DECLARE GLOBAL`` (or just ``GLOBAL`` for short) statement.
-They are both going to make a variable at global scope because that's
-the scope the program was in when the statement was encountered.
+Note that even though program files don't need an outermost
+set of curly braces, they still have a local scope. If you
+put a ``DECLARE LOCAL`` statement at the outermost scope of
+the program, outside of any braces, then that variable will
+only be usable from inside that program file and that program
+file's functions.
 
 
 Examples::
 
     GLOBAL x IS 10. // X is now a global variable with value 10,
     SET y TO 20. // Y is now a global variable (implicitly) with value 20.
-    LOCAL z IS 0.  // Z is now a global variable
-                   // because even though this says LOCAL, it was
-                   // stated at the outermost, global scope.
+    LOCAL z IS 0.  // Z is now local to this file's outer scope. This is
+                   // not *quite* global because it means other program files
+                   // can't see it.
 
     SET sum to -1. // sum is now an implicitly made global variable, containing -1.
 
-    // A function to return the mean average of all the items in the list
-    // passed into it, under the assumption all the items in the list are
-    // numbers of some sort:
+    // This function is declared at the file's outer scope.
+    // It can be seen and called by other programs after this program is done.
     FUNCTION calcAverage {
       PARAMETER inputList.
 
@@ -637,7 +658,7 @@ Examples::
 
 .. highlight:: none
 
-This example will print::
+The above example will print::
 
 
     Inside calcAverage, sum is 30
@@ -648,6 +669,7 @@ This example will print::
 
 Thus proving that the variable called SUM inside the function is NOT the
 same variable as the one called SUM out in the global main code.
+
 
 Nesting
 ~~~~~~~
