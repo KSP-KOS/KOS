@@ -1,11 +1,10 @@
-﻿using System;
+﻿using kOS.Safe.Screen;
+using System;
 using System.Collections.Generic;
-using kOS.Safe.Screen;
 
 namespace kOS.Safe.Test
 {
-
-    class Screen : IScreenBuffer
+    internal class Screen : IScreenBuffer
     {
         private List<String> output = new List<string>();
 
@@ -35,7 +34,7 @@ namespace kOS.Safe.Test
                     failText += line + "\n";
                 }
                 failText += "\nFound:\n";
-                foreach(string line in output)
+                foreach (string line in output)
                 {
                     failText += line + "\n";
                 }
@@ -43,177 +42,210 @@ namespace kOS.Safe.Test
             }
         }
 
-        public void Print (string textToPrint)
+        public void Print(string textToPrint)
         {
             output.Add(textToPrint);
         }
 
-        public void Print (string textToPrint, bool addNewLine)
+        public void Print(string textToPrint, bool addNewLine)
         {
             Print(textToPrint);
         }
 
-        public void PrintAt (string textToPrint, int row, int column)
+        public void PrintAt(string textToPrint, int row, int column)
         {
             Print(textToPrint);
         }
 
-        public int AbsoluteCursorRow {
-            get {
+        public int AbsoluteCursorRow
+        {
+            get
+            {
                 return 0;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public int BeepsPending {
-            get {
+        public int BeepsPending
+        {
+            get
+            {
                 return 0;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public double Brightness {
-            get {
+        public double Brightness
+        {
+            get
+            {
                 return 1;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public int CharacterPixelHeight {
-            get {
+        public int CharacterPixelHeight
+        {
+            get
+            {
                 return 0;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public int CharacterPixelWidth {
-            get {
+        public int CharacterPixelWidth
+        {
+            get
+            {
                 return 0;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public Queue<char> CharInputQueue {
-            get {
+        public Queue<char> CharInputQueue
+        {
+            get
+            {
                 return new Queue<char>();
             }
         }
 
-        public int ColumnCount {
-            get {
+        public int ColumnCount
+        {
+            get
+            {
                 return 0;
             }
         }
 
-        public int CursorColumnShow {
-            get {
+        public int CursorColumnShow
+        {
+            get
+            {
                 return 0;
             }
         }
 
-        public int CursorRowShow {
-            get {
+        public int CursorRowShow
+        {
+            get
+            {
                 return 0;
             }
         }
 
-        public bool ReverseScreen {
-            get {
+        public bool ReverseScreen
+        {
+            get
+            {
                 return false;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public int RowCount {
-            get {
+        public int RowCount
+        {
+            get
+            {
                 return 0;
             }
         }
 
-        public int TopRow {
-            get {
+        public int TopRow
+        {
+            get
+            {
                 return 0;
             }
         }
 
-        public bool VisualBeep {
-            get {
+        public bool VisualBeep
+        {
+            get
+            {
                 return false;
             }
 
-            set {
+            set
+            {
             }
         }
 
-        public void AddResizeNotifier (ScreenBuffer.ResizeNotifier notifier)
+        public void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void AddSubBuffer (SubBuffer subBuffer)
+        public void AddSubBuffer(SubBuffer subBuffer)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void ClearScreen ()
+        public void ClearScreen()
         {
         }
 
-        public string DebugDump ()
+        public string DebugDump()
         {
             return "";
         }
 
-        public List<IScreenBufferLine> GetBuffer ()
+        public List<IScreenBufferLine> GetBuffer()
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void MoveCursor (int row, int column)
+        public void MoveCursor(int row, int column)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void MoveToNextLine ()
+        public void MoveToNextLine()
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void RemoveAllResizeNotifiers ()
+        public void RemoveAllResizeNotifiers()
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void RemoveResizeNotifier (ScreenBuffer.ResizeNotifier notifier)
+        public void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void RemoveSubBuffer (SubBuffer subBuffer)
+        public void RemoveSubBuffer(SubBuffer subBuffer)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public int ScrollVertical (int deltaRows)
+        public int ScrollVertical(int deltaRows)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        public void SetSize (int rowCount, int columnCount)
+        public void SetSize(int rowCount, int columnCount)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
     }
 }

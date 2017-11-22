@@ -1,15 +1,13 @@
-﻿using System;
-using System.IO;
-using NUnit.Framework;
-using kOS.Safe.Compilation;
+﻿using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
-using kOS.Safe.Encapsulation.Suffixes;
-using System.Collections.Generic;
+using NUnit.Framework;
+using System;
+using System.IO;
 
 namespace kOS.Safe.Test.Execution
 {
@@ -22,9 +20,12 @@ namespace kOS.Safe.Test.Execution
             SafeHouse.Init(new Config(), new VersionInfo(0, 0, 0, 0), "", false, "");
             SafeHouse.Logger = new NoopLogger();
 
-            try {
+            try
+            {
                 AssemblyWalkAttribute.Walk();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Console.WriteLine(e);
                 Console.WriteLine(e.StackTrace);
                 throw;
@@ -79,7 +80,8 @@ namespace kOS.Safe.Test.Execution
         {
             string contents = File.ReadAllText(Path.Combine(baseDir, fileName));
             GlobalPath path = shared.VolumeMgr.GlobalPathFromObject("0:/" + fileName);
-            var compiled = shared.ScriptHandler.Compile(path, 1, contents, "test", new CompilerOptions() {
+            var compiled = shared.ScriptHandler.Compile(path, 1, contents, "test", new CompilerOptions()
+            {
                 LoadProgramsInSameAddressSpace = false,
                 IsCalledFromRun = false,
                 FuncManager = shared.FunctionManager
