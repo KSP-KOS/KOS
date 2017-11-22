@@ -3,12 +3,43 @@ using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Function;
 
 namespace kOS.Safe.Persistence
 {
     [kOS.Safe.Utilities.KOSNomenclature("Volume")]
     public abstract class Volume : Structure
     {
+        [Function("volume")]
+        public class FunctionVolume : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+                int remaining = CountRemainingArgs(shared);
+
+                Volume volume;
+
+                if (remaining == 0)
+                {
+                    volume = shared.VolumeMgr.CurrentVolume;
+                }
+                else
+                {
+                    object volumeId = PopValueAssert(shared, true);
+                    volume = shared.VolumeMgr.GetVolume(volumeId);
+
+                    if (volume == null)
+                    {
+                        throw new KOSPersistenceException("Could not find volume: " + volumeId);
+                    }
+                }
+
+                AssertArgBottomAndConsume(shared);
+
+                ReturnValue = volume;
+            }
+        }
+
         public const string TEXT_EXTENSION = "txt";
         public const string KERBOSCRIPT_EXTENSION = "ks";
         public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";

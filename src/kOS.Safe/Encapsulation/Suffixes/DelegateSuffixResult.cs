@@ -9,7 +9,22 @@ namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class DelegateSuffixResult : ISuffixResult
     {
+        /// <summary>
+        /// The C# delegate that implements this built-in suffix.
+        /// </summary>
         private readonly Delegate del;
+        /// <summary>
+        /// Although the delegate `del` knows via reflection how many
+        /// arguments it should expect, using reflection to invoke it is
+        /// slow.  This delegate `call` is a wrapper around `del` that
+        /// can be called with a fixed argument array of known length
+        /// without having to dynamically query the delegate signature
+        /// with reflection at runtime.  (i.e. OneArgSuffix can hardcode
+        /// at compile time that its `call` expects exactly 1 argument.
+        /// TwoArgSuffix can hardcode at compile time that it's `call`
+        /// expects exactly 2 arguments, etc.)
+        /// </summary>
+        private readonly CallDel call;
         private Structure value;
 
         public Delegate Del
@@ -22,9 +37,12 @@ namespace kOS.Safe.Encapsulation.Suffixes
             get { return value; }
         }
 
-        public DelegateSuffixResult(Delegate del)
+        public delegate object CallDel(object[] args);
+
+        public DelegateSuffixResult(Delegate del, CallDel call)
         {
             this.del = del;
+            this.call = call;
         }
 
         public bool HasValue
@@ -46,7 +64,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             CpuUtility.ReverseStackArgs(cpu, false);
             for (int i = 0; i < paramArray.Length; ++i)
             {
-                object arg = cpu.PopValue();
+                object arg = cpu.PopValueArgument();
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
 
@@ -112,9 +130,9 @@ namespace kOS.Safe.Encapsulation.Suffixes
             {
                 bool foundArgMarker = false;
                 int numExtraArgs = 0;
-                while (cpu.GetStackSize() > 0 && !foundArgMarker)
+                while (cpu.GetArgumentStackSize() > 0 && !foundArgMarker)
                 {
-                    object marker = cpu.PopValue();
+                    object marker = cpu.PopValueArgument();
                     if (marker != null && marker.GetType() == CpuUtility.ArgMarkerType)
                         foundArgMarker = true;
                     else
@@ -128,34 +146,14 @@ namespace kOS.Safe.Encapsulation.Suffixes
             // there are no arguments to pass:
             object[] argArray = (args.Count > 0) ? args.ToArray() : null;
 
-            try
+            object val = call(argArray);
+            if (methInfo.ReturnType == typeof(void))
             {
-                // I could find no documentation on what DynamicInvoke returns when the delegate
-                // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
-                // problem, I split this into these two cases:
-                if (methInfo.ReturnType == typeof(void))
-                {
-                    del.DynamicInvoke(argArray);
-                    value = ScalarValue.Create(0);
-                    // By adding this we can unconditionally assume all functionshave a return value
-                    // to be used or popped away, even if "void".  In order to mainain consistency with
-                    // the void return value of functions, and to ensure that we don't accidentally pass
-                    // a value back to the user that they cannot interact with (null), we return zero.
-                }
-                else
-                {
-                    // Convert a primitive return type to a structure.  This is done in the opcode, since
-                    // the opcode calls the deligate directly and cannot be (quickly) intercepted
-                    value = Structure.FromPrimitiveWithAssert(del.DynamicInvoke(argArray));
-                }
+                value = ScalarValue.Create(0);
             }
-            catch (TargetInvocationException e)
+            else
             {
-                // Annoyingly, calling DynamicInvoke on a delegate wraps any exceptions the delegate throws inside
-                // this TargetInvocationException, which hides them from the kOS user unless we do this:
-                if (e.InnerException != null)
-                    throw e.InnerException;
-                throw;
+                value = Structure.FromPrimitiveWithAssert(val);
             }
         }
 

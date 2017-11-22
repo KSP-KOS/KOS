@@ -4,6 +4,7 @@ using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
+using kOS.Safe.Function;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -64,6 +65,20 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("UniqueSet", KOSToCSharp = false)] // one-way because the generic templated UniqueSetValue<T> is the canonical one.
     public class UniqueSetValue : UniqueSetValue<Structure>
     {
+        [Function("uniqueset")]
+        public class FunctionSet : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+                Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+                for (int i = argArray.Length - 1; i >= 0; --i)
+                    argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                AssertArgBottomAndConsume(shared);
+                var setValue = new UniqueSetValue(argArray.ToList());
+                ReturnValue = setValue;
+            }
+        }
+
         public UniqueSetValue()
         {
             InitializeSuffixes();

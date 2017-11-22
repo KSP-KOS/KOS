@@ -81,7 +81,7 @@ namespace kOS.Safe.Execution
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
-            globalVariables = new VariableScope(0, -1);
+            globalVariables = new VariableScope(0, null);
             contexts = new List<ProgramContext>();
             mainYields = new List<YieldFinishedDetector>();
             triggerYields = new List<YieldFinishedDetector>();
@@ -103,7 +103,7 @@ namespace kOS.Safe.Execution
             // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
             // clear global variables
-            globalVariables.Variables.Clear();
+            globalVariables.Clear();
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
@@ -284,27 +284,31 @@ namespace kOS.Safe.Execution
             popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == null);
         }
 
-        /// <summary>
-        /// Push a single thing onto the secret "over" stack.
-        /// </summary>
-        public void PushAboveStack(object thing)
+        public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
         {
-            PushStack(thing);
-            MoveStackPointer(-1);
+            VariableScope parentScope = parentScopeId == 0 ? globalVariables : stack.FindScope(parentScopeId);
+            stack.PushScope(new VariableScope(scopeId, parentScope));
         }
 
         /// <summary>
-        /// Pop one or more things from the secret "over" stack, only returning the
+        /// Push a single thing onto the scope stack.
+        /// </summary>
+        public void PushScopeStack(object thing)
+        {
+            stack.PushScope(thing);
+        }
+
+        /// <summary>
+        /// Pop one or more things from the scope stack, only returning the
         /// finalmost thing popped.  (i.e if you pop 3 things then you get:
         /// pop once and throw away, pop again and throw away, pop again and return the popped thing.)
         /// </summary>
-        public object PopAboveStack(int howMany)
+        public object PopScopeStack(int howMany)
         {
             object returnVal = new int(); // bogus return val if given a bogus "pop zero things" request.
             while (howMany > 0)
             {
-                MoveStackPointer(1);
-                returnVal = PopStack();
+                returnVal = stack.PopScope();
                 --howMany;
             }
 
@@ -326,12 +330,19 @@ namespace kOS.Safe.Execution
         public List<VariableScope> GetCurrentClosure()
         {
             var closureList = new List<VariableScope>();
-            GetNestedDictionary("", closureList);
-            // The closure's variable scopes need to be marked as such, so the
-            // 'popscope' opcode knows to pop them off in one go when it hits
-            // them on the stack:
-            foreach (VariableScope scope in closureList)
-                scope.IsClosure = true;
+
+            var currentScope = GetCurrentScope();
+            while (currentScope != null)
+            {
+                // The closure's variable scopes need to be marked as such, so the
+                // 'popscope' opcode knows to pop them off in one go when it hits
+                // them on the stack:
+                currentScope.IsClosure = true;
+                closureList.Add(currentScope);
+
+                currentScope = currentScope.ParentScope;
+            }
+
             return closureList;
         }
 
@@ -392,13 +403,13 @@ namespace kOS.Safe.Execution
             // Pointer variables include:
             //   IP jump location for subprograms.
             //   IP jump location for functions.
-            savedPointers = new VariableScope(0, -1);
-            var pointers = new List<string>(globalVariables.Variables.Keys.Where(v => v.Contains('*')));
+            savedPointers = new VariableScope(0, null);
+            var pointers = new List<KeyValuePair<string, Variable>>(globalVariables.Locals.Where(entry => entry.Key.Contains('*')));
 
-            foreach (string pointerName in pointers)
+            foreach (var entry in pointers)
             {
-                savedPointers.Variables.Add(pointerName, globalVariables.Variables[pointerName]);
-                globalVariables.Variables.Remove(pointerName);
+                savedPointers.Add(entry.Key, entry.Value);
+                globalVariables.Remove(entry.Key);
             }
             SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
@@ -412,13 +423,13 @@ namespace kOS.Safe.Execution
             var restoredPointers = 0;
             var deletedPointers = 0;
 
-            foreach (KeyValuePair<string, Variable> item in savedPointers.Variables)
+            foreach (KeyValuePair<string, Variable> item in savedPointers.Locals)
             {
-                if (globalVariables.Variables.ContainsKey(item.Key))
+                if (globalVariables.Contains(item.Key))
                 {
                     // if the pointer exists it means it was redefined from inside a program
                     // and it's going to be invalid outside of it, so we remove it
-                    globalVariables.Variables.Remove(item.Key);
+                    globalVariables.Remove(item.Key);
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
@@ -426,7 +437,7 @@ namespace kOS.Safe.Execution
                 }
                 else
                 {
-                    globalVariables.Variables.Add(item.Key, item.Value);
+                    globalVariables.Add(item.Key, item.Value);
                     restoredPointers++;
                 }
             }
@@ -548,19 +559,14 @@ namespace kOS.Safe.Execution
             triggerYields.Clear();
         }
         
-        public void PushStack(object item)
+        public void PushArgumentStack(object item)
         {
-            stack.Push(item);
+            stack.PushArgument(item);
         }
 
-        public object PopStack()
+        public object PopArgumentStack()
         {
-            return stack.Pop();
-        }
-
-        public void MoveStackPointer(int delta)
-        {
-            stack.MoveStackPointer(delta);
+            return stack.PopArgument();
         }
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
@@ -596,119 +602,6 @@ namespace kOS.Safe.Execution
 
                 throw new KOSInvalidDelegateContextException(currentContextName, delegateContextName);
            }
-        }
-
-        /// <summary>
-        /// Gets the dictionary N levels of nesting down the dictionary stack,
-        /// where zero is the current localmost level.
-        /// Never errors out or fails.  If N is too large you just end up with
-        /// the global scope dictionary.
-        /// Does not allow the walk to go past the start of the current function
-        /// scope.
-        /// </summary>
-        /// <param name="peekDepth">how far down the peek under the top.  0 = localmost.</param>
-        /// <returns>The dictionary found, or the global dictionary if peekDepth is too big.</returns>
-        private VariableScope GetNestedDictionary(int peekDepth)
-        {
-            object stackItem = true; // any non-null value will do here, just to get the loop started.
-            for (var rawStackDepth = 0; stackItem != null && peekDepth >= 0; ++rawStackDepth)
-            {
-                stackItem = stack.Peek(-1 - rawStackDepth);
-                if (stackItem is VariableScope)
-                    --peekDepth;
-                if (stackItem is SubroutineContext)
-                    stackItem = null; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
-            }
-
-            var scope = stackItem as VariableScope;
-            return scope ?? globalVariables;
-        }
-
-        /// <summary>
-        /// Gets the dictionary that contains the given identifier, starting the
-        /// search at the local level and scanning the scopes upward all the
-        /// way to the global dictionary.<br/>
-        /// Does not allow the walk to use scope frames that were not directly in this
-        /// scope's lexical chain.  It skips over scope frames from other branches
-        /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
-        /// Returns null when no hit was found.<br/>
-        /// </summary>
-        /// <param name="identifier">identifier name to search for.  Pass an empty string to guarantee no hits will
-        ///   be found (which is useful to do when using the searchReport argument).</param>
-        /// <param name="searchReport">If you want to see the list of all the scopes that constituted the search
-        ///   path, not just the final hit, pass an empty list here and this method will fill it for you with
-        ///   that report.  Pass in a null to not get a report.</param>
-        /// <returns>The dictionary found, or null if no dictionary contains the identifier.</returns>
-        private VariableScope GetNestedDictionary(string identifier, List<VariableScope> searchReport = null)
-        {
-            if (searchReport != null)
-                searchReport.Clear();
-            short rawStackDepth = 0;
-            while (true) /*all of this loop's exits are explicit break or return statements*/
-            {
-                object stackItem;
-                bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
-                if (stackExhausted)
-                    break;
-                var localDict = stackItem as VariableScope;
-                if (localDict == null) // some items on the stack might not be variable scopes.  skip them.
-                {
-                    ++rawStackDepth;
-                    continue;
-                }
-
-                if (searchReport != null)
-                    searchReport.Add(localDict);
-
-                if (localDict.Variables.ContainsKey(identifier))
-                    return localDict;
-
-                // Get the next VariableScope that is valid, where valid means:
-                //    It is the lexical (not runtime) parent of this scope.
-                // -------------------------------------------------------------------------------
-
-                // Scan the stack until the variable scope with the right parent ID is seen:
-                short skippedLevels = 0;
-                while (!(stackExhausted))
-                {
-                    var needsIncrement = true;
-                    var scopeFrame = stackItem as VariableScope;
-                    if (scopeFrame != null) // skip cases where the thing on the stack isn't a variable scope.
-                    {
-                        // If the scope id of this frame is my parent ID, then we found it and are done.
-                        if (scopeFrame.ScopeId == localDict.ParentScopeId)
-                        {
-                            break;
-                        }
-                        // In the case where the variable scope is the SAME lexical ID as myself, that
-                        // means I recursively called myself and the thing on the runtime stack just before
-                        // me is ... another instance of me.  In that case just follow it's parent skip level
-                        if (scopeFrame.ScopeId == localDict.ScopeId && scopeFrame.ParentSkipLevels > 0)
-                        {
-                            skippedLevels += scopeFrame.ParentSkipLevels;
-                            rawStackDepth += scopeFrame.ParentSkipLevels;
-                            needsIncrement = false;
-                        }
-                    }
-                    if (needsIncrement)
-                    {
-                        ++skippedLevels;
-                        ++rawStackDepth;
-                    }
-                    stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
-                }
-
-                // Record how many levels had to be skipped for that to work.  In future calls of this
-                // method, it will know how far to jump in the stack without doing that scan.  This can
-                // be quite a speedup when dealing with nested recursion, where the runtime stack might
-                // be a hundred levels deep of the same function calling itself before hitting its lexical parent.
-                if (stackItem != null && localDict.ParentSkipLevels == 0)
-                    localDict.ParentSkipLevels = skippedLevels;
-            }
-            if (globalVariables.Variables.ContainsKey(identifier))
-                return globalVariables;
-            else
-                return null;
         }
 
         /// <summary>
@@ -759,13 +652,13 @@ namespace kOS.Safe.Execution
             msg.AppendLine("============== STACK VARIABLES ===============");
             DumpStack();
             msg.AppendLine("============== GLOBAL VARIABLES ==============");
-            foreach (string ident in globalVariables.Variables.Keys)
+            foreach (var entry in globalVariables.Locals)
             {
                 string line;
                 try
                 {
-                    Variable v = globalVariables.Variables[ident];
-                    line = ident;
+                    line = entry.Key;
+                    var v = entry.Value;
                     if (v == null || v.Value == null)
                         line += " is <null>";
                     else
@@ -775,7 +668,7 @@ namespace kOS.Safe.Execution
                 {
                     // This is necessary because of the deprecation exceptions that
                     // get raised by FlightStats when you try to print all of them out:
-                    line = ident + " is <value caused exception>\n    " + e.Message;
+                    line = entry.Key + " is <value caused exception>\n    " + e.Message;
                 }
                 msg.AppendLine(line);
             }
@@ -786,6 +679,16 @@ namespace kOS.Safe.Execution
         public string DumpStack()
         {
             return stack.Dump();
+        }
+
+        private VariableScope GetCurrentScope()
+        {
+            VariableScope currentScope = stack.GetCurrentScope();
+            if (currentScope == null)
+            {
+                currentScope = globalVariables;
+            }
+            return currentScope;
         }
 
         /// <summary>
@@ -801,9 +704,12 @@ namespace kOS.Safe.Execution
         private Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
         {
             identifier = identifier.ToLower();
-            VariableScope foundDict = GetNestedDictionary(identifier);
-            if (foundDict != null)
-                return foundDict.Variables[identifier];
+            Variable value = GetCurrentScope().GetNested(identifier);
+            if (value != null)
+            {
+                return value;
+            }
+
             if (barewordOkay)
             {
                 string strippedIdent = identifier.TrimStart('$');
@@ -814,7 +720,7 @@ namespace kOS.Safe.Execution
             // In the case where we were looking for a function pointer but didn't find one, and would
             // have failed with exception, then it's still acceptable to find a hit that isn't a function
             // pointer (has no trailing asterisk '*') but only if it's a delegate of some sort:
-            if (identifier.EndsWith("*"))
+            if (identifier[identifier.Length - 1] == '*')
             {
                 string trimmedTail = identifier.TrimEnd('*');
                 Variable retryVal = GetVariable(trimmedTail, barewordOkay, failOkay);
@@ -838,22 +744,24 @@ namespace kOS.Safe.Execution
         /// <param name="overwrite">true if it's okay to overwrite an existing variable</param>
         public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
         {
-            identifier = identifier.ToLower();
-
-            if (!identifier.StartsWith("$"))
+            if (identifier[0] != '$')
             {
                 identifier = "$" + identifier;
             }
 
-            VariableScope whichDict = local ? GetNestedDictionary(0) : globalVariables;
-            if (whichDict.Variables.ContainsKey(identifier))
+            VariableScope currentScope = local ? GetCurrentScope() : globalVariables;
+
+            Variable existing = currentScope.GetLocal(identifier);
+
+            if (existing != null)
             {
-                if (whichDict.Variables[identifier].Value is BoundVariable)
+                if (existing.Value is BoundVariable)
                     if (!overwrite)
                         throw new KOSIdentiferClashException(identifier);
-                whichDict.Variables.Remove(identifier);
+                currentScope.Remove(identifier);
             }
-            whichDict.Variables.Add(identifier, variable);
+
+            currentScope.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -870,15 +778,13 @@ namespace kOS.Safe.Execution
         /// <param name="identifier">varible to remove.</param>
         public void RemoveVariable(string identifier)
         {
-            identifier = identifier.ToLower();
-            VariableScope foundDict = GetNestedDictionary(identifier);
-            if (foundDict != null && VariableIsRemovable(foundDict.Variables[identifier]))
+            VariableScope currentScope = GetCurrentScope();
+            Variable variable = currentScope.RemoveNested(identifier);
+            if (variable != null)
             {
                 // Tell Variable to orphan its old value now.  Faster than relying
                 // on waiting several seconds for GC to eventually call ~Variable()
-                foundDict.Variables[identifier].Value = null;
-
-                foundDict.Variables.Remove(identifier);
+                variable.Value = null;
             }
         }
 
@@ -931,9 +837,10 @@ namespace kOS.Safe.Execution
         /// <param name="value">value to put into it</param>
         public void SetNewLocal(string identifier, object value)
         {
-            Variable variable;
-            VariableScope localDict = GetNestedDictionary(0);
-            if (!localDict.Variables.TryGetValue(identifier, out variable))
+            VariableScope currentScope = GetCurrentScope();
+
+            Variable variable = currentScope.GetLocal(identifier);
+            if (variable == null)
             {
                 variable = new Variable { Name = identifier };
                 AddVariable(variable, identifier, true);
@@ -953,11 +860,11 @@ namespace kOS.Safe.Execution
         /// <param name="value">value to put into it</param>
         public void SetGlobal(string identifier, object value)
         {
-            Variable variable;
             // Attempt to get it as a global.  Make a new one if it's not found.
             // This preserves the "bound-ness" of the variable if it's a
             // BoundVariable, whereas unconditionally making a new Variable wouldn't:
-            if (!globalVariables.Variables.TryGetValue(identifier, out variable))
+            Variable variable = globalVariables.GetLocal(identifier);
+            if (variable == null)
             {
                 variable = new Variable { Name = identifier };
                 AddVariable(variable, identifier, false, true);
@@ -1004,20 +911,20 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Pop a value off the stack, and if it's a variable name then get its value,
+        /// Pop a value off the argument stack, and if it's a variable name then get its value,
         /// else just return it as it is.
         /// </summary>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PopValue(bool barewordOkay = false)
+        public object PopValueArgument(bool barewordOkay = false)
         {
-            return GetValue(PopStack(), barewordOkay);
+            return GetValue(PopArgumentStack(), barewordOkay);
         }
 
         /// <summary>
-        /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
+        /// Peek at a value atop the argument stack without popping it, and if it's a variable name then get its value,
         /// else just return it as it is.<br/>
         /// <br/>
         /// NOTE: Evaluating variables when you don't really need to is pointlessly expensive, as it
@@ -1029,9 +936,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PeekValue(int digDepth, bool barewordOkay = false)
+        public object PeekValueArgument(int digDepth, bool barewordOkay = false)
         {
-            return GetValue(stack.Peek(digDepth), barewordOkay);
+            return GetValue(stack.PeekArgument(digDepth), barewordOkay);
         }
 
         /// <summary>
@@ -1047,9 +954,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PopStructureEncapsulated(bool barewordOkay = false)
+        public Structure PopStructureEncapsulatedArgument(bool barewordOkay = false)
         {
-            return Structure.FromPrimitiveWithAssert( PopValue(barewordOkay) );
+            return Structure.FromPrimitiveWithAssert( PopValueArgument(barewordOkay) );
         }
 
         /// <summary>
@@ -1066,9 +973,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        public Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitiveWithAssert(PeekValueArgument(digDepth, barewordOkay));
         }
 
         /// <summary>
@@ -1090,7 +997,7 @@ namespace kOS.Safe.Execution
         ///   is the value?
         /// </param>
         /// <returns>The value after the steps described have been performed.</returns>
-        public Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false)
+        public Structure GetStructureEncapsulatedArgument(Structure testValue, bool barewordOkay = false)
         {
             return Structure.FromPrimitiveWithAssert(GetValue(testValue, barewordOkay));
         }
@@ -1107,9 +1014,9 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PopValueEncapsulated(bool barewordOkay = false)
+        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
         {
-            return Structure.FromPrimitive( PopValue(barewordOkay) );
+            return Structure.FromPrimitive( PopValueArgument(barewordOkay) );
         }
 
         /// <summary>
@@ -1125,29 +1032,42 @@ namespace kOS.Safe.Execution
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
         /// <returns>value off the stack</returns>
-        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+            return Structure.FromPrimitive(PeekValueArgument(digDepth, barewordOkay));
         }
 
         /// <summary>
-        /// Peek at a value atop the stack without popping it, and without evaluating it to get the variable's
+        /// Peek at a value atop the argument stack without popping it, and without evaluating it to get the variable's
         /// value.  (i.e. if the thing in the stack is $foo, and the variable foo has value 5, you'll get the string
         /// "$foo" returned, not the integer 5).
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
         /// <returns>value off the stack</returns>
-        public object PeekRaw(int digDepth, out bool checkOkay)
+        public object PeekRawArgument(int digDepth, out bool checkOkay)
         {
             object returnValue;
-            checkOkay = stack.PeekCheck(digDepth, out returnValue);
+            checkOkay = stack.PeekCheckArgument(digDepth, out returnValue);
             return returnValue;
         }
 
-        public int GetStackSize()
+        /// <summary>
+        /// Peek at a value atop the scope stack without popping it.
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
+        /// <returns>value off the stack</returns>
+        public object PeekRawScope(int digDepth, out bool checkOkay)
         {
-            return stack.GetLogicalSize();
+            object returnValue;
+            checkOkay = stack.PeekCheckScope(digDepth, out returnValue);
+            return returnValue;
+        }
+
+        public int GetArgumentStackSize()
+        {
+            return stack.GetArgumentStackSize();
         }
 
         /// <summary>
@@ -1416,18 +1336,18 @@ namespace kOS.Safe.Execution
                         // first line of the trigger, like OpcodeCall would do.
                         SubroutineContext contextRecord =
                             new SubroutineContext(currentInstructionPointer, trigger);
-                        PushAboveStack(contextRecord);
+                        PushScopeStack(contextRecord);
 
                         // Reverse-push the closure's scope record, if there is one, just after the function return context got put on the stack.
                         if (trigger.Closure != null)
                             for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
-                                PushAboveStack(trigger.Closure[i]);
+                                PushScopeStack(trigger.Closure[i]);
 
-                        PushStack(new KOSArgMarkerType());
+                        PushArgumentStack(new KOSArgMarkerType());
 
                         if (trigger.IsCSharpCallback)
                             for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
-                                PushStack(trigger.Args[argIndex]);
+                                PushArgumentStack(trigger.Args[argIndex]);
                         
                         triggersToBeExecuted.Add(trigger);
 
@@ -1492,8 +1412,8 @@ namespace kOS.Safe.Execution
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(IProgramContext context, bool doProfiling)
-        {            
+        private bool ExecuteInstruction(ProgramContext context, bool doProfiling)
+        {
             Opcode opcode = context.Program[context.InstructionPointer];
             
             if (SafeHouse.Config.DebugEachOpcode)

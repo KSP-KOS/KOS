@@ -25,27 +25,27 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void PushStack(object item)
+        public void PushArgumentStack(object item)
         {
             fakeStack.Push(item);
         }
 
-        public object PopStack()
+        public object PopArgumentStack()
         {
             return fakeStack.Pop();
         }
 
-        public void MoveStackPointer(int delta)
+        public void PushScopeStack(object thing)
         {
             throw new NotImplementedException();
         }
 
-        public void PushAboveStack(object thing)
+        public object PopScopeStack(int howMany)
         {
             throw new NotImplementedException();
         }
 
-        public object PopAboveStack(int howMany)
+        public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
         {
             throw new NotImplementedException();
         }
@@ -70,47 +70,52 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public object PopValue(bool barewordOkay = false)
+        public object PopValueArgument(bool barewordOkay = false)
         {
-            return PopStack();
+            return PopArgumentStack();
         }
 
-        public object PeekValue(int digDepth, bool barewordOkay = false)
+        public object PeekValueArgument(int digDepth, bool barewordOkay = false)
         {
             throw new NotImplementedException();
         }
 
-        public object PeekRaw(int digDepth, out bool checkOkay)
+        public object PeekRawArgument(int digDepth, out bool checkOkay)
         {
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure GetStructureEncapsulated(Encapsulation.Structure testValue, bool barewordOkay = false)
+        public object PeekRawScope(int digDepth, out bool checkOkay)
         {
             throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure PopStructureEncapsulated(bool barewordOkay = false)
+        public Encapsulation.Structure GetStructureEncapsulatedArgument(Encapsulation.Structure testValue, bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PopValue(barewordOkay));
+            throw new NotImplementedException();
         }
 
-        public Encapsulation.Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false)
+        public Encapsulation.Structure PopStructureEncapsulatedArgument(bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PeekValue(digDepth, barewordOkay));
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PopValueArgument(barewordOkay));
+        }
+
+        public Encapsulation.Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false)
+        {
+            return kOS.Safe.Encapsulation.Structure.FromPrimitiveWithAssert(PeekValueArgument(digDepth, barewordOkay));
         }
         
-        public object PopValueEncapsulated(bool barewordOkay = false)
+        public object PopValueEncapsulatedArgument(bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PopValue(barewordOkay));
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PopValueArgument(barewordOkay));
         }
 
-        public object PeekValueEncapsulated(int digDepth, bool barewordOkay = false)
+        public object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false)
         {
-            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PeekValue(digDepth, barewordOkay));
+            return kOS.Safe.Encapsulation.Structure.FromPrimitive(PeekValueArgument(digDepth, barewordOkay));
         }
 
-        public int GetStackSize()
+        public int GetArgumentStackSize()
         {
             return fakeStack.Count;
         }

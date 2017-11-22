@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
+using kOS.Safe.Function;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -65,6 +66,20 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Stack", KOSToCSharp = false)] // one-way because the generic templated StackValue<T> is the canonical one.  
     public class StackValue : StackValue<Structure>
     {
+        [Function("stack")]
+        public class FunctionStack : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+                Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+                for (int i = argArray.Length - 1; i >= 0; --i)
+                    argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                AssertArgBottomAndConsume(shared);
+                var stackValue = new StackValue(argArray.ToList());
+                ReturnValue = stackValue;
+            }
+        }
+
         public StackValue()
         {
             InitializeSuffixes();

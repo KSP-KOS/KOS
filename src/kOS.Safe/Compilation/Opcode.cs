@@ -441,7 +441,7 @@ namespace kOS.Safe.Compilation
         /// <returns>object popped if it all worked fine</returns>
         protected object PopValueAssert(ICpu cpu, bool barewordOkay = false)
         {
-            object returnValue = cpu.PopValue(barewordOkay);
+            object returnValue = cpu.PopValueArgument(barewordOkay);
             if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Called with not enough arguments.");
             return returnValue;
@@ -475,15 +475,15 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {            
-            object right = cpu.PopValue();
-            object left = cpu.PopValue();
+            object right = cpu.PopValueArgument();
+            object left = cpu.PopValueArgument();
 
             var operands = new OperandPair(left, right);
 
             Calculator calc = Calculator.GetCalculator(operands);
             Operands = operands;
             object result = ExecuteCalculation(calc);
-            cpu.PushStack(result);
+            cpu.PushArgumentStack(result);
         }
 
         protected virtual object ExecuteCalculation(Calculator calc)
@@ -523,7 +523,7 @@ namespace kOS.Safe.Compilation
             Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopStack());
+            var identifier = Convert.ToString(cpu.PopArgumentStack());
             cpu.SetValue(identifier, value);
         }
     }
@@ -547,12 +547,12 @@ namespace kOS.Safe.Compilation
             bool result = false; //pessimistic default
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
-            string ident = Convert.ToString(cpu.PopStack());
+            string ident = Convert.ToString(cpu.PopArgumentStack());
             if (ident != null && cpu.IdentifierExistsInScope(ident))
             {
                 result = true;
             }
-            cpu.PushStack(result);
+            cpu.PushArgumentStack(result);
         }
     }
 
@@ -575,7 +575,7 @@ namespace kOS.Safe.Compilation
             Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopStack());
+            var identifier = Convert.ToString(cpu.PopArgumentStack());
             cpu.SetValueExists(identifier, value);
         }
     }
@@ -610,7 +610,7 @@ namespace kOS.Safe.Compilation
             Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopStack());
+            var identifier = Convert.ToString(cpu.PopArgumentStack());
             cpu.SetNewLocal(identifier, value);
         }
     }
@@ -639,7 +639,7 @@ namespace kOS.Safe.Compilation
             Structure value = PopStructureAssertEncapsulated(cpu);
             // Convert to string instead of cast in case the identifier is stored
             // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopStack());
+            var identifier = Convert.ToString(cpu.PopArgumentStack());
             cpu.SetGlobal(identifier, value);
         }
     }
@@ -651,7 +651,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object identifier = cpu.PopStack();
+            object identifier = cpu.PopArgumentStack();
             if (identifier != null)
             {
                 cpu.RemoveVariable(identifier.ToString());
@@ -671,8 +671,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            string suffixName = cpu.PopStack().ToString();
-            object popValue = cpu.PopValueEncapsulated();
+            string suffixName = cpu.PopArgumentStack().ToString();
+            object popValue = cpu.PopValueEncapsulatedArgument();
 
             var specialValue = popValue as ISuffixed;
             
@@ -691,8 +691,8 @@ namespace kOS.Safe.Compilation
                 // member returned is a delegate that needs to be called to get its actual
                 // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
 
-                cpu.PushStack(result);
-                cpu.PushStack(new KOSArgMarkerType());
+                cpu.PushArgumentStack(result);
+                cpu.PushArgumentStack(new KOSArgMarkerType());
                 OpcodeCall.StaticExecute(cpu, false, "", false); // this will push the return value on the stack for us.
             }
             else
@@ -701,7 +701,7 @@ namespace kOS.Safe.Compilation
                 {
                     // Push the already calculated value.
 
-                    cpu.PushStack(result.Value);
+                    cpu.PushArgumentStack(result.Value);
                 }
                 else
                 {
@@ -710,7 +710,7 @@ namespace kOS.Safe.Compilation
                     // Eventually an <indirect> OpcodeCall will occur further down the program which
                     // will actually execute this.
                     
-                    cpu.PushStack(result);
+                    cpu.PushArgumentStack(result);
                 }
             }
         }
@@ -743,9 +743,9 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = cpu.PopStructureEncapsulated();         // new value to set it to
-            string suffixName = cpu.PopStack().ToString();            // name of suffix being set
-            Structure popValue = cpu.PopStructureEncapsulated();      // object to which the suffix is attached.
+            Structure value = cpu.PopStructureEncapsulatedArgument();         // new value to set it to
+            string suffixName = cpu.PopArgumentStack().ToString();            // name of suffix being set
+            Structure popValue = cpu.PopStructureEncapsulatedArgument();      // object to which the suffix is attached.
 
             // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
             // the referenced variable wouldn't be updated.  The primitives themselves are treated as value
@@ -776,8 +776,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure index = cpu.PopStructureEncapsulated();
-            Structure collection = cpu.PopStructureEncapsulated();
+            Structure index = cpu.PopStructureEncapsulatedArgument();
+            Structure collection = cpu.PopStructureEncapsulatedArgument();
 
             Structure result;
 
@@ -791,7 +791,7 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Can't iterate on an object of type {0}", collection.GetType()));
             }
 
-            cpu.PushStack(result);
+            cpu.PushArgumentStack(result);
         }
     }
 
@@ -803,9 +803,9 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = cpu.PopStructureEncapsulated();
-            Structure index = cpu.PopStructureEncapsulated();
-            Structure list = cpu.PopStructureEncapsulated();
+            Structure value = cpu.PopStructureEncapsulatedArgument();
+            Structure index = cpu.PopStructureEncapsulatedArgument();
+            Structure list = cpu.PopStructureEncapsulatedArgument();
 
             if (index == null || value == null)
             {
@@ -917,7 +917,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            bool condition = Convert.ToBoolean(cpu.PopValue());
+            bool condition = Convert.ToBoolean(cpu.PopValueArgument());
 
             DeltaInstructionPointer = !condition ? Distance : 1;
         }
@@ -930,7 +930,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            bool condition = Convert.ToBoolean(cpu.PopValue());
+            bool condition = Convert.ToBoolean(cpu.PopValueArgument());
             DeltaInstructionPointer = condition ? Distance : 1;
         }
     }
@@ -1084,13 +1084,13 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            Structure value = cpu.PopStructureEncapsulated();
+            Structure value = cpu.PopStructureEncapsulatedArgument();
 
             var scalarValue = value as ScalarValue;
 
             if (scalarValue != null && scalarValue.IsValid)
             {
-                cpu.PushStack(-scalarValue);
+                cpu.PushArgumentStack(-scalarValue);
                 return;
             }
 
@@ -1102,7 +1102,7 @@ namespace kOS.Safe.Compilation
             if (negateMe != null)
             {
                 object result = negateMe.Invoke(null, new[]{value});
-                cpu.PushStack(result);
+                cpu.PushArgumentStack(result);
             }
             else
                 throw new KOSUnaryOperandTypeException("negate", value);
@@ -1191,9 +1191,9 @@ namespace kOS.Safe.Compilation
             // a ScalarBoolean that would be true.  But the purpose of this opcode
             // is to also change integers and floats into booleans. Thus the call to
             // Convert.ToBoolean():
-            object value = cpu.PopValue();
+            object value = cpu.PopValueArgument();
             bool result = Convert.ToBoolean(value);
-            cpu.PushStack(Structure.FromPrimitive(result));
+            cpu.PushArgumentStack(Structure.FromPrimitive(result));
         }
     }
     
@@ -1204,7 +1204,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
+            object value = cpu.PopValueArgument();
             object result;
 
             // Convert to bool instead of cast in case the identifier is stored
@@ -1219,7 +1219,7 @@ namespace kOS.Safe.Compilation
             {
                 throw new KOSCastException(value.GetType(), typeof(BooleanValue));
             }
-            cpu.PushStack(Structure.FromPrimitive(result));
+            cpu.PushArgumentStack(Structure.FromPrimitive(result));
         }
     }
 
@@ -1231,10 +1231,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            bool argument2 = Convert.ToBoolean(cpu.PopValue());
-            bool argument1 = Convert.ToBoolean(cpu.PopValue());
+            bool argument2 = Convert.ToBoolean(cpu.PopValueArgument());
+            bool argument1 = Convert.ToBoolean(cpu.PopValueArgument());
             object result = argument1 && argument2;
-            cpu.PushStack(Structure.FromPrimitive(result));
+            cpu.PushArgumentStack(Structure.FromPrimitive(result));
         }
     }
 
@@ -1246,10 +1246,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            bool argument2 = Convert.ToBoolean(cpu.PopValue());
-            bool argument1 = Convert.ToBoolean(cpu.PopValue());
+            bool argument2 = Convert.ToBoolean(cpu.PopValueArgument());
+            bool argument1 = Convert.ToBoolean(cpu.PopValueArgument());
             object result = argument1 || argument2;
-            cpu.PushStack(Structure.FromPrimitive(result));
+            cpu.PushArgumentStack(Structure.FromPrimitive(result));
         }
     }
 
@@ -1386,15 +1386,15 @@ namespace kOS.Safe.Compilation
                 bool foundBottom = false;
                 int digDepth;
                 int argsCount = 0;
-                for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
+                for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetArgumentStackSize() ; ++digDepth)
                 {
-                    object arg = cpu.PeekValue(digDepth);
+                    object arg = cpu.PeekValueArgument(digDepth);
                     if (arg != null && arg.GetType() == ArgMarkerType)
                         foundBottom = true;
                     else
                         ++argsCount;
                 }
-                functionPointer = cpu.PeekValue(digDepth);
+                functionPointer = cpu.PeekValueArgument(digDepth);
                 if (! ( functionPointer is Delegate || functionPointer is KOSDelegate || functionPointer is ISuffixResult))
                 {
                     // Indirect calls are meant to be delegates.  If they are not, then that means the
@@ -1405,11 +1405,11 @@ namespace kOS.Safe.Compilation
                     if (argsCount>0)
                     {
                         for (int i=1 ; i<=argsCount; ++i)
-                            cpu.PopValue();
+                            cpu.PopValueArgument();
                         throw new KOSArgumentMismatchException(
                             0, argsCount, "\n(In fact in this case the parentheses are entirely optional)");
                     }
-                    cpu.PopValue(); // pop the ArgMarkerString too.
+                    cpu.PopValueArgument(); // pop the ArgMarkerString too.
                     return -1;
                 }
             }
@@ -1466,13 +1466,13 @@ namespace kOS.Safe.Compilation
                 var contextRecord = new SubroutineContext(cpu.InstructionPointer+1);
                 newIP = Convert.ToInt32(functionPointer);
                 
-                cpu.PushAboveStack(contextRecord);
+                cpu.PushScopeStack(contextRecord);
                 if (userDelegate != null)
                 {
                     cpu.AssertValidDelegateCall(userDelegate);
                     // Reverse-push the closure's scope record, just after the function return context got put on the stack.
                     for (int i = userDelegate.Closure.Count - 1 ; i >= 0 ; --i)
-                        cpu.PushAboveStack(userDelegate.Closure[i]);
+                        cpu.PushScopeStack(userDelegate.Closure[i]);
                 }
             }
             else if (functionPointer is string)
@@ -1490,9 +1490,9 @@ namespace kOS.Safe.Compilation
                 // as that was the indirect BuiltInDelegate:
                 if ((! direct) && builtinDel != null)
                 {
-                    object topThing = cpu.PopStack();
-                    cpu.PopStack(); // remove BuiltInDelegate object.
-                    cpu.PushStack(topThing); // put return value back.
+                    object topThing = cpu.PopArgumentStack();
+                    cpu.PopArgumentStack(); // remove BuiltInDelegate object.
+                    cpu.PushArgumentStack(topThing); // put return value back.
                 }
             }
             else if (functionPointer is ISuffixResult)
@@ -1523,7 +1523,7 @@ namespace kOS.Safe.Compilation
             if (functionPointer is ISuffixResult || functionPointer is NoDelegate)
             {
                 if (! (delegateReturn is KOSPassThruReturn))
-                    cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
+                    cpu.PushArgumentStack(delegateReturn); // And now leave the return value on the stack to be read.
             }
 
             return newIP;
@@ -1599,7 +1599,7 @@ namespace kOS.Safe.Compilation
             // it to return the number 2, not the variable name $x, which could
             // be a variable local to this function which is about to go out of scope
             // so the caller can't access it:
-            object returnVal = cpu.PopValue();
+            object returnVal = cpu.PopValueArgument();
 
             // Now dig down through the stack until the argbottom is found.
             // anything still leftover above that should be unread parameters we
@@ -1607,16 +1607,16 @@ namespace kOS.Safe.Compilation
             object shouldBeArgMarker = 0; // just a temp to force the loop to execute at least once.
             while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType))
             {
-                if (cpu.GetStackSize() <= 0)
+                if (cpu.GetArgumentStackSize() <= 0)
                 {
                     throw new KOSArgumentMismatchException(
                         string.Format("Something is wrong with the stack - no arg bottom mark when doing a return.  This is an internal problem with kOS")
                        );
                 }
-                shouldBeArgMarker = cpu.PopStack();
+                shouldBeArgMarker = cpu.PopArgumentStack();
             }
 
-            cpu.PushStack(Structure.FromPrimitive(returnVal));
+            cpu.PushArgumentStack(Structure.FromPrimitive(returnVal));
 
             // Now, after the eval was done, NOW finally pop the scope, after we don't need local vars anymore:
             if( Depth > 0 )
@@ -1629,13 +1629,13 @@ namespace kOS.Safe.Compilation
             // the way, then expect the context record.  Any other pattern encountered
             // is proof the stack alignment got screwed up:
             bool okay;
-            VariableScope peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
+            VariableScope peeked = cpu.PeekRawScope(0, out okay) as VariableScope;
             while (okay && peeked != null && peeked.IsClosure)
             {
-                cpu.PopAboveStack(1);
-                peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
+                cpu.PopScopeStack(1);
+                peeked = cpu.PeekRawScope(0, out okay) as VariableScope;
             }
-            object shouldBeContextRecord = cpu.PopAboveStack(1);
+            object shouldBeContextRecord = cpu.PopScopeStack(1);
             if ( !(shouldBeContextRecord is SubroutineContext) )
             {
                 // This should never happen with any user code:
@@ -1649,7 +1649,7 @@ namespace kOS.Safe.Compilation
             // return value atop the stack, and instead want to pop it and use it:
             if (contextRecord.IsTrigger)
             {
-                cpu.PopStack(); // already got the return value up above, just ignore it.
+                cpu.PopArgumentStack(); // already got the return value up above, just ignore it.
                 TriggerInfo trigger = contextRecord.Trigger;
                 // For callbacks, the return value should be preserved in the trigger object
                 // so the C# code can find it there.  For non-callbacks, the return value 
@@ -1706,7 +1706,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PushStack(Argument);
+            cpu.PushArgumentStack(Argument);
         }
 
         public override string ToString()
@@ -1790,14 +1790,14 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             // Even though this value is being thrown away it's still important to attempt to
-            // process it (with cpu.PopValue()) rather than ignore it (with cpu.PopStack()).  This
+            // process it (with cpu.PopValueArgument()) rather than ignore it (with cpu.PopArgumentStack()).  This
             // is just in case it's an unknown variable name in need of an error message
             // to the user.  Detecting that a variable name is unknown occurs during the popping
             // of the value, not the pushing of it.  (This is necessary because SET and DECLARE
             // statements have to be allowed to push undefined variable references onto the stack
             // for new variables that they are going to create.)
 
-            cpu.PopValue();
+            cpu.PopValueArgument();
         }
     }
 
@@ -1816,7 +1816,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool worked;
-            object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
+            object shouldBeArgMarker = cpu.PeekRawArgument(0,out worked);
 
             if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
             {
@@ -1838,15 +1838,15 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool worked;
-            object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
+            object shouldBeArgMarker = cpu.PeekRawArgument(0,out worked);
 
             if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
             {
-                cpu.PushStack(false); // these are internally used, so no Strucutre.FromPrimitive wrapper call.
+                cpu.PushArgumentStack(false); // these are internally used, so no Strucutre.FromPrimitive wrapper call.
             }
             else
             {
-                cpu.PushStack(true); // these are internally used, so no Strucutre.FromPrimitive wrapper call.
+                cpu.PushArgumentStack(true); // these are internally used, so no Strucutre.FromPrimitive wrapper call.
             }
         }
     }
@@ -1861,9 +1861,9 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopStack();
-            cpu.PushStack(value);
-            cpu.PushStack(value);
+            object value = cpu.PopArgumentStack();
+            cpu.PushArgumentStack(value);
+            cpu.PushArgumentStack(value);
         }
     }
 
@@ -1875,10 +1875,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value1 = cpu.PopStack();
-            object value2 = cpu.PopStack();
-            cpu.PushStack(value1);
-            cpu.PushStack(value2);
+            object value1 = cpu.PopArgumentStack();
+            object value2 = cpu.PopArgumentStack();
+            cpu.PushArgumentStack(value1);
+            cpu.PushArgumentStack(value2);
         }
     }
     
@@ -1913,7 +1913,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PushStack(cpu.PopValueEncapsulated(barewordOkay));
+            cpu.PushArgumentStack(cpu.PopValueEncapsulatedArgument(barewordOkay));
         }
     }
 
@@ -1964,7 +1964,7 @@ namespace kOS.Safe.Compilation
         
         public override void Execute(ICpu cpu)
         {
-            cpu.PushAboveStack(new VariableScope(ScopeId,ParentScopeId));
+            cpu.PushNewScope(ScopeId,ParentScopeId);
         }
 
         public override string ToString()
@@ -2025,7 +2025,7 @@ namespace kOS.Safe.Compilation
         /// <param name="levels">number of levels to popscope.</param>
         public static void DoPopScope(ICpu cpuObj, Int16 levels)
         {
-            cpuObj.PopAboveStack(levels);
+            cpuObj.PopScopeStack(levels);
         }
 
         public override string ToString()
@@ -2068,12 +2068,12 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             IUserDelegate pushMe = cpu.MakeUserDelegate(EntryPoint, WithClosure);
-            cpu.PushStack(pushMe);
+            cpu.PushArgumentStack(pushMe);
         }
 
         public override string ToString()
         {
-            return Name + " " + EntryPoint.ToString();
+            return Name + " " + EntryPoint.ToString() + (WithClosure ? " closure" : "");
         }
     }
         
@@ -2122,7 +2122,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            int functionPointer = Convert.ToInt32(cpu.PopValue()); // in case it got wrapped in a ScalarIntValue
+            int functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
             cpu.AddTrigger(functionPointer, cpu.GetCurrentClosure());
         }
 
@@ -2140,7 +2140,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            var functionPointer = Convert.ToInt32(cpu.PopValue()); // in case it got wrapped in a ScalarIntValue
+            var functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
             cpu.RemoveTrigger(functionPointer);
         }
     }
@@ -2153,7 +2153,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            double arg = Convert.ToDouble(cpu.PopValue());
+            double arg = Convert.ToDouble(cpu.PopValueArgument());
             cpu.YieldProgram(new YieldFinishedGameTimer(arg));
         }
     }

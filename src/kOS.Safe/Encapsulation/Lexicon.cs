@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Utilities;
+using kOS.Safe.Function;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -13,6 +14,21 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("Lex", CSharpToKOS = false) ]
     public class Lexicon : SerializableStructure, IDictionary<Structure, Structure>, IIndexable
     {
+        [Function("lex", "lexicon")]
+        public class FunctionLexicon : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+
+                Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+                for (int i = argArray.Length - 1; i >= 0; --i)
+                    argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                AssertArgBottomAndConsume(shared);
+                var lexicon = new Lexicon(argArray.ToList());
+                ReturnValue = lexicon;
+            }
+        }
+
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
             public bool Equals(TI x, TI y)

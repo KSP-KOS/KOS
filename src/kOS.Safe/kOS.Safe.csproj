@@ -277,6 +277,12 @@
     <Compile Include="Encapsulation\Suffixes\ThreeArgsSuffix.cs" />
     <Compile Include="Exceptions\KOSTermWidthObsoletionException.cs" />
     <Compile Include="Execution\IPopContextNotifyee.cs" />
+    <Compile Include="Exceptions\KOSStackOverflowException.cs" />
+    <Compile Include="Function\Math.cs" />
+    <Compile Include="Function\Misc.cs" />
+    <Compile Include="Function\Persistence.cs" />
+    <Compile Include="Function\Suffixed.cs" />
+    <Compile Include="Function\Trigonometry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
