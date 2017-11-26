@@ -404,7 +404,7 @@ namespace kOS.Safe.Execution
             //   IP jump location for subprograms.
             //   IP jump location for functions.
             savedPointers = new VariableScope(0, null);
-            var pointers = new List<KeyValuePair<string, Variable>>(globalVariables.Locals.Where(entry => entry.Key.Contains('*')));
+            var pointers = new List<KeyValuePair<string, Variable>>(globalVariables.Locals.Where(entry => StringUtil.EndsWith(entry.Key, "*")));
 
             foreach (var entry in pointers)
             {
@@ -720,7 +720,7 @@ namespace kOS.Safe.Execution
             // In the case where we were looking for a function pointer but didn't find one, and would
             // have failed with exception, then it's still acceptable to find a hit that isn't a function
             // pointer (has no trailing asterisk '*') but only if it's a delegate of some sort:
-            if (identifier[identifier.Length - 1] == '*')
+            if (StringUtil.EndsWith(identifier, "*"))
             {
                 string trimmedTail = identifier.TrimEnd('*');
                 Variable retryVal = GetVariable(trimmedTail, barewordOkay, failOkay);
@@ -744,7 +744,7 @@ namespace kOS.Safe.Execution
         /// <param name="overwrite">true if it's okay to overwrite an existing variable</param>
         public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
         {
-            if (identifier[0] != '$')
+            if (!StringUtil.StartsWith(identifier, "$"))
             {
                 identifier = "$" + identifier;
             }
