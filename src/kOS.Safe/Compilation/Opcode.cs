@@ -493,7 +493,8 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
-    /// The base class for opcodes that operate on an identifier.
+    /// The base class for opcodes that operate on an identifier as an MLfield
+    /// (rather than reading the identifier from a stack argument).
     /// </summary>
     public abstract class OpcodeIdentifierBase : Opcode
     {
@@ -525,8 +526,8 @@ namespace kOS.Safe.Compilation
 
 
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable named by the Identifier MLField of this opcode.<br/>
     /// <br/>
     /// If the variable does not exist in the local scope, then it will attempt to look for
     /// it in the next scoping level up, and the next one up, and so on
@@ -589,8 +590,9 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable described by Identifer MLField of this opcode,
+    /// which must already exist as a variable before this is executed.<br/>
     /// <br/>
     /// Unlike OpcodeStore, OpcodeStoreExist will NOT create the variable if it
     /// does not already exist.  Instead it will cause an
@@ -618,8 +620,8 @@ namespace kOS.Safe.Compilation
     }
     
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable named in the Identiver MLField of this Opcode.<br/>
     /// <br/>
     /// The variable must not exist already in the local nesting level, and it will
     /// NOT attempt to look for it in the next scoping level up.<br/>
@@ -658,8 +660,8 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable named by the Identifier MLfield of this Opcode.<br/>
     /// <br/>
     /// The variable will always be stored at a global scope, overwriting
     /// whatever else was there if the variable already existed.<br/>
