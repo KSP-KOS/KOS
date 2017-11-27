@@ -16,14 +16,15 @@ namespace kOS.Safe
                 return false;
             }
 
-            for (int i = 0; i < suffixLen; i++)
+            int iStr = strLen - suffixLen;
+            int iSuffix = 0;
+            while (iSuffix < suffixLen)
             {
-                if (str[strLen - i - 1] != suffix[suffixLen - i - 1])
-                {
+                if (str[iStr] != suffix[iSuffix])
                     return false;
-                }
+                ++iStr;
+                ++iSuffix;
             }
-
             return true;
         }
 
