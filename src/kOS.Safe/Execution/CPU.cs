@@ -1205,8 +1205,10 @@ namespace kOS.Safe.Execution
                 updateWatch.Reset();
                 executionWatch.Reset();
                 instructionWatch.Reset();
-                compileWatch.Stop();
-                compileWatch.Reset();
+                if (!compileWatch.IsRunning)
+                {
+                    compileWatch.Reset();
+                }
                 updateWatch.Start();
             }
 
@@ -1272,7 +1274,10 @@ namespace kOS.Safe.Execution
                 totalUpdateTime += updateElapsed;
                 executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
                 totalExecutionTime += executionElapsed;
-                totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                if (!compileWatch.IsRunning)
+                {
+                    totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
+                }
                 if (maxMainlineInstructionsSoFar < numMainlineInstructions)
                     maxMainlineInstructionsSoFar = numMainlineInstructions;
                 if (maxUpdateTime < updateElapsed)
