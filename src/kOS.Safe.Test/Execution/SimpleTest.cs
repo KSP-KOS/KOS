@@ -95,7 +95,8 @@ namespace kOS.Safe.Test.Execution
             RunSingleStep();
             AssertOutput(
                 "3",
-                "4"
+                "4",
+                "5"
             );
         }
     }

@@ -8,3 +8,6 @@ print(c).
 
 set b to 3.
 print(c).
+
+set c to 5.
+print(c).
