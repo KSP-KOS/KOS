@@ -1747,25 +1747,25 @@ namespace kOS.Safe.Compilation.KS
                 // it as a variable, else parse it as a raw identifier:
                 bool rememberIsV = identifierIsVariable;
                 identifierIsVariable = (!startsWithFunc) && nodeIndex == 0;
-                // Push this term on the stack unless it's the name of the user function or built-in function:
+
+                // when we are setting a member value we need to leave
+                // the last object and the last suffix in the stack
+                bool usingSetMember = (suffixTerm.Nodes.Count > 0) && (compilingSetDestination && nodeIndex == (node.Nodes.Count - 1));
+
+                // Push this term on the stack unless it's the name of the user function or built-in function or a suffix:
                 bool isDirect = true;
-                if ( (!isUserFunc) && (nodeIndex > 0 || !startsWithFunc) )
+                if (nodeIndex != 0 && !usingSetMember)
+                {
+                    string suffixName = GetIdentifierText(suffixTerm.Nodes[0]);
+                    AddOpcode(startsWithFunc ? new OpcodeGetMethod(suffixName) : new OpcodeGetMember(suffixName));
+                    isDirect = false;
+                }
+                else if (!isUserFunc && (nodeIndex > 0 || !startsWithFunc))
                 {
                     VisitNode(suffixTerm.Nodes[0]);
                     isDirect = false;
                 }
                 identifierIsVariable = rememberIsV;
-                if (nodeIndex != 0)
-                {
-                    // when we are setting a member value we need to leave
-                    // the last object and the last suffix in the stack
-                    bool usingSetMember = (suffixTerm.Nodes.Count > 0) && (compilingSetDestination && nodeIndex == (node.Nodes.Count - 1));
-
-                    if (!usingSetMember)
-                    {
-                        AddOpcode(startsWithFunc ? new OpcodeGetMethod() : new OpcodeGetMember());
-                    }
-                }
 
                 // The remaining terms are a chain of function_trailers "(...)" and array_trailers "[...]" or "#.." in any arbitrary order:
                 for (int trailerIndex = 1; trailerIndex < suffixTerm.Nodes.Count; ++trailerIndex)
@@ -3214,22 +3214,19 @@ namespace kOS.Safe.Compilation.KS
             PushBreakList(braceNestLevel);
 
             VisitNode(node.Nodes[3]);
-            AddOpcode(new OpcodePush("iterator"));
-            AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodeGetMember("iterator"));
             AddOpcode(new OpcodeStoreLocal(iteratorIdentifier));
             // loop condition
             Opcode condition = AddOpcode(new OpcodePush(iteratorIdentifier));
             string conditionLabel = condition.Label;
-            AddOpcode(new OpcodePush("next"));
-            AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodeGetMember("next"));
             // branch
             Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
             AddToBreakList(branch);
             // assign value to iteration variable
             string varName = "$" + GetIdentifierText(node.Nodes[1]);
             AddOpcode(new OpcodePush(iteratorIdentifier));
-            AddOpcode(new OpcodePush("value"));
-            AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodeGetMember("value"));
             AddOpcode(new OpcodeStoreLocal(varName));
             // instructions in FOR body
             VisitNode(node.Nodes[4]);

@@ -713,15 +713,22 @@ namespace kOS.Safe.Compilation
         }
     }
     
-    public class OpcodeGetMember : Opcode
+    public class OpcodeGetMember : OpcodeIdentifierBase
     {
         protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
         protected bool IsMethodCallAttempt = false;
 
+        public OpcodeGetMember(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeGetMember() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
-            string suffixName = cpu.PopArgumentStack().ToString();
             object popValue = cpu.PopValueEncapsulatedArgument();
 
             var specialValue = popValue as ISuffixed;
@@ -731,7 +738,7 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            ISuffixResult result = specialValue.GetSuffix(suffixName);
+            ISuffixResult result = specialValue.GetSuffix(Identifier);
 
             // If the result is a suffix that is still in need of being invoked and hasn't resolved to a value yet:
             if (result != null && !IsMethodCallAttempt && !result.HasValue)
@@ -778,6 +785,15 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "getmethod"; } }
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
+
+        public OpcodeGetMethod(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeGetMethod() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             IsMethodCallAttempt = true;
