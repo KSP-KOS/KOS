@@ -1906,16 +1906,9 @@ namespace kOS.Safe.Compilation.KS
             UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, node);
             if (isVariable && userFuncObject != null)
             {
-                if (compilingSetDestination)
-                {
-                    UnlockIdentifier(userFuncObject);
-                }
-                else
-                {
-                    AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
-                }
+                AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
             }
-            else if (!compilingSetDestination)
+            else
             {
                 AddOpcode(new OpcodePush(prefix + identifier));
             }
@@ -2088,15 +2081,15 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="toThis">The righthand-side expression to set it to</param>
         private void ProcessSetOperation(ParseNode setThis, ParseNode toThis)
         {
-            // destination
-            compilingSetDestination = true;
-            VisitNode(setThis);
-            compilingSetDestination = false;
-
             bool isSuffix = VarIdentifierEndsWithSuffix(setThis);
             bool isIndex = VarIdentifierEndsWithIndex(setThis);
             if (isSuffix || isIndex)
             {
+                // destination
+                compilingSetDestination = true;
+                VisitNode(setThis);
+                compilingSetDestination = false;
+
                 // expression
                 VisitNode(toThis);
 
@@ -2107,7 +2100,15 @@ namespace kOS.Safe.Compilation.KS
                 // normal variable set
                 VisitNode(toThis);
 
-                string varName = "$" + GetIdentifierText(setThis);
+                string identifier = GetIdentifierText(setThis);
+
+                UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, setThis);
+                if (userFuncObject != null)
+                {
+                    UnlockIdentifier(userFuncObject);
+                }
+
+                string varName = "$" + identifier;
 
                 if (allowLazyGlobal)
                     AddOpcode(new OpcodeStore(varName));

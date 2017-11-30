@@ -99,5 +99,22 @@ namespace kOS.Safe.Test.Execution
                 "5"
             );
         }
+
+        [Test]
+        public void TestSuffixes()
+        {
+            // Test that various suffix and index combinations work for getting and setting
+            RunScript("integration/suffixes.ks");
+            RunSingleStep();
+            RunSingleStep();
+            AssertOutput(
+                "0",
+                "1",
+                "2",
+                "3",
+                "0",
+                "False"
+            );
+        }
     }
 }
