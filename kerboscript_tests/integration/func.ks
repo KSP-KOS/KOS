@@ -5,3 +5,9 @@ function a
 }
 
 a().
+
+set b to {
+  print("b").
+}.
+
+b().

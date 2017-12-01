@@ -9,7 +9,7 @@ using System.Text;
 
 namespace kOS.Safe.Compilation.KS
 {
-    class Compiler
+    class Compiler : IExpressionVisitor
     {
         private CodePart part;
         private Context context;
@@ -23,9 +23,6 @@ namespace kOS.Safe.Compilation.KS
         private readonly List<int> returnList = new List<int>();
         private readonly List<string> triggerKeepNames = new List<string>();
         private bool nowCompilingTrigger;
-        private bool compilingSetDestination;
-        private bool identifierIsVariable;
-        private bool identifierIsSuffix;
         private bool nowInALoop;
         private bool needImplicitReturn;
         private bool nextBraceIsFunction;
@@ -66,8 +63,6 @@ namespace kOS.Safe.Compilation.KS
             returnList.Clear();
             triggerKeepNames.Clear();
             nowCompilingTrigger = false;
-            compilingSetDestination = false;
-            identifierIsSuffix = false;
             nowInALoop = false;
             needImplicitReturn = true;
             braceNestLevel = 0;
@@ -466,7 +461,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
             AddOpcode(new OpcodeEval());
             // eval the expression for the new value, and leave it on the stack twice.
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             AddOpcode(new OpcodeEval());
             AddOpcode(new OpcodeDup());
             // Put one of those two copies of the new value into the old value identifier for next time:
@@ -515,7 +510,7 @@ namespace kOS.Safe.Compilation.KS
             // - - - - - - - - - - - - 
 
             currentCodeSection = triggerObject.Code;
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             OpcodeBranchIfTrue branchToBody = new OpcodeBranchIfTrue();
             branchToBody.Distance = 3;
             AddOpcode(branchToBody);
@@ -770,7 +765,14 @@ namespace kOS.Safe.Compilation.KS
                 if (needImplicitArgBottom)
                     AddOpcode(new OpcodeArgBottom());
 
-                VisitNode(bodyNode);
+                if (isLock)
+                {
+                    VisitExpression(bodyNode);
+                }
+                else
+                {
+                    VisitNode(bodyNode);
+                }
 
                 Int16 implicitReturnScopeDepth = 0;
                 
@@ -1076,9 +1078,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     VisitWhenStatement(node);
                     break;
-                case TokenType.onoff_trailer:
-                    VisitOnOffTrailer(node);
-                    break;
                 case TokenType.stage_stmt:
                     VisitStageStatement(node);
                     break;
@@ -1141,86 +1140,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.unset_stmt:
                     VisitUnsetStatement(node);
                     break;
-                case TokenType.arglist:
-                    VisitArgList(node);
-                    break;
-                case TokenType.compare_expr: // for issue #20
-                case TokenType.arith_expr:
-                case TokenType.multdiv_expr:
-                case TokenType.factor:
-                    VisitExpressionChain(node);
-                    break;
-                case TokenType.expr:
-                    VisitExpr(node);
-                    break;
-                case TokenType.or_expr:
-                case TokenType.and_expr:
-                    VisitShortCircuitBoolean(node);
-                    break;
-                case TokenType.suffix:
-                    VisitSuffix(node);
-                    break;
-                case TokenType.unary_expr:
-                    VisitUnaryExpression(node);
-                    break;
-                case TokenType.atom:
-                    VisitAtom(node);
-                    break;
-                case TokenType.sci_number:
-                    VisitSciNumber(node);
-                    break;
-                case TokenType.number:
-                    VisitNumber(node);
-                    break;
-                case TokenType.INTEGER:
-                    VisitInteger(node);
-                    break;
-                case TokenType.DOUBLE:
-                    VisitDouble(node);
-                    break;
-                case TokenType.PLUSMINUS:
-                    VisitPlusMinus(node);
-                    break;
-                case TokenType.MULT:
-                    VisitMult(node);
-                    break;
-                case TokenType.DIV:
-                    VisitDiv(node);
-                    break;
-                case TokenType.POWER:
-                    VisitPower(node);
-                    break;
-                case TokenType.varidentifier:
-                    VisitVarIdentifier(node);
-                    break;
-                // This never gets called anymore, but it's left here as
-                // a comment so future programmers who search for it will
-                // find this comment and realized that it's not an error
-                // for it to be missing.  It's missing-ness is deliberate:
-                // case TokenType.suffixterm:
-                //    VisitSuffixTerm(node);
-                //    break;
-                case TokenType.IDENTIFIER:
-                    VisitIdentifier(node);
-                    break;
-                case TokenType.FILEIDENT:
-                    VisitFileIdent(node);
-                    break;
-                case TokenType.STRING:
-                    VisitString(node);
-                    break;
-                case TokenType.TRUEFALSE:
-                    VisitTrueFalse(node);
-                    break;
-                case TokenType.COMPARATOR:
-                    VisitComparator(node);
-                    break;
-                case TokenType.AND:
-                    VisitAnd(node);
-                    break;
-                case TokenType.OR:
-                    VisitOr(node);
-                    break;
                 case TokenType.identifier_led_stmt:
                     VisitIdentifierLedStatement(node);
                     break;
@@ -1230,6 +1149,10 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.directive:
                     VisitDirective(node);
                     break;
+                case TokenType.EOF:
+                    break;
+                default:
+                    throw new KOSYouShouldNeverSeeThisException("Unknown token: " + node.Token.Type);
             }
         }
         
@@ -1264,382 +1187,6 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void VisitVariableNode(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            identifierIsVariable = true;
-            VisitNode(node);
-            identifierIsVariable = false;
-        }
-
-        /// <summary>
-        /// Performs the work for a number of different expressions that all
-        /// share the following universal basic properties:<br/>
-        /// - They contain optional binary operators.<br/>
-        /// - The terms are all at the same precedence level.<br/>
-        /// - Because of the tie of precedence level, the terms are to be evaluated left-to-right.<br/>
-        /// - No special extra work is needed, such that simply doing "push expr1, push expr2, then do operator" is all that's needed.<br/>
-        /// <br/>
-        /// Examples:<br/>
-        ///   5 + 4 - x + 2 // because + and - are in the same parse rule, these all get the same flat precedence.<br/>
-        ///   x * y * z<br/>
-        /// In cases like that where all the operators "tie", the entire chain of terms lives in the same ParseNode,<br/>
-        /// and we have to unroll those terms and presume left-to-right precedence.  That is what this method does.<br/>
-        /// </summary>
-        /// <param name="node"></param>
-        private void VisitExpressionChain(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (node.Nodes.Count > 1)
-            {
-                // it should always be odd, two arguments and one operator
-                if ((node.Nodes.Count % 2) != 1) return;
-
-                VisitNode(node.Nodes[0]); // pushes lefthand side on stack.
-
-                int nodeIndex = 2;
-                while (nodeIndex < node.Nodes.Count)
-                {
-                    VisitNode(node.Nodes[nodeIndex]); // pushes righthand side on stack.
-                    nodeIndex -= 1;
-                    VisitNode(node.Nodes[nodeIndex]); // operator, i.e '*', '+', '-', '/', etc.
-                    nodeIndex += 3; // Move to the next term over (if there's more than 2 terms in the chain).
-
-                    // If there are more terms to process, then the value that the operation leaves behind on the stack
-                    // from operating on these two terms will become the 'lefthand side' for the next iteration of this loop.
-                }
-            }
-            else if (node.Nodes.Count == 1)
-            {
-                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of binary operators, because
-                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
-                                          // So just delve in deeper to compile whatever part of speech it is further down.
-            }
-        }
-
-        /// <summary>
-        /// The outermost expression level, which may be a normal expression,
-        /// or may be an anonymous function, depending of if it's got braces.
-        /// </summary>
-        /// <param name="node"></param>
-        private void VisitExpr(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            
-            // If it's an instruction block then it's an anonymous function, so
-            // compile the function body right here, while branching around it so
-            // it won't execute just yet, and instead just push a UserDelegate of it
-            // onto the stack as the value of this expression:
-            if (node.Nodes[0].Token.Type == TokenType.instruction_block)
-            {
-                Opcode skipPastFunctionBody = AddOpcode(new OpcodeBranchJump());
-                string functionStartLabel = GetNextLabel(false);
-                
-                needImplicitReturn = true;
-                nextBraceIsFunction = true;
-                VisitNode(node.Nodes[0]); // the braces of the anonymous function and its contents get compiled in-line here.
-                nextBraceIsFunction = false;
-                if (needImplicitReturn)
-                    // needImplicitReturn is unconditionally true here, but it's being used anyway so we'll find this block
-                    // of code later when we search for "all the places using needImplicitReturn" and perform a refactor
-                    // of the logic for adding implicit returns.
-                {
-                    AddOpcode(new OpcodePush(0)); // Functions must push a dummy return val when making implicit returns. Locks already leave an expr atop the stack.
-                    AddOpcode(new OpcodeReturn(0));
-                }
-                Opcode afterFunctionBody = AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionStartLabel);
-                skipPastFunctionBody.DestinationLabel = afterFunctionBody.Label;
-            }
-            else // ordinary expression - just descend to the next level of the tree and eval the expression as normal:
-            {
-                VisitNode(node.Nodes[0]);
-            }
-        }
-
-        /// <summary>
-        /// Handles the short-circuit logic of boolean OR and boolean AND
-        /// chains.  It is like VisitExpressionChain (see elsewhere) but
-        /// in this case it has the special logic to short circuit and skip
-        /// executing the righthand expression if it can.  (The generic VisitExpressionXhain
-        /// always evaluates both the left and right sides of the operator first, then
-        /// does the operation).
-        /// </summary>
-        /// <param name="node"></param>
-        private void VisitShortCircuitBoolean(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            
-            if (node.Nodes.Count > 1)
-            {
-                // it should always be odd, two arguments and one operator
-                if ((node.Nodes.Count % 2) != 1) return;
-
-                // Determine if this is a chain of ANDs or a chain or ORs.  The parser will
-                // never mix ANDs and ORs into the same ParseNode level.  We are guaranteed
-                // that all the operators in this chain match the first operator in the chain:
-                // That guarantee is important.  Without it, we can't do short-circuiting like this
-                // because you can't short-circuit a mix of AND and OR at the same precedence.
-                TokenType operation = node.Nodes[1].Token.Type; // Guaranteed to be either TokenType.AND or TokenType.OR
-                
-                // For remembering the instruction pointers from which short-circuit branch jumps came:
-                List<int> shortCircuitFromIndeces = new List<int>();
-                
-                int nodeIndex = 0;
-                while (nodeIndex < node.Nodes.Count)
-                {
-                    if (nodeIndex > 0) // After each term, insert the branch test (which consumes the expr from the stack regardless of if it branches):
-                    {
-                       shortCircuitFromIndeces.Add(currentCodeSection.Count());
-                       if (operation == TokenType.AND)
-                           AddOpcode(new OpcodeBranchIfFalse());
-                       else if (operation == TokenType.OR)
-                           AddOpcode(new OpcodeBranchIfTrue());
-                       else
-                           throw new KOSException("Assertion check:  Broken kerboscript compiler (VisitShortCircuitBoolean).  See kOS devs");
-                    }
-                    
-                    VisitNode(node.Nodes[nodeIndex]); // pushes the next term onto the stack.
-                    nodeIndex += 2; // Skip the operator, moving to the next term over.
-                }
-                // If it gets to the end of all that and it still hasn't aborted, then the whole expression's
-                // Boolean value is just the value of its lastmost term, that's already gotten pushed atop the stack.
-                // Leave the lastmost term there, and just skip ahead past the short-circuit landing target:
-                OpcodeBranchJump skipShortCircuitTarget = new OpcodeBranchJump();
-                skipShortCircuitTarget.Distance = 2; // Hardcoded +2 jump distance skips the upcoming OpcodePush and just lands on
-                                                     // whatever comes next after this VisitNode.  Avoids using DestinationLabel
-                                                     // for later relocation because it would be messy to reassign this label later
-                                                     // in whatever VisitNode happens to come up next, when that could be anything.
-                AddOpcode(skipShortCircuitTarget);
-                
-                // Build the instruction all the short circuit checks will jump to if aborting partway through.
-                // (AND's abort when they're false.  OR's abort when they're true.)
-                AddOpcode(operation == TokenType.AND ? new OpcodePush(false) : new OpcodePush(true));
-                string shortCircuitTargetLabel = currentCodeSection[currentCodeSection.Count()-1].Label;
-                
-                // Retroactively re-assign the jump labels of all the short circuit branch operations:
-                foreach (int index in shortCircuitFromIndeces)
-                {
-                    currentCodeSection[index].DestinationLabel = shortCircuitTargetLabel;
-                }
-            }
-            else if (node.Nodes.Count == 1)
-            {
-                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of AND or OR operators, because
-                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
-                                          // So just delve in deeper to compile whatever part of speech it is further down.
-            }
-        }
-        
-        private void VisitUnaryExpression(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (node.Nodes.Count <= 0) return;
-
-            bool addNegation = false;
-            bool addNot = false;
-            bool addDefined = false;
-            int nodeIndex = 0;
-
-            if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
-            {
-                nodeIndex++;
-                if (node.Nodes[0].Token.Text == "-")
-                {
-                    addNegation = true;
-                }
-            }
-            else if (node.Nodes[0].Token.Type == TokenType.NOT)
-            {
-                nodeIndex++;
-                addNot = true;
-            }
-            else if (node.Nodes[0].Token.Type == TokenType.DEFINED)
-            {
-                nodeIndex++;
-                addDefined = true;
-            }
-            
-            VisitNode(node.Nodes[nodeIndex]);
-
-            if (addNegation)
-            {
-                AddOpcode(new OpcodeMathNegate());
-            }
-            if (addNot)
-            {
-                AddOpcode(new OpcodeLogicNot());
-            }
-            if (addDefined)
-            {
-                AddOpcode(new OpcodeExists());
-            }
-        }
-
-        private void VisitAtom(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-
-            if (node.Nodes[0].Token.Type == TokenType.BRACKETOPEN)
-            {
-                VisitNode(node.Nodes[1]);
-            }
-            else
-            {
-                VisitNode(node.Nodes[0]);
-            }
-        }
-
-        private void VisitSciNumber(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (node.Nodes.Count == 1)
-            {
-                VisitNumber(node.Nodes[0]);
-            }
-            else
-            {
-                //number in scientific notation
-                StringBuilder sb = new StringBuilder();
-                sb.Append(node.Nodes[0].Nodes[0].Token.Text); // have to use the sub-node of double or integer
-                for (int i = 1; i < node.Nodes.Count; ++i)
-                {
-                    sb.Append(node.Nodes[i].Token.Text);
-                }
-                string parseText = sb.ToString();
-                ScalarValue val;
-                if (ScalarValue.TryParse(parseText, out val))
-                {
-                    AddOpcode(new OpcodePush(val));
-                }
-                else
-                    throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, parseText));
-            }
-        }
-
-        private void VisitNumber(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            VisitNode(node.Nodes[0]);
-        }
-
-        private void VisitInteger(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            ScalarValue val;
-            if (ScalarValue.TryParseInt(node.Token.Text.Replace("_", ""), out val) ||
-                ScalarValue.TryParseDouble(node.Token.Text.Replace("_", ""), out val) // fallback if number is too big for an integer.
-               )
-            {
-                AddOpcode(new OpcodePush(val));
-            }
-            else
-                throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, node.Token.Text));
-        }
-
-        private void VisitDouble(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            ScalarValue val;
-            if (ScalarValue.TryParseDouble(node.Token.Text.Replace("_",""), out val))
-            {
-                AddOpcode(new OpcodePush(val));
-            }
-            else
-                throw new KOSCompileException(node.Token, string.Format(KOSNumberParseException.TERSE_MSG_FMT, node.Token.Text));
-        }
-
-        private void VisitTrueFalse(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            bool boolValue;
-            if (bool.TryParse(node.Token.Text, out boolValue))
-            {
-                AddOpcode(new OpcodePush(new BooleanValue(boolValue)));
-            }
-        }
-
-        private void VisitOnOffTrailer(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush((node.Nodes[0].Token.Type == TokenType.ON)));
-        }
-
-        /// <summary>
-        /// Do the work for function calls.
-        /// </summary>
-        /// <param name="node">parse node for the function term of the parse tree.</param>
-        /// <param name="isDirect">true if it should make an OpcodeCall that is Direct, false if it should make an indirect one.
-        /// See the documentation for OpcodeCall.Direct for the full explanation of the difference.  If isDirect is true, then
-        /// the name to the left of the parentheses will be the name of the function call or the name of the
-        /// identifier variable that holds the function's jump address in the case of user functions.  But in either case
-        /// the important thing is that when isDirect is true, that means the OpcodeCall uses the Opcode's argument to
-        /// decide where to call.  On the other hand, if isDirect is false, then it will
-        /// presume the function name, delegate, or branch index was
-        /// already placed atop the stack by other parts of this compiler, rather than encoding it into the
-        /// OpcodeCall's argument itself.</param>
-        /// <param name="directName">In the case where it's a direct function, what's the name of it?  In the case
-        /// where it's not direct, this argument doesn't matter.</param>
-        private void VisitActualFunction(ParseNode node, bool isDirect, string directName = "")
-        {
-            NodeStartHousekeeping(node);
-
-            ParseNode trailerNode = node; // the function_trailer rule is here.
-
-            if (trailerNode.Nodes.Count > 0 && trailerNode.Nodes[0].Token.Type == TokenType.ATSIGN)
-            {
-                BuildFunctionDelegate(isDirect, directName);
-                return;
-            }
-
-            // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
-            // Even if there are no arguments, it still has to be TOLD that by showing
-            // it the marker atop the stack with nothing above it.
-            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-
-            if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
-            {
-                // Some of the flags remembering the context of
-                // what we were inside of in the parse tree aren't
-                // appropriate to be using while evaluating the function's
-                // argument terms in the list:
-                bool rememberIsSuffix = identifierIsSuffix;
-                identifierIsSuffix = false;
-                bool rememberCompilingSetDestination = compilingSetDestination;
-                compilingSetDestination = false;
-
-                // Now compile the arguments in the list:
-                VisitNode(trailerNode.Nodes[1]);
-
-                // And then return the flags to their original condition:
-                compilingSetDestination = rememberCompilingSetDestination;
-                identifierIsSuffix = rememberIsSuffix;
-            }
-
-            if (isDirect)
-            {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
-                    directName += "()";
-                AddOpcode(new OpcodeCall(directName));
-            }
-            else
-            {
-                var op = new OpcodeCall(string.Empty) { Direct = false };
-                AddOpcode(op);
-            }
-
-        }
-
-        private void VisitArgList(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            int nodeIndex = 0;
-            while (nodeIndex < node.Nodes.Count)
-            {
-                VisitNode(node.Nodes[nodeIndex]);
-                nodeIndex += 2;
-            }
-        }
-
         // For the case where you wish to eval the args lastmost-first, such
         // that they'll push onto the stack like so:
         //   arg1 <-- top
@@ -1656,241 +1203,9 @@ namespace kOS.Safe.Compilation.KS
             int nodeIndex = node.Nodes.Count - 1;
             while (nodeIndex >= 0)
             {
-                VisitNode(node.Nodes[nodeIndex]);
+                VisitExpression(node.Nodes[nodeIndex]);
                 nodeIndex -= 2;
             }
-        }
-        
-        /// <summary>
-        /// When a function identifier or suffix ends in '@' where parentheses could have gone,
-        /// then its not really being called like a function.  Instead it's being asked to generate
-        /// a delegate of itself to be put atop the stack.
-        /// This builds the code that does that.
-        /// </summary>
-        /// <param name="isDirect">If true, then the directName is the name of the function being called or the user
-        /// variable holding the function delegate to be called.  If false, then the compiler should have built code
-        /// that will have left a suffix or function reference atop the stack already.</param>
-        /// <param name="directName">only needed when isDirect is true</param>
-        private void BuildFunctionDelegate(bool isDirect, string directName = "")
-        {
-            if (isDirect)
-            {
-                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then make a BuiltInDelegate
-                {
-                    AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                    AddOpcode(new OpcodePush(directName));
-                    AddOpcode(new OpcodeCall("makebuiltindelegate()"));
-                }
-                else
-                {
-                    // It is not a built-in, so instead get its value as a user function pointer variable, despite 
-                    // the fact that it's being called AS IF it was direct.
-                    if (!directName.EndsWith("*")) directName = directName + "*";
-                    if (!directName.StartsWith("$")) directName = "$" + directName;
-                    AddOpcode(new OpcodePush(directName));
-                }
-            }
-            // Else we shouldn't have to do any work because the thing atop the stack will already
-            // be a suffix delegate.
-        }
-
-        private void VisitVarIdentifier(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-
-            // I might be called on a raw IDENTIFIER, in which case I have no
-            // child nodes to descend into.  But if I *do* have a child node
-            // to descend into, then do so:
-            VisitNode(node.Nodes.Count == 0 ? node : node.Nodes[0]);
-        }
-
-        // Parses this rule:
-        // suffix             -> suffixterm (suffix_trailer)*;
-        // suffix_trailer     -> (COLON suffixterm);
-        private void VisitSuffix(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-
-            // For each suffixterm between colons:
-            for (int nodeIndex = 0; nodeIndex < node.Nodes.Count; ++nodeIndex)
-            {
-
-                bool remember = identifierIsSuffix;
-                identifierIsSuffix = (nodeIndex > 0);
-
-                ParseNode suffixTerm;
-                if (nodeIndex == 0)
-                    suffixTerm = node.Nodes[nodeIndex];
-                else
-                    // nodes after the first are suffix_trailers consisting of (COLON suffixterm).  This skips the colon.
-                    suffixTerm = node.Nodes[nodeIndex].Nodes[1];
-
-                // Is it being portrayed like a function call with parentheses?
-                bool startsWithFunc =
-                    (suffixTerm.Nodes.Count > 1 &&
-                     suffixTerm.Nodes[1].Nodes.Count > 0 &&
-                     suffixTerm.Nodes[1].Nodes[0].Token.Type == TokenType.function_trailer);
-
-                string firstIdentifier = "";
-                bool isUserFunc = false;
-                if (nodeIndex == 0)
-                {
-                    firstIdentifier = GetIdentifierText(suffixTerm);
-                    UserFunction userFuncObject = GetUserFunctionWithScopeWalk(firstIdentifier, node);
-                    if (userFuncObject != null && !compilingSetDestination)
-                    {
-                        firstIdentifier = userFuncObject.ScopelessPointerIdentifier;
-                        isUserFunc = true;
-                    }
-                }
-                // The term starts with either an identifier or an expression.  If it's the start, then parse
-                // it as a variable, else parse it as a raw identifier:
-                bool rememberIsV = identifierIsVariable;
-                identifierIsVariable = (!startsWithFunc) && nodeIndex == 0;
-
-                // when we are setting a member value we need to leave
-                // the last object and the last suffix in the stack
-                bool usingSetMember = (suffixTerm.Nodes.Count > 0) && (compilingSetDestination && nodeIndex == (node.Nodes.Count - 1));
-
-                // Push this term on the stack unless it's the name of the user function or built-in function or a suffix:
-                bool isDirect = true;
-
-                if (usingSetMember && suffixTerm.Nodes.Count == 1)
-                {
-                    // If this is the name of a suffix that we are setting, don't do anything with it.
-                    // ProcessSetOperation will handle putting the suffix name into the opcode.
-                }
-                else if (nodeIndex != 0 && !usingSetMember)
-                {
-                    string suffixName = GetIdentifierText(suffixTerm.Nodes[0]);
-                    AddOpcode(startsWithFunc ? new OpcodeGetMethod(suffixName) : new OpcodeGetMember(suffixName));
-                    isDirect = false;
-                }
-                else if (!isUserFunc && (nodeIndex > 0 || !startsWithFunc))
-                {
-                    VisitNode(suffixTerm.Nodes[0]);
-                    isDirect = false;
-                }
-                identifierIsVariable = rememberIsV;
-
-                // The remaining terms are a chain of function_trailers "(...)" and array_trailers "[...]" or "#.." in any arbitrary order:
-                for (int trailerIndex = 1; trailerIndex < suffixTerm.Nodes.Count; ++trailerIndex)
-                {
-                    // suffixterm_trailer is always a wrapper around either function_trailer or array_trailer,
-                    // so delve down one level to get which of them it is:
-                    ParseNode trailerTerm = suffixTerm.Nodes[trailerIndex].Nodes[0];
-                    bool isFunc = (trailerTerm.Token.Type == TokenType.function_trailer);
-                    bool isArray = (trailerTerm.Token.Type == TokenType.array_trailer);
-                    bool thisTermIsDirect = (isDirect && trailerIndex == 1); // only the firstmost term in a chain can be direct.
-
-                    if (isFunc || isUserFunc)
-                    {
-                        // direct if it's just one term like foo(aaa) but indirect
-                        // if it's a list of suffixes like foo:bar(aaa):
-                        VisitActualFunction(trailerTerm, thisTermIsDirect, firstIdentifier);
-                    }
-                    if (isArray)
-                    {
-                        VisitActualArray(trailerTerm);
-                    }
-                }
-                
-                // In the case of a lock function without parentheses, it needs this special case:
-                if (suffixTerm.Nodes.Count <= 1)
-                {
-                    if (isDirect && isUserFunc)
-                    {
-                        AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                        AddOpcode(new OpcodeCall(firstIdentifier));
-                    }
-                }
-
-                identifierIsSuffix = remember;
-
-            }
-        }
-
-        /// <summary>
-        /// Do the work for array index references.  It assumes the array object has already
-        /// been pushed on top of the stack so there's no reason to read that from the
-        /// node's children.  It just reads the indexing part.
-        /// </summary>
-        /// <param name="node">parse node for the array suffix of the parse tree.</param>
-        private void VisitActualArray(ParseNode node)
-        {
-            ParseNode trailerNode = node; // should be type array_trailer.
-
-            int nodeIndex = 1;
-            while (nodeIndex < trailerNode.Nodes.Count)
-            {
-                // Skip two tokens instead of one between dimensions if using the "[]" syntax:
-                if (trailerNode.Nodes[nodeIndex].Token.Type == TokenType.SQUAREOPEN)
-                {
-                    ++nodeIndex;
-                }
-
-                // Temporarily turn off these flags while evaluating the expression inside
-                // the array index square brackets.  These flags apply to this outer containing
-                // thing, the array access, not to the expression in the index brackets:
-                bool rememberIdentIsSuffix = identifierIsSuffix;
-                identifierIsSuffix = false;
-                bool rememberCompSetDest = compilingSetDestination;
-                compilingSetDestination = false;
-                
-                VisitNode(trailerNode.Nodes[nodeIndex]); // pushes the result of expression inside square brackets.
-
-                compilingSetDestination = rememberCompSetDest;
-                identifierIsSuffix = rememberIdentIsSuffix;
-
-                // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
-                // depending on whether using the "#" syntax or the "[..]" syntax:
-                bool isLastIndex = false;
-                var previousNodeType = trailerNode.Nodes[nodeIndex - 1].Token.Type;
-                switch (previousNodeType)
-                {
-                    case TokenType.ARRAYINDEX:
-                        isLastIndex = (nodeIndex == trailerNode.Nodes.Count - 1);
-                        break;
-                    case TokenType.SQUAREOPEN:
-                        isLastIndex = (nodeIndex == trailerNode.Nodes.Count - 2);
-                        break;
-                }
-
-                // when we are setting a member value we need to leave
-                // the last object and the last index in the stack
-                // the only exception is when we are setting a suffix of the indexed value
-                bool atEnd = IsLastmostTrailerInTerm(node);
-                if (!(compilingSetDestination && isLastIndex) || (!atEnd))
-                {
-                    AddOpcode(new OpcodeGetIndex());
-                }
-
-                nodeIndex += 2;
-            }
-
-        }
-        
-        /// <summary>
-        /// Returns true if this is the last most trailer term (array_trailer, suffix_trailer, or function_trailer)
-        /// in a term inside a suffix rule of the parser.  Does this by a tree walk to look for siblings to
-        /// the right of me.
-        /// </summary>
-        /// <param name="node">Node to check</param>
-        /// <returns>true if I am the rightmost thing in the parse tree all the way up to the suffix term above me.</returns>
-        private bool IsLastmostTrailerInTerm(ParseNode node)
-        {
-            ParseNode current = node;
-            ParseNode parent = node.Parent;
-            
-            while (parent != null && current.Token.Type != TokenType.suffix && current.Token.Type != TokenType.varidentifier)
-            {
-                if (parent.Nodes.LastIndexOf(current) < parent.Nodes.Count - 1)
-                    return false; // there is a child to the right of me.  I am not lastmost.
-
-                current = parent;
-                parent = current.Parent;
-            }
-            return true;
         }
 
         private string GetIdentifierText(ParseNode node)
@@ -1912,39 +1227,7 @@ namespace kOS.Safe.Compilation.KS
 
             return string.Empty;
         }
-        
-        // The fact that there is no VisitSuffixTerm method is not an omission or mistake.
-        // All the logic of this node of the parse tree is now handled by the parent nodes
-        // that come above this one instead.  I'm leaving this comment here so that future programmers
-        // searching this code don't attempt to fix this "mistake" by adding this method back in:
-        // private void VisitSuffixTerm(ParseNode node)
-        // {
-        //     // nothing here anymore.
-        // }
-        
-        private void VisitIdentifier(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            bool isVariable = (identifierIsVariable && !identifierIsSuffix);
-            string prefix = isVariable ? "$" : String.Empty;
-            string identifier = GetIdentifierText(node);
-            
-            // Special case when the identifier is known to be a lock.
-            // Note that this only works when the lock is defined in the SAME
-            // file.  When one script calls another one, the compiler won't know
-            // that the identifier is a lock, and you'll have to use empty parens
-            // to make it a real function call like var():
-            UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, node);
-            if (isVariable && userFuncObject != null)
-            {
-                AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
-            }
-            else
-            {
-                AddOpcode(new OpcodePush(prefix + identifier));
-            }
-        }
-        
+
         /// <summary>
         /// Get the User function with the given the identifier, performing a
         /// scope walk from here up to the root of the parse tree until a hit
@@ -1975,177 +1258,13 @@ namespace kOS.Safe.Compilation.KS
             return null;
         }
 
-        private void VisitFileIdent(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            string identifier = GetIdentifierText(node);
-            AddOpcode(new OpcodePush(identifier));
-        }
-
-        private void VisitString(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush(new StringValue(node.Token.Text.Trim('"'))));
-        }
-
-        ///<summary>
-        /// Check for if the rightmost thing in the var_identifier node
-        /// is a suffix term.  i.e. return true if the var_identifier is:<br/>
-        ///    AAA:BBB, or<br/>
-        ///    AAA[0]:BBB,<br/>
-        /// but NOT if it's this:<br/>
-        ///    AAA:BBB[0].<br/>
-        /// (Which does *contain* a suffix, but not as the rightmost part of it.  The rightmost
-        /// part of it is the array indexer "[0]".)
-        /// </summary>
-        private bool VarIdentifierEndsWithSuffix(ParseNode node)
-        {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return VarIdentifierEndsWithSuffix(node.Nodes.First());
-
-            // Descend the rightmost children until encountering the deepest node that is
-            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
-            // was a suffix_trailer, return true, else it's false.
-            ParseNode prevChild = node;
-            ParseNode thisChild = node.Nodes.Last();
-            
-            bool descendedThroughAColon = false; // eeeewwww, sounds disgusting.
-                
-            while (thisChild.Token.Type == TokenType.suffix_trailer ||
-                   thisChild.Token.Type == TokenType.suffix || 
-                   thisChild.Token.Type == TokenType.suffixterm || 
-                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
-                   thisChild.Token.Type == TokenType.array_trailer ||
-                   thisChild.Token.Type == TokenType.function_trailer)
-            {
-                if (thisChild.Token.Type == TokenType.suffix_trailer)
-                    descendedThroughAColon = true;
-                prevChild = thisChild;
-                thisChild = thisChild.Nodes.Last();
-            }
-            return descendedThroughAColon && 
-                (prevChild.Token.Type == TokenType.suffix_trailer ||
-                 prevChild.Token.Type == TokenType.suffixterm);
-        }
-
-        ///<summary>
-        /// Get the rightmost suffix in a var_identifier.
-        /// i.e. return "BBB" if the var_identifier is:<br/>
-        ///    AAA:BBB, or<br/>
-        ///    AAA[0]:BBB,<br/>
-        /// </summary>
-        private string GetVarIdentifierEndSuffix(ParseNode node)
-        {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return GetVarIdentifierEndSuffix(node.Nodes.First());
-
-            // Descend the rightmost children until encountering the deepest node that is
-            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
-            // was a suffix_trailer, return true, else it's false.
-            ParseNode prevChild = node;
-            ParseNode thisChild = node.Nodes.Last();
-
-            bool descendedThroughAColon = false; // eeeewwww, sounds disgusting.
-
-            while (thisChild.Token.Type == TokenType.suffix_trailer ||
-                   thisChild.Token.Type == TokenType.suffix || 
-                   thisChild.Token.Type == TokenType.suffixterm || 
-                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
-                   thisChild.Token.Type == TokenType.array_trailer ||
-                   thisChild.Token.Type == TokenType.function_trailer)
-            {
-                if (thisChild.Token.Type == TokenType.suffix_trailer)
-                    descendedThroughAColon = true;
-                prevChild = thisChild;
-                thisChild = thisChild.Nodes.Last();
-            }
-            if (descendedThroughAColon && 
-                (prevChild.Token.Type == TokenType.suffix_trailer ||
-                 prevChild.Token.Type == TokenType.suffixterm))
-            {
-                return GetIdentifierText(prevChild);
-            }
-
-            throw new KOSYouShouldNeverSeeThisException("VarIdentifier didn't end in a suffix");
-        }
-
-        ///<summary>
-        /// Check for if the rightmost thing in the var_identifier node
-        /// is an array indexer.  i.e. return true if the var_identifier is:<br/>
-        ///    AAA:BBB[0], or<br/>
-        ///    AAA[0],<br/>
-        /// but NOT if it's this:<br/>
-        ///    AAA[0]:BBB<br/>
-        /// (Which does *contain* an array indexer, but not as the rightmost part of it.  The rightmost
-        /// part of it is the suffix term ":BBB".)
-        /// </summary>
-        private bool VarIdentifierEndsWithIndex(ParseNode node)
-        {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return VarIdentifierEndsWithIndex(node.Nodes.First());
-
-            // Descend the rightmost children until encountering the deepest node that is
-            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
-            // was an array_trailer, return true, else it's false.
-            ParseNode prevChild = node;
-            ParseNode thisChild = node.Nodes.Last();
-            while (thisChild.Token.Type == TokenType.suffix_trailer ||
-                   thisChild.Token.Type == TokenType.suffix || 
-                   thisChild.Token.Type == TokenType.suffixterm || 
-                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
-                   thisChild.Token.Type == TokenType.array_trailer ||
-                   thisChild.Token.Type == TokenType.function_trailer)
-            {
-                prevChild = thisChild;
-                thisChild = thisChild.Nodes.Last();
-            }
-            return prevChild.Token.Type == TokenType.array_trailer;
-        }
-
-        /// <summary>
-        /// Perform a depth-first leftmost search of the parse tree from the starting
-        /// point given to find the first occurrence of a node of the given token type.<br/>
-        /// This is intended as a way to make code that might be a bit more robustly able
-        /// to handle shifts and adjustments to the parse grammar in the TinyPG file.<br/>
-        /// Instead of assuming "I know that array nodes are always one level underneath
-        /// function nodes", it instead lets you say "Get the array node version of this
-        /// node, no matter how many levels down it may be."<br/>
-        /// This is needed because TinyPG's LL(1) limitations made it so we had to define
-        /// things like "we're going to call this node a 'function' even though it might
-        /// not actually be because the "(..)" part of the syntax is optional.  In reality
-        /// it's *potentially* a function, or maybe actually an array, or an identifier.<br/>
-        /// This method is intended to let you descend however far down is required to get
-        /// the node in the sort of context you're looking for.
-        /// </summary>
-        /// <param name="node">start the search from this point in the parse tree</param>
-        /// <param name="tokType">look for this kind of node</param>
-        /// <returns>the found node, or null if no such node found.</returns>
-        private ParseNode DepthFirstLeftSearch(ParseNode node, TokenType tokType)
-        {
-            if (node.Token.Type == tokType)
-            {
-                return node;
-            }
-            foreach (ParseNode child in node.Nodes)
-            {
-                ParseNode hit = DepthFirstLeftSearch(child, tokType);
-                if (hit != null)
-                    return hit;
-            }
-
-            return null; // not found.
-        }
-
         private void VisitSetStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            ProcessSetOperation(node.Nodes[1], node.Nodes[3]);
+            ProcessSetOperation(
+                ExpressionBuilder.BuildExpression(node.Nodes[1]),
+                ExpressionBuilder.BuildExpression(node.Nodes[3])
+            );
         }
 
         /// <summary>
@@ -2153,49 +1272,54 @@ namespace kOS.Safe.Compilation.KS
         /// </summary>
         /// <param name="setThis">The lefthand-side expression to be set</param>
         /// <param name="toThis">The righthand-side expression to set it to</param>
-        private void ProcessSetOperation(ParseNode setThis, ParseNode toThis)
+        private void ProcessSetOperation(ExpressionNode setThis, ExpressionNode toThis)
         {
-            bool isSuffix = VarIdentifierEndsWithSuffix(setThis);
-            bool isIndex = VarIdentifierEndsWithIndex(setThis);
-            if (isSuffix || isIndex)
+            if (setThis is IdentifierAtomNode)
             {
-                // destination
-                compilingSetDestination = true;
-                VisitNode(setThis);
-                compilingSetDestination = false;
+                // set identifier to expr.
 
-                // expression
-                VisitNode(toThis);
+                string identifier = ((IdentifierAtomNode)setThis).Identifier;
 
-                if (isSuffix)
+                // if this is a locked value, unlock it
+                UserFunction userFunc = GetUserFunctionWithScopeWalk(identifier, setThis.ParseNode);
+                if (userFunc != null)
                 {
-                    string suffixName = GetVarIdentifierEndSuffix(setThis);
-                    AddOpcode(new OpcodeSetMember(suffixName));
+                    UnlockIdentifier(userFunc);
                 }
+
+                toThis.Accept(this);
+
+                if (allowLazyGlobal)
+                    AddOpcode(new OpcodeStore("$" + identifier));
                 else
-                {
-                    AddOpcode(new OpcodeSetIndex());
-                }
+                    AddOpcode(new OpcodeStoreExist("$" + identifier));
+            }
+            else if (setThis is GetIndexNode)
+            {
+                // set base[index] to expr.
+
+                GetIndexNode getIndex = (GetIndexNode)setThis;
+
+                getIndex.Base.Accept(this);
+                getIndex.Index.Accept(this);
+                toThis.Accept(this);
+
+                AddOpcode(new OpcodeSetIndex());
+            }
+            else if (setThis is GetSuffixNode)
+            {
+                // set base:suffix to expr.
+
+                GetSuffixNode getSuffix = (GetSuffixNode)setThis;
+
+                getSuffix.Base.Accept(this);
+                toThis.Accept(this);
+
+                AddOpcode(new OpcodeSetMember(getSuffix.Suffix));
             }
             else
             {
-                // normal variable set
-                VisitNode(toThis);
-
-                string identifier = GetIdentifierText(setThis);
-
-                UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, setThis);
-                if (userFuncObject != null)
-                {
-                    UnlockIdentifier(userFuncObject);
-                }
-
-                string varName = "$" + identifier;
-
-                if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore(varName));
-                else
-                    AddOpcode(new OpcodeStoreExist(varName));
+                throw new KOSCompileException(setThis.ParseNode.Token, "Invalid set destination");
             }
         }
 
@@ -2203,7 +1327,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             // The IF check:
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             Opcode branchToFalse = AddOpcode(new OpcodeBranchIfFalse());
             // The IF BODY:
             VisitNode(node.Nodes[2]);
@@ -2240,7 +1364,7 @@ namespace kOS.Safe.Compilation.KS
 
             string conditionLabel = GetNextLabel(false);
             PushBreakList(braceNestLevel);
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             AddOpcode(new OpcodeLogicNot());
             Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
             AddToBreakList(branch);
@@ -2251,75 +1375,6 @@ namespace kOS.Safe.Compilation.KS
             addBranchDestination = true;
 
             nowInALoop = remember;
-        }
-
-        private void VisitPlusMinus(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (node.Token.Text == "+")
-            {
-                AddOpcode(new OpcodeMathAdd());
-            }
-            else if (node.Token.Text == "-")
-            {
-                AddOpcode(new OpcodeMathSubtract());
-            }
-        }
-
-        private void VisitMult(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodeMathMultiply());
-        }
-
-        private void VisitDiv(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodeMathDivide());
-        }
-
-        private void VisitPower(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodeMathPower());
-        }
-
-        private void VisitAnd(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodeLogicAnd());
-        }
-
-        private void VisitOr(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodeLogicOr());
-        }
-
-        private void VisitComparator(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            switch (node.Token.Text)
-            {
-                case ">":
-                    AddOpcode(new OpcodeCompareGT());
-                    break;
-                case "<":
-                    AddOpcode(new OpcodeCompareLT());
-                    break;
-                case ">=":
-                    AddOpcode(new OpcodeCompareGTE());
-                    break;
-                case "<=":
-                    AddOpcode(new OpcodeCompareLTE());
-                    break;
-                case "<>":
-                    AddOpcode(new OpcodeCompareNE());
-                    break;
-                case "=":
-                    AddOpcode(new OpcodeCompareEqual());
-                    break;
-            }
         }
 
         private void VisitInstructionBlock(ParseNode node)
@@ -2342,7 +1397,7 @@ namespace kOS.Safe.Compilation.KS
 
             // For each child node, but interrupting for the spot
             // where to insert the argbottom opcode:
-            for (int i = 0 ; i < node.Nodes.Count ; ++i)
+            for (int i = 1 ; i < node.Nodes.Count - 1 ; ++i)
             {
                 if (i == argbottomSpot)
                     AddOpcode(new OpcodeArgBottom());
@@ -2604,7 +1659,7 @@ namespace kOS.Safe.Compilation.KS
             if (triggerObject.IsInitialized())
             {
                 // Store the current value into the old value to prep for the first use of the ON trigger:
-                VisitNode(node.Nodes[1]); // the expression in the on statement.
+                VisitExpression(node.Nodes[1]); // the expression in the on statement.
                 AddOpcode(new OpcodeStore(triggerObject.OldValueIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger());
@@ -2632,7 +1687,7 @@ namespace kOS.Safe.Compilation.KS
             if (node.Nodes.Count == 3)
             {
                 // For commands of the form:  WAIT N. where N is a number:
-                VisitNode(node.Nodes[1]);
+                VisitExpression(node.Nodes[1]);
                 AddOpcode(new OpcodeWait());
             }
             else
@@ -2640,7 +1695,7 @@ namespace kOS.Safe.Compilation.KS
                 // For commands of the form:  WAIT UNTIL expr. where expr is any boolean expression:
                 Opcode waitLoopStart = AddOpcode(new OpcodePush(0));       // Loop start: Gives OpcodeWait an argument of zero.
                 AddOpcode(new OpcodeWait());                               // Avoid busy polling.  Even a WAIT 0 still forces 1 fixedupdate 'tick'.
-                VisitNode(node.Nodes[2]);                                  // Inserts instructions here to evaluate the expression
+                VisitExpression(node.Nodes[2]);                            // Inserts instructions here to evaluate the expression
                 AddOpcode(new OpcodeBranchIfFalse(), waitLoopStart.Label); // Repeat the loop as long as expression is false.
                 // Falls through to whatever comes next when expression is true.
             }
@@ -2657,7 +1712,7 @@ namespace kOS.Safe.Compilation.KS
             //    DECLARE [GLOBAL|LOCAL] identifier TO expr.
             if (lastSubNode.Token.Type == TokenType.declare_identifier_clause)
             {
-                VisitNode(lastSubNode.Nodes[2]);
+                VisitExpression(lastSubNode.Nodes[2]);
                 AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[0])));
             }
             
@@ -2723,7 +1778,7 @@ namespace kOS.Safe.Compilation.KS
                 OpcodeBranchIfFalse branchSkippingInit = new OpcodeBranchIfFalse();
                 AddOpcode(branchSkippingInit);
                 
-                VisitNode(expressionNode); // evals init expression on the top of the stack where the arg would have been
+                VisitExpression(expressionNode); // evals init expression on the top of the stack where the arg would have been
 
                 branchSkippingInit.DestinationLabel = GetNextLabel(false);
             }
@@ -2837,14 +1892,13 @@ namespace kOS.Safe.Compilation.KS
         private void VisitToggleStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            string varName = "$" + GetIdentifierText(node.Nodes[1]);
-            VisitVarIdentifier(node.Nodes[1]);
-            AddOpcode(new OpcodeLogicToBool());
-            AddOpcode(new OpcodeLogicNot());
-            if (allowLazyGlobal)
-                AddOpcode(new OpcodeStore(varName));
-            else
-                AddOpcode(new OpcodeStoreExist(varName));
+            ExpressionNode identifier = ExpressionBuilder.BuildExpression(node.Nodes[1]);
+            ExpressionNode target = new NegateExpressionNode() {
+                ParseNode = node,
+                Target = identifier
+            };
+
+            ProcessSetOperation(identifier, target);
         }
 
         private void VisitPrintStatement(ParseNode node)
@@ -2853,16 +1907,16 @@ namespace kOS.Safe.Compilation.KS
             if (node.Nodes.Count == 3)
             {
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                VisitNode(node.Nodes[1]);
+                VisitExpression(node.Nodes[1]);
                 AddOpcode(new OpcodeCall("print()"));
                 AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
             }
             else
             {
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                VisitNode(node.Nodes[1]);
-                VisitNode(node.Nodes[4]);
-                VisitNode(node.Nodes[6]);
+                VisitExpression(node.Nodes[1]);
+                VisitExpression(node.Nodes[4]);
+                VisitExpression(node.Nodes[6]);
                 AddOpcode(new OpcodeCall("printat()"));
                 AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
             }
@@ -2880,7 +1934,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             AddOpcode(new OpcodeCall("add()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -2889,7 +1943,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             AddOpcode(new OpcodeCall("remove()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -2906,7 +1960,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             AddOpcode(new OpcodeCall("edit()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -2992,7 +2046,7 @@ namespace kOS.Safe.Compilation.KS
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
                 AddOpcode(new OpcodePush(hasOnce));
-                VisitNode(node.Nodes[progNameIndex]); // put program name on stack.
+                VisitExpression(node.Nodes[progNameIndex]); // put program name on stack.
                 AddOpcode(new OpcodeEval(true));
             }
 
@@ -3018,7 +2072,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
 
                 // program name
-                VisitNode(node.Nodes[progNameIndex]);
+                VisitExpression(node.Nodes[progNameIndex]);
 
                 // volume where program should be executed (null means local)
                 if (volumeIndex >= 0 && volumeIndex < node.Nodes.Count)
@@ -3039,12 +2093,12 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // for the load() function.
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
             AddOpcode(new OpcodePush(false));
             if (node.Nodes.Count > 3)
             {
                 // It has a "TO outputfile" clause:
-                VisitNode(node.Nodes[3]);
+                VisitExpression(node.Nodes[3]);
             }
             else
             {
@@ -3061,7 +2115,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[2]);
+            VisitExpression(node.Nodes[2]);
             AddOpcode(new OpcodeCall("switch()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -3070,11 +2124,11 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
 
             AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "from" : "to"));
 
-            VisitNode(node.Nodes[3]);
+            VisitExpression(node.Nodes[3]);
             AddOpcode(new OpcodeCall("copy_deprecated()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -3101,8 +2155,8 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(renameFile ? "file" : "volume"));
             }
 
-            VisitNode(node.Nodes[oldNameIndex]);
-            VisitNode(node.Nodes[newNameIndex]);
+            VisitExpression(node.Nodes[oldNameIndex]);
+            VisitExpression(node.Nodes[newNameIndex]);
 
             if (renameFile)
             {
@@ -3119,10 +2173,10 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[1]);
+            VisitExpression(node.Nodes[1]);
 
             if (node.Nodes.Count == 5)
-                VisitNode(node.Nodes[3]);
+                VisitExpression(node.Nodes[3]);
             else
                 AddOpcode(new OpcodePush(null));
 
@@ -3142,7 +2196,7 @@ namespace kOS.Safe.Compilation.KS
                 string varName = "$" + GetIdentifierText(node.Nodes[3]);
                 // list type
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                VisitNode(node.Nodes[1]);
+                VisitExpression(node.Nodes[1]);
                 // build list
                 AddOpcode(new OpcodeCall("buildlist()"));
                 if (allowLazyGlobal)
@@ -3155,7 +2209,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 // list type
                 if (hasIdentifier)
-                    VisitNode(node.Nodes[1]);
+                    VisitExpression(node.Nodes[1]);
                 else
                     AddOpcode(new OpcodePush("files"));
                 // print list
@@ -3168,8 +2222,8 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-            VisitNode(node.Nodes[1]);
-            VisitNode(node.Nodes[3]);
+            VisitExpression(node.Nodes[1]);
+            VisitExpression(node.Nodes[3]);
             AddOpcode(new OpcodeCall("logfile()"));
             AddOpcode(new OpcodePop()); // all functions now return a value even if it's a dummy we ignore.
         }
@@ -3212,7 +2266,7 @@ namespace kOS.Safe.Compilation.KS
             // keyword with no expression, then push a secret dummy return value of zero:
             if (node.Nodes.Count > 2)
             {
-                VisitNode(node.Nodes[1]);
+                VisitExpression(node.Nodes[1]);
             }
             else
             {
@@ -3270,7 +2324,7 @@ namespace kOS.Safe.Compilation.KS
 
             PushBreakList(braceNestLevel);
 
-            VisitNode(node.Nodes[3]);
+            VisitExpression(node.Nodes[3]);
             AddOpcode(new OpcodeGetMember("iterator"));
             AddOpcode(new OpcodeStoreLocal(iteratorIdentifier));
             // loop condition
@@ -3312,7 +2366,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                VisitVariableNode(node.Nodes[1]);
+                VisitExpression(node.Nodes[1]);
             }
 
             AddOpcode(new OpcodeUnset());
@@ -3347,7 +2401,10 @@ namespace kOS.Safe.Compilation.KS
                 // Transform the statement into the equivalent more sane statement:
                 // SET BUNCHA_STUFF TO TRUE. // OR FALSE, Depending.
                 // And have the compiler parse it THAT way instead of trying to mess with it here:
-                ProcessSetOperation(node.Nodes[0], node.Nodes[1]);
+                ProcessSetOperation(
+                    ExpressionBuilder.BuildExpression(node.Nodes[0]), 
+                    ExpressionBuilder.BuildExpression(node.Nodes[1])
+                );
             }
             else
             {
@@ -3356,7 +2413,7 @@ namespace kOS.Safe.Compilation.KS
                 // the result away off the top of the stack.
                 // To keep this code simple, we just have the rule that there will unconditionally always
                 // be something atop the stack that all function calls leave behind, even if it's a dummy.)
-                VisitNode(node.Nodes[0]);
+                VisitExpression(node.Nodes[0]);
                 AddOpcode(new OpcodePop());
             }
         }
@@ -3448,6 +2505,319 @@ namespace kOS.Safe.Compilation.KS
             else if (onOffValue.Token.Type == TokenType.OFF)
                 allowLazyGlobal = false;
             // else do nothing, which really should be an impossible case.
+        }
+
+        public void VisitExpression(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+
+            ExpressionNode expr = ExpressionBuilder.BuildExpression(node);
+            expr.Accept(this);
+        }
+
+        public void VisitExpression(OrExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            List<Opcode> skipOps = new List<Opcode>();
+
+            for (int i = 0; i < node.Expressions.Length; i++)
+            {
+                node.Expressions[i].Accept(this);
+                if (i != node.Expressions.Length - 1)
+                {
+                    // for all but the last expression, we short circuit when true
+                    skipOps.Add(AddOpcode(new OpcodeBranchIfTrue()));
+                }
+            }
+
+            // jump over the short circuit value
+            AddOpcode(new OpcodeBranchJump() { Distance = 2 });
+
+            // if we short circuited, it was true
+            string shortCircuitLabel = AddOpcode(new OpcodePush(true)).Label;
+
+            // make all the skips jump to the short circuit value
+            foreach (var skipOp in skipOps)
+            {
+                skipOp.DestinationLabel = shortCircuitLabel;
+            }
+        }
+
+        public void VisitExpression(AndExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            List<Opcode> skipOps = new List<Opcode>();
+
+            for (int i = 0; i < node.Expressions.Length; i++)
+            {
+                node.Expressions[i].Accept(this);
+                if (i != node.Expressions.Length - 1)
+                {
+                    // for all but the last expression, we short circuit when false
+                    skipOps.Add(AddOpcode(new OpcodeBranchIfFalse()));
+                }
+            }
+
+            // jump over the short circuit value
+            AddOpcode(new OpcodeBranchJump() { Distance = 2 });
+
+            // if we short circuited, it was false
+            string shortCircuitLabel = AddOpcode(new OpcodePush(false)).Label;
+
+            // make all the skips jump to the short circuit value
+            foreach (var skipOp in skipOps)
+            {
+                skipOp.DestinationLabel = shortCircuitLabel;
+            }
+        }
+
+        public void VisitExpression(CompareExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+
+            switch (node.Comparator)
+            {
+            case "<":
+                AddOpcode(new OpcodeCompareLT());
+                break;
+            case "<=":
+                AddOpcode(new OpcodeCompareLTE());
+                break;
+            case ">=":
+                AddOpcode(new OpcodeCompareGTE());
+                break;
+            case ">":
+                AddOpcode(new OpcodeCompareGT());
+                break;
+            case "=":
+                AddOpcode(new OpcodeCompareEqual());
+                break;
+            case "<>":
+                AddOpcode(new OpcodeCompareNE());
+                break;
+            default:
+                throw new KOSYouShouldNeverSeeThisException("Unknown comparator: " + node.Comparator);
+            }
+        }
+
+        public void VisitExpression(AddExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+            AddOpcode(new OpcodeMathAdd());
+        }
+
+        public void VisitExpression(SubtractExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+            AddOpcode(new OpcodeMathSubtract());
+        }
+
+        public void VisitExpression(MultiplyExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+            AddOpcode(new OpcodeMathMultiply());
+        }
+
+        public void VisitExpression(DivideExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+            AddOpcode(new OpcodeMathDivide());
+        }
+
+        public void VisitExpression(PowerExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+            AddOpcode(new OpcodeMathPower());
+        }
+
+        public void VisitExpression(NegateExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Target.Accept(this);
+            AddOpcode(new OpcodeMathNegate());
+        }
+
+        public void VisitExpression(NotExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Target.Accept(this);
+            AddOpcode(new OpcodeLogicNot());
+        }
+
+        public void VisitExpression(DefinedExpressionNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            AddOpcode(new OpcodePush("$" + node.Identifier));
+            AddOpcode(new OpcodeExists());
+        }
+
+        public void VisitExpression(GetSuffixNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Base.Accept(this);
+            AddOpcode(new OpcodeGetMember(node.Suffix));
+        }
+
+        public void VisitExpression(CallSuffixNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Base.Accept(this);
+            AddOpcode(new OpcodeGetMethod(node.Suffix));
+
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+            foreach (var arg in node.Arguments)
+            {
+                arg.Accept(this);
+            }
+
+            AddOpcode(new OpcodeCall(string.Empty) { Direct = false });
+        }
+
+        public void VisitExpression(GetIndexNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Base.Accept(this);
+            node.Index.Accept(this);
+            AddOpcode(new OpcodeGetIndex());
+        }
+
+        public void VisitExpression(DirectCallNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+            foreach (var arg in node.Arguments)
+            {
+                arg.Accept(this);
+            }
+
+            string directName = node.Identifier;
+            if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
+                directName += "()";
+            AddOpcode(new OpcodeCall(directName));
+        }
+
+        public void VisitExpression(IndirectCallNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            node.Base.Accept(this);
+
+            AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+            foreach (var arg in node.Arguments)
+            {
+                arg.Accept(this);
+            }
+
+            AddOpcode(new OpcodeCall(string.Empty) { Direct = false });
+        }
+
+        public void VisitExpression(FunctionAddressNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+
+            if (options.FuncManager.Exists(node.Identifier)) // if the name is a built-in, then make a BuiltInDelegate
+            {
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                AddOpcode(new OpcodePush(node.Identifier));
+                AddOpcode(new OpcodeCall("makebuiltindelegate()"));
+            }
+            else
+            {
+                // It is not a built-in, so instead get its value as a user function pointer variable, despite 
+                // the fact that it's being called AS IF it was direct.
+                AddOpcode(new OpcodePush("$" + node.Identifier + "*"));
+            }
+        }
+
+        public void VisitExpression(LambdaNode node)
+        {
+            Opcode skipPastFunctionBody = AddOpcode(new OpcodeBranchJump());
+            string functionStartLabel = GetNextLabel(false);
+
+            needImplicitReturn = true;
+            nextBraceIsFunction = true;
+            VisitNode(node.ParseNode); // the braces of the anonymous function and its contents get compiled in-line here.
+            nextBraceIsFunction = false;
+            if (needImplicitReturn)
+                // needImplicitReturn is unconditionally true here, but it's being used anyway so we'll find this block
+                // of code later when we search for "all the places using needImplicitReturn" and perform a refactor
+                // of the logic for adding implicit returns.
+            {
+                AddOpcode(new OpcodePush(0)); // Functions must push a dummy return val when making implicit returns. Locks already leave an expr atop the stack.
+                AddOpcode(new OpcodeReturn(0));
+            }
+            Opcode afterFunctionBody = AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionStartLabel);
+            skipPastFunctionBody.DestinationLabel = afterFunctionBody.Label;
+        }
+
+        public void VisitExpression(ScalarAtomNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            AddOpcode(new OpcodePush(node.Value));
+        }
+
+        public void VisitExpression(StringAtomNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            AddOpcode(new OpcodePush(new StringValue(node.Value)));
+        }
+
+        public void VisitExpression(BooleanAtomNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            AddOpcode(new OpcodePush(new BooleanValue(node.Value)));
+        }
+
+        public void VisitExpression(IdentifierAtomNode node)
+        {
+            NodeStartHousekeeping(node.ParseNode);
+
+            // Special case when the identifier is known to be a lock.
+            // Note that this only works when the lock is defined in the SAME
+            // file.  When one script calls another one, the compiler won't know
+            // that the identifier is a lock, and you'll have to use empty parens
+            // to make it a real function call like var():
+            UserFunction userFuncObject = GetUserFunctionWithScopeWalk(node.Identifier, node.ParseNode);
+            if (userFuncObject != null)
+            {
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
+            }
+            else
+            {
+                AddOpcode(new OpcodePush("$" + node.Identifier));
+            }
         }
     }
 }

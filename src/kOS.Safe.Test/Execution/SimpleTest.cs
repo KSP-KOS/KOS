@@ -41,7 +41,8 @@ namespace kOS.Safe.Test.Execution
             RunScript("integration/func.ks");
             RunSingleStep();
             AssertOutput(
-                "a"
+                "a",
+                "b"
             );
         }
 
@@ -118,19 +119,24 @@ namespace kOS.Safe.Test.Execution
         }
 
         [Test]
-        public void TestSuffixes()
+        public void TestShortCircuit()
         {
-            // Test that various suffix and index combinations work for getting and setting
-            RunScript("integration/suffixes.ks");
-            RunSingleStep();
+            // Test that boolean logic short circuits
+            RunScript("integration/short_circuit.ks");
             RunSingleStep();
             AssertOutput(
-                "0",
-                "1",
-                "2",
-                "3",
-                "0",
-                "False"
+                "a",
+                // short circuit away b
+                "False",
+                "a",
+                "b",
+                "True",
+                "b",
+                "a",
+                "False",
+                "b",
+                // short circuit away a
+                "True"
             );
         }
     }
