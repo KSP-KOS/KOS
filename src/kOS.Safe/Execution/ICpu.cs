@@ -43,12 +43,15 @@ namespace kOS.Safe.Execution
         TriggerInfo AddTrigger(UserDelegate del, params Structure[] args);
         void RemoveTrigger(int triggerFunctionPointer);
         void RemoveTrigger(TriggerInfo trigger);
+        void CancelCalledTriggers(int triggerFunctionPointer);
+        void CancelCalledTriggers(TriggerInfo trigger);
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
         void YieldProgram(YieldFinishedDetector yieldTracker);
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         IProgramContext GetCurrentContext();
+        SubroutineContext GetCurrentSubroutineContext();
         void AddPopContextNotifyee(IPopContextNotifyee notifyee);
         void RemovePopContextNotifyee(IPopContextNotifyee notifyee);
         Opcode GetCurrentOpcode();

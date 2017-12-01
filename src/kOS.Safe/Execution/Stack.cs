@@ -384,6 +384,45 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
+        /// Gets the subroutine context of the currently executing routine from the stack,
+        /// or returns null if we are not inside a subroutine.
+        /// </summary>
+        /// <returns>The current subroutine context.</returns>
+        public SubroutineContext GetCurrentSubroutineContext()
+        {
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var context = scopeStack[index] as SubroutineContext;
+                if (context != null)
+                {
+                    return context;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the subroutine contexts of any calls matching the trigger given
+        /// which have already been pushed onto the call stack for execution.
+        /// </summary>
+        /// <returns>List of matches, zero length if no matches.</returns>
+        public List<SubroutineContext> GetTriggerCallContexts(TriggerInfo trigger)
+        {
+            List<SubroutineContext> returnList = new List<SubroutineContext>();
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var context = scopeStack[index] as SubroutineContext;
+
+                // Note must use .Equals(), not == below:  For TriggerInfo, == still means
+                // reference-equals because there's places we need that.  For this case, we
+                // want to match all equivalent triggers (ones that execute the same subroutine):
+                if (context != null && context.IsTrigger && context.Trigger.Equals(trigger))
+                    returnList.Add(context);
+            }
+            return returnList;
+        }
+
+        /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.
         /// </summary>
         /// <returns>The items in the list are the instruction pointers of the Opcodecall instructions

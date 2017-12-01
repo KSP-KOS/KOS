@@ -86,6 +86,7 @@ namespace kOS.Safe.Compilation
         EXISTS         = 0x5f,
         ARGBOTTOM      = 0x60,
         TESTARGBOTTOM  = 0x61,
+        TESTCANCELLED  = 0x62,
         
 
         // Augmented bogus placeholder versions of the normal
@@ -1899,6 +1900,33 @@ namespace kOS.Safe.Compilation
             }
         }
     }
+
+    /// <summary>
+    /// Tests whether or not the current subroutine context on the stack that is being
+    /// executed right now is one that has been flagged as cancelled by someone
+    /// having called SubroutineContext.Cancel().  This pushes a True or a False on
+    /// the stack to provide the answer.  This should be the first thing done by triggers
+    /// that wish to be cancel-able by other triggers.  (For example if someone unlocks
+    /// steering in one trigger, the steering function should not be run after that even
+    /// if it had been queued up at the start of this physics tick)  If you are a trigger
+    /// that wishes to be cancel-able in this fashion, your trigger body should start by
+    /// first calling this to see if you have been cancelled, and if it returns true,
+    /// then you should return early without doing the rest of your body.
+    /// <br/><br/>
+    /// See kOS Github issue 2178 for a lengthy discussion
+    /// about what caused the need for this.
+    /// </summary>
+    public class OpcodeTestCancelled : Opcode
+    {
+        protected override string Name { get { return "testcancelled"; } }
+        public override ByteCode Code { get { return ByteCode.TESTCANCELLED; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            SubroutineContext sr = cpu.GetCurrentSubroutineContext();
+            cpu.PushArgumentStack(new BooleanValue((sr == null ? false : sr.IsCancelled)));
+        }
+    }
     
     /// <summary>
     /// Push the thing atop the stack onto the stack again so there are now two of it atop the stack.
@@ -2191,6 +2219,7 @@ namespace kOS.Safe.Compilation
         {
             var functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
             cpu.RemoveTrigger(functionPointer);
+            cpu.CancelCalledTriggers(functionPointer);
         }
     }
 

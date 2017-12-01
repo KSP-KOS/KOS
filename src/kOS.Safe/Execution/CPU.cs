@@ -691,6 +691,22 @@ namespace kOS.Safe.Execution
             return currentScope;
         }
 
+        public SubroutineContext GetCurrentSubroutineContext()
+        {
+            return stack.GetCurrentSubroutineContext();
+        }
+
+        /// <summary>
+        /// Find any trigger call contexts that are on the callstack to be executed
+        /// that match the given trigger.
+        /// </summary>
+        /// <returns>List of matching trigger call contexts.  Zero length if none.</returns>
+        /// <param name="trigger">Trigger.</param>
+        public List<SubroutineContext> GetTriggerCallContexts(TriggerInfo trigger)
+        {
+            return stack.GetTriggerCallContexts(trigger);
+        }
+
         /// <summary>
         /// Get the variable's contents, performing a lookup through all nesting levels
         /// up to global.
@@ -1188,6 +1204,22 @@ namespace kOS.Safe.Execution
         public void RemoveTrigger(TriggerInfo trigger)
         {
             currentContext.RemoveTrigger(trigger);
+        }
+
+        public void CancelCalledTriggers(int triggerFunctionPointer)
+        {
+            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, null));
+        }
+
+        public void CancelCalledTriggers(TriggerInfo trigger)
+        {
+            // Inform any already existing calls to the trigger that they should cancel themselves
+            // if they support the cancellation logic (if they pay attention to OpcodeTestCancelled).
+            List<SubroutineContext> calls = GetTriggerCallContexts(trigger);
+            for (int i = 0; i < calls.Count; ++i)
+            {
+                calls[i].Cancel();
+            }
         }
 
         public void KOSFixedUpdate(double deltaTime)

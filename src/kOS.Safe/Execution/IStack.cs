@@ -20,5 +20,7 @@ namespace kOS.Safe.Execution
         bool HasTriggerContexts();
         VariableScope FindScope(Int16 scopeId);
         VariableScope GetCurrentScope();
+        SubroutineContext GetCurrentSubroutineContext();
+        List<SubroutineContext> GetTriggerCallContexts(TriggerInfo trigger);
     }
 }
