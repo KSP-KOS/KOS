@@ -454,6 +454,13 @@ namespace kOS.Safe.Compilation.KS
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
+            // - - - - - - - - - - - - 
+            // TODO: If we ever implement triggers that can be named and cancelled by name later,
+            // then right here we'd need to add some opcodes that implement the same logic as
+            // the cooked steering triggers use (check OpcodeTestCancelled and premature return
+            // if this trigger has been cancelled elsewhere before we begin running it.)
+            // - - - - - - - - - - - - 
+
             currentCodeSection = triggerObject.Code;
             // Put the old value on top of the stack for equals comparison later:
             AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
@@ -499,6 +506,13 @@ namespace kOS.Safe.Compilation.KS
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
+
+            // - - - - - - - - - - - - 
+            // TODO: If we ever implement triggers that can be named and cancelled by name later,
+            // then right here we'd need to add some opcodes that implement the same logic as
+            // the cooked steering triggers use (check OpcodeTestCancelled and premature return
+            // if this trigger has been cancelled elsewhere before we begin running it.)
+            // - - - - - - - - - - - - 
 
             currentCodeSection = triggerObject.Code;
             VisitNode(node.Nodes[1]);
@@ -797,6 +811,17 @@ namespace kOS.Safe.Compilation.KS
             lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
             List<Opcode> rememberCurrentCodeSection = currentCodeSection;
             currentCodeSection = triggerObject.Code;
+
+            // Premature return if someone cancelled this trigger from
+            // within another trigger that fired in the same physics tick:
+            AddOpcode(new OpcodeTestCancelled());
+            OpcodeBranchIfFalse proceedOkay = new OpcodeBranchIfFalse();
+            proceedOkay.Distance = 3;
+            AddOpcode(proceedOkay);
+            AddOpcode(new OpcodePush(false)); // Return false. Don't preserve this trigger.
+            AddOpcode(new OpcodeReturn((short)0));
+
+            // Main body:
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // need these for all locks now.
             AddOpcode(new OpcodeCall(func.ScopelessPointerIdentifier));
             AddOpcode(new OpcodeStoreGlobal("$" + func.ScopelessIdentifier));
