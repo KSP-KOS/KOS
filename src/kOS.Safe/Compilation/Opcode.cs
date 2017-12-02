@@ -713,15 +713,22 @@ namespace kOS.Safe.Compilation
         }
     }
     
-    public class OpcodeGetMember : Opcode
+    public class OpcodeGetMember : OpcodeIdentifierBase
     {
         protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
         protected bool IsMethodCallAttempt = false;
 
+        public OpcodeGetMember(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeGetMember() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
-            string suffixName = cpu.PopArgumentStack().ToString();
             object popValue = cpu.PopValueEncapsulatedArgument();
 
             var specialValue = popValue as ISuffixed;
@@ -731,7 +738,7 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            ISuffixResult result = specialValue.GetSuffix(suffixName);
+            ISuffixResult result = specialValue.GetSuffix(Identifier);
 
             // If the result is a suffix that is still in need of being invoked and hasn't resolved to a value yet:
             if (result != null && !IsMethodCallAttempt && !result.HasValue)
@@ -778,6 +785,15 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "getmethod"; } }
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
+
+        public OpcodeGetMethod(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeGetMethod() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             IsMethodCallAttempt = true;
@@ -786,15 +802,22 @@ namespace kOS.Safe.Compilation
     }
 
     
-    public class OpcodeSetMember : Opcode
+    public class OpcodeSetMember : OpcodeIdentifierBase
     {
         protected override string Name { get { return "setmember"; } }
         public override ByteCode Code { get { return ByteCode.SETMEMBER; } }
 
+        public OpcodeSetMember(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeSetMember() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = cpu.PopStructureEncapsulatedArgument();         // new value to set it to
-            string suffixName = cpu.PopArgumentStack().ToString();            // name of suffix being set
             Structure popValue = cpu.PopStructureEncapsulatedArgument();      // object to which the suffix is attached.
 
             // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
@@ -811,9 +834,9 @@ namespace kOS.Safe.Compilation
             // TODO: When we refactor to make every structure use the new suffix style, this conversion
             // to primative can be removed.  Right now there are too many structures that override the
             // SetSuffix method while relying on unboxing the object rahter than using Convert
-            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimitive(value)))
+            if (!specialValue.SetSuffix(Identifier, Structure.ToPrimitive(value)))
             {
-                throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
+                throw new Exception(string.Format("Suffix {0} not found on object", Identifier));
             }
         }
     }

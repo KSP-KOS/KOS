@@ -284,6 +284,9 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="Utilities\StringUtil.cs" />
+    <Compile Include="Compilation\KS\ExpressionNode.cs" />
+    <Compile Include="Compilation\KS\ExpressionBuilder.cs" />
+    <Compile Include="Compilation\KS\IExpressionVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

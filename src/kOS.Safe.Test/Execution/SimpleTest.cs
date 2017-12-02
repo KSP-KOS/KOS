@@ -41,7 +41,8 @@ namespace kOS.Safe.Test.Execution
             RunScript("integration/func.ks");
             RunSingleStep();
             AssertOutput(
-                "a"
+                "a",
+                "b"
             );
         }
 
@@ -114,6 +115,28 @@ namespace kOS.Safe.Test.Execution
                 "3",
                 "0",
                 "False"
+            );
+        }
+
+        [Test]
+        public void TestShortCircuit()
+        {
+            // Test that boolean logic short circuits
+            RunScript("integration/short_circuit.ks");
+            RunSingleStep();
+            AssertOutput(
+                "a",
+                // short circuit away b
+                "False",
+                "a",
+                "b",
+                "True",
+                "b",
+                "a",
+                "False",
+                "b",
+                // short circuit away a
+                "True"
             );
         }
     }
