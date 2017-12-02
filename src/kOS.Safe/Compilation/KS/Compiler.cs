@@ -1892,6 +1892,8 @@ namespace kOS.Safe.Compilation.KS
         private void VisitToggleStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
+            // process this as
+            // SET foo TO NOT foo
             ExpressionNode identifier = ExpressionBuilder.BuildExpression(node.Nodes[1]);
             ExpressionNode target = new NegateExpressionNode() {
                 ParseNode = node,

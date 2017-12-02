@@ -226,8 +226,10 @@ namespace kOS.Safe.Compilation.KS
                             args = BuildArglist(trailer.Nodes[1]);
                         }
 
+                        // Depending on what we are calling, construct a different semantic node
                         if (expr is IdentifierAtomNode)
                         {
+                            // identifiers are direct calls
                             expr = new DirectCallNode() {
                                 ParseNode = trailer,
                                 Identifier = ((IdentifierAtomNode)expr).Identifier,
@@ -236,6 +238,7 @@ namespace kOS.Safe.Compilation.KS
                         }
                         else if (expr is GetSuffixNode)
                         {
+                            // GetSuffixNodes are replaced with CallSuffixNodes
                             expr = new CallSuffixNode() {
                                 ParseNode = trailer,
                                 Base = ((GetSuffixNode)expr).Base,
@@ -245,6 +248,9 @@ namespace kOS.Safe.Compilation.KS
                         }
                         else
                         {
+                            // Everything else is an indirect call
+                            // These could be things like
+                            // foo[1]()
                             expr = new IndirectCallNode() {
                                 ParseNode = trailer,
                                 Base = expr,
