@@ -86,6 +86,7 @@ namespace kOS.Safe.Compilation
         EXISTS         = 0x5f,
         ARGBOTTOM      = 0x60,
         TESTARGBOTTOM  = 0x61,
+        TESTCANCELLED  = 0x62,
         
 
         // Augmented bogus placeholder versions of the normal
@@ -492,14 +493,42 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// The base class for opcodes that operate on an identifier as an MLfield
+    /// (rather than reading the identifier from a stack argument).
+    /// </summary>
+    public abstract class OpcodeIdentifierBase : Opcode
+    {
+        [MLField(1, false)]
+        public string Identifier { get; set; }
+
+        protected OpcodeIdentifierBase(string identifier)
+        {
+            Identifier = identifier;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception(String.Format("Saved field in ML file for {0} seems to be missing.  Version mismatch?", Name));
+            Identifier = (string)fields[0];
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} {1}", Name, (string)Identifier);
+        }
+    }
+
     #endregion
 
     #region General
 
 
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable named by the Identifier MLField of this opcode.<br/>
     /// <br/>
     /// If the variable does not exist in the local scope, then it will attempt to look for
     /// it in the next scoping level up, and the next one up, and so on
@@ -513,18 +542,23 @@ namespace kOS.Safe.Compilation
     /// that hasn't been given an initial value.  Its the act of storing a value into
     /// the variable that causues it to exist.  This is deliberate design.
     /// </summary>
-    public class OpcodeStore : Opcode
+    public class OpcodeStore : OpcodeIdentifierBase
     {
         protected override string Name { get { return "store"; } }
         public override ByteCode Code { get { return ByteCode.STORE; } }
 
+        public OpcodeStore(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStore() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetValue(identifier, value);
+            cpu.SetValue(Identifier, value);
         }
     }
 
@@ -557,32 +591,38 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable described by Identifer MLField of this opcode,
+    /// which must already exist as a variable before this is executed.<br/>
     /// <br/>
     /// Unlike OpcodeStore, OpcodeStoreExist will NOT create the variable if it
     /// does not already exist.  Instead it will cause an
     /// error.  (It corresponds to kerboscript's @LAZYGLOBAL OFF directive).<br/>
     /// <br/>
     /// </summary>
-    public class OpcodeStoreExist : Opcode
+    public class OpcodeStoreExist : OpcodeIdentifierBase
     {
         protected override string Name { get { return "storeexist"; } }
         public override ByteCode Code { get { return ByteCode.STOREEXIST; } }
 
+        public OpcodeStoreExist(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStoreExist() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetValueExists(identifier, value);
+            cpu.SetValueExists(Identifier, value);
         }
     }
     
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable named in the Identiver MLField of this Opcode.<br/>
     /// <br/>
     /// The variable must not exist already in the local nesting level, and it will
     /// NOT attempt to look for it in the next scoping level up.<br/>
@@ -600,24 +640,29 @@ namespace kOS.Safe.Compilation
     /// that hasn't been given an initial value.  Its the act of storing a value into
     /// the variable that causues it to exist.  This is deliberate design.
     /// </summary>
-    public class OpcodeStoreLocal : Opcode
+    public class OpcodeStoreLocal : OpcodeIdentifierBase
     {
         protected override string Name { get { return "storelocal"; } }
         public override ByteCode Code { get { return ByteCode.STORELOCAL; } }
 
+        public OpcodeStoreLocal(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStoreLocal() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetNewLocal(identifier, value);
+            cpu.SetNewLocal(Identifier, value);
         }
     }
 
     /// <summary>
-    /// Consumes the topmost 2 values of the stack, storing the topmost stack
-    /// value into a variable described by the next value down the stack. <br/>
+    /// Consumes the topmost value of the stack, storing it into
+    /// a variable named by the Identifier MLfield of this Opcode.<br/>
     /// <br/>
     /// The variable will always be stored at a global scope, overwriting
     /// whatever else was there if the variable already existed.<br/>
@@ -629,18 +674,23 @@ namespace kOS.Safe.Compilation
     /// Its the act of storing a value into the variable that causues it to exist.
     /// This is deliberate design.
     /// </summary>
-    public class OpcodeStoreGlobal : Opcode
+    public class OpcodeStoreGlobal : OpcodeIdentifierBase
     {
         protected override string Name { get { return "storeglobal"; } }
         public override ByteCode Code { get { return ByteCode.STOREGLOBAL; } }
 
+        public OpcodeStoreGlobal(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeStoreGlobal() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = PopStructureAssertEncapsulated(cpu);
-            // Convert to string instead of cast in case the identifier is stored
-            // as an encapsulated StringValue, preventing an unboxing collision.
-            var identifier = Convert.ToString(cpu.PopArgumentStack());
-            cpu.SetGlobal(identifier, value);
+            cpu.SetGlobal(Identifier, value);
         }
     }
 
@@ -1420,14 +1470,14 @@ namespace kOS.Safe.Compilation
             if (functionPointer is string || functionPointer is StringValue)
             {
                 string functionName = functionPointer.ToString();
-                if (functionName.EndsWith("()"))
+                if (StringUtil.EndsWith(functionName, "()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 if (!(cpu.BuiltInExists(functionName)))
                 {
                     // It is not a built-in, so instead get its value as a user function pointer variable, despite
                     // the fact that it's being called AS IF it was direct.
-                    if (!functionName.EndsWith("*")) functionName = functionName + "*";
-                    if (!functionName.StartsWith("$")) functionName = "$" + functionName;
+                    if (!StringUtil.EndsWith(functionName, "*")) functionName = functionName + "*";
+                    if (!StringUtil.StartsWith(functionName, "$")) functionName = "$" + functionName;
                     functionPointer = cpu.GetValue(functionName);
                 }
             }
@@ -1482,7 +1532,7 @@ namespace kOS.Safe.Compilation
                 // might want to change that.
                 var name = functionPointer as string;
                 string functionName = name;
-                if (functionName.EndsWith("()"))
+                if (StringUtil.EndsWith(functionName, "()"))
                     functionName = functionName.Substring(0, functionName.Length - 2);
                 cpu.CallBuiltinFunction(functionName);
 
@@ -1850,6 +1900,33 @@ namespace kOS.Safe.Compilation
             }
         }
     }
+
+    /// <summary>
+    /// Tests whether or not the current subroutine context on the stack that is being
+    /// executed right now is one that has been flagged as cancelled by someone
+    /// having called SubroutineContext.Cancel().  This pushes a True or a False on
+    /// the stack to provide the answer.  This should be the first thing done by triggers
+    /// that wish to be cancel-able by other triggers.  (For example if someone unlocks
+    /// steering in one trigger, the steering function should not be run after that even
+    /// if it had been queued up at the start of this physics tick)  If you are a trigger
+    /// that wishes to be cancel-able in this fashion, your trigger body should start by
+    /// first calling this to see if you have been cancelled, and if it returns true,
+    /// then you should return early without doing the rest of your body.
+    /// <br/><br/>
+    /// See kOS Github issue 2178 for a lengthy discussion
+    /// about what caused the need for this.
+    /// </summary>
+    public class OpcodeTestCancelled : Opcode
+    {
+        protected override string Name { get { return "testcancelled"; } }
+        public override ByteCode Code { get { return ByteCode.TESTCANCELLED; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            SubroutineContext sr = cpu.GetCurrentSubroutineContext();
+            cpu.PushArgumentStack(new BooleanValue((sr == null ? false : sr.IsCancelled)));
+        }
+    }
     
     /// <summary>
     /// Push the thing atop the stack onto the stack again so there are now two of it atop the stack.
@@ -1964,7 +2041,7 @@ namespace kOS.Safe.Compilation
         
         public override void Execute(ICpu cpu)
         {
-            cpu.PushScopeStack(new VariableScope(ScopeId,ParentScopeId));
+            cpu.PushNewScope(ScopeId,ParentScopeId);
         }
 
         public override string ToString()
@@ -2073,7 +2150,7 @@ namespace kOS.Safe.Compilation
 
         public override string ToString()
         {
-            return Name + " " + EntryPoint.ToString();
+            return Name + " " + EntryPoint.ToString() + (WithClosure ? " closure" : "");
         }
     }
         
@@ -2142,6 +2219,7 @@ namespace kOS.Safe.Compilation
         {
             var functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
             cpu.RemoveTrigger(functionPointer);
+            cpu.CancelCalledTriggers(functionPointer);
         }
     }
 

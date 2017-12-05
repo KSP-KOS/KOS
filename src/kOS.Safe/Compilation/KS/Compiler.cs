@@ -454,6 +454,13 @@ namespace kOS.Safe.Compilation.KS
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
+            // - - - - - - - - - - - - 
+            // TODO: If we ever implement triggers that can be named and cancelled by name later,
+            // then right here we'd need to add some opcodes that implement the same logic as
+            // the cooked steering triggers use (check OpcodeTestCancelled and premature return
+            // if this trigger has been cancelled elsewhere before we begin running it.)
+            // - - - - - - - - - - - - 
+
             currentCodeSection = triggerObject.Code;
             // Put the old value on top of the stack for equals comparison later:
             AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
@@ -463,9 +470,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeEval());
             AddOpcode(new OpcodeDup());
             // Put one of those two copies of the new value into the old value identifier for next time:
-            AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal(triggerObject.OldValueIdentifier));
             // Use the other dup'ed copy of the new value to actually do the equals
             // comparison with the old value that's still under it on the stack:
             AddOpcode(new OpcodeCompareEqual());
@@ -479,9 +484,8 @@ namespace kOS.Safe.Compilation.KS
             // defaults to true = removal should happen.
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
-            AddOpcode(new OpcodePush(triggerKeepName));
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
 
             VisitNode(node.Nodes[2]);
 
@@ -503,6 +507,13 @@ namespace kOS.Safe.Compilation.KS
             string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
+            // - - - - - - - - - - - - 
+            // TODO: If we ever implement triggers that can be named and cancelled by name later,
+            // then right here we'd need to add some opcodes that implement the same logic as
+            // the cooked steering triggers use (check OpcodeTestCancelled and premature return
+            // if this trigger has been cancelled elsewhere before we begin running it.)
+            // - - - - - - - - - - - - 
+
             currentCodeSection = triggerObject.Code;
             VisitNode(node.Nodes[1]);
             OpcodeBranchIfTrue branchToBody = new OpcodeBranchIfTrue();
@@ -515,9 +526,8 @@ namespace kOS.Safe.Compilation.KS
             // defaults to true = removal should happen.
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
-            AddOpcode(new OpcodePush(triggerKeepName));
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
 
             VisitNode(node.Nodes[3]);
 
@@ -724,9 +734,8 @@ namespace kOS.Safe.Compilation.KS
                     var branch = new OpcodeBranchIfTrue();
                     branch.Distance = 4;
                     AddOpcode(branch);
-                    AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(userFuncObject.ScopelessPointerIdentifier));
                 }
                 else
                 {
@@ -802,10 +811,20 @@ namespace kOS.Safe.Compilation.KS
             lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
             List<Opcode> rememberCurrentCodeSection = currentCodeSection;
             currentCodeSection = triggerObject.Code;
-            AddOpcode(new OpcodePush("$" + func.ScopelessIdentifier));
+
+            // Premature return if someone cancelled this trigger from
+            // within another trigger that fired in the same physics tick:
+            AddOpcode(new OpcodeTestCancelled());
+            OpcodeBranchIfFalse proceedOkay = new OpcodeBranchIfFalse();
+            proceedOkay.Distance = 3;
+            AddOpcode(proceedOkay);
+            AddOpcode(new OpcodePush(false)); // Return false. Don't preserve this trigger.
+            AddOpcode(new OpcodeReturn((short)0));
+
+            // Main body:
             AddOpcode(new OpcodePush(new KOSArgMarkerType())); // need these for all locks now.
             AddOpcode(new OpcodeCall(func.ScopelessPointerIdentifier));
-            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeStoreGlobal("$" + func.ScopelessIdentifier));
             AddOpcode(new OpcodePush(true)); // always preserve this particular kind of trigger.
             AddOpcode(new OpcodeReturn((short)0));
             lastLine = rememberLastLine;
@@ -813,12 +832,14 @@ namespace kOS.Safe.Compilation.KS
         }
 
         /// <summary>
-        /// Get the instruction_block this node is immediately inside of.
+        /// Get the instruction_block (or file Start block at outermost level) this node is immediately inside of.
         /// Gives a null if the node isn't in one (it's global).
         /// </summary>
         private ParseNode GetContainingBlockNode(ParseNode node)
         {
-            while (node != null && node.Token.Type != TokenType.instruction_block)
+            while (node != null && 
+                   node.Token.Type != TokenType.instruction_block &&
+                   node.Token.Type != TokenType.Start)
                 node = node.Parent;
             return node;
         }
@@ -967,6 +988,7 @@ namespace kOS.Safe.Compilation.KS
             {
                 // List all the types of parse node that open a new variable scope here:
                 // ---------------------------------------------------------------------
+                case TokenType.Start: // Here because all programs start with an outer scope block
                 case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.
                 case TokenType.declare_lock_clause: // here because the lock body needs a scope in order to work with closures.  The scope remembers the lexical id.
                 case TokenType.instruction_block:
@@ -1213,8 +1235,12 @@ namespace kOS.Safe.Compilation.KS
         
         private void VisitStartStatement(ParseNode node)
         {
-            AddFunctionJumpVars(null);
             int argbottomSpot = (options.IsCalledFromRun) ? FindArgBottomSpot(node) : -1;
+
+            NodeStartHousekeeping(node);
+            BeginScope(node);
+
+            AddFunctionJumpVars(node, true);
 
             // For each child node, but interrupting for the spot
             // where to insert the argbottom opcode:
@@ -1225,6 +1251,8 @@ namespace kOS.Safe.Compilation.KS
                 
                 VisitNode(node.Nodes[i]); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above.
             }
+
+            EndScope(node);
         }
 
         private void VisitChildNodes(ParseNode node)
@@ -1903,15 +1931,7 @@ namespace kOS.Safe.Compilation.KS
             UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, node);
             if (isVariable && userFuncObject != null)
             {
-                if (compilingSetDestination)
-                {
-                    UnlockIdentifier(userFuncObject);
-                    AddOpcode(new OpcodePush("$" + identifier));
-                }
-                else
-                {
-                    AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
-                }
+                AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
             }
             else
             {
@@ -2086,27 +2106,39 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="toThis">The righthand-side expression to set it to</param>
         private void ProcessSetOperation(ParseNode setThis, ParseNode toThis)
         {
-            // destination
-            compilingSetDestination = true;
-            VisitNode(setThis);
-            compilingSetDestination = false;
-            // expression
-            VisitNode(toThis);
+            bool isSuffix = VarIdentifierEndsWithSuffix(setThis);
+            bool isIndex = VarIdentifierEndsWithIndex(setThis);
+            if (isSuffix || isIndex)
+            {
+                // destination
+                compilingSetDestination = true;
+                VisitNode(setThis);
+                compilingSetDestination = false;
 
-            if (VarIdentifierEndsWithSuffix(setThis))
-            {
-                AddOpcode(new OpcodeSetMember());
-            }
-            else if (VarIdentifierEndsWithIndex(setThis))
-            {
-                AddOpcode(new OpcodeSetIndex());
+                // expression
+                VisitNode(toThis);
+
+                AddOpcode(isSuffix ? (Opcode)new OpcodeSetMember() : (Opcode)new OpcodeSetIndex());
             }
             else
             {
+                // normal variable set
+                VisitNode(toThis);
+
+                string identifier = GetIdentifierText(setThis);
+
+                UserFunction userFuncObject = GetUserFunctionWithScopeWalk(identifier, setThis);
+                if (userFuncObject != null)
+                {
+                    UnlockIdentifier(userFuncObject);
+                }
+
+                string varName = "$" + identifier;
+
                 if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(varName));
                 else
-                    AddOpcode(new OpcodeStoreExist());
+                    AddOpcode(new OpcodeStoreExist(varName));
             }
         }
 
@@ -2245,7 +2277,7 @@ namespace kOS.Safe.Compilation.KS
             if (nextBraceWasFunction)
                 PushReturnList();
             
-            AddFunctionJumpVars(node);
+            AddFunctionJumpVars(node, false);
             
             int argbottomSpot = -1;
             if (nextBraceWasFunction)
@@ -2363,7 +2395,10 @@ namespace kOS.Safe.Compilation.KS
         /// for the given function names defined in this scope.  Pass a NULL to mean global scope.
         /// </summary>
         /// <param name="node"></param>
-        private void AddFunctionJumpVars(ParseNode node)
+        /// <param name="isFileScope">A few special exceptions are needed for functions at the outermost file scope.
+        /// If a function is at the outermost file scope level, then it needs to default to global identifier,
+        /// else it needs to default to local identifier.  This weird rule is needed for backward compatibility.</param>
+        private void AddFunctionJumpVars(ParseNode node, bool isFileScope)
         {
             // All the functions for which this scope is where they live, and this file is where they live:
             IEnumerable<UserFunction> theseFuncs =
@@ -2371,14 +2406,8 @@ namespace kOS.Safe.Compilation.KS
                     item =>
                         item.IsFunction &&                                     // This might be redundant?
                         item.ScopeNode == node &&                              // Preprocessing found this function here in this set of scope braces.
-                        (node != null || context.UserFunctions.IsNew(item)));  // If global, ensure it's not from a previously compiled script's global scope.
+                        ((! isFileScope) || context.UserFunctions.IsNew(item)));  // If global, ensure it's not from a previously compiled script's global scope.
 
-            // NOTE: IF WE EVER IMPLEMENT FILE SCOPING!
-            // ----------------------------------------
-            // That last check above is needed because the "scope" of a global function in one script and
-            // a global function in another script are the same scope, since we don't nest files in their own scope.
-            // If we ever change the design to create file scoping, the lastmost check above can probably go away.
-            //
             // That last check deliberately takes advantage of short-circuiting to avoid the expense of IsNew() if it can.
 
             foreach (UserFunction func in theseFuncs)
@@ -2400,16 +2429,17 @@ namespace kOS.Safe.Compilation.KS
                 // for all functions just in case they may get used this way.  It's unneded overhead
                 // to do so most of the time, but it makes the algorithm simple for the few cases
                 // where it is needed.
-                
-                AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
+
                 AddOpcode(new OpcodePushDelegateRelocateLater(null,true), func.GetFuncLabel());
-                if (node == null) // global scope, so unconditionally use a normal Store:
-                    AddOpcode(new OpcodeStore()); //
+
+                // Where the function should go, according to the rules of GLOBAL, LOCAL, and LAZYGLOBAL:
+                StorageModifier whereToPut = GetStorageModifierFor(func.OriginalNode);
+
+                // But make a weird exception for file scope - they are always global unless explicitly stated to be local:
+                if (isFileScope && whereToPut != StorageModifier.LOCAL)
+                    AddOpcode(new OpcodeStore(func.ScopelessPointerIdentifier));
                 else
-                {
-                    StorageModifier whereToPut = GetStorageModifierFor(func.OriginalNode);
-                    AddOpcode(CreateAppropriateStoreCode(whereToPut, true));
-                }
+                    AddOpcode(CreateAppropriateStoreCode(whereToPut, true, func.ScopelessPointerIdentifier));
             }
         }
 
@@ -2428,9 +2458,8 @@ namespace kOS.Safe.Compilation.KS
 
             string functionLabel = lockObject.GetUserFunctionLabel(expressionHash);
             // lock variable
-            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
             AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionLabel);
-            AddOpcode(CreateAppropriateStoreCode(whereToStore, allowLazyGlobal));
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, allowLazyGlobal, lockObject.ScopelessPointerIdentifier));
 
             if (lockObject.IsSystemLock())
             {
@@ -2501,12 +2530,11 @@ namespace kOS.Safe.Compilation.KS
 
             // unlock variable
             // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
-            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
             AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
             if (allowLazyGlobal)
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStore(lockObject.ScopelessPointerIdentifier));
             else
-                AddOpcode(new OpcodeStoreExist());
+                AddOpcode(new OpcodeStoreExist(lockObject.ScopelessPointerIdentifier));
         }
 
         private void VisitOnStatement(ParseNode node)
@@ -2519,9 +2547,8 @@ namespace kOS.Safe.Compilation.KS
             if (triggerObject.IsInitialized())
             {
                 // Store the current value into the old value to prep for the first use of the ON trigger:
-                AddOpcode(new OpcodePush(triggerObject.OldValueIdentifier));
                 VisitNode(node.Nodes[1]); // the expression in the on statement.
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStore(triggerObject.OldValueIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger());
             }
@@ -2573,9 +2600,8 @@ namespace kOS.Safe.Compilation.KS
             //    DECLARE [GLOBAL|LOCAL] identifier TO expr.
             if (lastSubNode.Token.Type == TokenType.declare_identifier_clause)
             {
-                VisitNode(lastSubNode.Nodes[0]);
                 VisitNode(lastSubNode.Nodes[2]);
-                AddOpcode(CreateAppropriateStoreCode(whereToStore, true));
+                AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(lastSubNode.Nodes[0])));
             }
             
             // If the declare statement is of the form:
@@ -2644,9 +2670,7 @@ namespace kOS.Safe.Compilation.KS
 
                 branchSkippingInit.DestinationLabel = GetNextLabel(false);
             }
-            VisitNode(identifierNode);
-            AddOpcode(new OpcodeSwap());
-            AddOpcode(CreateAppropriateStoreCode(whereToStore, true));                
+            AddOpcode(CreateAppropriateStoreCode(whereToStore, true, "$" + GetIdentifierText(identifierNode)));
         }
                 
         /// <summary>
@@ -2658,19 +2682,19 @@ namespace kOS.Safe.Compilation.KS
         /// false if it should not.  NOTE that it should always be true when
         /// doing DECLARE operations and only vary when doing SET operations.</param>
         /// <returns>the new opcode you should add</returns>
-        private Opcode CreateAppropriateStoreCode(StorageModifier kind, bool lazyGlobal)
+        private Opcode CreateAppropriateStoreCode(StorageModifier kind, bool lazyGlobal, string identifier)
         {
             switch (kind)
             {
                 case StorageModifier.LOCAL:
-                    return new OpcodeStoreLocal();
+                    return new OpcodeStoreLocal(identifier);
                 case StorageModifier.GLOBAL:
-                    return new OpcodeStoreGlobal();
+                    return new OpcodeStoreGlobal(identifier);
                 default:
                     if (lazyGlobal)
-                        return new OpcodeStore();
+                        return new OpcodeStore(identifier);
                     else
-                        return new OpcodeStoreExist();
+                        return new OpcodeStoreExist(identifier);
             }
         }
         
@@ -2707,10 +2731,15 @@ namespace kOS.Safe.Compilation.KS
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
 
             // Default varies depending on which kind of statement it is.
-            // locks are default global while everything else is 
-            // default local:
-            StorageModifier modifier =
-                (lastSubNode.Token.Type == TokenType.declare_lock_clause ? StorageModifier.GLOBAL : StorageModifier.LOCAL);
+            // locks are default global, and functions declared at file
+            // scope are default global, while everything else is default local:
+            StorageModifier modifier = StorageModifier.LOCAL;
+            if (lastSubNode.Token.Type == TokenType.declare_lock_clause ||
+                lastSubNode.Token.Type == TokenType.declare_function_clause)
+            {
+                modifier = StorageModifier.GLOBAL;
+            }
+
             bool storageKeywordMissing = true;
             
             foreach (ParseNode t in node.Nodes)
@@ -2739,12 +2768,6 @@ namespace kOS.Safe.Compilation.KS
                                                          "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
                                                          "in a file where the default @LAZYGLOBAL behavior is on");
             }
-            if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-            {
-                LineCol location = GetLineCol(node);
-                throw new KOSCommandInvalidHereException(location, "GLOBAL",
-                                                         "in a function declaration", "in a variable declaration");
-            }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
             {
                 LineCol location = GetLineCol(node);
@@ -2757,14 +2780,14 @@ namespace kOS.Safe.Compilation.KS
         private void VisitToggleStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            VisitVarIdentifier(node.Nodes[1]);
+            string varName = "$" + GetIdentifierText(node.Nodes[1]);
             VisitVarIdentifier(node.Nodes[1]);
             AddOpcode(new OpcodeLogicToBool());
             AddOpcode(new OpcodeLogicNot());
             if (allowLazyGlobal)
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStore(varName));
             else
-                AddOpcode(new OpcodeStoreExist());
+                AddOpcode(new OpcodeStoreExist(varName));
         }
 
         private void VisitPrintStatement(ParseNode node)
@@ -3059,16 +3082,16 @@ namespace kOS.Safe.Compilation.KS
             if (hasIn)
             {
                 // destination variable
-                VisitVariableNode(node.Nodes[3]);
+                string varName = "$" + GetIdentifierText(node.Nodes[3]);
                 // list type
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 VisitNode(node.Nodes[1]);
                 // build list
                 AddOpcode(new OpcodeCall("buildlist()"));
                 if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
+                    AddOpcode(new OpcodeStore(varName));
                 else
-                    AddOpcode(new OpcodeStoreExist());
+                    AddOpcode(new OpcodeStoreExist(varName));
             }
             else
             {
@@ -3155,9 +3178,8 @@ namespace kOS.Safe.Compilation.KS
                 throw new KOSPreserveInvalidHereException(new LineCol(lastLine, lastColumn));
 
             string flagName = PeekTriggerKeepName();
-            AddOpcode(new OpcodePush(flagName));
             AddOpcode(new OpcodePush(true));
-            AddOpcode(new OpcodeStore());
+            AddOpcode(new OpcodeStore(flagName));
         }
 
         private void VisitRebootStatement(ParseNode node)
@@ -3191,11 +3213,10 @@ namespace kOS.Safe.Compilation.KS
 
             PushBreakList(braceNestLevel);
 
-            AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodePush("iterator"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeStoreLocal());
+            AddOpcode(new OpcodeStoreLocal(iteratorIdentifier));
             // loop condition
             Opcode condition = AddOpcode(new OpcodePush(iteratorIdentifier));
             string conditionLabel = condition.Label;
@@ -3205,11 +3226,11 @@ namespace kOS.Safe.Compilation.KS
             Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
             AddToBreakList(branch);
             // assign value to iteration variable
-            VisitVariableNode(node.Nodes[1]);
+            string varName = "$" + GetIdentifierText(node.Nodes[1]);
             AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodePush("value"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeStoreLocal());
+            AddOpcode(new OpcodeStoreLocal(varName));
             // instructions in FOR body
             VisitNode(node.Nodes[4]);
             // jump to condition

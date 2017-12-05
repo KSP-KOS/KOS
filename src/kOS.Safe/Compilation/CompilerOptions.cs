@@ -10,7 +10,7 @@ namespace kOS.Safe.Compilation
         /// is a chance of there being arguments passed as parameters.  If it is
         /// the interpreter context, then this should be false to instruct the
         /// compiler NOT to attempt to look for an arg bottom marker because there
-        /// won't be one.
+        /// will not be one.
         /// </summary>
         public bool IsCalledFromRun { get; set; }
         public IFunctionManager FuncManager { get; set; }

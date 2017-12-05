@@ -333,17 +333,93 @@ namespace kOS.Safe.Execution
             VariableScope dict = item as VariableScope;
             if (dict != null)
             {
-                builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
-                                             dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
+                Int16 parentScopeId = -1;
+                if (dict.ParentScope != null)
+                {
+                    parentScopeId = dict.ParentScope.ScopeId;
+                }
+
+                builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, IsClosure={2}",
+                                             dict.ScopeId, parentScopeId, dict.IsClosure);
                 builder.AppendLine();
                 // Dump the local variable context stored here on the stack:
-                foreach (string varName in dict.Variables.Keys)
+                foreach (var entry in dict.Locals)
                 {
-                    var value = dict.Variables[varName].Value;
-                    builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, KOSNomenclature.GetKOSName(value.GetType()), dict.Variables[varName].Value);
+                    builder.AppendFormat("            local var {0} is {1} with value = {2}", entry.Key, KOSNomenclature.GetKOSName(entry.Value.GetType()), entry.Value);
                     builder.AppendLine();
                 }
             }
+        }
+
+        /// <summary>
+        /// Finds a scope with the given ID number, from the top down.
+        /// If no such scope is found, it returns null.
+        /// </summary>
+        /// <returns>The scope.</returns>
+        /// <param name="ScopeId">Scope identifier.</param>
+        public VariableScope FindScope(Int16 ScopeId)
+        {
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var scope = scopeStack[index] as VariableScope;
+                if (scope != null && scope.ScopeId == ScopeId)
+                {
+                    return scope;
+                }
+            }
+            return null;
+        }
+
+        public VariableScope GetCurrentScope()
+        {
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var scope = scopeStack[index] as VariableScope;
+                if (scope != null)
+                {
+                    return scope;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the subroutine context of the currently executing routine from the stack,
+        /// or returns null if we are not inside a subroutine.
+        /// </summary>
+        /// <returns>The current subroutine context.</returns>
+        public SubroutineContext GetCurrentSubroutineContext()
+        {
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var context = scopeStack[index] as SubroutineContext;
+                if (context != null)
+                {
+                    return context;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the subroutine contexts of any calls matching the trigger given
+        /// which have already been pushed onto the call stack for execution.
+        /// </summary>
+        /// <returns>List of matches, zero length if no matches.</returns>
+        public List<SubroutineContext> GetTriggerCallContexts(TriggerInfo trigger)
+        {
+            List<SubroutineContext> returnList = new List<SubroutineContext>();
+            for (int index = scopeCount - 1; index >= 0; --index)
+            {
+                var context = scopeStack[index] as SubroutineContext;
+
+                // Note must use .Equals(), not == below:  For TriggerInfo, == still means
+                // reference-equals because there's places we need that.  For this case, we
+                // want to match all equivalent triggers (ones that execute the same subroutine):
+                if (context != null && context.IsTrigger && context.Trigger.Equals(trigger))
+                    returnList.Add(context);
+            }
+            return returnList;
         }
 
         /// <summary>

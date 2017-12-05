@@ -56,7 +56,6 @@ namespace kOS.Safe.Execution
             {
                 case CompileMode.RUN:
                     programContext.AddParts(codeParts);
-                    shared.Cpu.StopCompileStopwatch();
                     break;
                 case CompileMode.LOAD:
                     int programAddress = programContext.AddObjectParts(codeParts, path.ToString());
@@ -74,6 +73,7 @@ namespace kOS.Safe.Execution
                 default:
                     break;
             }
+            shared.Cpu.StopCompileStopwatch();
         }
 
         public static YieldFinishedCompile RunScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)

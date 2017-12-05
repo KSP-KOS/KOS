@@ -45,7 +45,17 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
+        public void PushNewScope(Int16 scopeId, Int16 parentScopeId)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<VariableScope> GetCurrentClosure()
+        {
+            throw new NotImplementedException();
+        }
+
+        public SubroutineContext GetCurrentSubroutineContext()
         {
             throw new NotImplementedException();
         }
@@ -196,6 +206,16 @@ namespace kOS.Safe.Test.Opcode
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CancelCalledTriggers(int triggerFunctionPointer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CancelCalledTriggers(TriggerInfo trigger)
         {
             throw new NotImplementedException();
         }

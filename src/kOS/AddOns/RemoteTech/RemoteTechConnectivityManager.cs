@@ -49,7 +49,8 @@ namespace kOS.AddOns.RemoteTech
         {
             if (!RemoteTechHook.IsAvailable(vessel.id))
                 return -1; // default to no connection if the vessel isn't configured for RT.
-            return RemoteTechUtility.GetInputWaitTime(vessel);
+            if (RemoteTechHook.Instance.HasLocalControl(vessel.id)) return 0d;
+            return RemoteTechHook.Instance.GetShortestSignalDelay(vessel.id);
         }
 
         public double GetDelayToHome(Vessel vessel)
@@ -76,8 +77,8 @@ namespace kOS.AddOns.RemoteTech
         public bool HasConnectionToControl(Vessel vessel)
         {
             if (!RemoteTechHook.IsAvailable(vessel.id))
-                return false; // default to no connection if the vessel isn't configured for RT.
-            return RemoteTechHook.Instance.HasAnyConnection(vessel.id);
+                return vessel.CurrentControlLevel >= Vessel.ControlLevel.PARTIAL_MANNED; // default to checking for local control if the vessel isn't configured for RT.
+            return RemoteTechHook.Instance.HasAnyConnection(vessel.id) || RemoteTechHook.Instance.HasLocalControl(vessel.id);
         }
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
@@ -92,6 +93,13 @@ namespace kOS.AddOns.RemoteTech
                 }
                 RemoteTechHook.Instance.AddSanctionedPilot(vessel.id, action);
             }
+            else // fallback to stock events when RT isn't available, this may have unexpected results if RT availability changes
+            {
+                // removing the callback if not already added doesn't throw an error
+                // but adding it a 2nd time will result in 2 calls.  Remove to be safe.
+                vessel.OnPreAutopilotUpdate -= hook;
+                vessel.OnPreAutopilotUpdate += hook;
+            }
         }
 
         private System.Collections.Generic.Dictionary<FlightInputCallback, Action<FlightCtrlState>> callbacks = new System.Collections.Generic.Dictionary<FlightInputCallback, Action<FlightCtrlState>>();
@@ -103,6 +111,10 @@ namespace kOS.AddOns.RemoteTech
             {
                 RemoteTechHook.Instance.RemoveSanctionedPilot(vessel.id, action);
                 callbacks.Remove(hook);
+            }
+            else // remove fallback event hook
+            {
+                vessel.OnPreAutopilotUpdate -= hook;
             }
         }
     }

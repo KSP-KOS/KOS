@@ -1,15 +1,83 @@
 kOS Mod Changelog
 =================
+
+# VTODO_RELEASE_NUM_HERE_WHEN_WE_RELEASE TODO_RELEASE_CUTE_NAME_HERE
+
+This release was primarily focused on speedups and smoothness
+of execution.  We welcomed a new developer (github username tsholmes)
+who contributed a lot of bottleneck analysis and code speedups.  The
+goal was to reduce the burden kOS causes to the physics rate of the
+game, and consequently also allow tech tree scaled performance by era
+for the kOS computer parts themselves (slow at first, faster later).
+
+### BREAKING CHANGES:
+
+- Files now have an implied local scope, causing the following change:
+  - **Previously:** If you declared a variable as ``local`` at the
+    outermost scope of a program file (outside any curly braces),
+    then it had the same effect as ``global``, creating a varible
+    that you could see from anywhere outside that program file.
+  - **New behaviour:** Now that there is an outermost scope for a file,
+    ``local`` actually means something in that scope.  To get the
+    old behaviour you would need to explicitly call the variable
+    ``global``.i
+  (The variables magically created via the lazyglobal system will still
+  be global just like they were before.)
+- Parameters to programs now have local scope to that program file.
+  (Previously they were sort of global and visible everywhere, which
+  they shouldn't have been.  If you relied on this behaviour your
+  script might break.)
+- Functions declared at the outermost scope of a program will now
+  keep proper closure, making them see variables local to that program
+  file even when called from outside that file.  This may hide a global
+  variable with a more local variable of the same name, when previously
+  the global variable would have been accessible from the function.
+  (You probably weren't relying on this buggy behaviour before, but
+  if you were, this fix will break your script.)
+
+### NEW FEATURES:
+
+- TODO: Describe various speedups here, but not in too much detail.
+- **File scope**: Previously, kerboscript did not wrap program files
+  in their own local scope.  (Declaring a ``local`` in a file had
+  the same effect as declaring a ``global`` there).  Now each program file
+  has its own scope (and also the parameters passed to a program file
+  are local to that file scope).
+  - NOTE: For backward compatibility, there is one important exception
+    to the file scope - functions declared at the outermost level by
+    default can be globally seen in other programs.  You *CAN* get functions
+    that are local to the file's scope, but you have to explicitly include
+    the ``local`` keyword in the function declaration to make that happen.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2157)
+
+### BUG FIXES:
+
+- Functions at the outermost file scope level now have closures that can
+  see the file scope variables properly.  Previously they could not (but
+  this did not matter since there was no file scope to matter.  This bug
+  got exposed by the other file scope changes.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2157)
+  
+
+
 # v1.1.3.2 (for KSP 1.3.1) New KSP version HOTFIX
+
 This version is functionally identical to v1.1.3.0, however the binaries are
 compiled against KSP 1.3.1 to allow it to properly load with the updated version
 of KSP
+
 ### BREAKING CHANGES:
+
 - This build will not work on previous versions of KSP.
+
 ### NEW FEATURES:
+
 (None)
+
 ### BUG FIXES:
+
 (None)
+
 # v1.1.3.1 (for KSP 1.2.2) Backward compatibility version of v1.1.3.0
 
 ### Only use if you are stuck on KSP 1.2.2.

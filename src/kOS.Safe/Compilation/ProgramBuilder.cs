@@ -108,14 +108,10 @@ namespace kOS.Safe.Compilation
             // low level kRISC does not so the parameters have to be read in stack order:
             
             // store parameter 2 in a local name:
-            boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal("$runonce") {Label = nextLabel, SourcePath = path});
 
             // store parameter 1 in a local name:
-            boilerplate.Add(new OpcodePush("$filename") {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
+            boilerplate.Add(new OpcodeStoreLocal("$filename") {Label = nextLabel, SourcePath = path});
             
             // Unconditionally call load() no matter what.  load() will abort and return
             // early if the program was already compiled, and tell us that on the stack:
@@ -144,10 +140,8 @@ namespace kOS.Safe.Compilation
             
             // Actually call the Program from its entry Point, which is now the thing left on top
             // of the stack from the second return value of load():
-            Opcode branchTo = new OpcodePush("$entrypoint") {Label = nextLabel, SourcePath = path};
+            Opcode branchTo = new OpcodeStoreLocal("$entrypoint") {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchTo);
-            boilerplate.Add(new OpcodeSwap() {Label = nextLabel, SourcePath = path});
-            boilerplate.Add(new OpcodeStoreLocal() {Label = nextLabel, SourcePath = path});
             boilerplate.Add(new OpcodeCall("$entrypoint") {Label = nextLabel, SourcePath = path});
             
             boilerplate.Add(new OpcodePop() {Label = nextLabel, SourcePath = path});

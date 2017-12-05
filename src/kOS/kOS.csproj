@@ -63,7 +63,6 @@
     <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
-    <Compile Include="AddOns\RemoteTech\RemoteTechUtility.cs" />
     <Compile Include="AddOns\Trajectories\Addon.cs" />
     <Compile Include="AddOns\Trajectories\TRWrapper.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
@@ -96,7 +95,6 @@
     <Compile Include="Function\Misc.cs" />
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
-    <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\kOSCustomParameters.cs" />
