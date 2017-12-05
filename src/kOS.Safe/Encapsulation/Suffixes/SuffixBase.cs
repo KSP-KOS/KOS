@@ -32,7 +32,8 @@ namespace kOS.Safe.Encapsulation.Suffixes
             DelegateParameter[] delParams = new DelegateParameter[paramInfos.Length];
             for (int i = 0; i < paramInfos.Length; i++)
             {
-                delParams[i] = new DelegateParameter() {
+                delParams[i] = new DelegateParameter()
+                {
                     ParameterType = paramInfos[i].ParameterType,
                     IsParams = (i == paramInfos.Length - 1) ? Attribute.IsDefined(paramInfos[i], typeof(ParamArrayAttribute)) : false
                 };
@@ -52,7 +53,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
     public class DelegateInfo
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
         public Type ReturnType { get; set; }
         public DelegateParameter[] Parameters { get; set; }
     }

@@ -16,10 +16,10 @@ namespace kOS.Safe.Encapsulation.Suffixes
             return new SuffixResult(getter.Invoke());
         }
 
-        protected override object Call (object [] args)
+        protected override object Call(object[] args)
         {
             // We are overriding Get so no need to implement this
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
         protected override Delegate Delegate
@@ -27,7 +27,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
             get
             {
                 // We are override Get so no need to implement
-                throw new NotImplementedException ();
+                throw new NotImplementedException();
             }
         }
     }
