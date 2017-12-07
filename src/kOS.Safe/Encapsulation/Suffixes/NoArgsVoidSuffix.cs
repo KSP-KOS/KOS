@@ -1,3 +1,5 @@
+using System;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     /// <summary>
@@ -17,15 +19,18 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override ISuffixResult Get()
-        {
-            return new DelegateSuffixResult(del, call);
-        }
-
-        private object call(object[] args)
+        protected override object Call(object[] args)
         {
             del();
             return null;
+        }
+
+        protected override Delegate Delegate
+        {
+            get
+            {
+                return del;
+            }
         }
     }
 }

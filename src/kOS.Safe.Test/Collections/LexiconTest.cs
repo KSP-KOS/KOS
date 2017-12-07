@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Test.Opcode;
 using NUnit.Framework;
@@ -13,10 +14,12 @@ namespace kOS.Safe.Test.Collections
     [TestFixture]
     public class LexiconTest
     {
+        private ICpu cpu;
+
         [SetUp]
         public void Setup()
         {
-
+            cpu = new FakeCpu();
         }
 
         [Test]
@@ -310,9 +313,16 @@ namespace kOS.Safe.Test.Collections
                 var delegateResult = lengthResult as DelegateSuffixResult;
                 if (delegateResult != null)
                 {
-                    var temp = delegateResult.Del.DynamicInvoke(parameters);
+                    cpu.PushArgumentStack(null); // fake delegate info
+                    cpu.PushArgumentStack(new KOSArgMarkerType());
+                    foreach (var param in parameters)
+                    {
+                        cpu.PushArgumentStack(param);
+                    }
+
+                    delegateResult.Invoke(cpu);
                     
-                    return temp as Encapsulation.Structure;
+                    return delegateResult.Value;
                 }
             }
 
