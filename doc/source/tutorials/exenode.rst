@@ -7,7 +7,7 @@ Let's try to automate one of the most common tasks in orbital maneuvering - exec
 
 So to start our script we need to get the next available :ref:`maneuver node <maneuver node>`::
 
-    set nd to nextnode().
+    set nd to nextnode.
 
 Our next step is to calculate how much time our vessel needs to burn at full throttle to execute the node::
 
@@ -37,7 +37,7 @@ Our next step is to calculate how much time our vessel needs to burn at full thr
 
 So now we have our node's deltav vector, ETA to the node and we calculated our burn duration. All that is left for us to do is wait until we are close to node's ETA less half of our burn duration. But we want to write a universal script, and some of our current and/or future ships can be quite slow to turn, so let's give us some time, 60 seconds, to prepare for the maneuver burn::
 
-    wait until node:eta <= (burn_duration/2 + 60).
+    wait until nd:eta <= (burn_duration/2 + 60).
 
 This wait can be tedious and you'll most likely end up warping some time, but we'll leave kOS automation of warping for a given period of time to our readers.
 
@@ -47,10 +47,10 @@ The wait has finished, and now we need to start turning our ship in the directio
     lock steering to np.
 
     //now we need to wait until the burn vector and ship's facing are aligned
-    wait until abs(np:pitch - facing:pitch) < 0.15 and abs(np:yaw - facing:yaw) < 0.15.
+    wait until vang(np, ship:facing:vector) < 0.25.
 
     //the ship is facing the right direction, let's wait for our burn time
-    wait until node:eta <= (burn_duration/2)
+    wait until nd:eta <= (burn_duration/2).
 
 Now we are ready to burn. It is usually done in the `until` loop, checking main parameters of the burn every iteration until the burn is complete::
 
