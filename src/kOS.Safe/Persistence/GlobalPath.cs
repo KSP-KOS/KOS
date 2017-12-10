@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using kOS.Safe.Persistence;
@@ -44,7 +45,7 @@ namespace kOS.Safe.Persistence
             }
 
             int result;
-            if (volumeId is string && int.TryParse(volumeId as string, out result))
+            if (volumeId is string && int.TryParse(volumeId as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
             {
                 volumeId = result;
             }
