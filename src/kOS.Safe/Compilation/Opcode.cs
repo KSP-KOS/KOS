@@ -962,7 +962,9 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// Aborts the current program. This is used to return back to the interpreter context
-    /// once a program is finished executing. Has no stack effect.
+    /// once a program is finished executing. Has no stack effect. (The
+    /// system may wipe some things off the stack as it performs cleanup associated
+    /// with ending the program, but this opcode doesn't do it directly itself.)
     /// </summary>
     public class OpcodeEOP : Opcode
     {
@@ -1084,7 +1086,7 @@ namespace kOS.Safe.Compilation
 
     /// <summary>
     /// <para>
-    /// Uncondintionally branches to the given destination.
+    /// Unconditionally branches to the given destination.
     /// </para>
     /// <para></para>
     /// <para>jump destination</para>
@@ -1274,7 +1276,8 @@ namespace kOS.Safe.Compilation
     
     /// <summary>
     /// <para>
-    /// Consumes one value from the stack, pushing back the negation of the value.
+    /// Consumes one value from the stack, pushing back the mathematical
+    /// negation of the value (i.e. 99 becomes -99)
     /// </para>
     /// <para></para>
     /// <para>negate</para>
@@ -1418,6 +1421,7 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Consumes a value from the stack, coercing it to a boolean and then pushing it back.
+    /// This uses the nonzero=true Boolean interpretation.
     /// </para>
     /// <para></para>
     /// <para>bool</para>
@@ -1445,6 +1449,8 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Consumes a value from the stack, pushing back the logical not of the value.
+    /// If the value on the stack is not a BooleanValue, this will treat it as one
+    /// using nonzero=true Boolean interpretation.
     /// </para>
     /// <para></para>
     /// <para>not</para>
@@ -1479,7 +1485,12 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Consumes 2 values from the stack, pushing back a boolean of if both values were true.
+    /// If one or more of the values on the stack are not BooleanValues, this will attempt
+    /// to treat them as Booleans using the nonzero=true Boolean interpretation.
     /// </para>
+    /// <para>The kerboscript compiler avoids using this opcode by using short-circuit logic instead.
+    /// This opcode is only left here to support other future potential languages.</para>
+    /// <para></para>
     /// <para>and</para>
     /// <para>... left right -- ... both</para>
     /// </summary>
@@ -1500,7 +1511,12 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Consumes 2 values from the stack, pushing back a boolean of if either of values were true.
+    /// If one or more of the values on the stack are not BooleanValues, this will attempt
+    /// to treat them as Booleans using the nonzero=true Boolean interpretation.
     /// </para>
+    /// <para>The kerboscript compiler avoids using this opcode by using short-circuit logic instead.
+    /// This opcode is only left here to support other future potential languages.</para>
+    /// <para></para>
     /// <para>or</para>
     /// <para>... left right -- ... either</para>
     /// </summary>

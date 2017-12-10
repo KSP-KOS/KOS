@@ -1988,6 +1988,49 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(new StringValue(node.Token.Text.Trim('"'))));
         }
 
+        /// <summary>
+        /// Given a ParseNode that should be somewhere in the Suffix term portion of a parse tree,
+        /// return the Suffix trailer or suffix term at the end of it that has the final suffix identifier.
+        /// If the term doesn't end with a suffix identifier, then this returns null.
+        /// </summary>
+        /// <returns>The variable identifier end suffix.</returns>
+        /// <param name="node">Node.</param>
+        private ParseNode FindVarIdentifierEndNode(ParseNode node)
+        {
+            // If it's a var_identifier being worked on, drop down one level first
+            // to get into the actual meat of the syntax tree it represents:
+            if (node.Token.Type == TokenType.varidentifier)
+                return FindVarIdentifierEndNode(node.Nodes.First());
+
+            // Descend the rightmost children until encountering the deepest node that is
+            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
+            // was a suffix_trailer, return true, else it's false.
+            ParseNode prevChild = node;
+            ParseNode thisChild = node.Nodes.Last();
+
+            bool descendedThroughAColon = false; // eeeewwww, sounds disgusting.
+
+            while (thisChild.Token.Type == TokenType.suffix_trailer ||
+                thisChild.Token.Type == TokenType.suffix || 
+                thisChild.Token.Type == TokenType.suffixterm || 
+                thisChild.Token.Type == TokenType.suffixterm_trailer || 
+                thisChild.Token.Type == TokenType.array_trailer ||
+                thisChild.Token.Type == TokenType.function_trailer)
+            {
+                if (thisChild.Token.Type == TokenType.suffix_trailer)
+                    descendedThroughAColon = true;
+                prevChild = thisChild;
+                thisChild = thisChild.Nodes.Last();
+            }
+            if (descendedThroughAColon &&
+                (prevChild.Token.Type == TokenType.suffix_trailer ||
+                 prevChild.Token.Type == TokenType.suffixterm))
+            {
+                return prevChild;
+            }
+            return null;
+        }
+
         ///<summary>
         /// Check for if the rightmost thing in the var_identifier node
         /// is a suffix term.  i.e. return true if the var_identifier is:<br/>
@@ -2000,34 +2043,7 @@ namespace kOS.Safe.Compilation.KS
         /// </summary>
         private bool VarIdentifierEndsWithSuffix(ParseNode node)
         {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return VarIdentifierEndsWithSuffix(node.Nodes.First());
-
-            // Descend the rightmost children until encountering the deepest node that is
-            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
-            // was a suffix_trailer, return true, else it's false.
-            ParseNode prevChild = node;
-            ParseNode thisChild = node.Nodes.Last();
-            
-            bool descendedThroughAColon = false; // eeeewwww, sounds disgusting.
-                
-            while (thisChild.Token.Type == TokenType.suffix_trailer ||
-                   thisChild.Token.Type == TokenType.suffix || 
-                   thisChild.Token.Type == TokenType.suffixterm || 
-                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
-                   thisChild.Token.Type == TokenType.array_trailer ||
-                   thisChild.Token.Type == TokenType.function_trailer)
-            {
-                if (thisChild.Token.Type == TokenType.suffix_trailer)
-                    descendedThroughAColon = true;
-                prevChild = thisChild;
-                thisChild = thisChild.Nodes.Last();
-            }
-            return descendedThroughAColon && 
-                (prevChild.Token.Type == TokenType.suffix_trailer ||
-                 prevChild.Token.Type == TokenType.suffixterm);
+            return FindVarIdentifierEndNode(node) != null;
         }
 
         ///<summary>
@@ -2038,39 +2054,10 @@ namespace kOS.Safe.Compilation.KS
         /// </summary>
         private string GetVarIdentifierEndSuffix(ParseNode node)
         {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return GetVarIdentifierEndSuffix(node.Nodes.First());
-
-            // Descend the rightmost children until encountering the deepest node that is
-            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
-            // was a suffix_trailer, return true, else it's false.
-            ParseNode prevChild = node;
-            ParseNode thisChild = node.Nodes.Last();
-
-            bool descendedThroughAColon = false; // eeeewwww, sounds disgusting.
-
-            while (thisChild.Token.Type == TokenType.suffix_trailer ||
-                   thisChild.Token.Type == TokenType.suffix || 
-                   thisChild.Token.Type == TokenType.suffixterm || 
-                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
-                   thisChild.Token.Type == TokenType.array_trailer ||
-                   thisChild.Token.Type == TokenType.function_trailer)
-            {
-                if (thisChild.Token.Type == TokenType.suffix_trailer)
-                    descendedThroughAColon = true;
-                prevChild = thisChild;
-                thisChild = thisChild.Nodes.Last();
-            }
-            if (descendedThroughAColon && 
-                (prevChild.Token.Type == TokenType.suffix_trailer ||
-                 prevChild.Token.Type == TokenType.suffixterm))
-            {
-                return GetIdentifierText(prevChild);
-            }
-
-            throw new KOSYouShouldNeverSeeThisException("VarIdentifier didn't end in a suffix");
+            ParseNode endingNode = FindVarIdentifierEndNode(node);
+            if (endingNode == null)
+                throw new KOSYouShouldNeverSeeThisException("VarIdentifier didn't end in a suffix");
+            return GetIdentifierText(endingNode);
         }
 
         ///<summary>
