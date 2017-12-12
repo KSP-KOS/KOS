@@ -1,10 +1,12 @@
 kOS Mod Changelog
 =================
 
-# VTODO_RELEASE_NUM_HERE_WHEN_WE_RELEASE TODO_RELEASE_CUTE_NAME_HERE
+# v1.1.4.0 Does faster compilation break a work flow?
+
+Built for KSP v1.3.1
 
 This release was primarily focused on speedups and smoothness
-of execution.  We welcomed a new developer (github username tsholmes)
+of execution.  We welcomed a new developer (github username @tsholmes)
 who contributed a lot of bottleneck analysis and code speedups.  The
 goal was to reduce the burden kOS causes to the physics rate of the
 game, and consequently also allow tech tree scaled performance by era
@@ -15,29 +17,30 @@ for the kOS computer parts themselves (slow at first, faster later).
 - Files now have an implied local scope, causing the following change:
   - **Previously:** If you declared a variable as ``local`` at the
     outermost scope of a program file (outside any curly braces),
-    then it had the same effect as ``global``, creating a varible
+    then it had the same effect as ``global``, creating a variable
     that you could see from anywhere outside that program file.
-  - **New behaviour:** Now that there is an outermost scope for a file,
+  - **New behavior:** Now that there is an outermost scope for a file,
     ``local`` actually means something in that scope.  To get the
-    old behaviour you would need to explicitly call the variable
-    ``global``.i
+    old behavior you would need to explicitly call the variable
+    ``global``.
   (The variables magically created via the lazyglobal system will still
   be global just like they were before.)
 - Parameters to programs now have local scope to that program file.
   (Previously they were sort of global and visible everywhere, which
-  they shouldn't have been.  If you relied on this behaviour your
-  script might break.)
+  they shouldn't have been.  If you relied on this behavior your
+  script might break.)  This is of particular note when working with locks and
+  triggers as the local parameters by conflict with the global scope of these
+  features.
 - Functions declared at the outermost scope of a program will now
   keep proper closure, making them see variables local to that program
   file even when called from outside that file.  This may hide a global
   variable with a more local variable of the same name, when previously
   the global variable would have been accessible from the function.
-  (You probably weren't relying on this buggy behaviour before, but
+  (You probably weren't relying on this buggy behavior before, but
   if you were, this fix will break your script.)
 
 ### NEW FEATURES:
 
-- TODO: Describe various speedups here, but not in too much detail.
 - **File scope**: Previously, kerboscript did not wrap program files
   in their own local scope.  (Declaring a ``local`` in a file had
   the same effect as declaring a ``global`` there).  Now each program file
@@ -50,6 +53,34 @@ for the kOS computer parts themselves (slow at first, faster later).
     the ``local`` keyword in the function declaration to make that happen.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2157)
 
+### OPTIMIZATIONS:
+
+- The regular expression syntax used to compile programs has been heavily
+  modified to speed up file parsing using start string anchors and eliminating
+  string copying.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2145)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2172)
+- Suffix lists are no longer initialized on every call, saving both execution
+  time and memory.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2136)
+- Various string operation optimizations for internal string lookups.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2137)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2142)
+- The cpu stack was re-written to use two stacks instead of using a single stack
+  with hidden offsets.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2138)
+- Cache type lookup data for suffix delegates.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2144)
+- Begin encoding identifiers directly in opcodes instead of pushing a string
+  identifier prior to executing the opcode.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2156)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2181)
+- General optimizations for the C# source code, including for unit tests.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2139)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2140)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2148)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2150)
+
 ### BUG FIXES:
 
 - Functions at the outermost file scope level now have closures that can
@@ -57,7 +88,16 @@ for the kOS computer parts themselves (slow at first, faster later).
   this did not matter since there was no file scope to matter.  This bug
   got exposed by the other file scope changes.)
   [pull request](https://github.com/KSP-KOS/KOS/pull/2157)
-  
+- Fixed inability to use flight controls on a craft with local control when
+  RemoteTech is installed, both with and without a probe core installed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2128)
+- Fixed a crash to desktop when attempting to parse very large numbers.
+  [pull requst](https://github.com/KSP-KOS/KOS/pull/2134)
+- Fixed syntax errors in the exenode tutorial documents.  The code as displayed
+  has been tested to work correctly as of this release.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2188)
+
+
 
 
 # v1.1.3.2 (for KSP 1.3.1) New KSP version HOTFIX
