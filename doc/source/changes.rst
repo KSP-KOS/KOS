@@ -27,10 +27,10 @@ release.
 Changes in 1.1.4.0
 ------------------
 
-There were numberous optimizations applied to the source code that most end
+There were numerous optimizations applied to the source code that most end
 users will not see directly.  Users should however see a performance boost.
 Notable modifications were to the regular expressions engine used to parse
-script files, optimization of internal string operations, better cacheing of
+script files, optimization of internal string operations, better caching of
 suffix information, and migrating to a dual stack cpu instead of a single stack
 with hidden offsets.
 
@@ -40,7 +40,7 @@ are no longer treated as part of the global scope.  It also means that script
 parameters are local to the file itself and will not overwrite global variables.
 
 Work also began to include identifier information within opcodes themselves
-rather than as a pushed string litteral to be evaluated separately.  This should
+rather than as a pushed string literal to be evaluated separately.  This should
 help with execution time and reduce the number of opcode calls within the kOS
 virtual machine.
 
