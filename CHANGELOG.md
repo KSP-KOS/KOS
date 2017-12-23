@@ -14,6 +14,8 @@ for the kOS computer parts themselves (slow at first, faster later).
 
 ### BREAKING CHANGES:
 
+- If you use the compiled script feature **YOU MUST RECOMPILE ALL KSM FILES,
+  USING KSM FILES COMPILED IN A PREVIOUS VERSION WILL RESULT IN AN ERROR.**
 - Files now have an implied local scope, causing the following change:
   - **Previously:** If you declared a variable as ``local`` at the
     outermost scope of a program file (outside any curly braces),
@@ -29,7 +31,7 @@ for the kOS computer parts themselves (slow at first, faster later).
   (Previously they were sort of global and visible everywhere, which
   they shouldn't have been.  If you relied on this behavior your
   script might break.)  This is of particular note when working with locks and
-  triggers as the local parameters by conflict with the global scope of these
+  triggers as the local parameters may conflict with the global scope of these
   features.
 - Functions declared at the outermost scope of a program will now
   keep proper closure, making them see variables local to that program
@@ -96,7 +98,17 @@ for the kOS computer parts themselves (slow at first, faster later).
 - Fixed syntax errors in the exenode tutorial documents.  The code as displayed
   has been tested to work correctly as of this release.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2188)
-
+- Parsing numbers on host computers that normally expect the `,` character to
+  be used as a decimal symbol will no longer be blocked.  kOS now forces the use
+  of `CultureInvariant` when parsing numbers, so all locales will be required
+  to use the `.` character for decimals.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2196)
+- Action Groups Extended support should once again work as the the method used
+  to detect that the mod is installed has been repaired.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2189)
+- Attempting to delete a path that does not exist no longer throws a null
+  reference error.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2201)
 
 
 
