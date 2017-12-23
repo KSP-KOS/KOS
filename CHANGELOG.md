@@ -109,8 +109,8 @@ for the kOS computer parts themselves (slow at first, faster later).
 - Attempting to delete a path that does not exist no longer throws a null
   reference error.
   [pull request](https://github.com/KSP-KOS/KOS/pull/2201)
-
-
+- Documentation was added for `part:hasmodule` suffix.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2202)
 
 # v1.1.3.2 (for KSP 1.3.1) New KSP version HOTFIX
 
