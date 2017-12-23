@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using kOS.AddOns.RemoteTech;
 using kOS.Safe.Encapsulation;
@@ -246,7 +247,7 @@ namespace kOS.Suffixed
         {
             var valueStr = value.ToString();
             float valueParsed;
-            if (float.TryParse(valueStr, out valueParsed))
+            if (float.TryParse(valueStr, NumberStyles.Float, CultureInfo.InvariantCulture, out valueParsed))
             {
                 doubleValue = valueParsed;
             }

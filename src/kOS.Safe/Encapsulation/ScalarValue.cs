@@ -112,7 +112,7 @@ namespace kOS.Safe.Encapsulation
             result = null; // default the out value to null
             int val;
             str = str.Replace("_","");
-            if (int.TryParse(str, out val))
+            if (int.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out val))
             {
                 result = new ScalarIntValue(val);
                 return true;
@@ -125,7 +125,7 @@ namespace kOS.Safe.Encapsulation
             result = null; // default the out value to null
             str = trimPattern.Replace(str, "E").Replace("_",""); // remove white space around "e" and strip spacing underscores.
             double val;
-            if (double.TryParse(str, out val))
+            if (double.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
             {
                 // use Create instead of new ScalarDoubleValue so doubles that
                 // represent integers will output a ScalarIntValue instead
