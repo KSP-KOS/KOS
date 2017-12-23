@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
@@ -587,7 +588,7 @@ namespace kOS.Function
             }
 
             double parsedAmount;
-            if (Double.TryParse(amount.ToString(), out parsedAmount))
+            if (Double.TryParse(amount.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out parsedAmount))
             {
                 object toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
                 ReturnValue = toPush;
