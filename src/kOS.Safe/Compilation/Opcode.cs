@@ -512,7 +512,7 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception(String.Format("Saved field in ML file for {0} seems to be missing.  Version mismatch?", Name));
-            Identifier = (string)fields[0];
+            Identifier = Convert.ToString(fields[0]);
         }
 
         public override string ToString()
@@ -694,6 +694,12 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// Consumes the topmost value of the stack as an identifier, unsetting
+    /// the variable referenced by this identifier. This will remove the
+    /// variable referenced by this identifier in the innermost scope that
+    /// it is set in.
+    /// </summary>
     public class OpcodeUnset : Opcode
     {
         protected override string Name { get { return "unset"; } }
@@ -712,16 +718,39 @@ namespace kOS.Safe.Compilation
             }
         }
     }
-    
-    public class OpcodeGetMember : Opcode
+
+    /// <summary>
+    /// <para>
+    /// Consumes the topmost value of the stack, getting the suffix of it
+    /// specified by the Identifier MLField and putting that value back on
+    /// the stack. If this suffix refers to a method suffix, it will be
+    /// called with no arguments.
+    /// </para>
+    /// <para></para>
+    /// <para>getmember identifier</para>
+    /// <para>... obj -- ... result</para>
+    /// <para></para>
+    /// <para>
+    /// If this is instead a GetMethod call, it will leave the
+    /// DelegateSuffixResult on the stack to be called by a later instruction.
+    /// </para>
+    /// </summary>
+    public class OpcodeGetMember : OpcodeIdentifierBase
     {
         protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
         protected bool IsMethodCallAttempt = false;
 
+        public OpcodeGetMember(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeGetMember() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
-            string suffixName = cpu.PopArgumentStack().ToString();
             object popValue = cpu.PopValueEncapsulatedArgument();
 
             var specialValue = popValue as ISuffixed;
@@ -731,7 +760,7 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
 
-            ISuffixResult result = specialValue.GetSuffix(suffixName);
+            ISuffixResult result = specialValue.GetSuffix(Identifier);
 
             // If the result is a suffix that is still in need of being invoked and hasn't resolved to a value yet:
             if (result != null && !IsMethodCallAttempt && !result.HasValue)
@@ -767,17 +796,31 @@ namespace kOS.Safe.Compilation
     }
     
     /// <summary>
+    /// <para>
     /// OpcodeGetMethod is *exactly* the same thing as OpcodeGetMember, and is in fact a subclass of it.
     /// The only reason for the distinction is so that at runtime the Opcode can tell whether the
     /// getting of the member was done with method call syntax with parentheses, like SHIP:NAME(), or
     /// non-method call syntax, like SHIP:NAME. It needs to know whether there is an upcoming
     /// OpcodeCall coming next or not, so it knows whether the delegate will get dealt with later
     /// or if it needs to perform it now.
+    /// </para>
+    /// <para></para>
+    /// <para>getmethod identifier</para>
+    /// <para>... obj -- ... DelegateSuffixResult</para>
     /// </summary>
     public class OpcodeGetMethod : OpcodeGetMember
     {
         protected override string Name { get { return "getmethod"; } }
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
+
+        public OpcodeGetMethod(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeGetMethod() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             IsMethodCallAttempt = true;
@@ -785,16 +828,32 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
-    public class OpcodeSetMember : Opcode
+    /// <summary>
+    /// <para>
+    /// Consumes a value and a destination object from the stack,
+    /// setting the objects suffix specified by the Identifier MLField
+    /// to the popped value.
+    /// </para>
+    /// <para></para>
+    /// <para>setmember identifier</para>
+    /// <para>... obj value -- ...</para>
+    /// </summary>
+    public class OpcodeSetMember : OpcodeIdentifierBase
     {
         protected override string Name { get { return "setmember"; } }
         public override ByteCode Code { get { return ByteCode.SETMEMBER; } }
 
+        public OpcodeSetMember(string identifier) : base(identifier)
+        {
+        }
+
+        protected OpcodeSetMember() : base("")
+        {
+        }
+
         public override void Execute(ICpu cpu)
         {
             Structure value = cpu.PopStructureEncapsulatedArgument();         // new value to set it to
-            string suffixName = cpu.PopArgumentStack().ToString();            // name of suffix being set
             Structure popValue = cpu.PopStructureEncapsulatedArgument();      // object to which the suffix is attached.
 
             // We aren't converting the popValue to a Scalar, Boolean, or String structure here because
@@ -811,14 +870,23 @@ namespace kOS.Safe.Compilation
             // TODO: When we refactor to make every structure use the new suffix style, this conversion
             // to primative can be removed.  Right now there are too many structures that override the
             // SetSuffix method while relying on unboxing the object rahter than using Convert
-            if (!specialValue.SetSuffix(suffixName, Structure.ToPrimitive(value)))
+            if (!specialValue.SetSuffix(Identifier, Structure.ToPrimitive(value)))
             {
-                throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
+                throw new Exception(string.Format("Suffix {0} not found on object", Identifier));
             }
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes an index and an target object from the stack,
+    /// getting the indexed value from the object and pushing
+    /// the result back on the stack.
+    /// </para>
+    /// <para></para>
+    /// <para>getindex</para>
+    /// <para>... obj index -- ... result</para>
+    /// </summary>
     public class OpcodeGetIndex : Opcode
     {
         protected override string Name { get { return "getindex"; } }
@@ -845,7 +913,15 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes a value, an index, and an object from the stack,
+    /// setting the specified index on the object to the given value.
+    /// </para>
+    /// <para></para>
+    /// <para>setindex</para>
+    /// <para>... obj index value -- ...</para>
+    /// </summary>
     public class OpcodeSetIndex : Opcode
     {
         protected override string Name { get { return "setindex"; } }
@@ -871,8 +947,9 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
-    
+    /// <summary>
+    /// Stops executing for this cycle. Has no stack effect.
+    /// </summary>
     public class OpcodeEOF : Opcode
     {
         protected override string Name { get { return "EOF"; } }
@@ -883,7 +960,12 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// Aborts the current program. This is used to return back to the interpreter context
+    /// once a program is finished executing. Has no stack effect. (The
+    /// system may wipe some things off the stack as it performs cleanup associated
+    /// with ending the program, but this opcode doesn't do it directly itself.)
+    /// </summary>
     public class OpcodeEOP : Opcode
     {
         protected override string Name { get { return "EOP"; } }
@@ -894,7 +976,9 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// No-op. Does nothing.
+    /// </summary>
     public class OpcodeNOP : Opcode
     {
         protected override string Name { get { return "nop"; } }
@@ -959,7 +1043,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes one value from the stack and branches to the given destination if the value was false
+    /// </para>
+    /// <para></para>
+    /// <para>br.false destination</para>
+    /// <para>... flag -- ...</para>
+    /// </summary>
     public class OpcodeBranchIfFalse : BranchOpcode
     {
         protected override string Name { get { return "br.false"; } }
@@ -972,7 +1063,15 @@ namespace kOS.Safe.Compilation
             DeltaInstructionPointer = !condition ? Distance : 1;
         }
     }
-    
+
+    /// <summary>
+    /// <para>
+    /// Consumes one value from the stack and branches to the given destination if the value was true
+    /// </para>
+    /// <para></para>
+    /// <para>br.true destination</para>
+    /// <para>... flag -- ...</para>
+    /// </summary>
     public class OpcodeBranchIfTrue : BranchOpcode
     {
         protected override string Name { get { return "br.true"; } }
@@ -985,7 +1084,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Unconditionally branches to the given destination.
+    /// </para>
+    /// <para></para>
+    /// <para>jump destination</para>
+    /// <para>... -- ...</para>
+    /// </summary>
     public class OpcodeBranchJump : BranchOpcode
     {
         protected override string Name { get { return "jump"; } }
@@ -1007,7 +1113,7 @@ namespace kOS.Safe.Compilation
     /// creating a dummy opcode that is just a no-op instruction intended to be
     /// removed when the program is actually loaded into memory and run.  It
     /// exists purely to store, as an argument, the label of the next opcode to
-    /// follow it.
+    /// follow it. Has no stack effect.
     /// </summary>
     public class OpcodeLabelReset : Opcode
     {
@@ -1050,7 +1156,14 @@ namespace kOS.Safe.Compilation
 
     #region Compare
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is greater than the first.
+    /// </para>
+    /// <para></para>
+    /// <para>gt</para>
+    /// <para>... left right -- ... result</para>
+    /// </summary>
     public class OpcodeCompareGT : BinaryOpcode
     {
         protected override string Name { get { return "gt"; } }
@@ -1062,7 +1175,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is less than the first.
+    /// </para>
+    /// <para></para>
+    /// <para>lt</para>
+    /// <para>... left right -- ... result</para>
+    /// </summary>
     public class OpcodeCompareLT : BinaryOpcode
     {
         protected override string Name { get { return "lt"; } }
@@ -1074,7 +1194,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is greater than or equal to the first.
+    /// </para>
+    /// <para></para>
+    /// <para>gte</para>
+    /// <para>... left right -- ... result</para>
+    /// </summary>
     public class OpcodeCompareGTE : BinaryOpcode
     {
         protected override string Name { get { return "gte"; } }
@@ -1086,7 +1213,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is less than or equal to the first.
+    /// </para>
+    /// <para></para>
+    /// <para>lte</para>
+    /// <para>... left right -- ... result</para>
+    /// </summary>
     public class OpcodeCompareLTE : BinaryOpcode
     {
         protected override string Name { get { return "lte"; } }
@@ -1098,7 +1232,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is not equal to the first.
+    /// </para>
+    /// <para></para>
+    /// <para>ne</para>
+    /// <para>... left right -- ... result</para>
+    /// </summary>
     public class OpcodeCompareNE : BinaryOpcode
     {
         protected override string Name { get { return "ne"; } }
@@ -1109,8 +1250,15 @@ namespace kOS.Safe.Compilation
             return calc.NotEqual(Operands);
         }
     }
-    
-    
+
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if the second is not equal to the first.
+    /// </para>
+    /// <para></para>
+    /// <para>eq</para>
+    /// <para>... left right -- ... result</para>
+    /// </summary>
     public class OpcodeCompareEqual : BinaryOpcode
     {
         protected override string Name { get { return "eq"; } }
@@ -1126,7 +1274,15 @@ namespace kOS.Safe.Compilation
 
     #region Math
     
-    
+    /// <summary>
+    /// <para>
+    /// Consumes one value from the stack, pushing back the mathematical
+    /// negation of the value (i.e. 99 becomes -99)
+    /// </para>
+    /// <para></para>
+    /// <para>negate</para>
+    /// <para>... value -- ... negativeValue</para>
+    /// </summary>
     public class OpcodeMathNegate : Opcode
     {
         protected override string Name { get { return "negate"; } }
@@ -1160,7 +1316,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back the sum of the 2 values.
+    /// </para>
+    /// <para></para>
+    /// <para>add</para>
+    /// <para>... left right -- ... sum</para>
+    /// </summary>
     public class OpcodeMathAdd : BinaryOpcode
     {
         protected override string Name { get { return "add"; } }
@@ -1175,7 +1338,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back the difference of the 2 values.
+    /// </para>
+    /// <para></para>
+    /// <para>sub</para>
+    /// <para>... left right -- ... difference</para>
+    /// </summary>
     public class OpcodeMathSubtract : BinaryOpcode
     {
         protected override string Name { get { return "sub"; } }
@@ -1187,7 +1357,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back the product of the 2 values.
+    /// </para>
+    /// <para></para>
+    /// <para>mult</para>
+    /// <para>... left right -- ... product</para>
+    /// </summary>
     public class OpcodeMathMultiply : BinaryOpcode
     {
         protected override string Name { get { return "mult"; } }
@@ -1199,7 +1376,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back their quotient.
+    /// </para>
+    /// <para></para>
+    /// <para>add</para>
+    /// <para>... divident divisor -- ... quotient</para>
+    /// </summary>
     public class OpcodeMathDivide : BinaryOpcode
     {
         protected override string Name { get { return "div"; } }
@@ -1211,8 +1395,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
-
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back the result of raising the second value to the power of the first.
+    /// </para>
+    /// <para></para>
+    /// <para>add</para>
+    /// <para>... base exponent -- ... power</para>
+    /// </summary>
     public class OpcodeMathPower : BinaryOpcode
     {
         protected override string Name { get { return "pow"; } }
@@ -1227,7 +1417,16 @@ namespace kOS.Safe.Compilation
     #endregion
     
     #region Logic
-    
+
+    /// <summary>
+    /// <para>
+    /// Consumes a value from the stack, coercing it to a boolean and then pushing it back.
+    /// This uses the nonzero=true Boolean interpretation.
+    /// </para>
+    /// <para></para>
+    /// <para>bool</para>
+    /// <para>... value -- ... boolValue</para>
+    /// </summary>
     public class OpcodeLogicToBool : Opcode
     {
         protected override string Name { get { return "bool"; } }
@@ -1246,7 +1445,17 @@ namespace kOS.Safe.Compilation
             cpu.PushArgumentStack(Structure.FromPrimitive(result));
         }
     }
-    
+
+    /// <summary>
+    /// <para>
+    /// Consumes a value from the stack, pushing back the logical not of the value.
+    /// If the value on the stack is not a BooleanValue, this will treat it as one
+    /// using nonzero=true Boolean interpretation.
+    /// </para>
+    /// <para></para>
+    /// <para>not</para>
+    /// <para>... value -- ... notValue</para>
+    /// </summary>
     public class OpcodeLogicNot : Opcode
     {
         protected override string Name { get { return "not"; } }
@@ -1273,7 +1482,18 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if both values were true.
+    /// If one or more of the values on the stack are not BooleanValues, this will attempt
+    /// to treat them as Booleans using the nonzero=true Boolean interpretation.
+    /// </para>
+    /// <para>The kerboscript compiler avoids using this opcode by using short-circuit logic instead.
+    /// This opcode is only left here to support other future potential languages.</para>
+    /// <para></para>
+    /// <para>and</para>
+    /// <para>... left right -- ... both</para>
+    /// </summary>
     public class OpcodeLogicAnd : Opcode
     {
         protected override string Name { get { return "and"; } }
@@ -1288,7 +1508,18 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Consumes 2 values from the stack, pushing back a boolean of if either of values were true.
+    /// If one or more of the values on the stack are not BooleanValues, this will attempt
+    /// to treat them as Booleans using the nonzero=true Boolean interpretation.
+    /// </para>
+    /// <para>The kerboscript compiler avoids using this opcode by using short-circuit logic instead.
+    /// This opcode is only left here to support other future potential languages.</para>
+    /// <para></para>
+    /// <para>or</para>
+    /// <para>... left right -- ... either</para>
+    /// </summary>
     public class OpcodeLogicOr : Opcode
     {
         protected override string Name { get { return "or"; } }
@@ -1307,7 +1538,15 @@ namespace kOS.Safe.Compilation
 
     #region Call
 
-    
+    /// <summary>
+    /// <para>
+    /// Calls a subroutine, leaving the result on the stack. What actually happens under the hood depends on what type
+    /// of call is happening, but the end result is always the arguments being consumed and the result being put back.
+    /// </para>
+    /// <para></para>
+    /// <para>call destinationLabel destination</para>
+    /// <para>... [delegate] argmarker arg1 arg2 .. argN -- ... result</para>
+    /// </summary>
     public class OpcodeCall : Opcode
     {
 
@@ -1586,6 +1825,7 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
+    /// <para>
     /// Returns from an OpcodeCall, popping a number of scope depths off
     /// the stack as it does so.  It evals the topmost thing on the stack.
     /// to remove any local variable references and replace them with their
@@ -1596,6 +1836,10 @@ namespace kOS.Safe.Compilation
     /// consumed did not match the number of arguments passed and it throws
     /// an exception (to avoid stack misalignment that would happen if it
     /// tried to continue).
+    /// </para>
+    /// <para></para>
+    /// <para>return depth</para>
+    /// <para>... argmarker returnVal -- ... returnVal</para>
     /// </summary>
     public class OpcodeReturn : Opcode
     {
@@ -1727,7 +1971,15 @@ namespace kOS.Safe.Compilation
     #endregion
 
     #region Stack
-    
+
+    /// <summary>
+    /// <para>
+    /// Pushes a constant value onto the stack.
+    /// </para>
+    /// <para></para>
+    /// <para>push val</para>
+    /// <para>... -- ... val</para>
+    /// </summary>
     public class OpcodePush : Opcode
     {
         [MLField(1,false)]
@@ -1831,7 +2083,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Pops a value off the stack, discarding it.
+    /// </para>
+    /// <para></para>
+    /// <para>pop</para>
+    /// <para>... val -- ...</para>
+    /// </summary>
     public class OpcodePop : Opcode
     {
         protected override string Name { get { return "pop"; } }
@@ -1852,11 +2111,16 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
+    /// <para>
     /// Asserts that the next thing on the stack is the argument bottom marker.
     /// If it's not the argument bottom, it throws an error.
     /// This does NOT pop the value from the stack - it merely peeks at the stack top.
     /// The actual popping of the arg bottom value comes later when doing a return,
     /// or a program bottom exit.
+    /// </para>
+    /// <para></para>
+    /// <para>argbottom</para>
+    /// <para>... argmarker -- ... argmarker</para>
     /// </summary>
     public class OpcodeArgBottom : Opcode
     {
@@ -1876,9 +2140,14 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
+    /// <para>
     /// Tests whether or not the next thing on the stack is the argument bottom marker.
     /// It pushes a true on top if it is, or false if it is not.  In either case it does
     /// NOT consume the arg bottom marker, but just peeks for it.
+    /// </para>
+    /// <para></para>
+    /// <para>testargbottom</para>
+    /// <para>... argbottom? -- ... argbottom? isargbottom</para>
     /// </summary>
     public class OpcodeTestArgBottom : Opcode
     {
@@ -1929,7 +2198,12 @@ namespace kOS.Safe.Compilation
     }
     
     /// <summary>
+    /// <para>
     /// Push the thing atop the stack onto the stack again so there are now two of it atop the stack.
+    /// </para>
+    /// <para></para>
+    /// <para>dup</para>
+    /// <para>... val -- ... val val</para>
     /// </summary>
     public class OpcodeDup : Opcode
     {
@@ -1944,7 +2218,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Swaps the order of the top 2 values on the stack.
+    /// </para>
+    /// <para></para>
+    /// <para>swap</para>
+    /// <para>... val1 val2 -- ... val2 val1</para>
+    /// </summary>
     public class OpcodeSwap : Opcode
     {
         protected override string Name { get { return "swap"; } }
@@ -1960,11 +2241,16 @@ namespace kOS.Safe.Compilation
     }
     
     /// <summary>
+    /// <para>
     /// Replaces the topmost thing on the stack with its evaluated,
     /// fully dereferenced version.  For example, if the variable
     /// foo contains value 4, and the top of the stack is the
     /// identifier name "$foo", then this will replace the "$foo"
     /// with a 4.
+    /// </para>
+    /// <para></para>
+    /// <para>eval</para>
+    /// <para>... nameOrVal -- ... val</para>
     /// </summary>
     public class OpcodeEval : Opcode
     {
@@ -1998,7 +2284,7 @@ namespace kOS.Safe.Compilation
     /// Pushes a new variable namespace scope (for example, when a "{" is encountered
     /// in a block-scoping language like C++ or Java or C#.)
     /// From now on any local variables created will be made in this new
-    /// namespace.
+    /// namespace. Has no argument stack effect.
     /// </summary>
     public class OpcodePushScope : Opcode
     {
@@ -2059,6 +2345,7 @@ namespace kOS.Safe.Compilation
     /// It is possible to give it an argument to pop more than one nesting level of scope, to
     /// handle the case where you are breaking out of more than one nested level at once.
     /// (i.e. such as might happen with a break, return, or exit keyword).
+    /// Has no argument stack effect.
     /// </summary>
     public class OpcodePopScope : Opcode
     {
@@ -2111,7 +2398,15 @@ namespace kOS.Safe.Compilation
         }
         
     }
-    
+
+    /// <summary>
+    /// <para>
+    /// Pushes a delegate object onto the stack, optionally capturing a closure.
+    /// </para>
+    /// <para></para>
+    /// <para>pushdelegate entrypoint withClosure</para>
+    /// <para>... -- ... del</para>
+    /// </summary>
     public class OpcodePushDelegate : Opcode
     {
         [MLField(1,false)]
@@ -2191,7 +2486,14 @@ namespace kOS.Safe.Compilation
 
     #region Wait / Trigger
 
-    
+    /// <summary>
+    /// <para>
+    /// Pops a function pointer from the stack and adds a trigger that will be called each cycle.
+    /// </para>
+    /// <para></para>
+    /// <para>addtrigger</para>
+    /// <para>... fp -- ...</para>
+    /// </summary>
     public class OpcodeAddTrigger : Opcode
     {
         protected override string Name { get { return "addtrigger"; } }
@@ -2209,7 +2511,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Pops a function pointer from the stack and removes any triggers that call that function pointer.
+    /// </para>
+    /// <para></para>
+    /// <para>removetrigger</para>
+    /// <para>... fp -- ...</para>
+    /// </summary>
     public class OpcodeRemoveTrigger : Opcode
     {
         protected override string Name { get { return "removetrigger"; } }
@@ -2223,7 +2532,14 @@ namespace kOS.Safe.Compilation
         }
     }
 
-    
+    /// <summary>
+    /// <para>
+    /// Pops a duration in seconds from the stack and yields execution for that amount of game time.
+    /// </para>
+    /// <para></para>
+    /// <para>wait</para>
+    /// <para>... duration -- ...</para>
+    /// </summary>
     public class OpcodeWait : Opcode
     {
         protected override string Name { get { return "wait"; } }
