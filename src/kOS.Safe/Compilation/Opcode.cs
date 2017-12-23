@@ -512,7 +512,7 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception(String.Format("Saved field in ML file for {0} seems to be missing.  Version mismatch?", Name));
-            Identifier = (string)fields[0];
+            Identifier = Convert.ToString(fields[0]);
         }
 
         public override string ToString()
