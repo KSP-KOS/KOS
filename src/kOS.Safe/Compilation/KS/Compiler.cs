@@ -2775,13 +2775,20 @@ namespace kOS.Safe.Compilation.KS
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
 
             // Default varies depending on which kind of statement it is.
-            // locks are default global, and functions declared at file
-            // scope are default global, while everything else is default local:
             StorageModifier modifier = StorageModifier.LOCAL;
-            if (lastSubNode.Token.Type == TokenType.declare_lock_clause ||
-                lastSubNode.Token.Type == TokenType.declare_function_clause)
+            // locks are default global:
+            if (lastSubNode.Token.Type == TokenType.declare_lock_clause)
             {
                 modifier = StorageModifier.GLOBAL;
+            }
+            // functions declared at file scope are default global. inner functions are default local:
+            else if (lastSubNode.Token.Type == TokenType.declare_function_clause)
+            {
+                ParseNode containingNode = GetContainingBlockNode(node);
+                if (containingNode != null && containingNode.Token.Type == TokenType.Start) // file scope
+                    modifier = StorageModifier.GLOBAL;
+                else
+                    modifier = StorageModifier.LOCAL;
             }
 
             bool storageKeywordMissing = true;
@@ -2817,7 +2824,6 @@ namespace kOS.Safe.Compilation.KS
                 LineCol location = GetLineCol(node);
                 throw new KOSCommandInvalidHereException(location, "GLOBAL", "in a parameter declaration", "in a variable declaration");
             }
-
             return modifier;
         }
 
