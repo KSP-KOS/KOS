@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Variables &amp; Statements &mdash; kOS 1.1.3.0 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 1.1.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.3.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="KerboScript User Functions" href="user_functions.html"/>
         <link rel="prev" title="Flow Control" href="flow.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.3.0
+                1.1.5.0
               </div>
             
           
@@ -238,11 +238,22 @@ has, and gives it an initial value.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <div class="last versionadded">
-<p><span class="versionmodified">New in version 0.17: </span><strong>*BREAKING CHANGE</strong>
+<p><span class="versionmodified">New in version 0.17: </span>** BREAKING CHANGE: **
 The meaning, and syntax, of this statement changed considerably
 in this update.  Prior to this version, DECLARE always created
 global variables no matter where it appeared in the script.
 See &#8216;initializer required&#8217; below.</p>
+</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.5: </span>** BREAKING CHANGE: **
+Previously the outermost level of a program file was the global
+scope.  Now each file has its own scope and the outermost level
+is still nested &#8220;one scope inside&#8221; the global scope.  You now only
+get global variables when you explicitly declare a variable as global,
+or when you rely on the lazyglobal system to make them for you.</p>
 </div>
 </div>
 </div>
@@ -290,12 +301,13 @@ important to read the <a class="reference internal" href="#scope"><span>section 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It is implied that the outermost scope of a program file is
-the global scope.  Therefore if you make a LOCAL variable at
-the outermost nesting level of your program it really ends up
-being GLOBAL.  Note that GLOBAL variables are not only shared
+also a local scope, as if the entire program file had been
+wrapped inside an invisible set of curly braces.
+Note that GLOBAL variables are not only shared
 between functions of your script, but also can be seen by
 other programs you run from the current program, and visa
-versa.</p>
+versa.  But local variables you make at the outermost scope
+of a file won&#8217;t be.</p>
 </div>
 <p>Alternatively, a variable can be implicitly declared by any <code class="docutils literal"><span class="pre">SET</span></code> or
 <code class="docutils literal"><span class="pre">LOCK</span></code> statement, however doing so causes the variable to always have
@@ -426,14 +438,15 @@ only gets executed if the system needed to pad a missing argument.</p>
 <p class="first admonition-title">Note</p>
 <p><strong>Pass By Value</strong></p>
 <p>The following paragraph is important for people familiar with other programming languages. If you are new to programming and don&#8217;t understand what it is saying, that&#8217;s okay you can ignore it.</p>
-<p class="last">At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don&#8217;t exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that kOS lets you use a colon suffix with), then the parameters will behave exactly like being passed by reference because all you&#8217;re passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.</p>
+<p class="last">At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don&#8217;t exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that isn&#8217;t just a single scalar, boolean, or string), then the parameters will behave exactly like being passed by reference because all you&#8217;re passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="section" id="set">
 <span id="id2"></span><h2><a class="toc-backref" href="#id14"><code class="docutils literal"><span class="pre">SET</span></code></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
-<p>Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist:</p>
+<p>Sets the value of a variable. Implicitly creates a global variable if it doesn&#8217;t already exist,
+unless <a class="reference internal" href="#lazyglobal"><span>the &#64;lazyglobal off</span></a> directive has been given:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="nv">y</span><span class="o">*</span><span class="mf">2</span> <span class="o">-</span> <span class="mf">1</span><span class="p">.</span>
 </pre></div>
@@ -662,7 +675,7 @@ scope.  This means you can have variables that are not only
 local to a function, but are in fact actually local to JUST
 the current curly-brace block of statements, even if that block
 of statements is, say, the body of an IF check, or the body of
-an UNTIL loop.</dd>
+an UNTIL loop.  A program file also has its own local scope.</dd>
 <dt>Why limit scope?</dt>
 <dd>You might be wondering why it&#8217;s useful to limit the scope of a
 variable.  Wouldn&#8217;t it be easier just to make all variables
@@ -689,12 +702,21 @@ the variables.</p>
 <h3><a class="toc-backref" href="#id26">Presumed defaults</a><a class="headerlink" href="#presumed-defaults" title="Permalink to this headline">¶</a></h3>
 <p>The DECLARE keyword and the LOCK keyword have some default
 presumed scoping behaviors:</p>
-<p><code class="docutils literal"><span class="pre">DECLARE</span></code> Is assumed to always be LOCAL when not otherwise specified.</p>
-<p><code class="docutils literal"><span class="pre">FUNCTION</span></code> Must always be LOCAL.  Declaring it as global has no effect,
-so the only way to make it be global is to declare it while at outermost
-scope.  This is because functions always remember their closures, and
-so to declare a function as global while it holds closure information
-about local variables would be contradictory.</p>
+<p><code class="docutils literal"><span class="pre">DECLARE</span></code> is assumed to always be LOCAL when used with a variable
+if the words <code class="docutils literal"><span class="pre">local</span></code> or <code class="docutils literal"><span class="pre">global</span></code> have been left off.
+When used with something that is not a variable, the presumed default
+(whether it&#8217;s local versus global) varies depending on what the declared
+thing is, as described next:</p>
+<p><code class="docutils literal"><span class="pre">FUNCTION</span></code> <strong>not in curly braces</strong>: Functions that are declared at the outermost
+file scope, (i.e. outside of any curly braces) and don&#8217;t mention <code class="docutils literal"><span class="pre">global</span></code>
+or <code class="docutils literal"><span class="pre">local</span></code> in their declaration behave as if they have the <code class="docutils literal"><span class="pre">global</span></code> keyword
+on them.  They can be called from any other program after this program has
+been run.</p>
+<p><code class="docutils literal"><span class="pre">FUNCTION</span></code> <strong>in curly braces</strong>: Functions that are declared anywhere <em>inside</em> of some
+curly braces and don&#8217;t mention <code class="docutils literal"><span class="pre">global</span></code> or <code class="docutils literal"><span class="pre">local</span></code> in their
+declaration behave as if they have the <code class="docutils literal"><span class="pre">local</span></code> keyword on them.
+They can only be called from the local scope of those curly braces
+or deeper.</p>
 <p><code class="docutils literal"><span class="pre">PARAMETER</span></code> Cannot be anything but LOCAL to the location it&#8217;s mentioned.
 It is an error to attempt to declare a parameter with the GLOBAL keyword.</p>
 <p><code class="docutils literal"><span class="pre">LOCK</span></code> Is assumed to always be GLOBAL when not otherwise specified.
@@ -710,10 +732,12 @@ igorned, see above under &#8216;Presumed defaults&#8217;.):</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">//</span>
 <span class="c1">// These are all synonymous with each other:</span>
 <span class="c1">//</span>
+<span class="k">DECLARE</span> <span class="nv">X</span> <span class="ow">IS</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">DECLARE</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
+<span class="k">DECLARE</span> <span class="k">LOCAL</span> <span class="nv">X</span> <span class="ow">IS</span> <span class="mf">1</span><span class="p">.</span>
 <span class="k">DECLARE</span> <span class="k">LOCAL</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span>
-<span class="k">LOCAL</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
 <span class="k">LOCAL</span> <span class="nv">X</span> <span class="ow">IS</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
+<span class="k">LOCAL</span> <span class="nv">X</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
 <span class="c1">//</span>
 <span class="c1">// These are all synonymous with each other:</span>
 <span class="c1">//</span>
@@ -736,26 +760,25 @@ are not allowed to rely on these presumed defaults when you&#8217;ve
 turned off LAZYGLOBAL.  (This only applies to trying to make
 a variable with <strong>declare identifier to value</strong>, and not to
 <code class="docutils literal"><span class="pre">declare</span> <span class="pre">parameter</span></code> or <code class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></code>.)</p>
-<div class="section" id="locals-stated-at-the-global-level-are-global">
-<h4>Locals stated at the global level are global<a class="headerlink" href="#locals-stated-at-the-global-level-are-global" title="Permalink to this headline">¶</a></h4>
-<p>Note that if you put a statement at the outermost scope
-of the program, then there is effectively no difference
-between a <code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span></code> (or just <code class="docutils literal"><span class="pre">LOCAL</span></code> for short)
-and a <code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span></code> (or just <code class="docutils literal"><span class="pre">GLOBAL</span></code> for short) statement.
-They are both going to make a variable at global scope because that&#8217;s
-the scope the program was in when the statement was encountered.</p>
+<div class="section" id="program-files-also-have-an-outer-local-scope">
+<h4>Program files also have an outer local scope<a class="headerlink" href="#program-files-also-have-an-outer-local-scope" title="Permalink to this headline">¶</a></h4>
+<p>Note that even though program files don&#8217;t need an outermost
+set of curly braces, they still have a local scope. If you
+put a <code class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span></code> statement at the outermost scope of
+the program, outside of any braces, then that variable will
+only be usable from inside that program file and that program
+file&#8217;s functions.</p>
 <p>Examples:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">GLOBAL</span> <span class="nv">x</span> <span class="ow">IS</span> <span class="mf">10</span><span class="p">.</span> <span class="c1">// X is now a global variable with value 10,</span>
 <span class="k">SET</span> <span class="nv">y</span> <span class="ow">TO</span> <span class="mf">20</span><span class="p">.</span> <span class="c1">// Y is now a global variable (implicitly) with value 20.</span>
-<span class="k">LOCAL</span> <span class="nv">z</span> <span class="ow">IS</span> <span class="mf">0</span><span class="p">.</span>  <span class="c1">// Z is now a global variable</span>
-               <span class="c1">// because even though this says LOCAL, it was</span>
-               <span class="c1">// stated at the outermost, global scope.</span>
+<span class="k">LOCAL</span> <span class="nv">z</span> <span class="ow">IS</span> <span class="mf">0</span><span class="p">.</span>  <span class="c1">// Z is now local to this file&#39;s outer scope. This is</span>
+               <span class="c1">// not *quite* global because it means other program files</span>
+               <span class="c1">// can&#39;t see it.</span>
 
 <span class="k">SET</span> <span class="nv">sum</span> <span class="ow">to</span> <span class="o">-</span><span class="mf">1</span><span class="p">.</span> <span class="c1">// sum is now an implicitly made global variable, containing -1.</span>
 
-<span class="c1">// A function to return the mean average of all the items in the list</span>
-<span class="c1">// passed into it, under the assumption all the items in the list are</span>
-<span class="c1">// numbers of some sort:</span>
+<span class="c1">// This function is declared at the file&#39;s outer scope.</span>
+<span class="c1">// It can be seen and called by other programs after this program is done.</span>
 <span class="kd">FUNCTION</span> <span class="nv">calcAverage</span> <span class="p">{</span>
   <span class="kd">PARAMETER</span> <span class="nv">inputList</span><span class="p">.</span>
 
@@ -772,7 +795,7 @@ the scope the program was in when the statement was encountered.</p>
 <span class="k">print</span> <span class="s">&quot;but out here where it&#39;s global, sum is still &quot;</span> <span class="o">+</span> <span class="nv">sum</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>This example will print:</p>
+<p>The above example will print:</p>
 <div class="highlight-none"><div class="highlight"><pre><span></span>Inside calcAverage, sum is 30
 average is 10
 but out here where it&#39;s global, sum is still -1
@@ -984,7 +1007,7 @@ don&#8217;t need to understand or deal with scope.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -1006,7 +1029,7 @@ don&#8217;t need to understand or deal with scope.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.3.0',
+            VERSION:'1.1.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

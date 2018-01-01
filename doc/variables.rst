@@ -42,15 +42,15 @@ The following alternate versions have identical meaning to each other:
 
 .. warning::
     .. versionadded:: 0.17
-        ** BREAKING CHANGE: **
+        ***BREAKING CHANGE:**
         The meaning, and syntax, of this statement changed considerably
         in this update.  Prior to this version, DECLARE always created
         global variables no matter where it appeared in the script.
         See 'initializer required' below.
 
 .. warning::
-    .. versionadded:: 1.5
-        ** BREAKING CHANGE: **
+    .. versionAdded:: 1.5.*
+        *** BREAKING CHANGE:**
         Previously the outermost level of a program file was the global
         scope.  Now each file has its own scope and the outermost level
         is still nested "one scope inside" the global scope.  You now only
@@ -127,11 +127,11 @@ Initializer required in DECLARE
 .. note::
     .. versionadded:: 0.17
         The syntax without the initializer, looking like so:
-
+    
         .. code-block:: kerboscript
-
+        
             DECLARE x. // no initializer like "TO 1."
-
+        
         is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
@@ -561,15 +561,15 @@ thing is, as described next:
 
 ``FUNCTION`` **not in curly braces**: Functions that are declared at the outermost
 file scope, (i.e. outside of any curly braces) and don't mention ``global``
-or ``local`` in their declaration behave as if they have the ``global`` keyword
+ or ``local`` in their declaration behave as if they have the ``global`` keyword
 on them.  They can be called from any other program after this program has
-been run.
+been run.  *See Example 2 below for a better examination of this*.
 
 ``FUNCTION`` **in curly braces**: Functions that are declared anywhere *inside* of some
-curly braces and don't mention ``global`` or ``local`` in their
+curly braces and don't mention ``global`` or ``local`` in their 
 declaration behave as if they have the ``local`` keyword on them.
 They can only be called from the local scope of those curly braces
-or deeper.
+or deeper. *See Example 2 below for a better examination of this*.
 
 ``PARAMETER`` Cannot be anything but LOCAL to the location it's mentioned.
 It is an error to attempt to declare a parameter with the GLOBAL keyword.
@@ -629,7 +629,9 @@ only be usable from inside that program file and that program
 file's functions.
 
 
-Examples::
+Example 1
+~~~~~~~~~
+::
 
     GLOBAL x IS 10. // X is now a global variable with value 10,
     SET y TO 20. // Y is now a global variable (implicitly) with value 20.
@@ -670,189 +672,43 @@ The above example will print::
 Thus proving that the variable called SUM inside the function is NOT the
 same variable as the one called SUM out in the global main code.
 
+Example 2
+~~~~~~~~~
 
-Nesting
-~~~~~~~
+Showing how file-level scoping works, and how function closures work.
+This example is complex, but that is because it is meant to cover all
+the strange cases.
 
-The scoping rules are nested as well.  If you attempt to use a
-variable that doesn't exist in the local scope, the next scope "outside"
-it will be used, and if it doesn't exist there, the next scope "outside"
-that will be used and so on, all the way up to the global scope.  Only
-if the variable isn't found at the global scope either will it be
-implicitly created.
+This is ``file1.ks.``, the file that calls a library program::
 
-.. _trigger_scope:
+    RUN file2.ks. // see below
 
-Scoping and Triggers:
-:::::::::::::::::::::
+    // I can call these file2 functions from here in file1:
+    print "Now Calling function1() from inside file1.ks.".
+    function1().
+    print "Now Calling function2() from inside file1.ks.".
+    function2().
+    print "Now Calling function4outer() from inside file1.ks.".
+    function4outer().
 
-Triggers such as:
+    // But these functions cannot be called from here, and if
+    // you uncomment the lines below, this program will break
+    // (try it and see):
+    //
+    // print "Now Calling function3() from inside file1.ks.".
+    // function3().
+    //
+    // print "Now Calling function4inner_local() from inside file1.ks.".
+    // function3().
+    //
+    // This will also fail because you can't see file2var from here,
+    // even though the *functions* of file2 can when called from
+    // here in file1:
+    // print "In file1, the value of file2var is:" + file2var.
 
-  - WHEN <boolean expression> THEN { <statements> }.
+    // But calling this function *does* work from here, even though
+    // it was inside another function - because it was declared globally:
+    print Now Calling function4inner_global() from inside file2.ks.".
+    function4inner_global().
+    
 
-and
-
-  - ON <any expression> { <statements> }.
-
-Can use local variables in their trigger expressions in thier
-headers or in the statements of their bodies.  The local scope
-they were declared inside of stays present as part of their
-"closure".
-
-Example::
-
-    FUNCTION future_trigger {
-      parameter delay.
-      print "I will fire the trigger after " + delay + " seconds.".
-
-      local trigger_time is time:seconds + delay.
-
-      // Note that the variable trigger_time is local here,
-      // yet this trigger still works after the function
-      // has completed and returned:
-      when time:seconds > trigger_time then {
-        print "I am now firing the trigger off.".
-      }
-    }
-    print "Before calling future_trigger(3).".
-    future_trigger(3).
-    print "After calling future_trigger(3), now waiting 5 seconds.".
-    print "You should see the trigger message during this wait.".
-    wait 5.
-    print "Done waiting.  Program over.".
-
-.. note::
-    .. versionadded:: 1.1.0
-        In the past, triggers such as WHEN and ON were not
-        able to use local variables in their check condintions.
-        They had to use only global variables in order to
-        be trigger-able after the local scope goes away.  Now
-        these triggers preserve their "closure scope" so they
-        can use any local variables.
-
-.. _lazyglobal:
-
-``@LAZYGLOBAL`` directive
-:::::::::::::::::::::::::
-
-Often the fact that you can get an implicit global variable declared
-without intending to can lead to a lot of code maintenance headaches
-down the road.  If you make a typo in a variable name, you end up
-creating a new variable instead of generating an error.  Or you may just
-forget to mark the variable as local when you intended to.
-
-If you wish to instruct Kerboscript to alter its behavior and
-disable its normal implicit globals, and instead demand that all
-variables MUST be explicitly declared and may not use implied
-lazy scoping, the ``@LAZYGLOBAL`` compiler directive allows you to
-do that.
-
-If you place the words::
-
-    @LAZYGLOBAL OFF.
-
-At the start of your program, you will turn off the compiler's
-lazy global feature and it will require you to explicitly mention
-all variables you use in a declaration somewhere (with the
-exception of the built-in variables such as THROTTLE, STEERING,
-SHIP, and so on.)
-
-.. note::
-    The @LAZYGLOBAL directive does not affect LOCK statements.
-    LOCKS are a special case that define new pseudo-functions
-    when encountered and don't quite work the same way as
-    SET statements do. Thus even with @LAZYGLOBAL OFF, it's still
-    possible to make a LOCK statement with a typo in the identifier
-    name and it will still create the new typo'ed lock that way.
-
-@LAZYGLOBAL Can only exist at the top of your code.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The @LAZYGLOBAL compile directive is only allowed as the first
-non-comment thing in the program file.  This is because it
-instructs the compiler to change its default behavior for the
-duration of the entire file's compile.
-
-@LAZYGLOBAL Makes ``LOCAL`` and ``GLOBAL`` mandatory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Normally the keywords ``local`` and ``global`` can be left off
-as optional in declare **identifier** statements.  But when you
-turn LAZYGLOBAL off, the compiler starts requiring them to be
-explicitly stated for **declare identifier** statements, to
-force yourself to be clear and explicit about the difference.
-
-For example, this program, which is valid::
-
-    function foo {print "foo ". }
-    declare x is 1.
-
-    print foo() + x.
-
-Starts giving errors when you add @LAZYGLOBAL OFF to the top::
-
-    @LAZYGLOBAL OFF.
-    function foo {print "foo ". }
-    declare x is 1.
-
-    print foo() + x.
-
-Which you fix by explicitly stating the local keyword, as follows::
-
-    @LAZYGLOBAL OFF.
-    function foo {print "foo ". }  // This does not need the 'local' keyword added
-    declare local x is 1.          // But this does because it is a declare *identifier* statement.
-                                   // you could have also just said:
-                                   //     local x is 1.
-                                   // without the 'declare' keyword.
-
-    print foo() + x.
-
-If you get in the habit of just writing your **declare identifier**
-statements like ``local x is 1.`` or ``global x is 1.``, which is
-probably nicer to read anyway, the issue won't come up.
-
-Longer Example of use
-~~~~~~~~~~~~~~~~~~~~~
-
-Example::
-
-    @LAZYGLOBAL off.
-    global num TO 1.
-    IF TRUE {
-      LOCAL Y IS 2.
-      SET num TO num + Y. // This is fine.  num exists already as a global and
-                          // you're adding the local Y to it.
-      SET nim TO 20. // This typo generates an error.  There is
-                     // no such variable "nim" and @LAZYGLOBAL OFF
-                     // says not to implicitly make it.
-    }.
-
-Why ``LAZYGLOBAL OFF``?
-    The rationale behind ``LAZYGLOBAL OFF.`` is to primarily be used in
-    cases where you're writing a library of function calls you intend to
-    use elsewhere, and want to be careful not to accidentally make
-    them dependent on globals outside the function itself.
-
-The ``@LAZYGLOBAL OFF.`` directive is meant to mimic Perl's ``use strict;``
-directive.
-
-~~~~~~
-
-History:
-    Kerboscript began its life as a language in which you never have to
-    declare a variable if you don't want to.  You can just create any
-    variable implicitly by just using it in a SET statement.
-
-    There are a variety of programming languages that work like this,
-    such as Perl, JavaScript, and Lua.  However, they all share one
-    thing in common - once you want to allow the possibility of having
-    local variables, you have to figure out how this should work with
-    the implicit variable declaration feature.
-
-    And all those languages went with the same solution, which
-    Kerboscript now follows as well.  Because implicit undeclared
-    variables are intended to be a nice easy way for new users to
-    ease into programming, they should always default to being
-    global so that people who wish to keep programming that way
-    don't need to understand or deal with scope.

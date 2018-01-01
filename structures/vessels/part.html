@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part &mdash; kOS 1.1.3.0 documentation</title>
+  <title>Part &mdash; kOS 1.1.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="PartModule" href="partmodule.html"/>
         <link rel="prev" title="Maneuver Node" href="node.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.3.0
+                1.1.5.0
               </div>
             
           
@@ -284,19 +284,23 @@
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>Same as <a class="reference internal" href="#attribute:PART:MODULES" title="PART:MODULES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:PARENT" title="PART:PARENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PARENT</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PART:HASMODULE" title="PART:HASMODULE method"><code class="xref ks ks-meth docutils literal"><span class="pre">HASMODULE(name)</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td>True if the part has the named module in it, false if not.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PART:PARENT" title="PART:PARENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PARENT</span></code></a></td>
 <td><a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 <td>Adjacent <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a> on this <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a>.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PART:HASPARENT" title="PART:HASPARENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPARENT</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:HASPARENT" title="PART:HASPARENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPARENT</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Check if this part has a parent <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:HASPHYSICS" title="PART:HASPHYSICS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPHYSICS</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PART:HASPHYSICS" title="PART:HASPHYSICS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASPHYSICS</span></code></a></td>
 <td><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Does this part have mass or drag</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PART:CHILDREN" title="PART:CHILDREN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHILDREN</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PART:CHILDREN" title="PART:CHILDREN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHILDREN</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
 <td>List of attached <a class="reference internal" href="#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></code></a></td>
 </tr>
@@ -648,6 +652,29 @@ Part:<code class="descname">ALLMODULES</code><a class="headerlink" href="#attrib
 <dd><p>Same as <a class="reference internal" href="#attribute:PART:MODULES" title="PART:MODULES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Part:MODULES</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:PART:HASMODULE">
+Part:<code class="descname">HASMODULE</code><span class="sig-paren">(</span>name<span class="sig-paren">)</span><a class="headerlink" href="#method:PART:HASMODULE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>) The name of the module to check for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Checks to see if this part contains the <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></code></a> with the name
+given.  If it does, this returns true, else it returns false.  (If
+<code class="docutils literal"><span class="pre">HASMODULE(name)</span></code> returns false, then this means an attempt to use
+<code class="docutils literal"><span class="pre">GETMODULE(name)</span></code> would fail with an error.)</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="attribute:PART:PARENT">
 Part:<code class="descname">PARENT</code><a class="headerlink" href="#attribute:PART:PARENT" title="Permalink to this definition">¶</a></dt>
@@ -734,7 +761,7 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -756,7 +783,7 @@ Part:<code class="descname">CHILDREN</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.3.0',
+            VERSION:'1.1.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

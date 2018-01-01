@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript User Functions &mdash; kOS 1.1.3.0 documentation</title>
+  <title>KerboScript User Functions &mdash; kOS 1.1.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.3.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/>
         <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.3.0
+                1.1.5.0
               </div>
             
           
@@ -169,34 +169,37 @@
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#help-for-the-new-user-what-is-a-function" id="id3">Help for the new user - What is a Function?</a></li>
-<li><a class="reference internal" href="#declare-function" id="id4">DECLARE FUNCTION</a></li>
-<li><a class="reference internal" href="#using-run-once-or-runoncepath" id="id5">Using RUN ONCE or RUNONCEPATH</a></li>
-<li><a class="reference internal" href="#declare-parameter" id="id6">DECLARE PARAMETER</a></li>
-<li><a class="reference internal" href="#calling-a-function" id="id7">Calling a function</a></li>
-<li><a class="reference internal" href="#optional-parameters-parameter-defaults" id="id8">Optional Parameters (parameter defaults)</a><ul>
-<li><a class="reference internal" href="#default-parameters-follow-short-circuit-logic" id="id9">Default parameters follow short-circuit logic</a></li>
-<li><a class="reference internal" href="#functions-and-the-terminal-interpreter" id="id10">Functions and the terminal interpreter</a></li>
-<li><a class="reference internal" href="#calling-a-function-without-parentheses-please-don-t" id="id11">Calling a function without parentheses (please don&#8217;t)</a></li>
-<li><a class="reference internal" href="#omitting-parentheses-only-works-in-the-same-file" id="id12">Omitting parentheses only works in the same file</a></li>
+<li><a class="reference internal" href="#declare-function" id="id4">DECLARE FUNCTION</a><ul>
+<li><a class="reference internal" href="#default-varies-when-local-or-global-are-omitted" id="id5">Default varies when local or global are omitted</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#local-to" id="id13">LOCAL .. TO</a><ul>
-<li><a class="reference internal" href="#initializers-are-now-mandatory-for-the-declare-statement" id="id14">Initializers are now mandatory for the DECLARE statement</a></li>
-<li><a class="reference internal" href="#difference-between-declare-and-set" id="id15">Difference between declare and set</a></li>
+<li><a class="reference internal" href="#using-run-once-or-runoncepath" id="id6">Using RUN ONCE or RUNONCEPATH</a></li>
+<li><a class="reference internal" href="#declare-parameter" id="id7">DECLARE PARAMETER</a></li>
+<li><a class="reference internal" href="#calling-a-function" id="id8">Calling a function</a></li>
+<li><a class="reference internal" href="#optional-parameters-parameter-defaults" id="id9">Optional Parameters (parameter defaults)</a><ul>
+<li><a class="reference internal" href="#default-parameters-follow-short-circuit-logic" id="id10">Default parameters follow short-circuit logic</a></li>
+<li><a class="reference internal" href="#functions-and-the-terminal-interpreter" id="id11">Functions and the terminal interpreter</a></li>
+<li><a class="reference internal" href="#calling-a-function-without-parentheses-please-don-t" id="id12">Calling a function without parentheses (please don&#8217;t)</a></li>
+<li><a class="reference internal" href="#omitting-parentheses-only-works-in-the-same-file" id="id13">Omitting parentheses only works in the same file</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#return" id="id16">RETURN</a></li>
-<li><a class="reference internal" href="#passing-by-value" id="id17">Passing by value</a><ul>
-<li><a class="reference internal" href="#important-exception-to-passing-by-value-structures" id="id18">Important exception to passing by value - structures</a></li>
+<li><a class="reference internal" href="#local-to" id="id14">LOCAL .. TO</a><ul>
+<li><a class="reference internal" href="#initializers-are-now-mandatory-for-the-declare-statement" id="id15">Initializers are now mandatory for the DECLARE statement</a></li>
+<li><a class="reference internal" href="#difference-between-declare-and-set" id="id16">Difference between declare and set</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#nesting-functions-inside-functions" id="id19">Nesting functions inside functions</a></li>
-<li><a class="reference internal" href="#recursion" id="id20">Recursion</a></li>
-<li><a class="reference internal" href="#anonymous-functions" id="id21">Anonymous functions</a></li>
-<li><a class="reference internal" href="#user-function-gotchas" id="id22">User Function Gotchas</a><ul>
-<li><a class="reference internal" href="#calling-program-s-functions-from-the-interpreter" id="id23">Calling program&#8217;s functions from the interpreter</a></li>
-<li><a class="reference internal" href="#inconsistent-returns" id="id24">Inconsistent returns</a></li>
-<li><a class="reference internal" href="#accidentally-using-globals" id="id25">Accidentally using globals</a></li>
+<li><a class="reference internal" href="#return" id="id17">RETURN</a></li>
+<li><a class="reference internal" href="#passing-by-value" id="id18">Passing by value</a><ul>
+<li><a class="reference internal" href="#important-exception-to-passing-by-value-structures" id="id19">Important exception to passing by value - structures</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nesting-functions-inside-functions" id="id20">Nesting functions inside functions</a></li>
+<li><a class="reference internal" href="#recursion" id="id21">Recursion</a></li>
+<li><a class="reference internal" href="#anonymous-functions" id="id22">Anonymous functions</a></li>
+<li><a class="reference internal" href="#user-function-gotchas" id="id23">User Function Gotchas</a><ul>
+<li><a class="reference internal" href="#calling-program-s-functions-from-the-interpreter" id="id24">Calling program&#8217;s functions from the interpreter</a></li>
+<li><a class="reference internal" href="#inconsistent-returns" id="id25">Inconsistent returns</a></li>
+<li><a class="reference internal" href="#accidentally-using-globals" id="id26">Accidentally using globals</a></li>
 </ul>
 </li>
 </ul>
@@ -262,22 +265,17 @@ now, don&#8217;t do it.  For further explanation, see the section entitled
 <p>In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:</p>
 <blockquote>
-<div>[<code class="docutils literal"><span class="pre">declare</span></code>] [<code class="docutils literal"><span class="pre">local</span></code>] <code class="docutils literal"><span class="pre">function</span></code> <em>identifier</em> <code class="docutils literal"><span class="pre">{</span></code> <em>statements</em> <code class="docutils literal"><span class="pre">}</span></code> <em>optional dot (.)</em></div></blockquote>
+<div>[<code class="docutils literal"><span class="pre">declare</span></code>] [<code class="docutils literal"><span class="pre">local``|``global</span></code>] <code class="docutils literal"><span class="pre">function</span></code> <em>identifier</em> <code class="docutils literal"><span class="pre">{</span></code> <em>statements</em> <code class="docutils literal"><span class="pre">}</span></code> <em>optional dot (.)</em></div></blockquote>
 <p>The statement is called a &#8220;declare function&#8221; statement even when the optional
 word &#8220;declare&#8221; was left off.</p>
-<p>The following are all identical in meaning:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="kd">function</span> <span class="nv">hi</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">declare</span> <span class="k">local</span> <span class="kd">function</span> <span class="nv">hi</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="p">}</span>
+<span class="k">declare</span> <span class="k">global</span> <span class="kd">function</span> <span class="nv">hi</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="k">local</span> <span class="kd">function</span> <span class="nv">hi</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="p">}</span>
+<span class="k">global</span> <span class="kd">function</span> <span class="nv">hi</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="p">}</span>
 <span class="kd">function</span> <span class="nv">hi</span> <span class="p">{</span> <span class="k">print</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>Functions are presumed to have scope local to the location where
-they are declared when the explicit local scope keyword is missing.</p>
-<p>At the moment, it is redundant to mention the <code class="docutils literal"><span class="pre">local</span></code> keyword,
-although it is allowed.</p>
-<p>It is best to just leave all the optional keywords of and merely say
-<code class="docutils literal"><span class="pre">function</span></code> by itself.</p>
 <p>Example:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Print the string you pass in, in one of the 4 corners</span>
 <span class="c1">// of the terminal:</span>
@@ -306,9 +304,33 @@ although it is allowed.</p>
 <span class="nv">print_corner</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span><span class="s">&quot;That&#39;s me in the corner&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
+<div class="section" id="default-varies-when-local-or-global-are-omitted">
+<h3><a class="toc-backref" href="#id5">Default varies when local or global are omitted</a><a class="headerlink" href="#default-varies-when-local-or-global-are-omitted" title="Permalink to this headline">¶</a></h3>
+<p>When the explicit <code class="docutils literal"><span class="pre">local</span></code> or <code class="docutils literal"><span class="pre">global</span></code> scope keyword is missing,
+the default that is chosen depends on where the function is declared.
+If the function was declared in the outermost file scope, it will be
+assumed to be global.  If it was declared inside some braces, it will
+be assumed to be local to those braces:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// f1 behaves as if it was declared global</span>
+<span class="c1">// because this is the outermost file scope:</span>
+<span class="kd">function</span> <span class="nv">f1</span> <span class="p">{</span>
+   <span class="k">print</span> <span class="s">&quot;I am in f1&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="nb">true</span> <span class="p">{</span>
+  <span class="c1">// f2 behaves as if it was declared local</span>
+  <span class="c1">// because this is inside some braces (&quot;{&quot;,&quot;}&quot;):</span>
+  <span class="kd">function</span> <span class="nv">f2</span> <span class="p">{</span>
+   <span class="k">print</span> <span class="s">&quot;I am in f2&quot;</span><span class="p">.</span>
+  <span class="p">}</span>
+  <span class="nv">f2</span><span class="p">().</span> <span class="c1">// can be called from here.</span>
+<span class="p">}</span>
+<span class="nv">f2</span><span class="p">().</span> <span class="c1">// This throws an error because f2 was local to the &quot;if true&quot; braces.</span>
+</pre></div>
+</div>
 <p>A declare function command can appear anywhere in a kerboscript program,
 and once its been &#8220;parsed&#8221; by the compiler, the function can be called
-from anywhere in the program.</p>
+from anywhere in the program that is able to see the function according
+to the scoping rules.</p>
 <p>The best design pattern is probably to create your library of function
 calls as one or more separate .ks files that contain just function
 definitions and not much else in them.  Then when you &#8220;run&#8221; the file
@@ -318,8 +340,9 @@ programs.  At the top of your main script you can then &#8220;run&#8221; the
 other scripts containing the library of functions to get them
 compiled into memory.</p>
 </div>
+</div>
 <div class="section" id="using-run-once-or-runoncepath">
-<h2><a class="toc-backref" href="#id5">Using RUN ONCE or RUNONCEPATH</a><a class="headerlink" href="#using-run-once-or-runoncepath" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Using RUN ONCE or RUNONCEPATH</a><a class="headerlink" href="#using-run-once-or-runoncepath" title="Permalink to this headline">¶</a></h2>
 <p>If you want to load a library of functions that ALSO perform some
 initialization mainline code, but you only want the mainline code
 to execute once when the library is first loaded, rather than
@@ -398,7 +421,7 @@ subprogram: next counter ID = 3
 <code class="docutils literal"><span class="pre">subprogram</span></code>.</p>
 </div>
 <div class="section" id="declare-parameter">
-<h2><a class="toc-backref" href="#id6">DECLARE PARAMETER</a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">DECLARE PARAMETER</a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>If your function expects to have parameters passed into it, you can
 use the <a class="reference internal" href="variables.html#declare-parameter"><span>DECLARE PARAMETER</span></a> command to do
 so.  This is the same command as is used to declare parameters for
@@ -411,7 +434,7 @@ above, where it is used for the <code class="docutils literal"><span class="pre"
 &#8216;declare parameter&#8217; commands.)</p>
 </div>
 <div class="section" id="calling-a-function">
-<h2><a class="toc-backref" href="#id7">Calling a function</a><a class="headerlink" href="#calling-a-function" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">Calling a function</a><a class="headerlink" href="#calling-a-function" title="Permalink to this headline">¶</a></h2>
 <p>To call a function you created, you call it the same way you
 call a built-in function, by putting a pair of parentheses
 to the right of it, as shown here:</p>
@@ -430,7 +453,7 @@ in the previous example where it said:</p>
 </div>
 </div>
 <div class="section" id="optional-parameters-parameter-defaults">
-<span id="default-parameters"></span><h2><a class="toc-backref" href="#id8">Optional Parameters (parameter defaults)</a><a class="headerlink" href="#optional-parameters-parameter-defaults" title="Permalink to this headline">¶</a></h2>
+<span id="default-parameters"></span><h2><a class="toc-backref" href="#id9">Optional Parameters (parameter defaults)</a><a class="headerlink" href="#optional-parameters-parameter-defaults" title="Permalink to this headline">¶</a></h2>
 <p>If you wish, you may make some of the parameters of a user function optional
 by defaulting them to a starting value with the <code class="docutils literal"><span class="pre">IS</span></code> keyword, as follows:</p>
 <p>example 1:</p>
@@ -481,7 +504,7 @@ it with 2 arguments, both P4 and P3 get defaulted.)</p>
 </div>
 <p>Because the optional parameters didn&#8217;t come at the end.</p>
 <div class="section" id="default-parameters-follow-short-circuit-logic">
-<h3><a class="toc-backref" href="#id9">Default parameters follow short-circuit logic</a><a class="headerlink" href="#default-parameters-follow-short-circuit-logic" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Default parameters follow short-circuit logic</a><a class="headerlink" href="#default-parameters-follow-short-circuit-logic" title="Permalink to this headline">¶</a></h3>
 <p>Remember that if you have an optional parameter with an initializer
 expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
@@ -494,7 +517,7 @@ only gets executed if the system needed to pad a missing argument.</p>
 </div>
 </div>
 <div class="section" id="functions-and-the-terminal-interpreter">
-<span id="interpreter-functions"></span><h3><a class="toc-backref" href="#id10">Functions and the terminal interpreter</a><a class="headerlink" href="#functions-and-the-terminal-interpreter" title="Permalink to this headline">¶</a></h3>
+<span id="interpreter-functions"></span><h3><a class="toc-backref" href="#id11">Functions and the terminal interpreter</a><a class="headerlink" href="#functions-and-the-terminal-interpreter" title="Permalink to this headline">¶</a></h3>
 <p>You <strong>cannot</strong> call functions from the interpreter interactive
 command line if they were declared inside of script programs.
 If you do, you will get seemingly &#8220;random&#8221; errors.  The reasons
@@ -515,7 +538,7 @@ get very strange and (seemingly) inexplicable errors.</p>
 but for right now, just don&#8217;t do it.</p>
 </div>
 <div class="section" id="calling-a-function-without-parentheses-please-don-t">
-<h3><a class="toc-backref" href="#id11">Calling a function without parentheses (please don&#8217;t)</a><a class="headerlink" href="#calling-a-function-without-parentheses-please-don-t" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">Calling a function without parentheses (please don&#8217;t)</a><a class="headerlink" href="#calling-a-function-without-parentheses-please-don-t" title="Permalink to this headline">¶</a></h3>
 <p>In some cases it is possible to call a function with the
 parentheses off, as shown below, but this is not recommended:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nv">example_function</span> <span class="p">{</span>
@@ -531,7 +554,7 @@ without the parentheses for old scripts written prior to kOS
 version 0.17.0 to continue working.</p>
 </div>
 <div class="section" id="omitting-parentheses-only-works-in-the-same-file">
-<h3><a class="toc-backref" href="#id12">Omitting parentheses only works in the same file</a><a class="headerlink" href="#omitting-parentheses-only-works-in-the-same-file" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id13">Omitting parentheses only works in the same file</a><a class="headerlink" href="#omitting-parentheses-only-works-in-the-same-file" title="Permalink to this headline">¶</a></h3>
 <p>One reason to avoid the above technique (of leaving the parentheses
 off) is that it really only works when you try to call a function
 that was declared in the same file.  If you want to call a <em>library</em>
@@ -541,7 +564,7 @@ binding.</p>
 </div>
 </div>
 <div class="section" id="local-to">
-<h2><a class="toc-backref" href="#id13">LOCAL .. TO</a><a class="headerlink" href="#local-to" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">LOCAL .. TO</a><a class="headerlink" href="#local-to" title="Permalink to this headline">¶</a></h2>
 <p>(aka: <strong>local variables</strong>)</p>
 <p>Syntax:</p>
 <ul class="simple">
@@ -569,7 +592,7 @@ the example above, where it is used for the <code class="docutils literal"><span
 <p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
 work is found <a class="reference internal" href="variables.html#scope"><span>on another page</span></a>.</p>
 <div class="section" id="initializers-are-now-mandatory-for-the-declare-statement">
-<h3><a class="toc-backref" href="#id14">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
 <p>This is now <strong>illegal</strong> syntax:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="nv">x</span><span class="p">.</span>  <span class="c1">// no initial value for x given.</span>
 </pre></div>
@@ -596,7 +619,7 @@ into it, the compiler wouldn&#8217;t even know what type of default to
 use - a string, an integer, a floating point number, etc.</em></div></blockquote>
 </div>
 <div class="section" id="difference-between-declare-and-set">
-<h3><a class="toc-backref" href="#id15">Difference between declare and set</a><a class="headerlink" href="#difference-between-declare-and-set" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">Difference between declare and set</a><a class="headerlink" href="#difference-between-declare-and-set" title="Permalink to this headline">¶</a></h3>
 <p>You may think that:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">local</span> <span class="nv">x</span> <span class="ow">is</span> <span class="mf">5</span><span class="p">.</span>
 </pre></div>
@@ -613,7 +636,7 @@ be made (and that new <code class="docutils literal"><span class="pre">x</span><
 </div>
 </div>
 <div class="section" id="return">
-<span id="id2"></span><h2><a class="toc-backref" href="#id16">RETURN</a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id17">RETURN</a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">return</span></code> <em>expression(optional)</em> <em>dot(mandatory)</em></p>
 <p>Examples:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="mf">3</span><span class="o">*</span><span class="nv">x</span><span class="p">.</span>
@@ -645,7 +668,7 @@ returned values are useful and meaningful.</p>
 </div>
 </div>
 <div class="section" id="passing-by-value">
-<h2><a class="toc-backref" href="#id17">Passing by value</a><a class="headerlink" href="#passing-by-value" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">Passing by value</a><a class="headerlink" href="#passing-by-value" title="Permalink to this headline">¶</a></h2>
 <p>Parameters to user functions in kerboscript are all pass-by-value, with
 an important caveat.  &#8220;Pass by value&#8221; means that the function is
 working on a copy of the variable you passed in, rather than the
@@ -674,7 +697,7 @@ x has been embiggened to 40
 <p>Although the function added 10 to its OWN copy of the parameter, the
 caller&#8217;s copy of the parameter remained unchanged.</p>
 <div class="section" id="important-exception-to-passing-by-value-structures">
-<h3><a class="toc-backref" href="#id18">Important exception to passing by value - structures</a><a class="headerlink" href="#important-exception-to-passing-by-value-structures" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">Important exception to passing by value - structures</a><a class="headerlink" href="#important-exception-to-passing-by-value-structures" title="Permalink to this headline">¶</a></h3>
 <p>If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
 suffixes) rather than being a simple single scalar value like a
@@ -719,7 +742,7 @@ work like this.</em></p>
 </div>
 </div>
 <div class="section" id="nesting-functions-inside-functions">
-<h2><a class="toc-backref" href="#id19">Nesting functions inside functions</a><a class="headerlink" href="#nesting-functions-inside-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id20">Nesting functions inside functions</a><a class="headerlink" href="#nesting-functions-inside-functions" title="Permalink to this headline">¶</a></h2>
 <p>You are allowed to make a local function existing inside another function.</p>
 <p>This means that the containing function is the only place the
 nested function can be called from.</p>
@@ -754,7 +777,7 @@ nested function can be called from.</p>
 </div>
 </div>
 <div class="section" id="recursion">
-<h2><a class="toc-backref" href="#id20">Recursion</a><a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id21">Recursion</a><a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
 <p>Recursive algorithms ( <a class="reference external" href="http://en.wikipedia.org/wiki/Recursion#In_computer_science">http://en.wikipedia.org/wiki/Recursion#In_computer_science</a> )
 are possible with kerboscript functions, provided you remember to
 always exclusively use local variables made with a declare statement
@@ -762,7 +785,7 @@ in the body of the function, and never use global variables for
 something that you intended to be different per recursive call.</p>
 </div>
 <div class="section" id="anonymous-functions">
-<h2><a class="toc-backref" href="#id21">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id22">Anonymous functions</a><a class="headerlink" href="#anonymous-functions" title="Permalink to this headline">¶</a></h2>
 <p>You can make <a class="reference internal" href="anonymous.html#anonymous-functions"><span>Anonymous functions</span></a> in kerboscript
 by simply leaving off the function keyword and the name of the function,
 and just using the curly braces (<code class="docutils literal"><span class="pre">{</span></code>, <code class="docutils literal"><span class="pre">}</span></code>) around some statements.
@@ -776,16 +799,16 @@ passed as an argument, etc.  The full details of what this means, and how
 to use it, is <a class="reference internal" href="anonymous.html#anonymous-functions"><span>explained elsewhere</span></a>.</p>
 </div>
 <div class="section" id="user-function-gotchas">
-<h2><a class="toc-backref" href="#id22">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id23">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="calling-program-s-functions-from-the-interpreter">
-<h3><a class="toc-backref" href="#id23">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id24">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
 <p>As <a class="reference internal" href="#interpreter-functions"><span>explained above</span></a>, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.</p>
 </div>
 <div class="section" id="inconsistent-returns">
-<h3><a class="toc-backref" href="#id24">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id25">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
 <p>Note that if you sometimes do and sometimes don&#8217;t return a value, from
 the same function, as in the example here:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// A badly designed function, with inconsistency</span>
@@ -813,7 +836,7 @@ the stack even for the empty return statements.)</p>
 <em>always</em> do so in every path through your function.</p>
 </div>
 <div class="section" id="accidentally-using-globals">
-<h3><a class="toc-backref" href="#id25">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id26">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to accidentally create global variables
 when you didn&#8217;t meant to, just because you made a typo.</p>
 <p>For example:</p>
@@ -881,7 +904,7 @@ compiler directive, the typo would be noticed:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2013-2016, Developed and maintained by kOS Team, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2017, Developed and maintained by kOS Team, Originally By Nivekk.
 
     </p>
   </div>
@@ -903,7 +926,7 @@ compiler directive, the typo would be noticed:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.3.0',
+            VERSION:'1.1.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
