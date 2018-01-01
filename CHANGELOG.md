@@ -1,6 +1,43 @@
 kOS Mod Changelog
 =================
 
+# v1.1.5.0 HotFix for nested function scope.
+
+Built for KSP v1.3.1
+
+This release is just to fix one bug introduced by v1.1.4.0
+that was discovered post-release by the users, during the
+Christmas-NewYears time.  The fix was quick but release
+was delayed for after the holidays.
+
+### BREAKING CHANGES:
+
+None that we know of.  This change shouldn't even require
+recompiling KSM files, presuming you had them recompiled
+already for v1.1.4.0.
+
+### BUG FIXES:
+
+- The default scope for ``declare function`` when you say  neither
+  ``local`` nor ``global``, was always defaulting to ``global``
+  in the previous release (kOS 1.1.4.0), when it was supposed to be
+  context dependent.  It was meant to be ``global`` only when the
+  function is at outermost file scope, but ``local`` when the
+  function is nested at any inner scope deeper than that.  This is
+  now fixed, and this bug is the main reason for this hotfix release.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2206)
+- The above bug also exposed a vulnerability in how kOS's own errors
+  (ones that are the dev's fault, not the user's fault) are dealt
+  with.  If ReplaceLabels() (a final step of loading a script into memory,
+  that happens when you RUN a .ks or .ksm file) threw an exception,
+  then the user would see the same error message repeating forever,
+  and never get control of that kOS computer back again.  (This
+  vulnerability was introduced when compiling was moved to its own
+  thread, for complex reasons, but only just discovered now because
+  this was the first time ReplaceLabels() had an exception since that
+  move had happened.)  It is fixed now.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2205)
+
 # v1.1.4.0 Does faster compilation break a work flow?
 
 Built for KSP v1.3.1
