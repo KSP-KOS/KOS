@@ -6,6 +6,7 @@ using kOS.UserIO;
 using kOS.Utilities;
 using KSP.UI.Screens;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -624,7 +625,7 @@ namespace kOS.Screen
             int newInt = -99; // Nonzero value to act as a flag to detect if the following line got triggered:
             if (fieldValue.Length == 0)
                 newInt = 0;// Empty or whitespace input should be a zero, instead of letting int.TryParse() call it an error.
-            if (newInt == 0 || int.TryParse(fieldValue, out newInt))
+            if (newInt == 0 || int.TryParse(fieldValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out newInt))
             {
                 backingConfigInts[whichInt] = newInt;
                 // Don't commit the temp value back to the CONFIGs unless RETURN is being pressed right now:

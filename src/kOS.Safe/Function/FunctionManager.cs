@@ -56,7 +56,7 @@ namespace kOS.Safe.Function
             SafeFunctionBase function = functions[functionName];
             function.Execute(shared);
             if (function.UsesAutoReturn)
-                shared.Cpu.PushStack(function.ReturnValue);
+                shared.Cpu.PushArgumentStack(function.ReturnValue);
         }
 
         /// <summary>

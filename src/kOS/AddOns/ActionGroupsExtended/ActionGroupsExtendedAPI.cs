@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace kOS.AddOns.ActionGroupsExtended
@@ -17,7 +18,18 @@ namespace kOS.AddOns.ActionGroupsExtended
 
         public ActionGroupsExtendedAPI()
         {
-            calledType = AssemblyLoader.loadedAssemblies.GetTypeByName(typeof(object), "ActionGroupsExtended.AGExtExternal");
+            calledType = GetType("ActionGroupsExtended.AGExtExternal");
+        }
+
+        internal static Type GetType(string name)
+        {
+            Type type = null;
+            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+            {
+                if (t.FullName == name)
+                    type = t;
+            });
+            return type;
         }
 
         /// <summary>

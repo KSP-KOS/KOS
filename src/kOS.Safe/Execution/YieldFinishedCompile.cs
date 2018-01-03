@@ -56,13 +56,12 @@ namespace kOS.Safe.Execution
             {
                 case CompileMode.RUN:
                     programContext.AddParts(codeParts);
-                    shared.Cpu.StopCompileStopwatch();
                     break;
                 case CompileMode.LOAD:
                     int programAddress = programContext.AddObjectParts(codeParts, path.ToString());
                     // push the entry point address of the new program onto the stack
-                    shared.Cpu.PushStack(programAddress);
-                    shared.Cpu.PushStack(BooleanValue.False);
+                    shared.Cpu.PushArgumentStack(programAddress);
+                    shared.Cpu.PushArgumentStack(BooleanValue.False);
                     break;
                 case CompileMode.FILE:
                     VolumeFile written = volume.SaveFile(outPath, new FileContent(codeParts));
@@ -74,6 +73,7 @@ namespace kOS.Safe.Execution
                 default:
                     break;
             }
+            shared.Cpu.StopCompileStopwatch();
         }
 
         public static YieldFinishedCompile RunScript(GlobalPath scriptPath, int lineNumber, string fileContent, string contextIdentifier, CompilerOptions compilerOptions)

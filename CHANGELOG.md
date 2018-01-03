@@ -1,6 +1,146 @@
 kOS Mod Changelog
 =================
 
+
+# v1.1.4.1 backport for KSP 1.2.2
+
+Built for KSP v1.2.2
+
+This is just a back-port of kOS v1.1.4.0, which has the
+necessary edits to make it still compile and run on the
+older KSP 1.2.2 system.  This is being done entirely
+for the sake of supporting Realism Overhaul which is
+not able to update past KSP 1.2.2 yet.
+
+# v1.1.4.0 Does faster compilation break a work flow?
+
+Built for KSP v1.3.1
+
+This release was primarily focused on speedups and smoothness
+of execution.  We welcomed a new developer (github username @tsholmes)
+who contributed a lot of bottleneck analysis and code speedups.  The
+goal was to reduce the burden kOS causes to the physics rate of the
+game, and consequently also allow tech tree scaled performance by era
+for the kOS computer parts themselves (slow at first, faster later).
+
+### BREAKING CHANGES:
+
+- If you use the compiled script feature **YOU MUST RECOMPILE ALL KSM FILES,
+  USING KSM FILES COMPILED IN A PREVIOUS VERSION WILL RESULT IN AN ERROR.**
+- Files now have an implied local scope, causing the following change:
+  - **Previously:** If you declared a variable as ``local`` at the
+    outermost scope of a program file (outside any curly braces),
+    then it had the same effect as ``global``, creating a variable
+    that you could see from anywhere outside that program file.
+  - **New behavior:** Now that there is an outermost scope for a file,
+    ``local`` actually means something in that scope.  To get the
+    old behavior you would need to explicitly call the variable
+    ``global``.
+  (The variables magically created via the lazyglobal system will still
+  be global just like they were before.)
+- Parameters to programs now have local scope to that program file.
+  (Previously they were sort of global and visible everywhere, which
+  they shouldn't have been.  If you relied on this behavior your
+  script might break.)  This is of particular note when working with locks and
+  triggers as the local parameters may conflict with the global scope of these
+  features.
+- Functions declared at the outermost scope of a program will now
+  keep proper closure, making them see variables local to that program
+  file even when called from outside that file.  This may hide a global
+  variable with a more local variable of the same name, when previously
+  the global variable would have been accessible from the function.
+  (You probably weren't relying on this buggy behavior before, but
+  if you were, this fix will break your script.)
+
+### NEW FEATURES:
+
+- **File scope**: Previously, kerboscript did not wrap program files
+  in their own local scope.  (Declaring a ``local`` in a file had
+  the same effect as declaring a ``global`` there).  Now each program file
+  has its own scope (and also the parameters passed to a program file
+  are local to that file scope).
+  - NOTE: For backward compatibility, there is one important exception
+    to the file scope - functions declared at the outermost level by
+    default can be globally seen in other programs.  You *CAN* get functions
+    that are local to the file's scope, but you have to explicitly include
+    the ``local`` keyword in the function declaration to make that happen.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2157)
+
+### OPTIMIZATIONS:
+
+- The regular expression syntax used to compile programs has been heavily
+  modified to speed up file parsing using start string anchors and eliminating
+  string copying.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2145)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2172)
+- Suffix lists are no longer initialized on every call, saving both execution
+  time and memory.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2136)
+- Various string operation optimizations for internal string lookups.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2137)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2142)
+- The cpu stack was re-written to use two stacks instead of using a single stack
+  with hidden offsets.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2138)
+- Cache type lookup data for suffix delegates.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2144)
+- Begin encoding identifiers directly in opcodes instead of pushing a string
+  identifier prior to executing the opcode.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2156)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2181)
+- General optimizations for the C# source code, including for unit tests.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2139)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2140)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2148)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2150)
+
+### BUG FIXES:
+
+- Functions at the outermost file scope level now have closures that can
+  see the file scope variables properly.  Previously they could not (but
+  this did not matter since there was no file scope to matter.  This bug
+  got exposed by the other file scope changes.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2157)
+- Fixed inability to use flight controls on a craft with local control when
+  RemoteTech is installed, both with and without a probe core installed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2128)
+- Fixed a crash to desktop when attempting to parse very large numbers.
+  [pull requst](https://github.com/KSP-KOS/KOS/pull/2134)
+- Fixed syntax errors in the exenode tutorial documents.  The code as displayed
+  has been tested to work correctly as of this release.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2188)
+- Parsing numbers on host computers that normally expect the `,` character to
+  be used as a decimal symbol will no longer be blocked.  kOS now forces the use
+  of `CultureInvariant` when parsing numbers, so all locales will be required
+  to use the `.` character for decimals.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2196)
+- Action Groups Extended support should once again work as the the method used
+  to detect that the mod is installed has been repaired.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2189)
+- Attempting to delete a path that does not exist no longer throws a null
+  reference error.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2201)
+- Documentation was added for `part:hasmodule` suffix.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2202)
+
+# v1.1.3.2 (for KSP 1.3.1) New KSP version HOTFIX
+
+This version is functionally identical to v1.1.3.0, however the binaries are
+compiled against KSP 1.3.1 to allow it to properly load with the updated version
+of KSP
+
+### BREAKING CHANGES:
+
+- This build will not work on previous versions of KSP.
+
+### NEW FEATURES:
+
+(None)
+
+### BUG FIXES:
+
+(None)
+
 # v1.1.3.1 (for KSP 1.2.2) Backward compatibility version of v1.1.3.0
 
 ### Only use if you are stuck on KSP 1.2.2.

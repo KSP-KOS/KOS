@@ -1,3 +1,5 @@
+using System;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class ThreeArgsSuffix<TReturn, TParam, TParam2, TParam3> : SuffixBase
@@ -13,9 +15,17 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override ISuffixResult Get()
+        protected override object Call(object[] args)
         {
-            return new DelegateSuffixResult(del);
+            return (TReturn)del((TParam)args[0], (TParam2)args[1], (TParam3)args[2]);
+        }
+
+        protected override Delegate Delegate
+        {
+            get
+            {
+                return del;
+            }
         }
     }
 
@@ -31,9 +41,18 @@ namespace kOS.Safe.Encapsulation.Suffixes
             this.del = del;
         }
 
-        public override ISuffixResult Get()
+        protected override object Call(object[] args)
         {
-            return new DelegateSuffixResult(del);
+            del((TParam)args[0], (TParam2)args[1], (TParam3)args[2]);
+            return null;
+        }
+
+        protected override Delegate Delegate
+        {
+            get
+            {
+                return del;
+            }
         }
     }
 }

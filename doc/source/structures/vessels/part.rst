@@ -72,6 +72,9 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`ALLMODULES`
           - :struct:`List`
           - Same as :attr:`MODULES`
+        * - :meth:`HASMODULE(name)`
+          - :struct:`Boolean`
+          - True if the part has the named module in it, false if not.
         * - :attr:`PARENT`
           - :struct:`Part`
           - Adjacent :struct:`Part` on this :struct:`Vessel`.
@@ -262,6 +265,16 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:ALLMODULES
 
     Same as :attr:`Part:MODULES`
+
+.. method:: Part:HASMODULE(name)
+
+    :parameter name: (:struct:`String`) The name of the module to check for
+    :returns: :struct:`Boolean`
+
+    Checks to see if this part contains the :struct:`PartModule` with the name
+    given.  If it does, this returns true, else it returns false.  (If 
+    ``HASMODULE(name)`` returns false, then this means an attempt to use
+    ``GETMODULE(name)`` would fail with an error.)
 
 .. attribute:: Part:PARENT
 

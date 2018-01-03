@@ -5,6 +5,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
 using kOS.Safe.Serialization;
+using kOS.Safe.Function;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -135,6 +136,20 @@ namespace kOS.Safe.Encapsulation
     [kOS.Safe.Utilities.KOSNomenclature("List", KOSToCSharp = false)] // one-way because the generic templated ListValue<T> is the canonical one.  
     public class ListValue : ListValue<Structure>
     {
+        [Function("list")]
+        public class FunctionList : SafeFunctionBase
+        {
+            public override void Execute(SafeSharedObjects shared)
+            {
+                Structure[] argArray = new Structure[CountRemainingArgs(shared)];
+                for (int i = argArray.Length - 1; i >= 0; --i)
+                    argArray[i] = PopStructureAssertEncapsulated(shared); // fill array in reverse order because .. stack args.
+                AssertArgBottomAndConsume(shared);
+                var listValue = new ListValue(argArray.ToList());
+                ReturnValue = listValue;
+            }
+        }
+
         public ListValue()
         {
             InitializeSuffixes();

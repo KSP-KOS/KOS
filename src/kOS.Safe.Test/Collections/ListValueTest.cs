@@ -192,32 +192,32 @@ namespace kOS.Safe.Test.Collections
         public void EachListConstructor()
         {
             var cpu = new FakeCpu();
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(new KOSArgMarkerType());
 
             var baseList = new ListValue();
             var baseDelegate = baseList.GetSuffix("LENGTH");
-            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             baseDelegate.Invoke(cpu);
             Assert.AreEqual(ScalarIntValue.Zero, baseDelegate.Value);
 
             var castList = ListValue.CreateList(new List<object>());
             var castDelegate = castList.GetSuffix("LENGTH");
-            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             castDelegate.Invoke(cpu);
             Assert.AreEqual(ScalarIntValue.Zero, castDelegate.Value);
 
             var copyDelegate = baseList.GetSuffix("COPY");
-            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             copyDelegate.Invoke(cpu);
             var copyList = copyDelegate.Value;
             Assert.AreEqual(baseList, copyList);
 
             var lengthDelegate = copyList.GetSuffix("LENGTH");
-            cpu.PushStack(null); // dummy push to be popped by ReverseStackArgs
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(null); // dummy push to be popped by ReverseStackArgs
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             lengthDelegate.Invoke(cpu);
             Assert.AreEqual(ScalarIntValue.Zero, lengthDelegate.Value);
         }

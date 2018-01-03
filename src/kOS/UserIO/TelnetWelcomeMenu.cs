@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -130,7 +131,7 @@ namespace kOS.UserIO
                 return;
             }
             int pickNumber;
-            if (!int.TryParse(cmd, out pickNumber) )
+            if (!int.TryParse(cmd, NumberStyles.Integer, CultureInfo.InvariantCulture, out pickNumber) )
             {
                 telnetServer.Write("Garbled selection. Try again." + (char)UnicodeCommand.STARTNEXTLINE);
                 forceMenuReprint = true;

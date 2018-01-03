@@ -1,13 +1,13 @@
 ﻿using System;
-using kOS.Safe.Function;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 
-namespace kOS.Function
+namespace kOS.Safe.Function
 {
     [Function("sin")]
-    public class FunctionSin : FunctionBase
+    public class FunctionSin : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double degrees = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -18,9 +18,9 @@ namespace kOS.Function
     }
 
     [Function("cos")]
-    public class FunctionCos : FunctionBase
+    public class FunctionCos : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double degrees = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -31,9 +31,9 @@ namespace kOS.Function
     }
 
     [Function("tan")]
-    public class FunctionTan : FunctionBase
+    public class FunctionTan : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double degrees = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -44,9 +44,9 @@ namespace kOS.Function
     }
 
     [Function("arcsin")]
-    public class FunctionArcSin : FunctionBase
+    public class FunctionArcSin : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -56,9 +56,9 @@ namespace kOS.Function
     }
 
     [Function("arccos")]
-    public class FunctionArcCos : FunctionBase
+    public class FunctionArcCos : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -68,9 +68,9 @@ namespace kOS.Function
     }
 
     [Function("arctan")]
-    public class FunctionArcTan : FunctionBase
+    public class FunctionArcTan : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
@@ -80,9 +80,9 @@ namespace kOS.Function
     }
 
     [Function("arctan2")]
-    public class FunctionArcTan2 : FunctionBase
+    public class FunctionArcTan2 : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double x = GetDouble(PopValueAssert(shared));
             double y = GetDouble(PopValueAssert(shared));
@@ -93,14 +93,14 @@ namespace kOS.Function
     }
 
     [Function("anglediff")]
-    public class FunctionAngleDiff : FunctionBase
+    public class FunctionAngleDiff : SafeFunctionBase
     {
-        public override void Execute(SharedObjects shared)
+        public override void Execute(SafeSharedObjects shared)
         {
             double ang2 = GetDouble(PopValueAssert(shared));
             double ang1 = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            double result = kOS.Utilities.Utils.DegreeFix( ang2 - ang1, -180 );
+            double result = KOSMath.DegreeFix( ang2 - ang1, -180 );
             ReturnValue = result;
         }
     }

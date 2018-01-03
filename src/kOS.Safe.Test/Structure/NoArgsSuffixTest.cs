@@ -46,8 +46,8 @@ namespace kOS.Safe.Test.Structure
             var del = suffix.Get();
             Assert.IsNotNull(del);
 
-            cpu.PushStack(null);  // dummy variable for ReverseStackArgs to pop
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(null);  // dummy variable for ReverseStackArgs to pop
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             del.Invoke(cpu);
 
             var value = del.Value;
@@ -63,8 +63,8 @@ namespace kOS.Safe.Test.Structure
             var del = suffix.Get();
             Assert.IsNotNull(del);
 
-            cpu.PushStack(null);  // dummy variable for ReverseStackArgs to pop
-            cpu.PushStack(new KOSArgMarkerType());
+            cpu.PushArgumentStack(null);  // dummy variable for ReverseStackArgs to pop
+            cpu.PushArgumentStack(new KOSArgMarkerType());
             del.Invoke(cpu);
 
             var value = del.Value;

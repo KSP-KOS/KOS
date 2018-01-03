@@ -103,7 +103,7 @@ namespace kOS.Safe.Function
         /// <param name="shared"></param>
         protected void AssertArgBottomAndConsume(SafeSharedObjects shared)
         {
-            object shouldBeBottom = shared.Cpu.PopStack();
+            object shouldBeBottom = shared.Cpu.PopArgumentStack();
             if (shouldBeBottom != null && shouldBeBottom.GetType() == OpcodeCall.ArgMarkerType)
                 return; // Assert passed.
 
@@ -123,7 +123,7 @@ namespace kOS.Safe.Function
             bool stillInStack = true;
             while (stillInStack && !found)
             {
-                object peekItem = shared.Cpu.PeekRaw(depth, out stillInStack);
+                object peekItem = shared.Cpu.PeekRawArgument(depth, out stillInStack);
                 if (stillInStack && peekItem != null && peekItem.GetType() == OpcodeCall.ArgMarkerType)
                     found = true;
                 else
@@ -143,21 +143,21 @@ namespace kOS.Safe.Function
         /// <returns></returns>
         protected object PopValueAssert(SafeSharedObjects shared, bool barewordOkay = false)
         {
-            object returnValue = shared.Cpu.PopValue(barewordOkay);
+            object returnValue = shared.Cpu.PopValueArgument(barewordOkay);
             if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
         }
 
         /// <summary>
-        /// A utility function that a function's Execute() should use in place of cpu.PopStack(),
+        /// A utility function that a function's Execute() should use in place of cpu.PopArgumentStack(),
         /// because it will assert that the value being popped is NOT an ARG_MARKER_STRING, and if it
         /// is, it will throw the appropriate error.
         /// </summary>
         /// <returns></returns>
         protected object PopStackAssert(SafeSharedObjects shared)
         {
-            object returnValue = shared.Cpu.PopStack();
+            object returnValue = shared.Cpu.PopArgumentStack();
             if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;

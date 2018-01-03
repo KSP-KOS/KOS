@@ -21,17 +21,17 @@ namespace kOS.Safe.Test.Opcode
         {
             var list = new ListValue();
             list.Add(new StringValue("bar"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const int INDEX = 0;
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             var opcode = new OpcodeGetIndex();
 
             opcode.Execute(cpu);
 
             Assert.AreEqual(1, list.Count());
-            Assert.AreEqual(new StringValue("bar"), cpu.PopStack());
+            Assert.AreEqual(new StringValue("bar"), cpu.PopArgumentStack());
         }
 
         [Test]
@@ -41,17 +41,17 @@ namespace kOS.Safe.Test.Opcode
             list.Add(new StringValue("bar"));
             list.Add(new StringValue("foo"));
             list.Add(new StringValue("fizz"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const int INDEX = 1;
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             var opcode = new OpcodeGetIndex();
 
             opcode.Execute(cpu);
 
             Assert.AreEqual(3, list.Count());
-            Assert.AreEqual(new StringValue("foo"), cpu.PopStack());
+            Assert.AreEqual(new StringValue("foo"), cpu.PopArgumentStack());
         }
 
         [Test]
@@ -61,17 +61,17 @@ namespace kOS.Safe.Test.Opcode
             list.Add(new StringValue("bar"));
             list.Add(new StringValue("foo"));
             list.Add(new StringValue("fizz"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const double INDEX = 2.5;
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             var opcode = new OpcodeGetIndex();
 
             opcode.Execute(cpu);
 
             Assert.AreEqual(3, list.Count());
-            Assert.AreEqual(new StringValue("fizz"), cpu.PopStack());
+            Assert.AreEqual(new StringValue("fizz"), cpu.PopArgumentStack());
         }
 
         [Test]
@@ -79,17 +79,17 @@ namespace kOS.Safe.Test.Opcode
         {
             var list = new Lexicon();
             list.Add(new StringValue("foo"), new StringValue("bar"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const string INDEX = "foo";
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             var opcode = new OpcodeGetIndex();
 
             opcode.Execute(cpu);
 
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual(new StringValue("bar"), cpu.PopStack());
+            Assert.AreEqual(new StringValue("bar"), cpu.PopArgumentStack());
         }
 
         [Test]
@@ -98,17 +98,17 @@ namespace kOS.Safe.Test.Opcode
             var list = new Lexicon();
             list.Add(new StringValue("foo"), new StringValue("bar"));
             list.Add(new StringValue("fizz"), new StringValue("bang"));
-            cpu.PushStack(list);
+            cpu.PushArgumentStack(list);
 
             const string INDEX = "fizz";
-            cpu.PushStack(INDEX);
+            cpu.PushArgumentStack(INDEX);
 
             var opcode = new OpcodeGetIndex();
 
             opcode.Execute(cpu);
 
             Assert.AreEqual(2, list.Count);
-            Assert.AreEqual(new StringValue("bang"), cpu.PopStack());
+            Assert.AreEqual(new StringValue("bang"), cpu.PopArgumentStack());
         }
     }
 }

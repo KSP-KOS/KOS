@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
@@ -6,24 +7,25 @@ namespace kOS.Safe.Execution
 {
     public interface ICpu : IFixedUpdateObserver
     {
-        void PushStack(object item);
-        object PopStack();
-        void MoveStackPointer(int delta);
-        void PushAboveStack(object thing);
-        object PopAboveStack(int howMany);
+        void PushArgumentStack(object item);
+        object PopArgumentStack();
+        void PushNewScope(Int16 scopeId, Int16 parentScopeId);
+        void PushScopeStack(object thing);
+        object PopScopeStack(int howMany);
         List<VariableScope> GetCurrentClosure();
         IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure);
         void AssertValidDelegateCall(IUserDelegate userDelegate);
         object GetValue(object testValue, bool barewordOkay = false);
-        object PopValue(bool barewordOkay = false);
-        object PeekValue(int digDepth, bool barewordOkay = false);
-        object PeekRaw(int digDepth, out bool checkOkay);
-        object PopValueEncapsulated(bool barewordOkay = false);
-        object PeekValueEncapsulated(int digDepth, bool barewordOkay = false);
-        Structure GetStructureEncapsulated(Structure testValue, bool barewordOkay = false);
-        Structure PopStructureEncapsulated(bool barewordOkay = false);
-        Structure PeekStructureEncapsulated(int digDepth, bool barewordOkay = false);
-        int GetStackSize();
+        object PopValueArgument(bool barewordOkay = false);
+        object PeekValueArgument(int digDepth, bool barewordOkay = false);
+        object PeekRawArgument(int digDepth, out bool checkOkay);
+        object PeekRawScope(int digDepth, out bool checkOkay);
+        object PopValueEncapsulatedArgument(bool barewordOkay = false);
+        object PeekValueEncapsulatedArgument(int digDepth, bool barewordOkay = false);
+        Structure GetStructureEncapsulatedArgument(Structure testValue, bool barewordOkay = false);
+        Structure PopStructureEncapsulatedArgument(bool barewordOkay = false);
+        Structure PeekStructureEncapsulatedArgument(int digDepth, bool barewordOkay = false);
+        int GetArgumentStackSize();
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);
         void SetNewLocal(string identifier, object value);
@@ -41,12 +43,15 @@ namespace kOS.Safe.Execution
         TriggerInfo AddTrigger(UserDelegate del, params Structure[] args);
         void RemoveTrigger(int triggerFunctionPointer);
         void RemoveTrigger(TriggerInfo trigger);
+        void CancelCalledTriggers(int triggerFunctionPointer);
+        void CancelCalledTriggers(TriggerInfo trigger);
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
         void YieldProgram(YieldFinishedDetector yieldTracker);
         void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         IProgramContext GetCurrentContext();
+        SubroutineContext GetCurrentSubroutineContext();
         void AddPopContextNotifyee(IPopContextNotifyee notifyee);
         void RemovePopContextNotifyee(IPopContextNotifyee notifyee);
         Opcode GetCurrentOpcode();

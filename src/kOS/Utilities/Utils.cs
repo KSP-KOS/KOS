@@ -100,13 +100,8 @@ namespace kOS.Utilities
         /// <returns>the same angle, normalized to the range given.</returns>
         public static double DegreeFix(double inAngle, double rangeStart)
         {
-            double rangeEnd = rangeStart + 360.0;
-            double outAngle = inAngle;
-            while (outAngle > rangeEnd)
-                outAngle -= 360.0;
-            while (outAngle < rangeStart)
-                outAngle += 360.0;
-            return outAngle;
+            // Use the kOS.Safe implementation to avoid duplicated code
+            return KOSMath.DegreeFix(inAngle, rangeStart);
         }
 
         /// <summary>
