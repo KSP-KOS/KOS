@@ -10,11 +10,11 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Update AssemblyInfo for kOS.Safe.Test project
 - [ ] Update `Resources\GameData\kOS\kOS.version`
 - [ ] Update `CHANGELOG.MD`
-- If this is a nomral release for the most recent KSP version supported:
+- [ ] If this is a nomral release for the most recent KSP version supported:
   - [ ] Update `doc\source\conf.py`
   - [ ] Update `doc\source\changes.rst`
   - [ ] Above changes merged into `develop` branch on repo.
-- Else if this for a *backport* to an older KSP release than the most recent version supported:
+- [ ] Else if this for a *backport* to an older KSP release than the most recent version supported:
   - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` brach.
 
 ### Build
@@ -30,7 +30,7 @@ note where it says "(*backport*)" below if you are doing a backport.
 ### Post-Build
 - [ ] Update master branch from develop branch.
 - [ ] Build Github release with changelog and title, using the ZIP made above in Build step.
-- CurseForge: Copy Github release text, and ZIP to [Curseforge](http://kerbal.curseforge.com/projects/kos-scriptable-autopilot-system?gameCategorySlug=ksp-mods&projectID=220265), as follows:
+- [ ] CurseForge: Copy Github release text, and ZIP to [Curseforge](http://kerbal.curseforge.com/projects/kos-scriptable-autopilot-system?gameCategorySlug=ksp-mods&projectID=220265), as follows:
   - [ ] If this is a *normal release* for the most recent KSP version suported, mark the file as "release".
   - [ ] If this is a *backport*, mark the file as "alpha".  (So Curse won't present this as the default version).
 - [ ] Copy Github release to [Spacedock](http://spacedock.info/mod/60/kOS:%20Scriptable%20Autopilot%20System)
