@@ -37,9 +37,19 @@ namespace kOS.Safe.Execution
                 childThread.Join();
                 if (childException == null)
                 {
-                    ThreadFinish();
+                    try
+                    {
+                        ThreadFinish();
+                    }
+                    catch (Exception ex)
+                    {
+                        childException = ex;
+                    }
                 }
-                else
+                // Note this is *deliberately* NOT an "else" of the above "if" even though
+                // it looks like it should be.  That is because the above IF clause can actually
+                // alter this flag and if it does so it needs to fall through to here and do this.
+                if (childException != null)
                 {
                     // If there was an error in the child thread, break execution and then
                     // throw the exception.  Because we're still executing the same opcode
