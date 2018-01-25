@@ -28,7 +28,9 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
 
 ### Post-Build
-- [ ] Update master branch from develop branch.
+- [ ] If this is a *normal release* for the most recent KSP version suported:
+  - [ ] Update master branch from develop branch.
+- [ ] Else if this is a *backport* then do NOT update the master branch.  Keep it in the `backport-for-KSPversion.number.here` branch.
 - [ ] Build Github release with changelog and title, using the ZIP made above in Build step.
 - [ ] CurseForge: Copy Github release text, and ZIP to [Curseforge](http://kerbal.curseforge.com/projects/kos-scriptable-autopilot-system?gameCategorySlug=ksp-mods&projectID=220265), as follows:
   - [ ] If this is a *normal release* for the most recent KSP version suported, mark the file as "release".
@@ -40,3 +42,7 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Post update in the forum thread
 - [ ] Post update on [reddit board](http://www.reddit.com/r/kos)
 - [ ] Push the gh-pages branch to KSP-KOS/KOS_DOC (unless this is a *backport*)
+
+### CKAN FIX (Post-Post-Build)
+
+- [ ] If this is a *backport* it will generally be necessary to manually make a PR on the CKAN repo to fix up its .ckan file for kOS.  (CKAN's automated scanning of the version file only sees what's in our Master branch, and can't see backports that we keep out of the master branch.)
