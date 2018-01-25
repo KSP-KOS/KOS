@@ -10,7 +10,7 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Update AssemblyInfo for kOS.Safe.Test project
 - [ ] Update `Resources\GameData\kOS\kOS.version`
 - [ ] Update `CHANGELOG.MD`
-- [ ] If this is a nomral release for the most recent KSP version supported:
+- [ ] If this is a normal release for the most recent KSP version supported:
   - [ ] Update `doc\source\conf.py`
   - [ ] Update `doc\source\changes.rst`
   - [ ] Above changes merged into `develop` branch on repo.
