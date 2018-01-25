@@ -15,7 +15,7 @@ note where it says "(*backport*)" below if you are doing a backport.
   - [ ] Update `doc\source\changes.rst`
   - [ ] Above changes merged into `develop` branch on repo.
 - [ ] Else if this for a *backport* to an older KSP release than the most recent version supported:
-  - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` brach.
+  - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` branch.
 
 ### Build
 - [ ] Build kOS solution in release mode
