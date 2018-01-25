@@ -289,7 +289,6 @@ namespace kOS.Utilities
         {
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog(
-                    "SPAWN_POPUP",
                     string.Format(message, formatArgs),
                     title,
                     HighLogic.UISkin,

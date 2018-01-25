@@ -1,6 +1,25 @@
 kOS Mod Changelog
 =================
 
+# v1.1.5.1 Backport of kOS v1.1.5.0 for KSP 1.2.2 (for Realism Overhaul users)
+
+Built for KSP v1.2.2 (for users of Realism Overhaul still stuck on the old version)
+
+**DO NOT USE UNLESS STUCK ON kOS 1.2.2**
+
+This release is ONLY FOR users still stuck on KSP version 1.2.2.
+It is **NOT THE MOST RECENT** version of kOS.  It is a backward
+port of the most recent version, just for those users who cannot
+update their KSP game to version 1.3.1.  (Generally, Realism Overhaul users).
+
+We release first for the most modern version of KSP at the time,
+then port backward to older versions after that, removing things that
+won't compile on the older version.  Thus the back-port has a higher
+version number than the modern port.
+
+If you are on KSP 1.3.1, continue using kOS v1.5.5.0 instead of
+this one.
+
 # v1.1.5.0 HotFix for nested function scope.
 
 Built for KSP v1.3.1

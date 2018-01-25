@@ -64,8 +64,6 @@ namespace kOS.Communication
             }
         }
 
-        public override string DisplaySection { get { return "kOS"; } }
-
         public override string Section
         {
             get
@@ -186,7 +184,6 @@ namespace kOS.Communication
                 }
                 Module.kOSSettingsChecker.QueueDialog(
                     new MultiOptionDialog(
-                        "Select Dialog",
                         SELECT_DIALOG_TEXT,
                         "kOS",
                         HighLogic.UISkin,
