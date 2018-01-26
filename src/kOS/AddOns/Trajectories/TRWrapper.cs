@@ -13,6 +13,7 @@ namespace kOS.AddOns.TrajectoriesAddon
         private static MethodInfo trGetImpactPosition = null;
         private static MethodInfo trCorrectedDirection = null;
         private static MethodInfo trPlannedDirection = null;
+        private static MethodInfo trHasTarget = null;
         private static MethodInfo trSetTarget = null;
         private static PropertyInfo trAlwaysUpdate = null;
 
@@ -38,35 +39,42 @@ namespace kOS.AddOns.TrajectoriesAddon
                 wrapped = false;
                 return;
             }
-            trGetImpactPosition = trajectoriesAPIType.GetMethod("getImpactPosition");
+            trGetImpactPosition = trajectoriesAPIType.GetMethod("GetImpactPosition");
             if (trGetImpactPosition == null)
             {
-                SafeHouse.Logger.Log("Trajectories.API.getImpactPosition method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.GetImpactPosition method is null.");
                 wrapped = false;
                 return;
             }
-            trCorrectedDirection = trajectoriesAPIType.GetMethod("correctedDirection");
+            trCorrectedDirection = trajectoriesAPIType.GetMethod("CorrectedDirection");
             if (trCorrectedDirection == null)
             {
-                SafeHouse.Logger.Log("Trajectories.API.correctedDirection method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.CorrectedDirection method is null.");
                 wrapped = false;
                 return;
             }
-            trPlannedDirection = trajectoriesAPIType.GetMethod("plannedDirection");
+            trPlannedDirection = trajectoriesAPIType.GetMethod("PlannedDirection");
             if (trPlannedDirection == null)
             {
-                SafeHouse.Logger.Log("Trajectories.API.plannedDirection method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.PlannedDirection method is null.");
                 wrapped = false;
                 return;
             }
-            trSetTarget = trajectoriesAPIType.GetMethod("setTarget");
+            trHasTarget = trajectoriesAPIType.GetMethod("HasTarget");
+            if (trHasTarget == null)
+            {
+                SafeHouse.Logger.Log("Trajectories.API.HasTarget method is null.");
+                wrapped = false;
+                return;
+            }
+            trSetTarget = trajectoriesAPIType.GetMethod("SetTarget");
             if (trSetTarget == null)
             {
-                SafeHouse.Logger.Log("Trajectories.API.setTarget method is null.");
+                SafeHouse.Logger.Log("Trajectories.API.SetTarget method is null.");
                 wrapped = false;
                 return;
             }
-            trAlwaysUpdate = trajectoriesAPIType.GetProperty("alwaysUpdate");
+            trAlwaysUpdate = trajectoriesAPIType.GetProperty("AlwaysUpdate");
             if (trAlwaysUpdate == null)
             {
                 wrapped = false;
@@ -75,7 +83,7 @@ namespace kOS.AddOns.TrajectoriesAddon
             trAlwaysUpdate.SetValue(null, true, null);
             if ((bool)trAlwaysUpdate.GetValue(null, null) == false)
             {
-                SafeHouse.Logger.Log("Trajectories.API.alwaysUpdate was not set.");
+                SafeHouse.Logger.Log("Trajectories.API.AlwaysUpdate was not set.");
                 wrapped = false;
                 return;
             }
@@ -87,14 +95,19 @@ namespace kOS.AddOns.TrajectoriesAddon
             return (Vector3?)trGetImpactPosition.Invoke(null, new object[] { });
         }
 
-        public static Vector3 CorrectedDirection()
+        public static Vector3? CorrectedDirection()
         {
-            return (Vector3)trCorrectedDirection.Invoke(null, new object[] { });
+            return (Vector3?)trCorrectedDirection.Invoke(null, new object[] { });
         }
 
-        public static Vector3 PlannedDirection()
+        public static Vector3? PlannedDirection()
         {
-            return (Vector3)trPlannedDirection.Invoke(null, new object[] { });
+            return (Vector3?)trPlannedDirection.Invoke(null, new object[] { });
+        }
+
+        public static bool HasTarget()
+        {
+            return (bool)trHasTarget.Invoke(null, new object[] { });
         }
 
         public static void SetTarget(double lat, double lon, double alt)
