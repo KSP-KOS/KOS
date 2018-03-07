@@ -224,7 +224,7 @@ namespace kOS.Screen
         private void LoadAudio()
         {
             beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
-            AudioClip beepClip = beepURL.audioClip;
+            AudioClip beepClip = beepURL.GetAudioClip();
             beepSource = gameObject.AddComponent<AudioSource>();
             beepSource.clip = beepClip;
         }
