@@ -1136,7 +1136,7 @@ namespace kOS.Safe.Execution
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, del.Closure, args);
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, del.Closure, del.GetMergedArgs(args));
             currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }

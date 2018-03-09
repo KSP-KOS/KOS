@@ -1,4 +1,5 @@
 # VisualStudio
+.vs/
 [Bb]in/
 [Oo]bj/
 *.suo

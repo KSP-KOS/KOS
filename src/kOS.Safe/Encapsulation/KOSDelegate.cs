@@ -47,6 +47,21 @@ namespace kOS.Safe.Encapsulation
             PreBoundArgs.Add(arg);
         }
 
+		/// <summary>
+		/// Get list of pre-bound args and provided args.
+		/// Used by CPU.AddTrigger.
+		/// </summary>
+		/// <param name="args">Arguments to add to returned list</param>
+		/// <returns>PreBoundArgs + args (or args if PreBoundArgs.Count = 0)</returns>
+		public List<Structure> GetMergedArgs(List<Structure> args)
+		{
+			if (PreBoundArgs.Count == 0) return args;
+			var merged = new List<Structure>(PreBoundArgs.Count + args.Count);
+			merged.AddRange(PreBoundArgs);
+			merged.AddRange(args);
+			return merged;
+		}
+
         public Structure CallPassingArgs(params Structure[] args)
         {
             if (Cpu == null)

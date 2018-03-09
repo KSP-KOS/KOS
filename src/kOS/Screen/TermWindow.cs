@@ -224,7 +224,7 @@ namespace kOS.Screen
         private void LoadAudio()
         {
             beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
-            AudioClip beepClip = beepURL.audioClip;
+            AudioClip beepClip = WWWAudioExtensions.GetAudioClip(beepURL);
             beepSource = gameObject.AddComponent<AudioSource>();
             beepSource.clip = beepClip;
         }
@@ -234,7 +234,7 @@ namespace kOS.Screen
             var imageLoader = new WWW("file://" + root + relativePath);
             imageLoader.LoadImageIntoTexture(targetTexture);
 
-            if (imageLoader.isDone && imageLoader.size == 0)
+            if (imageLoader.isDone && imageLoader.bytesDownloaded == 0)
             {
                 SafeHouse.Logger.LogError(string.Format("[TermWindow] Loading texture from \"{0}\" failed", relativePath));
                 allTexturesFound = false;
