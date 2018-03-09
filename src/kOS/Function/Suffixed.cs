@@ -289,20 +289,6 @@ namespace kOS.Function
         }
     }
 
-    [Function("hsva")]
-    public class FunctionHsva : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            var a = (float) GetDouble(PopValueAssert(shared));
-            var v = (float) GetDouble(PopValueAssert(shared));
-            var s = (float) GetDouble(PopValueAssert(shared));
-            var h = (float) GetDouble(PopValueAssert(shared));
-            AssertArgBottomAndConsume(shared);
-            ReturnValue = new HsvColor(h,s,v,a);
-        }
-    }
-
     [Function("rgb")]
     public class FunctionRgb : FunctionBase
     {
