@@ -85,7 +85,6 @@ namespace kOS.Screen
                     break;
                 default:
                     return base.SpecialKey(key);
-                    break;
             }
             return true;
         }
