@@ -234,7 +234,7 @@ namespace kOS.Screen
             var imageLoader = new WWW("file://" + root + relativePath);
             imageLoader.LoadImageIntoTexture(targetTexture);
 
-            if (imageLoader.isDone && imageLoader.size == 0)
+            if (imageLoader.isDone && imageLoader.bytesDownloaded == 0)
             {
                 SafeHouse.Logger.LogError(string.Format("[TermWindow] Loading texture from \"{0}\" failed", relativePath));
                 allTexturesFound = false;
