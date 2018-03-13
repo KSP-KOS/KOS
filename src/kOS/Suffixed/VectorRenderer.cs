@@ -447,8 +447,6 @@ namespace kOS.Suffixed
                 line.positionCount = 2;
                 line.startWidth = useWidth;
                 line.endWidth = useWidth;
-                // eraseme - after the above lines are proven to work:  line.SetVertexCount(2);
-                // eraseme - after the above lines are proven to work:  line.SetWidth(useWidth, useWidth);
                 line.SetPosition(0, point1);
                 line.SetPosition(1, point2);
 
@@ -456,8 +454,6 @@ namespace kOS.Suffixed
                 hat.positionCount = 2;
                 hat.startWidth = useWidth * 3.5f;
                 hat.endWidth = 0.0f;
-                // eraseme - after the above lines are proven to work: hat.SetVertexCount(2);
-                // eraseme - after the above lines are proven to work: hat.SetWidth(useWidth * 3.5f, 0.0F);
                 hat.SetPosition(0, point2);
                 hat.SetPosition(1, point3);
 
@@ -487,8 +483,6 @@ namespace kOS.Suffixed
                 // The hat does not have the fade effect, staying at color c2 the whole way:
                 hat.startColor = c2;
                 hat.endColor = c2;
-                // eraseme - after the above lines are proven to work: line.SetColors(c1, c2); // The line has the fade effect
-                // eraseme - after the above lines are proven to work: hat.SetColors(c2, c2);  // The hat does not have the fade effect.
                 label.color = lCol;     // The label does not have the fade effect.
             }
         }
