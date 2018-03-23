@@ -173,7 +173,7 @@ namespace kOS.Suffixed
             // patch, then just return the last patch (this can happen because a patches' EndUT
             // is one period of time and we might be predicting for a point in time more than one
             // period into the future.)
-            while (!(orbitPatch.StartUT < desiredUT && desiredUT < orbitPatch.EndUT))
+            while (!(orbitPatch.StartUT <= desiredUT && desiredUT < orbitPatch.EndUT))
             {
                 // Sadly the way to detect that you are at the end of the orbitPatch list is
                 // messy and inconsistent.  Sometimes KSP's API gives you a list that ends
