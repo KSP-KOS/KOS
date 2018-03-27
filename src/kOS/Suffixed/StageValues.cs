@@ -106,18 +106,34 @@ namespace kOS.Suffixed
             // We're creating the set every time because it doesn't pay attention to the various events
             // that would tell us that the old partset is no longer valid.
             partHash.Clear();
-            int vstgComp = shared.Vessel.currentStage - 2;
-            var parts = shared.Vessel.Parts;
-            global::Part part;
-            for (int i = parts.Count - 1; i >= 0; --i)
+            int currentStage = shared.Vessel.currentStage;
+            int nextDecoupler = -1;
+            foreach(var part in shared.Vessel.Parts)
             {
-                part = parts[i];
-                if (part.State == PartStates.ACTIVE)
+                var inverseStage = part.inverseStage;
+                // Ignore leftover decouplers and/or docks with staging enabled
+                // that are in current stage (thus already activated)
+                if (inverseStage >= currentStage)
+                    continue;
+                // Another part in same stage we already found decoupler in, ignore that
+                if (inverseStage >= nextDecoupler)
+                    continue;
+                // Mark new closest decoupler if this part is a decoupler
+                var modules = part.Modules;
+                if (modules.Contains<ModuleDecouple>() ||
+                    modules.Contains<ModuleAnchoredDecoupler>())
                 {
-                    foreach (var crossPart in part.crossfeedPartSet.GetParts())
-                    {
-                        if (crossPart.inverseStage > vstgComp) partHash.Add(crossPart);
-                    }
+                    nextDecoupler = inverseStage;
+                }
+            }
+            foreach (var part in shared.Vessel.Parts)
+            {
+                if (part.State != PartStates.ACTIVE)
+                    continue;
+                foreach (var crossPart in part.crossfeedPartSet.GetParts())
+                {
+                    if (crossPart.inverseStage >= nextDecoupler)
+                        partHash.Add(crossPart);
                 }
             }
             partSet.RebuildInPlace();
