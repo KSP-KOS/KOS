@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
@@ -40,6 +40,59 @@ namespace kOS.Safe.Execution
         private int scopeCount = 0;
 
         private int triggerContextCount = 0;
+
+        /// <summary>
+        /// Current size of argument stack
+        /// </summary>
+        public int ArgumentCount => argumentCount;
+        /// <summary>
+        /// Current size of scope stack
+        /// </summary>
+        public int ScopeCount => scopeCount;
+        /// <summary>
+        /// All arguments on the stack (from top to bottom)
+        /// </summary>
+        public IEnumerable<object> Arguments
+        {
+            get
+            {
+                for (int i = argumentCount; i > 0;)
+                    yield return argumentStack[--i];
+            }
+        }
+        /// <summary>
+        /// All arguments on the stack from bottom to top
+        /// </summary>
+        public IEnumerable<object> ArgumentsFromBottom
+        {
+            get
+            {
+                for (int i = 0; i < argumentCount;)
+                    yield return argumentStack[i++];
+            }
+        }
+        /// <summary>
+        /// All scopes on the stack (from top to bottom)
+        /// </summary>
+        public IEnumerable<object> Scopes
+        {
+            get
+            {
+                for (int i = scopeCount; i > 0;)
+                    yield return scopeStack[--i];
+            }
+        }
+        /// <summary>
+        /// All scopes on the stack from bottom to top
+        /// </summary>
+        public IEnumerable<object> ScopesFromBottom
+        {
+            get
+            {
+                for (int i = 0; i < scopeCount;)
+                    yield return scopeStack[i++];
+            }
+        }
 
         /// <summary>
         /// Push to the argument stack.

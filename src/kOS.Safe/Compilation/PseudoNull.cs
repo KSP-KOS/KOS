@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace kOS.Safe.Compilation
 {
@@ -6,6 +6,8 @@ namespace kOS.Safe.Compilation
     // use this for a fake "type" to reperesent null:
     public class PseudoNull : IEquatable<object>
     {
+        public static PseudoNull Instance { get; } = new PseudoNull();
+
         // all instances of PseudoNull should be considered identical:
         public override bool Equals(object o)
         {

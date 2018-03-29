@@ -16,41 +16,41 @@ namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
-        private enum Section
+        protected enum Section
         {
             Main = 1,
             Trigger = 2
         }
 
-        private readonly IStack stack;
-        private readonly VariableScope globalVariables;
-        private Section currentRunSection;
-        private List<YieldFinishedDetector> triggerYields;
-        private List<YieldFinishedDetector> mainYields;
-        
-        private double currentTime;
-        private readonly SafeSharedObjects shared;
-        private readonly List<ProgramContext> contexts;
-        private ProgramContext currentContext;
-        private VariableScope savedPointers;
-        private int instructionsSoFarInUpdate;
-        private int instructionsPerUpdate;
+        protected readonly IStack stack;
+        protected readonly VariableScope globalVariables;
+        protected Section currentRunSection;
+        protected List<YieldFinishedDetector> triggerYields;
+        protected List<YieldFinishedDetector> mainYields;
+
+        protected double currentTime;
+        protected readonly SafeSharedObjects shared;
+        protected readonly List<ProgramContext> contexts;
+        protected ProgramContext currentContext;
+        protected VariableScope savedPointers;
+        protected int instructionsSoFarInUpdate;
+        protected int instructionsPerUpdate;
 
         public int InstructionsThisUpdate { get { return instructionsSoFarInUpdate; } }
 
         // statistics
-        private double totalCompileTime;
+        protected double totalCompileTime;
 
-        private double totalUpdateTime;
-        private double totalExecutionTime;
-        private double maxUpdateTime;
-        private double maxExecutionTime;
-        private Stopwatch instructionWatch = new Stopwatch();
-        private Stopwatch updateWatch = new Stopwatch();
-        private Stopwatch executionWatch = new Stopwatch();
-        private Stopwatch compileWatch = new Stopwatch();
-        private int maxMainlineInstructionsSoFar;
-        private readonly StringBuilder executeLog = new StringBuilder();
+        protected double totalUpdateTime;
+        protected double totalExecutionTime;
+        protected double maxUpdateTime;
+        protected double maxExecutionTime;
+        protected Stopwatch instructionWatch = new Stopwatch();
+        protected Stopwatch updateWatch = new Stopwatch();
+        protected Stopwatch executionWatch = new Stopwatch();
+        protected Stopwatch compileWatch = new Stopwatch();
+        protected int maxMainlineInstructionsSoFar;
+        protected readonly StringBuilder executeLog = new StringBuilder();
 
         public int InstructionPointer
         {
@@ -74,7 +74,7 @@ namespace kOS.Safe.Execution
         /// The objects which have chosen to register themselves as IPopContextNotifyees
         /// to be told when popping a context (ending a program).
         /// </summary>
-        private List<WeakReference> popContextNotifyees;
+        protected List<WeakReference> popContextNotifyees;
 
         public CPU(SafeSharedObjects shared)
         {
@@ -207,7 +207,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void PushInterpreterContext()
+        protected void PushInterpreterContext()
         {
             var interpreterContext = new ProgramContext(true);
             // initialize the context with an empty program
@@ -215,7 +215,7 @@ namespace kOS.Safe.Execution
             PushContext(interpreterContext);
         }
 
-        private void PushContext(ProgramContext context)
+        protected void PushContext(ProgramContext context)
         {
             SafeHouse.Logger.Log("Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
             SaveAndClearPointers();
@@ -229,7 +229,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void PopContext()
+        protected void PopContext()
         {
             SafeHouse.Logger.Log("Popping context " + contexts.Count);
             IsPoppingContext = true;
@@ -295,7 +295,7 @@ namespace kOS.Safe.Execution
             popContextNotifyees.RemoveAll((item)=>(!item.IsAlive) || item.Target == notifyee);
         }
 
-        private void NotifyPopContextNotifyees(IProgramContext context)
+        protected void NotifyPopContextNotifyees(IProgramContext context)
         {
             // Notify them all:
             for (int i = 0; i < popContextNotifyees.Count; ++i)
@@ -344,7 +344,7 @@ namespace kOS.Safe.Execution
             return returnVal;
         }
 
-        private void PopFirstContext()
+        protected void PopFirstContext()
         {
             while (contexts.Count > 1)
             {
@@ -421,7 +421,7 @@ namespace kOS.Safe.Execution
             return currentContext.Program[instructionPtr];
         }
 
-        private void SaveAndClearPointers()
+        protected void SaveAndClearPointers()
         {
             // Any global variable that ends in an asterisk (*) is a system pointer
             // that shouldn't be inherited by other program contexts.  These sorts of
@@ -443,7 +443,7 @@ namespace kOS.Safe.Execution
             SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
 
-        private void RestorePointers()
+        protected void RestorePointers()
         {
             // Pointer variables that were stashed by SaveAndClearPointers() get brought
             // back again by this method when returning to the previous programming
@@ -552,7 +552,7 @@ namespace kOS.Safe.Execution
             yieldTracker.Begin(shared);
         }
 
-        private bool IsYielding()
+        protected bool IsYielding()
         {
             List<YieldFinishedDetector> yieldTrackers;
             
@@ -581,8 +581,8 @@ namespace kOS.Safe.Execution
             // are finished and we should still return that we are waiting:
             return yieldTrackers.Count > 0;
         }
-        
-        private void AbortAllYields()
+
+        protected void AbortAllYields()
         {
             mainYields.Clear();
             triggerYields.Clear();
@@ -651,7 +651,7 @@ namespace kOS.Safe.Execution
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        private Variable GetOrCreateVariable(string identifier)
+        protected Variable GetOrCreateVariable(string identifier)
         {
             Variable variable = GetVariable(identifier, false, true);
             if (variable == null)
@@ -710,7 +710,7 @@ namespace kOS.Safe.Execution
             return stack.Dump();
         }
 
-        private VariableScope GetCurrentScope()
+        protected VariableScope GetCurrentScope()
         {
             VariableScope currentScope = stack.GetCurrentScope();
             if (currentScope == null)
@@ -746,7 +746,7 @@ namespace kOS.Safe.Execution
         /// <param name="failOkay">Is it acceptable for the variable to
         ///   not exist, in which case a null will be returned as the value.</param>
         /// <returns>the value that was found</returns>
-        private Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
+        protected Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
         {
             identifier = identifier.ToLower();
             Variable value = GetCurrentScope().GetNested(identifier);
@@ -1251,7 +1251,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        public void KOSFixedUpdate(double deltaTime)
+        public virtual void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
             var executionElapsed = 0.0;
@@ -1348,7 +1348,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void PreUpdateBindings()
+        protected void PreUpdateBindings()
         {
             if (shared.BindingMgr != null)
             {
@@ -1356,7 +1356,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void PostUpdateBindings()
+        protected void PostUpdateBindings()
         {
             if (shared.BindingMgr != null)
             {
@@ -1364,7 +1364,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void ProcessTriggers()
+        protected void ProcessTriggers()
         {
             if (currentContext.ActiveTriggerCount() <= 0) return;
             int oldCount = currentContext.Program.Count;
@@ -1386,7 +1386,7 @@ namespace kOS.Safe.Execution
                 // will be invalid.  Only execute the trigger if it still exists.
                 if (currentContext.ContainsTrigger(trigger))
                 {
-                    if (trigger is NoDelegate)
+                    if (trigger.EntryPoint < 0 /* NoDelegate */)
                     {
                         // Don't bother calling it.  Just declare it to be "done" with its default value.
                         trigger.FinishCallback(new ScalarIntValue(0));
@@ -1436,7 +1436,7 @@ namespace kOS.Safe.Execution
             currentContext.InstructionPointer = currentInstructionPointer;
         }
 
-        private void ContinueExecution(bool doProfiling)
+        protected virtual void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
             int howManyMainLine = 0;
@@ -1478,7 +1478,7 @@ namespace kOS.Safe.Execution
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(ProgramContext context, bool doProfiling)
+        protected virtual bool ExecuteInstruction(ProgramContext context, bool doProfiling)
         {
             Opcode opcode = context.Program[context.InstructionPointer];
             
@@ -1537,7 +1537,7 @@ namespace kOS.Safe.Execution
             }
         }
 
-        private void SkipCurrentInstructionId()
+        protected void SkipCurrentInstructionId()
         {
             if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
@@ -1609,21 +1609,27 @@ namespace kOS.Safe.Execution
             maxExecutionTime = 0.0;
             maxMainlineInstructionsSoFar = 0;
         }
-        
-        private void PrintStatistics()
+
+        protected void PrintStatistics()
         {
             shared.Screen.Print(StatisticsDump(false));
             ResetStatistics();
         }
-        
-        private void CalculateProfileResult()
+
+        protected void CalculateProfileResult()
         {
             ProfileResult = currentContext.GetCodeFragment(0, currentContext.Program.Count - 1, true);
             // Prepend a header string consisting of the block of summary text:
             ProfileResult.Insert(0, StatisticsDump(true));
         }
 
+        ~CPU() => Dispose(false);
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
         {
             while (contexts.Count > 0)
             {
@@ -1644,9 +1650,9 @@ namespace kOS.Safe.Execution
             compileWatch.Stop();
         }
 
-        private class BootGlobalPath : InternalPath
+        protected class BootGlobalPath : InternalPath
         {
-            private string command;
+            protected string command;
 
             public BootGlobalPath(string command) : base()
             {
