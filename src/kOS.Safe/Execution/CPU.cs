@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
@@ -115,8 +115,12 @@ namespace kOS.Safe.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n(manual at {1})\n \n" + "Proceed.\n",
-                                                   SafeHouse.Version, SafeHouse.DocumentationURL);
+                var bootMessage = string.Format(
+                    "kOS Operating System\n" +
+                    "KerboScript v{0}\n" +
+                    "(manual at {1})\n",
+                    SafeHouse.Version,
+                    SafeHouse.DocumentationURL);
                 List<string> nags = Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
@@ -133,16 +137,27 @@ namespace kOS.Safe.Execution
                     bootMessage += "##################################################\n";
                     shared.Processor.SetMode(Module.ProcessorModes.OFF);
                 }
+
                 shared.Screen.Print(bootMessage);
             }
-
-            if (!shared.Processor.CheckCanBoot()) return;
 
             VolumePath path = shared.Processor.BootFilePath;
             // Check to make sure the boot file name is valid, and then that the boot file exists.
             if (path == null)
             {
                 SafeHouse.Logger.Log("Boot file name is empty, skipping boot script");
+
+                shared.Screen?.Print(" \n" + "Proceed.\n");
+            }
+            else if (!shared.Processor.CheckCanBoot())
+            {
+                shared.Screen?.Print(string.Format(
+                    " \n" +
+                    "Could not boot from {0}\n" +
+                    "Probably no connection to home\n" +
+                    " \n" +
+                    "Proceed.\n",
+                    path));
             }
             else
             {
@@ -155,9 +170,23 @@ namespace kOS.Safe.Execution
                 if (file == null)
                 {
                     SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", path));
+
+                    shared.Screen?.Print(string.Format(
+                        " \n" +
+                        "Could not boot from {0}\n" +
+                        "The file is missing\n" +
+                        " \n" +
+                        "Proceed.\n",
+                        path));
                 }
                 else
                 {
+                    shared.Screen?.Print(string.Format(
+                        " \n" +
+                        "Booting from {0}\n" +
+                        " \n",
+                        path));
+
                     var bootContext = "program";
                     shared.ScriptHandler.ClearContext(bootContext);
                     IProgramContext programContext = SwitchToProgramContext();
@@ -173,7 +202,7 @@ namespace kOS.Safe.Execution
                     };
 
                     YieldProgram(YieldFinishedCompile.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
-                    
+
                 }
             }
         }
