@@ -149,17 +149,7 @@ namespace kOS.Safe.Execution
 
                 shared.Screen?.Print(" \n" + "Proceed.\n");
             }
-            else if (!shared.Processor.CheckCanBoot())
-            {
-                shared.Screen?.Print(string.Format(
-                    " \n" +
-                    "Could not boot from {0}\n" +
-                    "Probably no connection to home\n" +
-                    " \n" +
-                    "Proceed.\n",
-                    path));
-            }
-            else
+            else if (shared.Processor.CheckCanBoot())
             {
                 // Boot is only called once right after turning the processor on,
                 // the volume cannot yet have been changed from that set based on
@@ -202,8 +192,31 @@ namespace kOS.Safe.Execution
                     };
 
                     YieldProgram(YieldFinishedCompile.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
-
                 }
+            }
+            else //shared.Processor.CheckCanBoot() returned false
+            {
+                shared.Screen?.Print(string.Format(
+                    " \n" +
+                    "Waiting for connection to boot from {0}\n" +
+                    " \n",
+                    path));
+
+                var bootContext = "program";
+                shared.ScriptHandler.ClearContext(bootContext);
+                IProgramContext programContext = SwitchToProgramContext();
+                programContext.Silent = true;
+
+                string bootCommand = string.Format("run \"{0}\".", path);
+
+                var options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = true,
+                    FuncManager = shared.FunctionManager,
+                    IsCalledFromRun = false
+                };
+
+                YieldProgram(YieldFinishedCompileBoot.RunScript(new BootGlobalPath(bootCommand), 1, bootCommand, bootContext, options));
             }
         }
 
