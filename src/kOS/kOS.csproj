@@ -123,7 +123,6 @@
     <Compile Include="Sound\Voice.cs" />
     <Compile Include="Sound\VoiceValue.cs" />
     <Compile Include="Suffixed\CraftTemplate.cs" />
-    <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
@@ -245,6 +244,7 @@
     <Compile Include="Communication\MessageQueue.cs" />
     <Compile Include="Module\AssetManager.cs" />
     <Compile Include="Screen\ListPickerDialog.cs" />
+    <Compile Include="Suffixed\HsvaColor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

@@ -4,13 +4,13 @@ using kOS.Safe.Encapsulation.Suffixes;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("HSVA")]
-    public class HsvColor : RgbaColor
+    public class HsvaColor : RgbaColor
     {
         private float hue;
         private float saturation;
         private float hsvValue;
 
-        public HsvColor(float hue, float saturation, float value, float alpha = 1.0f)
+        public HsvaColor(float hue, float saturation, float value, float alpha = 1.0f)
         {
             this.hue = hue;
             this.saturation = saturation;

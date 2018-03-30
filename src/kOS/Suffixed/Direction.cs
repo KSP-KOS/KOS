@@ -194,6 +194,12 @@ namespace kOS.Suffixed
             return false;
         }
 
+        // Needs to be overwritten because Equals() is overridden.
+        public override int GetHashCode()
+        {
+            return rotation.GetHashCode();
+        }
+
         public static bool operator ==(Direction a, Direction b)
         {
             Type compareType = typeof(Direction);

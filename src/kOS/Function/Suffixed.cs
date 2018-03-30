@@ -285,7 +285,7 @@ namespace kOS.Function
             var s = (float) GetDouble(PopValueAssert(shared));
             var h = (float) GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            ReturnValue = new HsvColor(h,s,v);
+            ReturnValue = new HsvaColor(h,s,v);
         }
     }
 
@@ -299,7 +299,7 @@ namespace kOS.Function
             var s = (float) GetDouble(PopValueAssert(shared));
             var h = (float) GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
-            ReturnValue = new HsvColor(h,s,v,a);
+            ReturnValue = new HsvaColor(h,s,v,a);
         }
     }
 
