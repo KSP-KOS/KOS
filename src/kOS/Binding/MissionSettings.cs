@@ -60,36 +60,24 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddGetter("TARGET", () =>
             {
-                if (shared.Vessel != FlightGlobals.ActiveVessel)
-                {
-                    throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("TARGET can only be returned for the Active Vessel");
-                }
-                var currentTarget = FlightGlobals.fetch.VesselTarget;
+                var target = shared.Vessel == FlightGlobals.ActiveVessel ?
+                    FlightGlobals.fetch.VesselTarget : shared.Vessel.targetObject;
 
-                var vessel = currentTarget as Vessel;
-                if (vessel != null)
-                {
+                if (target is Vessel vessel)
                     return VesselTarget.CreateOrGetExisting(vessel, shared);
-                }
-                var body = currentTarget as CelestialBody;
-                if (body != null)
-                {
+                if (target is CelestialBody body)
                     return BodyTarget.CreateOrGetExisting(body, shared);
-                }
-                var dockingNode = currentTarget as ModuleDockingNode;
-                if (dockingNode != null)
-                {
+                if (target is ModuleDockingNode dockingNode)
                     return new DockingPortValue(dockingNode, shared);
-                }
 
                 throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("No TARGET is selected");
             });
 
             shared.BindingMgr.AddGetter("HASTARGET", () =>
             {
-                if (shared.Vessel != FlightGlobals.ActiveVessel) return false;
                 // the ship has a target if the object does not equal null.
-                return FlightGlobals.fetch.VesselTarget != null;
+                return (shared.Vessel == FlightGlobals.ActiveVessel ?
+                    FlightGlobals.fetch.VesselTarget : shared.Vessel.targetObject) != null;
             });
 
         }
