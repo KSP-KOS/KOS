@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Utilities;
@@ -102,10 +102,11 @@ namespace kOS.Suffixed
                 return;
             lastRefresh = refresh;
 
-            // The following replicates the logic in KSP.UI.Screens.ResourceDisplay.CreateResourceList
             // We're creating the set every time because it doesn't pay attention to the various events
             // that would tell us that the old partset is no longer valid.
             partHash.Clear();
+
+            // Find nearest stage with decoupler/separator or dock with staging enabled
             int currentStage = shared.Vessel.currentStage;
             int nextDecoupler = -1;
             foreach(var part in shared.Vessel.Parts)
@@ -115,23 +116,31 @@ namespace kOS.Suffixed
                 // that are in current stage (thus already activated)
                 if (inverseStage >= currentStage)
                     continue;
-                // Another part in same stage we already found decoupler in, ignore that
-                if (inverseStage >= nextDecoupler)
+                // Another part in same or higher stage we already found decoupler in, ignore that
+                if (inverseStage <= nextDecoupler)
                     continue;
                 // Mark new closest decoupler if this part is a decoupler
-                var modules = part.Modules;
-                if (modules.Contains<ModuleDecouple>() ||
-                    modules.Contains<ModuleAnchoredDecoupler>())
+                foreach (var module in part.Modules)
                 {
-                    nextDecoupler = inverseStage;
+                    if (module is ModuleDecouple ||
+                        module is ModuleAnchoredDecoupler ||
+                        (module is ModuleDockingNode dock && dock.stagingEnabled))
+                    {
+                        nextDecoupler = inverseStage;
+                    }
                 }
             }
+
+            // Find all relevant parts that are to be separated by next decoupler/separator/dock
             foreach (var part in shared.Vessel.Parts)
             {
+                // Engines only
                 if (part.State != PartStates.ACTIVE)
                     continue;
+                // All tanks accessible to this engine ...
                 foreach (var crossPart in part.crossfeedPartSet.GetParts())
                 {
+                    // ... that are to be separated by next decoupler
                     if (crossPart.inverseStage >= nextDecoupler)
                         partHash.Add(crossPart);
                 }
