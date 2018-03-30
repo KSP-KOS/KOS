@@ -114,7 +114,12 @@ namespace kOS.AddOns.TrajectoriesAddon
             }
             if (Available())
             {
-                return TRWrapper.HasTarget();
+                bool? result = TRWrapper.HasTarget();
+                if (result == null)
+                {
+                    throw new KOSException("Trajectories Addon :HASTARGET suffix seems to be missing.  It was added in Trajectories 2.0.0. and your version might be older.");
+                }
+                return result;
             }
             throw new KOSUnavailableAddonException("HASTARGET", "Trajectories");
         }

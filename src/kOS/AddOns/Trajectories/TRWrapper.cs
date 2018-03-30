@@ -39,42 +39,48 @@ namespace kOS.AddOns.TrajectoriesAddon
                 wrapped = false;
                 return;
             }
-            trGetImpactPosition = trajectoriesAPIType.GetMethod("GetImpactPosition");
+            // Trajectories 2.0.0 changed the capitalization of this method.  Trying both spellings here to support older Trajectories versions:
+            trGetImpactPosition = trajectoriesAPIType.GetMethod("GetImpactPosition") ?? trajectoriesAPIType.GetMethod("getImpactPosition");
             if (trGetImpactPosition == null)
             {
                 SafeHouse.Logger.Log("Trajectories.API.GetImpactPosition method is null.");
                 wrapped = false;
                 return;
             }
-            trCorrectedDirection = trajectoriesAPIType.GetMethod("CorrectedDirection");
+            // Trajectories 2.0.0 changed the capitalization of this method.  Trying both spellings here to support older Trajectories versions:
+            trCorrectedDirection = trajectoriesAPIType.GetMethod("CorrectedDirection") ?? trajectoriesAPIType.GetMethod("correctedDirection");
             if (trCorrectedDirection == null)
             {
                 SafeHouse.Logger.Log("Trajectories.API.CorrectedDirection method is null.");
                 wrapped = false;
                 return;
             }
-            trPlannedDirection = trajectoriesAPIType.GetMethod("PlannedDirection");
+            // Trajectories 2.0.0 changed the capitalization of this method.  Trying both spellings here to support older Trajectories versions:
+            trPlannedDirection = trajectoriesAPIType.GetMethod("PlannedDirection") ?? trajectoriesAPIType.GetMethod("plannedDirection");
             if (trPlannedDirection == null)
             {
                 SafeHouse.Logger.Log("Trajectories.API.PlannedDirection method is null.");
                 wrapped = false;
                 return;
             }
-            trHasTarget = trajectoriesAPIType.GetMethod("HasTarget");
+            // Trajectories 2.0.0 changed the capitalization of this method.  Trying both spellings here to support older Trajectories versions:
+            trHasTarget = trajectoriesAPIType.GetMethod("HasTarget") ?? trajectoriesAPIType.GetMethod("hasTarget");
             if (trHasTarget == null)
             {
                 SafeHouse.Logger.Log("Trajectories.API.HasTarget method is null.");
                 wrapped = false;
                 return;
             }
-            trSetTarget = trajectoriesAPIType.GetMethod("SetTarget");
+            // Trajectories 2.0.0 changed the capitalization of this method.  Trying both spellings here to support older Trajectories versions:
+            trSetTarget = trajectoriesAPIType.GetMethod("SetTarget") ?? trajectoriesAPIType.GetMethod("setTarget");
             if (trSetTarget == null)
             {
                 SafeHouse.Logger.Log("Trajectories.API.SetTarget method is null.");
                 wrapped = false;
                 return;
             }
-            trAlwaysUpdate = trajectoriesAPIType.GetProperty("AlwaysUpdate");
+            // Trajectories 2.0.0 changed the capitalization of this method.  Trying both spellings here to support older Trajectories versions:
+            trAlwaysUpdate = trajectoriesAPIType.GetProperty("AlwaysUpdate") ?? trajectoriesAPIType.GetProperty("alwaysUpdate");
             if (trAlwaysUpdate == null)
             {
                 wrapped = false;
@@ -105,8 +111,10 @@ namespace kOS.AddOns.TrajectoriesAddon
             return (Vector3?)trPlannedDirection.Invoke(null, new object[] { });
         }
 
-        public static bool HasTarget()
+        public static bool? HasTarget()
         {
+            if (trHasTarget == null)
+                return null;
             return (bool)trHasTarget.Invoke(null, new object[] { });
         }
 
