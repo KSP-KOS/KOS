@@ -9,7 +9,7 @@ namespace kOS.AddOns.TrajectoriesAddon
 {
     [kOSAddon("TR")]
     [Safe.Utilities.KOSNomenclature("TRAddon")]
-    public class Addon : Suffixed.Addon
+    public class Addon: Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base(shared)
         {
@@ -18,20 +18,49 @@ namespace kOS.AddOns.TrajectoriesAddon
 
         private void InitializeSuffixes()
         {
+            AddSuffix("GETVERSION", new Suffix<StringValue>(GetVersion, "Get version string (Major.Minor.Patch)."));
+            AddSuffix("ISVERTWO", new Suffix<BooleanValue>(IsVerTwo, "Check whether Trajectories is v2.0.0 and above."));
+            AddSuffix("ISVERTWOTWO", new Suffix<BooleanValue>(IsVerTwoTwo, "Check whether Trajectories is v2.2.0 and above."));
             AddSuffix("IMPACTPOS", new Suffix<GeoCoordinates>(ImpactPos, "Get impact position coordinates."));
             AddSuffix("HASIMPACT", new Suffix<BooleanValue>(HasImpact, "Check whether Trajectories has predicted an impact position for the current vessel."));
             AddSuffix(new string[] { "CORRECTEDVEC", "CORRECTEDVECTOR" }, new Suffix<Vector>(CorrectedVector, "Offset plus PlannedVect, somewhat corrected to glide ship towards target."));
             AddSuffix(new string[] { "PLANNEDVEC", "PLANNEDVECTOR" }, new Suffix<Vector>(PlannedVector, "Vector at which to point to follow predicted trajectory."));
-            AddSuffix("HASTARGET", new Suffix<BooleanValue>(HasTarget, "Check whether Trajectories has a target position set."));
             AddSuffix("SETTARGET", new OneArgsSuffix<GeoCoordinates>(SetTarget, "Set CorrectedVect target."));
+            AddSuffix("HASTARGET", new Suffix<BooleanValue>(HasTarget, "Check whether Trajectories has a target position set."));
+            AddSuffix("TIMETILLIMPACT", new Suffix<ScalarValue>(TimeTillImpact, "Remaining time until Impact in seconds."));
+            AddSuffix("ISPROGRADE", new Suffix<BooleanValue>(IsPrograde, "Check whether the descent profile is set to Prograde."));
+            AddSuffix("SETPROGRADE", new NoArgsVoidSuffix(SetPrograde, "Sets the descent profile to Prograde."));
+            AddSuffix("ISRETROGRADE", new Suffix<BooleanValue>(IsRetrograde, "Check whether the descent profile is set to Retrograde."));
+            AddSuffix("SETRETROGRADE", new NoArgsVoidSuffix(SetRetrograde, "Sets the descent profile to Retrograde."));
         }
 
+        // Version checking suffixes.
+        private StringValue GetVersion()
+        {
+            if (Available())
+                return TRWrapper.GetVersion;
+            throw new KOSUnavailableAddonException("GETVERSION", "Trajectories");
+        }
+
+        private BooleanValue IsVerTwo()
+        {
+            if (Available())
+                return TRWrapper.IsVerTwo;
+            throw new KOSUnavailableAddonException("ISVERTWO", "Trajectories");
+        }
+
+        private BooleanValue IsVerTwoTwo()
+        {
+            if (Available())
+                return TRWrapper.IsVerTwoTwo;
+            throw new KOSUnavailableAddonException("ISVERTWOTWO", "Trajectories");
+        }
+
+        // Older suffixes.
         private GeoCoordinates ImpactPos()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-            {
                 throw new KOSException("You may only call addons:TR:ImpactPos from the active vessel. Always check addons:tr:HasImpact");
-            }
             if (Available())
             {
                 CelestialBody body = shared.Vessel.orbit.referenceBody;
@@ -43,10 +72,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                     var lng = Utils.DegreeFix(body.GetLongitude(worldImpactPos), -180);
                     return new GeoCoordinates(shared, lat, lng);
                 }
-                else
-                {
-                    throw new KOSException("Impact position is not available. Remember to check addons:tr:HasImpact");
-                }
+                throw new KOSException("Impact position is not available. Remember to check addons:tr:HasImpact");
             }
             throw new KOSUnavailableAddonException("IMPACTPOS", "Trajectories");
         }
@@ -54,19 +80,15 @@ namespace kOS.AddOns.TrajectoriesAddon
         private BooleanValue HasImpact()
         {
             if (Available())
-            {
                 return shared.Vessel == FlightGlobals.ActiveVessel && TRWrapper.ImpactVector().HasValue;
-            }
             throw new KOSUnavailableAddonException("HASIMPACT", "Trajectories");
         }
 
         private Vector CorrectedVector()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-            {
-                throw new KOSException("You may only call addons:TR:CorrectedVect from the active vessel which also has a target." +
+                throw new KOSException("You may only call addons:TR:CorrectedVect from the active vessel and must also have a trajectories target set." +
                     " Always check addons:tr:HasImpact and addons:tr:HasTarget");
-            }
             if (Available())
             {
                 Vector3? vect = TRWrapper.CorrectedDirection();
@@ -75,10 +97,7 @@ namespace kOS.AddOns.TrajectoriesAddon
                     Vector3 vector = (Vector3)vect;
                     return new Vector(vector.x, vector.y, vector.z);
                 }
-                else
-                {
-                    throw new KOSException("Corrected Vector is not available. Remember to check addons:tr:HasImpact and addons:tr:HasTarget");
-                }
+                throw new KOSException("Corrected Vector is not available. Remember to check addons:tr:HasImpact and addons:tr:HasTarget");
             }
             throw new KOSUnavailableAddonException("CORRECTEDDIRECTION", "Trajectories");
         }
@@ -86,10 +105,8 @@ namespace kOS.AddOns.TrajectoriesAddon
         private Vector PlannedVector()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-            {
-                throw new KOSException("You may only call addons:TR:plannedVect from the active vessel which also has a target." +
+                throw new KOSException("You may only call addons:TR:plannedVect from the active vessel and must also have a trajectories target set." +
                     " Always check addons:tr:HasImpact and addons:tr:HasTarget");
-            }
             if (Available())
             {
                 Vector3? vect = TRWrapper.PlannedDirection();
@@ -98,47 +115,110 @@ namespace kOS.AddOns.TrajectoriesAddon
                     Vector3 vector = (Vector3)vect;
                     return new Vector(vector.x, vector.y, vector.z);
                 }
-                else
-                {
-                    throw new KOSException("Planned Vector is not available. Remember to check addons:tr:HasImpact and addons:tr:HasTarget");
-                }
+                throw new KOSException("Planned Vector is not available. Remember to check addons:tr:HasImpact and addons:tr:HasTarget");
             }
             throw new KOSUnavailableAddonException("PLANNEDDIRECTION", "Trajectories");
-        }
-
-        private BooleanValue HasTarget()
-        {
-            if (shared.Vessel != FlightGlobals.ActiveVessel)
-            {
-                throw new KOSException("You may only call addons:TR:HasTarget from the active vessel.");
-            }
-            if (Available())
-            {
-                bool? result = TRWrapper.HasTarget();
-                if (result == null)
-                {
-                    throw new KOSException("Trajectories Addon :HASTARGET suffix seems to be missing.  It was added in Trajectories 2.0.0. and your version might be older.");
-                }
-                return result;
-            }
-            throw new KOSUnavailableAddonException("HASTARGET", "Trajectories");
         }
 
         private void SetTarget(GeoCoordinates target)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-            {
                 throw new KOSException("You may only call addons:TR:SetTarget from the active vessel.");
-            }
             if (Available())
             {
                 TRWrapper.SetTarget(target.Latitude, target.Longitude, target.GetTerrainAltitude());
+                return;
             }
-            else
-            {
-                throw new KOSUnavailableAddonException("SETTARGET", "Trajectories");
-            }
+            throw new KOSUnavailableAddonException("SETTARGET", "Trajectories");
         }
+
+        // v2.0.0 HasTarget suffix.
+        private BooleanValue HasTarget()
+        {
+            if (shared.Vessel != FlightGlobals.ActiveVessel)
+                throw new KOSException("You may only call addons:TR:HasTarget from the active vessel.");
+            if (Available())
+            {
+                bool? result = TRWrapper.HasTarget();
+                if (result != null)
+                    return result;
+                throw new KOSException("HasTarget is not available. It was added in Trajectories v2.0.0. and your version might be older." +
+                    " Check addons:tr:IsVerTwo or addons:tr:GetVersion");
+            }
+            throw new KOSUnavailableAddonException("HASTARGET", "Trajectories");
+        }
+
+        // v2.2.0 and above suffixes.
+        private ScalarValue TimeTillImpact()
+        {
+            if (shared.Vessel != FlightGlobals.ActiveVessel)
+                throw new KOSException("You may only call addons:TR:TimeTillImpact from the active vessel.");
+            if (Available())
+            {
+                double? result = TRWrapper.GetTimeTillImpact();
+                if (result != null)
+                    return result;
+                throw new KOSException("TimeTillImpact is not available. Remember to check addons:tr:HasImpact." +
+                    " Also TimeTillImpact was added in Trajectories v2.2.0. and your version might be older." +
+                    " Check addons:tr:IsVerTwoTwo or addons:tr:GetVersion");
+            }
+            throw new KOSUnavailableAddonException("TIMETILLIMPACT", "Trajectories");
+        }
+
+        private BooleanValue IsPrograde()
+        {
+            if (shared.Vessel != FlightGlobals.ActiveVessel)
+                throw new KOSException("You may only call addons:TR:IsPrograde from the active vessel.");
+            if (Available())
+            {
+                bool? result = TRWrapper.ProgradeEntry;
+                if (result != null)
+                    return result;
+                throw new KOSException("IsPrograde is not available. It was added in Trajectories v2.2.0. and your version might be older." +
+                    " Check addons:tr:IsVerTwoTwo or addons:tr:GetVersion");
+            }
+            throw new KOSUnavailableAddonException("ISPROGRADE", "Trajectories");
+        }
+
+        private void SetPrograde()
+        {
+            if (shared.Vessel != FlightGlobals.ActiveVessel)
+                throw new KOSException("You may only call addons:TR:SetPrograde from the active vessel.");
+            if (Available())
+            {
+                TRWrapper.ProgradeEntry = true;
+                return;
+            }
+            throw new KOSUnavailableAddonException("SETPROGRADE", "Trajectories");
+        }
+
+        private BooleanValue IsRetrograde()
+        {
+            if (shared.Vessel != FlightGlobals.ActiveVessel)
+                throw new KOSException("You may only call addons:TR:IsRetrograde from the active vessel.");
+            if (Available())
+            {
+                bool? result = TRWrapper.RetrogradeEntry;
+                if (result != null)
+                    return result;
+                throw new KOSException("IsRetrograde is not available. It was added in Trajectories v2.2.0. and your version might be older." +
+                    " Check addons:tr:IsVerTwoTwo or addons:tr:GetVersion");
+            }
+            throw new KOSUnavailableAddonException("ISRETROGRADE", "Trajectories");
+        }
+
+        private void SetRetrograde()
+        {
+            if (shared.Vessel != FlightGlobals.ActiveVessel)
+                throw new KOSException("You may only call addons:TR:SetRetrograde from the active vessel.");
+            if (Available())
+            {
+                TRWrapper.RetrogradeEntry = true;
+                return;
+            }
+            throw new KOSUnavailableAddonException("SETRETROGRADE", "Trajectories");
+        }
+
 
         public override BooleanValue Available()
         {
