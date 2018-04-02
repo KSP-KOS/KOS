@@ -28,10 +28,8 @@ namespace kOS.AddOns.TrajectoriesAddon
             AddSuffix("SETTARGET", new OneArgsSuffix<GeoCoordinates>(SetTarget, "Set CorrectedVect target."));
             AddSuffix("HASTARGET", new Suffix<BooleanValue>(HasTarget, "Check whether Trajectories has a target position set."));
             AddSuffix("TIMETILLIMPACT", new Suffix<ScalarValue>(TimeTillImpact, "Remaining time until Impact in seconds."));
-            AddSuffix("ISPROGRADE", new Suffix<BooleanValue>(IsPrograde, "Check whether the descent profile is set to Prograde."));
-            AddSuffix("SETPROGRADE", new NoArgsVoidSuffix(SetPrograde, "Sets the descent profile to Prograde."));
-            AddSuffix("ISRETROGRADE", new Suffix<BooleanValue>(IsRetrograde, "Check whether the descent profile is set to Retrograde."));
-            AddSuffix("SETRETROGRADE", new NoArgsVoidSuffix(SetRetrograde, "Sets the descent profile to Retrograde."));
+            AddSuffix("RETROGRADE", new SetSuffix<BooleanValue>(IsRetrograde, SetRetrograde, "Check the descent profile is Retrograde or Set the descent profile to Retrograde."));
+            AddSuffix("PROGRADE", new SetSuffix<BooleanValue>(IsPrograde, SetPrograde, "Check the descent profile is Prograde or Set the descent profile to Prograde."));
         }
 
         // Version checking suffixes.
@@ -168,55 +166,61 @@ namespace kOS.AddOns.TrajectoriesAddon
         private BooleanValue IsPrograde()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:IsPrograde from the active vessel.");
+                throw new KOSException("You may only call addons:TR:Prograde from the active vessel.");
             if (Available())
             {
                 bool? result = TRWrapper.ProgradeEntry;
                 if (result != null)
                     return result;
-                throw new KOSException("IsPrograde is not available. It was added in Trajectories v2.2.0. and your version might be older." +
+                throw new KOSException("Prograde is not available. It was added in Trajectories v2.2.0. and your version might be older." +
                     " Check addons:tr:IsVerTwoTwo or addons:tr:GetVersion");
             }
-            throw new KOSUnavailableAddonException("ISPROGRADE", "Trajectories");
+            throw new KOSUnavailableAddonException("PROGRADE", "Trajectories");
         }
 
-        private void SetPrograde()
+        private void SetPrograde(BooleanValue value)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:SetPrograde from the active vessel.");
+                throw new KOSException("You may only call addons:TR:Prograde from the active vessel.");
             if (Available())
             {
-                TRWrapper.ProgradeEntry = true;
+                if (value)
+                    TRWrapper.ProgradeEntry = true;
+                else
+                    TRWrapper.RetrogradeEntry = true;
                 return;
             }
-            throw new KOSUnavailableAddonException("SETPROGRADE", "Trajectories");
+            throw new KOSUnavailableAddonException("PROGRADE", "Trajectories");
         }
 
         private BooleanValue IsRetrograde()
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:IsRetrograde from the active vessel.");
+                throw new KOSException("You may only call addons:TR:Retrograde from the active vessel.");
             if (Available())
             {
                 bool? result = TRWrapper.RetrogradeEntry;
                 if (result != null)
                     return result;
-                throw new KOSException("IsRetrograde is not available. It was added in Trajectories v2.2.0. and your version might be older." +
+                throw new KOSException("Retrograde is not available. It was added in Trajectories v2.2.0. and your version might be older." +
                     " Check addons:tr:IsVerTwoTwo or addons:tr:GetVersion");
             }
-            throw new KOSUnavailableAddonException("ISRETROGRADE", "Trajectories");
+            throw new KOSUnavailableAddonException("RETROGRADE", "Trajectories");
         }
 
-        private void SetRetrograde()
+        private void SetRetrograde(BooleanValue value)
         {
             if (shared.Vessel != FlightGlobals.ActiveVessel)
-                throw new KOSException("You may only call addons:TR:SetRetrograde from the active vessel.");
+                throw new KOSException("You may only call addons:TR:Retrograde from the active vessel.");
             if (Available())
             {
-                TRWrapper.RetrogradeEntry = true;
+                if (value)
+                    TRWrapper.RetrogradeEntry = true;
+                else
+                    TRWrapper.ProgradeEntry = true;
                 return;
             }
-            throw new KOSUnavailableAddonException("SETRETROGRADE", "Trajectories");
+            throw new KOSUnavailableAddonException("RETROGRADE", "Trajectories");
         }
 
 
