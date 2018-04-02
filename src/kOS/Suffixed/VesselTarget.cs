@@ -1,4 +1,4 @@
-﻿using kOS.Binding;
+using kOS.Binding;
 using kOS.Communication;
 using kOS.Module;
 using kOS.Safe;
@@ -11,6 +11,7 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
+using KSP.UI.Screens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,33 +25,167 @@ namespace kOS.Suffixed
     {
         private static string DumpGuid = "guid";
 
-        private ListValue cachedParts = new ListValue();
-        private bool cachedPartsAreStale = true;
-        private bool eventsAreHooked = false;
+        public StageValues StageValues { get; }
 
+        //TODO: share these between all CPUs (or maybe have one VesselTarget instance?)
+        //TODO: create single list of parts and _slices_ for `children`
+        //..... [root, child1, child2, ..., part1-1, part1-2, ..., part2-1, ... heap ;)
+        private PartValue rootPart;
+        private DecouplerValue nextDecoupler;
+        private ListValue<PartValue> allParts;
+        private ListValue<DockingPortValue> dockingPorts;
+        private ListValue<DecouplerValue> decouplers;
+        private Dictionary<global::Part, PartValue> partCache;
+
+        private void InvalidateParts()
+        {
+            StageValues.stale = true;
+
+            rootPart = null;
+            nextDecoupler = null;
+            allParts = null;
+            dockingPorts = null;
+            decouplers = null;
+            partCache = null;
+        }
+        public PartValue Root
+        {
+            get
+            {
+                if (allParts == null)
+                    ConstructParts();
+                return rootPart;
+            }
+        }
+        public DecouplerValue NextDecoupler
+        {
+            get
+            {
+                if (allParts == null)
+                    ConstructParts();
+                return nextDecoupler;
+            }
+        }
+        public ListValue<PartValue> Parts
+        {
+            get
+            {
+                if (allParts == null)
+                    ConstructParts();
+                return allParts;
+            }
+        }
+        public ListValue<DockingPortValue> DockingPorts
+        {
+            get
+            {
+                if (dockingPorts == null)
+                    ConstructParts();
+                return dockingPorts;
+            }
+        }
+        public ListValue<DecouplerValue> Decouplers
+        {
+            get
+            {
+                if (decouplers == null)
+                    ConstructParts();
+                return decouplers;
+            }
+        }
+        public PartValue this[global::Part part]
+        {
+            get
+            {
+                if (allParts == null)
+                    ConstructParts();
+                return partCache[part];
+            }
+        }
+        private void ConstructParts()
+        {
+            rootPart = null;
+            nextDecoupler = null;
+            allParts = new ListValue<PartValue>();
+            dockingPorts = new ListValue<DockingPortValue>();
+            decouplers = new ListValue<DecouplerValue>();
+            partCache = new Dictionary<global::Part, PartValue>();
+
+            ConstructPart(Vessel.rootPart, null, null);
+
+            allParts.IsReadOnly = true;
+            dockingPorts.IsReadOnly = true;
+            decouplers.IsReadOnly = true;
+        }
+        private void ConstructPart(global::Part part, PartValue parent, DecouplerValue decoupler)
+        {
+            if (part.State == PartStates.DEAD || part.transform == null)
+                return;
+
+            PartValue self = null;
+            foreach (var module in part.Modules)
+            {
+                if (module is IEngineStatus engine)
+                {
+                    self = new EngineValue(Shared, part, parent, decoupler);
+                    break;
+                }
+                if (module is IStageSeparator)
+                {
+                    if (module is ModuleDockingNode dock)
+                    {
+                        var port = new DockingPortValue(Shared, part, parent, decoupler, dock);
+                        self = port;
+                        dockingPorts.Add(port);
+                        if (dock.stagingEnabled)
+                        {
+                            decoupler = port;
+                            decouplers.Add(decoupler);
+                        }
+                    }
+                    else
+                    {
+                        if (module is LaunchClamp)
+                            self = decoupler = new LaunchClampValue(Shared, part, parent, decoupler);
+                        else if (module is ModuleDecouple || module is ModuleAnchoredDecoupler)
+                            self = decoupler = new DecouplerValue(Shared, part, parent, decoupler);
+                        else // ModuleServiceModule ?
+                            break;
+                        decouplers.Add(decoupler);
+                    }
+                    // ignore leftover decouplers
+                    if (decoupler == null || decoupler.Part.inverseStage >= StageManager.CurrentStage)
+                        break;
+                    // check if we just created closer decoupler (see StageValues.CreatePartSet)
+                    if (nextDecoupler == null || decoupler.Part.inverseStage > nextDecoupler.Part.inverseStage)
+                        nextDecoupler = decoupler;
+                    break;
+                }
+                if (module is ModuleEnviroSensor sensor)
+                {
+                    self = new SensorValue(Shared, part, parent, decoupler, sensor);
+                    break;
+                }
+            }
+            if (self == null)
+                self = new PartValue(Shared, part, parent, decoupler);
+            if (rootPart == null)
+                rootPart = self;
+            partCache[part] = self;
+            allParts.Add(self);
+            foreach (var child in part.children)
+                ConstructPart(child, self, decoupler);
+            self.Children.IsReadOnly = true;
+        }
+
+        //Really need per-CPU instance??
         private static Dictionary<InstanceKey, WeakReference> instanceCache;
 
-        public override Orbit Orbit { get { return Vessel.orbit; } }
-
-        public override StringValue GetName()
-        {
-            return Vessel.vesselName;
-        }
-
-        public Guid GetGuid()
-        {
-            return Vessel.id;
-        }
-
-        public override Vector GetPosition()
-        {
-            return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
-        }
-
-        public override OrbitableVelocity GetVelocities()
-        {
-            return new OrbitableVelocity(Vessel);
-        }
+        public Guid Guid => Vessel.id;
+        public override Orbit Orbit => Vessel.orbit;
+        public override StringValue GetName() => Vessel.vesselName;
+        public override Vector GetPosition() => new Vector(Vessel.CoMD - CurrentVessel.CoMD);
+        public override OrbitableVelocity GetVelocities() => new OrbitableVelocity(Vessel);
 
         /// <summary>
         ///   Calculates the position of this vessel at some future universal timestamp,
@@ -194,29 +329,6 @@ namespace kOS.Suffixed
             return orbitPatch;
         }
 
-        static VesselTarget()
-        {
-            // TODO: These need to be refactored into the new suffix system at some point:
-
-            ShortCuttableShipSuffixes = new[]
-                {
-                    "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
-                    "LONGITUDE",
-                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
-                    "AIRSPEED", "SHIPNAME",
-                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
-                };
-        }
-
-        /// <summary>
-        /// All constructors for this class have been restricted because everyone should
-        /// be calling the factory method CreateOrGetExisting() instead.
-        /// </summary>
-        protected VesselTarget()
-        {
-            RegisterInitializer(InitializeSuffixes);
-        }
-
         /// <summary>
         /// All constructors for this class have been restricted because everyone should
         /// be calling the factory method CreateOrGetExisting() instead.
@@ -225,17 +337,9 @@ namespace kOS.Suffixed
             : base(shared)
         {
             Vessel = target;
+            StageValues = new StageValues(shared);
             HookEvents();
             RegisterInitializer(InitializeSuffixes);
-        }
-
-        /// <summary>
-        /// All constructors for this class have been restricted because everyone should
-        /// be calling the factory method CreateOrGetExisting() instead.
-        /// </summary>
-        protected VesselTarget(SharedObjects shared)
-            : this(shared.Vessel, shared)
-        {
         }
 
         /// <summary>
@@ -251,9 +355,22 @@ namespace kOS.Suffixed
         /// Using this factory method instead of a constructor prevents having thousands of stale
         /// instances of VesselTarget, which was the cause of Github issue #1980.
         /// </summary>
-        /// <returns>The or get.</returns>
-        /// <param name="Target">Target.</param>
-        /// <param name="Shared">Shared.</param>
+        public static VesselTarget CreateOrGetExisting(SharedObjects shared) =>
+            CreateOrGetExisting(shared.Vessel, shared);
+
+        /// <summary>
+        /// Factory method you should use instead of the constructor for this class.
+        /// This will construct a new instance if and only if there isn't already
+        /// an instance made for this particular kOSProcessor, for the given vessel
+        /// (Uniqueness determinied by the vessel's GUID).
+        /// If an instance already exists it will return a reference to that instead of making
+        /// a new one.
+        /// The reason this enforcement is needed is because VesselTarget has callback hooks
+        /// that prevent orphaning and garbage collection.  (The delegate inserted
+        /// into KSP's GameEvents counts as a reference to the VesselTarget.)
+        /// Using this factory method instead of a constructor prevents having thousands of stale
+        /// instances of VesselTarget, which was the cause of Github issue #1980.
+        /// </summary>
         public static VesselTarget CreateOrGetExisting(Vessel target, SharedObjects shared)
         {
             if (instanceCache == null)
@@ -282,76 +399,79 @@ namespace kOS.Suffixed
                 instanceCache.Clear();
         }
 
-        public static VesselTarget CreateOrGetExisting(SharedObjects shared)
+        // called in .ctor only
+        private void HookEvents()
         {
-            return CreateOrGetExisting(shared.Vessel, shared);
+            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
+            GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
+            GameEvents.onStageActivate.Add(OnStageActive);
+            GameEvents.onPartPriorityChanged.Add(OnPartPriorityChanged);
+            GameEvents.StageManager.OnGUIStageAdded.Add(OnStageAdded);
+            GameEvents.StageManager.OnGUIStageRemoved.Add(OnStageRemoved);
+            GameEvents.StageManager.OnGUIStageSequenceModified.Add(OnStageModified);
+        }
+        private void OnStageActive(int stage) =>
+            InvalidateParts();
+        private void OnStageAdded(int stage) =>
+            InvalidateParts();
+        private void OnStageRemoved(int stage) =>
+            InvalidateParts();
+        private void OnStageModified() =>
+            InvalidateParts();
+
+        private void OnPartPriorityChanged(global::Part part)
+        {
+            if (part.vessel == Vessel)
+                InvalidateParts();
         }
 
-        public void HookEvents()
+        private void OnVesselPartCountChanged(Vessel v)
         {
-            if (!eventsAreHooked)
-            {
-                GameEvents.onVesselDestroy.Add(OnVesselDestroy);
-                GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
-                eventsAreHooked = true;
-            }
+            if (Vessel.Equals(v))
+                InvalidateParts();
         }
-
-        public void UnhookEvents()
+        private void OnVesselDestroy(Vessel v)
         {
-            // In the way we're firing off ScopeLost, it's possible to
-            // end up triggering this more than once, which is why this
-            // protective boolean check is here:
-            if (eventsAreHooked)
+            if (Vessel.Equals(v))
+                UnhookEvents();
+        }
+        private void UnhookEvents()
+        {
+            if (Vessel != null)
             {
                 GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
                 GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
-                eventsAreHooked = false;
-            }
-        }
-
-        public void OnVesselDestroy(Vessel v)
-        {
-            if (Vessel.Equals(v))
-            {
-                UnhookEvents();
+                GameEvents.onStageActivate.Remove(OnStageActive);
+                GameEvents.onPartPriorityChanged.Remove(OnPartPriorityChanged);
+                GameEvents.StageManager.OnGUIStageAdded.Remove(OnStageAdded);
+                GameEvents.StageManager.OnGUIStageRemoved.Remove(OnStageRemoved);
+                GameEvents.StageManager.OnGUIStageSequenceModified.Remove(OnStageModified);
                 Vessel = null;
+                InvalidateParts();
             }
         }
-
-        public void OnVesselPartCountChanged(Vessel v)
-        {
-            cachedParts.Clear();
-            cachedPartsAreStale = true;
-            GetAllParts();
-        }
-
-        private Vessel CurrentVessel { get { return Shared.Vessel; } }
-
-        public ITargetable Target
-        {
-            get { return Vessel; }
-        }
+        private Vessel CurrentVessel => Shared.Vessel;
+        public ITargetable Target => Vessel;
+        public Vessel Vessel { get; private set; }
 
         // TODO: We will need to replace with the same thing Orbitable:DISTANCE does
         // in order to implement the orbit solver later.
-        public ScalarValue GetDistance()
+        public ScalarValue GetDistance() =>
+            Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
+
+        public static string[] ShortCuttableShipSuffixes { get; } = new[]
         {
-            return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
-        }
-
-        public Vessel Vessel { get; private set; }
-
-        public static string[] ShortCuttableShipSuffixes { get; private set; }
+            "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
+            "LONGITUDE",
+            "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
+            "AIRSPEED", "SHIPNAME",
+            "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
+        };
 
         private int linkCount = 0;
-
         public int LinkCount
         {
-            get
-            {
-                return linkCount;
-            }
+            get => linkCount;
             set
             {
                 linkCount = value;
@@ -369,24 +489,6 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "VESSEL(\"" + Vessel.vesselName + "\")";
-        }
-
-        public ListValue GetAllParts()
-        {
-            if (cachedPartsAreStale)
-            {
-                cachedParts.Clear();
-                for (int i = 0; i < Vessel.Parts.Count; ++i)
-                {
-                    var part = Vessel.Parts[i];
-                    if (part.State != PartStates.DEAD && part.transform != null)
-                    {
-                        cachedParts.Add(PartValueFactory.Construct(Vessel.Parts[i], Shared));
-                    }
-                }
-                cachedPartsAreStale = false;
-            }
-            return cachedParts;
         }
 
         private ListValue GetPartsDubbed(StringValue searchTerm)
@@ -621,8 +723,9 @@ namespace kOS.Suffixed
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue, StringValue>(GetPartsTagged));
             AddSuffix("PARTSTAGGEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsTaggedPattern));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
-            AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
-            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
+            AddSuffix("PARTS", new NoArgsSuffix<ListValue<PartValue>>(() => Parts));
+            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue<DockingPortValue>>(() => DockingPorts));
+            AddSuffix(new string[] { "DECOUPLERS", "SEPARATORS" }, new NoArgsSuffix<ListValue<DecouplerValue>>(() => Decouplers));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
             AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
@@ -647,7 +750,7 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "DYNAMICPRESSURE", "Q" }, new Suffix<ScalarValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<BooleanValue>(() => Vessel.loaded));
             AddSuffix("UNPACKED", new Suffix<BooleanValue>(() => !Vessel.packed));
-            AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
+            AddSuffix("ROOTPART", new Suffix<PartValue>(() => Root));
             AddSuffix("CONTROLPART", new Suffix<PartValue>(() => PartValueFactory.Construct(GetControlPart(), Shared)));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Vessel.GetWetMass(), "The Ship's mass when full"));

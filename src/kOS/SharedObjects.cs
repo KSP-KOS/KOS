@@ -1,16 +1,18 @@
-﻿using kOS.Communication;
+using kOS.Communication;
 using kOS.Execution;
 using kOS.Screen;
 using kOS.Callback;
 using kOS.Sound;
 using System.Collections.Generic;
 using System;
+using kOS.Suffixed;
 
 namespace kOS
 {
     public class SharedObjects : Safe.SafeSharedObjects
     {
         public Vessel Vessel { get; set; }
+        public VesselTarget VesselTarget => VesselTarget.CreateOrGetExisting(this);
         public ProcessorManager ProcessorMgr { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }

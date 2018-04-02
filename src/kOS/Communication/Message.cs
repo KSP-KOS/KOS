@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Communication;
 using kOS.Suffixed;
 using kOS.Safe;
@@ -40,13 +40,13 @@ namespace kOS.Communication
         public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender.GetGuid().ToString();
+            Vessel = sender.Guid.ToString();
         }
 
         public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender.GetGuid().ToString();
+            Vessel = sender.Guid.ToString();
         }
 
         public override Dump Dump()

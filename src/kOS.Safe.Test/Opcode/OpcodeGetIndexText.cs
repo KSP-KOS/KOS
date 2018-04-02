@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using NUnit.Framework;
@@ -30,7 +30,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreEqual(new StringValue("bar"), cpu.PopArgumentStack());
         }
 
@@ -50,7 +50,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(3, list.Count());
+            Assert.AreEqual(3, list.Count);
             Assert.AreEqual(new StringValue("foo"), cpu.PopArgumentStack());
         }
 
@@ -70,7 +70,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(3, list.Count());
+            Assert.AreEqual(3, list.Count);
             Assert.AreEqual(new StringValue("fizz"), cpu.PopArgumentStack());
         }
 

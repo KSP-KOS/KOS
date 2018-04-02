@@ -93,6 +93,11 @@ namespace kOS.Utilities
                 case "DOCKINGPORTS":
                     list = DockingPortValue.PartsToList(partList, sharedObj);
                     break;
+
+                case "DECOUPLERS":
+                case "SEPARATORS":
+                    list = DecouplerValue.PartsToList(partList, sharedObj);
+                    break;
             }
             return list;
         }
@@ -103,13 +108,11 @@ namespace kOS.Utilities
 
             foreach (var p in vessel.parts)
             {
-                foreach (PartModule pm in p.Modules)
+                foreach (PartModule module in p.Modules)
                 {
-                    if (!pm.isEnabled) continue;
-                    if (pm is ModuleEngines)
-                    {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, atmPressure: atmPressure);
-                    }
+                    if (!module.isEnabled) continue;
+                    if (module is ModuleEngines engine)
+                        thrust += engine.GetThrust(atmPressure: atmPressure);
                 }
             }
 
@@ -741,12 +744,10 @@ namespace kOS.Utilities
 
             foreach (var p in vessel.parts)
             {
-                foreach (PartModule pm in p.Modules)
+                foreach (PartModule module in p.Modules)
                 {
-                    if (pm.isEnabled && pm is ModuleEngines)
-                    {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, useThrustLimit: true, atmPressure: atmPressure);
-                    }
+                    if (module.isEnabled && module is ModuleEngines engine)
+                        thrust += engine.GetThrust(useThrustLimit: true, atmPressure: atmPressure);
                 }
             }
 

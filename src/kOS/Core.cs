@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
@@ -47,7 +47,7 @@ namespace kOS
         private ElementValue GetEelement()
         {
             var elList = shared.KSPPart.vessel.PartList("elements", shared);
-            var part = new PartValue(shared.KSPPart, shared);
+            var part = VesselTarget.CreateOrGetExisting(shared)[shared.KSPPart];
             return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
 
