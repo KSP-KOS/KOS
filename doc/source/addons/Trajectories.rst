@@ -64,7 +64,7 @@ Access structure TRAddon via ``ADDONS:TR``.
      :attr:`PLANNEDVEC`            :struct:`Vector` (readonly)           Vector at which to point to follow predicted trajectory.
      :attr:`PLANNEDVECTOR`         :struct:`Vector` (readonly)           Alias for :attr:`PLANNEDVEC`
      :meth:`SETTARGET(position)`   None                                  Set Trajectories target.
-     :attr:`HASTARGET`             :struct:`Boolean` (readonly)          True if Trajectories' target position has been selected.
+     :attr:`HASTARGET`             :struct:`Boolean` (readonly)          **(only Trajectories 2.0.0 and up)** True if Trajectories' target position has been selected.
      :attr:`TIMETILLIMPACT`        :struct:`ScalarValue` (readonly)      Predicted seconds until hitting the ground or water.
      :attr:`RETROGRADE`            :struct:`Boolean`                     Set True to put descent profile in retrograde mode.
      :attr:`PROGRADE`              :struct:`Boolean`                     Set True to put descent profile in prograde mode.
@@ -161,6 +161,11 @@ Access structure TRAddon via ``ADDONS:TR``.
     :type: :struct:`Boolean`
     :access: Get
 
+    **Did Not Exist in Trajectories before 2.0.0!**
+    
+    *If :attr:`TRAddons:ISVERTWO` is false, using this suffix will cause
+    a runtime error.*
+
     The Trajectories Addon can be given a target position on the ground.
     This is true if such a position is selected, or false if it is not.
 
@@ -169,6 +174,11 @@ Access structure TRAddon via ``ADDONS:TR``.
     :type: :struct:`Scalar`
     :access: Get
 
+    **Did Not Exist in Trajectories before 2.2.0!**
+    
+    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    a runtime error.*
+
     Gives you Trajectories' prediction of how many seconds until impact
     on ground or water.
 
@@ -176,6 +186,11 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     :type: :struct:`Boolean`
     :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.2.0!**
+    
+    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    a runtime error.*
 
     True if the Trajectories descent profile is set to 'prograde' mode.
     You can set this to have the same effect as clicking on prograde mode
@@ -187,6 +202,11 @@ Access structure TRAddon via ``ADDONS:TR``.
 
     :type: :struct:`Boolean`
     :access: Get/Set
+
+    **Did Not Exist in Trajectories before 2.2.0!**
+    
+    *If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+    a runtime error.*
 
     True if the Trajectories descent profile is set to 'retrograde' mode.
     You can set this to have the same effect as clicking on retrograde mode
