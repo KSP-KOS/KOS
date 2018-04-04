@@ -56,7 +56,7 @@ Access structure TRAddon via ``ADDONS:TR``.
      Suffix                        Type                                  Description
     ============================= ===================================== =============
      :attr:`AVAILABLE`             :struct:`Boolean` (readonly)          True if a compatible Trajectories version is installed.
-     :attr:`GETVERSION`            :struct:`String` (readonly)           **(only Trajectories 2.2.0 and up)** Which version of Trajectories is installed.
+     :attr:`GETVERSION`            :struct:`String` (readonly)           **(only TR 2.2.0 and up)** Trajectories version string.
      :attr:`ISVERTWO`              :struct:`Boolean` (readonly)          True if Trajectories version is 2.0.0 or above.
      :attr:`ISVERTWOTWO`           :struct:`Boolean` (readonly)          True if Trajectories version is 2.2.0 or above.
      :attr:`HASIMPACT`             :struct:`Boolean` (readonly)          True if Trajectories has calculated an impact position for the current vessel.
@@ -64,10 +64,10 @@ Access structure TRAddon via ``ADDONS:TR``.
      :attr:`PLANNEDVEC`            :struct:`Vector` (readonly)           Vector at which to point to follow predicted trajectory.
      :attr:`PLANNEDVECTOR`         :struct:`Vector` (readonly)           Alias for :attr:`PLANNEDVEC`
      :meth:`SETTARGET(position)`   None                                  Set Trajectories target.
-     :attr:`HASTARGET`             :struct:`Boolean` (readonly)          **(only Trajectories 2.0.0 and up)** True if Trajectories' target position has been selected.
-     :attr:`TIMETILLIMPACT`        :struct:`ScalarValue` (readonly)      Predicted seconds until hitting the ground or water.
-     :attr:`RETROGRADE`            :struct:`Boolean`                     Set True to put descent profile in retrograde mode.
-     :attr:`PROGRADE`              :struct:`Boolean`                     Set True to put descent profile in prograde mode.
+     :attr:`HASTARGET`             :struct:`Boolean` (readonly)          **(only TR 2.0.0 and up)** True if Trajectories' target position has been selected.
+     :attr:`TIMETILLIMPACT`        :struct:`ScalarValue` (readonly)      **(only TR 2.2.0 and up)** Seconds until impact
+     :attr:`RETROGRADE`            :struct:`Boolean`                     **(only TR 2.2.0 and up)** Descent profile is retrograde mode.
+     :attr:`PROGRADE`              :struct:`Boolean`                     **(only TR 2.2.0 and up)** Descent profile is prograde mode.
      :attr:`CORRECTEDVEC`          :struct:`Vector` (readonly)           Offset plus :attr:`PLANNEDVEC` to correct path for targeted impact.
      :attr:`CORRECTEDVECTOR`       :struct:`Vector` (readonly)           Alias for :attr:`CORRECTEDVEC`
     ============================= ===================================== =============
