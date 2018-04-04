@@ -159,11 +159,12 @@ namespace kOS.AddOns.TrajectoriesAddon
         }
 
         // Version checking properties
-        public static string GetVersion { get; private set; } = "";
-
-        public static bool IsVerTwo { get; private set; } = false;
-
-        public static bool IsVerTwoTwo { get; private set; } = false;
+        public static string getVersion = "";
+        public static string GetVersion { get { return getVersion; } private set {getVersion = value;} }
+        public static bool isVerTwo = false;
+        public static bool IsVerTwo { get { return isVerTwo; } private set { isVerTwo = value; } }
+        public static bool isVerTwoTwo = false;
+        public static bool IsVerTwoTwo { get { return isVerTwoTwo; }  private set { isVerTwoTwo = value; } }
 
         // Standard methods
         public static Vector3? ImpactVector()
