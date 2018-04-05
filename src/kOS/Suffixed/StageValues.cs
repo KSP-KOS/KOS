@@ -29,6 +29,9 @@ namespace kOS.Suffixed
         /// </summary>
         internal StageValues(SharedObjects shared)
         {
+			// Do not try to construct VesselTarget here, it is called from VesselTarget's constructor!
+			// Would need special logic if VesselTarget is needed here			
+
             this.shared = shared;
             partSet = new PartSet(partHash);
 

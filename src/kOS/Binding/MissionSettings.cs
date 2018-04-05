@@ -10,15 +10,15 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class MissionSettings : Binding
     {
-        private VesselTarget ship;
         private SharedObjects sharedObj;
+        private VesselTarget ship => VesselTarget.CreateOrGetExisting(sharedObj);
 
         public override void AddTo(SharedObjects shared)
         {
             sharedObj = shared;
 
             shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
-            shared.BindingMgr.AddGetter("SHIP", () => ship ?? (ship = VesselTarget.CreateOrGetExisting(shared)));
+            shared.BindingMgr.AddGetter("SHIP", () => ship);
             // These are now considered shortcuts to SHIP:suffix
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
             {
@@ -84,32 +84,10 @@ namespace kOS.Binding
 
         public object VesselShortcutGetter(string name)
         {
-            ISuffixResult suffix =ship.GetSuffix(name);
+            ISuffixResult suffix = ship.GetSuffix(name);
             if (!suffix.HasValue)
                 suffix.Invoke(sharedObj.Cpu);
             return suffix.Value;
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            if (ship == null)
-            {
-                ship = VesselTarget.CreateOrGetExisting(sharedObj);
-                ship.LinkCount++;
-            }
-            else if (ship.Vessel == null)
-            {
-                ship.LinkCount--;
-                ship = VesselTarget.CreateOrGetExisting(sharedObj);
-                ship.LinkCount++;
-            }
-            else if (!ship.Vessel.id.Equals(sharedObj.Vessel.id))
-            {
-                ship.LinkCount--;
-                ship = VesselTarget.CreateOrGetExisting(sharedObj);
-                ship.LinkCount++;
-            }
         }
     }
 }
