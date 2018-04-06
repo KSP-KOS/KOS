@@ -207,11 +207,14 @@ namespace kOS.AddOns.TrajectoriesAddon
         {
             get
             {
+                if (trProgradeEntry == null) // will be null if TR version too low.
+                    return null;
                 return (bool?)trProgradeEntry.GetValue(null, null);
             }
             set
             {
-                trProgradeEntry.SetValue(null, true, null);
+                if (trProgradeEntry != null) // will be null if TR version too low.
+                    trProgradeEntry.SetValue(null, true, null);
             }
         }
 
@@ -219,11 +222,14 @@ namespace kOS.AddOns.TrajectoriesAddon
         {
             get
             {
+                if (trRetrogradeEntry == null) // will be null if TR version too low.
+                    return null;
                 return (bool?)trRetrogradeEntry.GetValue(null, null);
             }
             set
             {
-                trRetrogradeEntry.SetValue(null, true, null);
+                if (trRetrogradeEntry != null) // will be null if TR version too low.
+                    trRetrogradeEntry.SetValue(null, true, null);
             }
         }
 

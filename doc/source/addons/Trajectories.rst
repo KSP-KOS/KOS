@@ -222,8 +222,11 @@ Access structure TRAddon via ``ADDONS:TR``.
     A vector that applies an offset to :attr:`PLANNEDVEC<TRAddon:PLANNEDVEC>`
     intended to correct the predicted trajectory to impact at the selected
     target position.  This vector does not use any aerodynamic prediction and
-    is a very simplistic representation.  Accuracy is not guaranteed, but it
-    should at least help determine if you need to pitch the nose up or down.
+    is a very simplistic representation.  It is also just a unit vector.  It
+    contains no magnitude information about how far off the selected target is
+    from the predicted impact - just the way the offset points. Accuracy is
+    not guaranteed, but it should at least help determine if you need to
+    pitch the nose up or down.
 
 .. attribute:: TRAddon:CORRECTEDVECTOR
 
