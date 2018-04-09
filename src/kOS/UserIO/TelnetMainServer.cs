@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using kOS.Safe.Utilities;
@@ -540,11 +541,51 @@ namespace kOS.UserIO
             // without DNS or names of any kind.  But, since this seems to be the standard
             // answer to the question "how do I list all my IP addresses?", we'll go with it
             // for now:
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress addr in localIPs)
+            try {
+                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+                foreach (IPAddress addr in localIPs)
+                {
+                    if (!addr.Equals(IPAddress.Loopback))
+                    {
+                        ipAddrList.Add(addr.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                if (! addr.Equals(IPAddress.Loopback) )
-                    ipAddrList.Add(addr.ToString());
+                // Catch the DNS error in the Fallback method on a "ceartain" OS to avoid infinite retry loop / log spam, thanks bonjour.
+                Debug.LogError(string.Format("{0} Exception getting ip addresses using DNS fallback method: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+            }
+
+            if (ipAddrList.Count <= 1)
+            {
+                // Primary: Loop through all network adapters and find all IPv4 unicast addresses
+                try {
+                    NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+                    Debug.LogWarning(string.Format("{0} No ip addresses found using the DNS method, using NetworkInterface method instead.", KSPLogger.LOGGER_PREFIX));
+                    if (nics != null && nics.Length > 0)
+                    {
+                        foreach (NetworkInterface adapter in nics)
+                        {
+                            if (adapter.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                            {
+                                var address = adapter.GetIPProperties().UnicastAddresses;
+                                foreach (var item in address)
+                                {
+                                    if (!item.Address.Equals(IPAddress.Loopback) && item.Address.AddressFamily.Equals(System.Net.Sockets.AddressFamily.InterNetwork))
+                                    {
+                                        ipAddrList.Add(item.Address.ToString());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Catch the DNS error in the Fallback method on a "ceartain" OS to avoid infinite retry loop / log spam, thanks bonjour.
+                    Debug.LogError(string.Format("{0} Exception getting ip addresses from network interfaces: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+                }
             }
             return ipAddrList;
         }
