@@ -179,7 +179,7 @@ namespace kOS.Safe.Execution
         /// <param name="trigger"></param>
         public void AddPendingTrigger(TriggerInfo trigger)
         {
-            // CntainsTrigger is a sequential walk, but that should be okay
+            // ContainsTrigger is a sequential walk, but that should be okay
             // because it should be unlikely that there's hundreds of
             // triggers.  There'll be at most tens of them, and even that's
             // unlikely.
