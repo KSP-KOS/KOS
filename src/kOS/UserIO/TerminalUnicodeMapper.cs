@@ -60,8 +60,9 @@ namespace kOS.UserIO
         {
             if (typeString.Substring(0,5).Equals("xterm", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
-            if (typeString.Substring(0,4).Equals("vt100", StringComparison.CurrentCultureIgnoreCase))
-                return TerminalType.XTERM;
+            // This should catch either vt100 or vt102:
+            if (typeString.Substring(0,4).Equals("vt10", StringComparison.CurrentCultureIgnoreCase))
+                return TerminalType.VT100;
 
                 //
                 // The following condition isn't implemented yet:
