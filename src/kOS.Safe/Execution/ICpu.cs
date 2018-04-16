@@ -37,13 +37,14 @@ namespace kOS.Safe.Execution
         int InstructionPointer { get; set; }
         double SessionTime { get; }
         List<string> ProfileResult { get; }
-        TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure);
+        int NextTriggerInstanceId {get; }
+        TriggerInfo AddTrigger(int triggerFunctionPointer, int instanceId, List<VariableScope> closure);
         TriggerInfo AddTrigger(TriggerInfo trigger);
-        TriggerInfo AddTrigger(UserDelegate del, List<Structure> args);
-        TriggerInfo AddTrigger(UserDelegate del, params Structure[] args);
-        void RemoveTrigger(int triggerFunctionPointer);
+        TriggerInfo AddTrigger(UserDelegate del, int instanceId, List<Structure> args);
+        TriggerInfo AddTrigger(UserDelegate del, int instanceId, params Structure[] args);
+        void RemoveTrigger(int triggerFunctionPointer, int instanceId);
         void RemoveTrigger(TriggerInfo trigger);
-        void CancelCalledTriggers(int triggerFunctionPointer);
+        void CancelCalledTriggers(int triggerFunctionPointer, int instanceId);
         void CancelCalledTriggers(TriggerInfo trigger);
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);

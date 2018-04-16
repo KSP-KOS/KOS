@@ -57,7 +57,12 @@ namespace kOS.Safe.Execution
             get { return currentContext.InstructionPointer; }
             set { currentContext.InstructionPointer = value; }
         }
-        
+
+        public int NextTriggerInstanceId
+        {
+            get { return currentContext.NextTriggerInstanceId; }
+        }
+
         public double SessionTime { get { return currentTime; } }
         
         public List<string> ProfileResult { get; private set; }
@@ -433,7 +438,7 @@ namespace kOS.Safe.Execution
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
-                        RemoveTrigger((int)item.Value.Value);
+                        RemoveTrigger((int)item.Value.Value, 0);
                 }
                 else
                 {
@@ -1086,6 +1091,7 @@ namespace kOS.Safe.Execution
             return stack.GetArgumentStackSize();
         }
 
+
         /// <summary>
         /// Schedules a trigger function call to occur near the start of the next CPU update tick.
         /// If multiple such function calls get inserted between ticks, they will behave like
@@ -1096,13 +1102,17 @@ namespace kOS.Safe.Execution
         /// when it finishes.  If its return is false, it won't fire off again.
         /// </summary>
         /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// entry point to be invokable.</param> 
         /// <param name="closure">The closure the trigger should be called with.  If this is
         /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
         /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, int instanceId,  List<VariableScope> closure)
         {
-            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, closure);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, closure);
             currentContext.AddPendingTrigger(triggerRef);
             return triggerRef;
         }
@@ -1125,6 +1135,10 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// entry point to be invokable.</param> 
         /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1132,11 +1146,11 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program just ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, List<Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, List<Structure> args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, del.Closure, del.GetMergedArgs(args));
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, instanceId, del.Closure, del.GetMergedArgs(args));
             currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }
@@ -1159,6 +1173,10 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="instanceID">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same UserDelegate.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// Delegate to be invokable.</param> 
         /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1166,11 +1184,11 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program is ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, params Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, params Structure[] args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            return AddTrigger(del, new List<Structure>(args));
+            return AddTrigger(del, instanceId, new List<Structure>(args));
         }
 
         /// <summary>
@@ -1196,9 +1214,15 @@ namespace kOS.Safe.Execution
             return trigger;
         }
 
-        public void RemoveTrigger(int triggerFunctionPointer)
+        /// <summary>
+        /// Removes a trigger looking like this if one exists.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">Trigger's entry point (instruction pointer)</param>
+        /// <param name="instanceId">If nonzero, only remove the trigger if it has this Id.  If zero, 
+        /// then remove all triggers with this entry point, regardless of their instance Id.</param>
+        public void RemoveTrigger(int triggerFunctionPointer, int instanceId)
         {
-            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, null));
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, null));
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
@@ -1206,9 +1230,15 @@ namespace kOS.Safe.Execution
             currentContext.RemoveTrigger(trigger);
         }
 
-        public void CancelCalledTriggers(int triggerFunctionPointer)
+        /// <summary>
+        /// Cancels any pending calls to triggers that match the criteria.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">Trigger's entry point (instruction pointer)</param>
+        /// <param name="instanceId">If nonzero, only affect the trigger if it has this Id.  If zero, 
+        /// then affect all triggers with this entry point, regardless of their instance Id.</param>
+        public void CancelCalledTriggers(int triggerFunctionPointer, int instanceId)
         {
-            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, null));
+            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, null));
         }
 
         public void CancelCalledTriggers(TriggerInfo trigger)
@@ -1385,7 +1415,7 @@ namespace kOS.Safe.Execution
                         if (trigger.IsCSharpCallback)
                             for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
                                 PushArgumentStack(trigger.Args[argIndex]);
-                        
+
                         triggersToBeExecuted.Add(trigger);
 
                         currentInstructionPointer = trigger.EntryPoint;

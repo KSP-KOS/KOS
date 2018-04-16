@@ -234,7 +234,7 @@ namespace kOS.Safe.Encapsulation
         {
             if (CheckForDead(false))
                 return null;
-            return Cpu.AddTrigger(this, args);
+            return Cpu.AddTrigger(this, Cpu.NextTriggerInstanceId, args);
         }
     }
 }

@@ -27,7 +27,14 @@ namespace kOS.Safe.Execution
         /// List of triggers that are currently active
         /// </summary>
         private List<TriggerInfo> Triggers { get; set; }
-        
+
+        private int nextTriggerInstanceId = 1;
+        public int NextTriggerInstanceId { get {return nextTriggerInstanceId++;} }
+        public void ResetTriggerInstanceIdCounter()
+        {
+            nextTriggerInstanceId = 1;
+        }
+
         /// <summary>
         /// List of triggers that are *about to become* currently active, but only after
         /// the CPU tells us it's a good safe time to re-insert them.  This delay is done
@@ -194,8 +201,8 @@ namespace kOS.Safe.Execution
         /// <param name="trigger"></param>
         public void RemoveTrigger(TriggerInfo trigger)
         {
-            Triggers.Remove(trigger); // can ignore if it wasn't in the list.
-            TriggersToInsert.Remove(trigger); // can ignore if it wasn't in the list.
+            Triggers.RemoveAll((item) => item == trigger); // can ignore if it wasn't in the list.
+            TriggersToInsert.RemoveAll((item) => item == trigger); // can ignore if it wasn't in the list.
         }
         
         /// <summary>

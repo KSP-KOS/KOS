@@ -1955,7 +1955,7 @@ namespace kOS.Safe.Compilation
                 else
                     if (returnVal is bool || returnVal is BooleanValue )
                         if (Convert.ToBoolean(returnVal))
-                            cpu.AddTrigger(trigger.EntryPoint, trigger.Closure);
+                            cpu.AddTrigger(trigger.EntryPoint, trigger.InstanceCount, trigger.Closure);
             }
             
             int destinationPointer = contextRecord.CameFromInstPtr;
@@ -2499,10 +2499,20 @@ namespace kOS.Safe.Compilation
         protected override string Name { get { return "addtrigger"; } }
         public override ByteCode Code { get { return ByteCode.ADDTRIGGER; } }
 
+        /// <summary>
+        /// True if the trigger being added should be called with an argument
+        /// that identifies this instance/entrypoint uniquely at runtime.
+        /// (For example, ON triggers need this, but WHEN triggers do not).
+        /// </summary>
+        [MLField(1,false)]
+        public bool InstanceArg { get; set; }
+
         public override void Execute(ICpu cpu)
         {
             int functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
-            cpu.AddTrigger(functionPointer, cpu.GetCurrentClosure());
+
+            List<Structure> args = new List<Structure>();
+            cpu.AddTrigger(functionPointer, cpu.NextTriggerInstanceId, cpu.GetCurrentClosure());
         }
 
         public override string ToString()
@@ -2527,8 +2537,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             var functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
-            cpu.RemoveTrigger(functionPointer);
-            cpu.CancelCalledTriggers(functionPointer);
+            cpu.RemoveTrigger(functionPointer, 0);
+            cpu.CancelCalledTriggers(functionPointer, 0);
         }
     }
 
