@@ -1093,7 +1093,9 @@ namespace kOS.Safe.Execution
 
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.  This type of trigger must be a function that
@@ -1122,7 +1124,9 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1164,7 +1168,9 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1201,7 +1207,9 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>

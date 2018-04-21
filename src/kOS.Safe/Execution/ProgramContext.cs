@@ -179,7 +179,8 @@ namespace kOS.Safe.Execution
         /// <summary>
         /// Add a trigger to the list of triggers pending insertion.
         /// It will not *finish* inserting it until the CPU tells us it's a good
-        /// time to do so, by calling ActivatePendingTriggers().
+        /// time to do so (i.e. next time CPU does a FixedUpdate), by calling
+        /// ActivatePendingTriggers().
         /// It will also refuse to insert a WHEN/ON/LOCK trigger that's already either active
         /// or pending insertion to the active list (avoids duplication).
         /// </summary>
@@ -196,7 +197,7 @@ namespace kOS.Safe.Execution
 
         /// <summary>
         /// Adds a trigger to happen immediately on the next opcode, instead of
-        /// waiting for the next fixedupdate tick like AddPendingTrigger does.
+        /// waiting for the next CPU FixedUpdate like AddPendingTrigger does.
         /// </summary>
         /// <param name="trigger">Trigger to be inserted</param>
         public void AddImmediateTrigger(TriggerInfo trigger)
