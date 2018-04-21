@@ -193,6 +193,16 @@ namespace kOS.Safe.Execution
             if (! ContainsTrigger(trigger))
                 TriggersToInsert.Add(trigger);
         }
+
+        /// <summary>
+        /// Adds a trigger to happen immediately on the next opcode, instead of
+        /// waiting for the next fixedupdate tick like AddPendingTrigger does.
+        /// </summary>
+        /// <param name="trigger">Trigger to be inserted</param>
+        public void AddImmediateTrigger(TriggerInfo trigger)
+        {
+            Triggers.Add(trigger);
+        }
         
         /// <summary>
         /// Remove a trigger from current triggers or pending insertion

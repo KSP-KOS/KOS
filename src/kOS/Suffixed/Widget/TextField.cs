@@ -81,7 +81,7 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnConfirm != null)
             {
-                UserOnConfirm.TriggerNextUpdate(new StringValue(Text));
+                UserOnConfirm.TriggerOnNextOpcode(new StringValue(Text));
                 Confirmed = false;
             }
         }
@@ -90,7 +90,7 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnChange != null)
             {
-                UserOnChange.TriggerNextUpdate(new StringValue(Text));
+                UserOnChange.TriggerOnNextOpcode(new StringValue(Text));
                 Changed = false;
             }
         }

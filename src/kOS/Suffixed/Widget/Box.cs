@@ -76,7 +76,7 @@ namespace kOS.Suffixed.Widget
         public void ScheduleOnRadioChange(Button b)
         {
             if (UserOnRadioChange != null)
-                UserOnRadioChange.TriggerNextUpdate(b);
+                UserOnRadioChange.TriggerOnNextOpcode(b);
         }
 
         /// <summary>

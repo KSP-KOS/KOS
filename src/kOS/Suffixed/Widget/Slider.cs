@@ -66,7 +66,7 @@ namespace kOS.Suffixed.Widget
         private void ScheduleOnChange()
         {
             if (UserOnChange != null)
-                UserOnChange.TriggerNextUpdate(new ScalarDoubleValue((double)val));
+                UserOnChange.TriggerOnNextOpcode(new ScalarDoubleValue((double)val));
         }
 
         public override string ToString()

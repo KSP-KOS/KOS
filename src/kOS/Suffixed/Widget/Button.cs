@@ -81,7 +81,7 @@ namespace kOS.Suffixed.Widget
 
             if (UserOnToggle != null)
             {
-                UserOnToggle.TriggerNextUpdate(new BooleanValue(pressed));
+                UserOnToggle.TriggerOnNextOpcode(new BooleanValue(pressed));
 
             }
 
@@ -100,7 +100,7 @@ namespace kOS.Suffixed.Widget
             // not the button-goes-out state that should auto-activate when it's read:
             if (UserOnClick != null && (IsToggle || pressed))
             {
-                UserOnClick.TriggerNextUpdate();
+                UserOnClick.TriggerOnNextOpcode();
                 if (!IsToggle)
                     causeRelease = true;
             }

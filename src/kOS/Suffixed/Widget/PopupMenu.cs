@@ -73,7 +73,7 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnChange != null)
             {
-                UserOnChange.TriggerNextUpdate(GetValue());
+                UserOnChange.TriggerOnNextOpcode(GetValue());
                 changed = false;
             }
         }

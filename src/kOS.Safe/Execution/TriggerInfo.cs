@@ -26,8 +26,8 @@ public class TriggerInfo
     public List<VariableScope> Closure {get; private set;}
 
     /// <summary>
-    /// If true, this is a callback invoked by our own C# code, which will
-    /// be awaiting the answer the user's code returns.
+    /// If true, this is a callback inserted by our own C# code, which will
+    /// might be awaiting the answer the user's code returns.
     /// </summary>
     public bool IsCSharpCallback { get; private set; }
     /// <summary>

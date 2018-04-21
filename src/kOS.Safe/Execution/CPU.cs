@@ -1106,14 +1106,18 @@ namespace kOS.Safe.Execution
         /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
         /// entry point to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="closure">The closure the trigger should be called with.  If this is
         /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
         /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, int instanceId,  List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, int instanceId, bool immediate, List<VariableScope> closure)
         {
             TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, closure);
-            currentContext.AddPendingTrigger(triggerRef);
+            if (immediate)
+                currentContext.AddImmediateTrigger(triggerRef);
+            else
+                currentContext.AddPendingTrigger(triggerRef);
             return triggerRef;
         }
 
@@ -1139,6 +1143,7 @@ namespace kOS.Safe.Execution
         /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
         /// entry point to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1146,12 +1151,15 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program just ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, List<Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, bool immediate, List<Structure> args)
         {
             if (del.ProgContext != currentContext)
                 return null;
             TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, instanceId, del.Closure, del.GetMergedArgs(args));
-            currentContext.AddPendingTrigger(callbackRef);
+            if (immediate)
+                currentContext.AddImmediateTrigger(callbackRef);
+            else
+                currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }
 
@@ -1177,6 +1185,7 @@ namespace kOS.Safe.Execution
         /// more than one instance of a trigger to exist for this same UserDelegate.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
         /// Delegate to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1184,11 +1193,11 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program is ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, params Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, bool immediate, params Structure[] args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            return AddTrigger(del, instanceId, new List<Structure>(args));
+            return AddTrigger(del, instanceId, immediate, new List<Structure>(args));
         }
 
         /// <summary>
@@ -1203,14 +1212,18 @@ namespace kOS.Safe.Execution
         /// If the TriggerInfo you pass in was built for a different ProgramContext than the one that
         /// is currently running, then this will return null and refuse to do anything.
         /// </summary>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <returns>To be in agreement with how the other AddTrigger() methods work, this returns
         /// a TriggerInfo which is just the same one you passed in.  It will return a null, however,
         /// in cases where the TriggerInfo you passed in is for a different ProgramContext.</returns>
-        public TriggerInfo AddTrigger(TriggerInfo trigger)
+        public TriggerInfo AddTrigger(TriggerInfo trigger, bool immediate)
         {
             if (trigger.ContextId != currentContext.ContextId)
                 return null;
-            currentContext.AddPendingTrigger(trigger);
+            if (immediate)
+                currentContext.AddImmediateTrigger(trigger);
+            else
+                currentContext.AddPendingTrigger(trigger);
             return trigger;
         }
 
@@ -1282,8 +1295,6 @@ namespace kOS.Safe.Execution
 
                 if (currentContext != null && currentContext.Program != null)
                 {
-                    ProcessTriggers();
-
                     if (showStatistics)
                     {
                         executionWatch.Start();
@@ -1449,6 +1460,11 @@ namespace kOS.Safe.Execution
                    executeNext &&
                    currentContext != null)
             {
+                // ProcessTriggers is in this loop because opcodes can result in changes that
+                // cause callbacks to be invoked, and this can make those callback invocations
+                // happen immediately on the next opcode:
+                ProcessTriggers();
+
                 if (! stack.HasTriggerContexts())
                 {
                     currentRunSection = Section.Main;

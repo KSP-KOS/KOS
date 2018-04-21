@@ -100,7 +100,7 @@ namespace kOS.Suffixed.Widget
                 if (UserTextUpdateResult.CallbackFinished)
                 {
                     SetText(UserTextUpdateResult.ReturnValue.ToString());
-                    UserTextUpdateResult = UserTextUpdater.TriggerNextUpdate();
+                    UserTextUpdateResult = UserTextUpdater.TriggerOnNextOpcode();
                 }
                 // Else just do nothing because a previous call is still pending its return result.
                 // don't start up a second call while still waiting for the first one to finish.  (we
@@ -108,7 +108,7 @@ namespace kOS.Suffixed.Widget
             }
             else
             {
-                UserTextUpdateResult = UserTextUpdater.TriggerNextUpdate();
+                UserTextUpdateResult = UserTextUpdater.TriggerOnNextOpcode();
             }
         }
 

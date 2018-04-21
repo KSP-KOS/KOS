@@ -230,11 +230,11 @@ namespace kOS.Safe.Encapsulation
         /// do so (the UserDelegate knows which Cpu it was created with so it can get to
         /// it directly from that).
         /// </summary>
-        public TriggerInfo TriggerNextUpdate(params Structure[] args)
+        public TriggerInfo TriggerOnNextOpcode(params Structure[] args)
         {
             if (CheckForDead(false))
                 return null;
-            return Cpu.AddTrigger(this, Cpu.NextTriggerInstanceId, args);
+            return Cpu.AddTrigger(this, Cpu.NextTriggerInstanceId, true, args);
         }
     }
 }

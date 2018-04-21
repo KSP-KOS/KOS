@@ -197,19 +197,19 @@ namespace kOS.Suffixed
             // -------------------------------------------------------------------------------------------------------------------------
             if (StartDelegate != null && (StartTrigger == null || StartTrigger.CallbackFinished))
             {
-                StartTrigger = StartDelegate.TriggerNextUpdate();
+                StartTrigger = StartDelegate.TriggerOnNextOpcode();
                 if (StartTrigger == null) // Delegate must be from a stale ProgramContext.  Stop trying to call it.
                     StartDelegate = null;
             }
             if (VectorDelegate != null && (VectorTrigger == null || VectorTrigger.CallbackFinished))
             {
-                VectorTrigger = VectorDelegate.TriggerNextUpdate();
+                VectorTrigger = VectorDelegate.TriggerOnNextOpcode();
                 if (VectorTrigger == null) // Delegate must be from a stale ProgramContext.  Stop trying to call it.
                     VectorDelegate = null;
             }
             if (ColorDelegate != null && (ColorTrigger == null || ColorTrigger.CallbackFinished))
             {
-                ColorTrigger = ColorDelegate.TriggerNextUpdate();
+                ColorTrigger = ColorDelegate.TriggerOnNextOpcode();
                 if (ColorTrigger == null) // Delegate must be from a stale ProgramContext.  Stop trying to call it.
                     ColorDelegate = null;
             }

@@ -97,7 +97,7 @@ namespace kOS.Safe.Encapsulation
                     // Try calling it again, and by the way any time we notice an attempt
                     // to call it again has failed, then go back and trim our list of
                     // watchers so it won't happen again:
-                    if (Shared.Cpu.AddTrigger(currentResizeTrigger) == null)
+                    if (Shared.Cpu.AddTrigger(currentResizeTrigger, false) == null)
                         TrimStaleWatchers();
                 }
             }
