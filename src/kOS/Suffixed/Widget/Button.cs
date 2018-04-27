@@ -82,7 +82,6 @@ namespace kOS.Suffixed.Widget
             if (UserOnToggle != null)
             {
                 UserOnToggle.TriggerOnNextOpcode(new BooleanValue(pressed));
-
             }
 
             if (parent != null && parent.UserOnRadioChange != null)

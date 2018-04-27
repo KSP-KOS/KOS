@@ -1203,7 +1203,8 @@ namespace kOS.Safe.Execution
         {
             if (del.ProgContext != currentContext)
                 return null;
-            return AddTrigger(del, instanceId, immediate, new List<Structure>(args));
+            TriggerInfo triggerRef = AddTrigger(del, instanceId, immediate, new List<Structure>(args));
+            return triggerRef;
         }
 
         /// <summary>
@@ -1432,7 +1433,7 @@ namespace kOS.Safe.Execution
                         PushArgumentStack(new KOSArgMarkerType());
 
                         if (trigger.IsCSharpCallback)
-                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
+                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex)
                                 PushArgumentStack(trigger.Args[argIndex]);
 
                         triggersToBeExecuted.Add(trigger);
@@ -1460,10 +1461,11 @@ namespace kOS.Safe.Execution
         {
             var executeNext = true;
             int howManyMainLine = 0;
+            bool okayToActivatePendingTriggers = false;
             currentRunSection = Section.Trigger; // assume we begin with trigger mode until we hit mainline code.
             
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
-
+            SafeHouse.Logger.Log("eraseme: ContinueExecution before While loop.");
             while (instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
@@ -1477,7 +1479,12 @@ namespace kOS.Safe.Execution
                 {
                     currentRunSection = Section.Main;
                 }
-                
+                if ((! okayToActivatePendingTriggers) && (! stack.HasDelayingTriggerContexts()))
+                {
+                    okayToActivatePendingTriggers = true;
+                    SafeHouse.Logger.Log("eraseme: okayToActivatePendingTriggers just became true.");
+                }
+
                 if (IsYielding())
                 {
                     executeNext = false;
@@ -1491,13 +1498,15 @@ namespace kOS.Safe.Execution
                 }
             }
 
-            // As long as at least one line of actual main code was reached, then re-enable all
-            // triggers that wanted to be re-enabled.  This delay in re-enabling them
-            // ensures that a nested bunch of triggers interruping other triggers can't
-            // *completely* starve mainline code of execution, no matter how invasive
-            // and cpu-hogging the user may have been written them to be:
-            if (currentRunSection == Section.Main)
+            // As long as all there are no more of the "pending" kinds of trigger
+            // on the callstack and we have reached at least one opcode of mainline
+            // code or of immediate trigger code, then it's okay to activate the
+            // pending triggers now:
+            if (okayToActivatePendingTriggers)
+            {
                 currentContext.ActivatePendingTriggers();
+                SafeHouse.Logger.Log("eraseme: ActivatedPendingTriggers.");
+            }
 
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());
