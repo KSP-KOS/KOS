@@ -191,6 +191,7 @@ namespace kOS.Safe.Execution
             // because it should be unlikely that there's hundreds of
             // triggers.  There'll be at most tens of them, and even that's
             // unlikely.
+            trigger.IsImmediateTrigger = false;
             if (! ContainsTrigger(trigger))
                 TriggersToInsert.Add(trigger);
         }
@@ -202,6 +203,7 @@ namespace kOS.Safe.Execution
         /// <param name="trigger">Trigger to be inserted</param>
         public void AddImmediateTrigger(TriggerInfo trigger)
         {
+            trigger.IsImmediateTrigger = true;
             Triggers.Add(trigger);
         }
         

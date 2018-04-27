@@ -26,6 +26,12 @@ public class TriggerInfo
     public List<VariableScope> Closure {get; private set;}
 
     /// <summary>
+    /// If True, This trigger has been marked by the CPU as one that is
+    /// an "immediate" trigger.  This is used by the CPU to decide
+    /// how this trigger should be scheduled.  This flag isn't set until
+    /// the trigger gets added to the CPU.
+    public bool IsImmediateTrigger { get; set; }
+    /// <summary>
     /// If true, this is a callback inserted by our own C# code, which will
     /// might be awaiting the answer the user's code returns.
     /// </summary>
