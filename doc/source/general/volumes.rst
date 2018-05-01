@@ -191,10 +191,11 @@ migration.
 
 As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad
 (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU's
-local hard disk with the same name.  If kOS is configured to start on the
-archive, the file will not be copied locally automatically. This script will
-be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics
-range or power on your CPU if it was turned off.  You may get or set the name
+local hard disk with the same name. This script will be run as soon as CPU boots,
+e.g. as soon as you bring your CPU in physics range or power on your CPU
+if it was turned off. If kOS is configured to start on the archive,
+the file will not be copied locally automatically and booting will be delayed,
+until connection to archive is established. You may get or set the name
 of the boot file using the :attr:`kOSProcessor:BOOTFILENAME` suffix.
 
 Important things to consider:
