@@ -13,6 +13,6 @@ namespace kOS.Suffixed.Part
             ListValue<PartValue>.CreateList(parts.Select(part => Construct(part, shared)));
 
         public static PartValue Construct(global::Part part, SharedObjects shared) =>
-            VesselTarget.CreateOrGetExisting(shared)[part];
+            VesselTarget.CreateOrGetExisting(part.vessel, shared)[part];
     }
 }

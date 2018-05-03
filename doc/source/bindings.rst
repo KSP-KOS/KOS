@@ -24,6 +24,8 @@ SHIP:
   CPU part that is running this Kerboscript code at the moment. This is
   the `CPU Vessel <general/cpu_vessel.html>`__.
 
+.. _target:
+
 TARGET:
 
 - **Variable Name**: TARGET

@@ -124,20 +124,23 @@ namespace kOS.Suffixed
                         var port = new DockingPortValue(Shared, part, parent, decoupler, dock);
                         self = port;
                         dockingPorts.Add(port);
-                        if (dock.stagingEnabled)
-                        {
-                            decoupler = port;
-                            decouplers.Add(decoupler);
-                        }
+                        if (!module.StagingEnabled())
+                            break;
+                        decoupler = port;
+                        decouplers.Add(decoupler);
                     }
                     else
                     {
+                        // ignore anything with staging disabled and continue the search
+                        // this can e.g. be heat shield or some sensor with integrated decoupler
+                        if (!module.StagingEnabled())
+                            continue;
                         if (module is LaunchClamp)
                             self = decoupler = new LaunchClampValue(Shared, part, parent, decoupler);
                         else if (module is ModuleDecouple || module is ModuleAnchoredDecoupler)
                             self = decoupler = new DecouplerValue(Shared, part, parent, decoupler);
                         else // ModuleServiceModule ?
-                            break;
+                            continue; // rather continue the search
                         decouplers.Add(decoupler);
                     }
                     // ignore leftover decouplers
