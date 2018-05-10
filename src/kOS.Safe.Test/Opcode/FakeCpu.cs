@@ -182,17 +182,17 @@ namespace kOS.Safe.Test.Opcode
         {
             get { throw new NotImplementedException(); }
         }
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, int instanceId, bool immediate, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, InterruptPriority priority, int instanceId, bool immediate, List<VariableScope> closure)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(UserDelegate del, int instanceId,bool immediate, List<kOS.Safe.Encapsulation.Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId,bool immediate, List<kOS.Safe.Encapsulation.Structure> args)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, bool immediate, params kOS.Safe.Encapsulation.Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, params kOS.Safe.Encapsulation.Structure[] args)
         {
             throw new NotImplementedException();
         }

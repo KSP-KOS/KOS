@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
 using UnityEngine;
 
 
@@ -81,7 +82,10 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnConfirm != null)
             {
-                UserOnConfirm.TriggerOnNextOpcode(new StringValue(Text));
+                if (guiCaused)
+                    UserOnConfirm.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, new StringValue(Text));
+                else
+                    UserOnConfirm.TriggerOnNextOpcode(InterruptPriority.NoChange, new StringValue(Text));
                 Confirmed = false;
             }
         }
@@ -90,7 +94,10 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnChange != null)
             {
-                UserOnChange.TriggerOnNextOpcode(new StringValue(Text));
+                if (guiCaused)
+                    UserOnChange.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, new StringValue(Text));
+                else
+                    UserOnChange.TriggerOnNextOpcode(InterruptPriority.NoChange, new StringValue(Text));
                 Changed = false;
             }
         }

@@ -16,18 +16,17 @@ namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
-        private enum Section
-        {
-            Main = 1,
-            Trigger = 2
-        }
-
         private readonly IStack stack;
         private readonly VariableScope globalVariables;
-        private Section currentRunSection;
-        private List<YieldFinishedDetector> triggerYields;
-        private List<YieldFinishedDetector> mainYields;
-        
+
+
+        private class YieldFinishedWithPriority
+        {
+            public YieldFinishedDetector detector;
+            public InterruptPriority priority;
+        }
+        private List<YieldFinishedWithPriority> yields;
+
         private double currentTime;
         private readonly SafeSharedObjects shared;
         private readonly List<ProgramContext> contexts;
@@ -52,12 +51,17 @@ namespace kOS.Safe.Execution
         private int maxMainlineInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
 
+
         public int InstructionPointer
         {
             get { return currentContext.InstructionPointer; }
             set { currentContext.InstructionPointer = value; }
         }
-
+        public InterruptPriority currentPriority
+        {
+            get { return currentContext.CurrentPriority; }
+            set { currentContext.CurrentPriority = value; }
+        }
         public int NextTriggerInstanceId
         {
             get { return currentContext.NextTriggerInstanceId; }
@@ -88,8 +92,7 @@ namespace kOS.Safe.Execution
             stack = new Stack();
             globalVariables = new VariableScope(0, null);
             contexts = new List<ProgramContext>();
-            mainYields = new List<YieldFinishedDetector>();
-            triggerYields = new List<YieldFinishedDetector>();
+            yields = new List<YieldFinishedWithPriority>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
             popContextNotifyees = new List<WeakReference>();
         }
@@ -101,7 +104,7 @@ namespace kOS.Safe.Execution
             contexts.Clear();            
             if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
-            currentRunSection = Section.Main;
+            currentPriority = InterruptPriority.Normal;
             currentTime = 0;
             maxUpdateTime = 0.0;
             maxExecutionTime = 0.0;
@@ -197,6 +200,7 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
+            currentPriority = InterruptPriority.Normal;
             shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)
@@ -296,10 +300,14 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Push a single thing onto the scope stack.
+        /// Push a single thing onto the scope stack.  If it's a context record it will encode the current
+        /// priority into it as the ComeFromPriority.
         /// </summary>
         public void PushScopeStack(object thing)
         {
+            SubroutineContext context = thing as SubroutineContext;
+            if (context != null)
+                context.CameFromPriority = currentPriority;
             stack.PushScope(thing);
         }
 
@@ -314,6 +322,9 @@ namespace kOS.Safe.Execution
             while (howMany > 0)
             {
                 returnVal = stack.PopScope();
+                SubroutineContext context = returnVal as SubroutineContext;
+                if (context != null)
+                    currentPriority = context.CameFromPriority;
                 --howMany;
             }
 
@@ -498,6 +509,7 @@ namespace kOS.Safe.Execution
                 currentContext.ClearTriggers();   // remove all the triggers
                 SkipCurrentInstructionId();
             }
+            currentPriority = InterruptPriority.Normal;
         }
 
         /// <summary>
@@ -512,56 +524,39 @@ namespace kOS.Safe.Execution
         /// <param name="yieldTracker"></param>
         public void YieldProgram(YieldFinishedDetector yieldTracker)
         {
-            switch (currentRunSection)
-            {
-                case Section.Main:
-                    mainYields.Add(yieldTracker);
-                    break;
-                case Section.Trigger:
-                    triggerYields.Add(yieldTracker);
-                    break;
-                default:
-                    // Should hypothetically be impossible unless we add more values to the enum.
-                    break;
-            }
+            yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = currentPriority });
             yieldTracker.creationTimeStamp = currentTime;
             yieldTracker.Begin(shared);
         }
 
         private bool IsYielding()
         {
-            List<YieldFinishedDetector> yieldTrackers;
-            
-            // Decide if we should operate on the yield trackers that are
-            // at the main code level or the ones that are at the trigger
-            // level:
-            switch (currentRunSection)
+            int numStillBlocking = 0;
+
+            // Iterating backward because items will be getting deleted as we
+            // iterate over the list and this way the index doesn't become wrong
+            // as we do so.  (also, those deletions are why foreach() isn't used here):
+            for (int i = yields.Count - 1; i >= 0; --i)
             {
-                case Section.Main:
-                    yieldTrackers = mainYields;
-                    break;
-                case Section.Trigger:
-                    yieldTrackers = triggerYields;
-                    break;
-                default:
-                    // Should hypothetically be impossible unless we add more values to the enum.
-                    return false;
+                YieldFinishedWithPriority yielder = yields[i];
+                // A yield blockage that is blocking mainline code while
+                // we are in a trigger isn't relevant.  Only check the ones
+                // that are blocking current priority or higher:
+                if (yielder.priority >= currentPriority)
+                {
+                    YieldFinishedDetector detector = yielder.detector;
+                    if (detector.creationTimeStamp != currentTime && detector.IsFinished())
+                        yields.RemoveAt(i);
+                    else
+                        ++numStillBlocking;
+                }
             }
-            // Query the yield trackers and remove all the ones that claim they are finished.
-            // Always treat them as unfinished if this is the same fixed time stamp as the
-            // one in which the yield got Begin()'ed regardless of what their IsFinished() claims,
-            // because all waits will always wait at least one tick, according to all our docs.
-            yieldTrackers.RemoveAll((t) => t.creationTimeStamp != currentTime && t.IsFinished());
-            
-            // If any are still present, that means not all yielders in this context (main or trigger)
-            // are finished and we should still return that we are waiting:
-            return yieldTrackers.Count > 0;
+            return (numStillBlocking > 0);
         }
         
         private void AbortAllYields()
         {
-            mainYields.Clear();
-            triggerYields.Clear();
+            yields.Clear();
         }
         
         public void PushArgumentStack(object item)
@@ -1104,6 +1099,7 @@ namespace kOS.Safe.Execution
         /// when it finishes.  If its return is false, it won't fire off again.
         /// </summary>
         /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
         /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
         /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
@@ -1113,9 +1109,9 @@ namespace kOS.Safe.Execution
         /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
         /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, int instanceId, bool immediate, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, InterruptPriority priority, int instanceId, bool immediate, List<VariableScope> closure)
         {
-            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, closure);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, priority, instanceId, closure);
             if (immediate)
                 currentContext.AddImmediateTrigger(triggerRef);
             else
@@ -1143,6 +1139,7 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
         /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
         /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
@@ -1155,11 +1152,11 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program just ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, bool immediate, List<Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, List<Structure> args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, instanceId, del.Closure, del.GetMergedArgs(args));
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, priority, instanceId, del.Closure, del.GetMergedArgs(args));
             if (immediate)
                 currentContext.AddImmediateTrigger(callbackRef);
             else
@@ -1187,6 +1184,7 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
         /// <param name="instanceID">pass in TriggerInfo.NextInstance if you desire the ability for
         /// more than one instance of a trigger to exist for this same UserDelegate.  Pass
         /// a zero to indicate you want to prevent multiple instances of triggers from this same
@@ -1199,11 +1197,11 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program is ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, int instanceId, bool immediate, params Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, params Structure[] args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo triggerRef = AddTrigger(del, instanceId, immediate, new List<Structure>(args));
+            TriggerInfo triggerRef = AddTrigger(del, priority, instanceId, immediate, new List<Structure>(args));
             return triggerRef;
         }
 
@@ -1244,7 +1242,7 @@ namespace kOS.Safe.Execution
         /// then remove all triggers with this entry point, regardless of their instance Id.</param>
         public void RemoveTrigger(int triggerFunctionPointer, int instanceId)
         {
-            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, null));
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, 0/*dummy*/, instanceId, null));
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
@@ -1260,7 +1258,7 @@ namespace kOS.Safe.Execution
         /// then affect all triggers with this entry point, regardless of their instance Id.</param>
         public void CancelCalledTriggers(int triggerFunctionPointer, int instanceId)
         {
-            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, instanceId, null));
+            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, 0 /*dummy*/, instanceId, null));
         }
 
         public void CancelCalledTriggers(TriggerInfo trigger)
@@ -1404,8 +1402,10 @@ namespace kOS.Safe.Execution
                 TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
                 
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
-                // will be invalid.  Only execute the trigger if it still exists.
-                if (currentContext.ContainsTrigger(trigger))
+                // will be invalid.  Only execute the trigger if it still exists, AND if it's of a higher priority
+                // than the current CPU priority level.  (If it's the same or less priority as the curent CPU priority,
+                // then leave it in the list to be added later once we return back to a lower priority that allows it.)
+                if (currentContext.ContainsTrigger(trigger) && (trigger.Priority == InterruptPriority.NoChange || trigger.Priority > currentPriority))
                 {
                     if (trigger is NoDelegate)
                     {
@@ -1425,7 +1425,7 @@ namespace kOS.Safe.Execution
                             new SubroutineContext(currentInstructionPointer, trigger);
                         PushScopeStack(contextRecord);
 
-                        // Reverse-push the closure's scope record, if there is one, just after the function return context got put on the stack.
+                        // Push the closure's scope record, if there is one, just after the function return context got put on the stack.
                         if (trigger.Closure != null)
                             for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
                                 PushScopeStack(trigger.Closure[i]);
@@ -1439,6 +1439,11 @@ namespace kOS.Safe.Execution
                         triggersToBeExecuted.Add(trigger);
 
                         currentInstructionPointer = trigger.EntryPoint;
+
+                        // elevate priority to the priority of the trigger:
+                        if (trigger.Priority != InterruptPriority.NoChange)
+                            currentPriority = trigger.Priority;
+
                         // Triggers can chain in this loop if more than one fire off at once - the second trigger
                         // will look like it was a function that was called from the start of the first trigger.
                         // The third trigger will look like a function that was called from the start of the second, etc.
@@ -1460,10 +1465,9 @@ namespace kOS.Safe.Execution
         private void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
-            int howManyMainLine = 0;
+            int howManyNormalPriority = 0;
             bool okayToActivatePendingTriggers = false;
-            currentRunSection = Section.Trigger; // assume we begin with trigger mode until we hit mainline code.
-            
+
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
             SafeHouse.Logger.Log("eraseme: ContinueExecution before While loop.");
             while (instructionsSoFarInUpdate < instructionsPerUpdate &&
@@ -1474,11 +1478,6 @@ namespace kOS.Safe.Execution
                 // cause callbacks to be invoked, and this can make those callback invocations
                 // happen immediately on the next opcode:
                 ProcessTriggers();
-
-                if (! stack.HasTriggerContexts())
-                {
-                    currentRunSection = Section.Main;
-                }
                 if ((! okayToActivatePendingTriggers) && (! stack.HasDelayingTriggerContexts()))
                 {
                     okayToActivatePendingTriggers = true;
@@ -1493,10 +1492,16 @@ namespace kOS.Safe.Execution
                 {
                     executeNext = ExecuteInstruction(currentContext, doProfiling);
                     instructionsSoFarInUpdate++;
-                    if (currentRunSection == Section.Main)
-                       ++howManyMainLine;
+                    if (currentPriority == InterruptPriority.Normal)
+                        ++howManyNormalPriority;
                 }
             }
+            // Do this once more after the loop, just in case the very last Opcode in the update
+            // caused a callback that was meant to occur immediately in the current priority level
+            // using InterruptPriority.NoChange.  It's important to get that call pushed onto the
+            // callstack now at the current priority, before the next update might escalate the
+            // priority with a trigger.
+            ProcessTriggers();
 
             // As long as all there are no more of the "pending" kinds of trigger
             // on the callstack and we have reached at least one opcode of mainline

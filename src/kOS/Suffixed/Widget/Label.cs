@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using UnityEngine;
 
 namespace kOS.Suffixed.Widget
@@ -100,7 +101,9 @@ namespace kOS.Suffixed.Widget
                 if (UserTextUpdateResult.CallbackFinished)
                 {
                     SetText(UserTextUpdateResult.ReturnValue.ToString());
-                    UserTextUpdateResult = UserTextUpdater.TriggerOnNextOpcode();
+                    UserTextUpdateResult = (guiCaused ?
+                        UserTextUpdater.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce) :
+                        UserTextUpdater.TriggerOnNextOpcode(InterruptPriority.NoChange ));
                 }
                 // Else just do nothing because a previous call is still pending its return result.
                 // don't start up a second call while still waiting for the first one to finish.  (we
@@ -108,7 +111,9 @@ namespace kOS.Suffixed.Widget
             }
             else
             {
-                UserTextUpdateResult = UserTextUpdater.TriggerOnNextOpcode();
+                UserTextUpdateResult = (guiCaused ?
+                    UserTextUpdater.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce) :
+                    UserTextUpdater.TriggerOnNextOpcode(InterruptPriority.NoChange));
             }
         }
 

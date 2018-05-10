@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
+using kOS.Safe.Execution;
 
 namespace kOS.Callback
 {
@@ -156,7 +157,7 @@ namespace kOS.Callback
             UniqueSetValue<UserDelegate> notifyees = GetSwitchVesselNotifyees();
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, Shared.Cpu.NextTriggerInstanceId, false, VesselTarget.CreateOrGetExisting(fromVes, Shared), VesselTarget.CreateOrGetExisting(toVes, Shared));
+                    Shared.Cpu.AddTrigger(del, InterruptPriority.CallbackOnce, Shared.Cpu.NextTriggerInstanceId, false, VesselTarget.CreateOrGetExisting(fromVes, Shared), VesselTarget.CreateOrGetExisting(toVes, Shared));
         }
 
         // SOIChange:
@@ -181,7 +182,7 @@ namespace kOS.Callback
             UniqueSetValue<UserDelegate> notifyees = GetSOIChangeNotifyees(evt.host);
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, Shared.Cpu.NextTriggerInstanceId, false, BodyTarget.CreateOrGetExisting(evt.@from, Shared), BodyTarget.CreateOrGetExisting(evt.to, Shared));
+                    Shared.Cpu.AddTrigger(del, InterruptPriority.CallbackOnce, Shared.Cpu.NextTriggerInstanceId, false, BodyTarget.CreateOrGetExisting(evt.@from, Shared), BodyTarget.CreateOrGetExisting(evt.to, Shared));
         }
 
         // PartCouple:
@@ -208,7 +209,7 @@ namespace kOS.Callback
             // Use GetFooNotifyees to activate the lazy-build logic if need be.
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, Shared.Cpu.NextTriggerInstanceId, false, PartValueFactory.Construct(evt.to, Shared));
+                    Shared.Cpu.AddTrigger(del, InterruptPriority.CallbackOnce, Shared.Cpu.NextTriggerInstanceId, false, PartValueFactory.Construct(evt.to, Shared));
 
             // Also notify any hooks attached to the part on the "to" side of the event.  Let's not
             // confuse users with KSP's strange notion of the "from" and the "to" of a docking, and just
@@ -216,7 +217,7 @@ namespace kOS.Callback
             notifyees = GetPartCoupleNotifyees(evt.to);
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, Shared.Cpu.NextTriggerInstanceId, false, PartValueFactory.Construct(evt.@from, Shared));
+                    Shared.Cpu.AddTrigger(del, InterruptPriority.CallbackOnce, Shared.Cpu.NextTriggerInstanceId, false, PartValueFactory.Construct(evt.@from, Shared));
         }
 
         // PartUndock:
@@ -242,14 +243,14 @@ namespace kOS.Callback
             UniqueSetValue<UserDelegate> notifyees = GetPartUndockNotifyees(p);
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, Shared.Cpu.NextTriggerInstanceId, false);
+                    Shared.Cpu.AddTrigger(del, InterruptPriority.CallbackOnce, Shared.Cpu.NextTriggerInstanceId, false);
 
             // Notify any hooks attached to the part on the "to" side of the event:
             ModuleDockingNode dockModule = (ModuleDockingNode) p.Modules["ModuleDockingNode"];
             notifyees = GetPartUndockNotifyees(dockModule.otherNode.part);
             foreach (UserDelegate del in notifyees)
                 if (UserDelgateIsAcceptable(del))
-                    Shared.Cpu.AddTrigger(del, Shared.Cpu.NextTriggerInstanceId, false);
+                    Shared.Cpu.AddTrigger(del, InterruptPriority.CallbackOnce, Shared.Cpu.NextTriggerInstanceId, false);
 
             // The event has no data available on which other part it had been attached to, apparently.
         }

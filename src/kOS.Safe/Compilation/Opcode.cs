@@ -1955,7 +1955,7 @@ namespace kOS.Safe.Compilation
                 else
                     if (returnVal is bool || returnVal is BooleanValue )
                         if (Convert.ToBoolean(returnVal))
-                            cpu.AddTrigger(trigger.EntryPoint, trigger.InstanceCount, false /*next update, not right now*/, trigger.Closure);
+                            cpu.AddTrigger(trigger.EntryPoint, trigger.Priority, trigger.InstanceCount, false /*next update, not right now*/, trigger.Closure);
             }
             
             int destinationPointer = contextRecord.CameFromInstPtr;
@@ -2489,6 +2489,7 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Pops a function pointer from the stack and adds a trigger that will be called each cycle.
+    /// These triggers get the priority InterruptPriority.Recurring
     /// </para>
     /// <para></para>
     /// <para>addtrigger</para>
@@ -2512,7 +2513,7 @@ namespace kOS.Safe.Compilation
             int functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
 
             List<Structure> args = new List<Structure>();
-            cpu.AddTrigger(functionPointer, cpu.NextTriggerInstanceId, false, cpu.GetCurrentClosure());
+            cpu.AddTrigger(functionPointer, InterruptPriority.Recurring, cpu.NextTriggerInstanceId, false, cpu.GetCurrentClosure());
         }
 
         public override string ToString()

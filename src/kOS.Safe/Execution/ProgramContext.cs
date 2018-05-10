@@ -13,7 +13,8 @@ namespace kOS.Safe.Execution
 
         public List<Opcode> Program { get; set; }
         public int InstructionPointer { get; set; }
-        
+        public InterruptPriority CurrentPriority { get; set; }
+
         // Increments every time we construct a new ProgramContext.
         private static int globalInstanceCount = 0;
         

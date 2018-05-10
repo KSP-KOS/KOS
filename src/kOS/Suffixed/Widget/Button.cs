@@ -81,7 +81,10 @@ namespace kOS.Suffixed.Widget
 
             if (UserOnToggle != null)
             {
-                UserOnToggle.TriggerOnNextOpcode(new BooleanValue(pressed));
+                if (guiCaused)
+                    UserOnToggle.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, new BooleanValue(pressed));
+                else
+                    UserOnToggle.TriggerOnNextOpcode(InterruptPriority.NoChange, new BooleanValue(pressed));
             }
 
             if (parent != null && parent.UserOnRadioChange != null)
@@ -99,7 +102,11 @@ namespace kOS.Suffixed.Widget
             // not the button-goes-out state that should auto-activate when it's read:
             if (UserOnClick != null && (IsToggle || pressed))
             {
-                UserOnClick.TriggerOnNextOpcode();
+                if (guiCaused)
+                    UserOnClick.TriggerOnNextOpcode(InterruptPriority.CallbackOnce);
+                else
+                    UserOnClick.TriggerOnNextOpcode(InterruptPriority.NoChange);
+
                 if (!IsToggle)
                     causeRelease = true;
             }

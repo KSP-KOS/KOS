@@ -16,6 +16,8 @@ public class TriggerInfo
     /// </summary>
     public int EntryPoint { get; private set; }
 
+    public InterruptPriority Priority { get; private set; }
+
     /// <summary>
     /// A number to help keep instances of the trigger with the smae EntryPoint unique
     /// in cases where that's allowed.  If this is a zero, that's a special flag
@@ -77,9 +79,10 @@ public class TriggerInfo
     /// <param name="closure">If not-null, this is the closure the trigger should be called with.
     /// If null, the trigger will only reliably be able to see global variables.</param> 
     /// <param name="isCSharpCallback">set to true to tell the system this trigger is meant to be a callback</param>
-    public TriggerInfo(IProgramContext context, int entryPoint, int instanceCount, List<VariableScope> closure, bool isCSharpCallback = false)
+    public TriggerInfo(IProgramContext context, int entryPoint, InterruptPriority priority, int instanceCount, List<VariableScope> closure, bool isCSharpCallback = false)
     {
         EntryPoint = entryPoint;
+        Priority = priority;
         InstanceCount = instanceCount;
         IsCSharpCallback = isCSharpCallback;
         ReturnValue = new ScalarIntValue(0);
@@ -102,9 +105,10 @@ public class TriggerInfo
     /// If null, the trigger will only reliably be able to see global variables.</param> 
     /// <param name="args">list of the arguments to pass in to the function.  Note, the existence of
     /// arguments mandates that this is a callback trigger.</param>
-    public TriggerInfo(IProgramContext context, int entryPoint, int instanceCount, List<VariableScope> closure, List<Structure> args)
+    public TriggerInfo(IProgramContext context, int entryPoint, InterruptPriority priority, int instanceCount, List<VariableScope> closure, List<Structure> args)
     {
         EntryPoint = entryPoint;
+        Priority = priority;
         InstanceCount = instanceCount;
         IsCSharpCallback = true;
         ReturnValue = new ScalarIntValue(0);
@@ -146,6 +150,11 @@ public class TriggerInfo
 
         if (IsCSharpCallback)
         {
+            // TODO - TEST THIS!!! - this may be failing and causing it to fail to remove
+            // triggers that are done (removing triggers is done by making dummy triggers
+            // and then comparing the fields to see if they'r equal to an instance in the list.)
+            // Test by seeing if the list of triggers in CPU is growing bigger and bigger over time.
+
             // For callbacks, only reference-equals are good enough.
             // Hypothetically the same chunk of user code (same entry point)
             // could have been given as a callback to two different areas of

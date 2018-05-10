@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Screen;
+using kOS.Safe.Execution;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -68,7 +69,7 @@ namespace kOS.Safe.Encapsulation
                 // also immediately inserts it into the execution list to start firing off right away.  We want
                 // to delay that, so here's an alternate way to construct a TriggerInfo that isn't running yet,
                 // that we'll wait until a later step to schedule to run:
-                TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.ProgContext, watcher.EntryPoint, 0, null, argList);
+                TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.ProgContext, watcher.EntryPoint, InterruptPriority.CallbackOnce, 0, null, argList);
                 pendingResizeTriggers.Enqueue(notYetExecutingTrigger);
             }
 
