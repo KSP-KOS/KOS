@@ -32,32 +32,26 @@ namespace kOS.Safe.Execution
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private VariableScope savedPointers;
-        private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
 
-        public int InstructionsThisUpdate { get { return instructionsSoFarInUpdate; } }
+        public int InstructionsThisUpdate { get; private set; }
 
         // statistics
         private double totalCompileTime;
-
-        private double totalUpdateTime;
-        private double totalExecutionTime;
-        private double maxUpdateTime;
-        private double maxExecutionTime;
         private Stopwatch instructionWatch = new Stopwatch();
         private Stopwatch updateWatch = new Stopwatch();
         private Stopwatch executionWatch = new Stopwatch();
         private Stopwatch compileWatch = new Stopwatch();
-        private int maxMainlineInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
 
+        private Dictionary<InterruptPriority, ExecutionStatBlock> executionStats = new Dictionary<InterruptPriority, ExecutionStatBlock>();
 
         public int InstructionPointer
         {
             get { return currentContext.InstructionPointer; }
             set { currentContext.InstructionPointer = value; }
         }
-        public InterruptPriority currentPriority
+        public InterruptPriority CurrentPriority
         {
             get { return currentContext.CurrentPriority; }
             set { currentContext.CurrentPriority = value; }
@@ -104,10 +98,8 @@ namespace kOS.Safe.Execution
             contexts.Clear();            
             if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
-            currentPriority = InterruptPriority.Normal;
+            CurrentPriority = InterruptPriority.Normal;
             currentTime = 0;
-            maxUpdateTime = 0.0;
-            maxExecutionTime = 0.0;
             // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
             // clear global variables
@@ -200,7 +192,7 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
-            currentPriority = InterruptPriority.Normal;
+            CurrentPriority = InterruptPriority.Normal;
             shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)
@@ -307,7 +299,7 @@ namespace kOS.Safe.Execution
         {
             SubroutineContext context = thing as SubroutineContext;
             if (context != null)
-                context.CameFromPriority = currentPriority;
+                context.CameFromPriority = CurrentPriority;
             stack.PushScope(thing);
         }
 
@@ -324,7 +316,7 @@ namespace kOS.Safe.Execution
                 returnVal = stack.PopScope();
                 SubroutineContext context = returnVal as SubroutineContext;
                 if (context != null)
-                    currentPriority = context.CameFromPriority;
+                    CurrentPriority = context.CameFromPriority;
                 --howMany;
             }
 
@@ -509,7 +501,8 @@ namespace kOS.Safe.Execution
                 currentContext.ClearTriggers();   // remove all the triggers
                 SkipCurrentInstructionId();
             }
-            currentPriority = InterruptPriority.Normal;
+            CurrentPriority = InterruptPriority.Normal;
+            ResetStatistics();
         }
 
         /// <summary>
@@ -524,7 +517,7 @@ namespace kOS.Safe.Execution
         /// <param name="yieldTracker"></param>
         public void YieldProgram(YieldFinishedDetector yieldTracker)
         {
-            yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = currentPriority });
+            yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = CurrentPriority });
             yieldTracker.creationTimeStamp = currentTime;
             yieldTracker.Begin(shared);
         }
@@ -542,7 +535,7 @@ namespace kOS.Safe.Execution
                 // A yield blockage that is blocking mainline code while
                 // we are in a trigger isn't relevant.  Only check the ones
                 // that are blocking current priority or higher:
-                if (yielder.priority >= currentPriority)
+                if (yielder.priority >= CurrentPriority)
                 {
                     YieldFinishedDetector detector = yielder.detector;
                     if (detector.creationTimeStamp != currentTime && detector.IsFinished())
@@ -1275,24 +1268,19 @@ namespace kOS.Safe.Execution
         public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
-            var executionElapsed = 0.0;
 
             // If the script changes config value, it doesn't take effect until next update:
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            instructionsSoFarInUpdate = 0;
-            var numMainlineInstructions = 0;
-
-            if (showStatistics)
+            InstructionsThisUpdate = 0;
+                
+            updateWatch.Reset();
+            executionWatch.Reset();
+            instructionWatch.Reset();
+            if (!compileWatch.IsRunning)
             {
-                updateWatch.Reset();
-                executionWatch.Reset();
-                instructionWatch.Reset();
-                if (!compileWatch.IsRunning)
-                {
-                    compileWatch.Reset();
-                }
-                updateWatch.Start();
+                compileWatch.Reset();
             }
+            updateWatch.Start();
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
@@ -1308,7 +1296,6 @@ namespace kOS.Safe.Execution
                         instructionWatch.Start();
                     }
                     ContinueExecution(showStatistics);
-                    numMainlineInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         executionWatch.Stop();
@@ -1346,25 +1333,10 @@ namespace kOS.Safe.Execution
                     stack.Clear(); // If breaking all execution, get rid of the cruft here too.
                 }
             }
+            updateWatch.Stop();
 
-            if (showStatistics)
-            {
-                updateWatch.Stop();
-                double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                totalUpdateTime += updateElapsed;
-                executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                totalExecutionTime += executionElapsed;
-                if (!compileWatch.IsRunning)
-                {
-                    totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                }
-                if (maxMainlineInstructionsSoFar < numMainlineInstructions)
-                    maxMainlineInstructionsSoFar = numMainlineInstructions;
-                if (maxUpdateTime < updateElapsed)
-                    maxUpdateTime = updateElapsed;
-                if (maxExecutionTime < executionElapsed)
-                    maxExecutionTime = executionElapsed;
-            }
+            foreach (ExecutionStatBlock statBlock in executionStats.Values)
+                statBlock.EndOneUpdate();
         }
 
         private void PreUpdateBindings()
@@ -1405,7 +1377,7 @@ namespace kOS.Safe.Execution
                 // will be invalid.  Only execute the trigger if it still exists, AND if it's of a higher priority
                 // than the current CPU priority level.  (If it's the same or less priority as the curent CPU priority,
                 // then leave it in the list to be added later once we return back to a lower priority that allows it.)
-                if (currentContext.ContainsTrigger(trigger) && (trigger.Priority == InterruptPriority.NoChange || trigger.Priority > currentPriority))
+                if (currentContext.ContainsTrigger(trigger) && (trigger.Priority == InterruptPriority.NoChange || trigger.Priority > CurrentPriority))
                 {
                     if (trigger is NoDelegate)
                     {
@@ -1442,7 +1414,7 @@ namespace kOS.Safe.Execution
 
                         // elevate priority to the priority of the trigger:
                         if (trigger.Priority != InterruptPriority.NoChange)
-                            currentPriority = trigger.Priority;
+                            CurrentPriority = trigger.Priority;
 
                         // Triggers can chain in this loop if more than one fire off at once - the second trigger
                         // will look like it was a function that was called from the start of the first trigger.
@@ -1470,7 +1442,7 @@ namespace kOS.Safe.Execution
 
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
             SafeHouse.Logger.Log("eraseme: ContinueExecution before While loop.");
-            while (instructionsSoFarInUpdate < instructionsPerUpdate &&
+            while (InstructionsThisUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
@@ -1491,8 +1463,8 @@ namespace kOS.Safe.Execution
                 else
                 {
                     executeNext = ExecuteInstruction(currentContext, doProfiling);
-                    instructionsSoFarInUpdate++;
-                    if (currentPriority == InterruptPriority.Normal)
+                    ++InstructionsThisUpdate;
+                    if (CurrentPriority == InterruptPriority.Normal)
                         ++howManyNormalPriority;
                 }
             }
@@ -1533,18 +1505,23 @@ namespace kOS.Safe.Execution
 
                 opcode.Execute(this);
 
+                // This will count *all* the time between the end of the prev instruction and now:
+                instructionWatch.Stop();
                 if (doProfiling)
                 {
-                    // This will count *all* the time between the end of the prev instruction and now:
-                    instructionWatch.Stop();
                     opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
                     
-                    // start the *next* instruction's timer right after this instruction ended
-                    instructionWatch.Reset();
-                    instructionWatch.Start();
                 }
-                
+                // Add the time this took to the exeuction stats for current priority level:
+                if (! executionStats.ContainsKey(CurrentPriority))
+                    executionStats[CurrentPriority] = new ExecutionStatBlock();
+                executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+
+                // start the *next* instruction's timer right after this instruction ended
+                instructionWatch.Reset();
+                instructionWatch.Start();
+
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1620,19 +1597,60 @@ namespace kOS.Safe.Execution
         public string StatisticsDump(bool doProfiling)
         {
             if (!SafeHouse.Config.ShowStatistics) return "";
-            
-            string delimiter = "";
-            if (doProfiling)
-                delimiter = ",";
-            
-            StringBuilder sb = new StringBuilder();
 
-            sb.Append(string.Format("{0}{0}{0}{0}Total compile time: {0}{1:F3}ms\n", delimiter, totalCompileTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Total update time: {0}{1:F3}ms\n", delimiter, totalUpdateTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Total execution time: {0}{1:F3}ms\n", delimiter, totalExecutionTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Maximum update time: {0}{1:F3}ms\n", delimiter, maxUpdateTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Maximum execution time: {0}{1:F3}ms\n", delimiter, maxExecutionTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
+            StringBuilder sb = new StringBuilder();
+            string formatterHeader = "{0,14},{1,7},{2,10},{3,7},{4,7},{5,7},{6,7}\n";
+            string formatterValues = "{0,14},{1,7:D},{2,10:F2},{3,7:F0},{4,7:F3},{5,7:D},{6,7:F3}\n";
+            sb.Append(string.Format("Total compile time: {0:F3}ms\n", totalCompileTime));
+            sb.Append(string.Format(formatterHeader, "Interrupt", "Total", "Total", "Mean", "Mean", "Max", "Max"));
+            sb.Append(string.Format(formatterHeader, "Priority", "inst", "ms", "instr/", "ms/", "instr/", "ms/"));
+            sb.Append(string.Format(formatterHeader, "", "", "", "update", "update", "update", "update"));
+            sb.Append(string.Format(formatterHeader, "-------------", "------", "------", "------", "------", "------", "------"));
+
+            int overallInstr = 0;
+            double overallMillis = 0.0;
+            double overallMeanInstr = 0.0;
+            double weightedSumMeanInstr = 0.0;
+            double overallMeanMillis = 0.0;
+            double weightedSumMeanMillis = 0.0;
+            long overallMaxInstr = 0;
+            double overallMaxMillis = 0.0;
+
+            foreach (InterruptPriority pri in executionStats.Keys)
+            {
+                ExecutionStatBlock stats = executionStats[pri];
+                stats.SealHangingUpdateIfAny(); // In case it aborted funny and didn't finish the last update.
+
+                sb.Append(string.Format(formatterValues,
+                    pri.ToString(),
+                    stats.TotalInstructions,
+                    stats.TotalMilliseconds,
+                    stats.MeanInstructionsPerUpdate,
+                    stats.MeanMillisecondsPerUpdate,
+                    stats.MaxInstructionsPerUpdate,
+                    stats.MaxMillisecondsInOneUpdate
+                ));
+
+                overallInstr += stats.TotalInstructions;
+                overallMillis += stats.TotalMilliseconds;
+
+                // Need to track a weighted mean depending on how many
+                // instructions came from which priority level, thus the
+                // mulitplication by how many total there were:
+                weightedSumMeanInstr += (stats.TotalInstructions * stats.MeanInstructionsPerUpdate);
+                weightedSumMeanMillis += (stats.TotalInstructions * stats.MeanMillisecondsPerUpdate);
+
+                if (overallMaxInstr < stats.MaxInstructionsPerUpdate)
+                    overallMaxInstr = stats.MaxInstructionsPerUpdate;
+                if (overallMaxMillis < stats.MaxMillisecondsInOneUpdate)
+                    overallMaxMillis = stats.MaxMillisecondsInOneUpdate;
+            }
+            overallMeanInstr = weightedSumMeanInstr / overallInstr;
+            overallMeanMillis = weightedSumMeanMillis / overallInstr;
+
+            sb.Append(string.Format(formatterValues,
+                "TOTAL:", overallInstr, overallMillis, overallMeanInstr, overallMeanMillis, overallMaxInstr, overallMaxMillis ));
+
             if (!doProfiling)
                 sb.Append("(`log ProfileResult() to file.csv` for more information.)\n");
             sb.Append(" \n");
@@ -1642,11 +1660,7 @@ namespace kOS.Safe.Execution
         public void ResetStatistics()
         {
             totalCompileTime = 0D;
-            totalUpdateTime = 0D;
-            totalExecutionTime = 0D;
-            maxUpdateTime = 0.0;
-            maxExecutionTime = 0.0;
-            maxMainlineInstructionsSoFar = 0;
+            executionStats.Clear();
         }
         
         private void PrintStatistics()

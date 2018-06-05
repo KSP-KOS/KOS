@@ -10,7 +10,7 @@ namespace kOS.Safe.Execution
     /// Interrupts of a lower level must wait until the interrupt level drops
     /// down again.
     /// </summary>
-    public enum InterruptPriority
+    public enum InterruptPriority : int
     {
         // Some space in between the numbers so it's possible to
         // add more fine-grain levels later if we feel like it:
