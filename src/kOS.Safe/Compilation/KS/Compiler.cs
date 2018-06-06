@@ -422,7 +422,7 @@ namespace kOS.Safe.Compilation.KS
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
                     break;
-		default:
+                default:
                     PreProcessChildNodes(node);
                     break;
             }
