@@ -335,6 +335,7 @@ namespace kOS.Module
                 if (++autopilotRehookCounter > autopilotRehookPeriod)
                 {
                     ConnectivityManager.AddAutopilotHook(Vessel, UpdateAutopilot);
+                    autopilotRehookCounter = 0;
                 }
             }
             else

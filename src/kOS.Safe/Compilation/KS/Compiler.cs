@@ -414,18 +414,6 @@ namespace kOS.Safe.Compilation.KS
 
             switch (node.Token.Type)
             {
-                // statements that can have a lock inside
-                case TokenType.Start:
-                case TokenType.instruction_block:
-                case TokenType.instruction:
-                case TokenType.if_stmt:
-                case TokenType.fromloop_stmt:
-                case TokenType.until_stmt:
-                case TokenType.for_stmt:
-                case TokenType.declare_function_clause:
-                case TokenType.declare_stmt:
-                    PreProcessChildNodes(node);
-                    break;
                 case TokenType.on_stmt:
                     PreProcessChildNodes(node);
                     PreProcessOnStatement(node);
@@ -433,6 +421,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
+                    break;
+                default:
+                    PreProcessChildNodes(node);
                     break;
             }
         }
