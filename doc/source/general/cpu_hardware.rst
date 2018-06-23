@@ -129,51 +129,113 @@ Triggers
     moot, which caused a re-write of most of this section of the
     documentation.
 
-Many of the warnings and cautions mentioned below can really be boiled
-down to this one phrase, which is a good idea to memorize:
+There are multiple things within kerboscript that run "in the background"
+always updating, while the main script continues on. The way these work is
+a bit like a real computer's interrupt handling system, but not *quite*.
 
-*Main-line code gets interrupted by triggers, but triggers don't get
-interrupted by main-line code (or other triggers).*
+Collectively all of these things are called "triggers".
 
-There are multiple things within kerboscript that run "in the background" always updating, while the main script continues on. The way these work is a bit like a real computer's multithreading, but not *quite*. Collectively all of these things are called "triggers".
+Triggers come in these varieties:
 
-Triggers are all of the following:
+.. _recurring_trigger:
 
--  LOCKS which are attached to flight controls (THROTTLE, STEERING,
-   etc), but not other LOCKS.
--  ON condition { some commands }.
--  WHEN condition THEN { some commands }.
+- **Recurring triggers:** Triggers that once they are started keep getting
+  called again and again on a regular basis, until they are made to stop.
+  - LOCKS which are attached to flight controls (THROTTLE, STEERING,
+    etc), but not other LOCKS.
+  - User Delegates assigned to recurrently updating suffixes such as
+    :attr:`VecDraw:VECUPDATER`.
+  - WHEN and ON triggers:
+    - ``WHEN condition THEN { some commands }``
+    - ``ON condition { some commands }``
 
-The way these work is that once per **physics tick**, all these
-trigger routines get run, including those locks that are always
-re-evaluated by the cooked steering, and the ``ON`` and ``WHEN``
-triggers.  (This isn't *quite* true.  The real answer is more
-complex than that - see :ref:`CPU Update Loop <cpu_update_loop>`
-elsewhere on this page).
+.. _callback_once_trigger:
 
-Each of the steering locks behaves like a function that returns
-a value, and is re-called to get the new value for this **physics
-tick**.  Each of the ``ON`` and ``WHEN`` triggers also behave
+- **CallbackOnce triggers:** Triggers that only happen once per event.  To
+  make the trigger happen again, the event has to happen again:
+  - Callback delegates you tell the system to call when the user
+    performs GUI events (for example a button's ONCLICK).
+
+These two types of trigger don't have the same priority level.
+It is possible for a recurring trigger to interrupt a callback-once
+trigger, but not the other way around.  Further information about
+this is described in the :ref:`interrupt priority <interrupt_priority>`
+documentation below.
+
+All triggers work essentially like this:
+
+The kOS CPU decides it's time to cause a call to the trigger.  (How it
+does this is explained below in
+:ref:`interrupt priority <interrupt_priority>`.)  Once it decides its
+time to call the trigger, it does so by inserting a subroutine call
+at the current moment that interrupts the normal program flow and
+jumps to the trigger's subroutine *as if* the program itself had chosen
+to call the subroutine.  It manipulates the call-stack in such a way
+that the normal work of the ``Return`` instruction at the end of the
+trigger routine will pop back to the current location of the program
+flow.  This system works because all variables in kOS are on the
+stack without any registers, and so popping back to where the
+interruption happened puts everything back in the state it was in
+before the interruption so the program can continue as if nothing
+had happened.
+
+.. _trigger_steering:
+
+Triggers for Cooked Steering
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*This is a kind of :ref:`recurring trigger <recurring_trigger>`.*
+
+The ``lock`` expressions associated with
+:ref:`Cooked Control <commands/flight/cooked.html>`__,
+meaning ``STEERING``, ``THROTTLE``, ``WHEELSTEERING``, and
+``WHEELTHROTTLE``, have triggers associated with them.
+kOS will keep calling these expressions repeatedly as frequently
+as it can (once per **physics tick** if it can).  That is why
+they are a kind of *recurring_trigger*.
+
+Note, the ``LOCK`` command does not *normally* result in a trigger
+that runs every **physics tick**.  It just does this when dealing with
+one of these specific values, of ``STEERING``, ``THROTTLE``,
+``WHEELSTEERING``, and ``WHEELTHROTTLE``.  The normal behaviour of
+a lock expression is to only execute the expression when it's used
+inside another expression.  It's just that in the case of these
+special locks, the kOS system *itself* is repeatedly doing that.
+To do this kOS needs to interrupt whatever your code was doing at the
+time to perform this expression and it uses the trigger interrupt
+system to do so.
+
+.. _when_on_trigger:
+
+Triggers for WHEN and ON statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*This is a kind of :ref:`recurring trigger <recurring_trigger>`.*
+
+Each of the ``ON`` and ``WHEN`` triggers also behave
 much like a function, with a body like this::
 
    if (not conditional_expression)
        return true.  // premature quit.  preserve and try again next time.
    do_rest_of_trigger_body_here.
 
+.. _when_on_conditional:
 
-.. _trigger_conditional:
-
-Triggers always execute at least as far as the Conditional Check
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**WHEN and ON Triggers always interrupt to check the condition even when
+the body doesn't happen yet.**
 
 Even a trigger who's condition isn't true yet still needs to execute
-a few instructions into the trigger subroutine to *discover* that its
-condition isn't true yet.  The trigger still causes a subroutine call
-once per **physics tick** just to get far enough into the routine to
+the few instructions at the start of the trigger that *discover* that
+its condition isn't true yet.  The trigger causes a subroutine call
+once per **physics tick** (or less often if the system has too 
+much trigger work to accomplish all the triggers in one tick).
+This call gets at least far enough into the routine to
 reach the conditional expression check and discover that it's not
 time to run the rest of the body yet, so it returns.  An expensive
 to calculate conditional expression can really starve the system of
-instructions because it's getting run every single **physics tick**.
+instructions because the system is attempting to run it every
+**physics tick** if it can.
+
 *It's good practice to try to keep your trigger's conditional check
 short and fast to execute.  If it consists of multiple clauses, try
 to take advantage of :ref:`short circuit boolean <short_circuit>`
@@ -184,58 +246,10 @@ logic by putting the fastest part of the check first.*
 Wait in a Trigger
 ~~~~~~~~~~~~~~~~~
 
-It is possible for kOS to allow a trigger that takes longer than one
-*physics tick* to execute.  It just means the rest of the program is
-stuck until the trigger is done.  Triggers can interrupt mainline code, but
-mainline code can't interrupt triggers.  Thus using a ``WAIT`` in a trigger,
-while possible, may be a bad idea because it stops the entire rest of
-the program, including all its triggers, from happening, unlike how waits
-in mainline code work.  Before considering doing this, remember that a
-``lock steering to ....`` command and a ``lock throttle to....`` command
-are both effectively triggers too.  If you wait in a trigger, you prevent
-the cooked steering values from updating while that wait is happening.
-Your ship will be stuck continuing to use whatever previous values they
-had just before the trigger's wait began, and they won't be recalculated
-until your trigger's wait is over.
-
-Short version:  While ``WAIT`` is possible from inside a trigger and it
-won't crash the script to use it, it's probably not a good design choice
-to use ``WAIT`` inside a trigger.  Triggers should be designed to execute
-all the way through to the end in one pass, if possible.
-
-This is a consequence of: *Main-line code gets interrupted by triggers,
-but triggers don't get interrupted by main-line code (or other triggers).*
-
-Advanced topic: why not threading?
-::::::::::::::::::::::::::::::::::
-
-*If you don't understand the terms used below, you can safely skip
-this part of the explanation.  It's here for the advanced users
-who already know how to program and might be thinking there's a
-better way to do this.*
-
-Remember that triggers aren't *quite* true multi-threading.  If you make
-a trigger ``WAIT UNTIL AG1.``, you're making the entire program wait.  If you make
-the main-line code ``WAIT``, there is a mechanism to make triggers
-fire off during that ``WAIT`` because triggers can interrupt main line
-code, and in fact that's their intended purpose - to behave as interrupts.
-
-But main line code can't interrupt triggers.  The only way to make them
-both 'equal' citizens and be capable of interrupting each other would be
-to implement a form of threading inside kOS.  The program context that
-kOS keeps track of while the program is executing consists of a stack,
-an array of the program opcodes, stack records that point to
-dictionaries of variables (on the stack so they can deal with scoping),
-and a current instruction pointer.  It's completely plausible that
-kOS could wrap all that inside a single class, and then make one
-instance of it per thread, and get multi-threading that way.  But there
-is reluctance to implement this because once the kOS system can do
-threading, the documentation explaining how to use kOS won't be so
-beginner-friendly anymore.  Allowing for threading opens up a whole
-new can of worms to explain, including atomic sections and how
-concurrently accessing the same variable can break everything if you're
-not careful, etc.
-
+While ``WAIT`` is possible from inside a trigger and it won't crash
+the script to use it, it's probably not a good design choice to use
+``WAIT`` inside a trigger.  Triggers should be designed to execute
+all the way through to the end in one fast pass, if possible.
 
 Do Not Loop a Long Time in a Trigger Body!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -252,13 +266,10 @@ in finite time and return.  What you should not do is design a trigger's
 body to go into an infinite loop, or a long-lasting loop that you thought
 would run in the background while the rest of the program continues on.
 
-This is because while you are in a trigger, ALL the other triggers aren't
-being fired, and the main-line code isn't being executed.  A trigger that
-performs a long-running loop will starve the rest of the code in your
-kerboscript program from being allowed to ever run again.
-
-This is a consequence of: *Main-line code gets interrupted by triggers,
-but triggers don't get interrupted by main-line code (or other triggers).*
+This is because while you are in a trigger, main-line code isn't being
+executed, and other triggers of equal or lesser priority aren't being
+executed.  A trigger that performs a long-running loop will starve the
+rest of the code in your kerboscript program from being allowed to run.
 
 But I Want a Loop!!
 ~~~~~~~~~~~~~~~~~~~
@@ -269,6 +280,20 @@ then make it return true (or use the ``preserve`` keyword, which is
 basically the same thing) to keep the trigger around for the next
 **physics tick**. Thus your trigger becomes a sort of "loop" that
 executes one iteration per **physics tick**.
+
+.. versionadded:: 1.1.6.0
+    The multiple priorities of interruption described below (GUI callbacks
+    being lower priority than recurring callbacks) were introduced in
+    kOS v1.1.6.0
+
+.. _interrupt_priority:
+
+Trigger Interrupt Priority
+--------------------------
+
+
+TODO: THIS IS A LONG WRITEUP TO GO HERE, TALKING ABOUT TRIGGER PRIORITIES.
+
 
 Wait!!!
 -------
