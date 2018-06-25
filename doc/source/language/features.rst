@@ -224,19 +224,18 @@ Triggers
 
 One useful feature of kerboscript (but a potentialy confusing one for 
 people new to the language, so we don't recommend you use it at
-first) is the "trigger".  A "trigger" is a block of statements headed by
-a conditional check (much like an IF condition) in which the kOS system
-itself will repeatdly run the conditional check *for you* in the
-background quite frequently without you having to explicitly run it
-yourself.  When the kOS system detects that the condition just became
-true, it will interrupt whatever your program is doing and run the block
-of statements in the trigger, returning control to your main program right
-where it left off.  Example::
+first) is the "trigger". Triggers are small sections of your program
+that can interrupt your normal program flow when certain things
+happen, then run a small patch of code, and return to wherever you
+were in your program as if nothing happened.  They let you set up
+hardware interrupts that will trigger based on your own conditions.
+Example::
 
     // When the altitude eventually goes above 50,000 at some point later,
     // interrupt whatever is going on to set off action group 1:
     WHEN ship:altitude > 50000 then { ag1 on. }
 
-Triggers are created using the :ref:`when <when>` and :ref:`on <on_trigger>`
-statements.  They are complex enough that you should read the documentation
-for those keywords carefully to understand them before you use them.
+This type of trigger is created using the :ref:`when <when>` or
+:ref:`on <on_trigger>` statement.  It's a complex enough topic that you
+should read the documentation for those keywords carefully to understand
+them before you use them.
