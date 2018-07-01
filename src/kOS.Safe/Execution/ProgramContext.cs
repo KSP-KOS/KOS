@@ -262,6 +262,11 @@ namespace kOS.Safe.Execution
             TriggersToInsert.Clear();
         }
 
+        public bool HasActiveTriggersAtLeastPriority(InterruptPriority pri)
+        {
+            return Triggers.Exists(t => t.Priority >= pri && !t.IsImmediateTrigger);
+        }
+
         public List<string> GetCodeFragment(int contextLines)
         {
             return GetCodeFragment(InstructionPointer - contextLines, InstructionPointer + contextLines);

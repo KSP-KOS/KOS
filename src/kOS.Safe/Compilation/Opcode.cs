@@ -2505,15 +2505,25 @@ namespace kOS.Safe.Compilation
         /// that identifies this instance/entrypoint uniquely at runtime.
         /// (For example, ON triggers need this, but WHEN triggers do not).
         /// </summary>
-        [MLField(1,false)]
-        public bool InstanceArg { get; set; }
+        [MLField(1,true)]
+        public bool Unique { get; set; }
+
+        public OpcodeAddTrigger(bool unique)
+        {
+            Unique = unique;
+        }
+
+        public OpcodeAddTrigger() // Must have a defualt constructor for how KSM files work.
+        {
+            Unique = true;
+        }
 
         public override void Execute(ICpu cpu)
         {
             int functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
 
             List<Structure> args = new List<Structure>();
-            cpu.AddTrigger(functionPointer, InterruptPriority.Recurring, cpu.NextTriggerInstanceId, false, cpu.GetCurrentClosure());
+            cpu.AddTrigger(functionPointer, InterruptPriority.Recurring, (Unique ? cpu.NextTriggerInstanceId : 0), false, cpu.GetCurrentClosure());
         }
 
         public override string ToString()

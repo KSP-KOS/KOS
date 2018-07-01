@@ -1362,14 +1362,12 @@ namespace kOS.Safe.Execution
 
             int currentInstructionPointer = currentContext.InstructionPointer;
             var triggersToBeExecuted = new List<TriggerInfo>();
-            
-            // To ensure triggers execute in the same order in which they
-            // got added (thus ensuring the system favors trying the least
-            // recently added trigger first in a more fair round-robin way),
-            // the nested function calls get built in stack order, so that
-            // they execute in normal order.  Thus the backward iteration
-            // order used in the loop below:
-            for (int index = currentContext.ActiveTriggerCount() - 1 ; index >= 0 ; --index)
+
+            // Recurring triggers tend to only get put on the callstack one at a time because
+            // when they are the same priority they won't enter the callstack till the
+            // previous one is done.  Therefore even though this is going on a stack, it
+            // still is getting inserted in LIFO order:
+            for (int index = 0 ; index < currentContext.ActiveTriggerCount() ; ++index)
             {
                 TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
                 
@@ -1450,7 +1448,12 @@ namespace kOS.Safe.Execution
                 // cause callbacks to be invoked, and this can make those callback invocations
                 // happen immediately on the next opcode:
                 ProcessTriggers();
-                if ((! okayToActivatePendingTriggers) && (! stack.HasDelayingTriggerContexts()))
+
+                // It is not okay to re-activate pending triggers till all existing active triggers
+                // of Recurring priority have been flushed out and executed:
+                if ((! okayToActivatePendingTriggers) &&
+                    (! stack.HasDelayingTriggerContexts()) &&
+                    ! currentContext.HasActiveTriggersAtLeastPriority(InterruptPriority.Recurring))
                 {
                     okayToActivatePendingTriggers = true;
                     SafeHouse.Logger.Log("eraseme: okayToActivatePendingTriggers just became true.");
@@ -1492,7 +1495,6 @@ namespace kOS.Safe.Execution
         private bool ExecuteInstruction(ProgramContext context, bool doProfiling)
         {
             Opcode opcode = context.Program[context.InstructionPointer];
-            
             if (SafeHouse.Config.DebugEachOpcode)
             {
                 executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));

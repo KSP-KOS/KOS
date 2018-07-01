@@ -2507,7 +2507,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                    AddOpcode(new OpcodeAddTrigger());
+                    AddOpcode(new OpcodeAddTrigger(false));
                 }
                     
                 // enable this FlyByWire parameter
