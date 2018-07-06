@@ -367,6 +367,7 @@ namespace kOS.Control
 
         public void EnableControl(SharedObjects sharedObj)
         {
+            Console.WriteLine("eraseme: EnableControl() being called.");
             shared = sharedObj;
             partId = sharedObj.KSPPart.flightID;
             ResetIs();
@@ -381,6 +382,7 @@ namespace kOS.Control
 
         public void DisableControl()
         {
+            Console.WriteLine("eraseme: DisableControl() being called.");
             shared = null;
             partId = 0;
             Enabled = false;
