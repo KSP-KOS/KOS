@@ -2553,12 +2553,6 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                     AddOpcode(new OpcodeRemoveTrigger());
                 }
-
-                // Adding these opcodes forces the IPU boundary to always come    //ereseme
-                // between these two bits of code, so the problem happens 100% of //eraseme
-                // the time, instead of inconsistently.                           //eraseme
-                AddOpcode(new OpcodePush(0)); AddOpcode(new OpcodeWait());        //eraseme
-
                 // disable this FlyByWire parameter
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
                 AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
