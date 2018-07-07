@@ -2553,6 +2553,11 @@ namespace kOS.Safe.Compilation.KS
                 // add a pop to clear out the dummy return value from toggleflybywire()
                 AddOpcode(new OpcodePop());
 
+                // Adding these opcodes forces the IPU boundary to always come    //ereseme
+                // between these two bits of code, so the problem happens 100% of //eraseme
+                // the time, instead of inconsistently.                           //eraseme
+                AddOpcode(new OpcodePush(0)); AddOpcode(new OpcodeWait());        //eraseme
+
                 // remove update trigger
                 string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
                 if (context.Triggers.Contains(triggerIdentifier))
