@@ -171,10 +171,14 @@ public class TriggerInfo
             // they are equal:
             if (EntryPoint != otherInfo.EntryPoint)
                 return false;
-            // If InstanceCount is zero, that's a magic flag that says
-            // "all instances with same Entry point match".  If it's nonzero,
-            // then only the same instance ID with this Entry Point matches:
-            if (InstanceCount != 0 && InstanceCount != otherInfo.InstanceCount)
+
+            // If they're nonzero the InstanceCounts also have to match for there to be equality.
+            // But only if they're nonzero!
+            //
+            // This "zero means don't-care" rule exists mostly because we store lists of
+            // TriggerInfos where we try to guarantee no duplicates within the list, and the meaning
+            // for "what counts as a duplicate" is different for some types of trigger in this regard.
+            if (InstanceCount != 0 && otherInfo.InstanceCount != 0 && InstanceCount != otherInfo.InstanceCount)
                 return false;
         }
 
