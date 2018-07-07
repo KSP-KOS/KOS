@@ -215,8 +215,8 @@ namespace kOS.Safe.Execution
         /// <param name="trigger"></param>
         public void RemoveTrigger(TriggerInfo trigger)
         {
-            Triggers.RemoveAll((item) => item == trigger); // can ignore if it wasn't in the list.
-            TriggersToInsert.RemoveAll((item) => item == trigger); // can ignore if it wasn't in the list.
+            Triggers.RemoveAll((item) => item.Equals(trigger)); // can ignore if it wasn't in the list.
+            TriggersToInsert.RemoveAll((item) => item.Equals(trigger)); // can ignore if it wasn't in the list.
         }
         
         /// <summary>
