@@ -723,7 +723,7 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodeExists());
                     var branch = new OpcodeBranchIfTrue();
-                    branch.Distance = 4;
+                    branch.Distance = 3;
                     AddOpcode(branch);
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
                     AddOpcode(new OpcodeStore(userFuncObject.ScopelessPointerIdentifier));
