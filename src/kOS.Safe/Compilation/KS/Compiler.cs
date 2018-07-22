@@ -2545,14 +2545,6 @@ namespace kOS.Safe.Compilation.KS
         {
             if (lockObject.IsSystemLock())
             {
-                // disable this FlyByWire parameter
-                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
-                AddOpcode(new OpcodePush(false));
-                AddOpcode(new OpcodeCall("toggleflybywire()"));
-                // add a pop to clear out the dummy return value from toggleflybywire()
-                AddOpcode(new OpcodePop());
-
                 // remove update trigger
                 string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
                 if (context.Triggers.Contains(triggerIdentifier))
@@ -2561,6 +2553,14 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                     AddOpcode(new OpcodeRemoveTrigger());
                 }
+                // disable this FlyByWire parameter
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
+                // add a pop to clear out the dummy return value from toggleflybywire()
+                AddOpcode(new OpcodePop());
+
             }
 
             // unlock variable
