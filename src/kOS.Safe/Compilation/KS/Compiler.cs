@@ -460,8 +460,11 @@ namespace kOS.Safe.Compilation.KS
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeEval());
             AddOpcode(new OpcodeDup());
-            // Put one of those two copies of the new value into the old value identifier for next time:
-            AddOpcode(new OpcodeStoreGlobal(triggerObject.OldValueIdentifier));
+            // Put one of those two copies of the new value into the old value identifier for next time.
+            // This is local because triggers have scope and this will keep multiple instances of the
+            // same ON trigger (i.e. executing the ON statement in a loop) to each have thier own copy
+            // of thier own OldValue.
+            AddOpcode(new OpcodeStoreLocal(triggerObject.OldValueIdentifier));
             // Use the other dup'ed copy of the new value to actually do the equals
             // comparison with the old value that's still under it on the stack:
             AddOpcode(new OpcodeCompareEqual());
@@ -476,7 +479,7 @@ namespace kOS.Safe.Compilation.KS
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
+            AddOpcode(new OpcodeStoreLocal(triggerKeepName));
 
             VisitNode(node.Nodes[2]);
 
@@ -518,7 +521,7 @@ namespace kOS.Safe.Compilation.KS
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
+            AddOpcode(new OpcodeStoreLocal(triggerKeepName));
 
             VisitNode(node.Nodes[3]);
 
@@ -2504,7 +2507,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                    AddOpcode(new OpcodeAddTrigger());
+                    AddOpcode(new OpcodeAddTrigger(false));
                 }
                     
                 // enable this FlyByWire parameter

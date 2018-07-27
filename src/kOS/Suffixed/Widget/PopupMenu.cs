@@ -73,7 +73,10 @@ namespace kOS.Suffixed.Widget
         {
             if (UserOnChange != null)
             {
-                UserOnChange.TriggerNextUpdate(GetValue());
+                if (guiCaused)
+                    UserOnChange.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, GetValue());
+                else
+                    UserOnChange.TriggerOnNextOpcode(InterruptPriority.NoChange, GetValue());
                 changed = false;
             }
         }
