@@ -285,6 +285,8 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="Utilities\StringUtil.cs" />
+    <Compile Include="Execution\InterruptPriority.cs" />
+    <Compile Include="Execution\ExecutionStatBlock.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

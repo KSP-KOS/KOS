@@ -16,48 +16,50 @@ namespace kOS.Safe.Execution
 {
     public class CPU : ICpu
     {
-        protected enum Section
-        {
-            Main = 1,
-            Trigger = 2
-        }
-
         protected readonly IStack stack;
         protected readonly VariableScope globalVariables;
-        protected Section currentRunSection;
-        protected List<YieldFinishedDetector> triggerYields;
-        protected List<YieldFinishedDetector> mainYields;
+        
+        protected class YieldFinishedWithPriority
+        {
+            public YieldFinishedDetector detector;
+            public InterruptPriority priority;
+        }
+        protected List<YieldFinishedWithPriority> yields;
 
         protected double currentTime;
         protected readonly SafeSharedObjects shared;
         protected readonly List<ProgramContext> contexts;
         protected ProgramContext currentContext;
         protected VariableScope savedPointers;
-        protected int instructionsSoFarInUpdate;
         protected int instructionsPerUpdate;
 
-        public int InstructionsThisUpdate { get { return instructionsSoFarInUpdate; } }
+        public int InstructionsThisUpdate { get; private set; }
 
         // statistics
         protected double totalCompileTime;
-
-        protected double totalUpdateTime;
-        protected double totalExecutionTime;
-        protected double maxUpdateTime;
-        protected double maxExecutionTime;
         protected Stopwatch instructionWatch = new Stopwatch();
         protected Stopwatch updateWatch = new Stopwatch();
         protected Stopwatch executionWatch = new Stopwatch();
         protected Stopwatch compileWatch = new Stopwatch();
-        protected int maxMainlineInstructionsSoFar;
         protected readonly StringBuilder executeLog = new StringBuilder();
+
+        private Dictionary<InterruptPriority, ExecutionStatBlock> executionStats = new Dictionary<InterruptPriority, ExecutionStatBlock>();
 
         public int InstructionPointer
         {
             get { return currentContext.InstructionPointer; }
             set { currentContext.InstructionPointer = value; }
         }
-        
+        public InterruptPriority CurrentPriority
+        {
+            get { return currentContext.CurrentPriority; }
+            set { currentContext.CurrentPriority = value; }
+        }
+        public int NextTriggerInstanceId
+        {
+            get { return currentContext.NextTriggerInstanceId; }
+        }
+
         public double SessionTime { get { return currentTime; } }
         
         public List<string> ProfileResult { get; private set; }
@@ -83,8 +85,7 @@ namespace kOS.Safe.Execution
             stack = new Stack();
             globalVariables = new VariableScope(0, null);
             contexts = new List<ProgramContext>();
-            mainYields = new List<YieldFinishedDetector>();
-            triggerYields = new List<YieldFinishedDetector>();
+            yields = new List<YieldFinishedWithPriority>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
             popContextNotifyees = new List<WeakReference>();
         }
@@ -96,10 +97,8 @@ namespace kOS.Safe.Execution
             contexts.Clear();            
             if (shared.GameEventDispatchManager != null) shared.GameEventDispatchManager.Clear();
             PushInterpreterContext();
-            currentRunSection = Section.Main;
+            CurrentPriority = InterruptPriority.Normal;
             currentTime = 0;
-            maxUpdateTime = 0.0;
-            maxExecutionTime = 0.0;
             // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
             // clear global variables
@@ -234,6 +233,7 @@ namespace kOS.Safe.Execution
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
+            CurrentPriority = InterruptPriority.Normal;
             shared.GameEventDispatchManager.SetDispatcherFor(currentContext);
 
             if (contexts.Count > 1)
@@ -333,10 +333,14 @@ namespace kOS.Safe.Execution
         }
 
         /// <summary>
-        /// Push a single thing onto the scope stack.
+        /// Push a single thing onto the scope stack.  If it's a context record it will encode the current
+        /// priority into it as the ComeFromPriority.
         /// </summary>
         public void PushScopeStack(object thing)
         {
+            SubroutineContext context = thing as SubroutineContext;
+            if (context != null)
+                context.CameFromPriority = CurrentPriority;
             stack.PushScope(thing);
         }
 
@@ -351,6 +355,9 @@ namespace kOS.Safe.Execution
             while (howMany > 0)
             {
                 returnVal = stack.PopScope();
+                SubroutineContext context = returnVal as SubroutineContext;
+                if (context != null)
+                    CurrentPriority = context.CameFromPriority;
                 --howMany;
             }
 
@@ -475,7 +482,7 @@ namespace kOS.Safe.Execution
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
-                        RemoveTrigger((int)item.Value.Value);
+                        RemoveTrigger((int)item.Value.Value, 0);
                 }
                 else
                 {
@@ -535,6 +542,8 @@ namespace kOS.Safe.Execution
                 currentContext.ClearTriggers();   // remove all the triggers
                 SkipCurrentInstructionId();
             }
+            CurrentPriority = InterruptPriority.Normal;
+            ResetStatistics();
         }
 
         /// <summary>
@@ -549,56 +558,39 @@ namespace kOS.Safe.Execution
         /// <param name="yieldTracker"></param>
         public void YieldProgram(YieldFinishedDetector yieldTracker)
         {
-            switch (currentRunSection)
-            {
-                case Section.Main:
-                    mainYields.Add(yieldTracker);
-                    break;
-                case Section.Trigger:
-                    triggerYields.Add(yieldTracker);
-                    break;
-                default:
-                    // Should hypothetically be impossible unless we add more values to the enum.
-                    break;
-            }
+            yields.Add(new YieldFinishedWithPriority() { detector = yieldTracker, priority = CurrentPriority });
             yieldTracker.creationTimeStamp = currentTime;
             yieldTracker.Begin(shared);
         }
 
         protected bool IsYielding()
         {
-            List<YieldFinishedDetector> yieldTrackers;
-            
-            // Decide if we should operate on the yield trackers that are
-            // at the main code level or the ones that are at the trigger
-            // level:
-            switch (currentRunSection)
+            int numStillBlocking = 0;
+
+            // Iterating backward because items will be getting deleted as we
+            // iterate over the list and this way the index doesn't become wrong
+            // as we do so.  (also, those deletions are why foreach() isn't used here):
+            for (int i = yields.Count - 1; i >= 0; --i)
             {
-                case Section.Main:
-                    yieldTrackers = mainYields;
-                    break;
-                case Section.Trigger:
-                    yieldTrackers = triggerYields;
-                    break;
-                default:
-                    // Should hypothetically be impossible unless we add more values to the enum.
-                    return false;
+                YieldFinishedWithPriority yielder = yields[i];
+                // A yield blockage that is blocking mainline code while
+                // we are in a trigger isn't relevant.  Only check the ones
+                // that are blocking current priority or higher:
+                if (yielder.priority >= CurrentPriority)
+                {
+                    YieldFinishedDetector detector = yielder.detector;
+                    if (detector.creationTimeStamp != currentTime && detector.IsFinished())
+                        yields.RemoveAt(i);
+                    else
+                        ++numStillBlocking;
+                }
             }
-            // Query the yield trackers and remove all the ones that claim they are finished.
-            // Always treat them as unfinished if this is the same fixed time stamp as the
-            // one in which the yield got Begin()'ed regardless of what their IsFinished() claims,
-            // because all waits will always wait at least one tick, according to all our docs.
-            yieldTrackers.RemoveAll((t) => t.creationTimeStamp != currentTime && t.IsFinished());
-            
-            // If any are still present, that means not all yielders in this context (main or trigger)
-            // are finished and we should still return that we are waiting:
-            return yieldTrackers.Count > 0;
+            return (numStillBlocking > 0);
         }
 
         protected void AbortAllYields()
         {
-            mainYields.Clear();
-            triggerYields.Clear();
+            yields.Clear();
         }
         
         public void PushArgumentStack(object item)
@@ -1128,8 +1120,11 @@ namespace kOS.Safe.Execution
             return stack.GetArgumentStackSize();
         }
 
+
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.  This type of trigger must be a function that
@@ -1138,19 +1133,30 @@ namespace kOS.Safe.Execution
         /// when it finishes.  If its return is false, it won't fire off again.
         /// </summary>
         /// <param name="triggerFunctionPointer">The entry point of this trigger function.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
+        /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// entry point to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="closure">The closure the trigger should be called with.  If this is
         /// null, then the trigger will only be able to see global variables reliably.</param>
         /// <returns>A TriggerInfo structure describing this new trigger, which probably isn't very useful
         /// tp the caller in most circumstances where this is a fire-and-forget trigger.</returns>
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, InterruptPriority priority, int instanceId, bool immediate, List<VariableScope> closure)
         {
-            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, closure);
-            currentContext.AddPendingTrigger(triggerRef);
+            TriggerInfo triggerRef = new TriggerInfo(currentContext, triggerFunctionPointer, priority, instanceId, closure);
+            if (immediate)
+                currentContext.AddImmediateTrigger(triggerRef);
+            else
+                currentContext.AddPendingTrigger(triggerRef);
             return triggerRef;
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1167,6 +1173,12 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
+        /// <param name="instanceId">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same triggerFunctionPointer.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// entry point to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="args">The list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1174,17 +1186,22 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program just ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, List<Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, List<Structure> args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, del.Closure, del.GetMergedArgs(args));
-            currentContext.AddPendingTrigger(callbackRef);
+            TriggerInfo callbackRef = new TriggerInfo(currentContext, del.EntryPoint, priority, instanceId, del.Closure, del.GetMergedArgs(args));
+            if (immediate)
+                currentContext.AddImmediateTrigger(callbackRef);
+            else
+                currentContext.AddPendingTrigger(callbackRef);
             return callbackRef;
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1201,6 +1218,12 @@ namespace kOS.Safe.Execution
         /// callback won't execute only matters when you were expecting to read its return value.
         /// </summary>
         /// <param name="del">A UserDelegate that was created using the CPU's current program context.</param>
+        /// <param name="priority">The priority that this trigger will interrupt with.</param> 
+        /// <param name="instanceID">pass in TriggerInfo.NextInstance if you desire the ability for
+        /// more than one instance of a trigger to exist for this same UserDelegate.  Pass
+        /// a zero to indicate you want to prevent multiple instances of triggers from this same
+        /// Delegate to be invokable.</param> 
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <param name="args">A parms list of arguments to pass to the UserDelegate when it gets called.</param>
         /// <returns>A TriggerInfo structure describing this new trigger.  It can be used to monitor
         /// the progress of the function call: To see if it has had a chance to finish executing yet,
@@ -1208,15 +1231,18 @@ namespace kOS.Safe.Execution
         /// for an "illegal" program context.  Null returns are used instead of throwing an exception
         /// because this condition is expected to occur often when a program is ended that had callback hooks
         /// in it.</returns>
-        public TriggerInfo AddTrigger(UserDelegate del, params Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, params Structure[] args)
         {
             if (del.ProgContext != currentContext)
                 return null;
-            return AddTrigger(del, new List<Structure>(args));
+            TriggerInfo triggerRef = AddTrigger(del, priority, instanceId, immediate, new List<Structure>(args));
+            return triggerRef;
         }
 
         /// <summary>
-        /// Schedules a trigger function call to occur near the start of the next CPU update tick.
+        /// Schedules a trigger function call to occur soon.  There are two ways you can
+        /// do this: (A) On the next Cpu.KOSFixedUpdate() before it will happen,
+        /// or (B) When the next Opcode was about to execute.  This is decided by the 'immediate' argument.
         /// If multiple such function calls get inserted between ticks, they will behave like
         /// a nested stack of function calls.  Mainline code will not continue until all such
         /// functions have finished at least once.<br/>
@@ -1227,20 +1253,30 @@ namespace kOS.Safe.Execution
         /// If the TriggerInfo you pass in was built for a different ProgramContext than the one that
         /// is currently running, then this will return null and refuse to do anything.
         /// </summary>
+        /// <param name="immediate">Trigger should happen immediately on next opcode instead of waiting till next fixeupdate</parem>
         /// <returns>To be in agreement with how the other AddTrigger() methods work, this returns
         /// a TriggerInfo which is just the same one you passed in.  It will return a null, however,
         /// in cases where the TriggerInfo you passed in is for a different ProgramContext.</returns>
-        public TriggerInfo AddTrigger(TriggerInfo trigger)
+        public TriggerInfo AddTrigger(TriggerInfo trigger, bool immediate)
         {
             if (trigger.ContextId != currentContext.ContextId)
                 return null;
-            currentContext.AddPendingTrigger(trigger);
+            if (immediate)
+                currentContext.AddImmediateTrigger(trigger);
+            else
+                currentContext.AddPendingTrigger(trigger);
             return trigger;
         }
 
-        public void RemoveTrigger(int triggerFunctionPointer)
+        /// <summary>
+        /// Removes a trigger looking like this if one exists.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">Trigger's entry point (instruction pointer)</param>
+        /// <param name="instanceId">If nonzero, only remove the trigger if it has this Id.  If zero, 
+        /// then remove all triggers with this entry point, regardless of their instance Id.</param>
+        public void RemoveTrigger(int triggerFunctionPointer, int instanceId)
         {
-            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, null));
+            currentContext.RemoveTrigger(new TriggerInfo(currentContext, triggerFunctionPointer, 0/*dummy*/, instanceId, null));
         }
 
         public void RemoveTrigger(TriggerInfo trigger)
@@ -1248,9 +1284,15 @@ namespace kOS.Safe.Execution
             currentContext.RemoveTrigger(trigger);
         }
 
-        public void CancelCalledTriggers(int triggerFunctionPointer)
+        /// <summary>
+        /// Cancels any pending calls to triggers that match the criteria.
+        /// </summary>
+        /// <param name="triggerFunctionPointer">Trigger's entry point (instruction pointer)</param>
+        /// <param name="instanceId">If nonzero, only affect the trigger if it has this Id.  If zero, 
+        /// then affect all triggers with this entry point, regardless of their instance Id.</param>
+        public void CancelCalledTriggers(int triggerFunctionPointer, int instanceId)
         {
-            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, null));
+            CancelCalledTriggers(new TriggerInfo(currentContext, triggerFunctionPointer, 0 /*dummy*/, instanceId, null));
         }
 
         public void CancelCalledTriggers(TriggerInfo trigger)
@@ -1267,24 +1309,19 @@ namespace kOS.Safe.Execution
         public virtual void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = SafeHouse.Config.ShowStatistics;
-            var executionElapsed = 0.0;
 
             // If the script changes config value, it doesn't take effect until next update:
             instructionsPerUpdate = SafeHouse.Config.InstructionsPerUpdate;
-            instructionsSoFarInUpdate = 0;
-            var numMainlineInstructions = 0;
-
-            if (showStatistics)
+            InstructionsThisUpdate = 0;
+                
+            updateWatch.Reset();
+            executionWatch.Reset();
+            instructionWatch.Reset();
+            if (!compileWatch.IsRunning)
             {
-                updateWatch.Reset();
-                executionWatch.Reset();
-                instructionWatch.Reset();
-                if (!compileWatch.IsRunning)
-                {
-                    compileWatch.Reset();
-                }
-                updateWatch.Start();
+                compileWatch.Reset();
             }
+            updateWatch.Start();
 
             currentTime = shared.UpdateHandler.CurrentFixedTime;
 
@@ -1294,15 +1331,12 @@ namespace kOS.Safe.Execution
 
                 if (currentContext != null && currentContext.Program != null)
                 {
-                    ProcessTriggers();
-
                     if (showStatistics)
                     {
                         executionWatch.Start();
                         instructionWatch.Start();
                     }
                     ContinueExecution(showStatistics);
-                    numMainlineInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         executionWatch.Stop();
@@ -1340,25 +1374,10 @@ namespace kOS.Safe.Execution
                     stack.Clear(); // If breaking all execution, get rid of the cruft here too.
                 }
             }
+            updateWatch.Stop();
 
-            if (showStatistics)
-            {
-                updateWatch.Stop();
-                double updateElapsed = updateWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                totalUpdateTime += updateElapsed;
-                executionElapsed = executionWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                totalExecutionTime += executionElapsed;
-                if (!compileWatch.IsRunning)
-                {
-                    totalCompileTime += compileWatch.ElapsedTicks * 1000D / Stopwatch.Frequency;
-                }
-                if (maxMainlineInstructionsSoFar < numMainlineInstructions)
-                    maxMainlineInstructionsSoFar = numMainlineInstructions;
-                if (maxUpdateTime < updateElapsed)
-                    maxUpdateTime = updateElapsed;
-                if (maxExecutionTime < executionElapsed)
-                    maxExecutionTime = executionElapsed;
-            }
+            foreach (ExecutionStatBlock statBlock in executionStats.Values)
+                statBlock.EndOneUpdate();
         }
 
         protected void PreUpdateBindings()
@@ -1384,20 +1403,20 @@ namespace kOS.Safe.Execution
 
             int currentInstructionPointer = currentContext.InstructionPointer;
             var triggersToBeExecuted = new List<TriggerInfo>();
-            
-            // To ensure triggers execute in the same order in which they
-            // got added (thus ensuring the system favors trying the least
-            // recently added trigger first in a more fair round-robin way),
-            // the nested function calls get built in stack order, so that
-            // they execute in normal order.  Thus the backward iteration
-            // order used in the loop below:
-            for (int index = currentContext.ActiveTriggerCount() - 1 ; index >= 0 ; --index)
+
+            // Recurring triggers tend to only get put on the callstack one at a time because
+            // when they are the same priority they won't enter the callstack till the
+            // previous one is done.  Therefore even though this is going on a stack, it
+            // still is getting inserted in LIFO order:
+            for (int index = 0 ; index < currentContext.ActiveTriggerCount() ; ++index)
             {
                 TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
                 
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
-                // will be invalid.  Only execute the trigger if it still exists.
-                if (currentContext.ContainsTrigger(trigger))
+                // will be invalid.  Only execute the trigger if it still exists, AND if it's of a higher priority
+                // than the current CPU priority level.  (If it's the same or less priority as the curent CPU priority,
+                // then leave it in the list to be added later once we return back to a lower priority that allows it.)
+                if (currentContext.ContainsTrigger(trigger) && (trigger.Priority == InterruptPriority.NoChange || trigger.Priority > CurrentPriority))
                 {
                     if (trigger.EntryPoint < 0 /* NoDelegate */)
                     {
@@ -1417,7 +1436,7 @@ namespace kOS.Safe.Execution
                             new SubroutineContext(currentInstructionPointer, trigger);
                         PushScopeStack(contextRecord);
 
-                        // Reverse-push the closure's scope record, if there is one, just after the function return context got put on the stack.
+                        // Push the closure's scope record, if there is one, just after the function return context got put on the stack.
                         if (trigger.Closure != null)
                             for (int i = trigger.Closure.Count - 1 ; i >= 0 ; --i)
                                 PushScopeStack(trigger.Closure[i]);
@@ -1425,12 +1444,17 @@ namespace kOS.Safe.Execution
                         PushArgumentStack(new KOSArgMarkerType());
 
                         if (trigger.IsCSharpCallback)
-                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex) // TODO test with more than 1 arg to see if this is the right order!
+                            for (int argIndex = trigger.Args.Count - 1; argIndex >= 0 ; --argIndex)
                                 PushArgumentStack(trigger.Args[argIndex]);
-                        
+
                         triggersToBeExecuted.Add(trigger);
 
                         currentInstructionPointer = trigger.EntryPoint;
+
+                        // elevate priority to the priority of the trigger:
+                        if (trigger.Priority != InterruptPriority.NoChange)
+                            CurrentPriority = trigger.Priority;
+
                         // Triggers can chain in this loop if more than one fire off at once - the second trigger
                         // will look like it was a function that was called from the start of the first trigger.
                         // The third trigger will look like a function that was called from the start of the second, etc.
@@ -1452,20 +1476,30 @@ namespace kOS.Safe.Execution
         protected virtual void ContinueExecution(bool doProfiling)
         {
             var executeNext = true;
-            int howManyMainLine = 0;
-            currentRunSection = Section.Trigger; // assume we begin with trigger mode until we hit mainline code.
-            
-            executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
+            int howManyNormalPriority = 0;
+            bool okayToActivatePendingTriggers = false;
 
-            while (instructionsSoFarInUpdate < instructionsPerUpdate &&
+            executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
+            SafeHouse.Logger.Log("eraseme: ContinueExecution before While loop.");
+            while (InstructionsThisUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
-                if (! stack.HasTriggerContexts())
+                // ProcessTriggers is in this loop because opcodes can result in changes that
+                // cause callbacks to be invoked, and this can make those callback invocations
+                // happen immediately on the next opcode:
+                ProcessTriggers();
+
+                // It is not okay to re-activate pending triggers till all existing active triggers
+                // of Recurring priority have been flushed out and executed:
+                if ((! okayToActivatePendingTriggers) &&
+                    (! stack.HasDelayingTriggerContexts()) &&
+                    ! currentContext.HasActiveTriggersAtLeastPriority(InterruptPriority.Recurring))
                 {
-                    currentRunSection = Section.Main;
+                    okayToActivatePendingTriggers = true;
+                    SafeHouse.Logger.Log("eraseme: okayToActivatePendingTriggers just became true.");
                 }
-                
+
                 if (IsYielding())
                 {
                     executeNext = false;
@@ -1473,19 +1507,27 @@ namespace kOS.Safe.Execution
                 else
                 {
                     executeNext = ExecuteInstruction(currentContext, doProfiling);
-                    instructionsSoFarInUpdate++;
-                    if (currentRunSection == Section.Main)
-                       ++howManyMainLine;
+                    ++InstructionsThisUpdate;
+                    if (CurrentPriority == InterruptPriority.Normal)
+                        ++howManyNormalPriority;
                 }
             }
+            // Do this once more after the loop, just in case the very last Opcode in the update
+            // caused a callback that was meant to occur immediately in the current priority level
+            // using InterruptPriority.NoChange.  It's important to get that call pushed onto the
+            // callstack now at the current priority, before the next update might escalate the
+            // priority with a trigger.
+            ProcessTriggers();
 
-            // As long as at least one line of actual main code was reached, then re-enable all
-            // triggers that wanted to be re-enabled.  This delay in re-enabling them
-            // ensures that a nested bunch of triggers interruping other triggers can't
-            // *completely* starve mainline code of execution, no matter how invasive
-            // and cpu-hogging the user may have been written them to be:
-            if (currentRunSection == Section.Main)
+            // As long as all there are no more of the "pending" kinds of trigger
+            // on the callstack and we have reached at least one opcode of mainline
+            // code or of immediate trigger code, then it's okay to activate the
+            // pending triggers now:
+            if (okayToActivatePendingTriggers)
+            {
                 currentContext.ActivatePendingTriggers();
+                SafeHouse.Logger.Log("eraseme: ActivatedPendingTriggers.");
+            }
 
             if (executeLog.Length > 0)
                 SafeHouse.Logger.Log(executeLog.ToString());
@@ -1494,7 +1536,6 @@ namespace kOS.Safe.Execution
         protected virtual bool ExecuteInstruction(ProgramContext context, bool doProfiling)
         {
             Opcode opcode = context.Program[context.InstructionPointer];
-            
             if (SafeHouse.Config.DebugEachOpcode)
             {
                 executeLog.Append(string.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n", context.InstructionPointer, context.Program.Count, opcode.Label, opcode));
@@ -1507,18 +1548,23 @@ namespace kOS.Safe.Execution
 
                 opcode.Execute(this);
 
+                // This will count *all* the time between the end of the prev instruction and now:
+                instructionWatch.Stop();
                 if (doProfiling)
                 {
-                    // This will count *all* the time between the end of the prev instruction and now:
-                    instructionWatch.Stop();
                     opcode.ProfileTicksElapsed += instructionWatch.ElapsedTicks;
                     opcode.ProfileExecutionCount++;
                     
-                    // start the *next* instruction's timer right after this instruction ended
-                    instructionWatch.Reset();
-                    instructionWatch.Start();
                 }
-                
+                // Add the time this took to the exeuction stats for current priority level:
+                if (! executionStats.ContainsKey(CurrentPriority))
+                    executionStats[CurrentPriority] = new ExecutionStatBlock();
+                executionStats[CurrentPriority].LogOneInstruction(instructionWatch.ElapsedTicks);
+
+                // start the *next* instruction's timer right after this instruction ended
+                instructionWatch.Reset();
+                instructionWatch.Start();
+
                 if (opcode.AbortProgram)
                 {
                     BreakExecution(false);
@@ -1594,19 +1640,60 @@ namespace kOS.Safe.Execution
         public string StatisticsDump(bool doProfiling)
         {
             if (!SafeHouse.Config.ShowStatistics) return "";
-            
-            string delimiter = "";
-            if (doProfiling)
-                delimiter = ",";
-            
-            StringBuilder sb = new StringBuilder();
 
-            sb.Append(string.Format("{0}{0}{0}{0}Total compile time: {0}{1:F3}ms\n", delimiter, totalCompileTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Total update time: {0}{1:F3}ms\n", delimiter, totalUpdateTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Total execution time: {0}{1:F3}ms\n", delimiter, totalExecutionTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Maximum update time: {0}{1:F3}ms\n", delimiter, maxUpdateTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Maximum execution time: {0}{1:F3}ms\n", delimiter, maxExecutionTime));
-            sb.Append(string.Format("{0}{0}{0}{0}Most Mainline instructions in one update: {0}{1}\n", delimiter, maxMainlineInstructionsSoFar));
+            StringBuilder sb = new StringBuilder();
+            string formatterHeader = "{0,14},{1,7},{2,10},{3,7},{4,7},{5,7},{6,7}\n";
+            string formatterValues = "{0,14},{1,7:D},{2,10:F2},{3,7:F0},{4,7:F3},{5,7:D},{6,7:F3}\n";
+            sb.Append(string.Format("Total compile time: {0:F3}ms\n", totalCompileTime));
+            sb.Append(string.Format(formatterHeader, "Interrupt", "Total", "Total", "Mean", "Mean", "Max", "Max"));
+            sb.Append(string.Format(formatterHeader, "Priority", "inst", "ms", "instr/", "ms/", "instr/", "ms/"));
+            sb.Append(string.Format(formatterHeader, "", "", "", "update", "update", "update", "update"));
+            sb.Append(string.Format(formatterHeader, "-------------", "------", "------", "------", "------", "------", "------"));
+
+            int overallInstr = 0;
+            double overallMillis = 0.0;
+            double overallMeanInstr = 0.0;
+            double weightedSumMeanInstr = 0.0;
+            double overallMeanMillis = 0.0;
+            double weightedSumMeanMillis = 0.0;
+            long overallMaxInstr = 0;
+            double overallMaxMillis = 0.0;
+
+            foreach (InterruptPriority pri in executionStats.Keys)
+            {
+                ExecutionStatBlock stats = executionStats[pri];
+                stats.SealHangingUpdateIfAny(); // In case it aborted funny and didn't finish the last update.
+
+                sb.Append(string.Format(formatterValues,
+                    pri.ToString(),
+                    stats.TotalInstructions,
+                    stats.TotalMilliseconds,
+                    stats.MeanInstructionsPerUpdate,
+                    stats.MeanMillisecondsPerUpdate,
+                    stats.MaxInstructionsPerUpdate,
+                    stats.MaxMillisecondsInOneUpdate
+                ));
+
+                overallInstr += stats.TotalInstructions;
+                overallMillis += stats.TotalMilliseconds;
+
+                // Need to track a weighted mean depending on how many
+                // instructions came from which priority level, thus the
+                // mulitplication by how many total there were:
+                weightedSumMeanInstr += (stats.TotalInstructions * stats.MeanInstructionsPerUpdate);
+                weightedSumMeanMillis += (stats.TotalInstructions * stats.MeanMillisecondsPerUpdate);
+
+                if (overallMaxInstr < stats.MaxInstructionsPerUpdate)
+                    overallMaxInstr = stats.MaxInstructionsPerUpdate;
+                if (overallMaxMillis < stats.MaxMillisecondsInOneUpdate)
+                    overallMaxMillis = stats.MaxMillisecondsInOneUpdate;
+            }
+            overallMeanInstr = weightedSumMeanInstr / overallInstr;
+            overallMeanMillis = weightedSumMeanMillis / overallInstr;
+
+            sb.Append(string.Format(formatterValues,
+                "TOTAL:", overallInstr, overallMillis, overallMeanInstr, overallMeanMillis, overallMaxInstr, overallMaxMillis ));
+
             if (!doProfiling)
                 sb.Append("(`log ProfileResult() to file.csv` for more information.)\n");
             sb.Append(" \n");
@@ -1616,11 +1703,7 @@ namespace kOS.Safe.Execution
         public void ResetStatistics()
         {
             totalCompileTime = 0D;
-            totalUpdateTime = 0D;
-            totalExecutionTime = 0D;
-            maxUpdateTime = 0.0;
-            maxExecutionTime = 0.0;
-            maxMainlineInstructionsSoFar = 0;
+            executionStats.Clear();
         }
 
         protected void PrintStatistics()

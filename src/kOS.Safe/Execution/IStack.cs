@@ -43,6 +43,7 @@ namespace kOS.Safe.Execution
         string Dump();
         List<int> GetCallTrace();
         bool HasTriggerContexts();
+        bool HasDelayingTriggerContexts();
         VariableScope FindScope(Int16 scopeId);
         VariableScope GetCurrentScope();
         SubroutineContext GetCurrentSubroutineContext();
