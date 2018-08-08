@@ -79,7 +79,7 @@ namespace kOS.Module
         public override void OnLoadVessel()
         {
             base.OnLoadVessel();
-            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0} ({1})", Vessel.vesselName, ID));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0}({1}), {2}({3})", Vessel.vesselName, ID, vessel.vesselName, vessel.id));
 
             // Vessel modules now load when the vessel is not loaded, including when not in the flight
             // scene.  So we now wait to attach to events and attempt to harvest parts until after
@@ -166,6 +166,7 @@ namespace kOS.Module
                     ClearParts();
                     HarvestParts();
                     partCount = Vessel.Parts.Count;
+                    ResetPhysicallyDetachedParameters();
                 }
                 CheckRehookAutopilot();
             }
@@ -234,7 +235,48 @@ namespace kOS.Module
             AddFlightControlParameter("wheelthrottle", new WheelThrottleManager(Vessel));
             AddFlightControlParameter("flightcontrol", new FlightControl(Vessel));
             flightParametersAdded = true;
-            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule AddDefaultParameters()!  On {0}", Vessel.vesselName));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule AddDefaultParameters()!  On {0}({1}", Vessel.vesselName, Vessel.id));
+        }
+
+        /// <summary>
+        /// After a decouple or part explosion, it's possible for this vessel to
+        /// still have an assigned flight control parameter that is coming from
+        /// a kOS core that is no longer on this vessel but is instead on the newly
+        /// branched vessel we left behind.  If so, that parameter needs to be
+        /// removed from this vessel.  The new kOSVesselModule will take care of
+        /// making a new parameter on the new vessel, but this kOSVesselModule needs
+        /// to detach it from this one.
+        /// </summary>
+        private void ResetPhysicallyDetachedParameters()
+        {
+            List<string> removeKeys = new List<string>();
+            foreach (string key in flightControlParameters.Keys)
+            {
+                IFlightControlParameter p = flightControlParameters[key];
+                if (p.GetShared() != null && p.GetShared().Vessel != null && vessel != null &&
+                    p.GetShared().Vessel.id != vessel.id)
+                    removeKeys.Add(key);
+            }
+            foreach (string key in removeKeys)
+            {
+                SafeHouse.Logger.SuperVerbose(string.Format(
+                    "kOSVesselModule: re-defaulting parameter \"{0}\" because it's on a detached part of the vessel.", key));
+                RemoveFlightControlParameter(key);
+                IFlightControlParameter p = null;
+                if (key.Equals("steering"))
+                    p = new SteeringManager(Vessel);
+                else if (key.Equals("throttle"))
+                    p = new ThrottleManager(Vessel);
+                else if (key.Equals("wheelsteering"))
+                    p = new WheelSteeringManager(Vessel);
+                else if (key.Equals("wheelthrottle"))
+                    p = new WheelThrottleManager(Vessel);
+                else if (key.Equals("flightcontrol"))
+                    p = new FlightControl(Vessel);
+
+                if (p != null)
+                    AddFlightControlParameter(key, p);
+            }
         }
 
         /// <summary>
@@ -350,13 +392,26 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
-            if (childParts.Count > 0)
+            if (vessel != null)
             {
-                foreach (var parameter in flightControlParameters.Values)
+                if (childParts.Count > 0)
                 {
-                    if (parameter.Enabled && parameter.IsAutopilot)
+                    foreach (var parameter in flightControlParameters.Values)
                     {
-                        parameter.UpdateAutopilot(c);
+                        if (parameter.Enabled && parameter.IsAutopilot && parameter.GetShared() != null)
+                        {
+                            SharedObjects sharedFromParam = parameter.GetShared();
+
+                            if (sharedFromParam != null && sharedFromParam.Vessel != null &&
+                                sharedFromParam.Vessel.id != vessel.id)
+                            {
+                                // This is a "should never see this" error - being logged in case a user
+                                // has problems and reports a bug.
+                                SafeHouse.Logger.LogError(string.Format("kOS Autopilot on wrong vessel: {0} != {1}",
+                                    parameter.GetShared().Vessel.id, vessel.id));
+                            }
+                            parameter.UpdateAutopilot(c);
+                        }
                     }
                 }
             }
@@ -434,7 +489,7 @@ namespace kOS.Module
             }
         }
 
-        /// <summary>
+        /// <summary>                
         /// Return the kOSVesselModule instance associated with the given Vessel object
         /// </summary>
         /// <param name="vessel">the vessel for which the module should be returned</param>
