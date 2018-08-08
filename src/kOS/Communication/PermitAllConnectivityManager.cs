@@ -61,10 +61,13 @@ namespace kOS.Communication
 
         public void AddAutopilotHook(Vessel vessel, FlightInputCallback hook)
         {
-            // removing the callback if not already added doesn't throw an error
-            // but adding it a 2nd time will result in 2 calls.  Remove to be safe.
-            vessel.OnPreAutopilotUpdate -= hook;
-            vessel.OnPreAutopilotUpdate += hook;
+            if (vessel != null)
+            {
+                // removing the callback if not already added doesn't throw an error
+                // but adding it a 2nd time will result in 2 calls.  Remove to be safe.
+                vessel.OnPreAutopilotUpdate -= hook;
+                vessel.OnPreAutopilotUpdate += hook;
+            }
         }
 
         public void RemoveAutopilotHook(Vessel vessel, FlightInputCallback hook)
