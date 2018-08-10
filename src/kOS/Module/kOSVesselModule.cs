@@ -23,6 +23,7 @@ namespace kOS.Module
         /// <summary>How often to re-attempt the autopilot hook, expressed as a number of physics updates</summary>
         private const int autopilotRehookPeriod = 25;
         private int autopilotRehookCounter = autopilotRehookPeriod - 2; // make sure it starts out ready to trigger soon
+        private bool foundWrongVesselAutopilot = false;
 
         public Guid ID
         {
@@ -161,7 +162,7 @@ namespace kOS.Module
         {
             if (initialized)
             {
-                if (Vessel.Parts.Count != partCount)
+                if (foundWrongVesselAutopilot || Vessel.Parts.Count != partCount)
                 {
                     ClearParts();
                     HarvestParts();
@@ -277,6 +278,7 @@ namespace kOS.Module
                 if (p != null)
                     AddFlightControlParameter(key, p);
             }
+            foundWrongVesselAutopilot = false;
         }
 
         /// <summary>
@@ -407,6 +409,7 @@ namespace kOS.Module
                                 // has problems and reports a bug.
                                 SafeHouse.Logger.LogError(string.Format("kOS Autopilot on wrong vessel: {0} != {1}",
                                     parameter.GetShared().Vessel.id, vessel.id));
+                                foundWrongVesselAutopilot = true;
                             }
                             parameter.UpdateAutopilot(c);
                         }
