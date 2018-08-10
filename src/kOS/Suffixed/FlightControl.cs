@@ -388,6 +388,11 @@ namespace kOS.Suffixed
             return null;
         }
 
+        Vessel IFlightControlParameter.GetResponsibleVessel()
+        {
+            return Vessel;
+        }
+
         void IFlightControlParameter.UpdateAutopilot(FlightCtrlState c)
         {
             OnFlyByWire(c);

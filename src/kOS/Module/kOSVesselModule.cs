@@ -398,12 +398,10 @@ namespace kOS.Module
                 {
                     foreach (var parameter in flightControlParameters.Values)
                     {
-                        if (parameter.Enabled && parameter.IsAutopilot && parameter.GetShared() != null)
+                        if (parameter.Enabled && parameter.IsAutopilot)
                         {
-                            SharedObjects sharedFromParam = parameter.GetShared();
-
-                            if (sharedFromParam != null && sharedFromParam.Vessel != null &&
-                                sharedFromParam.Vessel.id != vessel.id)
+                            Vessel ves = parameter.GetResponsibleVessel();                                
+                            if (ves != null && ves.id != vessel.id)
                             {
                                 // This is a "should never see this" error - being logged in case a user
                                 // has problems and reports a bug.
