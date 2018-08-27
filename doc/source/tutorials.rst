@@ -1,5 +1,5 @@
 .. _tutorials:
-    
+
 Tutorials
 =========
 
@@ -9,6 +9,7 @@ If you prefer the tutorial style of explanation, please see the following exampl
     :hidden:
 
     Quick Start <tutorials/quickstart>
+    Basic Explanation <tutorials/basictutorial>
     Design Patterns <tutorials/designpatterns>
     PID Loops <tutorials/pidloops>
     Execute Node script <tutorials/exenode>
@@ -20,12 +21,15 @@ Introductory
 :doc:`Quick Start Tutorial <tutorials/quickstart>`
     Walks you through the beginnings of making a beginner's ship launcher script.
 
+:doc:`Basic Explanation Tutorial <tutorials/basictutorial>`
+    Covers basic commands of KOS.
+
 Intermediate
 ------------
 
 :doc:`Design Patterns Tutorial <tutorials/designpatterns>`
     Discusses some general aspects of kOS flow control and optimizations.
-    
+
 :doc:`PID Loop Tutorial <tutorials/pidloops>`
     Starts with a basic proportional feedback loop and develops, in stages, a complete PID-loop to control the throttle of a simple rocket design.
 
