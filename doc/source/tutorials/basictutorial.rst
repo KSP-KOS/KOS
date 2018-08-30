@@ -46,7 +46,7 @@ To run the file, type:
 Making scrips with an editor
 ____________________________
 
-To use a text editor instead go to your KSP folder and go to ``/Ships/Script/`` and create an empty file and name it whatever you want
+To use a text editor instead go to your KSP folder and go to ``Ships/Script/`` and create an empty file and name it whatever you want
 (be cautious using spaces in filenames because this might mess stuff up, also, avoid using capital letters in .ks files if you are running Linux). Not sure where your KSP folder is? If you used steam to install KSP, go to your steam library and right click Kerbal Space Program in the list of games. Next click on ``properties`` and go to the ``local files`` tab. Finally, press on the ``browse local files`` button. (KSP doesn't require you to use steam, you can copy the KSP folder from the Steam folder to your desktop so you can play without using Steam).
 
 All KOS script files should end with ``.ks``.
