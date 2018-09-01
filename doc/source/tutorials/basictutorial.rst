@@ -166,7 +166,13 @@ For instance ``if``, this checks if a certain value matches the given value. ::
 
 This will show: ``x is one``.
 
-You've probably noticed the curly brackets ``{ }`` after an ``if`` statement. You don't need a period at the end of an ``if`` statement but you need these brackets.
+You've probably noticed the curly brackets ``{ }`` after an ``if`` statement. You don't need a period at the end of an ``if`` statement but you need these brackets if you have more than one statement in the body, otherwise they're optional.
+
+This is valid: ::
+
+  if x = 1
+    print "x is one".
+
 You could cover the piece the code within the curly brackets with your hand and say: if ``x`` is equal to ``1``, then do whatever
 I covered with my hand. ``If`` statements can also be used for booleans: ::
 
@@ -183,19 +189,19 @@ Ofcourse the equals sign isn't the only symbol you can use, other symbols are:
 
 Equals to or bigger than:
 
-1 >= 1
+``1 >= 1``
 
-2 >= 1
+``2 >= 1``
 
 Equals to or smaller than
 
-1 <= 1
+``1 <= 1``
 
-1 <= 2
+``1 <= 2``
 
 Is not equal to:
 
-1 <> 2
+``1 <> 2``
 
 So as you have seen, we created some commands that will only happen if a condition is true, otherwise nothing happens and we move
 on. But what if you want to do some commands when the condition is true and instead of doing nothing when it's false,
@@ -221,7 +227,8 @@ then check the following ``if`` statement. ::
     print "this is a dog".
   } else {
     print "this is neither a cat nor a dog".
-
+  }
+  
 This would print ``this is a dog``.
 
 =====================
@@ -230,7 +237,7 @@ This would print ``this is a dog``.
 
 Hopefully you now know the basics of how ``if`` works. You might be wondering why use ``else if`` if it's the same as ``if``.
 
-Using ``else if``
+Example 1, using ``else if``
 _________________
 ::
 
@@ -242,7 +249,7 @@ _________________
 	  print "Distance is farther than 100 m.".
 	}
 
-Only using ``if``
+Example 2, only using ``if``
 __________________
 ::
 
@@ -256,14 +263,18 @@ __________________
   	  print "Distance is farther than 1 kilometer.".
 	}
 
-We now run into some problems: if your distance is less than a meter you'll get the following messages: ::
+Using example 1, if your distance is less than a meter you'll get the following message: ::
 
+	Distance is within a meter.
+
+Using example 2, if your distance is less than a meter you'll get the following messages: ::
+	
 	Distance is within a meter.
 	Distance is within 100 meters.
 	Distance is farther than 1 kilometer.
 
-As you can imagine this isn't good. If we're at less than a meter away from something and the commands for if we would be farther
-than 1 kilometer show up we have a big problem. This could be fixed by doing the following, but **THIS IS UNNECESSARILY** complex: ::
+As you can imagine the second example isn't good. If we're at less than a meter away from something and the commands for if we would be farther
+than 1 kilometer show up we have a big problem. This could be fixed by doing the following, but **THIS IS UNNECESSARILY COMPLEX**: ::
 
  set Done to false.
 
@@ -294,35 +305,44 @@ Now this essentially does the same as the ``else if`` script but it's way more c
 Until, lock and wait
 ====================
 
-The ``wait`` command pretty straight forward: ::
+The ``wait`` command is pretty straight forward: ::
 
   wait 10.
- print "done waiting".
+  print "done waiting".
 
 
 It will take 10 seconds before ``done waiting`` shows up.
-Using ``wait 0`` will let the script wait for one physics tick, this can be handy for
-when you're doing stuff with maneuvers. Maneuvers don't show up instantly but show up
-after one physics tick. More about maneuvers in part ???.
+Using ``wait 0`` will let the script wait for one physics tick (a physics tick is the time it takes for KSP to update its physics), this can be handy for when you're doing stuff with maneuvers. Maneuvers don't show up instantly but show up
+after one physics tick. More about maneuvers in a future tutorial.
 
-The ``until`` command will keep looping a piece of code until the given value has been met.
-Before we can talk about until loops let's first talk about ``time:seconds`` and the ``lock`` command. ::
+The ``until`` command will keep looping a piece of code until the given value has been met. Here's a simple example of what you can do with an ``until`` command: ::
+
+  set x to 0.
+  until x > 100 {
+    print x.
+    set x to x + 1.
+  }
+
+This first sets ``x`` to 0 and until ``x`` is bigger than 100 it does whatever happens within the brackets.
+In this case it prints ``x`` and then it increases ``x`` by 1. This loop repeats itself until ``x`` is bigger than 100. 
+Before we can talk about more complex until loops let's first talk about ``time:seconds`` and the ``lock`` command. ::
 
   print time:seconds.
 
-
-will print the current time in seconds. Let's say the time is 1 minute.
-It would print ``60``. You can also set the current time as a variable: ::
+Will print the current time in seconds. Let's say the in-game time is 1 minute.
+It would print ``60``. You can also set the current in-game time as a variable: ::
 
   set CurrentTime to time:seconds.
 
-The variable ``CurrentTime`` will stay 60 seconds. Using the ``set`` command will look at
-a value and pick that value to stay the  same, even if the value it was set to changes.
-For instance, printing ``CurrentTime`` would give 60. Not only at ``time:seconds`` = 60,
-also at any other time like ``time:seconds`` = 4000. Eventhough ``time:seconds`` is 4000,
-``CurrentTime`` is still 60.
+The variable ``CurrentTime`` will stay 60 seconds. Eventhough the in-game time changes: ::
+  
+  set CurrentTime to time:seconds.
+  print CurrentTime. // shows: 60
+  wait 10.
+  print CurrentTime. // shows: 60
 
-The ``lock`` command updates constantly the variable, for example: ::
+As you can see, eventhough the in-game time has changed the variable ``CurrentTime`` is still 60. The ``set`` command does **NOT** constantly update the variable. If you want a constantly updating variable you have to use the ``lock`` command.
+Here's an example of what the ``lock`` command can do: ::
 
   lock TimeSecondsPlusTen to time:seconds + 10.
 
@@ -345,8 +365,8 @@ If we now combine all the command we can make the following piece of code: ::
   }
 
 So an easy way to read the until loop is to cover what ever is inside of the curly brackets
-and say: until ``time:seconds`` is bigger than our current time plus 5 seconds, print
-``Multiplier``, increase the value of ``Adder`` and wait 1 second.
+and say: until ``time:seconds`` is bigger than our current time plus 5 seconds, repeat whatever I covered with my hand.
+In this case that'd be: print ``Multiplier``, increase the value of ``Adder`` and wait 1 second.
 
 The outcome of this piece of code is: ::
 
@@ -360,7 +380,7 @@ The outcome of this piece of code is: ::
 Wait until
 __________
 
-You can also use the ``wait until`` command, this blocks all other code until the
+You can also use the ``wait until`` command, this pauses the current script until the
 conditions have been met. ::
 
   set TimePlusFive to time:seconds + 5.
@@ -368,6 +388,7 @@ conditions have been met. ::
   print "done waiting".
 
 It will take 5 seconds for ``done waiting`` to show up.
+Note: the ``wait until`` command only checks the condition once per physics tick.  Using ``wait until`` for a fraction of a physics tick will round up to the start of a new physics tick.
 
 ==================
 Lists and lexicons
@@ -428,6 +449,15 @@ In this case it prints: ::
   10
   15
   20
+
+You can also use variables to check an item in a list: ::
+
+  set x to 3.
+  print ValueList[x]. // shows 15
+
+Does the same as: ::
+
+  print ValueList[3]. // also shows 15
 
 Lexicons
 ________
@@ -605,6 +635,7 @@ the function it is in. ::
     set TotalRadius to OrbitHeight + KerbinRadius.
     set OrbitalPeriod to ship:orbit:period.
     return (2 * 3.1416 * TotalRadius) / OrbitalPeriod.
+    // everything after the return command will be skipped because a return command ends a function.
     print "this will be skipped".
   }
 
