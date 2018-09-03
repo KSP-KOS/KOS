@@ -273,7 +273,7 @@ Using example 2, if your distance is less than a meter you'll get the following 
 	Distance is within 100 meters.
 	Distance is farther than 1 kilometer.
 
-As you can imagine the second example isn't good. If we're at less than a meter away from something and the commands for if we would be farther
+As you can imagine the second example isn't good. If we're at less than a meter away from something and the messages for if we would be farther
 than 1 kilometer show up we have a big problem. This could be fixed by doing the following, but **THIS IS UNNECESSARILY COMPLEX**: ::
 
  set Done to false.
