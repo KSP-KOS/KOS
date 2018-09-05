@@ -242,20 +242,21 @@ Structure
     or hyperbolic, eccentricity >= 1.0).  If the orbit is closed, then
     this value will be in the range [0..360), where values larger than
     180 represent positions in the orbit where it is "coming back down"
-    from apoapsis to periapsis.  But if the orbit is open, then this
-    value will be in the range (-180..180), where negative values are
-    used to represent the positions in the orbit where it is "coming down"
-    to the periapsis.  The difference is because it does not make sense
-    to speak of the orbit looping all the way around 360 degrees in
-    the case of an open orbit where it does not come back down.
+    from apoapsis to periapsis.  But if the orbit is open, then this value
+    doesn't have any limits, and furthermore negative values are
+    used to represent the portion of the orbit that is "coming down"
+    to the periapsis, rather than using values > 180 for this.
 
-    Note that the above switch between 0..360 versus -180..180 happens
-    when the orbit is *mathematically* shown to be an escaping orbit,
-    NOT when it's still an ellipse but the apoapsis happens to be higher
-    than the body's sphere of influence so the game will let it escape
-    anyway.  Both conditions look similar on the game map so it may
-    be hard to tell them apart without actually querying the eccentricity
-    to find out which it is.
+    Note that the above switch between MEANANOMALY behaving in the "closed"
+    versus "open" way depends on the orbit being *mathematically* shown
+    to be an escaping orbit, NOT merely "escaping" because it has an
+    apoapsis higher than the body's sphere of influence.  If the orbit's
+    mathematical parameters show it to be an ellipse, but its apoapsis is
+    higher than the body's sphere of influence, then the game will let it
+    escape anyway despite it still being an elliptical orbit.  (It's just
+    an elliptical orbit with the top "cut off".)  The MEANANOMALY
+    measurement will treat such elliptical-but-escaping-anyway scenarios
+    as "closed" even though they don't look like it on the map.
 
 .. attribute:: Orbit:EPOCH
 
