@@ -139,7 +139,6 @@ namespace kOS.Safe.Test.Structures
         public void CanGetIndex()
         {
             var testValue = "FooBarFooBar";
-            var findChar = 0;
             var expectedIndex = new StringValue("F");
             var sv = new StringValue(testValue);
 

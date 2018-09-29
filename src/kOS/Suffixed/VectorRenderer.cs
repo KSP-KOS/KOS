@@ -444,14 +444,16 @@ namespace kOS.Suffixed
                 useWidth = (float)(Width * Scale * mapWidthMult);
 
                 // Position the arrow line:
-                line.SetVertexCount(2);
-                line.SetWidth(useWidth, useWidth);
+                line.positionCount = 2;
+                line.startWidth = useWidth;
+                line.endWidth = useWidth;
                 line.SetPosition(0, point1);
                 line.SetPosition(1, point2);
 
                 // Position the arrow hat:
-                hat.SetVertexCount(2);
-                hat.SetWidth(useWidth * 3.5f, 0.0F);
+                hat.positionCount = 2;
+                hat.startWidth = useWidth * 3.5f;
+                hat.endWidth = 0.0f;
                 hat.SetPosition(0, point2);
                 hat.SetPosition(1, point3);
 
@@ -475,8 +477,12 @@ namespace kOS.Suffixed
 
             if (line != null && hat != null)
             {
-                line.SetColors(c1, c2); // The line has the fade effect
-                hat.SetColors(c2, c2);  // The hat does not have the fade effect.
+                // The line has the fade effect from color c1 to color c2:
+                line.startColor = c1; 
+                line.endColor = c2;
+                // The hat does not have the fade effect, staying at color c2 the whole way:
+                hat.startColor = c2;
+                hat.endColor = c2;
                 label.color = lCol;     // The label does not have the fade effect.
             }
         }

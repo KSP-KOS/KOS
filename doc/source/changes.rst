@@ -24,6 +24,16 @@ release.
 
 ****
 
+Changes in 1.1.5.2
+------------------
+
+This was a compatibility release for KSP 1.4.1
+
+Changes in 1.1.5.0
+------------------
+
+This was a compatibility release for KSP 1.3.1
+
 Changes in 1.1.4.0
 ------------------
 

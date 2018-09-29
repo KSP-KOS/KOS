@@ -1,6 +1,22 @@
 kOS Mod Changelog
 =================
 
+# v1.1.5.2 Basic Compatibilty for KSP 1.4.1
+
+Built for KSP 1.4.1
+
+This release is mostly just a recompile to make kOS work with
+KSP 1.4.1, with the few changes that were needed to keep it
+working, and whatever bug fixes happened to already be 
+implemented when when KSP 1.4.1 came out.
+
+### BUG FIXES:
+
+- Callbacks where the delegate was created using :BIND now work.
+  (Thanks to firda-cze for finding and fixing the problem.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2238)
+
+
 # v1.1.5.0 HotFix for nested function scope.
 
 Built for KSP v1.3.1
