@@ -884,6 +884,8 @@ namespace kOS.Module
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;
+                    // Give rovers a chance to load energy
+                    kOSVesselModule.GetInstance(shared.Vessel).GetFlightControlParameter("wheelthrottle").UpdateValue(0.0d, shared);
                     break;
             }
 
