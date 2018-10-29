@@ -884,6 +884,8 @@ namespace kOS.Module
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;
+                    kOSVesselModule vesselModule = kOSVesselModule.GetInstance(shared.Vessel);
+                    if (!vesselModule.ProcessorAvailable()) vesselModule.OnAllProcessorsStarved();
                     break;
             }
 

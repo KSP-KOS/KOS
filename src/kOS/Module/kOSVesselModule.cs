@@ -435,6 +435,35 @@ namespace kOS.Module
         }
 
         /// <summary>
+        /// Checks if there is any kOSProcessor active
+        /// </summary>
+        public bool ProcessorAvailable()
+        {
+            IEnumerable<PartModule> processorModules = Vessel.parts
+                .SelectMany(p => p.Modules.Cast<PartModule>()
+                .Where(pMod => pMod is kOSProcessor));
+            foreach (kOSProcessor processor in processorModules)
+            {
+                if (processor.ProcessorMode == Safe.Module.ProcessorModes.READY)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Disables the controlls
+        /// </summary>
+        public void OnAllProcessorsStarved()
+        {
+            foreach (IFlightControlParameter f in flightControlParameters.Values)
+            {
+                f.DisableControl();
+            }
+        }
+
+        /// <summary>
         /// Return the kOSVesselModule instance associated with the given Vessel object
         /// </summary>
         /// <param name="vessel">the vessel for which the module should be returned</param>
