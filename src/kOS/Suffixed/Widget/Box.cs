@@ -37,12 +37,12 @@ namespace kOS.Suffixed.Widget
             AddSuffix("ADDLABEL", new OptionalArgsSuffix<Label>(AddLabel, new Structure[] { new StringValue ("") }));
             AddSuffix("ADDTEXTFIELD", new OptionalArgsSuffix<TextField>(AddTextField, new Structure [] { new StringValue ("") }));
             AddSuffix("ADDBUTTON", new OptionalArgsSuffix<Button>(AddButton, new Structure [] { new StringValue ("") }));
-            AddSuffix("ADDRADIOBUTTON", new OptionalArgsSuffix<Button>(AddRadioButton, new Structure [] { new ScalarDoubleValue(0), new ScalarDoubleValue (0), new ScalarDoubleValue (1) }));
+            AddSuffix("ADDRADIOBUTTON", new OptionalArgsSuffix<Button>(AddRadioButton, new Structure [] { new StringValue(""), new BooleanValue(false) }));
             AddSuffix("ADDCHECKBOX", new OptionalArgsSuffix<Button>(AddCheckbox, new Structure [] { new StringValue(""), new BooleanValue(false) }));
             AddSuffix("ADDPOPUPMENU", new Suffix<PopupMenu>(AddPopupMenu));
             AddSuffix("ADDHSLIDER", new OptionalArgsSuffix<Slider>(AddHSlider, new Structure [] { new ScalarDoubleValue (0), new ScalarDoubleValue (0), new ScalarDoubleValue (1) }));
             AddSuffix("ADDVSLIDER", new OptionalArgsSuffix<Slider>(AddVSlider, new Structure [] { new ScalarDoubleValue (0), new ScalarDoubleValue (0), new ScalarDoubleValue (1) }));
-            AddSuffix ("ADDHBOX", new Suffix<Box> (AddHBox));
+            AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
             AddSuffix("ADDVBOX", new Suffix<Box>(AddVBox));
             AddSuffix("ADDHLAYOUT", new Suffix<Box>(AddHLayout));
             AddSuffix("ADDVLAYOUT", new Suffix<Box>(AddVLayout));

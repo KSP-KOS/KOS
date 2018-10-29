@@ -19,16 +19,20 @@ namespace kOS.Safe.Encapsulation.Suffixes
         protected override object Call(object[] args)
         {
             Structure [] argsPassed = (Structure []) args [0];
-            if (argsPassed.Length > this.defaults.Length) {
+            if (argsPassed.Length > this.defaults.Length)
+            {
                 throw new KOSArgumentMismatchException (this.defaults.Length, argsPassed.Length, "Too many arguments.");
             }
             Structure [] argsClean = new Structure [this.defaults.Length];
 
-            for (int i = 0; i < argsPassed.Length; i++) {
+            for (int i = 0; i < argsPassed.Length; i++)
+            {
                 argsClean[i] = (Structure) argsPassed[i];
             }
-            for (int i = argsPassed.Length; i < this.defaults.Length; i++) {
-                if(this.defaults[i] == null) {
+            for (int i = argsPassed.Length; i < this.defaults.Length; i++)
+            {
+                if(this.defaults[i] == null)
+                {
                     throw new KOSArgumentMismatchException(this.defaults.Length, argsPassed.Length, "Missing required argument.");
                 }
                 argsClean[i] = this.defaults[i];
