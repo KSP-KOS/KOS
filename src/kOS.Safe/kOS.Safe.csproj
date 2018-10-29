@@ -286,6 +286,7 @@
     <Compile Include="Utilities\StringUtil.cs" />
     <Compile Include="Execution\InterruptPriority.cs" />
     <Compile Include="Execution\ExecutionStatBlock.cs" />
+    <Compile Include="Encapsulation\Suffixes\OptionalArgsSuffix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
