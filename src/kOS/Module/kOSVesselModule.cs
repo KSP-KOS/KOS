@@ -435,9 +435,11 @@ namespace kOS.Module
         }
 
         /// <summary>
-        /// Checks if there is any kOSProcessor active
+        /// True if there is any kOSProcessor on the vessel in READY state.
+        /// It's a slow O(n) operation (n = count of all PartModules on the vessel)
+        /// so don't be calling this frequently.
         /// </summary>
-        public bool ProcessorAvailable()
+        public bool AnyProcessorReady()
         {
             IEnumerable<PartModule> processorModules = Vessel.parts
                 .SelectMany(p => p.Modules.Cast<PartModule>()
@@ -453,7 +455,7 @@ namespace kOS.Module
         }
 
         /// <summary>
-        /// Disables the controlls
+        /// Disables the controls
         /// </summary>
         public void OnAllProcessorsStarved()
         {
