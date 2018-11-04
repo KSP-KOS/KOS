@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using kOS.Safe.Utilities;
@@ -534,17 +535,74 @@ namespace kOS.UserIO
             List<string> ipAddrList = new List<string>();
             ipAddrList.Add(IPAddress.Loopback.ToString()); // always ensure loopbacks exist.
 
-            // This seems to be the standard .net way to do this, but I don't like it.
-            // It presumes we have exactly one host name and that we have a functioning
-            // DNS for this machine that may very well be isolated on a local tiny network
-            // without DNS or names of any kind.  But, since this seems to be the standard
-            // answer to the question "how do I list all my IP addresses?", we'll go with it
-            // for now:
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress addr in localIPs)
+            // We ended up having to implement this this kind of inefficiently by trying two
+            // different techniques to do the same thing.
+            //
+            // The technique that finds IP addresses via DNS will find zero hits on some Macs installs
+            // because they are configured to use their own "bonjour" system instead of DNS.
+            //
+            // The technique that walks all network interfaces will find zero hits on some Linux installs
+            // because the Mono variant in Unity has a bugged implementation of GetAllNetworkInterfaces()
+            //
+            // So we decided to just try both techniques and keep the union of the two results.
+
+
+            // This is the attempt to find IP address via walking the DNS information:
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            try
             {
-                if (! addr.Equals(IPAddress.Loopback) )
-                    ipAddrList.Add(addr.ToString());
+                SafeHouse.Logger.Log("Technique 1: Walking all DNS hostnames of this machine to find all IP addresses.");
+                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+                foreach (IPAddress addr in localIPs)
+                {
+                    if (!addr.Equals(IPAddress.Loopback))
+                    {
+                        ipAddrList.Add(addr.ToString());
+                        SafeHouse.Logger.Log(string.Format("Found an IP address via DNS walk.  Adding it: {0}", addr.ToString()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format("{0} Exception getting ip addresses using DNS technique: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+            }
+
+            // This is the attempt to find IP address via walking the network interfaces:
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            try
+            {
+                SafeHouse.Logger.Log("Technique 2: Walking all NetworkInterfaces to find all IP addresses.");
+                NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+                if (nics != null && nics.Length > 0)
+                {
+                    foreach (NetworkInterface adapter in nics)
+                    {
+                        if (adapter.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                        {
+                            var address = adapter.GetIPProperties().UnicastAddresses;
+                            foreach (var item in address)
+                            {
+                                if (!item.Address.Equals(IPAddress.Loopback) && item.Address.AddressFamily.Equals(System.Net.Sockets.AddressFamily.InterNetwork))
+                                {
+                                    if (ipAddrList.Contains(item.Address.ToString()))
+                                    {
+                                        SafeHouse.Logger.Log(string.Format("  - Found IP address {0} : It's already in the list so skipping it.", item.Address.ToString()));
+                                    }
+                                    else
+                                    {
+                                        ipAddrList.Add(item.Address.ToString());
+                                        SafeHouse.Logger.Log(string.Format("  - Found IP address {0} : Adding it.", item.Address.ToString()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch the DNS error in the Fallback method on a "ceartain" OS to avoid infinite retry loop / log spam, thanks bonjour.
+                SafeHouse.Logger.LogError(string.Format("Exception getting ip addresses from network interfaces: {0}",ex.Message));
             }
             return ipAddrList;
         }

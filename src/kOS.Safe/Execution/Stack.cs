@@ -40,6 +40,7 @@ namespace kOS.Safe.Execution
         private int scopeCount = 0;
 
         private int triggerContextCount = 0;
+        private int delayingTriggerContextCount = 0;
 
         /// <summary>
         /// Push to the argument stack.
@@ -117,10 +118,14 @@ namespace kOS.Safe.Execution
         /// </summary>
         /// <param name="item">Item.</param>
         /// <param name="diff">Diff.</param>
-        private void AdjustTriggerCountIfNeeded(object item, int diff) {
+        private void AdjustTriggerCountIfNeeded(object item, int diff)
+        {
             SubroutineContext sr = item as SubroutineContext;
-            if (sr != null && sr.IsTrigger) {
+            if (sr != null && sr.IsTrigger)
+            {
                 triggerContextCount += diff;
+                if (sr.Trigger != null && ! sr.Trigger.IsImmediateTrigger)
+                    delayingTriggerContextCount += diff;
             }
         }
 
@@ -292,6 +297,7 @@ namespace kOS.Safe.Execution
                 scopeStack[scopeCount] = null;
             }
             triggerContextCount = 0;
+            delayingTriggerContextCount = 0;
         }
 
         public string Dump()
@@ -443,14 +449,30 @@ namespace kOS.Safe.Execution
         /// <summary>
         /// This stack tracks all its pushes and pops to know whether or not it
         /// contains subroutine contexts which are from triggers.  If there are
-        /// any still triggers in the stack, this returns true, else false.  
+        /// still any such triggers in the stack, this returns true, else false.  
         /// </summary>
         /// <returns>True if the current call stack indicates that either we are
         /// inside a trigger, or are inside code that was in turn indirectly called
-        /// from a trigger.  False if we are in mainline code instead.</returns>
+        /// from a trigger.  False if we are in mainline code.</returns>
         public bool HasTriggerContexts()
         {
             return triggerContextCount > 0;
+        }
+
+        /// <summary>
+        /// This stack tracks all its pushes and pops to know whether or not it
+        /// contains subroutine contexts which are from "delaying" triggers.  If there are
+        /// still any such "delaying" triggers in the stack, this returns true, else false.
+        /// A "delaying" trigger is one that isn't immediate - meaning one that nicely waits
+        /// for the next KOSFixedUpdate before it will fire off.
+        /// </summary>
+        /// <returns>True if the current call stack indicates that either we are
+        /// inside a "delaying" trigger, or are inside code that was in turn indirectly called
+        /// from a "delaying" trigger.  False if we are in mainline code or triggers
+        /// that are immediate.</returns>
+        public bool HasDelayingTriggerContexts()
+        {
+            return delayingTriggerContextCount > 0;
         }
     }
 }

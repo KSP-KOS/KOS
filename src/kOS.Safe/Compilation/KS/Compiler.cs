@@ -414,18 +414,6 @@ namespace kOS.Safe.Compilation.KS
 
             switch (node.Token.Type)
             {
-                // statements that can have a lock inside
-                case TokenType.Start:
-                case TokenType.instruction_block:
-                case TokenType.instruction:
-                case TokenType.if_stmt:
-                case TokenType.fromloop_stmt:
-                case TokenType.until_stmt:
-                case TokenType.for_stmt:
-                case TokenType.declare_function_clause:
-                case TokenType.declare_stmt:
-                    PreProcessChildNodes(node);
-                    break;
                 case TokenType.on_stmt:
                     PreProcessChildNodes(node);
                     PreProcessOnStatement(node);
@@ -433,6 +421,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.when_stmt:
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
+                    break;
+                default:
+                    PreProcessChildNodes(node);
                     break;
             }
         }
@@ -469,8 +460,11 @@ namespace kOS.Safe.Compilation.KS
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeEval());
             AddOpcode(new OpcodeDup());
-            // Put one of those two copies of the new value into the old value identifier for next time:
-            AddOpcode(new OpcodeStoreGlobal(triggerObject.OldValueIdentifier));
+            // Put one of those two copies of the new value into the old value identifier for next time.
+            // This is local because triggers have scope and this will keep multiple instances of the
+            // same ON trigger (i.e. executing the ON statement in a loop) to each have thier own copy
+            // of thier own OldValue.
+            AddOpcode(new OpcodeStoreLocal(triggerObject.OldValueIdentifier));
             // Use the other dup'ed copy of the new value to actually do the equals
             // comparison with the old value that's still under it on the stack:
             AddOpcode(new OpcodeCompareEqual());
@@ -485,7 +479,7 @@ namespace kOS.Safe.Compilation.KS
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
+            AddOpcode(new OpcodeStoreLocal(triggerKeepName));
 
             VisitNode(node.Nodes[2]);
 
@@ -527,7 +521,7 @@ namespace kOS.Safe.Compilation.KS
             string triggerKeepName = "$keep-" + triggerIdentifier;
             PushTriggerKeepName(triggerKeepName);
             AddOpcode(new OpcodePush(false));
-            AddOpcode(new OpcodeStoreGlobal(triggerKeepName));
+            AddOpcode(new OpcodeStoreLocal(triggerKeepName));
 
             VisitNode(node.Nodes[3]);
 
@@ -732,7 +726,7 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodeExists());
                     var branch = new OpcodeBranchIfTrue();
-                    branch.Distance = 4;
+                    branch.Distance = 3;
                     AddOpcode(branch);
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
                     AddOpcode(new OpcodeStore(userFuncObject.ScopelessPointerIdentifier));
@@ -2513,7 +2507,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                    AddOpcode(new OpcodeAddTrigger());
+                    AddOpcode(new OpcodeAddTrigger(false));
                 }
                     
                 // enable this FlyByWire parameter
@@ -2554,14 +2548,6 @@ namespace kOS.Safe.Compilation.KS
         {
             if (lockObject.IsSystemLock())
             {
-                // disable this FlyByWire parameter
-                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
-                AddOpcode(new OpcodePush(false));
-                AddOpcode(new OpcodeCall("toggleflybywire()"));
-                // add a pop to clear out the dummy return value from toggleflybywire()
-                AddOpcode(new OpcodePop());
-
                 // remove update trigger
                 string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
                 if (context.Triggers.Contains(triggerIdentifier))
@@ -2570,6 +2556,14 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
                     AddOpcode(new OpcodeRemoveTrigger());
                 }
+                // disable this FlyByWire parameter
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
+                // add a pop to clear out the dummy return value from toggleflybywire()
+                AddOpcode(new OpcodePop());
+
             }
 
             // unlock variable

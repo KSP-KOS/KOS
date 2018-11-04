@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Execution;
 using UnityEngine;
 
 namespace kOS.Suffixed.Widget
@@ -66,7 +67,12 @@ namespace kOS.Suffixed.Widget
         private void ScheduleOnChange()
         {
             if (UserOnChange != null)
-                UserOnChange.TriggerNextUpdate(new ScalarDoubleValue((double)val));
+            {
+                if (guiCaused)
+                    UserOnChange.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, new ScalarDoubleValue((double)val));
+                else
+                    UserOnChange.TriggerOnNextOpcode(InterruptPriority.NoChange, new ScalarDoubleValue((double)val));
+            }
         }
 
         public override string ToString()

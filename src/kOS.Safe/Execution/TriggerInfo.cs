@@ -16,11 +16,26 @@ public class TriggerInfo
     /// </summary>
     public int EntryPoint { get; private set; }
 
+    public InterruptPriority Priority { get; private set; }
+
+    /// <summary>
+    /// A number to help keep instances of the trigger with the smae EntryPoint unique
+    /// in cases where that's allowed.  If this is a zero, that's a special flag
+    /// that means "match all instances with the same Entry Point".
+    /// </summary>
+    public int InstanceCount { get; private set; } 
+
     public List<VariableScope> Closure {get; private set;}
 
     /// <summary>
-    /// If true, this is a callback invoked by our own C# code, which will
-    /// be awaiting the answer the user's code returns.
+    /// If True, This trigger has been marked by the CPU as one that is
+    /// an "immediate" trigger.  This is used by the CPU to decide
+    /// how this trigger should be scheduled.  This flag isn't set until
+    /// the trigger gets added to the CPU.
+    public bool IsImmediateTrigger { get; set; }
+    /// <summary>
+    /// If true, this is a callback inserted by our own C# code, which will
+    /// might be awaiting the answer the user's code returns.
     /// </summary>
     public bool IsCSharpCallback { get; private set; }
     /// <summary>
@@ -58,12 +73,17 @@ public class TriggerInfo
     /// <param name="context">The ProgramContext under which this Trigger is meant to run.</param>
     /// <param name="entryPoint">Address within the program context where the routine starts that
     /// needs to be called when the trigger needs to be invoked.</param>
+    /// <param name="instanceCount">If you want it to be allowed to make more than one instance of
+    /// a trigger at this EntryPoint, then pass in a call to TriggerInfo.NextInstance here, else
+    /// pass in zero to mean that multiple instances from the same entry point aren't allowed.</param> 
     /// <param name="closure">If not-null, this is the closure the trigger should be called with.
     /// If null, the trigger will only reliably be able to see global variables.</param> 
     /// <param name="isCSharpCallback">set to true to tell the system this trigger is meant to be a callback</param>
-    public TriggerInfo(IProgramContext context, int entryPoint, List<VariableScope> closure, bool isCSharpCallback = false)
+    public TriggerInfo(IProgramContext context, int entryPoint, InterruptPriority priority, int instanceCount, List<VariableScope> closure, bool isCSharpCallback = false)
     {
         EntryPoint = entryPoint;
+        Priority = priority;
+        InstanceCount = instanceCount;
         IsCSharpCallback = isCSharpCallback;
         ReturnValue = new ScalarIntValue(0);
         CallbackFinished = false;
@@ -78,17 +98,22 @@ public class TriggerInfo
     /// <param name="context">The ProgramContext under which this Trigger is meant to run.</param>
     /// <param name="entryPoint">Address within the program context where the routine starts that
     /// needs to be called when the trigger needs to be invoked.</param>
+    /// <param name="instanceCount">If you want it to be allowed to make more than one instance of
+    /// a trigger at this EntryPoint, then pass in a call to TriggerInfo.NextInstance here, else
+    /// pass in zero to mean that multiple instances from the same entry point aren't allowed.</param> 
     /// <param name="closure">If not-null, this is the closure the trigger should be called with.
     /// If null, the trigger will only reliably be able to see global variables.</param> 
     /// <param name="args">list of the arguments to pass in to the function.  Note, the existence of
     /// arguments mandates that this is a callback trigger.</param>
-    public TriggerInfo(IProgramContext context, int entryPoint, List<VariableScope> closure, List<Structure> args)
+    public TriggerInfo(IProgramContext context, int entryPoint, InterruptPriority priority, int instanceCount, List<VariableScope> closure, List<Structure> args)
     {
         EntryPoint = entryPoint;
+        Priority = priority;
+        InstanceCount = instanceCount;
         IsCSharpCallback = true;
         ReturnValue = new ScalarIntValue(0);
         CallbackFinished = false;
-        Args = args;
+        Args = args ?? new List<Structure>();
         ContextId = context.ContextId;
         Closure = closure;
     }
@@ -125,6 +150,11 @@ public class TriggerInfo
 
         if (IsCSharpCallback)
         {
+            // TODO - TEST THIS!!! - this may be failing and causing it to fail to remove
+            // triggers that are done (removing triggers is done by making dummy triggers
+            // and then comparing the fields to see if they'r equal to an instance in the list.)
+            // Test by seeing if the list of triggers in CPU is growing bigger and bigger over time.
+
             // For callbacks, only reference-equals are good enough.
             // Hypothetically the same chunk of user code (same entry point)
             // could have been given as a callback to two different areas of
@@ -136,8 +166,19 @@ public class TriggerInfo
         else
         {
             // for non-callbacks, as long as they refer to the same
-            // chunk of user code, they are equal:
+            // chunk of user code *that was generated at the same
+            // time from the CPU visiting that bit of code*,
+            // they are equal:
             if (EntryPoint != otherInfo.EntryPoint)
+                return false;
+
+            // If they're nonzero the InstanceCounts also have to match for there to be equality.
+            // But only if they're nonzero!
+            //
+            // This "zero means don't-care" rule exists mostly because we store lists of
+            // TriggerInfos where we try to guarantee no duplicates within the list, and the meaning
+            // for "what counts as a duplicate" is different for some types of trigger in this regard.
+            if (InstanceCount != 0 && otherInfo.InstanceCount != 0 && InstanceCount != otherInfo.InstanceCount)
                 return false;
         }
 
@@ -156,7 +197,7 @@ public class TriggerInfo
         if (IsCSharpCallback)
             return baseHashCode;
         else
-            return baseHashCode + EntryPoint.GetHashCode();
+            return baseHashCode + EntryPoint.GetHashCode() + (InstanceCount == 0 ? 0 : InstanceCount.GetHashCode());
     }
     
     public override string ToString()

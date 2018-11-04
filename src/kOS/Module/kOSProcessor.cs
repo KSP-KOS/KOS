@@ -460,8 +460,8 @@ namespace kOS.Module
                 }
 
                 var path = BootFilePath;
-                // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
-                if (vessel.situation == Vessel.Situations.PRELAUNCH && path != null && !SafeHouse.Config.StartOnArchive)
+                // populate it with the boot file, but only if using a new disk:
+                if (path != null && !SafeHouse.Config.StartOnArchive)
                 {
                     var bootVolumeFile = Archive.Open(BootFilePath) as VolumeFile;
                     if (bootVolumeFile != null)
@@ -884,6 +884,8 @@ namespace kOS.Module
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;
+                    kOSVesselModule vesselModule = kOSVesselModule.GetInstance(shared.Vessel);
+                    if (!vesselModule.AnyProcessorReady()) vesselModule.OnAllProcessorsStarved();
                     break;
             }
 

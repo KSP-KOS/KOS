@@ -34,21 +34,21 @@ namespace kOS.Suffixed.Widget
 
         private void InitializeSuffixes()
         {
-            AddSuffix("ADDLABEL", new OneArgsSuffix<Label, StringValue>(AddLabel));
-            AddSuffix("ADDTEXTFIELD", new OneArgsSuffix<TextField, StringValue>(AddTextField));
-            AddSuffix("ADDBUTTON", new OneArgsSuffix<Button, StringValue>(AddButton));
-            AddSuffix("ADDRADIOBUTTON", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddRadioButton));
-            AddSuffix("ADDCHECKBOX", new TwoArgsSuffix<Button, StringValue, BooleanValue>(AddCheckbox));
+            AddSuffix("ADDLABEL", new OptionalArgsSuffix<Label>(AddLabel, new Structure[] { new StringValue ("") }));
+            AddSuffix("ADDTEXTFIELD", new OptionalArgsSuffix<TextField>(AddTextField, new Structure [] { new StringValue ("") }));
+            AddSuffix("ADDBUTTON", new OptionalArgsSuffix<Button>(AddButton, new Structure [] { new StringValue ("") }));
+            AddSuffix("ADDRADIOBUTTON", new OptionalArgsSuffix<Button>(AddRadioButton, new Structure [] { new StringValue(""), new BooleanValue(false) }));
+            AddSuffix("ADDCHECKBOX", new OptionalArgsSuffix<Button>(AddCheckbox, new Structure [] { new StringValue(""), new BooleanValue(false) }));
             AddSuffix("ADDPOPUPMENU", new Suffix<PopupMenu>(AddPopupMenu));
-            AddSuffix("ADDHSLIDER", new ThreeArgsSuffix<Slider, ScalarValue, ScalarValue, ScalarValue>(AddHSlider));
-            AddSuffix("ADDVSLIDER", new ThreeArgsSuffix<Slider, ScalarValue, ScalarValue, ScalarValue>(AddVSlider));
+            AddSuffix("ADDHSLIDER", new OptionalArgsSuffix<Slider>(AddHSlider, new Structure [] { new ScalarDoubleValue (0), new ScalarDoubleValue (0), new ScalarDoubleValue (1) }));
+            AddSuffix("ADDVSLIDER", new OptionalArgsSuffix<Slider>(AddVSlider, new Structure [] { new ScalarDoubleValue (0), new ScalarDoubleValue (0), new ScalarDoubleValue (1) }));
             AddSuffix("ADDHBOX", new Suffix<Box>(AddHBox));
             AddSuffix("ADDVBOX", new Suffix<Box>(AddVBox));
             AddSuffix("ADDHLAYOUT", new Suffix<Box>(AddHLayout));
             AddSuffix("ADDVLAYOUT", new Suffix<Box>(AddVLayout));
             AddSuffix("ADDSCROLLBOX", new Suffix<ScrollBox>(AddScrollBox));
             AddSuffix("ADDSTACK", new Suffix<Box>(AddStack));
-            AddSuffix("ADDSPACING", new OneArgsSuffix<Spacing, ScalarValue>(AddSpace));
+            AddSuffix("ADDSPACING", new OptionalArgsSuffix<Spacing>(AddSpace, new Structure [] { new ScalarIntValue(-1) }));
             AddSuffix("WIDGETS", new Suffix<ListValue>(() => ListValue.CreateList(Widgets)));
             AddSuffix("RADIOVALUE", new Suffix<StringValue>(() => new StringValue(GetRadioValue())));
             AddSuffix("ONRADIOCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnRadioChange), value => UserOnRadioChange = CallbackSetter(value)));
@@ -76,7 +76,12 @@ namespace kOS.Suffixed.Widget
         public void ScheduleOnRadioChange(Button b)
         {
             if (UserOnRadioChange != null)
-                UserOnRadioChange.TriggerNextUpdate(b);
+            {
+                if (guiCaused)
+                    UserOnRadioChange.TriggerOnFutureUpdate(InterruptPriority.CallbackOnce, b);
+                else
+                    UserOnRadioChange.TriggerOnNextOpcode(InterruptPriority.NoChange, b);
+            }
         }
 
         /// <summary>
@@ -114,23 +119,23 @@ namespace kOS.Suffixed.Widget
             // children who try to Dispose will not be found.
         }
 
-        public Spacing AddSpace(ScalarValue amount)
+        public Spacing AddSpace(params Structure [] args)
         {
-            var w = new Spacing(this, amount);
+            var w = new Spacing(this, (ScalarValue) args[0]);
             Widgets.Add(w);
             return w;
         }
 
-        public Slider AddHSlider(ScalarValue init, ScalarValue min, ScalarValue max)
+        public Slider AddHSlider(params Structure [] args)
         {
-            var w = new Slider(this, true, init, min, max);
+            var w = new Slider(this, true, (ScalarValue) args[0], (ScalarValue) args[1], (ScalarValue) args[2]);
             Widgets.Add(w);
             return w;
         }
 
-        public Slider AddVSlider(ScalarValue init, ScalarValue min, ScalarValue max)
+        public Slider AddVSlider(params Structure [] args)
         {
-            var w = new Slider(this, false, init, min, max);
+            var w = new Slider(this, false, (ScalarValue) args[0], (ScalarValue) args[1], (ScalarValue) args[2]);
             Widgets.Add(w);
             return w;
         }
@@ -182,37 +187,37 @@ namespace kOS.Suffixed.Widget
             return w;
         }
 
-        public Label AddLabel(StringValue text)
+        public Label AddLabel(params Structure [] args)
         {
-            var w = new Label(this, text);
+            var w = new Label(this, (StringValue) args[0]);
             Widgets.Add(w);
             return w;
         }
 
-        public TextField AddTextField(StringValue text)
+        public TextField AddTextField(params Structure [] args)
         {
-            var w = new TextField(this, text);
+            var w = new TextField(this, (StringValue) args[0]);
             Widgets.Add(w);
             return w;
         }
 
-        public Button AddButton(StringValue text)
+        public Button AddButton(params Structure [] args)
         {
-            var w = new Button(this, text);
+            var w = new Button(this, (StringValue) args[0]);
             Widgets.Add(w);
             return w;
         }
 
-        public Button AddCheckbox(StringValue text, BooleanValue on)
+        public Button AddCheckbox(params Structure [] args)
         {
-            var w = Button.NewCheckbox(this, text, on);
+            var w = Button.NewCheckbox(this, (StringValue) args[0], (BooleanValue) args [1]);
             Widgets.Add(w);
             return w;
         }
 
-        public Button AddRadioButton(StringValue text, BooleanValue on)
+        public Button AddRadioButton(params Structure [] args)
         {
-            var w = Button.NewRadioButton(this, text, on);
+            var w = Button.NewRadioButton(this, (StringValue) args [0], (BooleanValue) args [1]);
             Widgets.Add(w);
             return w;
         }

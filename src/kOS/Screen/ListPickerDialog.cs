@@ -5,22 +5,26 @@ namespace kOS.Screen
 {
     /// <summary>
     /// A GUI widget that lets the user pick a string from a list of strings.
-    /// When a string is picked, the dialog is called to tell someone about it.
+    /// It creates the widget and leaves it showing while the rest of the C# code
+    /// continues on.  Then when the user picks one of the strings
+    /// the ChangeAction delegate is called to let the C# code know the pick
+    /// has happened.
     /// (Not to be confused with the kerbscript-capable popup dialog.  This is 
     /// for use with kOS's own C# code.)
     /// </summary>
     public class ListPickerDialog : MonoBehaviour
     {
         /// <summary>
-        /// A callback to invoke upon a selection fron the list.
-        /// If it returns true, the change is accepted.  If it
-        /// returns false, the change has been denied and the list
-        /// picker should not highlight the selected thing.
+        /// Your callback that this class will invoke upon a selection from the list.
+        /// If you make it return true, you are telling ListPickerDialog that you allow
+        /// the selection and it should highlight the selection.  If you make this
+        /// return false, then you are forbidding the selection and the list
+        /// picker will not highlight the selected thing.
         /// </summary>
         public delegate bool ChangeAction(string pick);
 
         /// <summary>
-        /// A callback to invoke upon a closing the list box down.
+        /// Your callback to be invoked when the user closes the list box.
         /// </summary>
         public delegate void CloseAction();
 
@@ -55,7 +59,8 @@ namespace kOS.Screen
         /// <param name="title">Title text.</param>
         /// <param name="current">Current string value.</param>
         /// <param name="choices">Choices.</param>
-        /// <param name="callWhenChanged">The dialog box will call this when a new pick has been made.</param>
+        /// <param name="callWhenChanged">Your Callback invoked when a new pick has been made.</param>
+        /// <param name="callWhenClosed">Your Callback invoked when the user closes the dialog box.</param>
         public void Summon(
             float leftX,
             float topY,

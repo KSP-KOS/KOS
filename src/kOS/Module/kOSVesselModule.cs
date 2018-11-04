@@ -335,6 +335,7 @@ namespace kOS.Module
                 if (++autopilotRehookCounter > autopilotRehookPeriod)
                 {
                     ConnectivityManager.AddAutopilotHook(Vessel, UpdateAutopilot);
+                    autopilotRehookCounter = 0;
                 }
             }
             else
@@ -430,6 +431,37 @@ namespace kOS.Module
                 fc.DisableControl();
                 IDisposable dispose = fc as IDisposable;
                 if (dispose != null) dispose.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// True if there is any kOSProcessor on the vessel in READY state.
+        /// It's a slow O(n) operation (n = count of all PartModules on the vessel)
+        /// so don't be calling this frequently.
+        /// </summary>
+        public bool AnyProcessorReady()
+        {
+            IEnumerable<PartModule> processorModules = Vessel.parts
+                .SelectMany(p => p.Modules.Cast<PartModule>()
+                .Where(pMod => pMod is kOSProcessor));
+            foreach (kOSProcessor processor in processorModules)
+            {
+                if (processor.ProcessorMode == Safe.Module.ProcessorModes.READY)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Disables the controls
+        /// </summary>
+        public void OnAllProcessorsStarved()
+        {
+            foreach (IFlightControlParameter f in flightControlParameters.Values)
+            {
+                f.DisableControl();
             }
         }
 
