@@ -87,7 +87,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
             AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Body.Mass));
-            AddSuffix("OCEAN", new Suffix<BooleanValue>(() => Body.ocean));
+            AddSuffix("HASOCEAN", new Suffix<BooleanValue>(() => Body.ocean));
             AddSuffix("HASSOLIDSURFACE", new Suffix<BooleanValue>(() => Body.hasSolidSurface));
             AddSuffix("ORBITINGCHILDREN", new Suffix<ListValue>(GetOrbitingChildren));
             AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Body.orbit.altitude));

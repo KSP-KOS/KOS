@@ -67,7 +67,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`NAME`                     :ref:`string <string>`
     :attr:`DESCRIPTION`              :ref:`string <string>`
     :attr:`MASS`                     :ref:`scalar <scalar>` (kg)
-    :attr:`OCEAN`                    :ref:`boolean <boolean>`
+    :attr:`HASOCEAN`                 :ref:`boolean <boolean>`
     :attr:`HASSOLIDSURFACE`          :ref:`boolean <boolean>`
     :attr:`ORBITINGCHILDREN`         :struct:`List`
     :attr:`ALTITUDE`                 :ref:`scalar <scalar>` (m)
@@ -99,13 +99,13 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
     The mass of the body in kilograms.
 
-.. attribute:: Body:OCEAN
+.. attribute:: Body:HASOCEAN
 
-    Does the body have oceans?
+    True if this body has an ocean.
 
 .. attribute:: Body:HASSOLIDSURFACE
 
-    Does the body have an actual solid surface?
+    True if this body has a solid surface.
 
 .. attribute:: Body:ORBITINGCHILDREN
 
