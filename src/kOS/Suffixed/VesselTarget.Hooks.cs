@@ -158,11 +158,28 @@ namespace kOS.Suffixed
                 GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
                 GameEvents.onStageActivate.Add(OnStageActive);
                 GameEvents.onPartPriorityChanged.Add(OnPartPriorityChanged);
+                GameEvents.onDockingComplete.Add(OnDockingComplete);
+                GameEvents.onPartDeCouple.Add(OnPartDecouple);
                 GameEvents.StageManager.OnGUIStageAdded.Add(OnStageAdded);
                 GameEvents.StageManager.OnGUIStageRemoved.Add(OnStageRemoved);
                 GameEvents.StageManager.OnGUIStageSequenceModified.Add(OnStageModified);
                 hooked = true;
             }
+
+            private void OnPartDecouple(global::Part data)
+            {
+                var target = VesselTarget;
+                if (target != null)
+                    target.InvalidateParts();
+            }
+
+            private void OnDockingComplete(GameEvents.FromToAction<global::Part, global::Part> data)
+            {
+                var target = VesselTarget;
+                if (target != null)
+                    target.InvalidateParts();
+            }
+
             ~Hooks() => Dispose(false);
             public void Dispose() => Dispose(true);
             private void Dispose(bool disposing)
@@ -178,6 +195,8 @@ namespace kOS.Suffixed
                     GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
                     GameEvents.onStageActivate.Remove(OnStageActive);
                     GameEvents.onPartPriorityChanged.Remove(OnPartPriorityChanged);
+                    GameEvents.onDockingComplete.Remove(OnDockingComplete);
+                    GameEvents.onPartDeCouple.Remove(OnPartDecouple);
                     GameEvents.StageManager.OnGUIStageAdded.Remove(OnStageAdded);
                     GameEvents.StageManager.OnGUIStageRemoved.Remove(OnStageRemoved);
                     GameEvents.StageManager.OnGUIStageSequenceModified.Remove(OnStageModified);

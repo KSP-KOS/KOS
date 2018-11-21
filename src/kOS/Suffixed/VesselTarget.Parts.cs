@@ -86,7 +86,12 @@ namespace kOS.Suffixed
             {
                 if (allParts == null)
                     ConstructParts();
-                return partCache[part];
+                if (partCache.ContainsKey(part)) {
+                    return partCache[part];
+                }
+                // returning null is very dangerous and must be guarded in other kOS code,
+                // because kOS itself has no ability to return a null value
+                return null;
             }
         }
         private void ConstructParts()
