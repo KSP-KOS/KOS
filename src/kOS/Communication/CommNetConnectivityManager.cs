@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommNet;
 using kOS.Module;
 
@@ -82,6 +82,8 @@ namespace kOS.Communication
         {
             if (!IsEnabled)
                 return true;
+            if (vessel == null) // null check to handle fringe instances where connection is checked after nullified
+                return false;
 
             // IsConnected is only set to true on the active vessel, so we have to manually
             // call the FindHome method to evaluate the home connection.
