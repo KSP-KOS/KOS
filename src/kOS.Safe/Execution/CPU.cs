@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Binding;
+using kOS.Safe.Binding;
 using kOS.Safe.Callback;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
@@ -1439,7 +1439,6 @@ namespace kOS.Safe.Execution
             bool okayToActivatePendingTriggers = false;
 
             executeLog.Remove(0, executeLog.Length); // In .net 2.0, StringBuilder had no Clear(), which is what this is simulating.
-            SafeHouse.Logger.Log("eraseme: ContinueExecution before While loop.");
             while (InstructionsThisUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
@@ -1456,7 +1455,6 @@ namespace kOS.Safe.Execution
                     ! currentContext.HasActiveTriggersAtLeastPriority(InterruptPriority.Recurring))
                 {
                     okayToActivatePendingTriggers = true;
-                    SafeHouse.Logger.Log("eraseme: okayToActivatePendingTriggers just became true.");
                 }
 
                 if (IsYielding())
@@ -1485,7 +1483,6 @@ namespace kOS.Safe.Execution
             if (okayToActivatePendingTriggers)
             {
                 currentContext.ActivatePendingTriggers();
-                SafeHouse.Logger.Log("eraseme: ActivatedPendingTriggers.");
             }
 
             if (executeLog.Length > 0)
