@@ -117,14 +117,16 @@ namespace kOS.Suffixed
             PartValue self = null;
             foreach (var module in part.Modules)
             {
-                if (module is IEngineStatus engine)
+                var engine = module as IEngineStatus;
+                if (engine != null)
                 {
                     self = new EngineValue(Shared, part, parent, decoupler);
                     break;
                 }
                 if (module is IStageSeparator)
                 {
-                    if (module is ModuleDockingNode dock)
+                    var dock = module as ModuleDockingNode;
+                    if (dock != null)
                     {
                         var port = new DockingPortValue(Shared, part, parent, decoupler, dock);
                         self = port;
@@ -153,7 +155,8 @@ namespace kOS.Suffixed
                         nextDecoupler = decoupler;
                     break;
                 }
-                if (module is ModuleEnviroSensor sensor)
+                var sensor = module as ModuleEnviroSensor;
+                if (sensor != null)
                 {
                     self = new SensorValue(Shared, part, parent, decoupler, sensor);
                     break;

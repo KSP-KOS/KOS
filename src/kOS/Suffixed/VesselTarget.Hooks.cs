@@ -14,7 +14,7 @@ namespace kOS.Suffixed
         private Hooks _hooks;
         public Vessel Vessel
         {
-            get => _vessel;
+            get { return _vessel; }
             private set
             {
                 if (_vessel == value)
@@ -43,7 +43,9 @@ namespace kOS.Suffixed
         // The flag should prevent problems if anybody decides to call Dispose() from elsewhere.
 
         bool disposed;
-        ~VesselTarget() => Dispose(false);
+        ~VesselTarget() {
+            Dispose(false);
+        }
         public void Dispose()
         {
             if (disposed)
@@ -109,9 +111,10 @@ namespace kOS.Suffixed
         public static VesselTarget CreateOrGetExisting(Vessel target, SharedObjects shared)
         {
             var key = new InstanceKey(shared.Processor, target);
+            WeakReference wref;
             if (instanceCache == null)
                 instanceCache = new Dictionary<InstanceKey, WeakReference>();
-            else if (instanceCache.TryGetValue(key, out WeakReference wref))
+            else if (instanceCache.TryGetValue(key, out wref))
             {
                 var it = wref.Target as VesselTarget;
                 if (it?.disposed == false) return it;
@@ -180,7 +183,10 @@ namespace kOS.Suffixed
                     target.InvalidateParts();
             }
 
-            ~Hooks() => Dispose(false);
+            ~Hooks()
+            {
+                Dispose(false);
+            }
             public void Dispose() => Dispose(true);
             private void Dispose(bool disposing)
             {
@@ -254,8 +260,14 @@ namespace kOS.Suffixed
 
             public bool Equals(InstanceKey other) =>
                 ProcessorId == other.ProcessorId && VesselId == other.VesselId;
-            public override bool Equals(object obj) =>
-                obj is InstanceKey key && Equals(key);
+            public override bool Equals(object obj) {
+                if (obj is InstanceKey)
+                {
+                    var key = (InstanceKey)obj;
+                    return Equals(key);
+                }
+                return false;
+            }
             public override int GetHashCode() =>
                 VesselId.GetHashCode() ^ (3001 * ProcessorId); //3001 is prime number
         }

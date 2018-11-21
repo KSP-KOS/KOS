@@ -111,7 +111,8 @@ namespace kOS.Utilities
                 foreach (PartModule module in p.Modules)
                 {
                     if (!module.isEnabled) continue;
-                    if (module is ModuleEngines engine)
+                    var engine = module as ModuleEngines;
+                    if (engine != null)
                         thrust += engine.GetThrust(atmPressure: atmPressure);
                 }
             }
@@ -746,7 +747,8 @@ namespace kOS.Utilities
             {
                 foreach (PartModule module in p.Modules)
                 {
-                    if (module.isEnabled && module is ModuleEngines engine)
+                    var engine = module as ModuleEngines;
+                    if (module.isEnabled && engine != null)
                         thrust += engine.GetThrust(useThrustLimit: true, atmPressure: atmPressure);
                 }
             }

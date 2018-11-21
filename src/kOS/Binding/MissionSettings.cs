@@ -11,11 +11,12 @@ namespace kOS.Binding
     public class MissionSettings : Binding
     {
         private SharedObjects sharedObj;
-        private VesselTarget ship => VesselTarget.CreateOrGetExisting(sharedObj);
+        private VesselTarget ship;
 
         public override void AddTo(SharedObjects shared)
         {
             sharedObj = shared;
+            this.ship = VesselTarget.CreateOrGetExisting(sharedObj);
 
             shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
             shared.BindingMgr.AddGetter("SHIP", () => ship);
@@ -60,14 +61,16 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddGetter("TARGET", () =>
             {
-                var target = shared.Vessel == FlightGlobals.ActiveVessel ?
-                    FlightGlobals.fetch.VesselTarget : shared.Vessel.targetObject;
+                var target = (shared.Vessel == FlightGlobals.ActiveVessel) ? FlightGlobals.fetch.VesselTarget : shared.Vessel.targetObject;
 
-                if (target is Vessel vessel)
+                var vessel = target as Vessel;
+                if (vessel != null)
                     return VesselTarget.CreateOrGetExisting(vessel, shared);
-                if (target is CelestialBody body)
+                var body = target as CelestialBody;
+                if (body != null)
                     return BodyTarget.CreateOrGetExisting(body, shared);
-                if (target is ModuleDockingNode dockingNode)
+                var dockingNode = target as ModuleDockingNode;
+                if (dockingNode != null)
                     return VesselTarget.CreateOrGetExisting(dockingNode.vessel, shared)[dockingNode.part];
 
                 throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("No TARGET is selected");

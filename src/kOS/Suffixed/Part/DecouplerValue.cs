@@ -26,7 +26,8 @@ namespace kOS.Suffixed.Part
                 {
                     if (!(module is IStageSeparator))
                         continue;
-                    if (module is ModuleDockingNode dockingNode && !dockingNode.stagingEnabled)
+                    var dockingNode = module as ModuleDockingNode;
+                    if (dockingNode != null && !dockingNode.stagingEnabled)
                         continue;
                     if (module is ModuleDecouple || module is ModuleAnchoredDecoupler
                         || module is LaunchClamp)

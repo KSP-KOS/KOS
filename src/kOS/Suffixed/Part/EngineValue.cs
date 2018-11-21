@@ -31,14 +31,16 @@ namespace kOS.Suffixed.Part
         {
             foreach (var module in part.Modules)
             {
-                if (module is MultiModeEngine mme)
+                var mme = module as MultiModeEngine;
+                var e = module as ModuleEngines;
+                if (mme != null)
                 {
-                    if (Multi == null)
+                    if (Multi != null)
                         Multi = mme;
                     else
                         SafeHouse.Logger.LogWarning("Multiple MultiModeEngine on {0}: {1}", part.name, part.partInfo.title);
                 }
-                else if (module is ModuleEngines e)
+                else if (e != null)
                 {
                     if (Engine1 == null)
                         Engine1 = e;

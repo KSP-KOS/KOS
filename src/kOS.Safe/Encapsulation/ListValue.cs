@@ -45,7 +45,7 @@ namespace kOS.Safe.Encapsulation
 
         public T this[int index]
         {
-            get => Collection[index];
+            get { return Collection[index]; }
             set
             {
                 CheckReadOnly();
@@ -156,11 +156,15 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public ListValue() =>
+        public ListValue()
+        {
             RegisterInitializer(InitializeSuffixes);
+        }
 
-        public ListValue(IEnumerable<Structure> toCopy) : base(toCopy) =>
+        public ListValue(IEnumerable<Structure> toCopy) : base(toCopy)
+        {
             RegisterInitializer(InitializeSuffixes);
+        }
 
         private void InitializeSuffixes() =>
             AddSuffix("COPY", new NoArgsSuffix<ListValue>(() => new ListValue(this)));
