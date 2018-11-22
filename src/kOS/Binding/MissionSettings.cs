@@ -11,12 +11,11 @@ namespace kOS.Binding
     public class MissionSettings : Binding
     {
         private SharedObjects sharedObj;
-        private VesselTarget ship;
+        private VesselTarget ship => VesselTarget.CreateOrGetExisting(sharedObj);
 
         public override void AddTo(SharedObjects shared)
         {
             sharedObj = shared;
-            this.ship = VesselTarget.CreateOrGetExisting(sharedObj);
 
             shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
             shared.BindingMgr.AddGetter("SHIP", () => ship);
