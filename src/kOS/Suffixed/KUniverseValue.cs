@@ -79,17 +79,17 @@ namespace kOS.Suffixed
                 EditorFacility fac;
                 switch (editor.ToUpper())
                 {
-                case "VAB":
-                    fac = EditorFacility.VAB;
-                    break;
+                    case "VAB":
+                        fac = EditorFacility.VAB;
+                        break;
 
-                case "SPH":
-                    fac = EditorFacility.SPH;
-                    break;
+                    case "SPH":
+                        fac = EditorFacility.SPH;
+                        break;
 
-                default:
-                    fac = EditorFacility.None;
-                    break;
+                    default:
+                        fac = EditorFacility.None;
+                        break;
                 }
                 shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToPrelaunch(fac);
@@ -301,11 +301,13 @@ namespace kOS.Suffixed
             var manifest = VesselCrewManifest.FromConfigNode(ship.InnerTemplate.config);
             manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(ship.InnerTemplate.config, manifest);
             PreFlightCheck preFlightCheck = new PreFlightCheck(
-                () => {
+                () => 
+                {
                     SafeHouse.Logger.Log("Launch new vessel!");
                     FlightDriver.StartWithNewLaunch(ship.FilePath, EditorLogic.FlagURL, launchSiteName, manifest);
                 },
-                () => {
+                () => 
+                {
                     SafeHouse.Logger.LogError("Could not launch vessel, did not pass preflight...");
                 });
             if (launchSiteName.Equals("runway", System.StringComparison.OrdinalIgnoreCase))
