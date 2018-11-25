@@ -301,12 +301,12 @@ namespace kOS.Suffixed
             var manifest = VesselCrewManifest.FromConfigNode(ship.InnerTemplate.config);
             manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(ship.InnerTemplate.config, manifest);
             PreFlightCheck preFlightCheck = new PreFlightCheck(
-                () => 
+                () =>
                 {
                     SafeHouse.Logger.Log("Launch new vessel!");
                     FlightDriver.StartWithNewLaunch(ship.FilePath, EditorLogic.FlagURL, launchSiteName, manifest);
                 },
-                () => 
+                () =>
                 {
                     SafeHouse.Logger.LogError("Could not launch vessel, did not pass preflight...");
                 });
