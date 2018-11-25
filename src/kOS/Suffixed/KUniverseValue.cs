@@ -53,26 +53,32 @@ namespace kOS.Suffixed
 
         public void RevertToLaunch()
         {
-            if (CanRevertToLaunch()) {
+            if (CanRevertToLaunch())
+            {
                 shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToLaunch();
-            } else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
+            }
+            else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
         }
 
         public void RevertToEditor()
         {
-            if (CanRevvertToEditor()) {
+            if (CanRevvertToEditor())
+            {
                 EditorFacility fac = ShipConstruction.ShipType;
                 shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToPrelaunch(fac);
-            } else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
+            }
+            else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
         }
 
         public void RevertTo(StringValue editor)
         {
-            if (CanRevvertToEditor()) {
+            if (CanRevvertToEditor())
+            {
                 EditorFacility fac;
-                switch (editor.ToUpper()) {
+                switch (editor.ToUpper())
+                {
                 case "VAB":
                     fac = EditorFacility.VAB;
                     break;
@@ -87,7 +93,8 @@ namespace kOS.Suffixed
                 }
                 shared.Cpu.GetCurrentOpcode().AbortProgram = true;
                 FlightDriver.RevertToPrelaunch(fac);
-            } else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTO", "When revert is disabled", "When revert is enabled");
+            }
+            else throw new KOSCommandInvalidHereException(LineCol.Unknown(), "REVERTTO", "When revert is disabled", "When revert is enabled");
         }
 
         public BooleanValue CanRevert()
@@ -109,7 +116,8 @@ namespace kOS.Suffixed
 
         public StringValue OriginatingEditor()
         {
-            if (ShipConstruction.ShipConfig != null) {
+            if (ShipConstruction.ShipConfig != null)
+            {
                 EditorFacility fac = ShipConstruction.ShipType;
                 return fac.ToString().ToUpper();
             }
@@ -119,7 +127,8 @@ namespace kOS.Suffixed
         public void SetActiveVessel(VesselTarget vesselTarget)
         {
             Vessel vessel = vesselTarget.Vessel;
-            if (!vessel.isActiveVessel) {
+            if (!vessel.isActiveVessel)
+            {
                 FlightGlobals.SetActiveVessel(vessel);
             }
         }
@@ -127,7 +136,8 @@ namespace kOS.Suffixed
         public void ForceSetActiveVessel(VesselTarget vesselTarget)
         {
             Vessel vessel = vesselTarget.Vessel;
-            if (!vessel.isActiveVessel) {
+            if (!vessel.isActiveVessel)
+            {
                 FlightGlobals.ForceSetActiveVessel(vessel);
             }
         }
@@ -144,7 +154,8 @@ namespace kOS.Suffixed
 
         public BooleanValue CanQuicksave()
         {
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR) {
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR)
+            {
                 return true;
             }
             return false;
@@ -152,9 +163,11 @@ namespace kOS.Suffixed
 
         public void QuickSave()
         {
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave) {
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
+            {
                 QuickSaveLoad.QuickSave();
-            } else throw new KOSException("KSP prevents using quicksave currently.");
+            }
+            else throw new KOSException("KSP prevents using quicksave currently.");
         }
 
         public void QuickSaveTo(StringValue name)
@@ -164,11 +177,13 @@ namespace kOS.Suffixed
 
         public void QuickSaveTo(string name)
         {
-            if (name.EndsWith(".sfs")) {
+            if (name.EndsWith(".sfs"))
+            {
                 name = name.Substring(0, name.Length - 4);
             }
             var reserved = new List<string>() { "persistent", "quicksave", "kos-backup-quicksave" };
-            if (reserved.Contains(name)) {
+            if (reserved.Contains(name))
+            {
                 throw new KOSException("Cannot save to " + name + " because it is a reserved name.");
             }
             SaveGame(name);
@@ -176,12 +191,14 @@ namespace kOS.Suffixed
 
         private void SaveGame(string name)
         {
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR) {
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave && FlightGlobals.ClearToSave() == ClearToSaveStatus.CLEAR)
+            {
                 var game = HighLogic.CurrentGame.Updated();
                 game.startScene = GameScenes.FLIGHT;
                 GamePersistence.SaveGame(game, name, HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 game.startScene = GameScenes.SPACECENTER;
-            } else throw new KOSException("KSP prevents using quicksave currently.");
+            }
+            else throw new KOSException("KSP prevents using quicksave currently.");
         }
 
         public void QuickLoad()
@@ -196,24 +213,32 @@ namespace kOS.Suffixed
 
         private void LoadGame(string name)
         {
-            if (name.EndsWith(".sfs")) {
+            if (name.EndsWith(".sfs"))
+            {
                 name = name.Substring(0, name.Length - 4);
             }
-            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickLoad) {
+            if (HighLogic.CurrentGame.Parameters.Flight.CanQuickLoad)
+            {
                 string filename = name + ".sfs";
                 string path = KSPUtil.GetOrCreatePath("saves/" + HighLogic.SaveFolder);
-                if (!File.Exists(Path.Combine(path, filename))) {
+                if (!File.Exists(Path.Combine(path, filename)))
+                {
                     throw new KOSException("Error loading the quicksave file, the save file does not exist.");
                 }
                 shared.Cpu.GetCurrentOpcode().AbortProgram = true;
-                try {
+                try
+                {
                     SaveGame("kos-backup-quicksave");
                     var game = GamePersistence.LoadGame(name, HighLogic.SaveFolder, true, false);
-                    if (game.flightState != null) {
-                        if (game.compatible) {
+                    if (game.flightState != null)
+                    {
+                        if (game.compatible)
+                        {
                             GamePersistence.UpdateScenarioModules(game);
-                            if (game.startScene != GameScenes.FLIGHT) {
-                                if (KSPUtil.CheckVersion(game.file_version_major, game.file_version_minor, game.file_version_revision, 0, 24, 0) != VersionCompareResult.INCOMPATIBLE_TOO_EARLY) {
+                            if (game.startScene != GameScenes.FLIGHT)
+                            {
+                                if (KSPUtil.CheckVersion(game.file_version_major, game.file_version_minor, game.file_version_revision, 0, 24, 0) != VersionCompareResult.INCOMPATIBLE_TOO_EARLY)
+                                {
                                     GamePersistence.SaveGame(game, name, HighLogic.SaveFolder, SaveMode.OVERWRITE);
                                     HighLogic.LoadScene(GameScenes.SPACECENTER);
                                     return;
@@ -222,11 +247,14 @@ namespace kOS.Suffixed
                             FlightDriver.StartAndFocusVessel(game, game.flightState.activeVesselIdx);
                         }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     SafeHouse.Logger.Log(ex.Message);
                     throw new KOSException("Error loading the quicksave file");
                 }
-            } else throw new KOSException("KSP prevents using quickload currently.");
+            }
+            else throw new KOSException("KSP prevents using quickload currently.");
         }
 
         private ListValue GetQuicksaveList()
@@ -234,9 +262,11 @@ namespace kOS.Suffixed
             var ret = new ListValue();
             string path = KSPUtil.GetOrCreatePath("saves/" + HighLogic.SaveFolder);
             var files = Directory.GetFiles(path, "*.sfs");
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 string name = Path.GetFileNameWithoutExtension(file);
-                if (!name.Equals("persistent")) {
+                if (!name.Equals("persistent"))
+                {
                     ret.Add(new StringValue(name));
                 }
             }
@@ -278,15 +308,20 @@ namespace kOS.Suffixed
                 () => {
                     SafeHouse.Logger.LogError("Could not launch vessel, did not pass preflight...");
                 });
-            if (launchSiteName.Equals("runway", System.StringComparison.OrdinalIgnoreCase)) {
+            if (launchSiteName.Equals("runway", System.StringComparison.OrdinalIgnoreCase))
+            {
                 preFlightCheck.AddTest(new CraftWithinPartCountLimit(ship.InnerTemplate, SpaceCenterFacility.SpaceplaneHangar, GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar), false)));
                 preFlightCheck.AddTest(new CraftWithinSizeLimits(ship.InnerTemplate, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false)));
                 preFlightCheck.AddTest(new CraftWithinMassLimits(ship.InnerTemplate, SpaceCenterFacility.Runway, (double)GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false)));
-            } else if (launchSiteName.Equals("launchpad", System.StringComparison.OrdinalIgnoreCase)) {
+            }
+            else if (launchSiteName.Equals("launchpad", System.StringComparison.OrdinalIgnoreCase))
+            {
                 preFlightCheck.AddTest(new CraftWithinPartCountLimit(ship.InnerTemplate, SpaceCenterFacility.VehicleAssemblyBuilding, GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding), true)));
                 preFlightCheck.AddTest(new CraftWithinSizeLimits(ship.InnerTemplate, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad), true)));
                 preFlightCheck.AddTest(new CraftWithinMassLimits(ship.InnerTemplate, SpaceCenterFacility.LaunchPad, (double)GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad), true)));
-            } else {
+            }
+            else
+            {
                 throw new KOSException("Failed to lauch vessel, unrecognized lauch site: " + launchSiteName + ". Expected \"Runway\" or \"LaunchPad\".");
             }
             preFlightCheck.AddTest(new ExperimentalPartsAvailable(manifest));
