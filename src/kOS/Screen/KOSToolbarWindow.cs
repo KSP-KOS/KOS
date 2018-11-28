@@ -86,6 +86,8 @@ namespace kOS.Screen
 
         private bool uiGloballyHidden = false;
 
+        private UplinkWindow uplinkWindow;
+
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
@@ -117,6 +119,8 @@ namespace kOS.Screen
             GameObject.DontDestroyOnLoad(this);
 
             fontPicker = null;
+
+            uplinkWindow = gameObject.AddComponent<UplinkWindow>();
         }
 
         // TODO - Remove this next method after verifying KSP 1.1 works without it:
@@ -443,7 +447,10 @@ namespace kOS.Screen
             CountBeginVertical();
             CountBeginHorizontal();
 
+            CountBeginVertical();
             DrawActiveCPUsOnPanel();
+            DrawActiveVesselLink();
+            CountEndVertical();
 
             CountBeginVertical("", 150);
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
@@ -664,7 +671,7 @@ namespace kOS.Screen
 
         private void DrawActiveCPUsOnPanel()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(windowRect.height - 60));
+            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(windowRect.height - 90));
 
             CountBeginVertical();
             Vessel prevVessel = null;
@@ -693,6 +700,29 @@ namespace kOS.Screen
             CountEndVertical();
 
             GUILayout.EndScrollView();
+        }
+
+        private void DrawActiveVesselLink()
+        {
+            Vessel thisVessel = FlightGlobals.ActiveVessel;
+
+            CountBeginVertical();
+            if (thisVessel == null)
+            {
+                GUILayout.Label("No active vessel.");
+            }
+            else
+            {
+                if (GUILayout.Button(uplinkWindow.IsOpen ?
+                                     new GUIContent("Close uplink channel") :
+                                     new GUIContent("Open uplink channel to active vessel")))
+                {
+                    SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: toggle uplink");
+                    uplinkWindow.AttachTo(thisVessel);
+                    uplinkWindow.Toggle();
+                }
+            }
+            CountEndVertical();
         }
 
         private void DrawPartRow(Part part)

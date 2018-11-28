@@ -4,7 +4,8 @@ Communication
 =============
 
 kOS allows you to write scripts that communicate with scripts running on other processors within the same vessel
-(inter-processor communication) or on other vessels (inter-vessel communication).
+(inter-processor communication) or on other vessels (inter-vessel communication) or as a receiver of messages from
+the KSC.
 
 Limitations
 -----------
@@ -143,6 +144,39 @@ The receiving CPU will use :attr:`CORE:MESSAGES` to access its message queue::
   } ELSE {
     PRINT "Unexpected message: " + RECEIVED:CONTENT.
   }
+
+Sending messages to vessel from KSC
+-----------------------------------
+
+.. versionadded:: ??
+
+It is possible to send messages to the active vessel from the Kerbal Space Center, e.g. for sending instructions.
+To do this, first change to the vessel you want to send the message to. Then open an uplink channel via a button
+in the main kOS window:
+
+.. figure:: /_images/commands/uplink_channel_button.png
+    :width: 30 %
+
+
+This opens a new window where you can type and send the message:
+
+.. figure:: /_images/commands/uplink_window.png
+    :width: 50 %
+
+Key Notes:
+
+  1. Name of the vessel the uplink is open to.
+  2. Time to receive the last message sent (will be ``NO MESSAGE SENT`` if none has been sent yet and ``RECEIVED``
+     if the last message sent was already received).
+  3. You can type the message here.
+  4. Sends the message.
+  5. Closes the uplink window.
+
+The message (its ``CONTENT``) will be a string. It is the job of the receiver to parse it into something useful (if needed).
+The message can be sent only if the active vessel's :global:`HOMECONNECTION` is connected. The message behaves in the same
+way as if it was sent from another vessel, except for :attr:`Message:SENDER` and :attr:`Message:HASSENDER` that indicate
+that the source is the KSC and not a vessel (see their reference for details).
+
 
 .. _connectivityManagers:
 

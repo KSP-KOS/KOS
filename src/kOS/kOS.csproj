@@ -242,6 +242,8 @@
     <Compile Include="Communication\PlanetariumTimeProvider.cs" />
     <Compile Include="Communication\Message.cs" />
     <Compile Include="Communication\MessageQueue.cs" />
+    <Compile Include="Communication\KscTarget.cs" />
+    <Compile Include="Screen\UplinkWindow.cs" />
     <Compile Include="Module\AssetManager.cs" />
     <Compile Include="Screen\ListPickerDialog.cs" />
     <Compile Include="Suffixed\HsvaColor.cs" />

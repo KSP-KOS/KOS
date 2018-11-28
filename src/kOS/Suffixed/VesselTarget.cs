@@ -37,7 +37,7 @@ namespace kOS.Suffixed
             return Vessel.vesselName;
         }
 
-        public Guid GetGuid()
+        public virtual Guid GetGuid()
         {
             return Vessel.id;
         }

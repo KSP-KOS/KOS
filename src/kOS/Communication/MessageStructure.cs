@@ -58,7 +58,7 @@ namespace kOS.Communication
 
             if (vessel == null)
             {
-                return new BooleanValue(false);
+                return new BooleanValue(KscTarget.Instance.GetGuid().ToString().Equals(Message.Vessel));
             }
 
             return VesselTarget.CreateOrGetExisting(vessel, shared);
