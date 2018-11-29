@@ -80,11 +80,16 @@ namespace kOS.Suffixed
             return CreateOrGetExisting(VesselUtils.GetBodyByName(bodyName), shared);
         }
 
+
+
         private void BodyInitializeSuffixes()
         {
             AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
             AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Body.Mass));
+            AddSuffix("HASOCEAN", new Suffix<BooleanValue>(() => Body.ocean));
+            AddSuffix("HASSOLIDSURFACE", new Suffix<BooleanValue>(() => Body.hasSolidSurface));
+            AddSuffix("ORBITINGCHILDREN", new Suffix<ListValue>(GetOrbitingChildren));
             AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Body.orbit.altitude));
             AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
             AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
@@ -105,6 +110,15 @@ namespace kOS.Suffixed
                       new TwoArgsSuffix<GeoCoordinates, ScalarValue, ScalarValue>(
                               GeoCoordinatesFromLatLng,
                               "Given latitude and longitude, return the geoposition on this body corresponding to it."));
+        }
+
+        public ListValue GetOrbitingChildren()
+        {
+            var toReturn = new ListValue();
+            foreach (CelestialBody body in Body.orbitingBodies) {
+                toReturn.Add(CreateOrGetExisting(body,Shared));
+            }
+            return toReturn;
         }
 
         public override StringValue GetName()
