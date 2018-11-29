@@ -35,10 +35,25 @@ namespace kOS.Safe.Persistence
         {
             Bytes = fileEncoding.GetBytes(content);
         }
-
+       
         public FileContent(byte[] content) : this()
         {
-            Bytes = content;
+            string decodedString;
+
+            // Issue #2345: kOS reading UTF-8 can't handle a file with a BOM in it.
+            //
+            // In order to allow kOS to read files with a BOM in them
+            // we first pass them through a StreamReader, which handles
+            // the BOM and gives us a string with only the text data.
+            using (MemoryStream ms = new MemoryStream(content))
+            {
+                using (StreamReader sr = new StreamReader(ms))
+                {
+                    decodedString = sr.ReadToEnd();
+                }
+            }
+
+            Bytes = fileEncoding.GetBytes(decodedString);
         }
 
         public FileContent(List<CodePart> parts) : this()
