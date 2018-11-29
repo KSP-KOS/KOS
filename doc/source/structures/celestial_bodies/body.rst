@@ -101,15 +101,18 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
 .. attribute:: Body:HASOCEAN
 
-    True if this body has an ocean.
+    True if this body has an ocean.  Example: In the stock solar system,
+    this is True for Kerbin and False for Mun.
 
 .. attribute:: Body:HASSOLIDSURFACE
 
-    True if this body has a solid surface.
+    True if this body has a solid surface.  Example: In the stock solar system,
+    this is True for Kerbin and False for Jool.
 
 .. attribute:: Body:ORBITINGCHILDREN
 
-    A list of the bodies orbiting this body.
+    A list of the bodies orbiting this body.  Example: In the stock solar system,
+    Kerbin:orbitingchildren is a list two things: Mun and Minmus.
 
 .. attribute:: Body:ALTITUDE
 
