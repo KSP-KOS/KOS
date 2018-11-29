@@ -10,7 +10,7 @@ Trajectories is a mod that displays trajectory predictions, accounting for atmos
 
 This addon is not associated with and not supported by the creator of Trajectories.
 
-The Trajectories API is accessed throgh C# reflection, and is designed for the
+The Trajectories API is accessed through C# reflection, and is designed for the
 current version. This means that future Trajectories updates may break this
 addon, in which case ``ADDONS:TR:AVAILABLE`` will return false.  It is also
 possible for future versions of Trjectories to remain fully compatible.
