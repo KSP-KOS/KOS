@@ -23,12 +23,21 @@ namespace kOS.Suffixed
     public partial class VesselTarget : Orbitable, IKOSTargetable, IDisposable
     {
         private static string DumpGuid = "guid";
-        public Guid Guid => Vessel.id;
+        public Guid Guid { get { return Vessel.id; } }
 
-        public override Orbit Orbit => Vessel.orbit;
-        public override StringValue GetName() => Vessel.vesselName;
-        public override Vector GetPosition() => new Vector(Vessel.CoMD - CurrentVessel.CoMD);
-        public override OrbitableVelocity GetVelocities() => new OrbitableVelocity(Vessel);
+        public override Orbit Orbit { get { return Vessel.orbit; } }
+        public override StringValue GetName()
+        {
+            return Vessel.vesselName;
+        }
+        public override Vector GetPosition()
+        {
+            return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
+        }
+        public override OrbitableVelocity GetVelocities()
+        {
+            return new OrbitableVelocity(Vessel);
+        }
 
         /// <summary>
         ///   Calculates the position of this vessel at some future universal timestamp,
@@ -172,22 +181,29 @@ namespace kOS.Suffixed
             return orbitPatch;
         }
 
-        private Vessel CurrentVessel => Shared.Vessel;
-        public ITargetable Target => Vessel;
+        private Vessel CurrentVessel { get { return Shared.Vessel; } }
+        public ITargetable Target { get { return Vessel; } }
 
         // TODO: We will need to replace with the same thing Orbitable:DISTANCE does
         // in order to implement the orbit solver later.
-        public ScalarValue GetDistance() =>
-            Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
-
-        public static string[] ShortCuttableShipSuffixes { get; } = new[]
+        public ScalarValue GetDistance()
         {
-            "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
-            "LONGITUDE",
-            "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
-            "AIRSPEED", "SHIPNAME",
-            "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
-        };
+            return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
+        }
+
+        public static string[] ShortCuttableShipSuffixes { get; private set; }
+
+        static VesselTarget()
+        {
+            ShortCuttableShipSuffixes = new[]
+            {
+                "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
+                "LONGITUDE",
+                "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
+                "AIRSPEED", "SHIPNAME",
+                "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
+            };
+        }
 
         public override string ToString()
         {

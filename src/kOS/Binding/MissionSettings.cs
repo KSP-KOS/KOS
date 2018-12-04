@@ -11,7 +11,7 @@ namespace kOS.Binding
     public class MissionSettings : Binding
     {
         private SharedObjects sharedObj;
-        private VesselTarget ship => VesselTarget.CreateOrGetExisting(sharedObj);
+        private VesselTarget ship { get { return VesselTarget.CreateOrGetExisting(sharedObj); } }
 
         public override void AddTo(SharedObjects shared)
         {

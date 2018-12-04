@@ -13,15 +13,18 @@ namespace kOS.Suffixed.Part
     [kOS.Safe.Utilities.KOSNomenclature("Engine")]
     public class EngineValue : PartValue
     {
-        public ModuleEngines Engine1 { get; }
-        public ModuleEngines Engine2 { get; }
-        public MultiModeEngine Multi { get; }
-        public GimbalFields Gimbal { get; }
+        public ModuleEngines Engine1 { get; private set; }
+        public ModuleEngines Engine2 { get; private set; }
+        public MultiModeEngine Multi { get; private set; }
+        public GimbalFields Gimbal { get; private set; }
 
-        public ModuleEngines Engine =>
-            Engine2 == null || Multi.runningPrimary ? Engine1 : Engine2;
-        public bool MultiMode => Engine2 != null;
-        public bool HasGimbal => Gimbal != null;
+        public ModuleEngines Engine {
+            get {
+                return Engine2 == null || Multi.runningPrimary ? Engine1 : Engine2;
+            }
+        }
+        public bool MultiMode { get { return Engine2 != null; } }
+        public bool HasGimbal { get { return Gimbal != null; } }
 
         /// <summary>
         /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
@@ -154,14 +157,22 @@ namespace kOS.Suffixed.Part
             Engine.Shutdown();
         }
 
-        public ScalarValue GetIspAtAtm(ScalarValue atmPressure) =>
-            Engine.GetIsp(atmPressure.GetDoubleValue());
-        public ScalarValue GetMaxThrustAtAtm(ScalarValue atmPressure) =>
-            Engine.GetThrust(atmPressure);
-        public ScalarValue GetAvailableThrustAtAtm(ScalarValue atmPressure) =>
-            Engine.GetThrust(atmPressure, useThrustLimit: true);
-        public ScalarValue GetPossibleThrustAtAtm(ScalarValue atmPressure) =>
-            Engine.GetThrust(atmPressure, useThrustLimit: true, operational: false);
+        public ScalarValue GetIspAtAtm(ScalarValue atmPressure)
+        {
+            return Engine.GetIsp(atmPressure.GetDoubleValue());
+        }
+        public ScalarValue GetMaxThrustAtAtm(ScalarValue atmPressure)
+        {
+            return Engine.GetThrust(atmPressure);
+        }
+        public ScalarValue GetAvailableThrustAtAtm(ScalarValue atmPressure)
+        {
+            return Engine.GetThrust(atmPressure, useThrustLimit: true);
+        }
+        public ScalarValue GetPossibleThrustAtAtm(ScalarValue atmPressure)
+        {
+            return Engine.GetThrust(atmPressure, useThrustLimit: true, operational: false);
+        }
 
         public ListValue GetAllModes()
         {
@@ -245,8 +256,10 @@ namespace kOS.Suffixed.Part
 
     public static class ModuleEnginesExtensions
     {
-        public static float GetThrust(this ModuleEngines engine, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true) =>
-            GetThrust(engine, engine.part.staticPressureAtm, useThrustLimit, throttle, operational);
+        public static float GetThrust(this ModuleEngines engine, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
+        {
+            return GetThrust(engine, engine.part.staticPressureAtm, useThrustLimit, throttle, operational);
+        }
         public static float GetThrust(this ModuleEngines engine, double atmPressure, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
         {
             if (engine == null || operational && !engine.isOperational)
@@ -265,14 +278,22 @@ namespace kOS.Suffixed.Part
             return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * GetIsp(engine, atmPressure) * engine.g * velMod;
         }
 
-        public static float GetIsp(this ModuleEngines engine) =>
-            GetIsp(engine, engine.part.staticPressureAtm);
-        public static float GetIsp(this ModuleEngines engine, double staticPressureAtm) =>
-            engine == null ? 0f : engine.atmosphereCurve.Evaluate((float)staticPressureAtm);
+        public static float GetIsp(this ModuleEngines engine)
+        {
+            return GetIsp(engine, engine.part.staticPressureAtm);
+        }
+        public static float GetIsp(this ModuleEngines engine, double staticPressureAtm)
+        {
+            return engine == null ? 0f : engine.atmosphereCurve.Evaluate((float)staticPressureAtm);
+        }
 
-        public static float GetVacuumSpecificImpluse(this ModuleEngines engine) =>
-            engine.atmosphereCurve.Evaluate(0);
-        public static float GetSeaLevelSpecificImpulse(this ModuleEngines engine) =>
-            engine.atmosphereCurve.Evaluate(1);
+        public static float GetVacuumSpecificImpluse(this ModuleEngines engine)
+        {
+            return engine.atmosphereCurve.Evaluate(0);
+        }
+        public static float GetSeaLevelSpecificImpulse(this ModuleEngines engine)
+        {
+            return engine.atmosphereCurve.Evaluate(1);
+        }
     }
 }

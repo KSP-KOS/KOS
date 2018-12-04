@@ -12,7 +12,7 @@ namespace kOS
     public class SharedObjects : Safe.SafeSharedObjects
     {
         public Vessel Vessel { get; set; }
-        public VesselTarget VesselTarget => VesselTarget.CreateOrGetExisting(this);
+        public VesselTarget VesselTarget { get { return VesselTarget.CreateOrGetExisting(this); } }
         public ProcessorManager ProcessorMgr { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }

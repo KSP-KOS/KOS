@@ -12,7 +12,7 @@ namespace kOS.Suffixed
 {
     partial class VesselTarget
     {
-        public StageValues StageValues { get; }
+        public StageValues StageValues { get; private set; }
 
         //TODO: share these between all CPUs (or maybe have one VesselTarget instance?)
         //TODO: create single list of parts and _slices_ for `children`

@@ -90,8 +90,10 @@ namespace kOS.Suffixed
         /// Using this factory method instead of a constructor prevents having thousands of stale
         /// instances of VesselTarget, which was the cause of Github issue #1980.
         /// </summary>
-        public static VesselTarget CreateOrGetExisting(SharedObjects shared) =>
-            CreateOrGetExisting(shared.Vessel, shared);
+        public static VesselTarget CreateOrGetExisting(SharedObjects shared)
+        {
+            return CreateOrGetExisting(shared.Vessel, shared);
+        }
 
         private static Dictionary<InstanceKey, WeakReference> instanceCache;
 
@@ -169,25 +171,14 @@ namespace kOS.Suffixed
                 hooked = true;
             }
 
-            private void OnPartDecouple(global::Part data)
-            {
-                var target = VesselTarget;
-                if (target != null)
-                    target.InvalidateParts();
-            }
-
-            private void OnDockingComplete(GameEvents.FromToAction<global::Part, global::Part> data)
-            {
-                var target = VesselTarget;
-                if (target != null)
-                    target.InvalidateParts();
-            }
-
             ~Hooks()
             {
                 Dispose(false);
             }
-            public void Dispose() => Dispose(true);
+            public void Dispose()
+            {
+                Dispose(true);
+            }
             private void Dispose(bool disposing)
             {
                 if (disposing)
@@ -210,28 +201,45 @@ namespace kOS.Suffixed
                 }
             }
 
-            private void OnStageActive(int stage) =>
+            private void OnStageActive(int stage)
+            {
                 VesselTarget?.InvalidateParts();
-            private void OnStageAdded(int stage) =>
+            }
+            private void OnStageAdded(int stage)
+            {
                 VesselTarget?.InvalidateParts();
-            private void OnStageRemoved(int stage) =>
+            }
+            private void OnStageRemoved(int stage)
+            {
                 VesselTarget?.InvalidateParts();
-            private void OnStageModified() =>
+            }
+            private void OnStageModified()
+            {
                 VesselTarget?.InvalidateParts();
+            }
 
             private void OnPartPriorityChanged(global::Part part)
             {
-                var target = VesselTarget;
-                if (target != null && part.vessel == target.Vessel)
-                    target.InvalidateParts();
+                if (VesselTarget != null && part.vessel == VesselTarget.Vessel)
+                    VesselTarget.InvalidateParts();
             }
 
             private void OnVesselPartCountChanged(Vessel v)
             {
-                var target = VesselTarget;
-                if (target != null && target.Vessel.Equals(v))
-                    target.InvalidateParts();
+                if (VesselTarget != null && VesselTarget.Vessel.Equals(v))
+                    VesselTarget.InvalidateParts();
             }
+
+            private void OnPartDecouple(global::Part data)
+            {
+                VesselTarget?.InvalidateParts();
+            }
+
+            private void OnDockingComplete(GameEvents.FromToAction<global::Part, global::Part> data)
+            {
+                VesselTarget?.InvalidateParts();
+            }
+
             private void OnVesselDestroy(Vessel v)
             {
                 if (VesselTarget?.Vessel.Equals(v) == true)
@@ -247,10 +255,10 @@ namespace kOS.Suffixed
         private struct InstanceKey: IEquatable<InstanceKey>
         {
             /// <summary>The kOSProcessor Module that built me.</summary>
-            public int ProcessorId { get; }
+            public int ProcessorId;
 
             /// <summary>The KSP vessel object that I'm wrapping.</summary>
-            public Guid VesselId { get; }
+            public Guid VesselId;
 
             public InstanceKey(IProcessor processor, Vessel vessel)
             {
@@ -258,8 +266,10 @@ namespace kOS.Suffixed
                 VesselId = vessel.id;
             }
 
-            public bool Equals(InstanceKey other) =>
-                ProcessorId == other.ProcessorId && VesselId == other.VesselId;
+            public bool Equals(InstanceKey other)
+            {
+                return ProcessorId == other.ProcessorId && VesselId == other.VesselId;
+            }
             public override bool Equals(object obj) {
                 if (obj is InstanceKey)
                 {
@@ -268,8 +278,10 @@ namespace kOS.Suffixed
                 }
                 return false;
             }
-            public override int GetHashCode() =>
-                VesselId.GetHashCode() ^ (3001 * ProcessorId); //3001 is prime number
+            public override int GetHashCode()
+            {
+                return VesselId.GetHashCode() ^ (3001 * ProcessorId); //3001 is prime number
+            }
         }
     }
 }

@@ -8,13 +8,16 @@ namespace kOS.Suffixed.Part
     {
         // Any time that we create a list, we have to be very careful about null references
         // because ListValue will attempt to assert that the value must 
-        public static ListValue Construct(IEnumerable<global::Part> parts, SharedObjects shared) =>
-            ListValue.CreateList(parts.Select(part => Construct(part, shared)).Where(p => p != null));
+        public static ListValue Construct(IEnumerable<global::Part> parts, SharedObjects shared) {
+            return ListValue.CreateList(parts.Select(part => Construct(part, shared)).Where(p => p != null));
+        }
 
-        public static ListValue<PartValue> ConstructGeneric(IEnumerable<global::Part> parts, SharedObjects shared) =>
-            ListValue<PartValue>.CreateList(parts.Select(part => Construct(part, shared)).Where(p => p != null));
+        public static ListValue<PartValue> ConstructGeneric(IEnumerable<global::Part> parts, SharedObjects shared) {
+            return ListValue<PartValue>.CreateList(parts.Select(part => Construct(part, shared)).Where(p => p != null));
+        }
 
-        public static PartValue Construct(global::Part part, SharedObjects shared) =>
-            VesselTarget.CreateOrGetExisting(part.vessel, shared)[part];
+        public static PartValue Construct(global::Part part, SharedObjects shared) {
+            return VesselTarget.CreateOrGetExisting(part.vessel, shared)[part];
+        }
     }
 }

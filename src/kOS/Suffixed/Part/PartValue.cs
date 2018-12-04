@@ -14,14 +14,14 @@ namespace kOS.Suffixed.Part
     [kOS.Safe.Utilities.KOSNomenclature("Part")]
     public class PartValue : Structure, IKOSTargetable
     {
-        public SharedObjects Shared { get; }
-        public global::Part Part { get; }
-        public PartValue Parent { get; }
-        public DecouplerValue Decoupler { get; }
-        public ListValue<PartValue> Children { get; } = new ListValue<PartValue>();
-        public Structure ParentValue => (Structure)Parent ?? StringValue.None;
-        public Structure DecouplerValue => (Structure)Decoupler ?? StringValue.None;
-        public int DecoupledIn => Decoupler?.Part.inverseStage ?? -1;
+        public SharedObjects Shared { get; private set; }
+        public global::Part Part { get; private set; }
+        public PartValue Parent { get; private set; }
+        public DecouplerValue Decoupler { get; private set; }
+        public ListValue<PartValue> Children { get; private set; }
+        public Structure ParentValue { get { return (Structure)Parent ?? StringValue.None; } }
+        public Structure DecouplerValue { get { return (Structure)Decoupler ?? StringValue.None; } }
+        public int DecoupledIn { get { return (Decoupler != null) ? Decoupler.Part.inverseStage : -1; } }
 
         /// <summary>
         /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
@@ -33,6 +33,7 @@ namespace kOS.Suffixed.Part
             Parent = parent;
             Decoupler = decoupler;
             RegisterInitializer(PartInitializeSuffixes);
+            Children  = new ListValue<PartValue>();
         }
 
         private void PartInitializeSuffixes()
