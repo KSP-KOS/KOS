@@ -38,7 +38,7 @@ namespace kOS.Safe.Persistence
 
         public FileContent(byte[] content) : this()
         {
-            Bytes = content;
+            Bytes = CopyBytesSkippingBOM(content);
         }
 
         public FileContent(List<CodePart> parts) : this()
@@ -85,6 +85,25 @@ namespace kOS.Safe.Persistence
         public static string DecodeString(byte[] content)
         {
             return fileEncoding.GetString(content);
+        }
+
+        // If the raw bytes content has the unneessary BOM marker that some editors (*cough*, Notepad) put
+        // in UTF-8 files, then make a copy that skips over it: (google "UTF-8 BOM" to see what this means)
+        // If it does not contain the BOM, then this just makes a copy as-is of the bytes.
+        private static byte[] CopyBytesSkippingBOM(byte[] content)
+        {
+            int sourceStart = 0;
+            int sourceLength = content.Length;
+
+            // If it starts with the magic 3-byte code for the BOM, then skip over those 3 bytes when copying:
+            if (sourceLength >= 3 && (content[0] == 0xEF && content[1] == 0xBB && content[2] == 0xBF))
+            {
+                sourceStart += 3;
+                sourceLength -= 3;
+            }
+            byte[] returnVal = new byte[sourceLength];
+            Array.Copy(content, sourceStart, returnVal, 0, sourceLength);
+            return returnVal;
         }
 
         public void Write(string contentToWrite)
