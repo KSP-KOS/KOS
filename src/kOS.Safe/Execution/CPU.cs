@@ -210,6 +210,7 @@ namespace kOS.Safe.Execution
                 // remove the last context
                 ProgramContext contextRemove = contexts.Last();
                 NotifyPopContextNotifyees(contextRemove);
+                contextRemove.ClearTriggers();
                 contexts.Remove(contextRemove);
                 shared.GameEventDispatchManager.RemoveDispatcherFor(currentContext);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
@@ -435,19 +436,14 @@ namespace kOS.Safe.Execution
             {
                 if (globalVariables.Contains(item.Key))
                 {
-                    // if the pointer exists it means it was redefined from inside a program
-                    // and it's going to be invalid outside of it, so we remove it
+                    // If the pointer exists it means it was redefined from inside a program
+                    // and it's going to be invalid outside of it, so just to be sure, remove
+                    // it entirely in preparation for restoring the old one:
                     globalVariables.Remove(item.Key);
                     deletedPointers++;
-                    // also remove the corresponding trigger if exists
-                    if (item.Value.Value is int)
-                        RemoveTrigger((int)item.Value.Value, 0);
                 }
-                else
-                {
-                    globalVariables.Add(item.Key, item.Value);
-                    restoredPointers++;
-                }
+                globalVariables.Add(item.Key, item.Value);
+                restoredPointers++;
             }
 
             SafeHouse.Logger.Log(string.Format("Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
@@ -498,7 +494,8 @@ namespace kOS.Safe.Execution
             }
             else
             {
-                currentContext.ClearTriggers();   // remove all the triggers
+                if (manual)
+                    currentContext.ClearTriggers(); // Removes the interpreter's triggers on Control-C and the like, but not on errors.
                 SkipCurrentInstructionId();
             }
             CurrentPriority = InterruptPriority.Normal;
