@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
@@ -222,11 +222,22 @@ namespace kOS.Safe.Function
                     List<CodePart> parts;
                     if (fileContent.Category == FileCategory.KSM)
                     {
-                        string prefix = programContext.Program.Count.ToString();
-                        parts = fileContent.AsParts(path, prefix);
-                        int programAddress = programContext.AddObjectParts(parts, path.ToString());
-                        // push the entry point address of the new program onto the stack
-                        shared.Cpu.PushArgumentStack(programAddress);
+                        try
+                        {
+                            string prefix = programContext.Program.Count.ToString();
+                            parts = fileContent.AsParts(path, prefix);
+                            int programAddress = programContext.AddObjectParts(parts, path.ToString());
+                            // push the entry point address of the new program onto the stack
+                            shared.Cpu.PushArgumentStack(programAddress);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is KOSException)
+                            {
+                                throw ex;
+                            }
+                            throw new KOSException("Error loading compiled file:\r\n{0}\r\n{1}", ex.Message, ex.StackTrace);
+                        }
                     }
                     else
                     {

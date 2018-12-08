@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
@@ -34,7 +34,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreNotEqual(new StringValue("bar"), list[0]);
             Assert.AreEqual(new StringValue("foo"), list[0]);
         }
@@ -56,7 +56,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreNotEqual(new StringValue("bar"), list[0]);
             Assert.AreEqual(new StringValue("foo"), list[0]);
         }
@@ -78,7 +78,7 @@ namespace kOS.Safe.Test.Opcode
 
             opcode.Execute(cpu);
 
-            Assert.AreEqual(1, list.Count());
+            Assert.AreEqual(1, list.Count);
             Assert.AreNotEqual(new StringValue("bar"), list[0]);
             Assert.AreEqual(new StringValue("foo"), list[0]);
         }

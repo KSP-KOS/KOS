@@ -475,6 +475,8 @@ namespace kOS.Module
             kOSVesselModule ret;
             if (!allInstances.TryGetValue(vessel.id, out ret))
             {
+                if (!vessel.isActiveAndEnabled)
+                    throw new Safe.Exceptions.KOSException("Vessel is no longer active or enabled " + vessel.name);
                 ret = vessel.GetComponent<kOSVesselModule>();
                 if (ret == null)
                     throw new kOS.Safe.Exceptions.KOSException("Cannot find kOSVesselModule on vessel " + vessel.name);

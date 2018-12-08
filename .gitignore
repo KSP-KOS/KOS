@@ -1,4 +1,5 @@
 # VisualStudio
+.vs/
 [Bb]in/
 [Oo]bj/
 
@@ -20,6 +21,9 @@ packages/
 
 # VisualStudio Code
 .vscode/
+
+# Vim
+*.swp
 
 # Unity
 [Ll]ibrary/

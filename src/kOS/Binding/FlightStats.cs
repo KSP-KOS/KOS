@@ -1,4 +1,4 @@
-﻿using kOS.Module;
+using kOS.Module;
 using kOS.Control;
 using kOS.Safe.Binding;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -27,7 +27,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => VesselTarget.CreateOrGetExisting(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
-            shared.BindingMgr.AddGetter("STAGE", () => stageValue ?? (stageValue = new StageValues(shared)));
+            shared.BindingMgr.AddGetter("STAGE", () => shared.VesselTarget.StageValues);
 
             shared.BindingMgr.AddSetter("SHIPNAME", value => shared.Vessel.vesselName = value.ToString());
 

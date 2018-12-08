@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Utilities;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KSP.UI.Screens;
 using kOS.Module;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
@@ -16,16 +18,24 @@ namespace kOS.Suffixed
         private readonly SharedObjects shared;
         private HashSet<global::Part> partHash = new HashSet<global::Part>();
         private PartSet partSet;
-        private double lastRefresh = 0;
         private ListValue<ActiveResourceValue> resList;
         private Lexicon resLex;
 
-        public StageValues(SharedObjects shared)
+        // Set by VesselTarget (from InvalidateParts)
+        internal bool stale = true;
+
+        /// <summary>
+        /// Do not call! VesselTarget.StageValues uses this, would use `friend VesselTarget` if this was C++!
+        /// </summary>
+        internal StageValues(SharedObjects shared)
         {
+			// Do not try to construct VesselTarget here, it is called from VesselTarget's constructor!
+			// Would need special logic if VesselTarget is needed here			
+
             this.shared = shared;
             partSet = new PartSet(partHash);
 
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
         private void InitializeSuffixes()
@@ -34,6 +44,7 @@ namespace kOS.Suffixed
             AddSuffix("READY", new Suffix<BooleanValue>(() => shared.Vessel.isActiveVessel && StageManager.CanSeparate));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
             AddSuffix("RESOURCESLEX", new Suffix<Lexicon>(GetResourceDictionary));
+            AddSuffix(new string[] { "NEXTDECOUPLER", "NEXTSEPARATOR" }, new Suffix<Structure>(() => shared.VesselTarget.NextDecoupler ?? (Structure)StringValue.None));
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
@@ -97,30 +108,34 @@ namespace kOS.Suffixed
 
         public void CreatePartSet()
         {
-            double refresh = Planetarium.GetUniversalTime();
-            if (lastRefresh >= refresh)
+            if (!stale)
                 return;
-            lastRefresh = refresh;
 
-            // The following replicates the logic in KSP.UI.Screens.ResourceDisplay.CreateResourceList
             // We're creating the set every time because it doesn't pay attention to the various events
             // that would tell us that the old partset is no longer valid.
             partHash.Clear();
-            int vstgComp = shared.Vessel.currentStage - 2;
-            var parts = shared.Vessel.Parts;
-            global::Part part;
-            for (int i = parts.Count - 1; i >= 0; --i)
+
+            var vesselTarget = shared.VesselTarget;
+            var nextDecoupler = vesselTarget.NextDecoupler?.Part.inverseStage ?? -1;
+
+            // Find all relevant parts that are to be separated by next decoupler/separator/dock
+            foreach (var part in shared.Vessel.Parts)
             {
-                part = parts[i];
-                if (part.State == PartStates.ACTIVE)
+                // Engines only
+                if (part.State != PartStates.ACTIVE)
+                    continue;
+                // All tanks accessible to this engine ...
+                foreach (var crossPart in part.crossfeedPartSet.GetParts())
                 {
-                    foreach (var crossPart in part.crossfeedPartSet.GetParts())
-                    {
-                        if (crossPart.inverseStage > vstgComp) partHash.Add(crossPart);
-                    }
+                    // ... that are to be separated by next decoupler
+                    if (vesselTarget[crossPart].DecoupledIn >= nextDecoupler)
+                        partHash.Add(crossPart);
                 }
             }
             partSet.RebuildInPlace();
+            stale = false;
+
+            SafeHouse.Logger.Log("StageValues: nd={0}, parts={1}", nextDecoupler, partHash.Count);
         }
 
         public override string ToString()
