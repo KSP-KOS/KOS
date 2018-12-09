@@ -111,10 +111,11 @@ namespace kOS.Utilities
         /// <param name="a">Does this body</param>
         /// <param name="b">Orbit around this body</param>
         /// <returns>True if a orbits b.  </returns>
+        #pragma warning disable CS0162
         public static Boolean BodyOrbitsBody(CelestialBody a, CelestialBody b)
         {
             const bool DEBUG_WALK = false;
-            
+
             if (DEBUG_WALK) SafeHouse.Logger.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
             if (DEBUG_WALK) SafeHouse.Logger.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
@@ -130,7 +131,8 @@ namespace kOS.Utilities
             }
             return found;
         }
-        
+        #pragma warning restore CS0162
+
         /// <summary>
         /// Given any CSharp object, return the string name of the type in
         /// a way that makes more sense to kOS users, using kOS names rather

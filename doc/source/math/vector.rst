@@ -33,12 +33,12 @@ Structure
     .. list-table:: **Members**
         :widths: 4 2 1 1
         :header-rows: 1
-        
+
         * - Suffix
           - Type
           - Get
           - Set
-          
+
         * - :attr:`X`
           - :ref:`scalar <scalar>`
           - yes
@@ -110,7 +110,7 @@ Structure
     :access: Get only
 
     This creates a unit vector pointing in the same direction as this vector. This is the same effect as multiplying the vector by the scalar ``1 / vec:MAG``.
-    
+
 .. attribute:: Vector:SQRMAGNITUDE
 
     :type: :ref:`scalar <scalar>`
@@ -143,9 +143,9 @@ Operations and Methods
 ----------------------
 
 ======================================================================== =============
-Method / Operator                                                         Return Type    
+Method / Operator                                                         Return Type
 ======================================================================== =============
- :ref:`* (asterisk) <Vector *>`                                          :struct:`scalar` or :struct:`Vector` 
+ :ref:`* (asterisk) <Vector *>`                                          :struct:`scalar` or :struct:`Vector`
  :ref:`+ (plus)     <Vector +->`                                         :struct:`Vector`
  :ref:`- (minus)    <Vector +->`                                         :struct:`Vector`
  :ref:`- (unary)    <Vector +->`                                         :struct:`Vector`
@@ -159,7 +159,9 @@ Method / Operator                                                         Return
 .. _Vector *:
 .. object:: *
 
-    `Scalar multiplication <vecsmul>`_ or `dot product <vecdot>`_ of two ``Vectors``. See also :func:`VECTORDOTPRODUCT`::
+    `Scalar multiplication <https://mathinsight.org/vector_introduction#scalarmultiplication>`__ or
+    `dot product <https://mathinsight.org/dot_product>`__
+    of two ``Vectors``. See also :func:`VECTORDOTPRODUCT`::
 
         SET a TO 2.
         SET vec1 TO V(1,2,3).
@@ -167,7 +169,7 @@ Method / Operator                                                         Return
         PRINT a * vec1.     // prints: V(2,4,6)
         PRINT vec1 * vec2.  // prints: 20
 
-    Note that the *unary* minus operator is really a multiplication of 
+    Note that the *unary* minus operator is really a multiplication of
     the vector by a scalar of (-1)::
 
 	PRINT -vec1.     // these two both print the
@@ -178,7 +180,7 @@ Method / Operator                                                         Return
 .. _Vector +-:
 .. object:: +, -
 
-    :struct:`Vector` `addition and subtraction <vecadd>`_ by a scalar or another :struct:`Vector`::
+    `Adding <https://mathinsight.org/vector_introduction#addition>`__ and `subtracting <https:/mathinsight.org/vector_introduction#subtraction>`__ a :struct:`Vector` with another :struct:`Vector`::
 
         SET a TO 2.
         SET vec1 TO V(1,2,3).
@@ -190,46 +192,49 @@ Method / Operator                                                         Return
     the vector by a scalar of (-1), and is not technically an addition or
     subtraction operator::
 
-	PRINT -vec1.     // these two both print the
-	PRINT (-1)*vec1. // exact same thing.
+        // These two both print the same exact thing:
+	PRINT -vec1.
+	PRINT (-1)*vec1.
 
 .. function:: VDOT(v1,v2)
 
     Same as :func:`VECTORDOTPRODUCT(v1,v2)` and :ref:`v1 * v2 <Vector *>`.
-    
+
 .. function:: VECTORDOTPRODUCT(v1,v2)
 
     :parameter v1: (:struct:`Vector`)
     :parameter v2: (:struct:`Vector`)
-    :return: The `vector dot-product <vecdot>`_
+    :return: The `vector dot-product <https://mathinsight.org/dot_product>`__
     :rtype: :struct:`scalar`
 
-    This is the `dot product <vecdot>`_ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
+    This is the `dot product <https://mathinsight.org/dot_product>`__ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
 
         SET vec1 TO V(1,2,3).
         SET vec2 TO V(2,3,4).
-        
-        // These will all print the value: 20
-        PRINT vec1 * vec2.
+
+        // These are different ways to perform the same operation.
+        // All of them will print the value: 20
+        // -------------------------------------------------------
         PRINT VDOT(vec1, vec2).
         PRINT VECTORDOTPRODUCT(vec1, vec2).
+        PRINT vec1 * vec2. // multiplication of two vectors with asterisk "*" performs a VDOT().
 
 .. function:: VCRS(v1,v2)
 
     Same as :func:`VECTORCROSSPRODUCT(v1,v2)`
-    
+
 .. function:: VECTORCROSSPRODUCT(v1,v2)
 
     :parameter v1: (:struct:`Vector`)
     :parameter v2: (:struct:`Vector`)
-    :return: The `vector cross-product <veccross>`_
+    :return: The `vector cross-product <https://mathinsight.org/cross_product>`__
     :rtype: :struct:`Vector`
 
-    The vector `cross product <veccross>`_ of two vectors in the order ``(v1,v2)`` returning a new `Vector`::
+    The vector `cross product <https://mathinsight.org/cross-product/>`__ of two vectors in the order ``(v1,v2)`` returning a new `Vector`::
 
         SET vec1 TO V(1,2,3).
         SET vec2 TO V(2,3,4).
-        
+
         // These will both print: V(-1,2,-1)
         PRINT VCRS(vec1, vec2).
         PRINT VECTORCROSSPRODUCT(vec1, vec2).
@@ -270,21 +275,16 @@ Method / Operator                                                         Return
 .. function:: VXCL(v1,v2)
 
     Same as :func:`VECTOREXCLUDE(v1,v2)`
-    
+
 .. function:: VECTOREXCLUDE(v1,v2)
 
     This is a vector, ``v2`` with all of ``v1`` excluded from it. In other words, the projection of ``v2`` onto the plane that is normal to ``v1``.
-
-.. _vecsmul: http://en.wikipedia.org/wiki/Vector_addition#Scalar_multiplication
-.. _vecadd:  http://en.wikipedia.org/wiki/Vector_addition#Addition_and_subtraction
-.. _vecdot: http://en.wikipedia.org/wiki/Dot_product
-.. _veccross: http://en.wikipedia.org/wiki/Cross_product
 
 Some examples of using the :struct:`Vector` object::
 
     // initializes a vector with x=100, y=5, z=0
     SET varname TO V(100,5,0).
-    
+
     varname:X.    // Returns 100.
     V(100,5,0):Y. // Returns 5.
     V(100,5,0):Z. // Returns 0.
@@ -293,14 +293,13 @@ Some examples of using the :struct:`Vector` object::
     varname:MAG.
 
     // Changes x coordinate value to 111.
-    SET varname:X TO 111.       
+    SET varname:X TO 111.
 
     // Lengthen or shorten vector to make its magnitude 10.
-    SET varname:MAG to 10.      
+    SET varname:MAG to 10.
 
     // get vector pointing opposite to surface velocity.
-    SET retroSurf to (-1)*velocity:surface. 
+    SET retroSurf to (-1)*velocity:surface.
 
     // use cross product to find normal to the orbit plane.
-    SET norm to VCRS(velocity:orbit, ship:body:position).  
-
+    SET norm to VCRS(velocity:orbit, ship:body:position).

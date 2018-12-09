@@ -125,6 +125,8 @@
     <Compile Include="Suffixed\CraftTemplate.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\LoadDistanceValue.cs" />
+    <Compile Include="Suffixed\Part\DecouplerValue.cs" />
+    <Compile Include="Suffixed\Part\LaunchClampValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -140,7 +142,6 @@
     <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
     <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
-    <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
@@ -167,6 +168,8 @@
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\VesselAlt.cs" />
     <Compile Include="Suffixed\VesselEta.cs" />
+    <Compile Include="Suffixed\VesselTarget.Hooks.cs" />
+    <Compile Include="Suffixed\VesselTarget.Parts.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
     <Compile Include="Suffixed\Widget\Slider.cs" />

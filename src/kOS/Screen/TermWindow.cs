@@ -190,10 +190,10 @@ namespace kOS.Screen
         /// <summary>
         /// Unity lacks gui styles for GUI.DrawTexture(), so to make it do
         /// 9-slice stretching, we have to draw the 9slice image as a GUI.Label.
-        /// But GUI.Labels that render a Texture2D instead of text, won't stretch\
+        /// But GUI.Labels that render a Texture2D instead of text, won't stretch
         /// larger than the size of the image file no matter what you do (only smaller).
         /// So to make it stretch the image in a label, the image has to be implemented
-        /// as part of the label's background defined in the GUIStyle insteade of as a
+        /// as part of the label's background defined in the GUIStyle instead of as a
         /// normal image element.  This sets up that style, which you can then render
         /// by making a GUILabel use this style and have dummy empty string content.
         /// </summary>
@@ -527,8 +527,10 @@ namespace kOS.Screen
                 
                 if (!IsSpecial(c)) // printable characters
                 {
+#pragma warning disable CS0162
                     if (DebugInternational)
                         c = DebugInternationalMapping(c);
+#pragma warning restore CS0162
                     ProcessOneInputChar(c, null);
                     consumeEvent = true;
                     cursorBlinkTime = 0.0f; // Don't blink while the user is still actively typing.
@@ -912,7 +914,7 @@ namespace kOS.Screen
                 GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
             }
             terminalLetterSkin.label.normal.textColor = AdjustColor(reversingScreen ? bgColor : currentTextColor, screen.Brightness);            
-            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth + 2, screen.RowCount * charHeight + 2)); // +2's for the sake of safety margin
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth + 2, screen.RowCount * charHeight + 4)); // +4 so descenders and underscores visible on bottom row.
 
             // When loading a quicksave, it is possible for the teminal window to update even though
             // mostRecentScreen is null.  If that's the case, just skip the screen update.

@@ -490,7 +490,38 @@ namespace kOS.Module
             }
         }
 
-        /// <summary>                
+        /// <summary>
+        /// True if there is any kOSProcessor on the vessel in READY state.
+        /// It's a slow O(n) operation (n = count of all PartModules on the vessel)
+        /// so don't be calling this frequently.
+        /// </summary>
+        public bool AnyProcessorReady()
+        {
+            IEnumerable<PartModule> processorModules = Vessel.parts
+                .SelectMany(p => p.Modules.Cast<PartModule>()
+                .Where(pMod => pMod is kOSProcessor));
+            foreach (kOSProcessor processor in processorModules)
+            {
+                if (processor.ProcessorMode == Safe.Module.ProcessorModes.READY)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Disables the controls
+        /// </summary>
+        public void OnAllProcessorsStarved()
+        {
+            foreach (IFlightControlParameter f in flightControlParameters.Values)
+            {
+                f.DisableControl();
+            }
+        }
+
+        /// <summary>
         /// Return the kOSVesselModule instance associated with the given Vessel object
         /// </summary>
         /// <param name="vessel">the vessel for which the module should be returned</param>
@@ -500,6 +531,8 @@ namespace kOS.Module
             kOSVesselModule ret;
             if (!allInstances.TryGetValue(vessel.id, out ret))
             {
+                if (!vessel.isActiveAndEnabled)
+                    throw new Safe.Exceptions.KOSException("Vessel is no longer active or enabled " + vessel.name);
                 ret = vessel.GetComponent<kOSVesselModule>();
                 if (ret == null)
                     throw new kOS.Safe.Exceptions.KOSException("Cannot find kOSVesselModule on vessel " + vessel.name);

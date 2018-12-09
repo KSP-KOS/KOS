@@ -1,19 +1,22 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
     [kOS.Safe.Utilities.KOSNomenclature("DockingPort")]
-    public class DockingPortValue : PartValue
+    public class DockingPortValue : DecouplerValue
     {
         private readonly ModuleDockingNode module;
 
-        public DockingPortValue(ModuleDockingNode module, SharedObjects sharedObj)
-            : base(module.part, sharedObj)
+        /// <summary>
+        /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
+        /// </summary>
+        internal DockingPortValue(SharedObjects shared, global::Part part, PartValue parent, DecouplerValue decoupler, ModuleDockingNode module)
+            : base(shared, part, parent, decoupler)
         {
             this.module = module;
-            DockingInitializeSuffixes();
+            RegisterInitializer(DockingInitializeSuffixes);
         }
 
         private void DockingInitializeSuffixes()
@@ -46,19 +49,14 @@ namespace kOS.Suffixed.Part
             get { return module; }
         }
 
-        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
+        public static new ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
+            var vessel = VesselTarget.CreateOrGetExisting(sharedObj);
             foreach (var part in parts)
             {
-                foreach (PartModule module in part.Modules)
-                {
-                    var dockingNode = module as ModuleDockingNode;
-                    if (dockingNode != null)
-                    {
-                        toReturn.Add(new DockingPortValue(dockingNode, sharedObj));
-                    }
-                }
+                if (part.Modules.Contains<ModuleDockingNode>())
+                    toReturn.Add(vessel[part]);
             }
             return toReturn;
         }

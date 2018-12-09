@@ -1,5 +1,6 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Suffixed;
 using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.InfernalRobotics
@@ -101,7 +102,7 @@ namespace kOS.AddOns.InfernalRobotics
             if (!p)
                 shared.Logger.LogError("Cannot find Infernal Robotics part with UID: " + servo.UID);
 
-            return p != null ? new PartValue(p, shared) : null;
+            return p != null ? VesselTarget.CreateOrGetExisting(shared)[p] : null;
         }
     }
 }

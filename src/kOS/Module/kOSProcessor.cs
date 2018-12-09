@@ -136,8 +136,15 @@ namespace kOS.Module
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
-            SafeHouse.Logger.Log("Activate");
+            SafeHouse.Logger.Log("Open Window by event");
             OpenWindow();
+        }
+
+        [KSPEvent(guiActive = true, guiName = "Close Terminal", category = "skip_delay;")]
+        public void Deactivate()
+        {
+            SafeHouse.Logger.Log("Close Window by event");
+            CloseWindow();
         }
 
         [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000")]
@@ -154,7 +161,7 @@ namespace kOS.Module
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param)
         {
-            SafeHouse.Logger.Log("Open Terminal from Dialog");
+            SafeHouse.Logger.Log("Open Terminal from ActionGroup");
             Activate();
         }
 
@@ -884,6 +891,8 @@ namespace kOS.Module
                     if (shared.Window != null) shared.Window.IsPowered = false;
                     if (shared.SoundMaker != null) shared.SoundMaker.StopAllVoices();
                     foreach (var w in shared.ManagedWindows) w.IsPowered = false;
+                    kOSVesselModule vesselModule = kOSVesselModule.GetInstance(shared.Vessel);
+                    if (!vesselModule.AnyProcessorReady()) vesselModule.OnAllProcessorsStarved();
                     break;
             }
 

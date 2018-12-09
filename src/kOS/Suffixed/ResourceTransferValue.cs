@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
@@ -117,6 +117,10 @@ namespace kOS.Suffixed
                 return TransferPartType.Part;
             }
             if (toTest is ListValue)
+            {
+                return TransferPartType.Parts;
+            }
+            if (toTest is ListValue<PartValue>)
             {
                 return TransferPartType.Parts;
             }
@@ -329,22 +333,24 @@ namespace kOS.Suffixed
             switch (type)
             {
                 case TransferPartType.Part:
-                {
-                    
                     var partValue = obj as PartValue;
                     parts.Add(partValue.Part);
                     break;
-                }
                 case TransferPartType.Parts:
-                {
                     var listValue = (obj as ListValue);
                     if (listValue != null)
                     {
                         var partValues = listValue.OfType<PartValue>();
-                        parts.AddRange(partValues.Select(partValue => partValue.Part));
+                        parts.AddRange(partValues.Select(pv => pv.Part));
+                        break;
+                    }
+                    var partListValue = obj as ListValue<PartValue>;
+                    if (partListValue != null)
+                    {
+                        parts.AddRange(partListValue.Select(pv => pv.Part));
+                        break;
                     }
                     break;
-                }
                 case TransferPartType.Element:
                     var element = obj as ElementValue;
                     var elementParts = element.Parts.Cast<PartValue>();

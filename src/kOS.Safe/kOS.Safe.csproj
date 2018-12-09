@@ -71,6 +71,7 @@
     <Compile Include="Exceptions\KOSInvalidDelegateType.cs" />
     <Compile Include="Encapsulation\TerminalInput.cs" />
     <Compile Include="Exceptions\KOSInvalidTargetException.cs" />
+    <Compile Include="Exceptions\KOSModifyReadonly.cs" />
     <Compile Include="Exceptions\KOSNumberParseException.cs" />
     <Compile Include="Exceptions\KOSObsoletionException.cs" />
     <Compile Include="Exceptions\KOSPatchesObsoletionException.cs" />
@@ -110,7 +111,6 @@
     <Compile Include="Encapsulation\ISuffixed.cs" />
     <Compile Include="Encapsulation\Lexicon.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
-    <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\PIDLoop.cs" />
     <Compile Include="Encapsulation\ScalarDoubleValue.cs" />
     <Compile Include="Encapsulation\ScalarIntValue.cs" />
@@ -286,6 +286,7 @@
     <Compile Include="Utilities\StringUtil.cs" />
     <Compile Include="Execution\InterruptPriority.cs" />
     <Compile Include="Execution\ExecutionStatBlock.cs" />
+    <Compile Include="Encapsulation\Suffixes\OptionalArgsSuffix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

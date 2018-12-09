@@ -113,6 +113,10 @@ KUniverse 4th wall methods
           - :struct:`List` of :struct:`CraftTemplate`
           - Method
           - A list of all craft templates in the save specific and stock folders.
+        * - :attr:`REALTIME`
+          - :struct:`Scalar`
+          - Get only
+          - Real world timestamp (outside of game) in seconds since 1970
 
 
 .. attribute:: KUniverse:CANREVERT
@@ -395,6 +399,21 @@ KUniverse 4th wall methods
 
         kOS: (KUNIVERSE:DEBUGLOG) this is my message
 
+.. attribute:: KUniverse:REALTIME
+
+    :access: Get Only
+    :type: :struct:`Scalar`
+
+    Returns the current time in the real world (outside of the game).
+    It uses the so called "UNIX time" convention - that is the number
+    of seconds since the start of 1970, right at midnight, 1st January.
+    
+.. attribute:: KUniverse:REALWORLDTIME
+
+    :access: Get Only
+    :type: :struct:`Scalar`
+
+    An alias for :struct:`KUniverse:REALTIME`.
 
 ****
 

@@ -101,7 +101,7 @@ GUI display tools
       Where to show the message on the screen:
       - 1 = upper left
       - 2 = upper center
-      - 3 = lower right
+      - 3 = upper right
       - 4 = lower center
       Note that all these locations have their own defined slightly
       different fonts and default sizes, enforced by the stock KSP game.

@@ -10,15 +10,15 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class MissionSettings : Binding
     {
-        private VesselTarget ship;
         private SharedObjects sharedObj;
+        private VesselTarget ship { get { return VesselTarget.CreateOrGetExisting(sharedObj); } }
 
         public override void AddTo(SharedObjects shared)
         {
             sharedObj = shared;
 
             shared.BindingMgr.AddGetter("CORE", () => new Core((kOSProcessor)shared.Processor, shared));
-            shared.BindingMgr.AddGetter("SHIP", () => ship ?? (ship = VesselTarget.CreateOrGetExisting(shared)));
+            shared.BindingMgr.AddGetter("SHIP", () => ship);
             // These are now considered shortcuts to SHIP:suffix
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
             {
@@ -60,68 +60,36 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddGetter("TARGET", () =>
             {
-                if (shared.Vessel != FlightGlobals.ActiveVessel)
-                {
-                    throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("TARGET can only be returned for the Active Vessel");
-                }
-                var currentTarget = FlightGlobals.fetch.VesselTarget;
+                var target = (shared.Vessel == FlightGlobals.ActiveVessel) ? FlightGlobals.fetch.VesselTarget : shared.Vessel.targetObject;
 
-                var vessel = currentTarget as Vessel;
+                var vessel = target as Vessel;
                 if (vessel != null)
-                {
                     return VesselTarget.CreateOrGetExisting(vessel, shared);
-                }
-                var body = currentTarget as CelestialBody;
+                var body = target as CelestialBody;
                 if (body != null)
-                {
                     return BodyTarget.CreateOrGetExisting(body, shared);
-                }
-                var dockingNode = currentTarget as ModuleDockingNode;
+                var dockingNode = target as ModuleDockingNode;
                 if (dockingNode != null)
-                {
-                    return new DockingPortValue(dockingNode, shared);
-                }
+                    return VesselTarget.CreateOrGetExisting(dockingNode.vessel, shared)[dockingNode.part];
 
                 throw new kOS.Safe.Exceptions.KOSSituationallyInvalidException("No TARGET is selected");
             });
 
             shared.BindingMgr.AddGetter("HASTARGET", () =>
             {
-                if (shared.Vessel != FlightGlobals.ActiveVessel) return false;
                 // the ship has a target if the object does not equal null.
-                return FlightGlobals.fetch.VesselTarget != null;
+                return (shared.Vessel == FlightGlobals.ActiveVessel ?
+                    FlightGlobals.fetch.VesselTarget : shared.Vessel.targetObject) != null;
             });
 
         }
 
         public object VesselShortcutGetter(string name)
         {
-            ISuffixResult suffix =ship.GetSuffix(name);
+            ISuffixResult suffix = ship.GetSuffix(name);
             if (!suffix.HasValue)
                 suffix.Invoke(sharedObj.Cpu);
             return suffix.Value;
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            if (ship == null)
-            {
-                ship = VesselTarget.CreateOrGetExisting(sharedObj);
-                ship.LinkCount++;
-            }
-            else if (ship.Vessel == null)
-            {
-                ship.LinkCount--;
-                ship = VesselTarget.CreateOrGetExisting(sharedObj);
-                ship.LinkCount++;
-            }
-            else if (!ship.Vessel.id.Equals(sharedObj.Vessel.id))
-            {
-                ship.LinkCount--;
-                ship = VesselTarget.CreateOrGetExisting(sharedObj);
-                ship.LinkCount++;
-            }
         }
     }
 }
