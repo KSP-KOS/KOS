@@ -159,8 +159,8 @@ Method / Operator                                                         Return
 .. _Vector *:
 .. object:: *
 
-    `Scalar multiplication <https://mathinsight.org/vector_introduction>`__ or
-    `dot product <https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/>`__
+    `Scalar multiplication <https://mathinsight.org/vector_introduction#scalarmultiplication>`__ or
+    `dot product <https://mathinsight.org/dot_product>`__
     of two ``Vectors``. See also :func:`VECTORDOTPRODUCT`::
 
         SET a TO 2.
@@ -180,7 +180,7 @@ Method / Operator                                                         Return
 .. _Vector +-:
 .. object:: +, -
 
-    :struct:`Vector` `addition and subtraction <https://mathinsight.org/vector_introduction>`__ by a scalar or another :struct:`Vector`::
+    `Adding <https://mathinsight.org/vector_introduction#addition>`__ and `subtracting <https:/mathinsight.org/vector_introduction#subtraction>`__ a :struct:`Vector` with another :struct:`Vector`::
 
         SET a TO 2.
         SET vec1 TO V(1,2,3).
@@ -192,8 +192,9 @@ Method / Operator                                                         Return
     the vector by a scalar of (-1), and is not technically an addition or
     subtraction operator::
 
-	PRINT -vec1.     // these two both print the
-	PRINT (-1)*vec1. // exact same thing.
+        // These two both print the same exact thing:
+	PRINT -vec1.
+	PRINT (-1)*vec1.
 
 .. function:: VDOT(v1,v2)
 
@@ -203,18 +204,20 @@ Method / Operator                                                         Return
 
     :parameter v1: (:struct:`Vector`)
     :parameter v2: (:struct:`Vector`)
-    :return: The `vector dot-product <https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/>`__
+    :return: The `vector dot-product <https://mathinsight.org/dot_product>`__
     :rtype: :struct:`scalar`
 
-    This is the `dot product <https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/>`__ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
+    This is the `dot product <https://mathinsight.org/dot_product>`__ of two vectors returning a scalar number. This is the same as :ref:`v1 * v2 <Vector *>`::
 
         SET vec1 TO V(1,2,3).
         SET vec2 TO V(2,3,4).
 
-        // These will all print the value: 20
-        PRINT vec1 * vec2.
+        // These are different ways to perform the same operation.
+        // All of them will print the value: 20
+        // -------------------------------------------------------
         PRINT VDOT(vec1, vec2).
         PRINT VECTORDOTPRODUCT(vec1, vec2).
+        PRINT vec1 * vec2. // multiplication of two vectors with asterisk "*" performs a VDOT().
 
 .. function:: VCRS(v1,v2)
 
@@ -224,10 +227,10 @@ Method / Operator                                                         Return
 
     :parameter v1: (:struct:`Vector`)
     :parameter v2: (:struct:`Vector`)
-    :return: The `vector cross-product <https://betterexplained.com/articles/cross-product/>`__
+    :return: The `vector cross-product <https://mathinsight.org/cross_product>`__
     :rtype: :struct:`Vector`
 
-    The vector `cross product <https://betterexplained.com/articles/cross-product/>`__ of two vectors in the order ``(v1,v2)`` returning a new `Vector`::
+    The vector `cross product <https://mathinsight.org/cross-product/>`__ of two vectors in the order ``(v1,v2)`` returning a new `Vector`::
 
         SET vec1 TO V(1,2,3).
         SET vec2 TO V(2,3,4).
@@ -276,11 +279,6 @@ Method / Operator                                                         Return
 .. function:: VECTOREXCLUDE(v1,v2)
 
     This is a vector, ``v2`` with all of ``v1`` excluded from it. In other words, the projection of ``v2`` onto the plane that is normal to ``v1``.
-
-.. _vecsmul: http://en.wikipedia.org/wiki/Vector_addition#Scalar_multiplication
-.. _vecadd:  http://en.wikipedia.org/wiki/Vector_addition#Addition_and_subtraction
-.. _vecdot: http://en.wikipedia.org/wiki/Dot_product
-.. _veccross: http://en.wikipedia.org/wiki/Cross_product
 
 Some examples of using the :struct:`Vector` object::
 
