@@ -351,7 +351,8 @@ namespace kOS.UserIO
                 else
                     throw; // Not one of the expected thread-closed IO exceptions, so don't hide it - let it get reported.
             }
-            
+
+#pragma warning disable CS0162
             if (VERBOSE_DEBUG_SEND) // compiler warning - this code block is hardcoded to be unreachable.  But that's deliberate.
             {
                 StringBuilder logMessage = new StringBuilder();
@@ -364,6 +365,7 @@ namespace kOS.UserIO
                 }
                 SafeHouse.Logger.Log(logMessage.ToString());
             }
+#pragma warning restore CS0162
         }
 
         public void StopListening()

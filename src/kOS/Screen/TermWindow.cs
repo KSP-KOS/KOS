@@ -527,8 +527,10 @@ namespace kOS.Screen
                 
                 if (!IsSpecial(c)) // printable characters
                 {
+#pragma warning disable CS0162
                     if (DebugInternational)
                         c = DebugInternationalMapping(c);
+#pragma warning restore CS0162
                     ProcessOneInputChar(c, null);
                     consumeEvent = true;
                     cursorBlinkTime = 0.0f; // Don't blink while the user is still actively typing.
