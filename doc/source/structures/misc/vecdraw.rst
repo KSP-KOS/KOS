@@ -36,6 +36,22 @@ Drawing Vectors on the Screen
               0.2
             ).
 
+    Vector arrows can be created with dynamic positioning and color by passing
+    :ref:`Delegates` as any of the first three arguments for ``VECDRAW()`` or ``VECDRAWARGS()``::
+
+        SET anArrow TO VECDRAW(
+          { return 3*up:vector. },
+          { return (3+sin(100*time:seconds)) * up:vector.  },
+          { return RGBA(1, 1, RANDOM(), 1). },
+          "Jumping arrow!",
+          1.0,
+          TRUE,
+          0.2
+        ).
+
+    The example above uses the arguments *start*, *vec* and *color* as shortcuts
+    for setting :attr:`VecDraw:STARTUPDATER`, :attr:`VecDraw:VECUPDATER` and :attr:`VecDraw:COLORUPDATER`.
+
     All the parameters of the ``VECDRAW()`` and ``VECDRAWARGS()`` are
     optional.  You can leave any of the lastmost parameters off and they
     will be given a default::

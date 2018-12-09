@@ -341,23 +341,51 @@ namespace kOS.Function
     [Function("vecdraw", "vecdrawargs")]
     public class FunctionVecDrawNull : FunctionBase
     {
+        protected RgbaColor GetDefaultColor()
+        {
+            return new RgbaColor(1.0f, 1.0f, 1.0f);
+        }
+
+        protected Vector GetDefaultVector()
+        {
+            return new Vector(1.0, 0.0, 0.0);
+        }
+
+        protected Vector GetDefaultStart()
+        {
+            return new Vector(0, 0, 0);
+        }
+
         public override void Execute(SharedObjects shared)
         {
             int argc = CountRemainingArgs(shared);
 
             // Handle the var args that might be passed in, or give defaults if fewer args:
-            double width   = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
-            bool   show    = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
-            double scale   = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
-            string str     = (argc >= 4) ? PopValueAssert(shared).ToString()         : "";
-            RgbaColor rgba = (argc >= 3) ? GetRgba(PopValueAssert(shared))           : new RgbaColor(1.0f, 1.0f, 1.0f);
-            Vector vec     = (argc >= 2) ? GetVector(PopValueAssert(shared))         : new Vector(1.0, 0.0, 0.0);
-            Vector start   = (argc >= 1) ? GetVector(PopValueAssert(shared))         : new Vector(0.0, 0.0, 0.0);
+            double width    = (argc >= 7) ? GetDouble(PopValueAssert(shared))         : 0.2;
+            bool   show     = (argc >= 6) ? Convert.ToBoolean(PopValueAssert(shared)) : false;
+            double scale    = (argc >= 5) ? GetDouble(PopValueAssert(shared))         : 1.0;
+            string str      = (argc >= 4) ? PopValueAssert(shared).ToString()         : "";
+
+            // Pop the arguments or use the default if omitted
+            object argRgba  = (argc >= 3) ? PopValueAssert(shared) : GetDefaultColor();
+            object argVec   = (argc >= 2) ? PopValueAssert(shared) : GetDefaultVector();
+            object argStart = (argc >= 1) ? PopValueAssert(shared) : GetDefaultStart();
+
+            // Assign the arguments of type delegate or null otherwise
+            KOSDelegate colorUpdater = argRgba  as KOSDelegate;
+            KOSDelegate vecUpdater   = argVec   as KOSDelegate;
+            KOSDelegate startUpdater = argStart as KOSDelegate;
+
+            // Get the values or use the default if its a delegate
+            RgbaColor rgba = (colorUpdater == null) ? GetRgba(argRgba)    : GetDefaultColor();
+            Vector vec     = (vecUpdater == null)   ? GetVector(argVec)   : GetDefaultVector();
+            Vector start   = (startUpdater == null) ? GetVector(argStart) : GetDefaultStart();
+
             AssertArgBottomAndConsume(shared);
-            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width);
+            DoExecuteWork(shared, start, vec, rgba, str, scale, show, width, colorUpdater, vecUpdater, startUpdater);
         }
         
-        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width)
+        public void DoExecuteWork(SharedObjects shared, Vector start, Vector vec, RgbaColor rgba, string str, double scale, bool show, double width, KOSDelegate colorUpdater, KOSDelegate vecUpdater, KOSDelegate startUpdater)
         {
             var vRend = new VectorRenderer( shared.UpdateHandler, shared )
                 {
@@ -369,6 +397,15 @@ namespace kOS.Function
                 };
             vRend.SetLabel( str );
             vRend.SetShow( show );
+
+            if (colorUpdater != null)
+                vRend.SetSuffix("COLORUPDATER", colorUpdater);
+
+            if (vecUpdater != null)
+                vRend.SetSuffix("VECUPDATER", vecUpdater);
+
+            if (startUpdater != null)
+                vRend.SetSuffix("STARTUPDATER", startUpdater);
             
             ReturnValue = vRend;
         }
