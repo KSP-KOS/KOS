@@ -81,6 +81,18 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`HASPARENT`
           - :struct:`Boolean`
           - Check if this part has a parent :struct:`Part`
+        * - :attr:`DECOUPLER`
+          - :struct:`Decoupler` or :struct:`String`
+          - The decoupler/separator that will decouple this part when activated. `None` if no such exists.
+        * - :attr:`SEPARATOR`
+          - :struct:`Decoupler` or :struct:`String`
+          - Alias name for :attr:`DECOUPLER <Part:DECOUPLER>`
+        * - :attr:`DECOUPLEDIN`
+          - :struct:`Scalar`
+          - The stage number where this part will get decoupled. -1 if cannot be decoupled.
+        * - :attr:`SEPARATEDIN`
+          - :struct:`Scalar`
+          - Alias name for :attr:`DECOUPLEDIN <Part:DECOUPLEDIN>`
         * - :attr:`HASPHYSICS`
           - :struct:`Boolean`
           - Does this part have mass or drag
@@ -283,6 +295,41 @@ These are the generic properties every PART has. You can obtain a list of values
 
     When walking the :ref:`tree of parts <parts and partmodules>`, this is the part that this part is attached to on the way "up" toward the root part.
 
+.. attribute:: Part:HASPARENT
+
+    :access: Get only
+    :type: :struct:`Boolean`
+
+    When walking the :ref:`tree of parts <parts and partmodules>`, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).
+
+.. attribute:: Part:DECOUPLER
+
+    :access: Get only
+    :type: :struct:`Decoupler` or :struct:`String`
+
+    The decoupler/separator that will decouple this part when activated. `None` if no such exists.
+
+.. attribute:: Part:SEPARATOR
+
+    :access: Get only
+    :type: :struct:`Decoupler` or :struct:`String`
+    
+    Alias name for :attr:`DECOUPLER <Part:DECOUPLER>`
+
+.. attribute:: Part:DECOUPLEDIN
+
+    :access: Get only
+    :type: :struct:`Scalar`
+    
+    The stage number where this part will get decoupled. -1 if cannot be decoupled.
+
+.. attribute:: Part:SEPARATEDIN
+
+    :access: Get only
+    :type: :struct:`Scalar`
+    
+    Alias name for :attr:`DECOUPLEDIN <Part:DECOUPLEDIN>`
+
 .. attribute:: Part:HASPHYSICS
 
     :access: Get only
@@ -291,13 +338,6 @@ These are the generic properties every PART has. You can obtain a list of values
     This comes from a part's configuration and is an artifact of the KSP simulation.
 
     For a list of stock parts that have this attribute and a fuller explanation see `the KSP wiki page about massless parts <http://wiki.kerbalspaceprogram.com/wiki/Massless_part>`_.
-
-.. attribute:: Part:HASPARENT
-
-    :access: Get only
-    :type: :struct:`Boolean`
-
-    When walking the :ref:`tree of parts <parts and partmodules>`, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).
 
 .. attribute:: Part:CHILDREN
 
