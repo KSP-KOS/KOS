@@ -153,6 +153,7 @@ Stage Structure
 
     This is particularly helpful for advanced staging logic, e.g.:
     ::
+
         STAGE.
         IF stage:nextDecoupler:isType("LaunchClamp")
             STAGE.
@@ -171,4 +172,4 @@ Stage Structure
     :access: Get
     :type: :struct:`Decoupler`
 
-    Alias for :attr:`NEXTDECOUPER`
+    Alias for :attr:`NEXTDECOUPLER<Stage:NEXTDECOUPLER>`

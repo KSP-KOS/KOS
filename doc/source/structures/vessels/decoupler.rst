@@ -1,5 +1,4 @@
 .. _decoupler:
-.. _separator:
 
 Decoupler
 =========
@@ -23,3 +22,6 @@ Alias :struct:`Separator` can also be used for :struct:`Decoupler`.
           -
           - A :struct:`Decoupler` is a kind of :struct:`Part`
 
+.. structure:: Separator
+
+    :struct:`Separator` is an alias for the structure :struct:`Decoupler`
