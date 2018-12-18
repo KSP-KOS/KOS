@@ -566,7 +566,7 @@ namespace kOS.Screen
 
         private static bool IsSpecial(char c)
         {
-            if (c < 0x0020)
+            if (c < 0x0020 || c > 0xE000)
                 return true;
             if (Enum.IsDefined(typeof(UnicodeCommand), (int)c))
                 return true;
