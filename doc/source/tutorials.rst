@@ -38,3 +38,8 @@ Intermediate
 
 :doc:`Creating Reusable GUI Elements <tutorials/gui>`
     Creating and using a "TabWidget" to put a lot of functionality in a small amount of screenspace.
+    
+External tutorials
+------------------
+`General tutorials <https://github.com/Toukie/KOS-tutorials>`__
+    More in-depth explanation and tutorials.
