@@ -2,6 +2,7 @@
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Screen;
 using kOS.Safe.Execution;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -161,6 +162,20 @@ namespace kOS.Safe.Encapsulation
                                                                     "Character height on in-game terminal screen in pixels"));
             AddSuffix("RESIZEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => resizeWatchers));
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
+            AddSuffix("CURSORCOL", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorColumnShow,
+                                                              value => { //Screen.MoveCursor rolls over the end of line, but not over the front, so we have to implement the latter ourselves.
+                                                                  int row = Shared.Screen.CursorRowShow;
+                                                                  while(value < 0)
+                                                                  {
+                                                                      row--;
+                                                                      value += Shared.Screen.ColumnCount;
+                                                                  }
+                                                                  Shared.Screen.MoveCursor(row, value);
+                                                              },
+                                                              "Current cursor column.  Will roll over the screen edges into the next or previous row."));
+            AddSuffix("CURSORROW", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorRowShow,
+                                                              value => Shared.Screen.MoveCursor((int)KOSMath.Clamp(value,0,Shared.Screen.RowCount), Shared.Screen.CursorColumnShow),
+                                                              "Current cursor row, between 0 and HEIGHT-1"));
         }
 
         private void CannotSetWidth(ScalarValue newWidth)
