@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System;
 using kOS.Safe.UserIO;
@@ -12,7 +12,7 @@ namespace kOS.Safe.Screen
         private int cursorColumnBuffer;
         private int cursorRowBuffer;
         
-        public override int CursorColumnShow { get { return cursorColumnBuffer; } }
+        public override int CursorColumnShow { get { return CursorColumn + cursorColumnBuffer; } }
         public override int CursorRowShow { get { return CursorRow + cursorRowBuffer; } }
 
         protected StringBuilder LineBuilder { get; set; }

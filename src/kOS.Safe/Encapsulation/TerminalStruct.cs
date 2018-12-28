@@ -163,19 +163,13 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("RESIZEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => resizeWatchers));
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
             AddSuffix("CURSORCOL", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorColumnShow,
-                                                              value => { //Screen.MoveCursor rolls over the end of line, but not over the front, so we have to implement the latter ourselves.
-                                                                  int row = Shared.Screen.CursorRowShow;
-                                                                  while(value < 0)
-                                                                  {
-                                                                      row--;
-                                                                      value += Shared.Screen.ColumnCount;
-                                                                  }
-                                                                  Shared.Screen.MoveCursor(row, value);
-                                                              },
+                                                              value => Shared.Screen.MoveCursor(Shared.Screen.CursorRowShow, (int)KOSMath.Clamp(value,0,Shared.Screen.ColumnCount)),
                                                               "Current cursor column.  Will roll over the screen edges into the next or previous row."));
             AddSuffix("CURSORROW", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorRowShow,
                                                               value => Shared.Screen.MoveCursor((int)KOSMath.Clamp(value,0,Shared.Screen.RowCount), Shared.Screen.CursorColumnShow),
                                                               "Current cursor row, between 0 and HEIGHT-1"));
+            AddSuffix("PUT", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value,false),
+                                                            "Put string at current cursor position (without implied newline)."));
         }
 
         private void CannotSetWidth(ScalarValue newWidth)
