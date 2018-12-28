@@ -164,10 +164,10 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
             AddSuffix("CURSORCOL", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorColumnShow,
                                                               value => Shared.Screen.MoveCursor(Shared.Screen.CursorRowShow, (int)KOSMath.Clamp(value,0,Shared.Screen.ColumnCount)),
-                                                              "Current cursor column.  Will roll over the screen edges into the next or previous row."));
+                                                              "Current cursor column, between 0 and WIDTH-1."));
             AddSuffix("CURSORROW", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorRowShow,
                                                               value => Shared.Screen.MoveCursor((int)KOSMath.Clamp(value,0,Shared.Screen.RowCount), Shared.Screen.CursorColumnShow),
-                                                              "Current cursor row, between 0 and HEIGHT-1"));
+                                                              "Current cursor row, between 0 and HEIGHT-1."));
             AddSuffix("PUT", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value,false),
                                                             "Put string at current cursor position (without implied newline)."));
         }

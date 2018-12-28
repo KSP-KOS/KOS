@@ -55,6 +55,21 @@ Structure
           - get and set
           - Height of a character cell in pixels.
 
+        * - :attr:`CURSORCOL`
+          - :struct:`Scalar`
+          - get and set
+          - Current cursor column, between 0 and WIDTH-1.
+        
+        * - :attr:`CURSORROW`
+          - :struct:`Scalar`
+          - get and set
+          - Current cursor row, between 0 and HEIGHT-1.
+
+        * - :meth:`PUT(string)`
+          - None
+          - Method Call
+          - Output string without newline.
+
         * - :attr:`INPUT`
           - :struct:`TerminalInput`
           - get
@@ -165,6 +180,26 @@ Structure
     The value is forced to remain in the range [4..24] and be
     divisible by 2.  If you try to set it to any other value, it
     will snap to the allowed range and increment.
+
+.. attribute:: Terminal:CURSORCOL
+
+    :access: Get/Set
+    :type: :struct:`Scalar`
+
+    Current cursor column, between 0 and WIDTH-1.
+
+.. attribute:: Terminal:CURSORROW
+
+    :access: Get/Set
+    :type: :struct:`Scalar`
+
+    Current cursor row, between 0 and HEIGHT-1.
+
+.. method:: Terminal:PUT(text)
+
+    :parameter text: (string) Text to print
+
+    Put string at current cursor position (without implied newline).
 
 .. attribute:: Terminal:INPUT
 
