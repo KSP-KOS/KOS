@@ -35,7 +35,9 @@ Terminal and game environment
     :parameter col: (integer) column starting with zero (left)
     :parameter line: (integer) line starting with zero (top)
 
-    Used in combination with :global:`PRINT`. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression::
+    Used in combination with :global:`PRINT`. Prints the selected text to the screen at specified location. 
+    This does **not** move the terminal cursor, as opposed to PRINT and the :ref:`terminal <terminal>` output methods.
+    Can print strings, or the result of an expression::
 
         PRINT "Hello" AT(0,10).
         PRINT 4+1 AT(0,10).
