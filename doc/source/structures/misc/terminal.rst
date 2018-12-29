@@ -70,6 +70,11 @@ Structure
           - Method Call
           - Output string without newline.
 
+        * - :meth:`PUTLN(string)`
+          - None
+          - Method Call
+          - Output string with newline.
+
         * - :attr:`INPUT`
           - :struct:`TerminalInput`
           - get
@@ -200,6 +205,13 @@ Structure
     :parameter text: (string) Text to print
 
     Put string at current cursor position (without implied newline).
+
+.. method:: Terminal:PUTLN(text)
+
+    :parameter text: (string) Text to print
+
+    Put string at current cursor position (with implied newline).
+    This is an alias for :global:`PRINT`
 
 .. attribute:: Terminal:INPUT
 

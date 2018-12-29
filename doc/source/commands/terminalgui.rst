@@ -18,6 +18,8 @@ Terminal and game environment
         PRINT 4+1.
         PRINT "4 times 8 is: " + (4*8).
 
+    This is an alias for TERMINAL:PUTLN, see :ref:`terminal struct <terminal>`.
+
 .. global:: SET TERMINAL:WIDTH. GET TERMINAL:WIDTH
 
      Gets or sets the terminal's width in characters.

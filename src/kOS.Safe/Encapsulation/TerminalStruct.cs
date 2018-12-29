@@ -170,6 +170,8 @@ namespace kOS.Safe.Encapsulation
                                                               "Current cursor row, between 0 and HEIGHT-1."));
             AddSuffix("PUT", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value,false),
                                                             "Put string at current cursor position (without implied newline)."));
+            AddSuffix("PUTLN", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value),
+                                                              "Put string at current cursor position (with implied newline)."));
         }
 
         private void CannotSetWidth(ScalarValue newWidth)
