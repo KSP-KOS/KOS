@@ -172,6 +172,8 @@ namespace kOS.Safe.Encapsulation
                                                             "Put string at current cursor position (without implied newline)."));
             AddSuffix("PUTLN", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value),
                                                               "Put string at current cursor position (with implied newline)."));
+            AddSuffix("PUTAT", new ThreeArgsSuffix<StringValue, ScalarValue, ScalarValue>((StringValue text, ScalarValue col, ScalarValue row) => Shared.Screen.PrintAt(text, row, col),
+                                                                                          "Put string at position without moving the cursor."));
         }
 
         private void CannotSetWidth(ScalarValue newWidth)

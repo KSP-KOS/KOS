@@ -75,6 +75,11 @@ Structure
           - Method Call
           - Output string with newline.
 
+        * - :meth:`PUTAT(text,column,row)`
+          - None
+          - Method Call
+          - Output string at position
+
         * - :attr:`INPUT`
           - :struct:`TerminalInput`
           - get
@@ -212,6 +217,15 @@ Structure
 
     Put string at current cursor position (with implied newline).
     This is an alias for :global:`PRINT`
+
+.. method:: Terminal:PUTAT(text,column,row)
+
+    :parameter text: (string) Text to print
+    :parameter column: (scalar) Horizontal starting position
+    :parameter row: (scalar) Vertical starting position
+
+    Put string at position without moving the cursor.
+    This is an alias for PRINT AT.
 
 .. attribute:: Terminal:INPUT
 

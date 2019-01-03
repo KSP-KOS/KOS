@@ -36,7 +36,8 @@ Terminal and game environment
     :parameter line: (integer) line starting with zero (top)
 
     Used in combination with :global:`PRINT`. Prints the selected text to the screen at specified location. 
-    This does **not** move the terminal cursor, as opposed to PRINT and the :ref:`terminal <terminal>` output methods.
+    This does **not** move the terminal cursor, as opposed to PRINT and most :ref:`terminal <terminal>` output methods.
+    This is an alias for TERMINAL:PUTAT, see :ref:`terminal struct <terminal>`.
     Can print strings, or the result of an expression::
 
         PRINT "Hello" AT(0,10).
