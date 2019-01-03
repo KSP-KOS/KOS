@@ -65,6 +65,11 @@ Structure
           - get and set
           - Current cursor row, between 0 and HEIGHT-1.
 
+        * - :meth:`MOVECURSOR(column,row)`
+          - None
+          - Method Call
+          - Move cursor to position.
+
         * - :meth:`PUT(string)`
           - None
           - Method Call
@@ -204,6 +209,13 @@ Structure
     :type: :struct:`Scalar`
 
     Current cursor row, between 0 and HEIGHT-1.
+
+.. method:: Terminal:MOVECURSOR(column,row)
+
+    :parameter column: (scalar) column to move to.
+    :parameter row: (scalar) row to move to.
+
+    Move both coordinates of the cursor at once.
 
 .. method:: Terminal:PUT(text)
 
