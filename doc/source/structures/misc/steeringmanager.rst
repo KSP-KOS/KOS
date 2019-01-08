@@ -16,12 +16,6 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     // Change the torque calculation to multiply the available torque by 1.5.
     SET STEERINGMANAGER:ROLLTORQUEFACTOR TO 1.5.
 
-.. note::
-
-    .. versionadded:: 0.18
-        The :struct:`SteeringManager` was added to improve the accuracy of kOS's cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymmetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.
-
-
 .. structure:: SteeringManager
 
     ==================================== ========================= =============
@@ -54,11 +48,6 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :attr:`YAWTORQUEFACTOR`              :struct:`scalar`          Multiplicative adjustment to yaw torque (calculated)
     :attr:`ROLLTORQUEFACTOR`             :struct:`scalar`          Multiplicative adjustment to roll torque (calculated)
     ==================================== ========================= =============
-
-.. warning::
-    .. versionadded:: v0.20.1
-        The suffixes ``SHOWRCSVECTORS`` and ``SHOWTHRUSTVECTORS`` were
-        deprecated with the move to using stock torque calculation with KSP 1.1.
 
 .. attribute:: SteeringManager:PITCHPID
 

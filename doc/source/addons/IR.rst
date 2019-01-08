@@ -15,8 +15,6 @@ Infernal Robotics introduces robotics parts to the game, letting you create movi
 
 .. figure:: http://i.imgur.com/O94LBvF.png
 
-Starting version 0.20 of the Infernal Robotics, mod creators introduced API to for easier access to robotic features.
-
 Access structure IRAddon via ``ADDONS:IR``.
 
 .. structure:: IRAddon
@@ -53,7 +51,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :struct:`List` of :struct:`IRControlGroup` objects
     :access: Get only
 
-    Lists all Servo Groups for the Vessel on which the script is being executed. On IR versions prior to 0.21.5 will always return servo groups for current focused vessel.
+    Lists all Servo Groups for the Vessel on which the script is being executed.
     Example of use::
 
         for g in ADDONS:IR:GROUPS
@@ -67,7 +65,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :struct:`List` of :struct:`IRServo` objects
     :access: Get only
 
-    Lists all Servos for the Vessel on which the script is being executed. On IR versions prior to 0.21.5 will always return servos for current focused vessel.
+    Lists all Servos for the Vessel on which the script is being executed.
     Example of use::
 
         for s in ADDONS:IR:ALLSERVOS
@@ -94,7 +92,7 @@ Access structure IRAddon via ``ADDONS:IR``.
      :attr:`FORWARDKEY`                    :ref:`string <string>`    Key assigned to forward movement
      :attr:`REVERSEKEY`                    :ref:`string <string>`    Key assigned to reverse movement
      :attr:`SERVOS`                        List (readonly)           List of servos in the group
-     :attr:`VESSEL`                        :struct:`Vessel`          Vessel object, owning this servo group. Readonly, requires IR version 0.21.5 or later.
+     :attr:`VESSEL`                        :struct:`Vessel`          Vessel object, owning this servo group. Readonly.
 
      :meth:`MOVERIGHT()`                   void                      Commands servos in the group to move in positive direction
      :meth:`MOVELEFT()`                    void                      Commands servos in the group to move in negative direction
@@ -160,7 +158,7 @@ Access structure IRAddon via ``ADDONS:IR``.
     :type: :struct:`Vessel`
     :access: Get only
 
-    If IR 0.21.5 or later is installed will return a Vessel that owns this ServoGroup, otherwise will return current focused Vessel
+    Returns a Vessel that owns this ServoGroup
 
 .. method:: IRControlGroup:MOVERIGHT()
 

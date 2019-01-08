@@ -96,35 +96,3 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
-
-Deprecated Suffix
------------------
-
-.. attribute:: Atmosphere:SCALE
-
-    :type: :ref:`scalar <scalar>`
-    :access: Get only
-
-    A math constant plugged into a formula to find atmosphere density.
-
-    .. note::
-
-        .. deprecated:: 0.17.2
-
-            Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0
-
-
-Atmospheric Math
-----------------
-
-.. note::
-
-   **[Section deleted]**
-
-   This documentation used to contain a description of how the math for
-   Kerbal Space Program's default stock atmospheric model works, but
-   everything that was mentioned here became utterly false when KSP 1.0
-   was released with a brand new atmospheric model that invalided pretty
-   much everything that was said here.  Rather than teach people incorrect
-   information, it was deemed that no documentation is better than misleading
-   documentation, so this section below this point has been removed.

@@ -22,11 +22,6 @@ more advanced scripts. This page contains that type of information.
 Update Ticks and Physics Ticks
 ------------------------------
 
-.. note::
-    .. versionadded:: 0.17
-        Previous versions of kOS used to execute program code during the
-	Update phase, rather than the more correct Physics Update phase.
-
 Kerbal Space Program simulates the universe by running the universe in
 small incremental time intervals that for the purpose of this
 document, we will call "**physics ticks**". The exact length of time
@@ -78,12 +73,6 @@ other way around.
 Electric Drain
 --------------
 
-.. versionadded:: 0.19.0
-    As of version 0.19.0, the electric charge drain varies depending
-    on CPU % usage.  Prior to version 0.19.0, the CPU load made no
-    difference and the electric drain was constant regardless of
-    utilization.
-
 Real world CPUs often have low power modes, and sleep modes, and these are
 vital to long distance probes.  In these modes the computer deliberately
 runs slowly in order to use less power, and then the program can tell it to
@@ -119,15 +108,6 @@ that update can make a big difference.
 
 Triggers
 --------
-
-.. versionadded:: 0.19.3
-    Note that as of version 0.19.3 and up, the entire way that triggers
-    are dealt with by the underlying kOS CPU has been redesigned.  In
-    previous versions it was not possible to have a trigger that lasts
-    longer than one **physics tick**, leading to a lot of warnings in
-    this section of the documentation.  Many of those warnings are now
-    moot, which caused a re-write of most of this section of the
-    documentation.
 
 There are multiple things within kerboscript that run "in the background"
 always updating, while the main script continues on. The way these work is
@@ -369,14 +349,6 @@ Then even though the condition is immediately true, it will still wait one physi
 
 CPU Update Loop
 ---------------
-
-.. versionadded:: 0.19.3
-    As of version 0.19.3, the behaviour of triggers was changed
-    dramatically to enable triggers that last longer than one
-    *physics tick*, thereby causing the section of documentation
-    that follows to be completely re-written.  If you were familiar
-    with triggers before 0.19.3, you should read the next section
-    carefully to be aware of what changed.
 
 .. versionadded:: 1.1.6.0
     As of version 1.1.6.0, the entire layout of the CPU update loop

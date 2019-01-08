@@ -340,20 +340,6 @@ Structure
 
 Both :attr:`NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`HASNEXTPATCH <Orbit:HASNEXTPATCH>` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's :attr:`:ORBIT <ManeuverNode:ORBIT>` suffix, and then look at **its** :attr:`:NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`:HASNEXTPATCH <Orbit:HASNEXTPATCH>`.
 
-Deprecated Suffix
------------------
-
-.. attribute:: Orbit:PATCHES
-
-    :type: :struct:`List` of :struct:`Orbit` Objects
-    :access: Get only
-
-    .. note::
-
-        .. deprecated:: 0.15
-
-            To get the same functionality, you must use :attr:`Vessel:PATCHES`  which is a suffix of the :struct:`Vessel` itself.
-
 .. _transitions:
 
 Transition Names

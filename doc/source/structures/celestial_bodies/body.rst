@@ -9,11 +9,6 @@ This is any sort of planet or moon. To get a variable referring to a Body, you c
     // like "Mun" for example.
     SET MY_VAR TO BODY("name").
 
-.. note::
-    .. versionchanged:: 0.13
-        A Celestial Body is now also an :ref:`Orbitable <orbitable>`, and can use all the terms described for these objects too.
-
-
 Bodies' names are added to the kerboscript language as variable names as well.
 This means you can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``,
 and the variable ``Kerbin`` to mean the same thing as ``BODY("Kerbin")``, and so on.

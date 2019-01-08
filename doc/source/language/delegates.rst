@@ -3,11 +3,6 @@
 Delegates (function references)
 ===============================
 
-.. note::
-    .. versionadded:: 0.19.0
-        The delegate feature described on this page did not exist
-        prior to kOS 0.19.0.
-
 .. contents:: Contents
     :local:
     :depth: 2
@@ -32,9 +27,7 @@ Kerboscript provides this feature with a built-in type called a
 :struct:`KOSDelegate`, which remembers the details needed
 to be able to call a function later on.
 
-The topic can be a bit confusing to people new to it, but this video,
-produced shortly before the release of kOS 0.19.0 by one of the
-(then new) collaborators of the team may help:
+The topic can be a bit confusing to people new to it, but this video by one of the collaborators of the team may help:
 
 `CheersKevin's explanation of delegates <https://www.youtube.com/watch?v=pcbURdU_WyU>`__
 
@@ -392,7 +385,7 @@ Kinds of Delegate (no suffixes)
 Under the hood, kOS handles several different kinds of "functions" and
 methods that aren't actually implemented the same way.  A ``KOSDelegate``
 attempts to hide the details of these differences from the user, but
-one difference in particular still stands out.  In kOS version 0.19.0,
+one difference in particular still stands out.  As of kOS version 1.1.5.2,
 you cannot reliably make a delegate of a suffix just yet.  (*This is
 intended as a future feature though.  It's been put off because it
 involves decisions that impact the future of the language and which, once
