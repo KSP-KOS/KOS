@@ -27,7 +27,7 @@ Kerboscript provides this feature with a built-in type called a
 :struct:`KOSDelegate`, which remembers the details needed
 to be able to call a function later on.
 
-The topic can be a bit confusing to people new to it, but this video by one of the collaborators of the team may help:
+The topic can be a bit confusing to people new to it, but this video by a prolific kOS YouTuber may help:
 
 `CheersKevin's explanation of delegates <https://www.youtube.com/watch?v=pcbURdU_WyU>`__
 

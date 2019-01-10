@@ -41,6 +41,14 @@ The following alternate versions have identical meaning to each other:
   * ``GLOBAL`` *identifier* ``IS`` *expression* *dot*
 
 .. warning::
+    .. versionadded:: 0.17
+        ** BREAKING CHANGE: **
+        The meaning, and syntax, of this statement changed considerably
+        in this update.  Prior to this version, DECLARE always created
+        global variables no matter where it appeared in the script.
+        See 'initializer required' below.
+
+.. warning::
     .. versionadded:: 1.5
         ** BREAKING CHANGE: **
         Previously the outermost level of a program file was the global
@@ -116,6 +124,16 @@ global is to declare it explicitly with one of these DECLARE statements**.
 Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
 
+.. note::
+    .. versionadded:: 0.17
+        The syntax without the initializer, looking like so:
+
+         .. code-block:: kerboscript
+
+             DECLARE x. // no initializer like "TO 1."
+
+         is **no longer legal syntax**.
+         
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
 there to exist any uninitialized variables in a script.

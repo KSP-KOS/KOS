@@ -41,7 +41,7 @@ items.  Only after the first time :attr:`NEXT` is called does the value of
 :attr:`VALUE` become usable as the first thing in the collection.
 
 If you want to restart an iteration you must call the ``:ITERATOR`` suffix of
-the collection again to obtain a new iterator.
+the collection again to obtain a new iterator.  Older versions of kOS had a ``:RESET`` suffix but it was removed as it could not be supported on all types.
 
 Members
 -------
@@ -59,6 +59,9 @@ Members
           - Description
 
 
+        * - :meth:`RESET`
+          - n/a
+          - (This method has been removed)
         * - :meth:`NEXT`
           - :ref:`boolean <boolean>`
           - Move iterator to the next item
@@ -72,6 +75,12 @@ Members
           - varies
           - The object currently being pointed to
 
+
+.. method:: Iterator:RESET
+
+    :returns: n/a
+
+    This suffix has been deleted from kOS.
 
 .. method:: Iterator:NEXT
 

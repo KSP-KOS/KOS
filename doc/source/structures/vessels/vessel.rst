@@ -17,6 +17,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
     // in case the target vessel changes.
     SET MY_VESS TO TARGET.
 
+Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associated suffixes as well as some additional suffixes.
+
 .. structure:: Vessel
 
     ======================================== =============================== =============
@@ -194,6 +196,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     How fast the ship is moving in the two dimensional plane horizontal
     to the SOI body's sea level surface.  The vertical component of the
     ship's velocity is ignored when calculating this.
+
+    .. note::
+
+       .. versionadded:: 0.18
+           The old name for this value was SURFACESPEED.  The name was changed
+           because it was confusing before.  "surface speed" implied it's the
+           :ref:`scalar <scalar>` magnitude of "surface velocity", but it wasn't, because of how
+           it ignores the vertical component.
 
 .. attribute:: Vessel:AIRSPEED
 
@@ -500,3 +510,20 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`MessageQueue`
 
     Returns this vessel's message queue. You can only access this attribute for your current vessel (using for example `SHIP:MESSAGES`).
+
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Vessel:TERMVELOCITY
+
+    :type: :ref:`scalar <scalar>` (m/s)
+    :access: Get only
+
+    terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+           Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0

@@ -11,8 +11,8 @@ These functions are built-in for performing basic math operations in kOS.
 Fundamental Constants
 ---------------------
 
-There is a bound variable called CONSTANT which contains some basic fundamental
-constants about the universe that you may find handy in your math operations.
+There is a bound variable called `CONSTANT` which contains some basic fundamental
+constants about the universe that you may find handy in your math operations.  Prior to kOS version 0.18, `CONSTANT` was implemented as a function call, so values were accessed as `CONSTANT():PI` and the like.  This functionality has been retained for backward compatibility, but new code should instead call `CONSTANT:PI`.
 
 .. list-table::
     :header-rows: 1

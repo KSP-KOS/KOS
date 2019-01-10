@@ -96,3 +96,20 @@ A Structure closely tied to :struct:`Body` A variable of type :struct:`Atmospher
     :access: Get only
 
     The altitude at which the atmosphere is "officially" advertised as ending. (actual ending value differs, see below).
+
+
+Deprecated Suffix
+-----------------
+
+.. attribute:: Atmosphere:SCALE
+
+    :type: :ref:`scalar <scalar>`
+    :access: Get only
+
+    A math constant plugged into a formula to find atmosphere density.
+
+    .. note::
+
+        .. deprecated:: 0.17.2
+
+           Removed to account for significant changes to planetary atmosphere mechanics introduced in KSP 1.0

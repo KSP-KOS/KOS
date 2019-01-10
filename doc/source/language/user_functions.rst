@@ -414,6 +414,14 @@ This is now **illegal** syntax::
 
     declare x.  // no initial value for x given.
 
+.. warning::
+  .. versionadded:: 0.17
+    **Breaking Change:** The kerboscript from prior versions
+    of kOS did allow you to make ``declare`` statements
+    without any initializers in them (and in fact you couldn't
+    provide an initializer for them in prior versions even if
+    you wanted to).	
+
 In order to avoid the issue of having uninitialized variables in
 kerboscript, any declare statement *requires* the use of the
 initializer clause.

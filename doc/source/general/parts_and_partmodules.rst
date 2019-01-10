@@ -3,6 +3,8 @@
 Ship Parts and PartModules
 ==========================
 
+kOS has the ability to access the functionality of Parts' actions, and right-click context menus. However, to understand how to use them it is necessary to first understand a little bit about the structure of parts in a vessel in Kerbal Space Program.
+
 In Kerbal Space Program, a Vessel is a collection of Parts arranged in a tree Structure. In kOS, you can access the parts one of two ways:
 
 Tutorial

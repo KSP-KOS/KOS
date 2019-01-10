@@ -68,6 +68,8 @@ your frame rate. Is it higher than 25 fps? If so, then your *update
 ticks* happen faster than your *physics ticks*, otherwise its the
 other way around.
 
+It is important to note that versions of kOS prior to 0.17 executed program code during update ticks.  After that point, program code was executed during the physics ticks.
+
 .. _electricdrain:
 
 Electric Drain
@@ -78,8 +80,7 @@ vital to long distance probes.  In these modes the computer deliberately
 runs slowly in order to use less power, and then the program can tell it to
 speed up to normal speed again when it needs to wake up and do something.
 
-In kOS, this concept is simplified by just draining electric charge by
-"micropayments" of charge per instruction executed.
+Older versions of kOS implemented this concept with a constant electric drain regardless of CPU load.  As of version 0.19.0, this concept is simplified by just draining electric charge by "micropayments" of charge per instruction executed.
 
 To change this setting if you want to re-balance the system, see the
 page about :ref:`kOSProcessor part config values <EcPerInstruction>`.
@@ -161,6 +162,8 @@ stack without any registers, and so popping back to where the
 interruption happened puts everything back in the state it was in
 before the interruption so the program can continue as if nothing
 had happened.
+
+Prior to kOS 0.19.3, this section was quite different but large changes to how triggers work required a re-write of this whole page. Any old kOS scripts you find that were written prior to kOS 0.19.3 that used triggers might have different behaviour because of this.
 
 .. _trigger_steering:
 

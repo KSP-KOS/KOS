@@ -40,7 +40,12 @@ All objects that can move in orbit around other objects share some similar struc
      :attr:`ALTITUDE`        :ref:`scalar <scalar>` (m)
      :attr:`GEOPOSITION`     :struct:`GeoCoordinates`
      :attr:`PATCHES`         :struct:`List` of :struct:`Orbits <Orbit>`
-    ======================= ==============
+    ----------------------- --------------
+    The Following are deprecated (use apoapsis and periapsis on :attr:`OBT`)
+    --------------------------------------
+     :attr:`APOAPSIS`        :ref:`scalar <scalar>` (m)
+     :attr:`PERIAPSIS`       :ref:`scalar <scalar>` (m)
+     ======================= ==============
 
 
 .. attribute:: Orbitable:NAME
@@ -196,3 +201,21 @@ All objects that can move in orbit around other objects share some similar struc
     :access: Get only
 
     The list of all the orbit patches that this object will transition to, not taking into account maneuver nodes. The zero-th patch of the list is the current orbit.
+
+.. attribute:: Orbitable:APOAPSIS
+
+    :type: :ref:`scalar <scalar>` (deg)
+    :access: Get only
+
+    .. deprecated:: 0.15
+
+       Use :attr:`OBT:APOAPSIS <Orbit:APOAPSIS>` instead.
+
+.. attribute:: Orbitable:PERIAPSIS
+
+    :type: :ref:`scalar <scalar>` (deg)
+    :access: Get only
+
+    .. deprecated:: 0.15
+
+       Use :attr:`OBT:PERIAPSIS <Orbit:PERIAPSIS>` instead.
