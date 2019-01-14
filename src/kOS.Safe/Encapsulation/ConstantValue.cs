@@ -11,9 +11,25 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         public const double KpaToAtm = 0.00986923266716012830002467308167;
 
+        // The following will be the default fallback value to use for G in case we can't
+        // access the KSP API for it, such as if we ever implement running kerboscript
+        // outside the game:
+        private static double gConstFromNIST_in2014 = 6.67408 * Math.Pow(10, -11);
+        private static double gravConstBeingUsed = gConstFromNIST_in2014;
+
+        /// <summary>
+        /// This is a public property so that it can be overridden by KSP-aware code elsewhere:
+        /// (ConstantValue is in kOS.Safe, so we can't see KSP's G value from here.)
+        /// </summary>
+        public static double GravConst
+        {
+            get { return gravConstBeingUsed; }
+            set { gravConstBeingUsed = value; }
+        }
+
         static ConstantValue()
         {
-            AddGlobalSuffix<ConstantValue>("G", new StaticSuffix<ScalarValue>(() => 6.67384*Math.Pow(10,-11)));
+            AddGlobalSuffix<ConstantValue>("G", new StaticSuffix<ScalarValue>(() => GravConst));
             AddGlobalSuffix<ConstantValue>("E", new StaticSuffix<ScalarValue>(() => Math.E));
             AddGlobalSuffix<ConstantValue>("PI", new StaticSuffix<ScalarValue>(() => Math.PI));
             AddGlobalSuffix<ConstantValue>("C", new StaticSuffix<ScalarValue>(() => 299792458.0, "Speed of light in m/s")); 

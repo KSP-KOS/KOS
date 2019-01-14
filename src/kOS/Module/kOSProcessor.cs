@@ -426,6 +426,9 @@ namespace kOS.Module
                 return;
             }
             objectsInitialized = true;
+
+            CalcGravConstFromKSP();
+
             shared = new SharedObjects();
 
             shared.Vessel = vessel;
@@ -499,6 +502,22 @@ namespace kOS.Module
             }
 
             InitProcessorTracking();
+        }
+
+        // The official value of "G" changes over time as standards bodies re-calculate it.
+        // This code below ensures we're using whatever value KSP itself is using.  (KSP updated
+        // it once in the past, so hardcoding it as a literal in kOS code isn't such a good idea.)
+        // The reason this code is *here* not in ConstantValue is because ConstantValue can't call
+        // the KSP API.  It's in kOS.Safe.
+        private void CalcGravConstFromKSP()
+        {
+            // Cannot find anything in KSP's API exposing their value of G, so this indirect means
+            // of calculating it from an arbitrary body is used:
+            CelestialBody anyBody = FlightGlobals.fetch.bodies.FirstOrDefault();
+            if (anyBody == null)
+                SafeHouse.Logger.LogError("kOSProcessor: This game installation is badly broken.  It appears to have no planets in it.");
+            else
+                ConstantValue.GravConst = anyBody.gravParameter / anyBody.Mass;
         }
 
         private void InitProcessorTracking()
