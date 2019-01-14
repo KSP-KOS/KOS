@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Serialization;
@@ -29,7 +29,10 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             orbit = orb;
-            name = "<unnamed>";
+            if (orb.referenceBody == null)
+                name = "<unnamed>"; // I have no clue when or how this could ever happen.  What is an orbit around nothing?
+            else
+                name = orb.referenceBody.name;
         }
 
         private void InitializeSuffixes()
