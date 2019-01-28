@@ -427,7 +427,7 @@ namespace kOS.Module
             }
             objectsInitialized = true;
 
-            CalcGravConstFromKSP();
+            CalcConstsFromKSP();
 
             shared = new SharedObjects();
 
@@ -504,13 +504,14 @@ namespace kOS.Module
             InitProcessorTracking();
         }
 
-        // The official value of "G" changes over time as standards bodies re-calculate it.
-        // This code below ensures we're using whatever value KSP itself is using.  (KSP updated
-        // it once in the past, so hardcoding it as a literal in kOS code isn't such a good idea.)
+        // The official value of some physics constants change over time as standards bodies re-calculate them.
+        // This code below ensures we're using whatever value KSP itself is using.
         // The reason this code is *here* not in ConstantValue is because ConstantValue can't call
         // the KSP API.  It's in kOS.Safe.
-        private void CalcGravConstFromKSP()
+        private void CalcConstsFromKSP()
         {
+            ConstantValue.G0 = PhysicsGlobals.GravitationalAcceleration;
+
             // Cannot find anything in KSP's API exposing their value of G, so this indirect means
             // of calculating it from an arbitrary body is used:
             CelestialBody anyBody = FlightGlobals.fetch.bodies.FirstOrDefault();
