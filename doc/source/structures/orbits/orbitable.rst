@@ -41,11 +41,11 @@ All objects that can move in orbit around other objects share some similar struc
      :attr:`GEOPOSITION`     :struct:`GeoCoordinates`
      :attr:`PATCHES`         :struct:`List` of :struct:`Orbits <Orbit>`
     ----------------------- --------------
-     The Following are deprecated (use apoapsis and periapsis on :attr:`OBT`)
+    The Following are deprecated (use apoapsis and periapsis on :attr:`OBT`)
     --------------------------------------
      :attr:`APOAPSIS`        :ref:`scalar <scalar>` (m)
      :attr:`PERIAPSIS`       :ref:`scalar <scalar>` (m)
-    ======================= ==============
+     ======================= ==============
 
 
 .. attribute:: Orbitable:NAME
@@ -208,8 +208,8 @@ All objects that can move in orbit around other objects share some similar struc
     :access: Get only
 
     .. deprecated:: 0.15
-    
-        Use :attr:`OBT:APOAPSIS <Orbit:APOAPSIS>` instead.
+
+       Use :attr:`OBT:APOAPSIS <Orbit:APOAPSIS>` instead.
 
 .. attribute:: Orbitable:PERIAPSIS
 
@@ -218,5 +218,4 @@ All objects that can move in orbit around other objects share some similar struc
 
     .. deprecated:: 0.15
 
-        Use :attr:`OBT:PERIAPSIS <Orbit:PERIAPSIS>` instead.
-
+       Use :attr:`OBT:PERIAPSIS <Orbit:PERIAPSIS>` instead.

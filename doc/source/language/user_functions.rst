@@ -319,12 +319,6 @@ expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.
 
-.. note::
-    .. versionadded:: 0.18.3
-        Optional Parameters were added as a new feature in kOS 0.18.3
-
-
-
 .. _interpreter functions:
 
 Functions and the terminal interpreter
@@ -344,7 +338,7 @@ up jumping into random parts of your code that have nothing
 to do with the actual function call you're trying to
 make.
 
-As a rule of thumb, in kOS 0.17.0, make sure you only use
+As a rule of thumb, make sure you only use
 functions from inside script programs.  Don't try to call
 them interactively from the interpreter prompt.  You will
 get very strange and (seemingly) inexplicable errors.
@@ -423,10 +417,10 @@ This is now **illegal** syntax::
 .. warning::
   .. versionadded:: 0.17
     **Breaking Change:** The kerboscript from prior versions
-    of kOS did allow you do make ``declare`` statements
+    of kOS did allow you to make ``declare`` statements
     without any initializers in them (and in fact you couldn't
     provide an initializer for them in prior versions even if
-    you wanted to).
+    you wanted to).	
 
 In order to avoid the issue of having uninitialized variables in
 kerboscript, any declare statement *requires* the use of the
@@ -647,7 +641,7 @@ User Function Gotchas
 Calling program's functions from the interpreter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As :ref:`explained above <interpreter functions>`, kOS 0.17.0 does
+As :ref:`explained above <interpreter functions>`, kOS does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.

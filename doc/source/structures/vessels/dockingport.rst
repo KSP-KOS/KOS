@@ -11,7 +11,6 @@ Such part can also be retrieved from :global:`TARGET`, if docking port is select
     .. versionadded:: 0.18
         The spelling of suffixes `AQUIRERANGE`, `AQUIREFORCE`, and `AQUIRETORQUE` on the :struct:`DockingPort` structure has been corrected.  Please use `ACQUIRERANGE`, `ACQUIREFORCE`, and `ACQUIRETORQURE` instead.  Using the old incorrect spelling, a deprecation exception will be thrown, with instruction to use the new spelling.
 
-
 .. structure:: DockingPort
 
     .. list-table::

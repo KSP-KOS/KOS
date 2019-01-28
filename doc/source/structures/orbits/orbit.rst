@@ -343,16 +343,16 @@ Both :attr:`NEXTPATCH <Orbit:NEXTPATCH>` and :attr:`HASNEXTPATCH <Orbit:HASNEXTP
 Deprecated Suffix
 -----------------
 
-.. attribute:: Orbit:PATCHES
+ .. attribute:: Orbit:PATCHES
 
-    :type: :struct:`List` of :struct:`Orbit` Objects
+     :type: :struct:`List` of :struct:`Orbit` Objects
     :access: Get only
 
-    .. note::
+     .. note::
 
-        .. deprecated:: 0.15
+         .. deprecated:: 0.15
 
-            To get the same functionality, you must use :attr:`Vessel:PATCHES`  which is a suffix of the :struct:`Vessel` itself.
+             To get the same functionality, you must use :attr:`Vessel:PATCHES`  which is a suffix of the :struct:`Vessel` itself.
 
 .. _transitions:
 
