@@ -38,10 +38,11 @@ Drawing Vectors on the Screen
 
     Vector arrows can also be created with dynamic positioning and color.  To do
     this, instead of passing static values for the first three arguments of
-    ``VECDRAW()`` or ``VECDRAWARGS()``, you can pass a :ref:`Delegate` for
-    any of them, which returns a value of the correct type.  Here's an example
-    where the Start, Vec, and Color are all dynamically adjusted by anonymous
-    delegates that kOS will frequently call for you as it draws the arrow::
+    ``VECDRAW()`` or ``VECDRAWARGS()``, you can pass a
+    :ref:`Delegate <delegates>` for any of them, which returns a value of the
+    correct type.  Here's an example where the Start, Vec, and Color are all
+    dynamically adjusted by anonymous delegates that kOS will frequently call
+    for you as it draws the arrow::
 
         // Small dynamically moving vecdraw example:
         SET anArrow TO VECDRAW(

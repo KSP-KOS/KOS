@@ -345,7 +345,7 @@ Deprecated Suffix
 
  .. attribute:: Orbit:PATCHES
 
-     :type: :struct:`List` of :struct:`Orbit` Objects
+    :type: :struct:`List` of :struct:`Orbit` Objects
     :access: Get only
 
      .. note::

@@ -16,36 +16,33 @@ All objects that can move in orbit around other objects share some similar struc
     **These terms are all read-only.**
 
     ======================= ==============
-     Suffix                  Type (units)
+    Suffix                  Type (units)
     ======================= ==============
-     :attr:`NAME`            :struct:`String`
-     :attr:`BODY`            :struct:`Body`
-     :attr:`HASBODY`         :struct:`boolean`
-     :attr:`HASORBIT`        :struct:`boolean`
-     :attr:`HASOBT`          :struct:`boolean`
-     :attr:`OBT`             :struct:`Orbit`
-     :attr:`ORBIT`           :struct:`Orbit`
-     :attr:`UP`              :struct:`Direction`
-     :attr:`NORTH`           :struct:`Direction`
-     :attr:`PROGRADE`        :struct:`Direction`
-     :attr:`SRFPROGRADE`     :struct:`Direction`
-     :attr:`RETROGRADE`      :struct:`Direction`
-     :attr:`SRFRETROGRADE`   :struct:`Direction`
-     :attr:`POSITION`        :struct:`Vector`
-     :attr:`VELOCITY`        :struct:`OrbitableVelocity`
-     :attr:`DISTANCE`        :ref:`scalar <scalar>` (m)
-     :attr:`DIRECTION`       :struct:`Direction`
-     :attr:`LATITUDE`        :ref:`scalar <scalar>` (deg)
-     :attr:`LONGITUDE`       :ref:`scalar <scalar>` (deg)
-     :attr:`ALTITUDE`        :ref:`scalar <scalar>` (m)
-     :attr:`GEOPOSITION`     :struct:`GeoCoordinates`
-     :attr:`PATCHES`         :struct:`List` of :struct:`Orbits <Orbit>`
-    ----------------------- --------------
-    The Following are deprecated (use apoapsis and periapsis on :attr:`OBT`)
-    --------------------------------------
-     :attr:`APOAPSIS`        :ref:`scalar <scalar>` (m)
-     :attr:`PERIAPSIS`       :ref:`scalar <scalar>` (m)
-     ======================= ==============
+    :attr:`NAME`            :struct:`String`
+    :attr:`BODY`            :struct:`Body`
+    :attr:`HASBODY`         :struct:`boolean`
+    :attr:`HASORBIT`        :struct:`boolean`
+    :attr:`HASOBT`          :struct:`boolean`
+    :attr:`OBT`             :struct:`Orbit`
+    :attr:`ORBIT`           :struct:`Orbit`
+    :attr:`UP`              :struct:`Direction`
+    :attr:`NORTH`           :struct:`Direction`
+    :attr:`PROGRADE`        :struct:`Direction`
+    :attr:`SRFPROGRADE`     :struct:`Direction`
+    :attr:`RETROGRADE`      :struct:`Direction`
+    :attr:`SRFRETROGRADE`   :struct:`Direction`
+    :attr:`POSITION`        :struct:`Vector`
+    :attr:`VELOCITY`        :struct:`OrbitableVelocity`
+    :attr:`DISTANCE`        :ref:`scalar <scalar>` (m)
+    :attr:`DIRECTION`       :struct:`Direction`
+    :attr:`LATITUDE`        :ref:`scalar <scalar>` (deg)
+    :attr:`LONGITUDE`       :ref:`scalar <scalar>` (deg)
+    :attr:`ALTITUDE`        :ref:`scalar <scalar>` (m)
+    :attr:`GEOPOSITION`     :struct:`GeoCoordinates`
+    :attr:`PATCHES`         :struct:`List` of :struct:`Orbits <Orbit>`
+    :attr:`APOAPSIS`        :ref:`scalar <scalar>` (m) (Deprecated, use :OBT:APOAPSIS instead.)
+    :attr:`PERIAPSIS`       :ref:`scalar <scalar>` (m) (Deprecated, use :OBT:PERIAPSIS instead.)
+    ======================= ==============
 
 
 .. attribute:: Orbitable:NAME
@@ -209,7 +206,10 @@ All objects that can move in orbit around other objects share some similar struc
 
     .. deprecated:: 0.15
 
-       Use :attr:`OBT:APOAPSIS <Orbit:APOAPSIS>` instead.
+       This is only kept here for backward compatibility.
+       in new scripts you write, use :attr:`OBT:APOAPSIS <Orbit:APOAPSIS>`.
+       (i.e. use ``SHIP:OBT:APOAPSIS`` instead of ``SHIP:APOAPSIS``,
+       or use ``MUN:OBT:APOAPSIS`` instead of ``MUN:APOAPSIS``, etc).
 
 .. attribute:: Orbitable:PERIAPSIS
 
@@ -218,4 +218,7 @@ All objects that can move in orbit around other objects share some similar struc
 
     .. deprecated:: 0.15
 
-       Use :attr:`OBT:PERIAPSIS <Orbit:PERIAPSIS>` instead.
+       This is only kept here for backward compatibility.
+       in new scripts you write, use :attr:`OBT:PERIAPSIS <Orbit:PERIAPSIS>`.
+       (i.e. use ``SHIP:OBT:PERIAPSIS`` instead of ``SHIP:PERIAPSIS``).
+       or use ``MUN:OBT:PERIAPSIS`` instead of ``MUN:PERIAPSIS``, etc).
