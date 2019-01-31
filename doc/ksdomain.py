@@ -166,7 +166,7 @@ class KOSAttribute(KOSObject):
                 raise Exception("Attribute name lacks a prefix and isn't " +
                     "indented inside a structure section.  Problem " +
                     "occurred at " + self.env.docname + ", line " +
-                     str(self.lineno) + 
+                     str(self.lineno) +
                      ".")
         else:
             struct = m.group('prefix').split(':')[-1]
@@ -209,7 +209,7 @@ class KOSMethod(KOSObject):
                 raise Exception("Method name lacks a prefix and isn't " +
                     "indented inside a structure section.  Problem " +
                     "occurred at " + self.env.docname + ", line " +
-                     str(self.lineno) + 
+                     str(self.lineno) +
                      ".")
         else:
             struct = m.group('prefix').split(':')[-1]

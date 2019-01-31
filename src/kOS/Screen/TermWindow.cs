@@ -15,7 +15,7 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
-        private const string CONTROL_LOCKOUT = "kOSTerminal";
+        public const string CONTROL_LOCKOUT = "kOSTerminal";
 
         /// <summary>
         /// Set to true only when compiling a version specifically for the purpose
@@ -259,11 +259,13 @@ namespace kOS.Screen
         
         public override void GetFocus()
         {
+            base.GetFocus();
             Lock();
         }
-        
+
         public override void LoseFocus()
         {
+            base.LoseFocus();
             Unlock();
         }
 
@@ -322,9 +324,7 @@ namespace kOS.Screen
             BringToFront();
 
 
-            // Exclude the TARGETING ControlType so that we can set the target vessel with the terminal open.
-            InputLockManager.SetControlLock(ControlTypes.All & ~ControlTypes.TARGETING, CONTROL_LOCKOUT);
-
+            InputLockManager.SetControlLock(ControlTypes.All, CONTROL_LOCKOUT);
             // Prevent editor keys from being pressed while typing
             EditorLogic editor = EditorLogic.fetch;
                 //TODO: POST 0.90 REVIEW
@@ -566,7 +566,7 @@ namespace kOS.Screen
 
         private static bool IsSpecial(char c)
         {
-            if (c < 0x0020)
+            if (c < 0x0020 || c > 0xE000)
                 return true;
             if (Enum.IsDefined(typeof(UnicodeCommand), (int)c))
                 return true;

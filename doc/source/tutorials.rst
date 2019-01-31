@@ -29,7 +29,7 @@ Intermediate
 
 :doc:`Design Patterns Tutorial <tutorials/designpatterns>`
     Discusses some general aspects of kOS flow control and optimizations.
-
+    
 :doc:`PID Loop Tutorial <tutorials/pidloops>`
     Starts with a basic proportional feedback loop and develops, in stages, a complete PID-loop to control the throttle of a simple rocket design.
 

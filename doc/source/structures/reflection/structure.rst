@@ -12,10 +12,6 @@ The root of all kOS data types.
 Overview
 --------
 
-.. versionadded:: 0.19.0
-    This is a new feature of kOS v0.19.0.  Most of what is
-    documented on this page won't work on earlier versions.
-
 All types of data that a kOS program can access, either via a variable, or
 a suffix return value, or really just any expression's temporary result,
 are now directly or indirectly derived from this one base type called just
