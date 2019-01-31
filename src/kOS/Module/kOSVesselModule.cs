@@ -1,4 +1,4 @@
-﻿using kOS.AddOns.RemoteTech;
+using kOS.AddOns.RemoteTech;
 using kOS.Control;
 using kOS.Binding;
 using System;
@@ -80,7 +80,7 @@ namespace kOS.Module
         public override void OnLoadVessel()
         {
             base.OnLoadVessel();
-            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0}({1}), {2}({3})", Vessel.vesselName, ID, vessel.vesselName, vessel.id));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0} ({1})", Vessel.vesselName, Vessel.id));
 
             // Vessel modules now load when the vessel is not loaded, including when not in the flight
             // scene.  So we now wait to attach to events and attempt to harvest parts until after
@@ -254,8 +254,8 @@ namespace kOS.Module
             foreach (string key in flightControlParameters.Keys)
             {
                 IFlightControlParameter p = flightControlParameters[key];
-                if (p.GetShared() != null && p.GetShared().Vessel != null && vessel != null &&
-                    p.GetShared().Vessel.id != vessel.id)
+                if (p.GetShared() != null && p.GetShared().Vessel != null && Vessel != null &&
+                    p.GetShared().Vessel.id != Vessel.id)
                     removeKeys.Add(key);
             }
             foreach (string key in removeKeys)
@@ -394,7 +394,7 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
-            if (vessel != null)
+            if (Vessel != null)
             {
                 if (childParts.Count > 0)
                 {
@@ -403,12 +403,12 @@ namespace kOS.Module
                         if (parameter.Enabled && parameter.IsAutopilot)
                         {
                             Vessel ves = parameter.GetResponsibleVessel();                                
-                            if (ves != null && ves.id != vessel.id)
+                            if (ves != null && ves.id != Vessel.id)
                             {
                                 // This is a "should never see this" error - being logged in case a user
                                 // has problems and reports a bug.
                                 SafeHouse.Logger.LogError(string.Format("kOS Autopilot on wrong vessel: {0} != {1}",
-                                    parameter.GetShared().Vessel.id, vessel.id));
+                                    parameter.GetShared().Vessel.id, Vessel.id));
                                 foundWrongVesselAutopilot = true;
                             }
                             parameter.UpdateAutopilot(c);
