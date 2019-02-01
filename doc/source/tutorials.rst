@@ -41,5 +41,8 @@ Intermediate
     
 External tutorials
 ------------------
+
+Tutorials written by others, outside the main kOS docs.
+
 `General tutorials <https://github.com/Toukie/KOS-tutorials>`__
-    More in-depth explanation and tutorials.
+    
