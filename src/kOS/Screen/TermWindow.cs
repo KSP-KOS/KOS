@@ -36,12 +36,10 @@ namespace kOS.Screen
         private const bool DebugInternational = false;
 
         private static string root;
-        private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
-        private static readonly Color colorAlpha = new Color(1f, 1f, 1f, 0.8f); // slightly less opaque window color when not focused.
+        private static readonly Color color = new Color(1f, 1f, 1f, 1.1f); // opaque window color when focused
         private static readonly Color bgColor = new Color(0.0f, 0.0f, 0.0f, 1.0f); // black background of terminal
-        private static readonly Color textColor = new Color(0.4f, 1.0f, 0.2f, 1.0f); // font color on terminal
+        private static readonly Color textColor = new Color(0.5f, 1.0f, 0.5f, 1.0f); // font color on terminal
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f); // font color when power starved.
-        private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.8f); // font color when power starved and not focused.
         private Rect closeButtonRect;
         private Rect resizeButtonCoords;
         private GUIStyle tinyToggleStyle;
@@ -363,7 +361,7 @@ namespace kOS.Screen
 
             GUI.skin = HighLogic.Skin;
             
-            GUI.color = isLocked ? color : colorAlpha;
+            GUI.color = color;
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
             ChangeTitle(CalcualteTitle());
@@ -835,7 +833,7 @@ namespace kOS.Screen
             }
             IScreenBuffer screen = shared.Screen;
             
-            GUI.color = isLocked ? color : colorAlpha;
+            GUI.color = color;
 
             GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             if (telnets.Count > 0)
