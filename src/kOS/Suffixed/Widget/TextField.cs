@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
 using UnityEngine;
@@ -38,7 +38,9 @@ namespace kOS.Suffixed.Widget
         private UserDelegate UserOnChange { get; set; }
         private UserDelegate UserOnConfirm { get; set; }
 
-        private WidgetStyle toolTipStyle;
+        private WidgetStyle emptyHintStyle;
+
+        public string EmptyHint { get; private set; }
 
         /// <summary>
         /// Tracks Unity's ID of this gui widget for the sake of seeing if the widget has focus.
@@ -52,7 +54,7 @@ namespace kOS.Suffixed.Widget
 
         public TextField(Box parent, string text) : base(parent,text,parent.FindStyle("textField"))
         {
-            toolTipStyle = FindStyle("labelTipOverlay");
+            emptyHintStyle = FindStyle("emptyHintStyle");
             RegisterInitializer(InitializeSuffixes);
         }
 
@@ -62,6 +64,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("CONFIRMED", new SetSuffix<BooleanValue>(() => TakeConfirm(), value => Confirmed = value));
             AddSuffix("ONCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnChange), value => UserOnChange = CallbackSetter(value)));
             AddSuffix("ONCONFIRM", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnConfirm), value => UserOnConfirm = CallbackSetter(value)));
+            AddSuffix("EMPTYHINT", new SetSuffix<StringValue>(() => EmptyHint, value => EmptyHint = value));
         }
 
         public bool TakeChange()
@@ -130,7 +133,7 @@ namespace kOS.Suffixed.Widget
                 Changed = true;
             }
             if (newtext == "") {
-                GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), toolTipStyle.ReadOnly);
+                GUI.Label(GUILayoutUtility.GetLastRect(), VisibleTooltip(), emptyHintStyle.ReadOnly);
             }
         }
 

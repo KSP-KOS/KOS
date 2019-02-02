@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using System.Collections.Generic;
@@ -54,6 +54,11 @@ namespace kOS.Suffixed.Widget
             Enabled = true;
             Shown = true;
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        public Box GetParent()
+        {
+            return parent;
         }
 
         /// <summary>
