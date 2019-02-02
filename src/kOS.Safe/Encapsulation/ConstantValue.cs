@@ -26,10 +26,18 @@ namespace kOS.Safe.Encapsulation
             get { return gravConstBeingUsed; }
             set { gravConstBeingUsed = value; }
         }
+        
+        private static double g0 = 9.80665; // Typically accepted Earth value. Will override with KSP game value.
+        public static double G0
+        {
+            get { return g0; }
+            set { g0 = value; }
+        }
 
         static ConstantValue()
         {
             AddGlobalSuffix<ConstantValue>("G", new StaticSuffix<ScalarValue>(() => GravConst));
+            AddGlobalSuffix<ConstantValue>("G0", new StaticSuffix<ScalarValue>(() => G0));
             AddGlobalSuffix<ConstantValue>("E", new StaticSuffix<ScalarValue>(() => Math.E));
             AddGlobalSuffix<ConstantValue>("PI", new StaticSuffix<ScalarValue>(() => Math.PI));
             AddGlobalSuffix<ConstantValue>("C", new StaticSuffix<ScalarValue>(() => 299792458.0, "Speed of light in m/s")); 

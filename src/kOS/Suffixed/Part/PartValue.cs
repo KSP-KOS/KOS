@@ -43,6 +43,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("FUELCROSSFEED", new Suffix<BooleanValue>(() => Part.fuelCrossFeed));
             AddSuffix("TITLE", new Suffix<StringValue>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<ScalarValue>(() => Part.inverseStage));
+            AddSuffix("CID", new Suffix<StringValue>(() => Part.craftID.ToString()));
             AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.transform.position - Shared.Vessel.CoMD)));
