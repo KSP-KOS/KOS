@@ -36,7 +36,7 @@ Note that this mod only adds action groups 11 through 250, it does not change ho
 **Known limitations (Action groups 11 through 250 only):** 
 
 - On a nearby vessel that is not your current focus, an action group with no actions assigned will always return a state of False and can not be set to a state of true via the "AG15 on." command. Assign the Script Trigger action as a work-around for this.
-- At this point, AG11 through AG250 do not officially support RemoteTech through kOS. (Support will happen once all three mods involved have updated to KSP version 1.0 and made any internal changes necessary.) All three mods can be installed at the same time without issue, just be aware there may be unexpected behaviour when using action groups 11 through 250 from a kOS script in terms of RemoteTech signal delay and connection state.
+- At this point, AG11 through AG250 do not officially support RemoteTech through kOS. (Support will happen once all three mods involved have made any internal changes necessary.) All three mods can be installed at the same time without issue, just be aware there may be unexpected behaviour when using action groups 11 through 250 from a kOS script in terms of RemoteTech signal delay and connection state.
 
 **Action state monitoring**
 

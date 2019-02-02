@@ -334,20 +334,26 @@ namespace kOS.Screen
 
                     case KeyCode.E:
                         if (Event.current.control)
+                        {
                             ExitEditor();
-                        Event.current.Use();
+                            Event.current.Use();
+                        }
                         break;
 
                     case KeyCode.S:
                         if (Event.current.control)
+                        {
                             SaveContents();
-                        Event.current.Use();
+                            Event.current.Use();
+                        }
                         break;
 
                     case KeyCode.R:
                         if (Event.current.control)
+                        {
                             ReloadContents();
-                        Event.current.Use();
+                            Event.current.Use();
+                        }
                         break;
                 }
             }

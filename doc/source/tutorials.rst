@@ -29,7 +29,7 @@ Intermediate
 
 :doc:`Design Patterns Tutorial <tutorials/designpatterns>`
     Discusses some general aspects of kOS flow control and optimizations.
-
+    
 :doc:`PID Loop Tutorial <tutorials/pidloops>`
     Starts with a basic proportional feedback loop and develops, in stages, a complete PID-loop to control the throttle of a simple rocket design.
 
@@ -38,3 +38,11 @@ Intermediate
 
 :doc:`Creating Reusable GUI Elements <tutorials/gui>`
     Creating and using a "TabWidget" to put a lot of functionality in a small amount of screenspace.
+    
+External tutorials
+------------------
+
+Tutorials written by others, outside the main kOS docs.
+
+`General tutorials <https://github.com/Toukie/KOS-tutorials>`__
+    

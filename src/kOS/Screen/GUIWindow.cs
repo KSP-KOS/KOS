@@ -83,15 +83,7 @@ namespace kOS.Screen
         void OnShowUI()
         {
             uiGloballyHidden = false;            
-        }
-        
-        public override void GetFocus()
-        {
-        }
-        
-        public override void LoseFocus()
-        {
-        }
+        }        
 
         public override void Open()
         {

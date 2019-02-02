@@ -54,7 +54,7 @@ Special variable TIME
 Using TIME to detect when the physics have been updated 'one tick'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-kOS programs run however fast your computer's animation rate will allow, which can flow and change from one moment to the next depending on load. However, the physics of the universe get updated at a fixed rate according to your game settings (the default, as of KSP 0.25, is 25 physics updates per second)
+The game will make an effort to maintain regular physics updates at a fixed rate (defaulting to 25 updates per second), sacrificing animation rate as necessary.  When the game is unable to maintain regular updates at this rate, the clock time (in the upper left of the screen) will turn yellow or red instead of green.
 
 You can use the :global:`TIME` special variable to detect whether or not a real physics 'tic' has occurred yet, which can be important for scripts that need to take measurements from the simulated universe. If no physics tic has occurred, then :global:`TIME` will still be exactly the same value.
 
