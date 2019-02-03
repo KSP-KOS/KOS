@@ -40,8 +40,6 @@ namespace kOS.Suffixed.Widget
 
         private WidgetStyle emptyHintStyle;
 
-        public string EmptyHint { get; private set; }
-
         /// <summary>
         /// Tracks Unity's ID of this gui widget for the sake of seeing if the widget has focus.
         /// </summary>
@@ -64,7 +62,6 @@ namespace kOS.Suffixed.Widget
             AddSuffix("CONFIRMED", new SetSuffix<BooleanValue>(() => TakeConfirm(), value => Confirmed = value));
             AddSuffix("ONCHANGE", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnChange), value => UserOnChange = CallbackSetter(value)));
             AddSuffix("ONCONFIRM", new SetSuffix<UserDelegate>(() => CallbackGetter(UserOnConfirm), value => UserOnConfirm = CallbackSetter(value)));
-            AddSuffix("EMPTYHINT", new SetSuffix<StringValue>(() => EmptyHint, value => EmptyHint = value));
         }
 
         public bool TakeChange()
