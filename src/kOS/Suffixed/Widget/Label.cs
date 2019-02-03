@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
@@ -36,7 +36,7 @@ namespace kOS.Suffixed.Widget
             AddSuffix("TOOLTIP", new SetSuffix<StringValue>(() => content.tooltip, value => { if (content.tooltip != value) { content.tooltip = value; Communicate(() => content_visible.tooltip = value); } }));
         }
 
-        private void SetText(string newValue)
+        protected void SetText(string newValue)
         {
             if (content.text != newValue)
             {

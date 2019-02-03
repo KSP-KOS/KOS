@@ -172,6 +172,7 @@
     <Compile Include="Suffixed\VesselTarget.Parts.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
+    <Compile Include="Suffixed\Widget\TipDisplay.cs" />
     <Compile Include="Suffixed\Widget\Slider.cs" />
     <Compile Include="Suffixed\Widget\Spacing.cs" />
     <Compile Include="Suffixed\Widget\Label.cs" />

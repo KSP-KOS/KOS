@@ -196,6 +196,7 @@ following hierarchy:
         - :struct:`BUTTON` - label that notices when it's clicked or toggled.
             - :struct:`POPUPMENU` - button that when clicked shows a list to pick from.
         - :struct:`TEXTFIELD` - label that is edit-able by the user.
+        - :struct:`TIPDISPLAY` - A place where tooltips for this window will be shown.
     - :struct:`SLIDER` - vertical or horizontal movable handle that edits a :struct:`Scalar` value.
     - :struct:`SPACING` - empty whitespace area within the box for layout reasons.
 
