@@ -1354,5 +1354,10 @@ namespace kOS.Control
         {
             return shared;
         }
+
+        Vessel IFlightControlParameter.GetResponsibleVessel()
+        {
+            return shared.Vessel;
+        }
     }
 }
