@@ -5,28 +5,28 @@ older version of KSP instead of the most recent version.  Please
 note where it says "(*backport*)" below if you are doing a backport.
 
 ### Pre-Build
-- [x] Update AssemblyInfo for kOS project
-- [x] Update AssemblyInfo for kOS.Safe project
-- [x] Update AssemblyInfo for kOS.Safe.Test project
-- [x] Update `Resources\GameData\kOS\kOS.version`
-- [x] Update `CHANGELOG.MD`
-- [x] If this is a normal release for the most recent KSP version supported:
-  - [x] Update `doc\source\conf.py`
-  - [x] Update `doc\source\changes.rst`
-  - [x] Above changes merged into `develop` branch on repo.
+- [ ] Update AssemblyInfo for kOS project
+- [ ] Update AssemblyInfo for kOS.Safe project
+- [ ] Update AssemblyInfo for kOS.Safe.Test project
+- [ ] Update `Resources\GameData\kOS\kOS.version`
+- [ ] Update `CHANGELOG.MD`
+- [ ] If this is a normal release for the most recent KSP version supported:
+  - [ ] Update `doc\source\conf.py`
+  - [ ] Update `doc\source\changes.rst`
+  - [ ] Above changes merged into `develop` branch on repo.
 - [ ] Else if this for a *backport* to an older KSP release than the most recent version supported:
   - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` branch.
 
 ### Build
-- [x] Build kOS solution in release mode
-- [x] Run all unit tests
-- [x] Ensure that all required resources are in place (module manager) (*backport* : Note if this is a backport you may need to use an older modulemanager DLL here.)
-- [X] Create zip file with a root starting in the `\Resources\` directory
-- [X] The zip file should have the GameData folder in the root
-- [X] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.<build>.zip` (eg kOS-v1.1.3.0.zip )
-- [x] Build the documentation (unless this is a *backport*) with:
+- [ ] Build kOS solution in release mode
+- [ ] Run all unit tests
+- [ ] Ensure that all required resources are in place (module manager) (*backport* : Note if this is a backport you may need to use an older modulemanager DLL here.)
+- [ ] Create zip file with a root starting in the `\Resources\` directory
+- [ ] The zip file should have the GameData folder in the root
+- [ ] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.<build>.zip` (eg kOS-v1.1.3.0.zip )
+- [ ] Build the documentation (unless this is a *backport*) with:
   - (if Linux or Mac: `cd docs ; make clean ; make html`)
-- [x] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
+- [ ] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
 
 ### Post-Build
 - [ ] If this is a *normal release* for the most recent KSP version suported:

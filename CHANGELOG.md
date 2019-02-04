@@ -1,5 +1,20 @@
 kOS Mod Changelog
 =================
+
+# v1.1.6.1 Quickfix (MAXTHRUST air pressure)
+
+Built for KSP 1.6.1
+
+Nothing but a quick patch to v1.1.6.0.
+
+### BUG FIX
+
+v1.1.6.1 had a flaw in MAXTHRUST, AVAILABLETHRUST,
+and engine ISP calculations that always calculated them
+as if your ship was in vacuum even when it's not.  This
+was deemed an important enough problem to warrant a
+quick-fix release.
+
 # v1.1.6.0 It's been too long without a release.
 
 Built for KSP 1.6.1

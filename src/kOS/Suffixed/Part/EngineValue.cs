@@ -256,11 +256,18 @@ namespace kOS.Suffixed.Part
 
     public static class ModuleEnginesExtensions
     {
-        public static float GetThrust(this ModuleEngines engine, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
-        {
-            return GetThrust(engine, engine.part.staticPressureAtm, useThrustLimit, throttle, operational);
-        }
-        public static float GetThrust(this ModuleEngines engine, double atmPressure, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
+        /// <summary>
+        /// Get engine thrust
+        /// </summary>
+        /// <param name="engine">The engine (can be null - returns zero in that case)</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
+        /// <param name="useThrustLimit">Use current thrust limit (assume 100% if false)</param>
+        /// <param name="throttle">Throttle (full if omitted)</param>
+        /// <param name="operational">Return zero if this is true and engine is not operational (enabled/staged)</param>
+        /// <returns>The thrust</returns>
+        public static float GetThrust(this ModuleEngines engine, double? atmPressure = null, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
         {
             if (engine == null || operational && !engine.isOperational)
                 return 0f;
@@ -277,23 +284,18 @@ namespace kOS.Suffixed.Part
             // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
             return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * GetIsp(engine, atmPressure) * engine.g * velMod;
         }
-
-        public static float GetIsp(this ModuleEngines engine)
+        /// <summary>
+        /// Get engine ISP
+        /// </summary>
+        /// <param name="engine">The engine (can be null - returns zero in that case)</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
+        /// <returns></returns>
+        public static float GetIsp(this ModuleEngines engine, double? atmPressure = null)
         {
-            return GetIsp(engine, engine.part.staticPressureAtm);
-        }
-        public static float GetIsp(this ModuleEngines engine, double staticPressureAtm)
-        {
-            return engine == null ? 0f : engine.atmosphereCurve.Evaluate((float)staticPressureAtm);
-        }
-
-        public static float GetVacuumSpecificImpluse(this ModuleEngines engine)
-        {
-            return engine.atmosphereCurve.Evaluate(0);
-        }
-        public static float GetSeaLevelSpecificImpulse(this ModuleEngines engine)
-        {
-            return engine.atmosphereCurve.Evaluate(1);
+            return engine == null ? 0f : engine.atmosphereCurve.Evaluate(Mathf.Max(0f,
+                (float)(atmPressure ?? engine.part.staticPressureAtm)));
         }
     }
 }
