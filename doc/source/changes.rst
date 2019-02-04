@@ -24,6 +24,88 @@ release.
 
 ****
 
+Changes in 1.1.6.0
+------------------
+
+GUI tooltips
+::::::::::::
+
+Described how to make GUI tooltips work.  See:
+
+- :attr:`Label:TOOLTIP`
+- :attr:`GuiWidgets:TOOLTIP`
+- :attr:`TIPDISPLAY`
+
+5% null zone
+::::::::::::
+
+Mentioned the stock :ref:`null zone<_raw_null_zone>` issue with RCS
+translation.
+
+Part:CID
+::::::::
+
+Added new suffix, :attr:`Part:CID`
+
+An External Tutorial
+::::::::::::::::::::
+
+Added an external tutorial link to the :ref:`Tutorials <tutorials>` page.
+
+G and G0 constants
+::::::::::::::::::
+
+Added :attr:`constant:G` and :attr:`constant:G0`.
+
+Removed old notices
+:::::::::::::::::::
+
+Some "this changed in version ...." notices had aged beyond their usefulness
+and were removed.
+
+Document Simulate in BG
+:::::::::::::::::::::::
+
+Documented the need to have Simulate in BG enabled when playing in windwed mode,
+on the :ref:`Telnet <telnet>` page.
+
+Stage/decouple docs
+:::::::::::::::::::
+
+Many edits to the pages about :ref:`stages<stage>` and
+:ref:`decouplers<decoupler>` to clarify points.
+
+Vecdraw delegate
+::::::::::::::::
+
+Documented that the :ref:`Vecdraw constructor<vecdraw>` can
+now take delegates.
+
+Vector math link changes
+::::::::::::::::::::::::
+
+External links explaining vector operations such as dot product and
+cross product now link to different sites on the
+:ref:`Vectors<vectors>` page.
+
+New suffixes on Body page
+:::::::::::::::::::::::::
+
+:ref:`Body <body>` page now has more fleshed-out examples and documentation
+to go with the new :HASOCEAN, :HASSURFACE, and :CHILDREN suffixes
+
+New Basic tutoial
+:::::::::::::::::
+
+New Basic Tutorial page.
+
+Clarified CPU hardware page
+:::::::::::::::::::::::::::
+
+Much of the :ref:`CPU hardware<cpu hardware>` page has been re-done to reflect
+some of the refactors that have happened in this revision.
+
+
 Changes in 1.1.5.2
 ------------------
 
