@@ -102,7 +102,15 @@ namespace kOS.Utilities
             return list;
         }
 
-        public static double GetMaxThrust(Vessel vessel, double? atmPressure = null)
+        /// <summary>
+        /// Get total thrust (of operational engines at full throttle,
+        /// not counting with thrust limits - assuming 100% unless useThrustLimit: true)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <param name="atmPressure">Atmospheric pressure (current if omitted/null, 1.0 means sea level, 0.0 is vacuum)</param>
+        /// <param name="useThrustLimit">Use current thrust limit (assume 100% if false)</param>
+        /// <returns>Total thrust</returns>
+        public static double GetMaxThrust(Vessel vessel, double? atmPressure = null, bool useThrustLimit = false)
         {
             var thrust = 0.0;
 
@@ -113,12 +121,21 @@ namespace kOS.Utilities
                     if (!module.isEnabled) continue;
                     var engine = module as ModuleEngines;
                     if (engine != null)
-                        thrust += engine.GetThrust(atmPressure: atmPressure);
+                        thrust += engine.GetThrust(useThrustLimit: useThrustLimit, atmPressure: atmPressure);
                 }
             }
 
             return thrust;
         }
+        /// <summary>
+        /// Get total available thrust (of operational engines at full throttle,
+        /// counting with thrust limits)
+        /// </summary>
+        /// <param name="vessel">The vessel/ship</param>
+        /// <param name="atmPressure">Atmospheric pressure (current if omitted/null, 1.0 means sea level, 0.0 is vacuum)</param>
+        /// <returns>Total available thrust</returns>
+        public static double GetAvailableThrust(Vessel vessel, double? atmPressure = null)
+            => GetMaxThrust(vessel, atmPressure, useThrustLimit: true);
 
         private static Vessel TryGetVesselByName(string name, Vessel origin)
         {
@@ -756,23 +773,6 @@ namespace kOS.Utilities
         public static void UnsetTarget()
         {
             FlightGlobals.fetch.SetVesselTarget(null);
-        }
-
-        public static double GetAvailableThrust(Vessel vessel, double? atmPressure = null)
-        {
-            var thrust = 0.0;
-
-            foreach (var p in vessel.parts)
-            {
-                foreach (PartModule module in p.Modules)
-                {
-                    var engine = module as ModuleEngines;
-                    if (module.isEnabled && engine != null)
-                        thrust += engine.GetThrust(useThrustLimit: true, atmPressure: atmPressure);
-                }
-            }
-
-            return thrust;
         }
 
         public static Direction GetFacing(Vessel vessel)
