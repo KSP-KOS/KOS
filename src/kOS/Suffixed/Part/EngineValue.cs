@@ -256,11 +256,7 @@ namespace kOS.Suffixed.Part
 
     public static class ModuleEnginesExtensions
     {
-        public static float GetThrust(this ModuleEngines engine, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
-        {
-            return GetThrust(engine, engine.part.staticPressureAtm, useThrustLimit, throttle, operational);
-        }
-        public static float GetThrust(this ModuleEngines engine, double atmPressure, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
+        public static float GetThrust(this ModuleEngines engine, double? atmPressure = null, bool useThrustLimit = false, float throttle = 1.0f, bool operational = true)
         {
             if (engine == null || operational && !engine.isOperational)
                 return 0f;
@@ -278,13 +274,9 @@ namespace kOS.Suffixed.Part
             return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * GetIsp(engine, atmPressure) * engine.g * velMod;
         }
 
-        public static float GetIsp(this ModuleEngines engine)
+        public static float GetIsp(this ModuleEngines engine, double? atmPressure = null)
         {
-            return GetIsp(engine, engine.part.staticPressureAtm);
-        }
-        public static float GetIsp(this ModuleEngines engine, double staticPressureAtm)
-        {
-            return engine == null ? 0f : engine.atmosphereCurve.Evaluate((float)staticPressureAtm);
+            return engine == null ? 0f : engine.atmosphereCurve.Evaluate((float)(atmPressure ?? engine.part.staticPressureAtm));
         }
 
         public static float GetVacuumSpecificImpluse(this ModuleEngines engine)

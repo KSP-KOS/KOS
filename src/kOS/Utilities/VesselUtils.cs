@@ -102,7 +102,7 @@ namespace kOS.Utilities
             return list;
         }
 
-        public static double GetMaxThrust(Vessel vessel, double atmPressure = -1.0)
+        public static double GetMaxThrust(Vessel vessel, double? atmPressure = null)
         {
             var thrust = 0.0;
 
@@ -758,7 +758,7 @@ namespace kOS.Utilities
             FlightGlobals.fetch.SetVesselTarget(null);
         }
 
-        public static double GetAvailableThrust(Vessel vessel, double atmPressure = -1.0)
+        public static double GetAvailableThrust(Vessel vessel, double? atmPressure = null)
         {
             var thrust = 0.0;
 
