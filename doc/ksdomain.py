@@ -12,7 +12,8 @@ from sphinx.locale import l_, _
 from sphinx.domains import Domain, ObjType, Index
 from sphinx.directives import ObjectDescription
 from sphinx.util.nodes import make_refnode
-from sphinx.util.compat import Directive
+# ### Next line is deprecated, and it seems to work without it, as per kOS PR #2339 ###
+# from sphinx.util.compat import Directive
 from sphinx.util.docfields import Field, GroupedField, TypedField
 
 ks_sig_re = re.compile(r'''
@@ -165,7 +166,7 @@ class KOSAttribute(KOSObject):
                 raise Exception("Attribute name lacks a prefix and isn't " +
                     "indented inside a structure section.  Problem " +
                     "occurred at " + self.env.docname + ", line " +
-                     str(self.lineno) + 
+                     str(self.lineno) +
                      ".")
         else:
             struct = m.group('prefix').split(':')[-1]
@@ -208,7 +209,7 @@ class KOSMethod(KOSObject):
                 raise Exception("Method name lacks a prefix and isn't " +
                     "indented inside a structure section.  Problem " +
                     "occurred at " + self.env.docname + ", line " +
-                     str(self.lineno) + 
+                     str(self.lineno) +
                      ".")
         else:
             struct = m.group('prefix').split(':')[-1]

@@ -93,6 +93,11 @@ namespace kOS.Utilities
                 case "DOCKINGPORTS":
                     list = DockingPortValue.PartsToList(partList, sharedObj);
                     break;
+
+                case "DECOUPLERS":
+                case "SEPARATORS":
+                    list = DecouplerValue.PartsToList(partList, sharedObj);
+                    break;
             }
             return list;
         }
@@ -103,13 +108,12 @@ namespace kOS.Utilities
 
             foreach (var p in vessel.parts)
             {
-                foreach (PartModule pm in p.Modules)
+                foreach (PartModule module in p.Modules)
                 {
-                    if (!pm.isEnabled) continue;
-                    if (pm is ModuleEngines)
-                    {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, atmPressure: atmPressure);
-                    }
+                    if (!module.isEnabled) continue;
+                    var engine = module as ModuleEngines;
+                    if (engine != null)
+                        thrust += engine.GetThrust(atmPressure: atmPressure);
                 }
             }
 
@@ -156,7 +160,26 @@ namespace kOS.Utilities
             else if (val.GetVessel() == currentVessel)
                 throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a part of itself.");
 
+            // If any kOS terminal (not just the one this CPU uses as its Shared.Window, but ANY kOS terminal
+            // from any kOS CPU) is the focused window right now, causing input lockouts, we must
+            // temporarily turn off that input lock in order for the main game allow the SetVesselTarget()
+            // call in the lines below to perform its task fully:
+            //
+            // Note the preferred solution would be to walk all control locks and suppress *any* that are turning
+            // off the targeting, regardless of whether they're kOS or not, but InputLockManager does not provide
+            // any methods for iteratinng the collection of all control lock masks, and it's also not possible to turn
+            // a lock OFF by masking it with a new control lock, since all the locks in the stack are OR'ed together.)
+
+            ControlTypes termInputLock = InputLockManager.GetControlLock(Screen.TermWindow.CONTROL_LOCKOUT);
+            // (Note, KSP returns ControlTypes.None rather than null when no such lock was found, because it's
+            // a non-nullable enum)
+            if (termInputLock != ControlTypes.None)
+                InputLockManager.RemoveControlLock(Screen.TermWindow.CONTROL_LOCKOUT);
+
             FlightGlobals.fetch.SetVesselTarget(val, true);
+
+            if (termInputLock != ControlTypes.None)
+                InputLockManager.SetControlLock(termInputLock, Screen.TermWindow.CONTROL_LOCKOUT);
         }
 
         public static float AngleDelta(float a, float b)
@@ -741,12 +764,11 @@ namespace kOS.Utilities
 
             foreach (var p in vessel.parts)
             {
-                foreach (PartModule pm in p.Modules)
+                foreach (PartModule module in p.Modules)
                 {
-                    if (pm.isEnabled && pm is ModuleEngines)
-                    {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, useThrustLimit: true, atmPressure: atmPressure);
-                    }
+                    var engine = module as ModuleEngines;
+                    if (module.isEnabled && engine != null)
+                        thrust += engine.GetThrust(useThrustLimit: true, atmPressure: atmPressure);
                 }
             }
 

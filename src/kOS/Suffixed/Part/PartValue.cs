@@ -1,4 +1,4 @@
-﻿using kOS.Module;
+using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -14,18 +14,26 @@ namespace kOS.Suffixed.Part
     [kOS.Safe.Utilities.KOSNomenclature("Part")]
     public class PartValue : Structure, IKOSTargetable
     {
-        protected SharedObjects Shared { get; private set; }
-
+        public SharedObjects Shared { get; private set; }
         public global::Part Part { get; private set; }
+        public PartValue Parent { get; private set; }
+        public DecouplerValue Decoupler { get; private set; }
+        public ListValue<PartValue> Children { get; private set; }
+        public Structure ParentValue { get { return (Structure)Parent ?? StringValue.None; } }
+        public Structure DecouplerValue { get { return (Structure)Decoupler ?? StringValue.None; } }
+        public int DecoupledIn { get { return (Decoupler != null) ? Decoupler.Part.inverseStage : -1; } }
 
-        public PartValue(global::Part part, SharedObjects sharedObj)
+        /// <summary>
+        /// Do not call! VesselTarget.ConstructPart uses this, would use `friend VesselTarget` if this was C++!
+        /// </summary>
+        internal PartValue(SharedObjects shared, global::Part part, PartValue parent, DecouplerValue decoupler)
         {
+            Shared = shared;
             Part = part;
-            Shared = sharedObj;
-
-            // This cannot be called from inside InitializeSuffixes because the base constructor calls
-            // InitializeSuffixes first before this constructor has set "Part" to a real value.
-            PartInitializeSuffixes();
+            Parent = parent;
+            Decoupler = decoupler;
+            RegisterInitializer(PartInitializeSuffixes);
+            Children  = new ListValue<PartValue>();
         }
 
         private void PartInitializeSuffixes()
@@ -35,6 +43,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("FUELCROSSFEED", new Suffix<BooleanValue>(() => Part.fuelCrossFeed));
             AddSuffix("TITLE", new Suffix<StringValue>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<ScalarValue>(() => Part.inverseStage));
+            AddSuffix("CID", new Suffix<StringValue>(() => Part.craftID.ToString()));
             AddSuffix("UID", new Suffix<StringValue>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.transform.rotation)));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.transform.position - Shared.Vessel.CoMD)));
@@ -47,7 +56,9 @@ namespace kOS.Suffixed.Part
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields, StringValue>(GetModule));
             AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, ScalarValue>(GetModuleIndex));
             AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
-            AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent, Shared), "The parent part of this part"));
+            AddSuffix("PARENT", new Suffix<Structure>(() => ParentValue, "The parent part of this part"));
+            AddSuffix(new[] { "DECOUPLER", "SEPARATOR" }, new Suffix<Structure>(() => DecouplerValue, "The part that will decouple/separate this part when activated"));
+            AddSuffix(new[] { "DECOUPLEDIN", "SEPARATEDIN" }, new Suffix<ScalarValue>(() => DecoupledIn));
             AddSuffix("HASPARENT", new Suffix<BooleanValue>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
             AddSuffix("CHILDREN", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(Part.children, Shared), "A LIST() of the children parts of this part"));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Part.GetDryMass(), "The Part's mass when empty"));

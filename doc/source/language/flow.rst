@@ -403,9 +403,9 @@ But when a ``WAIT`` is used in a trigger's body
 (A "trigger" is any ``WHEN``, or ``ON`` statement,
 or the expression in a steering control lock like
 ``lock throttle to mythrottlefunction().``), it actually
-causes all execution including other triggers to get
-stuck until the wait is done.  Because of this, while
-it is allowed, it is
+causes all execution except for other triggers that are
+of higher priority to get stuck until the wait is done.
+Because of this, while it is allowed, it is
 :ref:`usually a bad idea to use WAIT inside a trigger <wait_in_trigger>`.
 
 
@@ -618,8 +618,11 @@ CPU, and thus slow down your program's rate of running.
 By default triggers only run once, but this can be changed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The original intention of the ``WHEN`` and ``ON`` triggers was that they
-create one-shot chunks of code you didn't want to fire off repeatedly.
+The original intention of the ``WHEN`` and ``ON`` triggers was that 
+although they check the condition repeatedly, once the condition is
+found to be true, they execute the body just once and then stop
+checking the condition.
+
 They were intended for things like only running a piece of code when
 you break a threshold altitude, or detect that you've landed, etc.
 

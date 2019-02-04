@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,11 +35,6 @@ namespace kOS.Safe.Encapsulation
         public bool Contains(T item)
         {
             return InnerEnumerable.Contains(item);
-        }
-
-        public int Count()
-        {
-            return InnerEnumerable.Count();
         }
 
         public override string ToString()

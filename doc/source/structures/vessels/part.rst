@@ -39,9 +39,12 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`STAGE`
           - :struct:`Scalar`
           - The stage this is associated with
+        * - :attr:`CID`
+          - :struct:`String`
+          - Craft-Unique identifying number of this part
         * - :attr:`UID`
           - :struct:`String`
-          - Unique identifying number of this part
+          - Universe-Unique identifying number of this part
         * - :attr:`ROTATION`
           - :struct:`Direction`
           - The rotation of this part's :math:`x`-axis
@@ -81,6 +84,18 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`HASPARENT`
           - :struct:`Boolean`
           - Check if this part has a parent :struct:`Part`
+        * - :attr:`DECOUPLER`
+          - :struct:`Decoupler` or :struct:`String`
+          - The decoupler/separator that will decouple this part when activated. `None` if no such exists.
+        * - :attr:`SEPARATOR`
+          - :struct:`Decoupler` or :struct:`String`
+          - Alias name for :attr:`DECOUPLER <Part:DECOUPLER>`
+        * - :attr:`DECOUPLEDIN`
+          - :struct:`Scalar`
+          - The stage number where this part will get decoupled. -1 if cannot be decoupled.
+        * - :attr:`SEPARATEDIN`
+          - :struct:`Scalar`
+          - Alias name for :attr:`DECOUPLEDIN <Part:DECOUPLEDIN>`
         * - :attr:`HASPHYSICS`
           - :struct:`Boolean`
           - Does this part have mass or drag
@@ -158,12 +173,24 @@ These are the generic properties every PART has. You can obtain a list of values
 
     the stage this part is part of.
 
+.. attribute:: Part:CID
+
+    :access: Get only
+    :type: :struct:`String`
+
+    Part Craft ID. This is similar to :attr:`Part:UID`, except that this
+    ID is only unique per craft design.  In other words if you launch two
+    copies of the same design without editing the design at all, then the
+    same part in both copies of the design will have the same ``Part:CID``
+    as each other.  (This value is kept in the *craft file* and repeated
+    in each instance of the vessel that you launch).
+
 .. attribute:: Part:UID
 
     :access: Get only
     :type: :struct:`String`
 
-    All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recommended to compare parts directly if possible.
+    Part Universal ID. All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recommended to compare parts directly if possible.
 
 .. attribute:: Part:ROTATION
 
@@ -283,6 +310,41 @@ These are the generic properties every PART has. You can obtain a list of values
 
     When walking the :ref:`tree of parts <parts and partmodules>`, this is the part that this part is attached to on the way "up" toward the root part.
 
+.. attribute:: Part:HASPARENT
+
+    :access: Get only
+    :type: :struct:`Boolean`
+
+    When walking the :ref:`tree of parts <parts and partmodules>`, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).
+
+.. attribute:: Part:DECOUPLER
+
+    :access: Get only
+    :type: :struct:`Decoupler` or :struct:`String`
+
+    The decoupler/separator that will decouple this part when activated. `None` if no such exists.
+
+.. attribute:: Part:SEPARATOR
+
+    :access: Get only
+    :type: :struct:`Decoupler` or :struct:`String`
+    
+    Alias name for :attr:`DECOUPLER <Part:DECOUPLER>`
+
+.. attribute:: Part:DECOUPLEDIN
+
+    :access: Get only
+    :type: :struct:`Scalar`
+    
+    The stage number where this part will get decoupled. -1 if cannot be decoupled.
+
+.. attribute:: Part:SEPARATEDIN
+
+    :access: Get only
+    :type: :struct:`Scalar`
+    
+    Alias name for :attr:`DECOUPLEDIN <Part:DECOUPLEDIN>`
+
 .. attribute:: Part:HASPHYSICS
 
     :access: Get only
@@ -291,13 +353,6 @@ These are the generic properties every PART has. You can obtain a list of values
     This comes from a part's configuration and is an artifact of the KSP simulation.
 
     For a list of stock parts that have this attribute and a fuller explanation see `the KSP wiki page about massless parts <http://wiki.kerbalspaceprogram.com/wiki/Massless_part>`_.
-
-.. attribute:: Part:HASPARENT
-
-    :access: Get only
-    :type: :struct:`Boolean`
-
-    When walking the :ref:`tree of parts <parts and partmodules>`, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).
 
 .. attribute:: Part:CHILDREN
 

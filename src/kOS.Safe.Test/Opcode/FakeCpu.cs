@@ -10,6 +10,8 @@ namespace kOS.Safe.Test.Opcode
         private readonly Stack<object> fakeStack;
         public bool IsPoppingContext { get { return false; } }
 
+        public int NextTriggerInstanceId { get { return -99;} }
+
         public FakeCpu()
         {
             fakeStack = new Stack<object>();
@@ -180,27 +182,27 @@ namespace kOS.Safe.Test.Opcode
         {
             get { throw new NotImplementedException(); }
         }
-        public TriggerInfo AddTrigger(int triggerFunctionPointer, List<VariableScope> closure)
+        public TriggerInfo AddTrigger(int triggerFunctionPointer, InterruptPriority priority, int instanceId, bool immediate, List<VariableScope> closure)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(UserDelegate del, List<kOS.Safe.Encapsulation.Structure> args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId,bool immediate, List<kOS.Safe.Encapsulation.Structure> args)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(UserDelegate del, params kOS.Safe.Encapsulation.Structure[] args)
+        public TriggerInfo AddTrigger(UserDelegate del, InterruptPriority priority, int instanceId, bool immediate, params kOS.Safe.Encapsulation.Structure[] args)
         {
             throw new NotImplementedException();
         }
 
-        public TriggerInfo AddTrigger(TriggerInfo trigger)
+        public TriggerInfo AddTrigger(TriggerInfo trigger, bool immediate)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveTrigger(int triggerFunctionPointer)
+        public void RemoveTrigger(int triggerFunctionPointer, int instanceId)
         {
             throw new NotImplementedException();
         }
@@ -210,7 +212,7 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
-        public void CancelCalledTriggers(int triggerFunctionPointer)
+        public void CancelCalledTriggers(int triggerFunctionPointer, int instanceId)
         {
             throw new NotImplementedException();
         }

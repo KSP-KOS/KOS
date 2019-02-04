@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using kOS.Safe.Utilities;
@@ -45,10 +46,11 @@ namespace kOS.UserIO
         
         private bool activeOptInDialog;
         private bool activeRealIPDialog;
-        
-        private Rect optInRect = new Rect( 200, 200, 500, 400);
-        private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case both are up at the same time, to ensure visible bits to click on.  They aren't movable.
+        private bool activeBgSimDialog;
 
+        private Rect optInRect = new Rect( 200, 200, 500, 400);
+        private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case multiples are up at the same time, to ensure visible bits to click on.  They aren't movable.
+        private Rect bgSimRect = new Rect( 280, 100, 400, 300); // offset just in case multiples are up at the same time, to ensure visible bits to click on.  They aren't movable.
         private const string HELP_URL = "http://ksp-kos.github.io/KOS_DOC/general/telnet.html";
 
         public TelnetMainServer()
@@ -177,7 +179,7 @@ namespace kOS.UserIO
             if (newVal)
             {
                 bool isLoopback = IPAddress.IsLoopback(bindAddr);
-                if (tempListenPermission && (tempRealIPPermission || isLoopback))
+                if (tempListenPermission && (tempRealIPPermission || isLoopback) && GameSettings.SIMULATE_IN_BACKGROUND)
                     StartListening();
                 else
                 {
@@ -187,11 +189,16 @@ namespace kOS.UserIO
                     // the dialog box will set EnableTelnet to true again
                     SafeHouse.Config.EnableTelnet = false;
 
-                    // Depending on which reason it was for the denial, activate the proper dialog window:
+                    // Depending on which reasons it was for the denial, activate the explanatory dialog windows:
                     if (!tempListenPermission)
                         activeOptInDialog = true;
-                    else
-                        activeRealIPDialog = true;
+                    else // If the initial opt-in hasn't been permitted, that should be the only dialog seen.  Only show these if that hurdle is passed:
+                    {
+                        if (!isLoopback)
+                            activeRealIPDialog = true;
+                        if (! GameSettings.SIMULATE_IN_BACKGROUND)
+                            activeBgSimDialog = true;
+                    }
                 }
             }
             else
@@ -369,6 +376,9 @@ namespace kOS.UserIO
             if (activeRealIPDialog)
                 realIPRect = GUILayout.Window(401124, // any made up number unlikely to clash is okay here
                                               realIPRect, RealIPOnGui, "kOS Telnet Non-Loopback Permisssion");
+            if (activeBgSimDialog)
+                bgSimRect = GUILayout.Window(401125, // any made up number unlikely to clash is okay here
+                                             bgSimRect, BgSimGui, "kOS Telnet \"Simulate in Background\" notice.");
         }
         
         void OptInOnGui(int id)
@@ -523,6 +533,41 @@ namespace kOS.UserIO
             GUI.DragWindow();
         }
 
+        void BgSimGui(int id)
+        {
+            string bgSimText =
+                "<b>The KSP main settings option 'Simulate in Background' is turned off.</b>\n\n" +
+                "This option must be enabled in order for kOS's telnet server to work.\n" +
+                "(Leaving it turned off causes the game to pause whenever you switch to another active window," +
+                "making it impossible to control the game from a telnet client.)\n\n" +
+                "To allow kOS's telnet server to work, you must perform the following steps:\n\n" +
+                "(1) Exit back to the first KSP title screen.\n" +
+                "(2) Click \"Settings\".\n" +
+                "(3) Click the \"General\" Tab on the settings screen.\n" +
+                "(4) Enable the setting called \"Simulate in Background\".\n" +
+                "(5) Click \"Accept\"\n" +
+                "(6) <b>This is important</b>: Quit and Restart KSP.  (The change does not take effect until you do this.)\n" +
+                "\n" +
+                "Remember you MUST restart KSP for the change to actually do anything.\n";
+
+            // Note, the unnecessary curly braces below are there to help enforce a begin/end indentation that won't be
+            // clobbered by auto-indenter tools.
+            GUILayout.BeginVertical();
+            {
+                GUILayout.Label(bgSimText, HighLogic.Skin.textArea);
+                GUILayout.BeginHorizontal();
+                {
+                    bool OkayClicked = GUILayout.Button("Okay", HighLogic.Skin.button);
+
+                    if (OkayClicked)
+                        activeBgSimDialog = false; // makes window stop existing.
+                }
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndVertical();
+            GUI.DragWindow();
+        }
+
         /// <summary>
         /// Return a list of all the addresses that exist on this
         /// machine, rendered into strings.  (i.e. "127.0.0.1" as
@@ -534,17 +579,74 @@ namespace kOS.UserIO
             List<string> ipAddrList = new List<string>();
             ipAddrList.Add(IPAddress.Loopback.ToString()); // always ensure loopbacks exist.
 
-            // This seems to be the standard .net way to do this, but I don't like it.
-            // It presumes we have exactly one host name and that we have a functioning
-            // DNS for this machine that may very well be isolated on a local tiny network
-            // without DNS or names of any kind.  But, since this seems to be the standard
-            // answer to the question "how do I list all my IP addresses?", we'll go with it
-            // for now:
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress addr in localIPs)
+            // We ended up having to implement this this kind of inefficiently by trying two
+            // different techniques to do the same thing.
+            //
+            // The technique that finds IP addresses via DNS will find zero hits on some Macs installs
+            // because they are configured to use their own "bonjour" system instead of DNS.
+            //
+            // The technique that walks all network interfaces will find zero hits on some Linux installs
+            // because the Mono variant in Unity has a bugged implementation of GetAllNetworkInterfaces()
+            //
+            // So we decided to just try both techniques and keep the union of the two results.
+
+
+            // This is the attempt to find IP address via walking the DNS information:
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            try
             {
-                if (! addr.Equals(IPAddress.Loopback) )
-                    ipAddrList.Add(addr.ToString());
+                SafeHouse.Logger.Log("Technique 1: Walking all DNS hostnames of this machine to find all IP addresses.");
+                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+                foreach (IPAddress addr in localIPs)
+                {
+                    if (!addr.Equals(IPAddress.Loopback))
+                    {
+                        ipAddrList.Add(addr.ToString());
+                        SafeHouse.Logger.Log(string.Format("Found an IP address via DNS walk.  Adding it: {0}", addr.ToString()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format("{0} Exception getting ip addresses using DNS technique: {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
+            }
+
+            // This is the attempt to find IP address via walking the network interfaces:
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            try
+            {
+                SafeHouse.Logger.Log("Technique 2: Walking all NetworkInterfaces to find all IP addresses.");
+                NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+                if (nics != null && nics.Length > 0)
+                {
+                    foreach (NetworkInterface adapter in nics)
+                    {
+                        if (adapter.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                        {
+                            var address = adapter.GetIPProperties().UnicastAddresses;
+                            foreach (var item in address)
+                            {
+                                if (!item.Address.Equals(IPAddress.Loopback) && item.Address.AddressFamily.Equals(System.Net.Sockets.AddressFamily.InterNetwork))
+                                {
+                                    if (ipAddrList.Contains(item.Address.ToString()))
+                                    {
+                                        SafeHouse.Logger.Log(string.Format("  - Found IP address {0} : It's already in the list so skipping it.", item.Address.ToString()));
+                                    }
+                                    else
+                                    {
+                                        ipAddrList.Add(item.Address.ToString());
+                                        SafeHouse.Logger.Log(string.Format("  - Found IP address {0} : Adding it.", item.Address.ToString()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch the DNS error in the Fallback method on a "ceartain" OS to avoid infinite retry loop / log spam, thanks bonjour.
+                SafeHouse.Logger.LogError(string.Format("Exception getting ip addresses from network interfaces: {0}",ex.Message));
             }
             return ipAddrList;
         }

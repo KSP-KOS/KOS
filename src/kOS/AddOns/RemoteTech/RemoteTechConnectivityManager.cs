@@ -92,6 +92,8 @@ namespace kOS.AddOns.RemoteTech
                     callbacks[hook] = action;
                 }
                 RemoteTechHook.Instance.AddSanctionedPilot(vessel.id, action);
+                // removing the callback from stock if not already added doesn't throw an error
+                vessel.OnPreAutopilotUpdate -= hook;
             }
             else // fallback to stock events when RT isn't available, this may have unexpected results if RT availability changes
             {
@@ -111,6 +113,8 @@ namespace kOS.AddOns.RemoteTech
             {
                 RemoteTechHook.Instance.RemoveSanctionedPilot(vessel.id, action);
                 callbacks.Remove(hook);
+                // removing the callback from stock if not already added doesn't throw an error
+                vessel.OnPreAutopilotUpdate -= hook;
             }
             else // remove fallback event hook
             {

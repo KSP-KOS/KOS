@@ -5,12 +5,20 @@ namespace kOS.Safe.Execution
     /// know to return from a subroutine.
     /// </summary>
     public class SubroutineContext
-    {        
+    {
         /// <summary>In the case where this block context is for a subroutine that needs
         /// to jump back to the calling location, this stores what the calling location was.
         /// It is the instruction pointer that this subroutine call came from, and therefore
         /// should be returned to when it's done.</summary>
         public int CameFromInstPtr {get; private set;}
+
+        /// <summary>
+        /// Most normal subroutine calls don't escalate the priority, but
+        /// some will. i.e The calls that are triggered by some kind of interrupt will raise the CPU's
+        /// priority level.  When popping the subroutine context to return from this subroutine, this
+        /// is the priority to de-escalate back down to, that the machine was in prior to this call.
+        /// </summary>
+        public InterruptPriority CameFromPriority;
 
         /// <summary>
         /// If this context record is from a trigger call the kOS CPU inserted, then
@@ -37,7 +45,7 @@ namespace kOS.Safe.Execution
         public bool IsCancelled { get; private set;}
 
         /// <summary>Make a new Subroutine Context, with all the required data.</summary>
-        /// <param name="cameFromInstPtr">Sets the ComeFromIP field</param>
+        /// <param name="cameFromInstPtr">which instruction did it come from (should it return to when this subroutine is over)</param>
         public SubroutineContext(int cameFromInstPtr, TriggerInfo trigger =  null)
         {
             CameFromInstPtr = cameFromInstPtr;

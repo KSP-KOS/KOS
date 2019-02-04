@@ -12,6 +12,16 @@ inside Kerbal Space Program.
         <iframe width="560" height="315" src="https://www.youtube.com/embed/CgwRY-OrPhI?list=PLdXwd2JlyAvo_pH1tS3P7elVTYjvmIh-m" frameborder="0" allowfullscreen></iframe>
     </div>
 
+.. warning::
+
+  To use this feature you **must** make sure you have the main game
+  option "Simulate in Background" turned **on**.  It can be found in
+  Kerbal Space Program's main menu settings screen, under
+  "General" settings.
+  
+  More explanation can be found further down this page in the
+  section titled "Simulate in Background".
+
 Telnet is an old network protocol designed in the early days of the Internet, long
 before World Wide Web.  Its purpose was (is) to allow you to get access to the
 remote command line interfaces of distant server computers, acting as if the 
@@ -61,6 +71,25 @@ For Linux
   already installed, and an xterm program already installed in most any Linux
   distribution.  Open an xterm window, and in that window type the telnet 
   command, as described by the section titled "`HOWTO: Command-line client`_"
+
+Simulate in Background
+----------------------
+
+To use the kOS telnet feature, you must have the stock KSP game's
+option called "Simulate in Background" turned on.  This option
+is found on Kerbal Space Program's "General" settings screen
+(Note, this is the settings screen you find on the
+*title screen* of the game, NOT the smaller subset of settings
+you find on the "escape" menu in-game.)
+
+**Why?** Because when that option is turned off, the entire KSP
+game is paused any time you switch focus to a different program
+on your computer other than KSP.  When the game is thusly paused,
+the kOS telnet server inside the game is frozen and can't respond
+to anything the telnet client sends it.  (If you are typing into a
+telnet client program on your computer, then *that* will be the
+the focussed window instead of the KSP game, so this issue will
+come up the majority of the time.)
 
 Using it
 --------

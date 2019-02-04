@@ -47,6 +47,7 @@ namespace kOS.Suffixed
             AddSuffix("CRAFTLIST", new Suffix<ListValue>(CraftTemplate.GetAllTemplates));
             AddSuffix("SWITCHVESSELWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => shared.DispatchManager.CurrentDispatcher.GetSwitchVesselNotifyees()));
             AddSuffix("TIMEWARP", new Suffix<TimeWarpValue>(() => TimeWarpValue.Instance));
+            AddSuffix(new string[] { "REALWORLDTIME", "REALTIME" }, new Suffix<ScalarValue>(GetRealWorldTime));
         }
 
 
@@ -159,7 +160,7 @@ namespace kOS.Suffixed
             }
             return false;
         }
-        
+
         public void QuickSave()
         {
             if (HighLogic.CurrentGame.Parameters.Flight.CanQuickSave)
@@ -270,6 +271,13 @@ namespace kOS.Suffixed
                 }
             }
             return ret;
+        }
+
+        public ScalarDoubleValue GetRealWorldTime()
+        {
+            // returns the current unix-timestamp the host operating system is set to
+            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+            return new ScalarDoubleValue(timeSpan.TotalSeconds);
         }
 
         public CraftTemplate GetCraft(StringValue name, StringValue editor)

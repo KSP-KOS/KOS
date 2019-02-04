@@ -64,8 +64,21 @@ Label
         :type: :struct:`String`
         :access: Get/Set
 
-        String which you wish to appear in a tooltip when the user hovers
-        the mouse pointer over this widget.
+        When the user hovers the mouse pointer over this item, set the
+        global "tooltip" value for its GUI window to this string.  This
+        tooltip value can be read by your script as the
+        :struct:`GUIWidgets:TOOLTIP` suffix of the outermost Box window
+        this widget is inside of.  It can also be shown by including a
+        :struct:`TIPDISPLAY` widget in this window somewhere.  The full
+        details explaining tooltips can be found in the documentation
+        page for :struct:`TIPDISPLAY`.
+
+        *Exception*: Due to a limitation of Unity3d's IMGUI system, you
+        cannot have a proper tooltip for a :struct:`TEXTFIELD` widget.
+        It will not set the tooltip hint when mousing over it.  Instead,
+        when used on a :struct:`TEXTFIELD` widget, the TOOLTIP becomes
+        the hint text that will be drawn in a 'greyed-out' color inside
+        the text field when the field is an empty string.
 
 .. _richtext:
 

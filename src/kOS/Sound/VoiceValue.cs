@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using kOS.Safe.Sound;
@@ -174,8 +174,8 @@ namespace kOS.Sound
                 NoteValue prevNote = curNote;
                 ++noteNum;
                 if (loop)
-                    noteNum = noteNum % song.Count(); // wraparound to zero if looping and past end.
-                if (noteNum >= song.Count())
+                    noteNum = noteNum % song.Count; // wraparound to zero if looping and past end.
+                if (noteNum >= song.Count)
                 {
                     isPlaying = false; // stop if past end.
                     curNote = null;

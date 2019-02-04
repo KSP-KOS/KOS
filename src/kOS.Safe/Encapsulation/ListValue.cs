@@ -10,7 +10,7 @@ using kOS.Safe.Function;
 namespace kOS.Safe.Encapsulation
 {
     [kOS.Safe.Utilities.KOSNomenclature("List")]
-    public class ListValue<T> : CollectionValue<T, IList<T>>, IIndexable
+    public class ListValue<T> : CollectionValue<T, List<T>>, IList<T>, IIndexable
         where T : Structure
     {
         public ListValue()
@@ -20,38 +20,37 @@ namespace kOS.Safe.Encapsulation
 
         public ListValue(IEnumerable<T> listValue) : base("LIST", new List<T>(listValue))
         {
-            ListInitializeSuffixes();
+            RegisterInitializer(ListInitializeSuffixes);
         }
+
+        public int Count => Collection.Count;
+        public void CopyTo(T[] array, int arrayIndex) =>
+            Collection.CopyTo(array, arrayIndex);
 
         public void Add(T item)
         {
+            CheckReadOnly();
             Collection.Add(item);
         }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            Collection.CopyTo(array, arrayIndex);
-        }
-
         public bool Remove(T item)
         {
+            CheckReadOnly();
             return Collection.Remove(item);
         }
-
-        public void Clear()
-        {
-            Collection.Clear();
-        }
-
         public void RemoveAt(int index)
         {
+            CheckReadOnly();
             Collection.RemoveAt(index);
         }
 
         public T this[int index]
         {
             get { return Collection[index]; }
-            set { Collection[index] = value; }
+            set
+            {
+                CheckReadOnly();
+                Collection[index] = value;
+            }
         }
 
         public override void LoadDump(Dump dump)
@@ -69,12 +68,15 @@ namespace kOS.Safe.Encapsulation
         private void ListInitializeSuffixes()
         {
             AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
-            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Collection.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT",   new TwoArgsSuffix<ScalarValue, T>     ((index, toAdd) => Collection.Insert(index, toAdd)));
-            AddSuffix("REMOVE",   new OneArgsSuffix<ScalarValue>        (toRemove => Collection.RemoveAt(toRemove)));
+            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("INSERT",   new TwoArgsSuffix<ScalarValue, T>     ((index, toAdd) => Insert(index, toAdd)));
+            AddSuffix("REMOVE",   new OneArgsSuffix<ScalarValue>        (toRemove => RemoveAt(toRemove)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, ScalarValue, ScalarValue>(SubListMethod));
             AddSuffix("JOIN",     new OneArgsSuffix<StringValue, StringValue>(Join));
-       }
+
+            AddSuffix(new[] { "INDEXOF", "FIND" }, new OneArgsSuffix<ScalarValue, T>(one => IndexOf(one)));
+            AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<ScalarValue, T>(s => Collection.LastIndexOf(s)));
+        }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
         private ListValue SubListMethod(ScalarValue start, ScalarValue runLength)
@@ -87,15 +89,11 @@ namespace kOS.Safe.Encapsulation
             return subList;
         }
 
-        public static ListValue<T> CreateList<TU>(IEnumerable<TU> list)
-        {
-            return new ListValue<T>(list.Cast<T>());
-        }
+        public static ListValue<T> CreateList<TU>(IEnumerable<TU> list) =>
+            new ListValue<T>(list.Cast<T>());
 
-        public Structure GetIndex(int index)
-        {
-            return Collection[index];
-        }
+        public Structure GetIndex(int index) =>
+            Collection[index];
 
         public Structure GetIndex(Structure index)
         {
@@ -110,6 +108,7 @@ namespace kOS.Safe.Encapsulation
 
         public void SetIndex(Structure index, Structure value)
         {
+            CheckReadOnly();
             int idx;
             try
             {
@@ -124,12 +123,19 @@ namespace kOS.Safe.Encapsulation
 
         public void SetIndex(int index, Structure value)
         {
+            CheckReadOnly();
             Collection[index] = (T)value;
         }
 
-        private StringValue Join(StringValue separator)
+        private StringValue Join(StringValue separator) =>
+            string.Join(separator, Collection.Select(i => i.ToString()).ToArray());
+
+        public int IndexOf(T item) =>
+            Collection.IndexOf(item);
+        public void Insert(int index, T item)
         {
-            return string.Join(separator, Collection.Select(i => i.ToString()).ToArray());
+            CheckReadOnly();
+            Collection.Insert(index, item);
         }
     }
 
@@ -152,24 +158,19 @@ namespace kOS.Safe.Encapsulation
 
         public ListValue()
         {
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
-        public ListValue(IEnumerable<Structure> toCopy)
-            : base(toCopy)
+        public ListValue(IEnumerable<Structure> toCopy) : base(toCopy)
         {
-            InitializeSuffixes();
+            RegisterInitializer(InitializeSuffixes);
         }
 
-        private void InitializeSuffixes()
-        {
+        private void InitializeSuffixes() =>
             AddSuffix("COPY", new NoArgsSuffix<ListValue>(() => new ListValue(this)));
-        }
 
-        public new static ListValue CreateList<T>(IEnumerable<T> toCopy)
-        {
-            return new ListValue(toCopy.Select(x => FromPrimitiveWithAssert(x)));
-        }
+        public new static ListValue CreateList<T>(IEnumerable<T> toCopy) =>
+            new ListValue(toCopy.Select(x => FromPrimitiveWithAssert(x)));
     }
 }
 

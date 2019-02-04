@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using System.Collections.Generic;
@@ -21,6 +21,13 @@ namespace kOS.Suffixed.Widget
     abstract public class Widget : Structure
     {
         protected Box parent;
+
+        /// <summary>
+        /// Temporarily set to "true" to tell the widget that any state changes
+        /// are happening because of a gui activity (rather than because of a script
+        /// deliberately changing a value for example).
+        /// </summary>
+        protected bool guiCaused;
 
         // The WidgetStyle is cheap as it only creates a new GUIStyle if it is
         // actually changed, otherwise it just refers to the one in the GUI:SKIN.
@@ -47,6 +54,11 @@ namespace kOS.Suffixed.Widget
             Enabled = true;
             Shown = true;
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        public Box GetParent()
+        {
+            return parent;
         }
 
         /// <summary>
@@ -157,11 +169,13 @@ namespace kOS.Suffixed.Widget
 
         virtual protected void Communicate(Action a)
         {
+            guiCaused = true;
             GUIWidgets gui = FindGUI();
             if (gui != null)
                 gui.Communicate(this,ToString(),a);
             else
                 a();
+            guiCaused = false;
         }
 
         public override string ToString()

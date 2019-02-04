@@ -14,12 +14,12 @@ PRINT "How Button 1 would behave without takepress.".
   set B2:toggle to true.
 
   local B3 is g:addbutton("button 3 (callback, not a toggle)").
-  set B3:onchange to {parameter newval. print "Button 3 onchange(" + newval + ")".}.
+  set B3:ontoggle to {parameter newval. print "Button 3 onchange(" + newval + ")".}.
   set B3:onclick to {print "Button 3 onclick.".}.
 
   local B4 is g:addbutton("button 4 (callback, a toggle)").
   set B4:toggle to true.
-  set B4:onchange to {parameter newval. print "Button 4 onchange(" + newval + ")".}.
+  set B4:ontoggle to {parameter newval. print "Button 4 onchange(" + newval + ")".}.
   set B4:onclick to {print "Button 4 onclick".}.
 
   local q_button is g:addbutton("Quit").

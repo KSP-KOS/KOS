@@ -1,5 +1,5 @@
 .. _tutorials:
-    
+
 Tutorials
 =========
 
@@ -9,6 +9,7 @@ If you prefer the tutorial style of explanation, please see the following exampl
     :hidden:
 
     Quick Start <tutorials/quickstart>
+    Basic Explanation <tutorials/basictutorial>
     Design Patterns <tutorials/designpatterns>
     PID Loops <tutorials/pidloops>
     Execute Node script <tutorials/exenode>
@@ -19,6 +20,9 @@ Introductory
 
 :doc:`Quick Start Tutorial <tutorials/quickstart>`
     Walks you through the beginnings of making a beginner's ship launcher script.
+
+:doc:`Basic Explanation Tutorial <tutorials/basictutorial>`
+    Covers basic commands of KOS.
 
 Intermediate
 ------------
@@ -34,3 +38,11 @@ Intermediate
 
 :doc:`Creating Reusable GUI Elements <tutorials/gui>`
     Creating and using a "TabWidget" to put a lot of functionality in a small amount of screenspace.
+    
+External tutorials
+------------------
+
+Tutorials written by others, outside the main kOS docs.
+
+`General tutorials <https://github.com/Toukie/KOS-tutorials>`__
+    

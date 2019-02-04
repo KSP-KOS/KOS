@@ -1,7 +1,17 @@
 # VisualStudio
+.vs/
 [Bb]in/
 [Oo]bj/
+
+# User-specific files
 *.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
 packages/
 /src/kOS.sln.ide
 
@@ -11,6 +21,9 @@ packages/
 
 # VisualStudio Code
 .vscode/
+
+# Vim
+*.swp
 
 # Unity
 [Ll]ibrary/
@@ -37,3 +50,6 @@ netkan.exe
 
 #zip files for archived art assets
 *.zip
+
+# .swp files from vim (temporary files that vim creates when editing a file)
+*.swp

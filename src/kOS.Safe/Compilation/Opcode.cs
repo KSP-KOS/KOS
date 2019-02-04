@@ -1955,7 +1955,7 @@ namespace kOS.Safe.Compilation
                 else
                     if (returnVal is bool || returnVal is BooleanValue )
                         if (Convert.ToBoolean(returnVal))
-                            cpu.AddTrigger(trigger.EntryPoint, trigger.Closure);
+                            cpu.AddTrigger(trigger.EntryPoint, trigger.Priority, trigger.InstanceCount, false /*next update, not right now*/, trigger.Closure);
             }
             
             int destinationPointer = contextRecord.CameFromInstPtr;
@@ -2489,6 +2489,7 @@ namespace kOS.Safe.Compilation
     /// <summary>
     /// <para>
     /// Pops a function pointer from the stack and adds a trigger that will be called each cycle.
+    /// These triggers get the priority InterruptPriority.Recurring
     /// </para>
     /// <para></para>
     /// <para>addtrigger</para>
@@ -2499,10 +2500,30 @@ namespace kOS.Safe.Compilation
         protected override string Name { get { return "addtrigger"; } }
         public override ByteCode Code { get { return ByteCode.ADDTRIGGER; } }
 
+        /// <summary>
+        /// True if the trigger being added should be called with an argument
+        /// that identifies this instance/entrypoint uniquely at runtime.
+        /// (For example, ON triggers need this, but WHEN triggers do not).
+        /// </summary>
+        [MLField(1,true)]
+        public bool Unique { get; set; }
+
+        public OpcodeAddTrigger(bool unique)
+        {
+            Unique = unique;
+        }
+
+        public OpcodeAddTrigger() // Must have a defualt constructor for how KSM files work.
+        {
+            Unique = true;
+        }
+
         public override void Execute(ICpu cpu)
         {
             int functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
-            cpu.AddTrigger(functionPointer, cpu.GetCurrentClosure());
+
+            List<Structure> args = new List<Structure>();
+            cpu.AddTrigger(functionPointer, InterruptPriority.Recurring, (Unique ? cpu.NextTriggerInstanceId : 0), false, cpu.GetCurrentClosure());
         }
 
         public override string ToString()
@@ -2527,8 +2548,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             var functionPointer = Convert.ToInt32(cpu.PopValueArgument()); // in case it got wrapped in a ScalarIntValue
-            cpu.RemoveTrigger(functionPointer);
-            cpu.CancelCalledTriggers(functionPointer);
+            cpu.RemoveTrigger(functionPointer, 0);
+            cpu.CancelCalledTriggers(functionPointer, 0);
         }
     }
 

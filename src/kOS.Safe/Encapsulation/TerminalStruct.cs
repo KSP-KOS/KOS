@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Screen;
+using kOS.Safe.Execution;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -68,7 +69,7 @@ namespace kOS.Safe.Encapsulation
                 // also immediately inserts it into the execution list to start firing off right away.  We want
                 // to delay that, so here's an alternate way to construct a TriggerInfo that isn't running yet,
                 // that we'll wait until a later step to schedule to run:
-                TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.ProgContext, watcher.EntryPoint, null, argList);
+                TriggerInfo notYetExecutingTrigger = new TriggerInfo(watcher.ProgContext, watcher.EntryPoint, InterruptPriority.CallbackOnce, 0, null, argList);
                 pendingResizeTriggers.Enqueue(notYetExecutingTrigger);
             }
 
@@ -97,7 +98,7 @@ namespace kOS.Safe.Encapsulation
                     // Try calling it again, and by the way any time we notice an attempt
                     // to call it again has failed, then go back and trim our list of
                     // watchers so it won't happen again:
-                    if (Shared.Cpu.AddTrigger(currentResizeTrigger) == null)
+                    if (Shared.Cpu.AddTrigger(currentResizeTrigger, false) == null)
                         TrimStaleWatchers();
                 }
             }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -36,6 +36,7 @@ namespace kOS.Suffixed
             AddSuffix("VESSEL", new Suffix<VesselTarget>(() => VesselTarget.CreateOrGetExisting(parts[0].vessel, shared)));
             AddSuffix("PARTS", new Suffix<ListValue>(() => PartValueFactory.Construct(parts, shared)));
             AddSuffix("DOCKINGPORTS", new Suffix<ListValue>(() => DockingPortValue.PartsToList(parts, shared)));
+            AddSuffix(new string[] { "DECOUPLERS", "SEPARATORS" }, new Suffix<ListValue>(() => DecouplerValue.PartsToList(parts, shared)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(GetResourceManifest));
         }
 

@@ -15,7 +15,7 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
-        private const string CONTROL_LOCKOUT = "kOSTerminal";
+        public const string CONTROL_LOCKOUT = "kOSTerminal";
 
         /// <summary>
         /// Set to true only when compiling a version specifically for the purpose
@@ -36,12 +36,10 @@ namespace kOS.Screen
         private const bool DebugInternational = false;
 
         private static string root;
-        private static readonly Color color = new Color(1, 1, 1, 1); // opaque window color when focused
-        private static readonly Color colorAlpha = new Color(1f, 1f, 1f, 0.8f); // slightly less opaque window color when not focused.
+        private static readonly Color color = new Color(1f, 1f, 1f, 1.1f); // opaque window color when focused
         private static readonly Color bgColor = new Color(0.0f, 0.0f, 0.0f, 1.0f); // black background of terminal
-        private static readonly Color textColor = new Color(0.4f, 1.0f, 0.2f, 1.0f); // font color on terminal
+        private static readonly Color textColor = new Color(0.5f, 1.0f, 0.5f, 1.0f); // font color on terminal
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f); // font color when power starved.
-        private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.8f); // font color when power starved and not focused.
         private Rect closeButtonRect;
         private Rect resizeButtonCoords;
         private GUIStyle tinyToggleStyle;
@@ -190,10 +188,10 @@ namespace kOS.Screen
         /// <summary>
         /// Unity lacks gui styles for GUI.DrawTexture(), so to make it do
         /// 9-slice stretching, we have to draw the 9slice image as a GUI.Label.
-        /// But GUI.Labels that render a Texture2D instead of text, won't stretch\
+        /// But GUI.Labels that render a Texture2D instead of text, won't stretch
         /// larger than the size of the image file no matter what you do (only smaller).
         /// So to make it stretch the image in a label, the image has to be implemented
-        /// as part of the label's background defined in the GUIStyle insteade of as a
+        /// as part of the label's background defined in the GUIStyle instead of as a
         /// normal image element.  This sets up that style, which you can then render
         /// by making a GUILabel use this style and have dummy empty string content.
         /// </summary>
@@ -259,11 +257,13 @@ namespace kOS.Screen
         
         public override void GetFocus()
         {
+            base.GetFocus();
             Lock();
         }
-        
+
         public override void LoseFocus()
         {
+            base.LoseFocus();
             Unlock();
         }
 
@@ -322,9 +322,7 @@ namespace kOS.Screen
             BringToFront();
 
 
-            // Exclude the TARGETING ControlType so that we can set the target vessel with the terminal open.
-            InputLockManager.SetControlLock(ControlTypes.All & ~ControlTypes.TARGETING, CONTROL_LOCKOUT);
-
+            InputLockManager.SetControlLock(ControlTypes.All, CONTROL_LOCKOUT);
             // Prevent editor keys from being pressed while typing
             EditorLogic editor = EditorLogic.fetch;
                 //TODO: POST 0.90 REVIEW
@@ -363,7 +361,7 @@ namespace kOS.Screen
 
             GUI.skin = HighLogic.Skin;
             
-            GUI.color = isLocked ? color : colorAlpha;
+            GUI.color = color;
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
             ChangeTitle(CalcualteTitle());
@@ -527,8 +525,10 @@ namespace kOS.Screen
                 
                 if (!IsSpecial(c)) // printable characters
                 {
+#pragma warning disable CS0162
                     if (DebugInternational)
                         c = DebugInternationalMapping(c);
+#pragma warning restore CS0162
                     ProcessOneInputChar(c, null);
                     consumeEvent = true;
                     cursorBlinkTime = 0.0f; // Don't blink while the user is still actively typing.
@@ -564,7 +564,7 @@ namespace kOS.Screen
 
         private static bool IsSpecial(char c)
         {
-            if (c < 0x0020)
+            if (c < 0x0020 || c > 0xE000)
                 return true;
             if (Enum.IsDefined(typeof(UnicodeCommand), (int)c))
                 return true;
@@ -833,7 +833,7 @@ namespace kOS.Screen
             }
             IScreenBuffer screen = shared.Screen;
             
-            GUI.color = isLocked ? color : colorAlpha;
+            GUI.color = color;
 
             GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             if (telnets.Count > 0)
@@ -912,7 +912,7 @@ namespace kOS.Screen
                 GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
             }
             terminalLetterSkin.label.normal.textColor = AdjustColor(reversingScreen ? bgColor : currentTextColor, screen.Brightness);            
-            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth + 2, screen.RowCount * charHeight + 2)); // +2's for the sake of safety margin
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount * charWidth + 2, screen.RowCount * charHeight + 4)); // +4 so descenders and underscores visible on bottom row.
 
             // When loading a quicksave, it is possible for the teminal window to update even though
             // mostRecentScreen is null.  If that's the case, just skip the screen update.
