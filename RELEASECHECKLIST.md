@@ -5,15 +5,15 @@ older version of KSP instead of the most recent version.  Please
 note where it says "(*backport*)" below if you are doing a backport.
 
 ### Pre-Build
-- [ ] Update AssemblyInfo for kOS project
-- [ ] Update AssemblyInfo for kOS.Safe project
-- [ ] Update AssemblyInfo for kOS.Safe.Test project
-- [ ] Update `Resources\GameData\kOS\kOS.version`
-- [ ] Update `CHANGELOG.MD`
-- [ ] If this is a normal release for the most recent KSP version supported:
-  - [ ] Update `doc\source\conf.py`
-  - [ ] Update `doc\source\changes.rst`
-  - [ ] Above changes merged into `develop` branch on repo.
+- [x] Update AssemblyInfo for kOS project
+- [x] Update AssemblyInfo for kOS.Safe project
+- [x] Update AssemblyInfo for kOS.Safe.Test project
+- [x] Update `Resources\GameData\kOS\kOS.version`
+- [x] Update `CHANGELOG.MD`
+- [x] If this is a normal release for the most recent KSP version supported:
+  - [x] Update `doc\source\conf.py`
+  - [x] Update `doc\source\changes.rst`
+  - [x] Above changes merged into `develop` branch on repo.
 - [ ] Else if this for a *backport* to an older KSP release than the most recent version supported:
   - [ ] Above changes merged into `backport-for-KSPversion.number.here` branch on repo instead of into `develop` branch.
 
