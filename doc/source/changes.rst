@@ -24,6 +24,14 @@ release.
 
 ****
 
+Changes in 1.1.6.1
+------------------
+
+The various thrust and ISP calculations that take pressure
+as a parameter prevent you from using negative values for
+pressure.  Now they are clamped to be no lower than zero.
+This change documents this fact.
+
 Changes in 1.1.6.0
 ------------------
 
