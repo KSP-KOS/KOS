@@ -260,7 +260,9 @@ namespace kOS.Suffixed.Part
         /// Get engine thrust
         /// </summary>
         /// <param name="engine">The engine (can be null - returns zero in that case)</param>
-        /// <param name="atmPressure">Atmospheric pressure (current if omitted/null, 1.0 means sea level, 0.0 is vacuum)</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
         /// <param name="useThrustLimit">Use current thrust limit (assume 100% if false)</param>
         /// <param name="throttle">Throttle (full if omitted)</param>
         /// <param name="operational">Return zero if this is true and engine is not operational (enabled/staged)</param>
@@ -286,7 +288,9 @@ namespace kOS.Suffixed.Part
         /// Get engine ISP
         /// </summary>
         /// <param name="engine">The engine (can be null - returns zero in that case)</param>
-        /// <param name="atmPressure">Atmospheric pressure (current if omitted/null, 1.0 means sea level, 0.0 is vacuum)</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
         /// <returns></returns>
         public static float GetIsp(this ModuleEngines engine, double? atmPressure = null)
         {

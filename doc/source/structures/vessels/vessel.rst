@@ -120,6 +120,8 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :type: :ref:`scalar <scalar>` (kN)
 
     Sum of all the :ref:`engines' MAXTHRUSTATs <engine_MAXTHRUSTAT>` of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
 .. attribute:: Vessel:AVAILABLETHRUST
 
@@ -134,6 +136,8 @@ Vessels are also :ref:`Orbitable<orbitable>`, and as such have all the associate
     :type: :ref:`scalar <scalar>` (kN)
 
     Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    (Pressure must be greater than or equal to zero.  If you pass in a
+    negative value, it will be treated as if you had given a zero instead.)
 
 .. attribute:: Vessel:FACING
 

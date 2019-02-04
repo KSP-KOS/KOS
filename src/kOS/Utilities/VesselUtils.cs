@@ -107,7 +107,9 @@ namespace kOS.Utilities
         /// not counting with thrust limits - assuming 100% unless useThrustLimit: true)
         /// </summary>
         /// <param name="vessel">The vessel/ship</param>
-        /// <param name="atmPressure">Atmospheric pressure (current if omitted/null, 1.0 means sea level, 0.0 is vacuum)</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
         /// <param name="useThrustLimit">Use current thrust limit (assume 100% if false)</param>
         /// <returns>Total thrust</returns>
         public static double GetMaxThrust(Vessel vessel, double? atmPressure = null, bool useThrustLimit = false)
@@ -132,7 +134,9 @@ namespace kOS.Utilities
         /// counting with thrust limits)
         /// </summary>
         /// <param name="vessel">The vessel/ship</param>
-        /// <param name="atmPressure">Atmospheric pressure (current if omitted/null, 1.0 means sea level, 0.0 is vacuum)</param>
+        /// <param name="atmPressure">
+        ///   Atmospheric pressure (defaults to pressure at current location if omitted/null,
+        ///   1.0 means Earth/Kerbin sea level, 0.0 is vacuum)</param>
         /// <returns>Total available thrust</returns>
         public static double GetAvailableThrust(Vessel vessel, double? atmPressure = null)
             => GetMaxThrust(vessel, atmPressure, useThrustLimit: true);
