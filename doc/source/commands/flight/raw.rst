@@ -12,7 +12,7 @@ Unlike with so-called "Cooked" steering, "raw" steering uses the ``SET`` command
 
     SET SHIP:CONTROL:YAW to 0.2.
 
-This will start pushing the ship to rotate a bit faster to the right, like pushing the ``D`` key gently. All the following values are set between :math:`-1` and :math:`+1`. Zero means the control is neutral. You can set to values smaller in magnitude than :math:`-1` and :math:`+1` for gentler control, (but be aware of the 5% :ref:`null zone mentioned below<raw_null_zone>`)::
+This will start pushing the ship to rotate a bit faster to the right, like pushing the ``D`` key gently. All the following values are set between :math:`-1` and :math:`+1`. Zero means the control is neutral. You can set to values smaller in magnitude than :math:`-1` and :math:`+1` for gentler control, (but be aware of the 5% :ref:`null zone mentioned below<raw null zone>`)::
 
     print "Gently pushing forward for 3 seconds.".
     SET SHIP:CONTROL:FORE TO 0.2.
@@ -37,7 +37,7 @@ This will start pushing the ship to rotate a bit faster to the right, like pushi
 
 One can use :ref:`SHIP:CONTROL:ROTATION <SHIP CONTROL ROTATION>` and :ref:`SHIP:CONTROL:TRANSLATION <SHIP CONTROL TRANSLATION>` to see the ship's current situation.
 
-.. _raw_null_zone::
+.. _raw null zone:
 
 5% null zone
 ------------
@@ -188,21 +188,21 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. object:: SHIP:CONTROL:FORE
 
     Controls the translation of the ship forward :math:`(+1)` or backward :math:`(-1)`.
-    Note that this control has a :ref:`game-enforced 5% null zone <raw_null_zone>` that
+    Note that this control has a :ref:`game-enforced 5% null zone <raw null zone>` that
     kOS doesn't seem to be able to change.
 
 .. _SHIP CONTROL STARBOARD:
 .. object:: SHIP:CONTROL:STARBOARD
 
     Controls the translation of the ship to the right :math:`(+1)` or left :math:`(-1)` from the pilot's perspective.
-    Note that this control has a :ref:`game-enforced 5% null zone <raw_null_zone>` that
+    Note that this control has a :ref:`game-enforced 5% null zone <raw null zone>` that
     kOS doesn't seem to be able to change.
 
 .. _SHIP CONTROL TOP:
 .. object:: SHIP:CONTROL:TOP
 
     Controls the translation of the ship up :math:`(+1)` or down :math:`(-1)` from the pilot's perspective.
-    Note that this control has a :ref:`game-enforced 5% null zone <raw_null_zone>` that
+    Note that this control has a :ref:`game-enforced 5% null zone <raw null zone>` that
     kOS doesn't seem to be able to change.
 
 .. _SHIP CONTROL TRANSLATION:
@@ -210,7 +210,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 
     Controls the translation as a :struct:`Vector` ``(STARBOARD, TOP, FORE)``.
     Note that each axis of this this control vector has a
-    :ref:`game-enforced 5% null zone <raw_null_zone>` that kOS doesn't seem to be
+    :ref:`game-enforced 5% null zone <raw null zone>` that kOS doesn't seem to be
     able to change.
 
 .. _SHIP CONTROL WHEELSTEER:

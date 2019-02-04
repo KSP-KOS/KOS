@@ -39,7 +39,7 @@ Described how to make GUI tooltips work.  See:
 5% null zone
 ::::::::::::
 
-Mentioned the stock :ref:`null zone<_raw_null_zone>` issue with RCS
+Mentioned the stock :ref:`null zone<raw null zone>` issue with RCS
 translation.
 
 Part:CID

@@ -23,7 +23,7 @@ constants about the universe that you may find handy in your math operations.  P
 
     * - :global:`G`
       - Newton's Gravitational Constant.
-    * - :global:`g0
+    * - :global:`g0`
       - gravity acceleration (m/s^2) at sea level on Earth.
     * - :global:`E`
       - Base of the natural log (Euler's number)
