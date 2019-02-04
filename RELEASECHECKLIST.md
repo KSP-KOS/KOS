@@ -29,10 +29,10 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [x] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
 
 ### Post-Build
-- [ ] If this is a *normal release* for the most recent KSP version suported:
-  - [ ] Update master branch from develop branch.
+- [x] If this is a *normal release* for the most recent KSP version suported:
+  - [x] Update master branch from develop branch.
 - [ ] Else if this is a *backport* then do NOT update the master branch.  Keep it in the `backport-for-KSPversion.number.here` branch.
-- [ ] Build Github release with changelog and title, using the ZIP made above in Build step.
+- [X] Build Github release with changelog and title, using the ZIP made above in Build step.
 - [ ] CurseForge: Copy Github release text, and ZIP to [Curseforge](http://kerbal.curseforge.com/projects/kos-scriptable-autopilot-system?gameCategorySlug=ksp-mods&projectID=220265), as follows:
   - [ ] If this is a *normal release* for the most recent KSP version suported, mark the file as "release".
   - [ ] If this is a *backport*, mark the file as "alpha".  (So Curse won't present this as the default version).
