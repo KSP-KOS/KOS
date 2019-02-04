@@ -24,8 +24,9 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [X] Create zip file with a root starting in the `\Resources\` directory
 - [X] The zip file should have the GameData folder in the root
 - [X] Name the zip file with the following pattern `kOS-v<major>.<minor>.<patch>.<build>.zip` (eg kOS-v1.1.3.0.zip )
-- [ ] Build the documentation in `\docs\` (unless this is a *backport*)
-- [ ] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
+- [x] Build the documentation (unless this is a *backport*) with:
+  - (if Linux or Mac: `cd docs ; make clean ; make html`)
+- [x] Push the contents of `docs\gh-pages` to the gh-pages branch of KSP-KOS/KOS and verify correct rendering (unless this is a *backport*)
 
 ### Post-Build
 - [ ] If this is a *normal release* for the most recent KSP version suported:
