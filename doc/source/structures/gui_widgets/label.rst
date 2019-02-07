@@ -51,13 +51,14 @@ Label
         the look and feel of control panels in the ship and not necessarily
         something that takes up "space" on the disk.
 
-        PNG format images usually work best, although any format Unity
+        DDS or PNG format images usually work best, although any format Unity
         is capable of reading can work here.
 
-        You can leave off the ``".png"`` ending on the filename if you like
-        and this suffix will presume you meant to read a .png file.  If you 
-        wish to read a file in some other format than PNG, you will need
-        to give its filename extension explicitly.
+        You can leave off the ``".png"`` or ``".dds"`` ending on the
+        filename if you like and this suffix will presume you meant to read
+        a .dds file, and failing that, a .png file.  If you wish to read a
+        file in some other format than DDS or PNG, you will need to give its
+        filename extension explicitly.
 
     .. attribute:: TOOLTIP
 

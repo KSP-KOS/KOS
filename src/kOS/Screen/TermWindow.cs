@@ -143,23 +143,13 @@ namespace kOS.Screen
             closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
-            // Load dummy textures
-            terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-
-            root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
-            LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
-            LoadTexture("GameData/kOS/GFX/monitor_minimal_frame.png", ref terminalFrameImage);
-            LoadTexture("GameData/kOS/GFX/monitor_minimal_frame_active.png", ref terminalFrameActiveImage);
-            LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
-            LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
-            LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
-            LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
+            terminalImage = GameDatabase.Instance.GetTexture("kOS/GFX/monitor_minimal", false);
+            terminalFrameImage = GameDatabase.Instance.GetTexture("kOS/GFX/monitor_minimal_frame", false);
+            terminalFrameActiveImage = GameDatabase.Instance.GetTexture("kOS/GFX/monitor_minimal_frame_active", false);
+            resizeButtonImage = GameDatabase.Instance.GetTexture("kOS/GFX/resize-button", false);
+            networkZigZagImage = GameDatabase.Instance.GetTexture("kOS/GFX/network-zigzag", false);
+            brightnessButtonImage = GameDatabase.Instance.GetTexture("kOS/GFX/brightness-button", false);
+            fontHeightButtonImage = GameDatabase.Instance.GetTexture("kOS/GFX/font-height-button", false);
 
             terminalImageStyle = Create9SliceStyle(terminalImage);
             terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
@@ -227,18 +217,6 @@ namespace kOS.Screen
             beepSource.clip = beepClip;
         }
 
-        public void LoadTexture(string relativePath, ref Texture2D targetTexture)
-        {
-            var imageLoader = new WWW("file://" + root + relativePath);
-            imageLoader.LoadImageIntoTexture(targetTexture);
-
-            if (imageLoader.isDone && imageLoader.bytesDownloaded == 0)
-            {
-                SafeHouse.Logger.LogError(string.Format("[TermWindow] Loading texture from \"{0}\" failed", relativePath));
-                allTexturesFound = false;
-            }
-        }
-        
         public void OpenPopupEditor(Volume v, GlobalPath path)
         {
             popupEditor.AttachTo(this, v, path);
@@ -833,9 +811,9 @@ namespace kOS.Screen
             }
             IScreenBuffer screen = shared.Screen;
             
+            GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             GUI.color = color;
 
-            GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             if (telnets.Count > 0)
                 DrawTelnetStatus();
 
