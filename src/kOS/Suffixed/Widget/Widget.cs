@@ -154,7 +154,7 @@ namespace kOS.Suffixed.Widget
             }
             string path = Path.Combine(SafeHouse.ArchiveFolder, relativePath);
             var r = new Texture2D(0, 0, TextureFormat.ARGB32, false);
-            string[] exts = { ".dds", ".png", "" };
+            string[] exts = {".png", "" };
             foreach (string ext in exts) {
                 string filename = path + ext;
                 if (File.Exists(filename)) {
