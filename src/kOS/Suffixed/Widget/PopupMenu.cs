@@ -39,7 +39,7 @@ namespace kOS.Suffixed.Widget
             popupStyle = FindStyle("popupWindow");
 
             list = new ListValue();
-            SetInitialContentImage(GameDatabase.Instance.GetTexture("kOS/GFX/popupmenu", false));
+            SetInitialContentImage(Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/popupmenu", false));
             RegisterInitializer(InitializeSuffixes);
         }
 

@@ -143,14 +143,23 @@ namespace kOS.Screen
             closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
-            terminalImage = GameDatabase.Instance.GetTexture("kOS/GFX/monitor_minimal", false);
-            terminalFrameImage = GameDatabase.Instance.GetTexture("kOS/GFX/monitor_minimal_frame", false);
-            terminalFrameActiveImage = GameDatabase.Instance.GetTexture("kOS/GFX/monitor_minimal_frame_active", false);
-            resizeButtonImage = GameDatabase.Instance.GetTexture("kOS/GFX/resize-button", false);
-            networkZigZagImage = GameDatabase.Instance.GetTexture("kOS/GFX/network-zigzag", false);
-            brightnessButtonImage = GameDatabase.Instance.GetTexture("kOS/GFX/brightness-button", false);
-            fontHeightButtonImage = GameDatabase.Instance.GetTexture("kOS/GFX/font-height-button", false);
+            terminalImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/monitor_minimal", false);
+            terminalFrameImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/monitor_minimal_frame", false);
+            terminalFrameActiveImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/monitor_minimal_frame_active", false);
+            resizeButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/resize-button", false);
+            networkZigZagImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/network-zigzag", false);
+            brightnessButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/brightness-button", false);
+            fontHeightButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/font-height-button", false);
 
+            allTexturesFound =
+                terminalImage != null &&
+                terminalFrameImage != null &&
+                terminalFrameActiveImage != null &&
+                resizeButtonImage != null &&
+                networkZigZagImage != null &&
+                brightnessButtonImage != null &&
+                fontHeightButtonImage != null;
+;
             terminalImageStyle = Create9SliceStyle(terminalImage);
             terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
             terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
@@ -794,7 +803,11 @@ namespace kOS.Screen
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
-                           "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
+                           "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the dds texture files are there.\n" +
+                           "Check the game log to see error messages starting with \"kOS:\" that talk about Texture files." +
+                           "\n" +
+                           "If you see this message, it probably means that kOS isn't installed correctly and you should try " +
+                           "installing it again.");
 
                 closeButtonRect = new Rect(WindowRect.width - 75, WindowRect.height - 30, 50, 25);
                 if (GUI.Button(closeButtonRect, "Close"))

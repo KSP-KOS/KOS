@@ -68,7 +68,7 @@ namespace kOS.Screen
             WindowRect = new Rect(0, 0, 470, 280); // bogus starting value will be changed later when attaching to a terminal.
 
             // Load dummy textures
-            resizeImage = GameDatabase.Instance.GetTexture("kOS/GFX/resize-button", false);
+            resizeImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/resize-button", false);
 
             dialog = gameObject.AddComponent<DelegateDialog>();
 
