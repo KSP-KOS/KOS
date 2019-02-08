@@ -34,7 +34,7 @@ namespace kOS.Suffixed.Part
             var vessel = VesselTarget.CreateOrGetExisting(sharedObj);
             foreach (var part in parts)
             {
-                if(part.Modules.Contains<PartModule>())
+                if(part.Modules.Contains<ModuleEnviroSensor>())
                     toReturn.Add(vessel[part]);
             }
             return toReturn;

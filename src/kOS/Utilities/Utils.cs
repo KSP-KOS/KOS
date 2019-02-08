@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Utilities;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
@@ -300,6 +300,23 @@ namespace kOS.Utilities
                 true,
                 HighLogic.UISkin
                 );
+        }
+
+        /// <summary>
+        /// A wrapper around GameDatabase.Instance.GetTexture() that will
+        /// log an error to the Unity player log if the texture is not found.<br/>
+        /// (Without this wrapper GameDatabase.Instance.GetTexture() would just fail silently.)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="normalMap"></param>
+        /// <returns>the texture if it worked, or null if it failed</returns>
+        public static Texture2D GetTextureWithErrorMsg(string path, bool asNormalMap)
+        {
+            Texture2D result = GameDatabase.Instance.GetTexture(path, asNormalMap);
+            if (result == null)
+                SafeHouse.Logger.Log(string.Format(
+                    "Can't find or load texture called: {0}.dds or {0}.png", path));
+            return result;
         }
     }
 }

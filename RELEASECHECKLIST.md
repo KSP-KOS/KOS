@@ -46,4 +46,4 @@ note where it says "(*backport*)" below if you are doing a backport.
 
 ### CKAN FIX (Post-Post-Build)
 
-- [ ] If this is a *backport* it will generally be necessary to manually make a PR on the CKAN repo to fix up its .ckan file for kOS.  (CKAN's automated scanning of the version file only sees what's in our Master branch, and can't see backports that we keep out of the master branch.)
+- [ ] If this is a *backport* it will be important to check up on CKAN's database over the next day to ensure you didn't confuse it.  If all the version numbers were entered correctly in kOS.version in the branch from which you made the ZIP, it should be okay, but if not, there is potential to really mess it up.  Double check that the CKAN database is giving correct information.  (That is, that the backport is NOT being offered on new KSP installations, and is only being offered on older ones.)

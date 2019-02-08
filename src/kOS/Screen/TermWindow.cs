@@ -143,24 +143,23 @@ namespace kOS.Screen
             closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
-            // Load dummy textures
-            terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalFrameImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalFrameActiveImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            brightnessButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            fontHeightButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal", false);
+            terminalFrameImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal_frame", false);
+            terminalFrameActiveImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal_frame_active", false);
+            resizeButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_resize-button", false);
+            networkZigZagImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_network-zigzag", false);
+            brightnessButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_brightness-button", false);
+            fontHeightButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_font-height-button", false);
 
-            root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
-            LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
-            LoadTexture("GameData/kOS/GFX/monitor_minimal_frame.png", ref terminalFrameImage);
-            LoadTexture("GameData/kOS/GFX/monitor_minimal_frame_active.png", ref terminalFrameActiveImage);
-            LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
-            LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
-            LoadTexture("GameData/kOS/GFX/brightness-button.png", ref brightnessButtonImage);
-            LoadTexture("GameData/kOS/GFX/font-height-button.png", ref fontHeightButtonImage);
-
+            allTexturesFound =
+                terminalImage != null &&
+                terminalFrameImage != null &&
+                terminalFrameActiveImage != null &&
+                resizeButtonImage != null &&
+                networkZigZagImage != null &&
+                brightnessButtonImage != null &&
+                fontHeightButtonImage != null;
+;
             terminalImageStyle = Create9SliceStyle(terminalImage);
             terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
             terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
@@ -227,18 +226,6 @@ namespace kOS.Screen
             beepSource.clip = beepClip;
         }
 
-        public void LoadTexture(string relativePath, ref Texture2D targetTexture)
-        {
-            var imageLoader = new WWW("file://" + root + relativePath);
-            imageLoader.LoadImageIntoTexture(targetTexture);
-
-            if (imageLoader.isDone && imageLoader.bytesDownloaded == 0)
-            {
-                SafeHouse.Logger.LogError(string.Format("[TermWindow] Loading texture from \"{0}\" failed", relativePath));
-                allTexturesFound = false;
-            }
-        }
-        
         public void OpenPopupEditor(Volume v, GlobalPath path)
         {
             popupEditor.AttachTo(this, v, path);
@@ -815,8 +802,17 @@ namespace kOS.Screen
         {
             if (!allTexturesFound)
             {
-                GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
-                           "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
+                GUI.Label(new Rect(15, 15, 450, 300),
+                    "Error: Some or all kOS textures were not found.\n" +
+                    "Please go to the following folder: \n\n" +
+                    "<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\n" +
+                    "and ensure that the dds texture files are there.\n" +
+                    "Check the game log to see error messages \n" +
+                    "starting with \"kOS:\" that talk about Texture files." +
+                    "\n" +
+                    "If you see this message, it probably means that\n" +
+                    "kOS isn't installed correctly and you should try\n" +
+                    "installing it again.");
 
                 closeButtonRect = new Rect(WindowRect.width - 75, WindowRect.height - 30, 50, 25);
                 if (GUI.Button(closeButtonRect, "Close"))
@@ -833,9 +829,9 @@ namespace kOS.Screen
             }
             IScreenBuffer screen = shared.Screen;
             
+            GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             GUI.color = color;
 
-            GUI.Label(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), "", terminalImageStyle);
             if (telnets.Count > 0)
                 DrawTelnetStatus();
 
