@@ -802,12 +802,17 @@ namespace kOS.Screen
         {
             if (!allTexturesFound)
             {
-                GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
-                           "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the dds texture files are there.\n" +
-                           "Check the game log to see error messages starting with \"kOS:\" that talk about Texture files." +
-                           "\n" +
-                           "If you see this message, it probably means that kOS isn't installed correctly and you should try " +
-                           "installing it again.");
+                GUI.Label(new Rect(15, 15, 450, 300),
+                    "Error: Some or all kOS textures were not found.\n" +
+                    "Please go to the following folder: \n\n" +
+                    "<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\n" +
+                    "and ensure that the dds texture files are there.\n" +
+                    "Check the game log to see error messages \n" +
+                    "starting with \"kOS:\" that talk about Texture files." +
+                    "\n" +
+                    "If you see this message, it probably means that\n" +
+                    "kOS isn't installed correctly and you should try\n" +
+                    "installing it again.");
 
                 closeButtonRect = new Rect(WindowRect.width - 75, WindowRect.height - 30, 50, 25);
                 if (GUI.Button(closeButtonRect, "Close"))
