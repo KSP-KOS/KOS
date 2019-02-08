@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using kOS.Safe.Persistence;
@@ -939,7 +939,7 @@ namespace kOS.Screen
                 }
 
                 bool blinkOn = cursorBlinkTime < 0.5f &&
-                               screen.CursorRowShow < screen.RowCount &&
+                               screen.CursorVisible &&
                                IsPowered &&
                                ShowCursor;
 

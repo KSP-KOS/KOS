@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace kOS.Safe.Screen
 {
@@ -9,6 +9,7 @@ namespace kOS.Safe.Screen
         double Brightness { get; set; } // double is overkill, but floats don't work in KSP config.xml files.
         int CursorRowShow { get; }
         int CursorColumnShow { get; }
+        bool CursorVisible { get; }
         int RowCount { get; }
         int ColumnCount { get; }
         int AbsoluteCursorRow { get; set; }
@@ -20,7 +21,6 @@ namespace kOS.Safe.Screen
         void SetSize(int rowCount, int columnCount);
         int ScrollVertical(int deltaRows);
         void MoveCursor(int row, int column);
-        void MoveToNextLine();
         void PrintAt(string textToPrint, int row, int column);
         void Print(string textToPrint);
         void Print(string textToPrint, bool addNewLine);

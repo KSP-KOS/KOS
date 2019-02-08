@@ -163,12 +163,12 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("RESIZEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => resizeWatchers));
             AddSuffix("INPUT", new Suffix<TerminalInput>(GetTerminalInputInstance));
             AddSuffix("CURSORCOL", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorColumnShow,
-                                                              value => Shared.Screen.MoveCursor(Shared.Screen.CursorRowShow, (int)KOSMath.Clamp(value,0,Shared.Screen.ColumnCount)),
+                                                              value => Shared.Screen.MoveCursor(Shared.Screen.AbsoluteCursorRow, (int)KOSMath.Clamp(value,0,Shared.Screen.ColumnCount)),
                                                               "Current cursor column, between 0 and WIDTH-1."));
-            AddSuffix("CURSORROW", new SetSuffix<ScalarValue>(() => Shared.Screen.CursorRowShow,
-                                                              value => Shared.Screen.MoveCursor((int)KOSMath.Clamp(value,0,Shared.Screen.RowCount), Shared.Screen.CursorColumnShow),
+            AddSuffix("CURSORROW", new SetSuffix<ScalarValue>(() => Shared.Screen.AbsoluteCursorRow,
+                                                              value => Shared.Screen.MoveCursor(value, Shared.Screen.CursorColumnShow),
                                                               "Current cursor row, between 0 and HEIGHT-1."));
-            AddSuffix("MOVECURSOR", new TwoArgsSuffix<ScalarValue, ScalarValue>((ScalarValue col, ScalarValue row) => Shared.Screen.MoveCursor(col, row),
+            AddSuffix("MOVECURSOR", new TwoArgsSuffix<ScalarValue, ScalarValue>((ScalarValue col, ScalarValue row) => Shared.Screen.MoveCursor(row, col),
                                                                                 "Move cursor to (column, row)."));
             AddSuffix("PUT", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value,false),
                                                             "Put string at current cursor position (without implied newline)."));

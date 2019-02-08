@@ -9,7 +9,8 @@ namespace kOS.Safe.Screen
         int CursorColumn {get;}
         int CursorRow {get;}
         int RowCount {get;}
-        
+        bool CursorVisible { get; }
+
         string DiffFrom(IScreenSnapShot older);
         
         IScreenSnapShot DeepCopy();

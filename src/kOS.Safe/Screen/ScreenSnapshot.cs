@@ -14,6 +14,7 @@ namespace kOS.Safe.Screen
         public int TopRow {get; private set;}
         public int CursorColumn {get; private set;}
         public int CursorRow {get; private set;}
+        public bool CursorVisible { get; private set; }
         public int RowCount {get; private set;}
 
         // Tweakable setting:
@@ -40,6 +41,7 @@ namespace kOS.Safe.Screen
             TopRow = fromScreen.TopRow;
             CursorColumn = fromScreen.CursorColumnShow;
             CursorRow = fromScreen.CursorRowShow;
+            CursorVisible = fromScreen.CursorVisible;
             RowCount = fromScreen.RowCount;
         }
         
@@ -60,6 +62,7 @@ namespace kOS.Safe.Screen
             newThing.CursorColumn = fromScreen.CursorColumnShow;
             newThing.CursorRow = fromScreen.CursorRowShow;
             newThing.RowCount = fromScreen.RowCount;
+            newThing.CursorVisible = fromScreen.CursorVisible;
             newThing.Buffer = new List<IScreenBufferLine>();
             for (int i = 0; i < newThing.RowCount ; ++i)
                 newThing.Buffer.Add(new ScreenBufferLine(fromScreen.ColumnCount));
@@ -203,15 +206,57 @@ namespace kOS.Safe.Screen
                 }
                     
             }
-                    
-            // Now set the cursor back to the right spot one more time, unless it's already there:
-            if (trackCursorRow != CursorRow || trackCursorColumn != CursorColumn)
+            
+            if (CursorVisible)
             {
-                output.Append(String.Format("{0}{1}{2}",
-                                            (char)UnicodeCommand.TELEPORTCURSOR,
-                                            (char)CursorColumn,
-                                            (char)CursorRow));
+                // Now set the cursor back to the right spot one more time, unless it's already there:
+                if (trackCursorRow != CursorRow || trackCursorColumn != CursorColumn)
+                {
+                    output.Append(String.Format("{0}{1}{2}",
+                                                (char)UnicodeCommand.TELEPORTCURSOR,
+                                                (char)CursorColumn,
+                                                (char)CursorRow));
+                }
             }
+            else
+            {
+                // Move the screen to the boundary where it went offscreen, in case the terminal can't hide it
+                if(CursorRow < 0)
+                {
+                    output.Append(String.Format("{0}{1}{2}",
+                                                (char)UnicodeCommand.TELEPORTCURSOR,
+                                                (char)0,
+                                                (char)0));
+                }
+                else if(RowCount > 0)
+                {
+                    output.Append(String.Format("{0}{1}{2}",
+                                                (char)UnicodeCommand.TELEPORTCURSOR,
+                                                (char)Buffer[0].Length,
+                                                (char)RowCount-1));
+                }
+                else
+                {
+                    output.Append(String.Format("{0}{1}{2}",
+                                                (char)UnicodeCommand.TELEPORTCURSOR,
+                                                (char)Buffer[0].Length,
+                                                (char)RowCount - 1));
+                }
+            }
+
+            //Do cursor (un)hiding
+            if(CursorVisible != older.CursorVisible)
+            {
+                if(CursorVisible)
+                {
+                    output.Append((char)UnicodeCommand.SHOWCURSOR);
+                }
+                else
+                {
+                    output.Append((char)UnicodeCommand.HIDECURSOR);
+                }
+            }
+
             return output.ToString();
         }
         

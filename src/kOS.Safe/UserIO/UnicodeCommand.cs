@@ -212,6 +212,12 @@
         // RIGHTCURSORNUM,        
 
         /// <summary>
+        /// Enable or disable actually displaying the cursor.
+        /// This is basicly a passthrough of ScreenBuffer.CursorVisible.
+        /// </summary>
+        SHOWCURSOR, HIDECURSOR,
+
+        /// <summary>
         /// Tell the terminal to resize itself to a new row/col size.  Not all terminals will be capable of doing this.
         /// This can be communicated in either direction - for the client telling the server it has been resized, or
         /// for the server telling the client to it needs to resize itself.
