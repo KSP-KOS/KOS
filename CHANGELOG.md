@@ -1,6 +1,26 @@
 kOS Mod Changelog
 =================
 
+# v1.1.6.2 Quickfix (Image Files to DDS)
+
+Built for KSP 1.6.1
+
+Nothing but a quick patch to v1.1.6.0.
+
+### BUG FIX
+
+The v1.1.6.0 update resized a few of the PNG images used
+in the GUI panels, which exposed a bug that only manifests
+on some graphics cards.  KSP converts PNGs to DDS format
+upon loading them, and appears to use the Direct3D graphics
+driver to do so.  Older graphics cards refuse to do that
+conversion on images that aren't exactly expected sizes.
+We were just "lucky" that this never happened in the past
+with the image sizes we were using.  Converting them to
+DDS ourselves and shipping them that way, we bypass this
+problem because the user's own graphics drivers aren't
+responsible for doing the conversion.
+
 # v1.1.6.1 Quickfix (MAXTHRUST air pressure)
 
 Built for KSP 1.6.1

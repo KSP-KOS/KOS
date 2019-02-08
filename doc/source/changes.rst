@@ -24,6 +24,12 @@ release.
 
 ****
 
+Changes in 1.1.6.2
+------------------
+
+Nothing of significance changed in the docs.  This was a fix to
+switch files from PNG format to DDS format for GUI icons kOS uses.
+
 Changes in 1.1.6.1
 ------------------
 
