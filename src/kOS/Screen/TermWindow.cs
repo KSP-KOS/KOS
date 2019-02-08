@@ -143,13 +143,13 @@ namespace kOS.Screen
             closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
-            terminalImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/monitor_minimal", false);
-            terminalFrameImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/monitor_minimal_frame", false);
-            terminalFrameActiveImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/monitor_minimal_frame_active", false);
-            resizeButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/resize-button", false);
-            networkZigZagImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/network-zigzag", false);
-            brightnessButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/brightness-button", false);
-            fontHeightButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/font-height-button", false);
+            terminalImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal", false);
+            terminalFrameImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal_frame", false);
+            terminalFrameActiveImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal_frame_active", false);
+            resizeButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_resize-button", false);
+            networkZigZagImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_network-zigzag", false);
+            brightnessButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_brightness-button", false);
+            fontHeightButtonImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_font-height-button", false);
 
             allTexturesFound =
                 terminalImage != null &&

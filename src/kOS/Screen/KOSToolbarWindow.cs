@@ -92,11 +92,11 @@ namespace kOS.Screen
         /// </summary>
         public static void FirstTimeSetup()
         {
-            launcherButtonTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/launcher-button", false);
-            terminalOpenIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/terminal-icon-open", false);
-            terminalClosedIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/terminal-icon-closed", false);
-            terminalOpenTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/terminal-icon-open-telnet", false);
-            terminalClosedTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/terminal-icon-closed-telnet", false);
+            launcherButtonTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_launcher-button", false);
+            terminalOpenIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open", false);
+            terminalClosedIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed-telnet", false);
 
             windowRect = new Rect(0, 0, 1f, 1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
