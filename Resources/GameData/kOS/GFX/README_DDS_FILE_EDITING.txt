@@ -57,7 +57,10 @@ from GIMP:
 
 Compression: "BC3 / DXT5"
 Format: Default
-Mipmaps: "No mipmaps"
+Mipmaps: Your choice here varies:
+  - If this image is for the purpose of painting GUI 2D icons, then pick "no mipmaps".
+  - If this image is for the purpose of painting a decal over a 3D mesh, then you should
+    generate mimmaps here.
 
 As usual when saving image formats in Gimp, to save a file as DDS,
 use "File" -> "Export As", then the filename extension (".dds")
