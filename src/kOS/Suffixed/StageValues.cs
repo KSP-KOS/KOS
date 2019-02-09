@@ -9,6 +9,7 @@ using System.Linq;
 using KSP.UI.Screens;
 using kOS.Module;
 using kOS.Safe.Utilities;
+using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
@@ -127,9 +128,14 @@ namespace kOS.Suffixed
                 // All tanks accessible to this engine ...
                 foreach (var crossPart in part.crossfeedPartSet.GetParts())
                 {
+                    var xpart = vesselTarget[crossPart];
                     // ... that are to be separated by next decoupler
-                    if (vesselTarget[crossPart].DecoupledIn >= nextDecoupler)
+                    if (xpart.DecoupledIn >= nextDecoupler
+                        // ... but are not other boosters
+                        && !(crossPart != part && xpart is EngineValue))
+                    {
                         partHash.Add(crossPart);
+                    }
                 }
             }
             partSet.RebuildInPlace();
