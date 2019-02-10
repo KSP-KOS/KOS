@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace kOS.Safe.Execution
 {
-    public abstract class YiedFinishedThreadedDetector : YieldFinishedDetector
+    public abstract class YieldFinishedThreadedDetector : YieldFinishedDetector
     {
         private ManualResetEvent childThreadEvent;
         private Thread childThread;
@@ -23,15 +23,23 @@ namespace kOS.Safe.Execution
 
             childThreadEvent = new ManualResetEvent(false);
 
-            ThreadInitialize(sharedObj);
+            TryStartThread();
+        }
 
-            childThread = new Thread(DoThread);
-            childThread.IsBackground = true;
-            childThread.Start();
+        private void TryStartThread()
+        {
+            if (ThreadInitialize())
+            {
+                childThread = new Thread(DoThread);
+                childThread.IsBackground = true;
+                childThread.Start();
+            }
         }
 
         public override bool IsFinished()
         {
+            // Thread may not be started yet, but this distinguishes between finished and not-started
+            // in case IsFinished() gets called multiple times even after it returns true
             if (childThreadEvent.WaitOne(0))
             {
                 childThread.Join();
@@ -46,6 +54,10 @@ namespace kOS.Safe.Execution
                         childException = ex;
                     }
                 }
+
+                // Remove the reference now, before we potentially (re)throw the exception
+                childThread = null;
+
                 // Note this is *deliberately* NOT an "else" of the above "if" even though
                 // it looks like it should be.  That is because the above IF clause can actually
                 // alter this flag and if it does so it needs to fall through to here and do this.
@@ -59,9 +71,12 @@ namespace kOS.Safe.Execution
                     shared.Cpu.BreakExecution(false);
                     throw childException;
                 }
-                childThread = null;
                 return true;
             }
+            // Try starting the thread now, if not started yet
+            if (childThread == null)
+                TryStartThread();
+
             return false;
         }
 
@@ -82,8 +97,8 @@ namespace kOS.Safe.Execution
         /// This method is executed before starting the child thread.  It is called from the main thread and is not required
         /// to be thread safe with respect to KSP.
         /// </summary>
-        /// <param name="shared"></param>
-        public abstract void ThreadInitialize(SafeSharedObjects shared);
+        /// <returns>True if ready to start the thread (false if waiting for some condition, e.g. Processor.CheckCanBoot)</returns>
+        protected abstract bool ThreadInitialize();
 
         /// <summary>
         /// <para>
@@ -96,12 +111,12 @@ namespace kOS.Safe.Execution
         /// </para>
         /// </summary>
         /// <param name="shared"></param>
-        public abstract void ThreadExecute();
+        protected abstract void ThreadExecute();
 
         /// <summary>
         /// This method is executed after the child thread is finished, when the CPU checks IsFinished.  It is called from
         /// the main thread and is not required to be thread safe with respect to KSP.
         /// </summary>
-        public abstract void ThreadFinish();
+        protected abstract void ThreadFinish();
     }
 }
