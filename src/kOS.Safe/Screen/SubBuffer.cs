@@ -61,7 +61,12 @@ namespace kOS.Safe.Screen
         /// <param name="numRows">for this many rows, or up to the max row the buffer has if this number is too large</param>
         public void MarkRowsDirty(int startRow, int numRows)
         {
-            // Mark fewer rows than asked to if the reqeusted number would have blown past the end of the buffer:
+            //limit to rows actually existing in the buffer
+            if(startRow < 0)
+            {
+                numRows += startRow;
+                startRow = 0;
+            }
             int numSafeRows = (numRows + startRow <= RowCount) ? numRows : RowCount - startRow;
 
             for (int i = 0; i < numSafeRows; ++i)

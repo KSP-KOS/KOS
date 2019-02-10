@@ -169,9 +169,9 @@ namespace kOS.Safe.Screen
         
         public void ClearScreen()
         {
+            MoveCursor(0, 0);
             ScrollingOutput.Wipe();
             ScrollingOutput.SetSize(1, ColumnCount);
-            ScrollingOutput.MoveCursor(0, 0);
             PositionalOutput.PositionRow = 0;
             InitializeBuffer();
         }
@@ -270,7 +270,7 @@ namespace kOS.Safe.Screen
                 deltaRows = -topRow;
             else if (topRow + deltaRows > maxTopRow)
                 deltaRows = maxTopRow - topRow;
-
+            
             topRow += deltaRows;
 
             return deltaRows;

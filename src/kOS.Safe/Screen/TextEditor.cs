@@ -141,6 +141,8 @@ namespace kOS.Safe.Screen
             string commandText = LineBuilder.ToString();
 
             LineSubBuffer.Wipe();
+            LineSubBuffer.PositionRow = AbsoluteCursorRow;
+            LineSubBuffer.MoveCursor(0, base.CursorColumnShow);
 
             if (commandText.Length == 0)
             {
@@ -149,8 +151,6 @@ namespace kOS.Safe.Screen
             }
             else
             {
-                LineSubBuffer.PositionRow = AbsoluteCursorRow;
-                LineSubBuffer.MoveCursor(0, base.CursorColumnShow);
                 LineSubBuffer.Print(commandText, false);
 
                 UpdateSubBufferCursor();
