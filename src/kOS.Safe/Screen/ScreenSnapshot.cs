@@ -110,6 +110,13 @@ namespace kOS.Safe.Screen
             int trackCursorColumn = older.CursorColumn; // track the movements that will occur as the outputs happen.
             int trackCursorRow = older.CursorRow; // track the movements that will occur as the outputs happen.
 
+            //invalidate the cursor tracking because the last send cursor position will not actually be there (see below)
+            if(!older.CursorVisible)
+            {
+                trackCursorColumn = -100;
+                trackCursorRow = -100;
+            }
+
             // First, output the command to make the terminal scroll to match:
             if (verticalScroll > 0) // scrolling text up (eyeballs panning down)
                 output.Append(new String((char)UnicodeCommand.SCROLLSCREENUPONE, verticalScroll)); // A run of scrollup chars
@@ -206,46 +213,18 @@ namespace kOS.Safe.Screen
                 }
                     
             }
-            
-            if (CursorVisible)
+
+            // Now set the cursor back to the right spot one more time, unless it's already there:
+            if (trackCursorRow != CursorRow || trackCursorColumn != CursorColumn)
             {
-                // Now set the cursor back to the right spot one more time, unless it's already there:
-                if (trackCursorRow != CursorRow || trackCursorColumn != CursorColumn)
-                {
-                    output.Append(String.Format("{0}{1}{2}",
-                                                (char)UnicodeCommand.TELEPORTCURSOR,
-                                                (char)CursorColumn,
-                                                (char)CursorRow));
-                }
-            }
-            else
-            {
-                // Move the screen to the boundary where it went offscreen, in case the terminal can't hide it
-                if(CursorRow < 0)
-                {
-                    output.Append(String.Format("{0}{1}{2}",
-                                                (char)UnicodeCommand.TELEPORTCURSOR,
-                                                (char)0,
-                                                (char)0));
-                }
-                else if(RowCount > 0)
-                {
-                    output.Append(String.Format("{0}{1}{2}",
-                                                (char)UnicodeCommand.TELEPORTCURSOR,
-                                                (char)Buffer[0].Length,
-                                                (char)RowCount-1));
-                }
-                else
-                {
-                    output.Append(String.Format("{0}{1}{2}",
-                                                (char)UnicodeCommand.TELEPORTCURSOR,
-                                                (char)Buffer[0].Length,
-                                                (char)RowCount - 1));
-                }
+                output.Append(String.Format("{0}{1}{2}",
+                                            (char)UnicodeCommand.TELEPORTCURSOR,
+                                            (char)CursorColumn,
+                                            (char)CursorRow));
             }
 
             //Do cursor (un)hiding
-            if(CursorVisible != older.CursorVisible)
+            if (CursorVisible != older.CursorVisible)
             {
                 if(CursorVisible)
                 {
