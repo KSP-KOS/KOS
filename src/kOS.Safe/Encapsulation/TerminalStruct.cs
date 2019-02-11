@@ -170,11 +170,11 @@ namespace kOS.Safe.Encapsulation
                                                               "Current cursor row, between 0 and HEIGHT-1."));
             AddSuffix("MOVECURSOR", new TwoArgsSuffix<ScalarValue, ScalarValue>((ScalarValue col, ScalarValue row) => Shared.Screen.MoveCursor(row, col),
                                                                                 "Move cursor to (column, row)."));
-            AddSuffix("PUT", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value,false),
+            AddSuffix("PUT", new OneArgsSuffix<Structure>(value => Shared.Screen.Print(value.ToString(),false),
                                                             "Put string at current cursor position (without implied newline)."));
-            AddSuffix("PUTLN", new OneArgsSuffix<StringValue>(value => Shared.Screen.Print(value),
+            AddSuffix("PUTLN", new OneArgsSuffix<Structure>(value => Shared.Screen.Print(value.ToString()),
                                                               "Put string at current cursor position (with implied newline)."));
-            AddSuffix("PUTAT", new ThreeArgsSuffix<StringValue, ScalarValue, ScalarValue>((StringValue text, ScalarValue col, ScalarValue row) => Shared.Screen.PrintAt(text, row, col),
+            AddSuffix("PUTAT", new ThreeArgsSuffix<Structure, ScalarValue, ScalarValue>((Structure value, ScalarValue col, ScalarValue row) => Shared.Screen.PrintAt(value.ToString(), row, col),
                                                                                           "Put string at position without moving the cursor."));
         }
 
