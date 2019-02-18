@@ -1,6 +1,22 @@
 kOS Mod Changelog
 =================
 
+# v1.1.6.3 Folder Path Protection
+
+Built for KSP 1.6.1
+
+This is a patch for protecting against some kinds of file folder
+access that concerned us for those people using kOS to set up
+"Twitch Plays kOS" streams.
+
+### BUG FIX:
+
+If you currently have a "Twitch Plays kOS" stream, or plan to
+set up one in the future, PLEASE see this writup:
+
+    https://github.com/KSP-KOS/KOS/issues/2439
+
+
 # v1.1.6.2 Quickfix (Image Files to DDS)
 
 Built for KSP 1.6.1
