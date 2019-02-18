@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using kOS.Safe.Persistence;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Test.Persistence
 {
