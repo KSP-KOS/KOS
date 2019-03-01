@@ -183,11 +183,19 @@ you want to use.
       difficulty settings.
 
       .. note::
-
-          CommNet has limitations on updating connections for vessels
+          **Active Vessel**: CommNet has limitations on updating connections for vessels
           which are not the active vessel.  The best way to ensure that a connection
           is updated is to include one of the kinds of antenna that can act as
           a relay on one or both of the vessels.
+      .. note::
+          **Debris Vessel**: To save on computer load, CommNet cuts all "debris"
+          vessels out of the system and does not track them.  Therefore any
+          vessel of type "debris" will be unable to have a connection,
+          regardless of what antennas it may have on it.  You can see this
+          effect by using the "rename vessel" button on a ship to categorize it
+          as "debris" and suddenly KSP will claim it has no connections to
+          anything.
+          
     RemoteTechConnectivityManager
       This manager will use the RemoteTech mod to monitor connections. It will
       only be available if RemoteTech is installed.  You can access more
