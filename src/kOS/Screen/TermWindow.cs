@@ -208,7 +208,7 @@ namespace kOS.Screen
 
         public void OnDestroy()
         {
-            Unlock();
+            LoseFocus();
             GameEvents.onHideUI.Remove(OnHideUI);
             GameEvents.onShowUI.Remove(OnShowUI);
         }
