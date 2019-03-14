@@ -58,6 +58,14 @@ namespace kOS.Safe.Communication
             this.timeProvider = Activator.CreateInstance(typeof(TP)) as CurrentTimeProvider;
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static GenericMessageQueue<M,TP> CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new GenericMessageQueue<M,TP>();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         private void RemoveMessage(KeyValuePair<double, List<M>> queueItem, M message)
         {
             queueItem.Value.Remove(message);
