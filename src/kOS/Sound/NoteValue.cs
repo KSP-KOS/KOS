@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -76,7 +76,7 @@ namespace kOS.Sound
             result.Header = "NOTE";
 
             result.Add("freq", Frequency);
-            result.Add("endfreq", Frequency);
+            result.Add("endfreq", EndFrequency);
             result.Add("vol", Volume);
             result.Add("keydown", KeyDownLength);
             result.Add("duration", Duration);

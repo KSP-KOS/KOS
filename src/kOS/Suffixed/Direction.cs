@@ -1,5 +1,7 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 using System;
 using UnityEngine;
 
@@ -7,7 +9,7 @@ namespace kOS.Suffixed
 {
     [Safe.Utilities.KOSNomenclature("Direction")]
     [Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
-    public class Direction : Structure
+    public class Direction : SerializableStructure
     {
         private Vector3d euler;
         private Quaternion rotation;
@@ -229,6 +231,28 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "R(" + Math.Round(euler.x, 3) + "," + Math.Round(euler.y, 3) + "," + Math.Round(euler.z, 3) + ")";
+        }
+
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader
+                {
+                    { "q_w", rotation.w },
+                    { "q_x", rotation.x },
+                    { "q_y", rotation.y },
+                    { "q_z", rotation.z }
+                };
+            return dump;
+        }
+
+        public override void LoadDump(Dump dump)
+        {
+            rotation = new Quaternion(
+                (float)Convert.ToDouble(dump["q_w"]),
+                (float)Convert.ToDouble(dump["q_x"]),
+                (float)Convert.ToDouble(dump["q_y"]),
+                (float)Convert.ToDouble(dump["q_z"])
+                );
         }
     }
 }
