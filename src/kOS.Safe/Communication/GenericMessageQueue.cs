@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Serialization;
 using kOS.Safe.Encapsulation;
@@ -9,7 +9,7 @@ using kOS.Safe;
 
 namespace kOS.Safe.Communication
 {
-    public class GenericMessageQueue<M> : IDumper where M : BaseMessage
+    public class GenericMessageQueue<M,TP> : IDumper where M : BaseMessage where TP : CurrentTimeProvider
     {
         /// <summary>
         /// This stores a mapping: moment in time -> list of messages that arrive at that time.
@@ -17,6 +17,12 @@ namespace kOS.Safe.Communication
         /// </summary>
         private SortedList<double, List<M>> queue = new SortedList<double, List<M>>();
         private CurrentTimeProvider timeProvider;
+
+        /// <summary>
+        /// Gives a reference to the CurrentTimeProvider of type TP this class created when
+        /// it was constructed.
+        /// </summary>
+        public CurrentTimeProvider TimeProvider { get { return timeProvider; } }
 
         private List<M> Messages
         {
@@ -47,9 +53,17 @@ namespace kOS.Safe.Communication
             return IsReceived(message.ReceivedAt);
         }
 
-        public GenericMessageQueue(CurrentTimeProvider timeProvider)
+        public GenericMessageQueue()
         {
-            this.timeProvider = timeProvider;
+            this.timeProvider = Activator.CreateInstance(typeof(TP)) as CurrentTimeProvider;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static GenericMessageQueue<M,TP> CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new GenericMessageQueue<M,TP>();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void RemoveMessage(KeyValuePair<double, List<M>> queueItem, M message)

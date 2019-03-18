@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Serialization;
@@ -44,6 +44,15 @@ namespace kOS.Safe
                 throw new KOSException("Step must be a positive integer");
             }
         }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static RangeValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new RangeValue();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
 
         private void InitializeRangeSuffixes()
         {

@@ -22,6 +22,14 @@ namespace kOS.Safe.Encapsulation
             SetInitializeSuffixes();
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static UniqueSetValue<T> CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new UniqueSetValue<T>();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         public void Add(T item)
         {
             Collection.Add(item);
@@ -88,6 +96,14 @@ namespace kOS.Safe.Encapsulation
             : base(toCopy)
         {
             InitializeSuffixes();
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static new UniqueSetValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new UniqueSetValue();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()

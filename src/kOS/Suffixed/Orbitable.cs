@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace kOS.Suffixed
     /// or a moon.
     /// </summary>
     [kOS.Safe.Utilities.KOSNomenclature("Orbitable")]
-    public abstract class Orbitable : SerializableStructure, IHasSharedObjects
+    public abstract class Orbitable : SerializableStructure
     {
         protected Orbitable(SharedObjects shareObj) : this()
         {

@@ -24,6 +24,14 @@ namespace kOS.Safe.Encapsulation
             return InnerEnumerable.Reverse().GetEnumerator();
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static StackValue<T> CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new StackValue<T>();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         public T Pop()
         {
             return InnerEnumerable.Pop();
@@ -89,6 +97,14 @@ namespace kOS.Safe.Encapsulation
             : base(toCopy)
         {
             InitializeSuffixes();
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static new StackValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new StackValue();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()

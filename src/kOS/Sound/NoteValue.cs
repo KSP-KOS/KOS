@@ -47,9 +47,18 @@ namespace kOS.Sound
         {
         }
 
-        // Dummy default constructor that is necessary for all SerailizableStructure's.
-        public NoteValue()
+        // Only used by CreateFromDump()- don't make it public because it leaves fields
+        // unpopulated if not immediately followed up by LoadDump():
+        private NoteValue()
         {
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static NoteValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new NoteValue();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()
