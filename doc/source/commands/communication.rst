@@ -183,11 +183,24 @@ you want to use.
       difficulty settings.
 
       .. note::
-
-          CommNet has limitations on updating connections for vessels
+          **Active Vessel**: CommNet has limitations on updating connections for vessels
           which are not the active vessel.  The best way to ensure that a connection
           is updated is to include one of the kinds of antenna that can act as
           a relay on one or both of the vessels.
+      .. note::
+          **Debris Vessel**: To save on computer load, CommNet cuts all "debris"
+          vessels out of the system when loading the scene and does not track
+          them.  Therefore any vessel that was of type "debris" when the scene
+          was first loaded will be unable to have a connection, regardless of
+          what antennas it may have on it, and regardless of whether you change
+          its vessel type to something other than "debris" during the scene.
+          The vessel type has to be something other than "debris" *at the moment
+          the scene is first loaded* in order for it to be able to have CommNet
+          connections.  If you have a "debris" vessel that has no communication
+          connections, you can change the vessel type from "debris" to something
+          else, *and then go to the tracking station and come back*, then *that*
+          can cause the vessel to have a connection again.
+          
     RemoteTechConnectivityManager
       This manager will use the RemoteTech mod to monitor connections. It will
       only be available if RemoteTech is installed.  You can access more
