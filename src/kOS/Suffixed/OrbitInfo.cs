@@ -7,7 +7,7 @@ using System;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Orbit")]
-    public class OrbitInfo : Structure, IHasSharedObjects
+    public class OrbitInfo : Structure
     {
         private Orbit orbit;
         public SharedObjects Shared { get; set; }

@@ -4,6 +4,7 @@ using kOS.Execution;
 using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
+using kOS.Safe.Serialization;
 using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
@@ -814,6 +815,7 @@ namespace kOS.Module
         {
             Opcode.InitMachineCodeData();
             CompiledObject.InitTypeData();
+            SafeSerializationMgr.CheckIDumperStatics();
         }
 
         private void ProcessElectricity(Part partObj, float time)

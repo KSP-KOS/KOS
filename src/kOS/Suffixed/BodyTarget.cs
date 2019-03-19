@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
 using System;
@@ -12,7 +12,7 @@ using kOS.Safe.Serialization;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Body")]
-    public class BodyTarget : Orbitable, IKOSTargetable
+    public class BodyTarget : Orbitable
     {
         private static string DumpName = "name";
 
@@ -65,6 +65,17 @@ namespace kOS.Suffixed
             BodyTarget newlyConstructed = new BodyTarget(body, shared);
             instanceCache.Add(key, new WeakReference(newlyConstructed));
             return newlyConstructed;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Orbitable CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = CreateOrGetExisting(BodyFromDump(d), (SharedObjects)shared);
+            // Uncomment the line below if LoadDump ever does more things in the future.
+            // Right now, LoadDump is redundant with CreateOrGetExisting's work.
+            //
+            // newObj.LoadDump(d);
+            return newObj;
         }
 
         public static void ClearInstanceCache()
@@ -305,6 +316,11 @@ namespace kOS.Suffixed
 
         public override void LoadDump(Dump dump)
         {
+            Body = BodyFromDump(dump);
+        }
+
+        private static CelestialBody BodyFromDump(Dump dump)
+        {
             string name = dump[DumpName] as string;
 
             if (name == null)
@@ -319,8 +335,7 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Body with the given name does not exist");
             }
 
-            Body = body;
-
+            return body;
         }
 
         // The data that identifies a unique instance of this class, for use
