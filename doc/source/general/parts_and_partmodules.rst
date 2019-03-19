@@ -155,7 +155,7 @@ KSPFields
 
 A KSPField is a single variable that a PartModule attaches to a part. Some of the KSPFields are also displayed in the RMB context menu of a part. It has a current value, and if the field has had a "tweakable" GUI interface attached to it, then it's also a settable field by the user manipulating the field in the context menu. In kOS, you can only access those KSPFields that are currently visible on the RMB context menu. We, the developers of kOS, instituted this rule out of respect for the developers of other mods and the stock KSP game. If they didn't allow the user to see or manipulate the variable directly in the GUI, then we shouldn't allow it to be manipulated or seen by a kOS script either.
 
-KSPFields are read or manipulated by the following `suffixes of PartModule <../../structure/partmodule/index.html>`__
+KSPFields are read or manipulated by :meth:`PartModule:GetField` and :meth:`Partmodule:SetField`.
 
 -  :GETFIELD("name of field").
 
@@ -170,7 +170,7 @@ A KSPEvent, just like a KSPField, is a thing that a PartModule can put on the RM
 
 **Difference between a KSPEvent and a boolean KSPField**: If you see a label next to a button in the RMB context menu, it might be a KSPEvent, OR it might be a boolean KSPField variable which is editable with a tweakable GUI. They look exactly the same in the user interface. To tell the difference, you need to look at what happens when you click the button. If clicking the button causes the button to depress inward and stay pressed in until you click it again, then this is a boolean value KSPField. If clicking the button pops the button in and then it pops out again right away, then this is a KSPEvent instead.
 
-KSPEvents are manipulated by the following `suffix of PartModule <../../structure/partmodule/index.html>`__
+KSPEvents are manipulated by the following suffix of PartModule, called :meth:`PartModule:DoEvent`.
 
 -  :DOEVENT("name of event").
 
@@ -183,7 +183,7 @@ A KSPAction is a bit different from a KSPField or KSPEvent. A KSPAction is like 
 
 kOS now allows you to access any of those actions without necessarily having had to assign them to any action groups if you didn't want to.
 
-KSPActions are manipulated by the following `suffix of PartModule <../../structure/partmodule/index.html>`__
+KSPActions are manipulated by the following suffix of PartModule, called :meth:`PartModule:DoAction`.
 
 -  :DOACTION("name of action", new\_boolan\_value).
 
