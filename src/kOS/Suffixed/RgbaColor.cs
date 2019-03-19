@@ -11,10 +11,10 @@ namespace kOS.Suffixed
     [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
     public class RgbaColor : SerializableStructure
     {
-        static string DumpR = "red";
-        static string DumpG = "green";
-        static string DumpB = "blue";
-        static string DumpA = "alpha";
+        static string DumpR = "R";
+        static string DumpG = "G";
+        static string DumpB = "B";
+        static string DumpA = "A";
 
         protected float Red { get; set; }
 
