@@ -189,7 +189,7 @@ namespace kOS.Screen
             if (!ToolbarManager.ToolbarAvailable) return;
 
             blizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
-            blizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            blizzyButton.TexturePath = "kOS/GFX/dds_launcher-button-blizzy";
             blizzyButton.ToolTip = "kOS";
             blizzyButton.OnClick += e => CallbackOnClickBlizzy();
         }
