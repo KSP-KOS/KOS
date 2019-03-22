@@ -1322,6 +1322,12 @@ namespace kOS.Safe.Execution
                     // interpreter context
                     SkipCurrentInstructionId();
                     stack.Clear(); // Get rid of this interpreter command's cruft.
+
+                    // If it threw exception during a trigger with higher priority (like lock steering) before
+                    // reaching its OpcodeReturn, it's important to drop the interpreter context's priority
+                    // back down so interrupts will work correctly again.  Unlike with a *Program*, with the
+                    // interpreter we're re-using the same programcontext after the crash:
+                    CurrentPriority = InterruptPriority.Normal;
                 }
                 else
                 {
@@ -1367,7 +1373,7 @@ namespace kOS.Safe.Execution
             for (int index = 0 ; index < currentContext.ActiveTriggerCount() ; ++index)
             {
                 TriggerInfo trigger = currentContext.GetTriggerByIndex(index);
-                
+
                 // If the program is ended from within a trigger, the trigger list will be empty and the pointer
                 // will be invalid.  Only execute the trigger if it still exists, AND if it's of a higher priority
                 // than the current CPU priority level.  (If it's the same or less priority as the curent CPU priority,

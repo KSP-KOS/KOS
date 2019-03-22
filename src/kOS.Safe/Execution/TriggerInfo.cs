@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
@@ -202,6 +202,7 @@ public class TriggerInfo
     
     public override string ToString()
     {
-        return string.Format("TriggerInfo: {0}:{1}:(arg count: {2})", EntryPoint, (IsCSharpCallback ? "callback" : "non-callback"), Args.Count);
+        return string.Format("TriggerInfo: {0}:{1}:(arg count: {2}):{3}",
+            EntryPoint, (IsCSharpCallback ? "callback" : "non-callback"), Args.Count, Priority);
     }
 }
