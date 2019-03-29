@@ -75,11 +75,14 @@ namespace kOS.Module
             // that (1.5f) for "X coord" means "150% of the width it
             // took to draw the box".  Also, positive is to the lower-
             // left and negative is to the upper-right, for some
-            // godforsaken reason.  Also, setting Min and Max to the
+            // reason I don't understand.  Setting Min and Max to the
             // same numbers works, while setting them to different
-            // numbers starts doing random gibberish things, therefore
-            // we will just pass in the same value for mins and maxes
-            // when using this:
+            // numbers starts doing random things I don't understand.
+            // Therefore we will just pass in the same value for mins
+            // and maxes when using this.  There is a chance this system
+            // actually does make sense, but it's undocumented what these
+            // numbers were meant to represent, so it's hard by trial
+            // and error to make sense of it:
             public Vector2 anchor;
         }
     }
