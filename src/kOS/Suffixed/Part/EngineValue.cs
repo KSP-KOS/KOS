@@ -38,7 +38,7 @@ namespace kOS.Suffixed.Part
                 var e = module as ModuleEngines;
                 if (mme != null)
                 {
-                    if (Multi != null)
+                    if (Multi == null)
                         Multi = mme;
                     else
                         SafeHouse.Logger.LogWarning("Multiple MultiModeEngine on {0}: {1}", part.name, part.partInfo.title);
