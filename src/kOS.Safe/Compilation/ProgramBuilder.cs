@@ -134,8 +134,23 @@ namespace kOS.Safe.Compilation
             boilerplate.Add(new OpcodePush("$runonce") {Label = nextLabel, SourcePath = path});
             Opcode branchFromTwo = new OpcodeBranchIfFalse() {Label = nextLabel, SourcePath = path};
             boilerplate.Add(branchFromTwo);
-            boilerplate.Add(new OpcodePop() {Label = nextLabel, SourcePath = path}); // onsume the entry point that load() returned. We won't be calling it.
-            boilerplate.Add(new OpcodePush(0) {Label = nextLabel, SourcePath = path});   // ---+-- The dummy do-nothing return.
+
+            // If we fall through to this opcode (the br.false above doesn't jump), we are
+            // in the "program already ran, so skip running it" clause of a RUN ONCE.
+            // In that case the stack will still have the jump address returned by load(),
+            // and also all the args that were meant to be passed to the program (which is not
+            // getting run.)  In that case, we need to pop the stack of everything above the
+            // next KOSArgMarker to emulate what a call would have done to the stack had it run.
+            Opcode loopStart = new OpcodePop() {Label = nextLabel, SourcePath = path};
+            boilerplate.Add(loopStart);
+            boilerplate.Add(new OpcodeTestArgBottom() { Label = nextLabel, SourcePath = path });
+            Opcode branchThatExitsLoop = new OpcodeBranchIfTrue() { Label = nextLabel, SourcePath = path };
+            boilerplate.Add(branchThatExitsLoop);
+            boilerplate.Add(new OpcodeBranchJump() { Label = nextLabel, SourcePath = path, DestinationLabel = loopStart.Label });
+            Opcode afterLoop = new OpcodePop() { Label = nextLabel, SourcePath = path }; // Pop the KOSArgMarker that was under the args
+            boilerplate.Add(afterLoop);
+            branchThatExitsLoop.DestinationLabel = afterLoop.Label;
+            boilerplate.Add(new OpcodePush(0) { Label = nextLabel, SourcePath = path });   // ---+-- The dummy do-nothing return.
             boilerplate.Add(new OpcodeReturn(1) {Label = nextLabel, SourcePath = path}); // ---'
             
             // Actually call the Program from its entry Point, which is now the thing left on top
