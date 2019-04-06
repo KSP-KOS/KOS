@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
@@ -273,6 +273,34 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             shared.SoundMaker.StopAllVoices();
+        }
+    }
+
+    [Function("time")]
+    public class Time : FunctionBase
+    {
+        // Note: "TIME" is both a bound variable AND a built-in function now.
+        // If it gets called with parentheses(), the script calls this built-in function.
+        // If it gets called without them, then the bound variable is what gets called instead.
+        // Calling it using parentheses but with empty args: TIME() gives the same result
+        // as the bound variable.  While it would be cleaner to make it JUST a built-in function,
+        // the bound variable had to be retained for backward compatibility with scripts
+        // that call TIME without parentheses.
+        public override void Execute(SharedObjects shared)
+        {
+            double ut;
+            // Accepts zero or one arg:
+            int argCount = CountRemainingArgs(shared);
+
+            // If zero args, then the default is to assume you want to
+            // make a Timespan of "now":
+            if (argCount == 0)
+                ut = Planetarium.GetUniversalTime();
+            else
+                ut = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
+
+            ReturnValue = new kOS.Suffixed.TimeSpan(ut);
         }
     }
 

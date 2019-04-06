@@ -24,6 +24,10 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter(new [] { "OBT" , "ORBIT"}, () => new OrbitInfo(shared.Vessel.orbit,shared));
+            // Note: "TIME" is both a bound variable AND a built-in function now.
+            // While it would be cleaner to make it JUST a built -in function,
+            // the bound variable had to be retained for backward compatibility with scripts
+            // that call TIME without parentheses:
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => VesselTarget.CreateOrGetExisting(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
