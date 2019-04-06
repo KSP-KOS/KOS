@@ -43,6 +43,14 @@ namespace kOS.Module
                 KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
                 return tag == null ? string.Empty : tag.nameTag;
             }
+            set
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                // Really a null tag shouldn't ever happen.  It would mean kOS is installed but KOSNameTag's aren't on all the things.
+                // And that should only happen if someone has a bad ModuleManager config that's screwing with kOS.
+                if (tag != null)
+                    tag.nameTag = value;
+            }
         }
 
         private int vesselPartCount;
