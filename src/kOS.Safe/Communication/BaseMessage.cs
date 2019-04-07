@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Serialization;
 using kOS.Safe.Exceptions;
@@ -40,7 +40,10 @@ namespace kOS.Safe.Communication
             }
         }
 
-        public BaseMessage()
+        // Only used by CreateFromDump() and derived classes.
+        // Don't make it public because it leaves fields
+        // unpopulated:
+        protected BaseMessage()
         {
 
         }
@@ -57,6 +60,14 @@ namespace kOS.Safe.Communication
             Content = content;
             SentAt = sentAt;
             ReceivedAt = receivedAt;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static BaseMessage CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new BaseMessage();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         public virtual Dump Dump()

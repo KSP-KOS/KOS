@@ -1,52 +1,39 @@
-﻿using kOS.Binding;
 using kOS.Communication;
 using kOS.Module;
 using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
-using kOS.Safe.Execution;
 using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
-using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace kOS.Suffixed
 {
+    // See VesselTarget.Hooks.cs for Vessel (property), event hooks,
+    // instance cache, creation and destruction
+
+    // See VesselTarget.Parts.cs for parts, part cache, part lists and StageValues.
+
     [kOS.Safe.Utilities.KOSNomenclature("Vessel")]
-    public class VesselTarget : Orbitable, IKOSTargetable, IKOSScopeObserver
+    public partial class VesselTarget : Orbitable, IKOSTargetable, IDisposable
     {
         private static string DumpGuid = "guid";
-
-        private ListValue cachedParts = new ListValue();
-        private bool cachedPartsAreStale = true;
-        private bool eventsAreHooked = false;
-
-        private static Dictionary<InstanceKey, WeakReference> instanceCache;
+        public Guid Guid { get { return Vessel.id; } }
 
         public override Orbit Orbit { get { return Vessel.orbit; } }
-
         public override StringValue GetName()
         {
             return Vessel.vesselName;
         }
-
-        public Guid GetGuid()
-        {
-            return Vessel.id;
-        }
-
         public override Vector GetPosition()
         {
             return new Vector(Vessel.CoMD - CurrentVessel.CoMD);
         }
-
         public override OrbitableVelocity GetVelocities()
         {
             return new OrbitableVelocity(Vessel);
@@ -194,144 +181,8 @@ namespace kOS.Suffixed
             return orbitPatch;
         }
 
-        static VesselTarget()
-        {
-            // TODO: These need to be refactored into the new suffix system at some point:
-
-            ShortCuttableShipSuffixes = new[]
-                {
-                    "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
-                    "LONGITUDE",
-                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
-                    "AIRSPEED", "SHIPNAME",
-                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
-                };
-        }
-
-        /// <summary>
-        /// All constructors for this class have been restricted because everyone should
-        /// be calling the factory method CreateOrGetExisting() instead.
-        /// </summary>
-        protected VesselTarget()
-        {
-            RegisterInitializer(InitializeSuffixes);
-        }
-
-        /// <summary>
-        /// All constructors for this class have been restricted because everyone should
-        /// be calling the factory method CreateOrGetExisting() instead.
-        /// </summary>
-        protected VesselTarget(Vessel target, SharedObjects shared)
-            : base(shared)
-        {
-            Vessel = target;
-            HookEvents();
-            RegisterInitializer(InitializeSuffixes);
-        }
-
-        /// <summary>
-        /// All constructors for this class have been restricted because everyone should
-        /// be calling the factory method CreateOrGetExisting() instead.
-        /// </summary>
-        protected VesselTarget(SharedObjects shared)
-            : this(shared.Vessel, shared)
-        {
-        }
-
-        /// <summary>
-        /// Factory method you should use instead of the constructor for this class.
-        /// This will construct a new instance if and only if there isn't already
-        /// an instance made for this particular kOSProcessor, for the given vessel
-        /// (Uniqueness determinied by the vessel's GUID).
-        /// If an instance already exists it will return a reference to that instead of making
-        /// a new one.
-        /// The reason this enforcement is needed is because VesselTarget has callback hooks
-        /// that prevent orphaning and garbage collection.  (The delegate inserted
-        /// into KSP's GameEvents counts as a reference to the VesselTarget.)
-        /// Using this factory method instead of a constructor prevents having thousands of stale
-        /// instances of VesselTarget, which was the cause of Github issue #1980.
-        /// </summary>
-        /// <returns>The or get.</returns>
-        /// <param name="Target">Target.</param>
-        /// <param name="Shared">Shared.</param>
-        public static VesselTarget CreateOrGetExisting(Vessel target, SharedObjects shared)
-        {
-            if (instanceCache == null)
-                instanceCache = new Dictionary<InstanceKey, WeakReference>();
-
-            InstanceKey key = new InstanceKey { ProcessorId = shared.Processor.KOSCoreId, VesselId = target.id };
-            if (instanceCache.ContainsKey(key))
-            {
-                WeakReference weakRef = instanceCache[key];
-                if (weakRef.IsAlive)
-                    return (VesselTarget)weakRef.Target;
-                else
-                    instanceCache.Remove(key);
-            }
-            // If it either wasn't in the cache, or it was but the GC destroyed it by now, make a new one:
-            VesselTarget newlyConstructed = new VesselTarget(target, shared);
-            instanceCache.Add(key, new WeakReference(newlyConstructed));
-            return newlyConstructed;
-        }
-
-        public static void ClearInstanceCache()
-        {
-            if (instanceCache == null)
-                instanceCache = new Dictionary<InstanceKey, WeakReference>();
-            else
-                instanceCache.Clear();
-        }
-
-        public static VesselTarget CreateOrGetExisting(SharedObjects shared)
-        {
-            return CreateOrGetExisting(shared.Vessel, shared);
-        }
-
-        public void HookEvents()
-        {
-            if (!eventsAreHooked)
-            {
-                GameEvents.onVesselDestroy.Add(OnVesselDestroy);
-                GameEvents.onVesselPartCountChanged.Add(OnVesselPartCountChanged);
-                eventsAreHooked = true;
-            }
-        }
-
-        public void UnhookEvents()
-        {
-            // In the way we're firing off ScopeLost, it's possible to
-            // end up triggering this more than once, which is why this
-            // protective boolean check is here:
-            if (eventsAreHooked)
-            {
-                GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
-                GameEvents.onVesselPartCountChanged.Remove(OnVesselPartCountChanged);
-                eventsAreHooked = false;
-            }
-        }
-
-        public void OnVesselDestroy(Vessel v)
-        {
-            if (Vessel.Equals(v))
-            {
-                UnhookEvents();
-                Vessel = null;
-            }
-        }
-
-        public void OnVesselPartCountChanged(Vessel v)
-        {
-            cachedParts.Clear();
-            cachedPartsAreStale = true;
-            GetAllParts();
-        }
-
         private Vessel CurrentVessel { get { return Shared.Vessel; } }
-
-        public ITargetable Target
-        {
-            get { return Vessel; }
-        }
+        public ITargetable Target { get { return Vessel; } }
 
         // TODO: We will need to replace with the same thing Orbitable:DISTANCE does
         // in order to implement the orbit solver later.
@@ -340,271 +191,23 @@ namespace kOS.Suffixed
             return Vector3d.Distance(CurrentVessel.CoMD, Vessel.CoMD);
         }
 
-        public Vessel Vessel { get; private set; }
-
         public static string[] ShortCuttableShipSuffixes { get; private set; }
 
-        private int linkCount = 0;
-
-        public int LinkCount
+        static VesselTarget()
         {
-            get
+            ShortCuttableShipSuffixes = new[]
             {
-                return linkCount;
-            }
-            set
-            {
-                linkCount = value;
-
-                // Note, the following check to fire scopelost when link count
-                // hits zero is also happening in Variable.cs, so ScopeLost()
-                // fires twice for some cases.  But this still needs to
-                // be here to catch cases where the link count hits zero
-                // for reasons other than being in a named variable:
-                if (linkCount <= 0)
-                    ScopeLost();
-            }
+                "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
+                "LONGITUDE",
+                "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
+                "AIRSPEED", "SHIPNAME",
+                "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
+            };
         }
 
         public override string ToString()
         {
             return "VESSEL(\"" + Vessel.vesselName + "\")";
-        }
-
-        public ListValue GetAllParts()
-        {
-            if (cachedPartsAreStale)
-            {
-                cachedParts.Clear();
-                for (int i = 0; i < Vessel.Parts.Count; ++i)
-                {
-                    var part = Vessel.Parts[i];
-                    if (part.State != PartStates.DEAD && part.transform != null)
-                    {
-                        cachedParts.Add(PartValueFactory.Construct(Vessel.Parts[i], Shared));
-                    }
-                }
-                cachedPartsAreStale = false;
-            }
-            return cachedParts;
-        }
-
-        private ListValue GetPartsDubbed(StringValue searchTerm)
-        {
-            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches.
-            List<global::Part> kspParts = new List<global::Part>();
-            kspParts.AddRange(GetRawPartsNamed(searchTerm));
-            kspParts.AddRange(GetRawPartsTitled(searchTerm));
-            kspParts.AddRange(GetRawPartsTagged(searchTerm));
-
-            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
-            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
-        }
-
-        private ListValue GetPartsDubbedPattern(StringValue searchPattern)
-        {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(searchPattern, RegexOptions.IgnoreCase);
-            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches the pattern.
-            List<global::Part> kspParts = new List<global::Part>();
-            kspParts.AddRange(GetRawPartsNamedPattern(r));
-            kspParts.AddRange(GetRawPartsTitledPattern(r));
-            kspParts.AddRange(GetRawPartsTaggedPattern(r));
-
-            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
-            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
-        }
-
-        private ListValue GetPartsNamed(StringValue partName)
-        {
-            return PartValueFactory.Construct(GetRawPartsNamed(partName), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsNamed(string partName)
-        {
-            // Get the list of all the parts where the part's KSP API title matches:
-            return Vessel.parts.FindAll(
-                part => String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        private ListValue GetPartsNamedPattern(StringValue partNamePattern)
-        {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(partNamePattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsNamedPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsNamedPattern(Regex partNamePattern)
-        {
-            // Get the list of all the parts where the part's KSP API title matches the pattern:
-            return Vessel.parts.FindAll(
-                part => partNamePattern.IsMatch(part.name));
-        }
-
-        private ListValue GetPartsTitled(StringValue partTitle)
-        {
-            return PartValueFactory.Construct(GetRawPartsTitled(partTitle), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTitled(string partTitle)
-        {
-            // Get the list of all the parts where the part's GUI title matches:
-            return Vessel.parts.FindAll(
-                part => String.Equals(part.partInfo.title, partTitle, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        private ListValue GetPartsTitledPattern(StringValue partTitlePattern)
-        {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(partTitlePattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsTitledPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTitledPattern(Regex partTitlePattern)
-        {
-            // Get the list of all the parts where the part's GUI title matches the pattern:
-            return Vessel.parts.FindAll(
-                part => partTitlePattern.IsMatch(part.partInfo.title));
-        }
-
-        private ListValue GetPartsTagged(StringValue tagName)
-        {
-            return PartValueFactory.Construct(GetRawPartsTagged(tagName), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTagged(string tagName)
-        {
-            return Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
-        }
-
-        private ListValue GetPartsTaggedPattern(StringValue tagPattern)
-        {
-            // Prepare case-insensivie regex.
-            Regex r = new Regex(tagPattern, RegexOptions.IgnoreCase);
-            return PartValueFactory.Construct(GetRawPartsTaggedPattern(r), Shared);
-        }
-
-        private IEnumerable<global::Part> GetRawPartsTaggedPattern(Regex tagPattern)
-        {
-            return Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => tagPattern.IsMatch(tag.nameTag)));
-        }
-
-        /// <summary>
-        /// Get all the parts which have at least SOME non-default name:
-        /// </summary>
-        /// <returns></returns>
-        private ListValue GetAllTaggedParts()
-        {
-            IEnumerable<global::Part> partsWithName = Vessel.parts
-                .Where(p => p.Modules.OfType<KOSNameTag>()
-                .Any(tag => !String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase)));
-
-            return PartValueFactory.Construct(partsWithName, Shared);
-        }
-
-        private ListValue GetModulesNamed(StringValue modName)
-        {
-            // This is slow - maybe there should be a faster lookup string hash, but
-            // KSP's data model seems to have not implemented it:
-            IEnumerable<PartModule> modules = Vessel.parts
-                .SelectMany(p => p.Modules.Cast<PartModule>()
-                .Where(pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
-
-            return PartModuleFieldsFactory.Construct(modules, Shared);
-        }
-
-        private ListValue GetPartsInGroup(StringValue groupName)
-        {
-            var matchGroup = KSPActionGroup.None;
-            string upperName = groupName.ToUpper();
-
-            // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
-            // by both this code and the code in ActionGroup.cs:
-            if (upperName == "SAS") { matchGroup = KSPActionGroup.SAS; }
-            if (upperName == "GEAR") { matchGroup = KSPActionGroup.Gear; }
-            if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
-            if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
-            if (upperName == "RCS") { matchGroup = KSPActionGroup.RCS; }
-            if (upperName == "ABORT") { matchGroup = KSPActionGroup.Abort; }
-            if (upperName == "AG1") { matchGroup = KSPActionGroup.Custom01; }
-            if (upperName == "AG2") { matchGroup = KSPActionGroup.Custom02; }
-            if (upperName == "AG3") { matchGroup = KSPActionGroup.Custom03; }
-            if (upperName == "AG4") { matchGroup = KSPActionGroup.Custom04; }
-            if (upperName == "AG5") { matchGroup = KSPActionGroup.Custom05; }
-            if (upperName == "AG6") { matchGroup = KSPActionGroup.Custom06; }
-            if (upperName == "AG7") { matchGroup = KSPActionGroup.Custom07; }
-            if (upperName == "AG8") { matchGroup = KSPActionGroup.Custom08; }
-            if (upperName == "AG9") { matchGroup = KSPActionGroup.Custom09; }
-            if (upperName == "AG10") { matchGroup = KSPActionGroup.Custom10; }
-
-            ListValue kScriptParts = new ListValue();
-            if (matchGroup == KSPActionGroup.None) return kScriptParts;
-
-            foreach (global::Part p in Vessel.parts)
-            {
-                // See if any of the parts' actions are this action group:
-                bool hasPartAction = p.Actions.Any(a => a.actionGroup.Equals(matchGroup));
-                if (hasPartAction)
-                {
-                    kScriptParts.Add(PartValueFactory.Construct(p, Shared));
-                    continue;
-                }
-
-                var modules = p.Modules.Cast<PartModule>();
-                bool hasModuleAction = modules.Any(pm => pm.Actions.Any(a => a.actionGroup.Equals(matchGroup)));
-                if (hasModuleAction)
-                {
-                    kScriptParts.Add(PartValueFactory.Construct(p, Shared));
-                }
-            }
-            return kScriptParts;
-        }
-
-        private ListValue GetModulesInGroup(StringValue groupName)
-        {
-            var matchGroup = KSPActionGroup.None;
-            string upperName = groupName.ToUpper();
-
-            // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
-            // by both this code and the code in ActionGroup.cs:
-            if (upperName == "SAS") { matchGroup = KSPActionGroup.SAS; }
-            if (upperName == "GEAR") { matchGroup = KSPActionGroup.Gear; }
-            if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
-            if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
-            if (upperName == "RCS") { matchGroup = KSPActionGroup.RCS; }
-            if (upperName == "ABORT") { matchGroup = KSPActionGroup.Abort; }
-            if (upperName == "AG1") { matchGroup = KSPActionGroup.Custom01; }
-            if (upperName == "AG2") { matchGroup = KSPActionGroup.Custom02; }
-            if (upperName == "AG3") { matchGroup = KSPActionGroup.Custom03; }
-            if (upperName == "AG4") { matchGroup = KSPActionGroup.Custom04; }
-            if (upperName == "AG5") { matchGroup = KSPActionGroup.Custom05; }
-            if (upperName == "AG6") { matchGroup = KSPActionGroup.Custom06; }
-            if (upperName == "AG7") { matchGroup = KSPActionGroup.Custom07; }
-            if (upperName == "AG8") { matchGroup = KSPActionGroup.Custom08; }
-            if (upperName == "AG9") { matchGroup = KSPActionGroup.Custom09; }
-            if (upperName == "AG10") { matchGroup = KSPActionGroup.Custom10; }
-
-            ListValue kScriptParts = new ListValue();
-
-            // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
-            // later to merge them somehow:
-            //
-            if (matchGroup == KSPActionGroup.None) return kScriptParts;
-
-            foreach (global::Part p in Vessel.parts)
-                foreach (PartModule pm in p.Modules)
-                {
-                    if (pm.Actions.Any(a => a.actionGroup.Equals(matchGroup)))
-                    {
-                        kScriptParts.Add(PartModuleFieldsFactory.Construct(pm, Shared));
-                    }
-                }
-
-            return kScriptParts;
         }
 
         private void InitializeSuffixes()
@@ -621,8 +224,9 @@ namespace kOS.Suffixed
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue, StringValue>(GetPartsTagged));
             AddSuffix("PARTSTAGGEDPATTERN", new OneArgsSuffix<ListValue, StringValue>(GetPartsTaggedPattern));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
-            AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
-            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
+            AddSuffix("PARTS", new NoArgsSuffix<ListValue<PartValue>>(() => Parts));
+            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue<DockingPortValue>>(() => DockingPorts));
+            AddSuffix(new string[] { "DECOUPLERS", "SEPARATORS" }, new NoArgsSuffix<ListValue<DecouplerValue>>(() => Decouplers));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
             AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
@@ -647,7 +251,7 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "DYNAMICPRESSURE", "Q" }, new Suffix<ScalarValue>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<BooleanValue>(() => Vessel.loaded));
             AddSuffix("UNPACKED", new Suffix<BooleanValue>(() => !Vessel.packed));
-            AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
+            AddSuffix("ROOTPART", new Suffix<PartValue>(() => Root));
             AddSuffix("CONTROLPART", new Suffix<PartValue>(() => PartValueFactory.Construct(GetControlPart(), Shared)));
             AddSuffix("DRYMASS", new Suffix<ScalarValue>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<ScalarValue>(() => Vessel.GetWetMass(), "The Ship's mass when full"));
@@ -670,13 +274,6 @@ namespace kOS.Suffixed
             AddSuffix("STARTTRACKING", new NoArgsVoidSuffix(StartTracking));
 
             AddSuffix("SOICHANGEWATCHERS", new NoArgsSuffix<UniqueSetValue<UserDelegate>>(() => Shared.DispatchManager.CurrentDispatcher.GetSOIChangeNotifyees(Vessel)));
-        }
-
-        public global::Part GetControlPart()
-        {
-            global::Part res = Vessel.GetReferenceTransformPart(); //this can actually be null
-            if (res != null) { return res; }
-            else { return Vessel.rootPart; } //the root part is used as reference in that case
         }
 
         public ScalarValue GetCrewCapacity()
@@ -860,6 +457,11 @@ namespace kOS.Suffixed
 
         public override void LoadDump(Dump dump)
         {
+            Vessel = VesselFromDump(dump);
+        }
+
+        private static Vessel VesselFromDump(Dump dump)
+        {
             string guid = dump[DumpGuid] as string;
 
             if (guid == null)
@@ -874,23 +476,7 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Vessel with the given id does not exist");
             }
 
-            Vessel = vessel;
-        }
-
-        public void ScopeLost()
-        {
-            UnhookEvents();
-        }
-
-        // The data that identifies a unique instance of this class, for use
-        // with the factory method that avoids duplicate instances:
-        private struct InstanceKey
-        {
-            /// <summary>The kOSProcessor Module that built me.</summary>
-            public int ProcessorId { get; set; }
-
-            /// <summary>The KSP vessel object that I'm wrapping.</summary>
-            public Guid VesselId { get; set; }
+            return vessel;
         }
     }
 }

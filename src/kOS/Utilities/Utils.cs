@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Utilities;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
@@ -111,10 +111,11 @@ namespace kOS.Utilities
         /// <param name="a">Does this body</param>
         /// <param name="b">Orbit around this body</param>
         /// <returns>True if a orbits b.  </returns>
+        #pragma warning disable CS0162
         public static Boolean BodyOrbitsBody(CelestialBody a, CelestialBody b)
         {
             const bool DEBUG_WALK = false;
-            
+
             if (DEBUG_WALK) SafeHouse.Logger.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
             if (DEBUG_WALK) SafeHouse.Logger.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
@@ -130,7 +131,8 @@ namespace kOS.Utilities
             }
             return found;
         }
-        
+        #pragma warning restore CS0162
+
         /// <summary>
         /// Given any CSharp object, return the string name of the type in
         /// a way that makes more sense to kOS users, using kOS names rather
@@ -298,6 +300,23 @@ namespace kOS.Utilities
                 true,
                 HighLogic.UISkin
                 );
+        }
+
+        /// <summary>
+        /// A wrapper around GameDatabase.Instance.GetTexture() that will
+        /// log an error to the Unity player log if the texture is not found.<br/>
+        /// (Without this wrapper GameDatabase.Instance.GetTexture() would just fail silently.)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="normalMap"></param>
+        /// <returns>the texture if it worked, or null if it failed</returns>
+        public static Texture2D GetTextureWithErrorMsg(string path, bool asNormalMap)
+        {
+            Texture2D result = GameDatabase.Instance.GetTexture(path, asNormalMap);
+            if (result == null)
+                SafeHouse.Logger.Log(string.Format(
+                    "Can't find or load texture called: {0}.dds or {0}.png", path));
+            return result;
         }
     }
 }

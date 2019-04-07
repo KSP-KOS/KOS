@@ -25,6 +25,26 @@ the following points illustrate:
 
 This allows you to use a :struct:`TimeSpan` such as is returned by the :global:`TIME` special variable to make correct physics calculations.
 
+Built-in function TIME
+----------------------
+
+.. function:: TIME(universal_time)
+
+    :parameter universal_time: (:struct:`Scalar`)
+    :return: A :struct`TimeSpan` of the time represented by the seconds timestamp passed in.
+    :rtype: :struct:`TimeSpan`
+
+    This creates a :struct:`TimeSpan` given a "universal time",
+    which is a number of seconds since the current game began,
+    IN GAMETIME.  example: ``TIME(3600)`` will give you a
+    :struct:`TimeSpan` representing the moment exactly 1 hour
+    (3600 seconds) since the current game first began.
+
+    The parameter is OPTIONAL.  If you leave it off,
+    and just call ``TIME()``, then you end up getting
+    the current time, which is the same thing that :global:`TIME`
+    gives you (without the parentheses).
+
 Special variable TIME
 ---------------------
 
@@ -33,9 +53,15 @@ Special variable TIME
     :access: Get only
     :type: :struct:`TimeSpan`
 
-    The special variable :global:`TIME` is used to get the current time.
+    The special variable :global:`TIME` is used to get the current time
+    in the gameworld (not the real world where you're sitting in a chair
+    playing Kerbal Space Program.)  It is the same thing as calling
+    :function:`TIME` with empty parentheses.
 
-    Any time you perform arithmetic on :global:`TIME` you get a result back that is also a :struct:`TimeSpan`. In other words, :global:`TIME` is a :struct:`TimeSpan`, but ``TIME + 100`` is also a :struct:`TimeSpan`.
+Using a TimeSpan
+----------------
+
+    Any time you perform arithmetic on a :global:`TIMESPAN` you get a result back that is also a :struct:`TimeSpan`. In other words, :global:`TIME` is a :struct:`TimeSpan`, but ``TIME + 100`` is also a :struct:`TimeSpan`.
 
     Note that Kerbals do not have the concept of "months"::
 
@@ -51,12 +77,12 @@ Special variable TIME
 
 .. highlight:: kerboscript
 
-Using TIME to detect when the physics have been updated 'one tick'
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using TIME or TIME() to detect when the physics have been updated 'one tick'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-kOS programs run however fast your computer's animation rate will allow, which can flow and change from one moment to the next depending on load. However, the physics of the universe get updated at a fixed rate according to your game settings (the default, as of KSP 0.25, is 25 physics updates per second)
+The game will make an effort to maintain regular physics updates at a fixed rate (defaulting to 25 updates per second), sacrificing animation rate as necessary.  When the game is unable to maintain regular updates at this rate, the clock time (in the upper left of the screen) will turn yellow or red instead of green.
 
-You can use the :global:`TIME` special variable to detect whether or not a real physics 'tic' has occurred yet, which can be important for scripts that need to take measurements from the simulated universe. If no physics tic has occurred, then :global:`TIME` will still be exactly the same value.
+You can use the time reported by :global:`TIME` to detect whether or not a real physics 'tic' has occurred yet, which can be important for scripts that need to take measurements from the simulated universe. If no physics tic has occurred, then :global:`TIME` will still be exactly the same value.
 
 .. warning::
 

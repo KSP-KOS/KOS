@@ -81,6 +81,11 @@ namespace kOS.Control
             return controlShared;
         }
 
+        Vessel IFlightControlParameter.GetResponsibleVessel()
+        {
+            return controlShared.Vessel;
+        }
+
         object IFlightControlParameter.GetValue()
         {
             if (Enabled)

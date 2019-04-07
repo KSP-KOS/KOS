@@ -46,10 +46,11 @@ namespace kOS.UserIO
         
         private bool activeOptInDialog;
         private bool activeRealIPDialog;
-        
-        private Rect optInRect = new Rect( 200, 200, 500, 400);
-        private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case both are up at the same time, to ensure visible bits to click on.  They aren't movable.
+        private bool activeBgSimDialog;
 
+        private Rect optInRect = new Rect( 200, 200, 500, 400);
+        private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case multiples are up at the same time, to ensure visible bits to click on.  They aren't movable.
+        private Rect bgSimRect = new Rect( 280, 100, 400, 300); // offset just in case multiples are up at the same time, to ensure visible bits to click on.  They aren't movable.
         private const string HELP_URL = "http://ksp-kos.github.io/KOS_DOC/general/telnet.html";
 
         public TelnetMainServer()
@@ -178,7 +179,7 @@ namespace kOS.UserIO
             if (newVal)
             {
                 bool isLoopback = IPAddress.IsLoopback(bindAddr);
-                if (tempListenPermission && (tempRealIPPermission || isLoopback))
+                if (tempListenPermission && (tempRealIPPermission || isLoopback) && GameSettings.SIMULATE_IN_BACKGROUND)
                     StartListening();
                 else
                 {
@@ -188,11 +189,16 @@ namespace kOS.UserIO
                     // the dialog box will set EnableTelnet to true again
                     SafeHouse.Config.EnableTelnet = false;
 
-                    // Depending on which reason it was for the denial, activate the proper dialog window:
+                    // Depending on which reasons it was for the denial, activate the explanatory dialog windows:
                     if (!tempListenPermission)
                         activeOptInDialog = true;
-                    else
-                        activeRealIPDialog = true;
+                    else // If the initial opt-in hasn't been permitted, that should be the only dialog seen.  Only show these if that hurdle is passed:
+                    {
+                        if (!isLoopback)
+                            activeRealIPDialog = true;
+                        if (! GameSettings.SIMULATE_IN_BACKGROUND)
+                            activeBgSimDialog = true;
+                    }
                 }
             }
             else
@@ -370,6 +376,9 @@ namespace kOS.UserIO
             if (activeRealIPDialog)
                 realIPRect = GUILayout.Window(401124, // any made up number unlikely to clash is okay here
                                               realIPRect, RealIPOnGui, "kOS Telnet Non-Loopback Permisssion");
+            if (activeBgSimDialog)
+                bgSimRect = GUILayout.Window(401125, // any made up number unlikely to clash is okay here
+                                             bgSimRect, BgSimGui, "kOS Telnet \"Simulate in Background\" notice.");
         }
         
         void OptInOnGui(int id)
@@ -521,6 +530,41 @@ namespace kOS.UserIO
                     } GUILayout.EndHorizontal();
                 } GUILayout.EndVertical();
             } GUILayout.EndVertical();            
+            GUI.DragWindow();
+        }
+
+        void BgSimGui(int id)
+        {
+            string bgSimText =
+                "<b>The KSP main settings option 'Simulate in Background' is turned off.</b>\n\n" +
+                "This option must be enabled in order for kOS's telnet server to work.\n" +
+                "(Leaving it turned off causes the game to pause whenever you switch to another active window," +
+                "making it impossible to control the game from a telnet client.)\n\n" +
+                "To allow kOS's telnet server to work, you must perform the following steps:\n\n" +
+                "(1) Exit back to the first KSP title screen.\n" +
+                "(2) Click \"Settings\".\n" +
+                "(3) Click the \"General\" Tab on the settings screen.\n" +
+                "(4) Enable the setting called \"Simulate in Background\".\n" +
+                "(5) Click \"Accept\"\n" +
+                "(6) <b>This is important</b>: Quit and Restart KSP.  (The change does not take effect until you do this.)\n" +
+                "\n" +
+                "Remember you MUST restart KSP for the change to actually do anything.\n";
+
+            // Note, the unnecessary curly braces below are there to help enforce a begin/end indentation that won't be
+            // clobbered by auto-indenter tools.
+            GUILayout.BeginVertical();
+            {
+                GUILayout.Label(bgSimText, HighLogic.Skin.textArea);
+                GUILayout.BeginHorizontal();
+                {
+                    bool OkayClicked = GUILayout.Button("Okay", HighLogic.Skin.button);
+
+                    if (OkayClicked)
+                        activeBgSimDialog = false; // makes window stop existing.
+                }
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndVertical();
             GUI.DragWindow();
         }
 

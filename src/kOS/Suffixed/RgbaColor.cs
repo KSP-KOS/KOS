@@ -1,13 +1,21 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 using kOS.Safe.Utilities;
+using kOS.Safe;
 using UnityEngine;
+using System;
 
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("RGBA")]
-    public class RgbaColor : Structure
+    public class RgbaColor : SerializableStructure
     {
+        static string DumpR = "R";
+        static string DumpG = "G";
+        static string DumpB = "B";
+        static string DumpA = "A";
+
         protected float Red { get; set; }
 
         protected float Green { get; set; }
@@ -38,6 +46,14 @@ namespace kOS.Suffixed
             Green = copyFrom.Green;
             Blue = copyFrom.Blue;
             Alpha = copyFrom.Alpha;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static RgbaColor CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new RgbaColor();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixColor()
@@ -83,6 +99,27 @@ namespace kOS.Suffixed
             var greenByte = (byte)Mathf.Min(255, (int)(Green * 255f));
             var blueByte = (byte)Mathf.Min(255, (int)(Blue * 255f));
             return string.Format("#{0:x2}{1:x2}{2:x2}", redByte, greenByte, blueByte);
+        }
+
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader
+            {
+                {DumpR, Red },
+                {DumpG, Green },
+                {DumpB, Blue },
+                {DumpA, Alpha }
+            };
+
+            return dump;
+        }
+
+        public override void LoadDump(Dump dump)
+        {
+            Red = (float)Convert.ToDouble(dump[DumpR]);
+            Green = (float)Convert.ToDouble(dump[DumpG]);
+            Blue = (float)Convert.ToDouble(dump[DumpB]);
+            Alpha = (float)Convert.ToDouble(dump[DumpA]);
         }
     }
 }

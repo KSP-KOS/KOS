@@ -228,7 +228,7 @@ then check the following ``if`` statement. ::
   } else {
     print "this is neither a cat nor a dog".
   }
-  
+
 This would print ``this is a dog``.
 
 =====================
@@ -238,7 +238,7 @@ This would print ``this is a dog``.
 Hopefully you now know the basics of how ``if`` works. You might be wondering why use ``else if`` if it's the same as ``if``.
 
 Example 1, using ``else if``
-_________________
+____________________________
 ::
 
 	if distance <= 1 {
@@ -250,7 +250,7 @@ _________________
 	}
 
 Example 2, only using ``if``
-__________________
+____________________________
 ::
 
 	if distance <= 1 {
@@ -268,13 +268,12 @@ Using example 1, if your distance is less than a meter you'll get the following 
 	Distance is within a meter.
 
 Using example 2, if your distance is less than a meter you'll get the following messages: ::
-	
+
 	Distance is within a meter.
 	Distance is within 100 meters.
-	Distance is farther than 1 kilometer.
 
 As you can imagine the second example isn't good. If we're at less than a meter away from something and the messages for if we would be farther
-than 1 kilometer show up we have a big problem. This could be fixed by doing the following, but **THIS IS UNNECESSARILY COMPLEX**: ::
+than 100 meters show up we have a big problem. This could be fixed by doing the following, but **THIS IS UNNECESSARILY COMPLEX**: ::
 
  set Done to false.
 
@@ -324,7 +323,7 @@ The ``until`` command will keep looping a piece of code until the given value ha
   }
 
 This first sets ``x`` to 0 and until ``x`` is bigger than 100 it does whatever happens within the brackets.
-In this case it prints ``x`` and then it increases ``x`` by 1. This loop repeats itself until ``x`` is bigger than 100. 
+In this case it prints ``x`` and then it increases ``x`` by 1. This loop repeats itself until ``x`` is bigger than 100.
 Before we can talk about more complex until loops let's first talk about ``time:seconds`` and the ``lock`` command. ::
 
   print time:seconds.
@@ -335,7 +334,7 @@ It would print ``60``. You can also set the current in-game time as a variable: 
   set CurrentTime to time:seconds.
 
 The variable ``CurrentTime`` will stay 60 seconds. Eventhough the in-game time changes: ::
-  
+
   set CurrentTime to time:seconds.
   print CurrentTime. // shows: 60
   wait 10.

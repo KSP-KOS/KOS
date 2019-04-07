@@ -9,10 +9,7 @@ This is any sort of planet or moon. To get a variable referring to a Body, you c
     // like "Mun" for example.
     SET MY_VAR TO BODY("name").
 
-.. note::
-    .. versionchanged:: 0.13
-        A Celestial Body is now also an :ref:`Orbitable <orbitable>`, and can use all the terms described for these objects too.
-
+Bodies are also :ref:`Orbitable<orbitable>`, and as such have all the associated suffixes.
 
 Bodies' names are added to the kerboscript language as variable names as well.
 This means you can use the variable ``Mun`` to mean the same thing as ``BODY("Mun")``,
@@ -67,6 +64,9 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`NAME`                     :ref:`string <string>`
     :attr:`DESCRIPTION`              :ref:`string <string>`
     :attr:`MASS`                     :ref:`scalar <scalar>` (kg)
+    :attr:`HASOCEAN`                 :ref:`boolean <boolean>`
+    :attr:`HASSOLIDSURFACE`          :ref:`boolean <boolean>`
+    :attr:`ORBITINGCHILDREN`         :struct:`List`
     :attr:`ALTITUDE`                 :ref:`scalar <scalar>` (m)
     :attr:`ROTATIONPERIOD`           :ref:`scalar <scalar>` (s)
     :attr:`RADIUS`                   :ref:`scalar <scalar>` (m)
@@ -95,6 +95,21 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:MASS
 
     The mass of the body in kilograms.
+
+.. attribute:: Body:HASOCEAN
+
+    True if this body has an ocean.  Example: In the stock solar system,
+    this is True for Kerbin and False for Mun.
+
+.. attribute:: Body:HASSOLIDSURFACE
+
+    True if this body has a solid surface.  Example: In the stock solar system,
+    this is True for Kerbin and False for Jool.
+
+.. attribute:: Body:ORBITINGCHILDREN
+
+    A list of the bodies orbiting this body.  Example: In the stock solar system,
+    Kerbin:orbitingchildren is a list two things: Mun and Minmus.
 
 .. attribute:: Body:ALTITUDE
 

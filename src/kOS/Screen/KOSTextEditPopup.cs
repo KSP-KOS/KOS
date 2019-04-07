@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Persistence;
 using System;
 using System.Collections.Generic;
@@ -68,11 +68,9 @@ namespace kOS.Screen
             WindowRect = new Rect(0, 0, 470, 280); // bogus starting value will be changed later when attaching to a terminal.
 
             // Load dummy textures
-            resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            resizeImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_resize-button", false);
 
             dialog = gameObject.AddComponent<DelegateDialog>();
-            var urlGetter = new WWW(string.Format("file://{0}GameData/kOS/GFX/resize-button.png", KSPUtil.ApplicationRootPath.Replace("\\", "/")));
-            urlGetter.LoadImageIntoTexture(resizeImage);
 
             GetFont();
         }
@@ -334,20 +332,26 @@ namespace kOS.Screen
 
                     case KeyCode.E:
                         if (Event.current.control)
+                        {
                             ExitEditor();
-                        Event.current.Use();
+                            Event.current.Use();
+                        }
                         break;
 
                     case KeyCode.S:
                         if (Event.current.control)
+                        {
                             SaveContents();
-                        Event.current.Use();
+                            Event.current.Use();
+                        }
                         break;
 
                     case KeyCode.R:
                         if (Event.current.control)
+                        {
                             ReloadContents();
-                        Event.current.Use();
+                            Event.current.Use();
+                        }
                         break;
                 }
             }

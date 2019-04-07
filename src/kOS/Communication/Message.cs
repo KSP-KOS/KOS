@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Communication;
 using kOS.Suffixed;
 using kOS.Safe;
@@ -32,7 +32,9 @@ namespace kOS.Communication
             }
         }
 
-        public Message()
+        // Only used by CreateFromDump() - unsafe to make public because it makes a message where
+        // the fields aren't populated:
+        private Message()
             : base()
         {
         }
@@ -40,13 +42,21 @@ namespace kOS.Communication
         public Message(Dump content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender.GetGuid().ToString();
+            Vessel = sender.Guid.ToString();
         }
 
         public Message(PrimitiveStructure content, double sentAt, double receivedAt, VesselTarget sender)
             : base(content, sentAt, receivedAt)
         {
-            Vessel = sender.GetGuid().ToString();
+            Vessel = sender.Guid.ToString();
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Message CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new Message();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         public override Dump Dump()

@@ -51,7 +51,14 @@ namespace kOS.Safe.Persistence
                 mergedPath = Path.Combine(mergedPath, segment);
             }
 
-            return mergedPath;
+            string fullPath = Path.GetFullPath(mergedPath);
+
+            if (!fullPath.StartsWith(ArchiveFolder, StringComparison.Ordinal))
+            {
+                throw new KOSInvalidPathException("Path refers to parent directory", path.ToString());
+            }
+
+            return fullPath;
         }
 
         public override void Clear()

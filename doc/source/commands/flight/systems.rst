@@ -386,4 +386,6 @@ TARGET
 
         SET TARGET TO name.
 
+    For more information see :ref:`bindings`.
+
 Note that the above options also can refer to a different vessel besides the current ship, for example, ``TARGET:THROTTLE`` to read the target's throttle. But not all "set" or "lock" options will work with a different vessel other than the current one, because there's no authority to control a craft the current program is not attached to.

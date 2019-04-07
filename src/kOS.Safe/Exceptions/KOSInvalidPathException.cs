@@ -1,7 +1,7 @@
 ﻿using System;
 using kOS.Safe.Exceptions;
 
-namespace kOS.Safe
+namespace kOS.Safe.Exceptions
 {
     public class KOSInvalidPathException : KOSException
     {

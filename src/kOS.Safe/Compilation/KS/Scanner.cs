@@ -360,7 +360,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.EOF, regex);
             Tokens.Add(TokenType.EOF);
 
-            regex = new Regex(@"\G(?:\s+)");
+            regex = new Regex(@"\G(?:(\s|\p{C})+)");
             Patterns.Add(TokenType.WHITESPACE, regex);
             Tokens.Add(TokenType.WHITESPACE);
 

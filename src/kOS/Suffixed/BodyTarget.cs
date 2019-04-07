@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
 using System;
@@ -12,7 +12,7 @@ using kOS.Safe.Serialization;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Body")]
-    public class BodyTarget : Orbitable, IKOSTargetable
+    public class BodyTarget : Orbitable
     {
         private static string DumpName = "name";
 
@@ -67,6 +67,17 @@ namespace kOS.Suffixed
             return newlyConstructed;
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Orbitable CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = CreateOrGetExisting(BodyFromDump(d), (SharedObjects)shared);
+            // Uncomment the line below if LoadDump ever does more things in the future.
+            // Right now, LoadDump is redundant with CreateOrGetExisting's work.
+            //
+            // newObj.LoadDump(d);
+            return newObj;
+        }
+
         public static void ClearInstanceCache()
         {
             if (instanceCache == null)
@@ -80,11 +91,16 @@ namespace kOS.Suffixed
             return CreateOrGetExisting(VesselUtils.GetBodyByName(bodyName), shared);
         }
 
+
+
         private void BodyInitializeSuffixes()
         {
             AddSuffix("NAME", new Suffix<StringValue>(() => Body.name));
             AddSuffix("DESCRIPTION", new Suffix<StringValue>(() => Body.bodyDescription));
             AddSuffix("MASS", new Suffix<ScalarValue>(() => Body.Mass));
+            AddSuffix("HASOCEAN", new Suffix<BooleanValue>(() => Body.ocean));
+            AddSuffix("HASSOLIDSURFACE", new Suffix<BooleanValue>(() => Body.hasSolidSurface));
+            AddSuffix("ORBITINGCHILDREN", new Suffix<ListValue>(GetOrbitingChildren));
             AddSuffix("ALTITUDE", new Suffix<ScalarValue>(() => Body.orbit.altitude));
             AddSuffix("RADIUS", new Suffix<ScalarValue>(() => Body.Radius));
             AddSuffix("MU", new Suffix<ScalarValue>(() => Body.gravParameter));
@@ -105,6 +121,15 @@ namespace kOS.Suffixed
                       new TwoArgsSuffix<GeoCoordinates, ScalarValue, ScalarValue>(
                               GeoCoordinatesFromLatLng,
                               "Given latitude and longitude, return the geoposition on this body corresponding to it."));
+        }
+
+        public ListValue GetOrbitingChildren()
+        {
+            var toReturn = new ListValue();
+            foreach (CelestialBody body in Body.orbitingBodies) {
+                toReturn.Add(CreateOrGetExisting(body,Shared));
+            }
+            return toReturn;
         }
 
         public override StringValue GetName()
@@ -291,6 +316,11 @@ namespace kOS.Suffixed
 
         public override void LoadDump(Dump dump)
         {
+            Body = BodyFromDump(dump);
+        }
+
+        private static CelestialBody BodyFromDump(Dump dump)
+        {
             string name = dump[DumpName] as string;
 
             if (name == null)
@@ -305,8 +335,7 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Body with the given name does not exist");
             }
 
-            Body = body;
-
+            return body;
         }
 
         // The data that identifies a unique instance of this class, for use

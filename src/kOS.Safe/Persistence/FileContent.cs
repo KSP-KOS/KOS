@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Compilation;
+using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -44,6 +44,14 @@ namespace kOS.Safe.Persistence
         public FileContent(List<CodePart> parts) : this()
         {
             Bytes = CompiledObject.Pack(parts);
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static FileContent CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new FileContent();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()

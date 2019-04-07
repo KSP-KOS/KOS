@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
@@ -11,7 +11,7 @@ namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("GeoCoordinates")]
     [kOS.Safe.Utilities.KOSNomenclature("LatLng", CSharpToKOS = false)]
-    public class GeoCoordinates : SerializableStructure, IHasSharedObjects
+    public class GeoCoordinates : SerializableStructure
     {
         private static string DumpLat = "lat";
         private static string DumpLng = "lng";
@@ -46,7 +46,10 @@ namespace kOS.Suffixed
 
         private const int TERRAIN_MASK_BIT = 15;
 
-        public GeoCoordinates()
+        // Only used by CreateFromDump() and the other constructors.
+        // Don't make it public because it leaves fields unpopulated if
+        // used by itself:
+        private GeoCoordinates()
         {
             GeoCoordsInitializeSuffixes();
         }
@@ -105,6 +108,15 @@ namespace kOS.Suffixed
             Longitude = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static GeoCoordinates CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new GeoCoordinates();
+            newObj.Shared = (SharedObjects)shared;
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         /// <summary>

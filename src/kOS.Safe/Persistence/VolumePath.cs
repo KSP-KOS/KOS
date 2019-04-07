@@ -18,7 +18,7 @@ namespace kOS.Safe.Persistence
         public const char PathSeparator = '/';
         public const string UpSegment = "..";
         public const int MaxSegmentLength = 255;
-        public const string SegmentRegexString = @"\A[^/]+\Z";
+        public const string SegmentRegexString = @"\A[^/\\]+\Z";
         private static readonly Regex segmentRegex = new Regex(SegmentRegexString);
 
         /// <summary>

@@ -90,7 +90,7 @@ LAZYGLOBAL   -> @"lazyglobal\b";
 //Special
 EOF          -> @"$";
 [Skip]
-WHITESPACE   -> @"\s+";
+WHITESPACE   -> @"(\s|\p{C})+";
 [Skip]
 COMMENTLINE  -> @"//[^\n]*\n?";
 

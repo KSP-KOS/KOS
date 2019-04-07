@@ -66,13 +66,6 @@ Structures are variables that contain more than one piece of information. For ex
     PRINT "The Mun's periapsis altitude is: " + MUN:PERIAPSIS.
     PRINT "The ship's surface velocity is: " + SHIP:VELOCITY:SURFACE.
 
-.. note::
-    .. versionadded:: 0.19.0
-        As of this kOS version, in fact ALL values a script can see are
-        now a kind of :struct:`Structure <structure>`, even basic primitive
-        types such as Boolean and Scalar.
-
-
 Many structures also let you set a specific component of them, for example::
 
     SET VEC TO V(10,10,10).  // A vector with x,y,z components
@@ -95,10 +88,6 @@ Structures also often contain methods. A method is a suffix of a structure that 
                      // doesn't return anything.
     PRINT PLIST:SUBLIST(0,4). // calling a suffix method with 2
                               // arguments that returns a list.
-
-.. note::
-    .. versionadded:: 0.15
-        Methods now perform the activity when the interpreter comes up to it. Prior to this version, execution was sometimes delayed until some later time depending on the trigger setup or flow-control.
 
 For more information, see the :ref:`Structures Section <language structures>`. A full list of structure types can be found on the :ref:`Structures <structures>` page. For a more detailed breakdown of the language, see the :ref:`Language Syntax Constructs <syntax>` page.
 

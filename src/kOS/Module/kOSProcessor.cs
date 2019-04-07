@@ -4,6 +4,7 @@ using kOS.Execution;
 using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
+using kOS.Safe.Serialization;
 using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
@@ -15,6 +16,7 @@ using KSP.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using kOS.Safe.Execution;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
@@ -40,6 +42,14 @@ namespace kOS.Module
             {
                 KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
                 return tag == null ? string.Empty : tag.nameTag;
+            }
+            set
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                // Really a null tag shouldn't ever happen.  It would mean kOS is installed but KOSNameTag's aren't on all the things.
+                // And that should only happen if someone has a bad ModuleManager config that's screwing with kOS.
+                if (tag != null)
+                    tag.nameTag = value;
             }
         }
 
@@ -136,8 +146,15 @@ namespace kOS.Module
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
-            SafeHouse.Logger.Log("Activate");
+            SafeHouse.Logger.Log("Open Window by event");
             OpenWindow();
+        }
+
+        [KSPEvent(guiActive = true, guiName = "Close Terminal", category = "skip_delay;")]
+        public void Deactivate()
+        {
+            SafeHouse.Logger.Log("Close Window by event");
+            CloseWindow();
         }
 
         [KSPField(isPersistant = true, guiName = "kOS Average Power", guiActive = true, guiActiveEditor = true, guiUnits = "EC/s", guiFormat = "0.000")]
@@ -154,7 +171,7 @@ namespace kOS.Module
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param)
         {
-            SafeHouse.Logger.Log("Open Terminal from Dialog");
+            SafeHouse.Logger.Log("Open Terminal from ActionGroup");
             Activate();
         }
 
@@ -419,6 +436,9 @@ namespace kOS.Module
                 return;
             }
             objectsInitialized = true;
+
+            CalcConstsFromKSP();
+
             shared = new SharedObjects();
 
             shared.Vessel = vessel;
@@ -492,6 +512,42 @@ namespace kOS.Module
             }
 
             InitProcessorTracking();
+        }
+
+        // The official value of some physics constants change over time as standards bodies re-calculate them.
+        // This code below ensures we're using whatever value KSP itself is using.
+        // The reason this code is *here* not in ConstantValue is because ConstantValue can't call
+        // the KSP API.  It's in kOS.Safe.
+        private void CalcConstsFromKSP()
+        {
+            // GravitationalAcceleration did not exist in PhysicsGlobals prior to KSP 1.6.x.
+            // This code has to use reflection to avoid calling it on older backports:
+            Type physGlobType = typeof(PhysicsGlobals);
+            if (physGlobType != null)
+            {
+                // KSP often changes its mind whether a member is a Field or Property, so let's write this
+                // to future-proof against them changing which it is by trying both ways:
+                FieldInfo asField = (physGlobType.GetField("GravitationalAcceleration", BindingFlags.Public | BindingFlags.Static));
+                if (asField != null)
+                    ConstantValue.G0 = (double) asField.GetValue(null);
+                else
+                {
+                    PropertyInfo asProperty = (physGlobType.GetProperty("GravitationalAcceleration", BindingFlags.Public | BindingFlags.Static));
+                    if (asProperty != null)
+                        ConstantValue.G0 = (double)asProperty.GetValue(null, null);
+                }
+            }
+            // Fallback: Note if none of the above work, G0 still does have a reasonable value because we
+            // hardcode it to a literal in ConstantValue before doing any of the above work.
+
+
+            // Cannot find anything in KSP's API exposing their value of G, so this indirect means
+            // of calculating it from an arbitrary body is used:
+            CelestialBody anyBody = FlightGlobals.fetch.bodies.FirstOrDefault();
+            if (anyBody == null)
+                SafeHouse.Logger.LogError("kOSProcessor: This game installation is badly broken.  It appears to have no planets in it.");
+            else
+                ConstantValue.GravConst = anyBody.gravParameter / anyBody.Mass;
         }
 
         private void InitProcessorTracking()
@@ -767,6 +823,7 @@ namespace kOS.Module
         {
             Opcode.InitMachineCodeData();
             CompiledObject.InitTypeData();
+            SafeSerializationMgr.CheckIDumperStatics();
         }
 
         private void ProcessElectricity(Part partObj, float time)

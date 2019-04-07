@@ -1,4 +1,4 @@
-﻿using KSP.IO;
+using KSP.IO;
 using System;
 using System.Reflection;
 
@@ -181,7 +181,9 @@ namespace kOS.Module
                 // the new system, or that the user selected to prevent future migrations.
                 if (ipu > 0)
                 {
-                    kOSSettingsChecker.QueueDialog(new MultiOptionDialog(
+                    kOSSettingsChecker.QueueDialog(
+                        0.5f, 0.5f, // causes it to be centered (half of box's own width left and down from center is the corner).
+                        new MultiOptionDialog(
                             "Migration Dialog",
                             MIGRATION_DIALOG_TEXT,
                             "kOS",

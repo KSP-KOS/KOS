@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -185,6 +185,9 @@ namespace kOS.Communication
                     options.Add(new DialogGUIButton(text, () => { connectivityHandler = name; }, true));
                 }
                 Module.kOSSettingsChecker.QueueDialog(
+                    // Using 1.5, 1.5 fixes github issue #2456 by making it shift a
+                    // bit down and left from center (1.5 times box's own width)
+                    1.5f, 1.5f,
                     new MultiOptionDialog(
                         "Select Dialog",
                         SELECT_DIALOG_TEXT,

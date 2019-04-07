@@ -1,5 +1,7 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Serialization;
 using System;
 using UnityEngine;
 
@@ -7,8 +9,13 @@ namespace kOS.Suffixed
 {
     [Safe.Utilities.KOSNomenclature("Direction")]
     [Safe.Utilities.KOSNomenclature("Rotation", CSharpToKOS = false)]
-    public class Direction : Structure
+    public class Direction : SerializableStructure
     {
+        static string DumpQuaternionW = "q_w";
+        static string DumpQuaternionX = "q_x";
+        static string DumpQuaternionY = "q_y";
+        static string DumpQuaternionZ = "q_z";
+
         private Vector3d euler;
         private Quaternion rotation;
         private Vector3d vector;
@@ -37,6 +44,14 @@ namespace kOS.Suffixed
             {
                 Vector = v3D;
             }
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Direction CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new Direction();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         // The following two are effectively constructors, but because they have
@@ -229,6 +244,28 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "R(" + Math.Round(euler.x, 3) + "," + Math.Round(euler.y, 3) + "," + Math.Round(euler.z, 3) + ")";
+        }
+
+        public override Dump Dump()
+        {
+            DumpWithHeader dump = new DumpWithHeader
+            {
+                { DumpQuaternionW, rotation.w },
+                { DumpQuaternionX, rotation.x },
+                { DumpQuaternionY, rotation.y },
+                { DumpQuaternionZ, rotation.z }
+            };
+            return dump;
+        }
+
+        public override void LoadDump(Dump dump)
+        {
+            Rotation = new Quaternion(
+                (float)Convert.ToDouble(dump[DumpQuaternionW]),
+                (float)Convert.ToDouble(dump[DumpQuaternionX]),
+                (float)Convert.ToDouble(dump[DumpQuaternionY]),
+                (float)Convert.ToDouble(dump[DumpQuaternionZ])
+                );
         }
     }
 }

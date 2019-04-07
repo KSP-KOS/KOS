@@ -1,4 +1,4 @@
-﻿using kOS.AddOns.RemoteTech;
+using kOS.AddOns.RemoteTech;
 using kOS.Control;
 using kOS.Binding;
 using System;
@@ -23,6 +23,7 @@ namespace kOS.Module
         /// <summary>How often to re-attempt the autopilot hook, expressed as a number of physics updates</summary>
         private const int autopilotRehookPeriod = 25;
         private int autopilotRehookCounter = autopilotRehookPeriod - 2; // make sure it starts out ready to trigger soon
+        private bool foundWrongVesselAutopilot = false;
 
         public Guid ID
         {
@@ -79,7 +80,7 @@ namespace kOS.Module
         public override void OnLoadVessel()
         {
             base.OnLoadVessel();
-            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0} ({1})", Vessel.vesselName, ID));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule OnLoadVessel()!  On {0} ({1})", Vessel.vesselName, Vessel.id));
 
             // Vessel modules now load when the vessel is not loaded, including when not in the flight
             // scene.  So we now wait to attach to events and attempt to harvest parts until after
@@ -161,11 +162,12 @@ namespace kOS.Module
         {
             if (initialized)
             {
-                if (Vessel.Parts.Count != partCount)
+                if (foundWrongVesselAutopilot || Vessel.Parts.Count != partCount)
                 {
                     ClearParts();
                     HarvestParts();
                     partCount = Vessel.Parts.Count;
+                    ResetPhysicallyDetachedParameters();
                 }
                 CheckRehookAutopilot();
             }
@@ -234,7 +236,49 @@ namespace kOS.Module
             AddFlightControlParameter("wheelthrottle", new WheelThrottleManager(Vessel));
             AddFlightControlParameter("flightcontrol", new FlightControl(Vessel));
             flightParametersAdded = true;
-            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule AddDefaultParameters()!  On {0}", Vessel.vesselName));
+            SafeHouse.Logger.SuperVerbose(string.Format("kOSVesselModule AddDefaultParameters()!  On {0}({1}", Vessel.vesselName, Vessel.id));
+        }
+
+        /// <summary>
+        /// After a decouple or part explosion, it's possible for this vessel to
+        /// still have an assigned flight control parameter that is coming from
+        /// a kOS core that is no longer on this vessel but is instead on the newly
+        /// branched vessel we left behind.  If so, that parameter needs to be
+        /// removed from this vessel.  The new kOSVesselModule will take care of
+        /// making a new parameter on the new vessel, but this kOSVesselModule needs
+        /// to detach it from this one.
+        /// </summary>
+        private void ResetPhysicallyDetachedParameters()
+        {
+            List<string> removeKeys = new List<string>();
+            foreach (string key in flightControlParameters.Keys)
+            {
+                IFlightControlParameter p = flightControlParameters[key];
+                if (p.GetShared() != null && p.GetShared().Vessel != null && Vessel != null &&
+                    p.GetShared().Vessel.id != Vessel.id)
+                    removeKeys.Add(key);
+            }
+            foreach (string key in removeKeys)
+            {
+                SafeHouse.Logger.SuperVerbose(string.Format(
+                    "kOSVesselModule: re-defaulting parameter \"{0}\" because it's on a detached part of the vessel.", key));
+                RemoveFlightControlParameter(key);
+                IFlightControlParameter p = null;
+                if (key.Equals("steering"))
+                    p = new SteeringManager(Vessel);
+                else if (key.Equals("throttle"))
+                    p = new ThrottleManager(Vessel);
+                else if (key.Equals("wheelsteering"))
+                    p = new WheelSteeringManager(Vessel);
+                else if (key.Equals("wheelthrottle"))
+                    p = new WheelThrottleManager(Vessel);
+                else if (key.Equals("flightcontrol"))
+                    p = new FlightControl(Vessel);
+
+                if (p != null)
+                    AddFlightControlParameter(key, p);
+            }
+            foundWrongVesselAutopilot = false;
         }
 
         /// <summary>
@@ -350,13 +394,25 @@ namespace kOS.Module
         /// <param name="c"></param>
         private void UpdateAutopilot(FlightCtrlState c)
         {
-            if (childParts.Count > 0)
+            if (Vessel != null)
             {
-                foreach (var parameter in flightControlParameters.Values)
+                if (childParts.Count > 0)
                 {
-                    if (parameter.Enabled && parameter.IsAutopilot)
+                    foreach (var parameter in flightControlParameters.Values)
                     {
-                        parameter.UpdateAutopilot(c);
+                        if (parameter.Enabled && parameter.IsAutopilot)
+                        {
+                            Vessel ves = parameter.GetResponsibleVessel();                                
+                            if (ves != null && ves.id != Vessel.id)
+                            {
+                                // This is a "should never see this" error - being logged in case a user
+                                // has problems and reports a bug.
+                                SafeHouse.Logger.LogError(string.Format("kOS Autopilot on wrong vessel: {0} != {1}",
+                                    parameter.GetShared().Vessel.id, Vessel.id));
+                                foundWrongVesselAutopilot = true;
+                            }
+                            parameter.UpdateAutopilot(c);
+                        }
                     }
                 }
             }
@@ -475,6 +531,8 @@ namespace kOS.Module
             kOSVesselModule ret;
             if (!allInstances.TryGetValue(vessel.id, out ret))
             {
+                if (!vessel.isActiveAndEnabled)
+                    throw new Safe.Exceptions.KOSException("Vessel is no longer active or enabled " + vessel.name);
                 ret = vessel.GetComponent<kOSVesselModule>();
                 if (ret == null)
                     throw new kOS.Safe.Exceptions.KOSException("Cannot find kOSVesselModule on vessel " + vessel.name);

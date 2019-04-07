@@ -121,8 +121,10 @@ namespace kOS.Safe.Compilation.KS
         {
             if (node == null) { throw new ArgumentNullException("node"); }
 
+#pragma warning disable CS0162
             if (TRACE_PARSE)
                 SafeHouse.Logger.Log("traceParse: visiting node: " + node.Token.Type.ToString() + ", " + node.Token.Text);
+#pragma warning restore CS0162
 
             LineCol location = GetLineCol(node);
             lastLine = location.Line;

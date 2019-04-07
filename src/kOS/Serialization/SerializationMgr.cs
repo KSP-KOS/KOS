@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Reflection;
 using kOS.Safe.Serialization;
 using kOS.Safe.Encapsulation;
 using System.Collections.Generic;
@@ -15,28 +16,14 @@ namespace kOS.Serialization
         public SerializationMgr(SharedObjects sharedObjects) : base(sharedObjects)
         {
             SafeSerializationMgr.AddAssembly(typeof(SerializationMgr).Assembly.FullName);
+            this.sharedObjects = (SharedObjects)sharedObjects;
         }
 
         public override IDumper CreateAndLoad(string typeFullName, Dump data)
         {
-            IDumper instance = base.CreateInstance(typeFullName);
-
-            if (instance is IHasSharedObjects)
-            {
-                IHasSharedObjects withSharedObjects = instance as IHasSharedObjects;
-                withSharedObjects.Shared = sharedObjects;
-            }
-            else if (instance is IHasSafeSharedObjects)
-            {
-                IHasSafeSharedObjects withSharedObjects = instance as IHasSafeSharedObjects;
-                withSharedObjects.Shared = sharedObjects;
-            }
-
-            if (instance != null)
-            {
-                instance.LoadDump(data);
-            }
-
+            Type loadedType = base.GetTypeFromFullname(typeFullName);
+            MethodInfo method = loadedType.GetMethod("CreateFromDump", new Type[] { typeof(SafeSharedObjects), typeof(Dump) });
+            IDumper instance = (IDumper)method.Invoke(null, new object[] { sharedObjects, data });
             return instance;
         }
     }

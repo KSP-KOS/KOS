@@ -1,8 +1,9 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 using System.Collections.Generic;
 using kOS.Safe.Utilities;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using System.IO;
 using System;
@@ -54,6 +55,11 @@ namespace kOS.Suffixed.Widget
             Enabled = true;
             Shown = true;
             RegisterInitializer(InitializeSuffixes);
+        }
+
+        public Box GetParent()
+        {
+            return parent;
         }
 
         /// <summary>
@@ -135,7 +141,12 @@ namespace kOS.Suffixed.Widget
         {
             if (relativePath == "") return null;
             if (textureCache == null)
-                textureCache = new Dictionary<string, TexFileInfo>();
+                textureCache = new Dictionary<string, TexFileInfo> ();
+
+            string path = Path.GetFullPath (Path.Combine (SafeHouse.ArchiveFolder, relativePath));
+            if (!path.StartsWith (SafeHouse.ArchiveFolder, StringComparison.Ordinal))
+                throw new KOSInvalidPathException ("Path refers to parent directory", path);
+
             TexFileInfo t;
             if (textureCache.TryGetValue(relativePath, out t)) {
                 if (t.texture != null) {
@@ -147,9 +158,9 @@ namespace kOS.Suffixed.Widget
                 t = new TexFileInfo();
                 textureCache.Add(relativePath, t);
             }
-            string path = Path.Combine(SafeHouse.ArchiveFolder, relativePath);
+
             var r = new Texture2D(0, 0, TextureFormat.ARGB32, false);
-            string[] exts = { ".png", "" };
+            string[] exts = {".png", "" };
             foreach (string ext in exts) {
                 string filename = path + ext;
                 if (File.Exists(filename)) {

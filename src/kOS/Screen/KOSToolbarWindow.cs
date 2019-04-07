@@ -1,4 +1,4 @@
-﻿using kOS.Module;
+using kOS.Module;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Module;
 using kOS.Safe.Utilities;
@@ -92,11 +92,11 @@ namespace kOS.Screen
         /// </summary>
         public static void FirstTimeSetup()
         {
-            launcherButtonTexture = GameDatabase.Instance.GetTexture("kOS/GFX/launcher-button", false);
-            terminalOpenIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open", false);
-            terminalClosedIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed", false);
-            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open-telnet", false);
-            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed-telnet", false);
+            launcherButtonTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_launcher-button", false);
+            terminalOpenIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open", false);
+            terminalClosedIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_terminal-icon-closed-telnet", false);
 
             windowRect = new Rect(0, 0, 1f, 1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
@@ -189,7 +189,7 @@ namespace kOS.Screen
             if (!ToolbarManager.ToolbarAvailable) return;
 
             blizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
-            blizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            blizzyButton.TexturePath = "kOS/GFX/dds_launcher-button-blizzy";
             blizzyButton.ToolTip = "kOS";
             blizzyButton.OnClick += e => CallbackOnClickBlizzy();
         }

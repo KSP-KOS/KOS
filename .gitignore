@@ -1,4 +1,5 @@
 # VisualStudio
+.vs/
 [Bb]in/
 [Oo]bj/
 
@@ -20,6 +21,9 @@ packages/
 
 # VisualStudio Code
 .vscode/
+
+# Vim
+*.swp
 
 # Unity
 [Ll]ibrary/
@@ -46,3 +50,6 @@ netkan.exe
 
 #zip files for archived art assets
 *.zip
+
+# .swp files from vim (temporary files that vim creates when editing a file)
+*.swp
