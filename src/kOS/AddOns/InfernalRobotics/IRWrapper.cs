@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-// TODO: Change this namespace to something specific to your plugin here.
+// Infernal Robotics Next is the only version of IR that is supported
+// This wrapper was taken from https://github.com/meirumeiru/IR-Sequencer/blob/master/IRSequencer/IRSequencer/API/IRWrapper.cs
+// And represents the most recent recommended wrapper as of April 2019
 namespace kOS.AddOns.InfernalRobotics
 {
     public class IRWrapper

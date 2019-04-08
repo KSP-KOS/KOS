@@ -3,13 +3,29 @@
 Infernal Robotics
 =================
 
-- Download: http://kerbal.curseforge.com/ksp-mods/220267
-- Alternative download: https://github.com/MagicSmokeIndustries/InfernalRobotics/releases
-- Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/104535-/
+.. warning::
+    The Infernal Robotics mod has been migrating to Infernal Robotics Next. kOS
+    includes support for IR Next only, and no longer supports re-compiled
+    versions of the original IR.  The links to the original mod forum thread and
+    downloads remain in this file for historical context and reference.
+
+- Infernal Robotics Next download: https://github.com/meirumeiru/InfernalRobotics/releases
+- Infernal Robotics Next forum thread: https://forum.kerbalspaceprogram.com/index.php?/topic/170898--/
+- Historical download: http://kerbal.curseforge.com/ksp-mods/220267
+- Historical alternative download: https://github.com/MagicSmokeIndustries/InfernalRobotics/releases
+- Historical Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/index.php?/topic/104535--/
 
 Infernal Robotics might not be installed on your copy of the game.
 Your script can test whether or not it's installed by using
 the boolean expression ``addons:available("ir")``.
+
+.. warning::
+    At the time of this writing, IR Next officially supports KSP 1.3.1 and 1.4.2
+    with the beta 3 patch 7 "pre-release".  The addon has been tested using
+    this 1.4.2 zip file running on KSP 1.6.1 with no errors reported.  While
+    using this addon, please keep in mind that IR Next may have underlying
+    issues due to KSP version mismatch, and that newer releases to IR Next may
+    cause this addon to break in unexpected ways.
 
 Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren't possible under stock KSP.
 
