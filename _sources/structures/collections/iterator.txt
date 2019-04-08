@@ -40,15 +40,8 @@ invalid.  This represents a position just *before the start* of the list of
 items.  Only after the first time :attr:`NEXT` is called does the value of
 :attr:`VALUE` become usable as the first thing in the collection.
 
-Rewinding No Longer Supported
------------------------------
-
-.. note::
-
-    There used to be a :RESET method for iterators, but it has been
-    removed as it was not always implemented and sometimes gave an
-    error.  Now to start the enumeration over you need to obtain a
-    new iterator.
+If you want to restart an iteration you must call the ``:ITERATOR`` suffix of
+the collection again to obtain a new iterator.  Older versions of kOS had a ``:RESET`` suffix but it was removed as it could not be supported on all types.
 
 Members
 -------
@@ -88,17 +81,6 @@ Members
     :returns: n/a
 
     This suffix has been deleted from kOS.
-
-    .. note::
-
-        Previous versions of kOS had a ``:RESET`` suffix for Iterators.  This doesn't
-        exist anymore and is being left in the documentation here just so people trying
-        to search for it will find this message explaining where it went.  kOS had to
-        drop it because it's no longer as easy to implement it under the hood with
-        newer versions of .Net.
-
-    (If you want to restart an iteration you must call the ``:ITERATOR`` suffix of
-    the collection again to obtain a new iterator.)
 
 .. method:: Iterator:NEXT
 

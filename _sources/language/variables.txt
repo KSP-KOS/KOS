@@ -128,12 +128,12 @@ Initializer required in DECLARE
     .. versionadded:: 0.17
         The syntax without the initializer, looking like so:
 
-        .. code-block:: kerboscript
+         .. code-block:: kerboscript
 
-            DECLARE x. // no initializer like "TO 1."
+             DECLARE x. // no initializer like "TO 1."
 
-        is **no longer legal syntax**.
-
+         is **no longer legal syntax**.
+         
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifier name so as to make it impossible for
 there to exist any uninitialized variables in a script.
@@ -244,12 +244,6 @@ Remember that if you have an optional parameter with an initializer
 expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.
-
-.. note::
-    .. versionadded:: 0.18.3
-        Optional Parameters were added as a new feature in kOS 0.18.3
-
-
 
 .. note::
 
@@ -381,19 +375,7 @@ Calling a LOCK that was created in another file
 :::::::::::::::::::::::::::::::::::::::::::::::
 
 If you try to call a lock that is declared in another program
-file you run, it does not work, and has never worked prior to kOS
-0.17.0:
-
-File1.ks::
-
-    run File2.
-    print "x's locked value is " + x.
-
-File2.ks::
-
-    lock x to "this is x".
-
-But now with the Kerboscript of kOS 0.17.0, you can make it work
+file you run, it does not work.  You can make it work
 by inserting empty parentheses after the lock name to help give
 the compiler the hint that you expected x to be a function call
 (which is what a lock really is):
@@ -493,12 +475,6 @@ variable.
 
 Scoping terms
 -------------
-
-.. note::
-    .. versionadded:: 0.17
-        In prior versions of Kerboscript, all identifiers other than
-        DECLARE PARAMETER identifiers were always global variables no
-        matter what, even if you used the DECLARE statement to make them.
 
 What is Scope?
     The term *Scope* simply refers to asking the question "where in the

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS CPU hardware &mdash; kOS 1.1.5.0 documentation</title>
+  <title>The kOS CPU hardware &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="KOS Processor PartModule Configuration Fields" href="kospartmodule.html"/>
         <link rel="prev" title="CPU Vessel (SHIP)" href="cpu_vessel.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -184,26 +184,24 @@ more advanced scripts. This page contains that type of information.</p>
 <li><a class="reference internal" href="#update-ticks-and-physics-ticks" id="id3">Update Ticks and Physics Ticks</a></li>
 <li><a class="reference internal" href="#electric-drain" id="id4">Electric Drain</a></li>
 <li><a class="reference internal" href="#triggers" id="id5">Triggers</a><ul>
-<li><a class="reference internal" href="#triggers-always-execute-at-least-as-far-as-the-conditional-check" id="id6">Triggers always execute at least as far as the Conditional Check</a></li>
-<li><a class="reference internal" href="#wait-in-a-trigger" id="id7">Wait in a Trigger</a></li>
-<li><a class="reference internal" href="#do-not-loop-a-long-time-in-a-trigger-body" id="id8">Do Not Loop a Long Time in a Trigger Body!</a></li>
-<li><a class="reference internal" href="#but-i-want-a-loop" id="id9">But I Want a Loop!!</a></li>
+<li><a class="reference internal" href="#triggers-for-cooked-steering" id="id6">Triggers for Cooked Steering</a></li>
+<li><a class="reference internal" href="#triggers-for-when-and-on-statements" id="id7">Triggers for WHEN and ON statements</a></li>
+<li><a class="reference internal" href="#wait-in-a-trigger" id="id8">Wait in a Trigger</a></li>
+<li><a class="reference internal" href="#do-not-loop-a-long-time-in-a-trigger-body" id="id9">Do Not Loop a Long Time in a Trigger Body!</a></li>
+<li><a class="reference internal" href="#but-i-want-a-loop" id="id10">But I Want a Loop!!</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#wait" id="id10">Wait!!!</a></li>
-<li><a class="reference internal" href="#cpu-update-loop" id="id11">CPU Update Loop</a></li>
-<li><a class="reference internal" href="#the-frozen-universe" id="id12">The Frozen Universe</a></li>
+<li><a class="reference internal" href="#trigger-interrupt-priority" id="id11">Trigger Interrupt Priority</a></li>
+<li><a class="reference internal" href="#wait" id="id12">Wait!!!</a></li>
+<li><a class="reference internal" href="#cpu-update-loop" id="id13">CPU Update Loop</a><ul>
+<li><a class="reference internal" href="#how-an-interrupt-works" id="id14">How an interrupt works</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-frozen-universe" id="id15">The Frozen Universe</a></li>
 </ul>
 </div>
 <div class="section" id="update-ticks-and-physics-ticks">
 <span id="physics-tick"></span><h2><a class="toc-backref" href="#id3">Update Ticks and Physics Ticks</a><a class="headerlink" href="#update-ticks-and-physics-ticks" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.17: </span>Previous versions of kOS used to execute program code during the
-Update phase, rather than the more correct Physics Update phase.</p>
-</div>
-</div>
 <p>Kerbal Space Program simulates the universe by running the universe in
 small incremental time intervals that for the purpose of this
 document, we will call &#8220;<strong>physics ticks</strong>&#8221;. The exact length of time
@@ -246,21 +244,15 @@ happening <em>less</em> frequently than <em>physics tics</em>. Basically, look a
 your frame rate. Is it higher than 25 fps? If so, then your <em>update
 ticks</em> happen faster than your <em>physics ticks</em>, otherwise its the
 other way around.</p>
+<p>It is important to note that versions of kOS prior to 0.17 executed program code during update ticks.  After that point, program code was executed during the physics ticks.</p>
 </div>
 <div class="section" id="electric-drain">
 <span id="electricdrain"></span><h2><a class="toc-backref" href="#id4">Electric Drain</a><a class="headerlink" href="#electric-drain" title="Permalink to this headline">¶</a></h2>
-<div class="versionadded">
-<p><span class="versionmodified">New in version 0.19.0: </span>As of version 0.19.0, the electric charge drain varies depending
-on CPU % usage.  Prior to version 0.19.0, the CPU load made no
-difference and the electric drain was constant regardless of
-utilization.</p>
-</div>
 <p>Real world CPUs often have low power modes, and sleep modes, and these are
 vital to long distance probes.  In these modes the computer deliberately
 runs slowly in order to use less power, and then the program can tell it to
 speed up to normal speed again when it needs to wake up and do something.</p>
-<p>In kOS, this concept is simplified by just draining electric charge by
-&#8220;micropayments&#8221; of charge per instruction executed.</p>
+<p>Older versions of kOS implemented this concept with a constant electric drain regardless of CPU load.  As of version 0.19.0, this concept is simplified by just draining electric charge by &#8220;micropayments&#8221; of charge per instruction executed.</p>
 <p>To change this setting if you want to re-balance the system, see the
 page about <a class="reference internal" href="kospartmodule.html#ecperinstruction"><span>kOSProcessor part config values</span></a>.</p>
 <p>The shorthand version is this:  The more instructions per update
@@ -283,108 +275,113 @@ that update can make a big difference.</p>
 </div>
 <div class="section" id="triggers">
 <span id="id1"></span><h2><a class="toc-backref" href="#id5">Triggers</a><a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
-<div class="versionadded">
-<p><span class="versionmodified">New in version 0.19.3: </span>Note that as of version 0.19.3 and up, the entire way that triggers
-are dealt with by the underlying kOS CPU has been redesigned.  In
-previous versions it was not possible to have a trigger that lasts
-longer than one <strong>physics tick</strong>, leading to a lot of warnings in
-this section of the documentation.  Many of those warnings are now
-moot, which caused a re-write of most of this section of the
-documentation.</p>
-</div>
-<p>Many of the warnings and cautions mentioned below can really be boiled
-down to this one phrase, which is a good idea to memorize:</p>
-<p><em>Main-line code gets interrupted by triggers, but triggers don&#8217;t get
-interrupted by main-line code (or other triggers).</em></p>
-<p>There are multiple things within kerboscript that run &#8220;in the background&#8221; always updating, while the main script continues on. The way these work is a bit like a real computer&#8217;s multithreading, but not <em>quite</em>. Collectively all of these things are called &#8220;triggers&#8221;.</p>
-<p>Triggers are all of the following:</p>
-<ul class="simple">
+<p>There are multiple things within kerboscript that run &#8220;in the background&#8221;
+always updating, while the main script continues on. The way these work is
+a bit like a real computer&#8217;s interrupt handling system, but not <em>quite</em>.</p>
+<p>Collectively all of these things are called &#8220;triggers&#8221;.</p>
+<p>Triggers come in these varieties:</p>
+<ul class="simple" id="recurring-trigger">
+<li><strong>Recurring triggers:</strong> Triggers that once they are started keep getting
+called again and again on a regular basis, until they are made to stop.<ul>
 <li>LOCKS which are attached to flight controls (THROTTLE, STEERING,
 etc), but not other LOCKS.</li>
-<li>ON condition { some commands }.</li>
-<li>WHEN condition THEN { some commands }.</li>
+<li>User Delegates assigned to recurrently updating suffixes such as
+<a class="reference internal" href="../structures/misc/vecdraw.html#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:VECUPDATER</span></code></a>.</li>
+<li>WHEN and ON triggers:<ul>
+<li><code class="docutils literal"><span class="pre">WHEN</span> <span class="pre">condition</span> <span class="pre">THEN</span> <span class="pre">{</span> <span class="pre">some</span> <span class="pre">commands</span> <span class="pre">}</span></code></li>
+<li><code class="docutils literal"><span class="pre">ON</span> <span class="pre">condition</span> <span class="pre">{</span> <span class="pre">some</span> <span class="pre">commands</span> <span class="pre">}</span></code></li>
 </ul>
-<p>The way these work is that once per <strong>physics tick</strong>, all these
-trigger routines get run, including those locks that are always
-re-evaluated by the cooked steering, and the <code class="docutils literal"><span class="pre">ON</span></code> and <code class="docutils literal"><span class="pre">WHEN</span></code>
-triggers.  (This isn&#8217;t <em>quite</em> true.  The real answer is more
-complex than that - see <a class="reference internal" href="#cpu-update-loop"><span>CPU Update Loop</span></a>
-elsewhere on this page).</p>
-<p>Each of the steering locks behaves like a function that returns
-a value, and is re-called to get the new value for this <strong>physics
-tick</strong>.  Each of the <code class="docutils literal"><span class="pre">ON</span></code> and <code class="docutils literal"><span class="pre">WHEN</span></code> triggers also behave
+</li>
+</ul>
+</li>
+</ul>
+<ul class="simple" id="callback-once-trigger">
+<li><strong>CallbackOnce triggers:</strong> Triggers that only happen once per event.  To
+make the trigger happen again, the event has to happen again:<ul>
+<li>Callback delegates you tell the system to call when the user
+performs GUI events (for example a button&#8217;s ONCLICK).</li>
+</ul>
+</li>
+</ul>
+<p>These two types of trigger don&#8217;t have the same priority level.
+It is possible for a recurring trigger to interrupt a callback-once
+trigger, but not the other way around.  Further information about
+this is described in the <a class="reference internal" href="#interrupt-priority"><span>interrupt priority</span></a>
+documentation below.</p>
+<p>All triggers work essentially like this:</p>
+<p>The kOS CPU decides it&#8217;s time to cause a call to the trigger.  (How it
+does this is explained below in
+<a class="reference internal" href="#interrupt-priority"><span>interrupt priority</span></a>.)  Once it decides its
+time to call the trigger, it does so by inserting a subroutine call
+at the current moment that interrupts the normal program flow and
+jumps to the trigger&#8217;s subroutine <em>as if</em> the program itself had chosen
+to call the subroutine.  It manipulates the call-stack in such a way
+that the normal work of the <code class="docutils literal"><span class="pre">Return</span></code> instruction at the end of the
+trigger routine will pop back to the current location of the program
+flow.  This system works because all variables in kOS are on the
+stack without any registers, and so popping back to where the
+interruption happened puts everything back in the state it was in
+before the interruption so the program can continue as if nothing
+had happened.</p>
+<p>Prior to kOS 0.19.3, this section was quite different but large changes to how triggers work required a re-write of this whole page. Any old kOS scripts you find that were written prior to kOS 0.19.3 that used triggers might have different behaviour because of this.</p>
+<div class="section" id="triggers-for-cooked-steering">
+<span id="trigger-steering"></span><h3><a class="toc-backref" href="#id6">Triggers for Cooked Steering</a><a class="headerlink" href="#triggers-for-cooked-steering" title="Permalink to this headline">¶</a></h3>
+<p><em>This is a kind of</em> <a class="reference internal" href="#recurring-trigger"><span>recurring trigger</span></a>.</p>
+<p>The <code class="docutils literal"><span class="pre">lock</span></code> expressions associated with
+<a class="reference external" href="commands/flight/cooked.html">Cooked Control</a>,
+meaning <code class="docutils literal"><span class="pre">STEERING</span></code>, <code class="docutils literal"><span class="pre">THROTTLE</span></code>, <code class="docutils literal"><span class="pre">WHEELSTEERING</span></code>, and
+<code class="docutils literal"><span class="pre">WHEELTHROTTLE</span></code>, have triggers associated with them.
+kOS will keep calling these expressions repeatedly as frequently
+as it can (once per <strong>physics tick</strong> if it can).  That is why
+they are a kind of <em>recurring_trigger</em>.</p>
+<p>Note, the <code class="docutils literal"><span class="pre">LOCK</span></code> command does not <em>normally</em> result in a trigger
+that runs every <strong>physics tick</strong>.  It just does this when dealing with
+one of these specific values, of <code class="docutils literal"><span class="pre">STEERING</span></code>, <code class="docutils literal"><span class="pre">THROTTLE</span></code>,
+<code class="docutils literal"><span class="pre">WHEELSTEERING</span></code>, and <code class="docutils literal"><span class="pre">WHEELTHROTTLE</span></code>.  The normal behaviour of
+a lock expression is to only execute the expression when it&#8217;s used
+inside another expression.  It&#8217;s just that in the case of these
+special locks, the kOS system <em>itself</em> is repeatedly doing that.
+To do this kOS needs to interrupt whatever your code was doing at the
+time to perform this expression and it uses the trigger interrupt
+system to do so.</p>
+</div>
+<div class="section" id="triggers-for-when-and-on-statements">
+<span id="when-on-trigger"></span><h3><a class="toc-backref" href="#id7">Triggers for WHEN and ON statements</a><a class="headerlink" href="#triggers-for-when-and-on-statements" title="Permalink to this headline">¶</a></h3>
+<p><em>This is a kind of</em> <a class="reference internal" href="#recurring-trigger"><span>recurring trigger</span></a>.</p>
+<p>Each of the <code class="docutils literal"><span class="pre">ON</span></code> and <code class="docutils literal"><span class="pre">WHEN</span></code> triggers also behave
 much like a function, with a body like this:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nv">conditional_expression</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">true</span><span class="p">.</span>  <span class="c1">// premature quit.  preserve and try again next time.</span>
 <span class="nv">do_rest_of_trigger_body_here</span><span class="p">.</span>
 </pre></div>
 </div>
-<div class="section" id="triggers-always-execute-at-least-as-far-as-the-conditional-check">
-<span id="trigger-conditional"></span><h3><a class="toc-backref" href="#id6">Triggers always execute at least as far as the Conditional Check</a><a class="headerlink" href="#triggers-always-execute-at-least-as-far-as-the-conditional-check" title="Permalink to this headline">¶</a></h3>
+<p id="when-on-conditional"><strong>WHEN and ON Triggers always interrupt to check the condition even when
+the body doesn&#8217;t happen yet.</strong></p>
 <p>Even a trigger who&#8217;s condition isn&#8217;t true yet still needs to execute
-a few instructions into the trigger subroutine to <em>discover</em> that its
-condition isn&#8217;t true yet.  The trigger still causes a subroutine call
-once per <strong>physics tick</strong> just to get far enough into the routine to
+the few instructions at the start of the trigger that <em>discover</em> that
+its condition isn&#8217;t true yet.  The trigger causes a subroutine call
+once per <strong>physics tick</strong> (or less often if the system has too
+much trigger work to accomplish all the triggers in one tick).
+This call gets at least far enough into the routine to
 reach the conditional expression check and discover that it&#8217;s not
 time to run the rest of the body yet, so it returns.  An expensive
 to calculate conditional expression can really starve the system of
-instructions because it&#8217;s getting run every single <strong>physics tick</strong>.
-<em>It&#8217;s good practice to try to keep your trigger&#8217;s conditional check
+instructions because the system is attempting to run it every
+<strong>physics tick</strong> if it can.</p>
+<p><em>It&#8217;s good practice to try to keep your trigger&#8217;s conditional check
 short and fast to execute.  If it consists of multiple clauses, try
-to take advantage of :ref:`short circuit boolean &lt;short_circuit&gt;`
-logic by putting the fastest part of the check first.</em></p>
+to take advantage of</em> <a class="reference internal" href="../language/features.html#short-circuit"><span>short circuit boolean</span></a>
+<em>logic by putting the fastest part of the check first.</em></p>
 </div>
 <div class="section" id="wait-in-a-trigger">
-<span id="wait-in-trigger"></span><h3><a class="toc-backref" href="#id7">Wait in a Trigger</a><a class="headerlink" href="#wait-in-a-trigger" title="Permalink to this headline">¶</a></h3>
-<p>It is possible for kOS to allow a trigger that takes longer than one
-<em>physics tick</em> to execute.  It just means the rest of the program is
-stuck until the trigger is done.  Triggers can interrupt mainline code, but
-mainline code can&#8217;t interrupt triggers.  Thus using a <code class="docutils literal"><span class="pre">WAIT</span></code> in a trigger,
-while possible, may be a bad idea because it stops the entire rest of
-the program, including all its triggers, from happening, unlike how waits
-in mainline code work.  Before considering doing this, remember that a
-<code class="docutils literal"><span class="pre">lock</span> <span class="pre">steering</span> <span class="pre">to</span> <span class="pre">....</span></code> command and a <code class="docutils literal"><span class="pre">lock</span> <span class="pre">throttle</span> <span class="pre">to....</span></code> command
-are both effectively triggers too.  If you wait in a trigger, you prevent
-the cooked steering values from updating while that wait is happening.
-Your ship will be stuck continuing to use whatever previous values they
-had just before the trigger&#8217;s wait began, and they won&#8217;t be recalculated
-until your trigger&#8217;s wait is over.</p>
-<p>Short version:  While <code class="docutils literal"><span class="pre">WAIT</span></code> is possible from inside a trigger and it
-won&#8217;t crash the script to use it, it&#8217;s probably not a good design choice
-to use <code class="docutils literal"><span class="pre">WAIT</span></code> inside a trigger.  Triggers should be designed to execute
-all the way through to the end in one pass, if possible.</p>
-<p>This is a consequence of: <em>Main-line code gets interrupted by triggers,
-but triggers don&#8217;t get interrupted by main-line code (or other triggers).</em></p>
-<div class="section" id="advanced-topic-why-not-threading">
-<h4>Advanced topic: why not threading?<a class="headerlink" href="#advanced-topic-why-not-threading" title="Permalink to this headline">¶</a></h4>
-<p><em>If you don&#8217;t understand the terms used below, you can safely skip
-this part of the explanation.  It&#8217;s here for the advanced users
-who already know how to program and might be thinking there&#8217;s a
-better way to do this.</em></p>
-<p>Remember that triggers aren&#8217;t <em>quite</em> true multi-threading.  If you make
-a trigger <code class="docutils literal"><span class="pre">WAIT</span> <span class="pre">UNTIL</span> <span class="pre">AG1.</span></code>, you&#8217;re making the entire program wait.  If you make
-the main-line code <code class="docutils literal"><span class="pre">WAIT</span></code>, there is a mechanism to make triggers
-fire off during that <code class="docutils literal"><span class="pre">WAIT</span></code> because triggers can interrupt main line
-code, and in fact that&#8217;s their intended purpose - to behave as interrupts.</p>
-<p>But main line code can&#8217;t interrupt triggers.  The only way to make them
-both &#8216;equal&#8217; citizens and be capable of interrupting each other would be
-to implement a form of threading inside kOS.  The program context that
-kOS keeps track of while the program is executing consists of a stack,
-an array of the program opcodes, stack records that point to
-dictionaries of variables (on the stack so they can deal with scoping),
-and a current instruction pointer.  It&#8217;s completely plausible that
-kOS could wrap all that inside a single class, and then make one
-instance of it per thread, and get multi-threading that way.  But there
-is reluctance to implement this because once the kOS system can do
-threading, the documentation explaining how to use kOS won&#8217;t be so
-beginner-friendly anymore.  Allowing for threading opens up a whole
-new can of worms to explain, including atomic sections and how
-concurrently accessing the same variable can break everything if you&#8217;re
-not careful, etc.</p>
-</div>
+<span id="wait-in-trigger"></span><h3><a class="toc-backref" href="#id8">Wait in a Trigger</a><a class="headerlink" href="#wait-in-a-trigger" title="Permalink to this headline">¶</a></h3>
+<p>While <code class="docutils literal"><span class="pre">WAIT</span></code> is possible from inside a trigger and it won&#8217;t crash
+the script to use it, it&#8217;s probably not a good design choice to use
+<code class="docutils literal"><span class="pre">WAIT</span></code> inside a trigger.  Triggers should be designed to execute
+all the way through to the end in one fast pass, if possible.</p>
 </div>
 <div class="section" id="do-not-loop-a-long-time-in-a-trigger-body">
-<h3><a class="toc-backref" href="#id8">Do Not Loop a Long Time in a Trigger Body!</a><a class="headerlink" href="#do-not-loop-a-long-time-in-a-trigger-body" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Do Not Loop a Long Time in a Trigger Body!</a><a class="headerlink" href="#do-not-loop-a-long-time-in-a-trigger-body" title="Permalink to this headline">¶</a></h3>
 <p>For similar reasons to the explanation above about the <code class="docutils literal"><span class="pre">WAIT</span></code> command
 used inside triggers, it&#8217;s not really a good idea for a trigger to
 have a long loop inside it that just keeps going and going.</p>
@@ -395,15 +392,13 @@ update.  However, all triggers should be designed to finish their tasks
 in finite time and return.  What you should not do is design a trigger&#8217;s
 body to go into an infinite loop, or a long-lasting loop that you thought
 would run in the background while the rest of the program continues on.</p>
-<p>This is because while you are in a trigger, ALL the other triggers aren&#8217;t
-being fired, and the main-line code isn&#8217;t being executed.  A trigger that
-performs a long-running loop will starve the rest of the code in your
-kerboscript program from being allowed to ever run again.</p>
-<p>This is a consequence of: <em>Main-line code gets interrupted by triggers,
-but triggers don&#8217;t get interrupted by main-line code (or other triggers).</em></p>
+<p>This is because while you are in a trigger, main-line code isn&#8217;t being
+executed, and other triggers of equal or lesser priority aren&#8217;t being
+executed.  A trigger that performs a long-running loop will starve the
+rest of the code in your kerboscript program from being allowed to run.</p>
 </div>
 <div class="section" id="but-i-want-a-loop">
-<h3><a class="toc-backref" href="#id9">But I Want a Loop!!</a><a class="headerlink" href="#but-i-want-a-loop" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">But I Want a Loop!!</a><a class="headerlink" href="#but-i-want-a-loop" title="Permalink to this headline">¶</a></h3>
 <p>If you want a trigger body that is meant to loop a long time, the only
 workable way to do it is to design it to execute just once, but
 then make it return true (or use the <code class="docutils literal"><span class="pre">preserve</span></code> keyword, which is
@@ -412,8 +407,55 @@ basically the same thing) to keep the trigger around for the next
 executes one iteration per <strong>physics tick</strong>.</p>
 </div>
 </div>
+<div class="section" id="trigger-interrupt-priority">
+<span id="interrupt-priority"></span><h2><a class="toc-backref" href="#id11">Trigger Interrupt Priority</a><a class="headerlink" href="#trigger-interrupt-priority" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.6.0: </span>The multiple priorities of interruption described below (GUI callbacks
+being lower priority than recurring callbacks) were introduced in
+kOS v1.1.6.0</p>
+</div>
+<p>When the CPU wants to interrupt the normal program flow and redirect it
+into a trigger, there are some priority rules for which kind of trigger
+is allowed to interrupt the program flow depending on what the program
+is doing right now.  This is accomplished by having a few priority
+levels, shown in this list:</p>
+<ul class="simple">
+<li>Priority 20: <a class="reference internal" href="#recurring-trigger"><span>Recurring Interrupts</span></a></li>
+<li>Priority 10: <a class="reference internal" href="#callback-once-trigger"><span>Callback-Once Interrupts</span></a></li>
+<li>Priority 0: Normal (non-interrupting) code.</li>
+</ul>
+<p><strong>A Trigger will only interrupt something of lower priority than itself</strong>.</p>
+<p>If the CPU is currently running normal non-interrupting) code, then any
+trigger is allowed to interrupt it.  But if it is currently already in
+the middle of running a trigger, and another trigger of equal priority
+wants to interrupt it, the second trigger will wait until the first
+trigger is over and the CPU has dropped back down to normal code
+before the second trigger will be allowed to happen.</p>
+<p>The reason the priorities are laid out the way they are is that
+the assumption is that recurring interrupts need to be the
+highest priority because they&#8217;re often time sensitive and need
+to happen again and again with speed, while the callback-once
+interrupts are probably not as time-sensitive since they respond
+to one-shot events like user clicks.</p>
+<p><strong>A trigger cannot interrupt *itself* if it&#8217;s still running</strong>.</p>
+<p>When you have recurring triggers that keep re-running themselves
+again and again, the way they work is that they wait till the previous
+instance of themselves has finished running before a new instance will
+happen.  Thus a recurring trigger will <em>not</em> run every single <strong>physics
+tick</strong> if the trigger takes longer than 1 tick to finish.  Instead it
+will wait for the start of the next <strong>physics tick</strong> <em>after</em> the current
+execution of the trigger is over.  (This is to prevent it from queuing
+up calls faster than they get dispatched, which would make a backlog.)</p>
+<p>These priorities are subject to change in later future versions of
+kOS.  Right now they&#8217;re pretty coarse-grain, which is why they count
+by 10&#8217;s - so there is room to split them up and make them more
+fine-grained if that becomes necessary later.  Never write code that
+is too dependant on the priorities being exactly this way.  (This is
+why these numbers aren&#8217;t even exposed to the script at the moment,
+to avoid that design pattern.)</p>
+</div>
 <div class="section" id="wait">
-<h2><a class="toc-backref" href="#id10">Wait!!!</a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Wait!!!</a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h2>
 <p>Any WAIT statement causes the kerboscript program to immediately stop executing the main program where it is, even if far fewer than <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></code></a> instructions have been executed in this <strong>physics tick</strong>. It will not continue the execution until at least the next <strong>physics tick</strong>, when it will check to see if the WAIT condition is satisfied and it&#8217;s time to wake up and continue.</p>
 <p>Therefore ANY WAIT of any kind will guarantee that your program will allow at least one <strong>physics tick</strong> to have happened before continuing. If you attempt to:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">WAIT</span> <span class="mf">0</span><span class="p">.</span><span class="mf">001</span><span class="p">.</span>
@@ -436,81 +478,101 @@ full <strong>physics tick</strong>.</p>
 <p>Then even though the condition is immediately true, it will still wait one physics tick to discover this fact and continue.</p>
 </div>
 <div class="section" id="cpu-update-loop">
-<span id="id2"></span><h2><a class="toc-backref" href="#id11">CPU Update Loop</a><a class="headerlink" href="#cpu-update-loop" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">As of version 0.17.0, The kOS CPU runs every <em>physics tick</em>, not
-every <em>update tick</em> as it did before.</p>
-</div>
+<span id="id2"></span><h2><a class="toc-backref" href="#id13">CPU Update Loop</a><a class="headerlink" href="#cpu-update-loop" title="Permalink to this headline">¶</a></h2>
 <div class="versionadded">
-<p><span class="versionmodified">New in version 0.19.3: </span>As of version 0.19.3, the behaviour of triggers was changed
-dramatically to enable triggers that last longer than one
-<em>physics tick</em>, thereby causing the section of documentation
-that follows to be completely re-written.  If you were familiar
-with triggers before 0.19.3, you should read the next section
-carefully to be aware of what changed.</p>
+<p><span class="versionmodified">New in version 1.1.6.0: </span>As of version 1.1.6.0, the entire layout of the CPU update loop
+was re-written to handle the new trigger priority system.</p>
 </div>
-<p>On each physics tick, each kOS CPU that&#8217;s fully present &#8220;near&#8221; enough
-to the player&#8217;s current ship to be fully loaded, including the current
-ship itself, wakes up and performs the following steps, in this order:</p>
-<ol class="arabic simple">
-<li>For each TRIGGER (see below) that is currently enabled,
-manipulate the call stack to make it look as if the program
-had just made a subroutine call to the trigger right now, and the
-current execution is now set to the start of the trigger&#8217;s code.
-<em>Remeber that from the point of view of the CPU, triggers appear
-to be subroutines it just unconditionally calls whether or not
-their trigger condition is true yet.  The code to decide that
-it&#8217;s not really time yet for the trigger to fire is contained
-inside the trigger subroutine itself.  The first thing the
-trigger routine does is return prematurely if its trigger
-condition hasn&#8217;t been met.</em>
-If more than one such trigger is enabled and needs to be set up,
-then the calls to the triggers will end up looking like a list of
-nested subroutine calls on the stack had just begun, and the
-current instruction is the start of the innermost nested subroutine
-call.</li>
-<li>Any TRIGGER which has just been set up thusly is temporarily removed
-from the list of enabled triggers, so it will be ignored in step (1)
-above should the <em>physics tick</em> expire before the trigger&#8217;s code
-had its chance to go.</li>
-<li><em>(THE LOOP PART)</em>:
-The cpu now goes on and executes the next <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></code></a> number of
-instructions, mostly not caring about whether those instructions are
-ordinary main-line code or instructions that are inside of a trigger.
-Step (1) above has caused each trigger to look like just a normal
-subroutine was called from main-line code.  When the nested subroutines
-all finish, the call stack has &#8220;popped&#8221; all the way back to where the
-mainline code left off, and so it just continues on from there.
-<strong>Warning: Advanced sentence follows.  You can ignore it if you don&#8217;t
-understand it:</strong> <em>Because kOS is a pure stack computer with no
-temporary data held in &#8220;registers&#8221;, this technique works because all
-relevant data must be on the stack, and thus will get returned to its
-original state once the interrupting triggers are done with their work
-and the stack has fully popped back to where it started from.</em></li>
-<li>While executing the instructions in Step(3) above, if any of those
-instructions are a <code class="docutils literal"><span class="pre">WAIT</span></code> command, the execution stops there for
-now and the full number of <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></code></a> instructions won&#8217;t be
-used this update.  This is true BOTH of wait&#8217;s in main-line code and
-wait&#8217;s in trigger code.  Although you <em>can</em> wait in a trigger, doing
-so also stops main line code until that trigger is done waiting.</li>
-<li>One thing the CPU <em>does</em> keep track of while executing the instructions,
-though, is whether or not it got all the way back to executing mainline
-code again or not.  It&#8217;s possible that it spent the entire
-<a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></code></a> inside triggers and never got back to mainline code.
-If it <em>has</em> gotten back to mainline code and executed at least one
-mainline instruction, then it re-enables all the triggers that wished
-to be re-enabled because they executed <code class="docutils literal"><span class="pre">preserve.</span></code> or did a
-<code class="docutils literal"><span class="pre">return</span> <span class="pre">true</span></code>.   (They were temporarily disabled up in Step(2) above.)
-If it has <em>not</em> gotten back to mainline code yet, then that means
-it&#8217;s about to finish a physics tick while still inside a trigger, and
-it shouldn&#8217;t allow more triggers to re-fire yet until the main-line code
-has had a chance to go again.</li>
+<p>The guts behind the kOS emulated CPU is the main loop explained below
+that runs once per <strong>physics tick</strong>.  (A &#8220;FixedUpdate&#8221; in Unity3d terms).</p>
+<ul>
+<li><ol class="first arabic simple">
+<li>instructionsExecuted = 0</li>
 </ol>
+</li>
+<li><p class="first">2. how_many_instructions_this_time = config:IPU plus or minus one. (It
+wavers slightly because doing so can help prevent edge cases where
+the interrupt triggers syhnc up perfectly with the end of an update
+and thus starve main code.)
+TODO: THIS +/- 1 thing ISN&#8217;T TRUE IN THE CODE YET.  I&#8217;m WRITING THIS
+DOCUMENT BEFORE I&#8217;M IMPLEMENTING THIS.  COME BACK AND REMOVe THIS
+TODO WHEN I ACTUALLY IMPLEMENT THIS.</p>
+</li>
+<li><ol class="first arabic simple" start="3">
+<li>while instructionsExecuted &lt; how_many_instructions_this_time do this:</li>
+</ol>
+<ul>
+<li><p class="first">3.1 Execute one instruction.  It will move the instruction pointer +1
+to the next opcode in the program, or in the case of a jump opcode, by
+some other number than +1.</p>
+</li>
+<li><p class="first">3.2 Break out early from this loop if instruction was a WAIT or if program
+is over or errored out.</p>
+</li>
+<li><p class="first">3.3 Check if there&#8217;s enabled triggers with priority allowing an interrupt.</p>
+<blockquote>
+<div><ul class="simple">
+<li>3.3.1 - If so then insert a &#8220;faked&#8221; subroutine call right now that jumps
+to trigger&#8217;s code, with the stack arranged so it will return back to
+the current instruction pointer when it&#8217;s done.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">3.4 increment instructionsExecuted.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">4. Any trigger that wanted to interrupt but was waiting for the next
+<strong>physics tick</strong> boundary before it did so (recurring triggers are
+usually like this), gets moved from the &#8220;pending&#8221; trigger queue to
+the &#8220;active&#8221; queue so it will get executed next time on step 3.3 above).</p>
+</li>
+</ul>
+<div class="section" id="how-an-interrupt-works">
+<h3><a class="toc-backref" href="#id14">How an interrupt works</a><a class="headerlink" href="#how-an-interrupt-works" title="Permalink to this headline">¶</a></h3>
+<p>Whenever the CPU decides to cause an interrupt in step 3.3 above, it does
+so by simulating how a subroutine call normally works in the system.  It
+does the following:</p>
+<ul class="simple">
+<li>Create a subroutine context record which has its &#8220;came from&#8221; instruction
+pointer set to the current instruction pointer, and its &#8220;came from&#8221;
+priority level set to the current priority level.</li>
+<li>Push that subroutine context record on the callstack just like a normal
+subroutine call would do.</li>
+<li>Set the instruction pointer to the first instruction of the trigger&#8217;s
+code.</li>
+<li>Change the CPU priority to match the new priority of the interrupt.</li>
+</ul>
+<p>Now if it just lets the CPU loop run as normal after that, it will be
+inside the trigger code, and when it reaches the <code class="docutils literal"><span class="pre">Return</span></code> instruction at
+the end of the trigger code, it will pop the context record off the call
+stack and end up back where it was now before the interruption happened.
+Not only does <code class="docutils literal"><span class="pre">Return</span></code> go back to the instruction the call came from,
+but it also drops back down to the priority level the call came from.</p>
+<p>Because the kOS CPU is a pure stack machine, with all variables and
+scopes stored on the stack, this ensures everything will be just like
+it was before the interruption, and the main code can continue on,
+unaware that it was even interrupted.</p>
+<div class="section" id="interrupts-that-happen-at-the-same-time">
+<h4>Interrupts that happen at the same time<a class="headerlink" href="#interrupts-that-happen-at-the-same-time" title="Permalink to this headline">¶</a></h4>
+<p>When more than one trigger of the same priority are in the queue and both
+try to interrupt at the same time before either one has started running,
+then what happens is this:  The first trigger gets its interrupt to occur,
+but the second trigger, because the first trigger raised the priority
+level of the CPU, will refuse to interrupt the first one... UNTIL
+the first one gets to the bottom and does its <code class="docutils literal"><span class="pre">Return</span></code>.  Then before
+executing the next normal priority instruction, the CPU hits point 3.3 in
+the loop above again with the priority level now reduced back to normal
+because the first trigger has returned, and right away it notices the
+second trigger still in the queue, and inserts a call to it before the
+main code can continue.</p>
+<p>Thus the two interrupts happen back to back before normal code continues.</p>
 <p>Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.</p>
 </div>
+</div>
+</div>
 <div class="section" id="the-frozen-universe">
-<span id="frozen"></span><h2><a class="toc-backref" href="#id12">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
+<span id="frozen"></span><h2><a class="toc-backref" href="#id15">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
 <p>Each <strong>physics</strong> <em>tick</em>, the kOS mod wakes up and runs through all the currently loaded CPU parts that are in &#8220;physics range&#8221; (i.e. 2.5 km), and executes a batch of instructions from your script code that&#8217;s on them. It is important to note that during the running of this batch of instructions, because no <strong>physics ticks</strong> are happening during it, none of the values that you might query from the KSP system will change. The clock time returned from the TIME variable will keep the same value throughout. The amount of fuel left will remain fixed throughout. The position and velocity of the vessel will remaining fixed throughout. It&#8217;s not until the next physics tick occurs that those values will change to new numbers. It&#8217;s typical that several lines of your kerboscript code will run during a single physics tick.</p>
 <p>Effectively, as far as the <em>simulated</em> universe can tell, it&#8217;s as if your script runs several instructions in literally zero amount of time, and then pauses for a fraction of a second, and then runs more instructions in literally zero amount of time, then pauses for a fraction of a second, and so on, rather than running the program in a smoothed out continuous way.</p>
 <p>This is a vital difference between how a kOS CPU behaves versus how a real world computer behaves. In a real world computer, you would know for certain that time will pass, even if it&#8217;s just a few picoseconds, between the execution of one statement and the next.</p>
@@ -558,7 +620,7 @@ has had a chance to go again.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

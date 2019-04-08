@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Time Span &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Time Span &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="WARP" href="timewarp.html"/>
         <link rel="prev" title="Terminal Input" href="terminalinput.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -208,6 +208,40 @@ the following points illustrate:</p>
 </ul>
 <p>This allows you to use a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a> such as is returned by the <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> special variable to make correct physics calculations.</p>
 </div>
+<div class="section" id="built-in-function-time">
+<h2>Built-in function TIME<a class="headerlink" href="#built-in-function-time" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="function:TIME">
+<code class="descname">TIME</code><span class="sig-paren">(</span>universal_time<span class="sig-paren">)</span><a class="headerlink" href="#function:TIME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>universal_time</strong> &#8211; (<a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A :struct`TimeSpan` of the time represented by the seconds timestamp passed in.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a> given a &#8220;universal time&#8221;,
+which is a number of seconds since the current game began,
+IN GAMETIME.  example: <code class="docutils literal"><span class="pre">TIME(3600)</span></code> will give you a
+<a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a> representing the moment exactly 1 hour
+(3600 seconds) since the current game first began.</p>
+<p>The parameter is OPTIONAL.  If you leave it off,
+and just call <code class="docutils literal"><span class="pre">TIME()</span></code>, then you end up getting
+the current time, which is the same thing that <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a>
+gives you (without the parentheses).</p>
+</dd></dl>
+
+</div>
 <div class="section" id="special-variable-time">
 <h2>Special variable TIME<a class="headerlink" href="#special-variable-time" title="Permalink to this headline">¶</a></h2>
 <dl class="global">
@@ -223,8 +257,17 @@ the following points illustrate:</p>
 </tr>
 </tbody>
 </table>
-<p>The special variable <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> is used to get the current time.</p>
-<p>Any time you perform arithmetic on <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> you get a result back that is also a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>. In other words, <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> is a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>, but <code class="docutils literal"><span class="pre">TIME</span> <span class="pre">+</span> <span class="pre">100</span></code> is also a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>.</p>
+<p>The special variable <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> is used to get the current time
+in the gameworld (not the real world where you&#8217;re sitting in a chair
+playing Kerbal Space Program.)  It is the same thing as calling
+<a class="reference internal" href="#function:TIME" title="TIME function"><code class="xref ks ks-func docutils literal"><span class="pre">TIME</span></code></a> with empty parentheses.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="using-a-timespan">
+<h2>Using a TimeSpan<a class="headerlink" href="#using-a-timespan" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Any time you perform arithmetic on a <code class="xref ks ks-global docutils literal"><span class="pre">TIMESPAN</span></code> you get a result back that is also a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>. In other words, <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> is a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>, but <code class="docutils literal"><span class="pre">TIME</span> <span class="pre">+</span> <span class="pre">100</span></code> is also a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>.</p>
 <p>Note that Kerbals do not have the concept of &#8220;months&#8221;:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="nv">TIME</span>                <span class="c1">// Gets the current universal time</span>
 <span class="nv">TIME</span><span class="p">:</span><span class="nv">CLOCK</span>          <span class="c1">// Universal time in H:M:S format(1:50:26)</span>
@@ -237,12 +280,11 @@ the following points illustrate:</p>
 <span class="nv">TIME</span><span class="p">:</span><span class="nv">SECONDS</span>        <span class="c1">// Total Seconds since campaign began</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<div class="section" id="using-time-to-detect-when-the-physics-have-been-updated-one-tick">
-<h3>Using TIME to detect when the physics have been updated &#8216;one tick&#8217;<a class="headerlink" href="#using-time-to-detect-when-the-physics-have-been-updated-one-tick" title="Permalink to this headline">¶</a></h3>
-<p>kOS programs run however fast your computer&#8217;s animation rate will allow, which can flow and change from one moment to the next depending on load. However, the physics of the universe get updated at a fixed rate according to your game settings (the default, as of KSP 0.25, is 25 physics updates per second)</p>
-<p>You can use the <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> special variable to detect whether or not a real physics &#8216;tic&#8217; has occurred yet, which can be important for scripts that need to take measurements from the simulated universe. If no physics tic has occurred, then <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> will still be exactly the same value.</p>
+</div></blockquote>
+<div class="section" id="using-time-or-time-to-detect-when-the-physics-have-been-updated-one-tick">
+<h3>Using TIME or TIME() to detect when the physics have been updated &#8216;one tick&#8217;<a class="headerlink" href="#using-time-or-time-to-detect-when-the-physics-have-been-updated-one-tick" title="Permalink to this headline">¶</a></h3>
+<p>The game will make an effort to maintain regular physics updates at a fixed rate (defaulting to 25 updates per second), sacrificing animation rate as necessary.  When the game is unable to maintain regular updates at this rate, the clock time (in the upper left of the screen) will turn yellow or red instead of green.</p>
+<p>You can use the time reported by <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> to detect whether or not a real physics &#8216;tic&#8217; has occurred yet, which can be important for scripts that need to take measurements from the simulated universe. If no physics tic has occurred, then <a class="reference internal" href="#global:TIME" title="TIME global"><code class="xref ks ks-global docutils literal"><span class="pre">TIME</span></code></a> will still be exactly the same value.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p>Please be aware that the kind of calendar <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a>&#8216;s use will depend on your KSP settings. The main KSP game supports both Kerbin time and Earth time and changing that setting will affect how <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></code></a> works in kOS.</p>
@@ -493,7 +535,7 @@ your campaign).  Can be very precise.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

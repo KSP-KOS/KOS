@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Label &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Label &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Creating GUIs" href="../gui.html"/>
         <link rel="next" title="PopupMenu" href="popupmenu.html"/>
         <link rel="prev" title="GUI structure" href="gui.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -124,6 +124,7 @@
 <li class="toctree-l3"><a class="reference internal" href="stylerecoffset.html">StyleRectOffset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stylestate.html">StyleState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="textfield.html">TextField</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tipdisplay.html">TipDisplay</a></li>
 <li class="toctree-l3"><a class="reference internal" href="widget.html">Widget</a></li>
 </ul>
 </li>
@@ -265,12 +266,12 @@ volume, but are allowed to disobey the normal rules about reaching the
 archive with comms.  This is because these images conceptually represent
 the look and feel of control panels in the ship and not necessarily
 something that takes up &#8220;space&#8221; on the disk.</p>
-<p>PNG format images usually work best, although any format Unity
-is capable of reading can work here.</p>
-<p>You can leave off the <code class="docutils literal"><span class="pre">&quot;.png&quot;</span></code> ending on the filename if you like
-and this suffix will presume you meant to read a .png file.  If you
-wish to read a file in some other format than PNG, you will need
-to give its filename extension explicitly.</p>
+<p>PNG format images usually work best, although JPG files work
+as well.</p>
+<p>You can leave off the <code class="docutils literal"><span class="pre">&quot;.png&quot;</span></code> ending on the filename if you
+like and this suffix will presume you meant to read a .png file.
+If you wish to read a file in some other format than PNG, you
+will need to give its filename extension explicitly.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -286,8 +287,20 @@ Label:<code class="descname">TOOLTIP</code><a class="headerlink" href="#attribut
 </tr>
 </tbody>
 </table>
-<p>String which you wish to appear in a tooltip when the user hovers
-the mouse pointer over this widget.</p>
+<p>When the user hovers the mouse pointer over this item, set the
+global &#8220;tooltip&#8221; value for its GUI window to this string.  This
+tooltip value can be read by your script as the
+<code class="xref ks ks-struct docutils literal"><span class="pre">GUIWidgets:TOOLTIP</span></code> suffix of the outermost Box window
+this widget is inside of.  It can also be shown by including a
+<a class="reference internal" href="tipdisplay.html#structure:TIPDISPLAY" title="TIPDISPLAY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TIPDISPLAY</span></code></a> widget in this window somewhere.  The full
+details explaining tooltips can be found in the documentation
+page for <a class="reference internal" href="tipdisplay.html#structure:TIPDISPLAY" title="TIPDISPLAY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TIPDISPLAY</span></code></a>.</p>
+<p><em>Exception</em>: Due to a limitation of Unity3d&#8217;s IMGUI system, you
+cannot have a proper tooltip for a <a class="reference internal" href="textfield.html#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a> widget.
+It will not set the tooltip hint when mousing over it.  Instead,
+when used on a <a class="reference internal" href="textfield.html#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a> widget, the TOOLTIP becomes
+the hint text that will be drawn in a &#8216;greyed-out&#8217; color inside
+the text field when the field is an empty string.</p>
 </dd></dl>
 
 </dd></dl>
@@ -372,7 +385,7 @@ to prevent them from being interpreted as markup tags.)</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

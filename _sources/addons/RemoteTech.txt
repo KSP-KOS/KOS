@@ -75,8 +75,6 @@ of some of its suffixes.
 RTAddon
 ~~~~~~~
 
-Starting version 0.17 of kOS you can access structure RTAddon via ``ADDONS:RT``.
-
 .. structure:: RTAddon
 
     ===================================== ===================================== =============

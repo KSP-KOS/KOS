@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessel &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Vessel &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="VesselSensors" href="vesselsensors.html"/>
         <link rel="prev" title="Stage" href="stage.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -110,12 +110,14 @@
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
@@ -206,12 +208,7 @@
 <span class="k">SET</span> <span class="nv">MY_VESS</span> <span class="ow">TO</span> <span class="nv">TARGET</span><span class="p">.</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.13: </span>A vessel is now a type of <a class="reference internal" href="../orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></code></a>. Much of what a Vessel can do can now by done by any orbitable object. The documentation for those abilities has been moved to the <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>orbitable page</span></a>.</p>
-</div>
-</div>
+<p>Vessels are also <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>Orbitable</span></a>, and as such have all the associated suffixes as well as some additional suffixes.</p>
 <dl class="structure">
 <dt id="structure:VESSEL">
 <em class="property">structure </em><code class="descname">Vessel</code><a class="headerlink" href="#structure:VESSEL" title="Permalink to this definition">¶</a></dt>
@@ -528,7 +525,9 @@ Vessel:<code class="descname">MAXTHRUSTAT</code><span class="sig-paren">(</span>
 </tr>
 </tbody>
 </table>
-<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrustat"><span>engines&#8217; MAXTHRUSTATs</span></a> of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrustat"><span>engines&#8217; MAXTHRUSTATs</span></a> of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+(Pressure must be greater than or equal to zero.  If you pass in a
+negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -564,7 +563,9 @@ Vessel:<code class="descname">AVAILABLETHRUSTAT</code><span class="sig-paren">(<
 </tr>
 </tbody>
 </table>
-<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrustat"><span>engines&#8217; AVAILABLETHRUSTATs</span></a> of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrustat"><span>engines&#8217; AVAILABLETHRUSTATs</span></a> of all the currently active engines taking into account their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+(Pressure must be greater than or equal to zero.  If you pass in a
+negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -838,12 +839,6 @@ mentioned in information you may find when doing a web search on
 helpful formulae about angular momentum.  This is why kOS doesn&#8217;t
 use degrees here.  (That an backward compatibility for old scripts.
 It&#8217;s been like this for quite a while.).</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 0.15.4: </span>This has been changed to a vector, as it should have been all along.</p>
-</div>
-</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -1432,7 +1427,7 @@ Vessel:<code class="descname">TERMVELOCITY</code><a class="headerlink" href="#at
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

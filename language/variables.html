@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Variables &amp; Statements &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="KerboScript User Functions" href="user_functions.html"/>
         <link rel="prev" title="Flow Control" href="flow.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -329,10 +329,12 @@ be referred to as a &#8220;declare statement&#8221;, even though the word
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
 <p><span class="versionmodified">New in version 0.17: </span>The syntax without the initializer, looking like so:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// no initializer like &quot;TO 1.&quot;</span>
+<blockquote>
+<div><div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">DECLARE</span> <span class="nv">x</span><span class="p">.</span> <span class="c1">// no initializer like &quot;TO 1.&quot;</span>
 </pre></div>
 </div>
 <p>is <strong>no longer legal syntax</strong>.</p>
+</div></blockquote>
 </div>
 </div>
 <p>Kerboscript now requires the use of the initializer clause (the &#8220;TO&#8221;
@@ -428,12 +430,6 @@ it with 2 arguments, both P4 and P3 get defaulted.)</p>
 expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.18.3: </span>Optional Parameters were added as a new feature in kOS 0.18.3</p>
-</div>
-</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><strong>Pass By Value</strong></p>
@@ -555,18 +551,7 @@ affect the global steering value.</p>
 <div class="section" id="calling-a-lock-that-was-created-in-another-file">
 <h3><a class="toc-backref" href="#id19">Calling a LOCK that was created in another file</a><a class="headerlink" href="#calling-a-lock-that-was-created-in-another-file" title="Permalink to this headline">¶</a></h3>
 <p>If you try to call a lock that is declared in another program
-file you run, it does not work, and has never worked prior to kOS
-0.17.0:</p>
-<p>File1.ks:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">run</span> <span class="nv">File2</span><span class="p">.</span>
-<span class="k">print</span> <span class="s">&quot;x&#39;s locked value is &quot;</span> <span class="o">+</span> <span class="nv">x</span><span class="p">.</span>
-</pre></div>
-</div>
-<p>File2.ks:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">lock</span> <span class="nv">x</span> <span class="ow">to</span> <span class="s">&quot;this is x&quot;</span><span class="p">.</span>
-</pre></div>
-</div>
-<p>But now with the Kerboscript of kOS 0.17.0, you can make it work
+file you run, it does not work.  You can make it work
 by inserting empty parentheses after the lock name to help give
 the compiler the hint that you expected x to be a function call
 (which is what a lock really is):</p>
@@ -646,14 +631,6 @@ variable.</p>
 </div>
 <div class="section" id="scoping-terms">
 <span id="scope"></span><h2><a class="toc-backref" href="#id24">Scoping terms</a><a class="headerlink" href="#scoping-terms" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.17: </span>In prior versions of Kerboscript, all identifiers other than
-DECLARE PARAMETER identifiers were always global variables no
-matter what, even if you used the DECLARE statement to make them.</p>
-</div>
-</div>
 <dl class="docutils">
 <dt>What is Scope?</dt>
 <dd>The term <em>Scope</em> simply refers to asking the question &#8220;where in the
@@ -1029,7 +1006,7 @@ don&#8217;t need to understand or deal with scope.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

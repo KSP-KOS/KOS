@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Orbit &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Orbit &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Orbits" href="../orbits.html"/>
         <link rel="next" title="Orbitable (Vessels and Bodies)" href="orbitable.html"/>
         <link rel="prev" title="Orbits" href="../orbits.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -504,6 +504,25 @@ Orbit:<code class="descname">TRUEANOMALY</code><a class="headerlink" href="#attr
 traditionally done in radians, in keeping with the kOS standard
 of making everything into degrees, they are given as degrees by
 kOS.</p>
+<p><strong>Closed versus Open orbits clamp this differently:</strong> The range of
+possible values this can have differs depending on if the orbit
+is &#8220;closed&#8221; (elliptical, eccentricity &lt; 1.0) versus &#8220;open&#8221; (parabolic
+or hyperbolic, eccentricity &gt;= 1.0).  If the orbit is closed, then
+this value will be in the range [0..360), where values larger than
+180 represent positions in the orbit where it is &#8220;coming down&#8221;
+from apoapsis to periapsis.  But if the orbit is open, then this
+value will be in the range (-180..180), where negative values are
+used to represent the positions in the orbit where it is &#8220;coming down&#8221;
+to the periapsis.  The difference is because it does not make sense
+to speak of the orbit looping all the way around 360 degrees in
+the case of an open orbit where it does not come back down.</p>
+<p>Note that the above switch between 0..360 versus -180..180 happens
+when the orbit is <em>mathematically</em> shown to be an escaping orbit,
+NOT when it&#8217;s still an ellipse but the apoapsis happens to be higher
+than the body&#8217;s sphere of influence so the game will let it escape
+anyway.  Both conditions look similar on the game map so it may
+be hard to tell them apart without actually querying the eccentricity
+to find out which it is.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -531,6 +550,26 @@ uses) at which the mean anomaly of the orbit would be <code class="xref ks ks-at
 and the orbital period, it&#8217;s possible to find out the current mean anomaly.
 Kerbal Space Program uses this internally to track orbit positions while under
 time warp without using the full physics system.</p>
+<p><strong>Closed versus Open orbits clamp this differently:</strong> The range of
+possible values this can have differs depending on if the orbit
+is &#8220;closed&#8221; (elliptical, eccentricity &lt; 1.0) versus &#8220;open&#8221; (parabolic
+or hyperbolic, eccentricity &gt;= 1.0).  If the orbit is closed, then
+this value will be in the range [0..360), where values larger than
+180 represent positions in the orbit where it is &#8220;coming back down&#8221;
+from apoapsis to periapsis.  But if the orbit is open, then this value
+doesn&#8217;t have any limits, and furthermore negative values are
+used to represent the portion of the orbit that is &#8220;coming down&#8221;
+to the periapsis, rather than using values &gt; 180 for this.</p>
+<p>Note that the above switch between MEANANOMALY behaving in the &#8220;closed&#8221;
+versus &#8220;open&#8221; way depends on the orbit being <em>mathematically</em> shown
+to be an escaping orbit, NOT merely &#8220;escaping&#8221; because it has an
+apoapsis higher than the body&#8217;s sphere of influence.  If the orbit&#8217;s
+mathematical parameters show it to be an ellipse, but its apoapsis is
+higher than the body&#8217;s sphere of influence, then the game will let it
+escape anyway despite it still being an elliptical orbit.  (It&#8217;s just
+an elliptical orbit with the top &#8220;cut off&#8221;.)  The MEANANOMALY
+measurement will treat such elliptical-but-escaping-anyway scenarios
+as &#8220;closed&#8221; even though they don&#8217;t look like it on the map.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -667,27 +706,31 @@ Orbit:<code class="descname">HASNEXTPATCH</code><a class="headerlink" href="#att
 </div>
 <div class="section" id="deprecated-suffix">
 <h2><a class="toc-backref" href="#id4">Deprecated Suffix</a><a class="headerlink" href="#deprecated-suffix" title="Permalink to this headline">¶</a></h2>
-<dl class="attribute">
+<blockquote>
+<div><dl class="attribute">
 <dt id="attribute:ORBIT:PATCHES">
 Orbit:<code class="descname">PATCHES</code><a class="headerlink" href="#attribute:ORBIT:PATCHES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a> Objects</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first"><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></code></a> Objects</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body"><p class="first">Get only</p>
+<div class="last admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last deprecated">
 <p><span class="versionmodified">Deprecated since version 0.15: </span>To get the same functionality, you must use <a class="reference internal" href="../vessels/vessel.html#attribute:VESSEL:PATCHES" title="VESSEL:PATCHES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Vessel:PATCHES</span></code></a>  which is a suffix of the <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a> itself.</p>
 </div>
 </div>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
+</div></blockquote>
 </div>
 <div class="section" id="transition-names">
 <span id="transitions"></span><h2><a class="toc-backref" href="#id5">Transition Names</a><a class="headerlink" href="#transition-names" title="Permalink to this headline">¶</a></h2>
@@ -747,7 +790,7 @@ Orbit:<code class="descname">PATCHES</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

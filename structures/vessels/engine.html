@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Engine &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Engine &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="ETA" href="eta.html"/>
         <link rel="prev" title="Element" href="element.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -110,12 +110,14 @@
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
@@ -232,23 +234,31 @@
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:MAXTHRUST" title="ENGINE:MAXTHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MAXTHRUST</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Untweaked thrust limit</td>
+<td>Untweaked thrust limit. Zero if engine disabled.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:MAXTHRUSTAT" title="ENGINE:MAXTHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">MAXTHRUSTAT(pressure)</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Max thrust at the specified pressure (in standard Kerbin atmospheres).</td>
+<td>Max thrust at the specified pressure (in standard Kerbin atmospheres). Zero if engine disabled.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:THRUST" title="ENGINE:THRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">THRUST</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Current thrust</td>
+<td>Current thrust. Zero if engine disabled.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:AVAILABLETHRUST" title="ENGINE:AVAILABLETHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Available thrust at full throttle accounting for thrust limiter</td>
+<td>Available thrust at full throttle accounting for thrust limiter. Zero if engine disabled.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#method:ENGINE:AVAILABLETHRUSTAT" title="ENGINE:AVAILABLETHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">AVAILABLETHRUSTAT(pressure)</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
-<td>Available thrust at the specified pressure (in standard Kerbin atmospheres).</td>
+<td>Available thrust at the specified pressure (in standard Kerbin atmospheres). Zero if engine disabled.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:POSSIBLETHRUST" title="ENGINE:POSSIBLETHRUST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">POSSIBLETHRUST</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
+<td>Possible thrust at full throttle accounting for thrust limiter, when the engine is enabled.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:ENGINE:POSSIBLETHRUSTAT" title="ENGINE:POSSIBLETHRUSTAT method"><code class="xref ks ks-meth docutils literal"><span class="pre">POSSIBLETHRUSTAT(pressure)</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
+<td>Possible thrust at the specified pressure (in standard Kerbin atmospheres), when the engine is enabled.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:FUELFLOW" title="ENGINE:FUELFLOW attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">FUELFLOW</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (l/s maybe)</td>
@@ -376,7 +386,7 @@ round it to the nearest 0.5 whenever you open the panel.  So if you
 do something like <code class="docutils literal"><span class="pre">set</span> <span class="pre">ship:part[20]:thrustlimit</span> <span class="pre">to</span> <span class="pre">10.5123.</span></code> in
 your script, then look at the rightclick menu for the engine, the very
 act of just looking at the menu will cause it to become 10.5 instead
-of 10.5123.  There isn&#8217;t much that kOS can to to change this.  It&#8217;s a
+of 10.5123.  There isn&#8217;t much that kOS can do to change this.  It&#8217;s a
 user interface decision baked into the stock game.</p>
 </dd></dl>
 
@@ -393,7 +403,7 @@ Engine:<code class="descname">MAXTHRUST</code><a class="headerlink" href="#attri
 </tr>
 </tbody>
 </table>
-<p>How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine&#8217;s actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air.</p>
+<p>How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine&#8217;s actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air. Also note that this will read zero if the engine is currently disabled.</p>
 </dd></dl>
 
 <span class="target" id="engine-maxthrustat"></span><dl class="method">
@@ -413,7 +423,9 @@ Engine:<code class="descname">MAXTHRUSTAT</code><span class="sig-paren">(</span>
 </tr>
 </tbody>
 </table>
-<p>How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).</p>
+<p>How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve). Note that this will read zero if the engine is currently disabled.
+(Pressure must be greater than or equal to zero.  If you pass in a
+negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -445,7 +457,7 @@ Engine:<code class="descname">AVAILABLETHRUST</code><a class="headerlink" href="
 </tr>
 </tbody>
 </table>
-<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions.</p>
+<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions. Note that this will read zero if the engine is currently disabled.</p>
 </dd></dl>
 
 <span class="target" id="engine-availablethrustat"></span><dl class="method">
@@ -465,7 +477,47 @@ Engine:<code class="descname">AVAILABLETHRUSTAT</code><span class="sig-paren">(<
 </tr>
 </tbody>
 </table>
-<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM&#8217;s, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.</p>
+<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM&#8217;s, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.  Note that this will read zero if the engine is currently disabled.
+(Pressure must be greater than or equal to zero.  If you pass in a
+negative value, it will be treated as if you had given a zero instead.)</p>
+</dd></dl>
+
+<span class="target" id="engine-possiblethrust"></span><dl class="attribute">
+<dt id="attribute:ENGINE:POSSIBLETHRUST">
+Engine:<code class="descname">POSSIBLETHRUST</code><a class="headerlink" href="#attribute:ENGINE:POSSIBLETHRUST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</td>
+</tr>
+</tbody>
+</table>
+<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions. This will give the correct value even if the engine is currently disabled.</p>
+</dd></dl>
+
+<span class="target" id="engine-possiblethrustat"></span><dl class="method">
+<dt id="method:ENGINE:POSSIBLETHRUSTAT">
+Engine:<code class="descname">POSSIBLETHRUSTAT</code><span class="sig-paren">(</span>pressure<span class="sig-paren">)</span><a class="headerlink" href="#method:ENGINE:POSSIBLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kN)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM&#8217;s, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.  This will give the correct value even if the engine is currently disabled.
+(Pressure must be greater than or equal to zero.  If you pass in a
+negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -517,7 +569,9 @@ Engine:<code class="descname">ISPAT</code><span class="sig-paren">(</span>pressu
 </tr>
 </tbody>
 </table>
-<p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+<p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+(Pressure must be greater than or equal to zero.  If you pass in a
+negative value, it will be treated as if you had given a zero instead.)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -825,7 +879,7 @@ Engine:<code class="descname">GIMBAL</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

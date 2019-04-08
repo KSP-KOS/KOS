@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Delegates (function references) &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Delegates (function references) &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="prev" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -168,13 +168,6 @@
             
   <div class="section" id="delegates-function-references">
 <span id="delegates"></span><h1>Delegates (function references)<a class="headerlink" href="#delegates-function-references" title="Permalink to this headline">¶</a></h1>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.19.0: </span>The delegate feature described on this page did not exist
-prior to kOS 0.19.0.</p>
-</div>
-</div>
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
@@ -205,9 +198,7 @@ etc.)</p>
 <p>Kerboscript provides this feature with a built-in type called a
 <a class="reference internal" href="../structures/misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a>, which remembers the details needed
 to be able to call a function later on.</p>
-<p>The topic can be a bit confusing to people new to it, but this video,
-produced shortly before the release of kOS 0.19.0 by one of the
-(then new) collaborators of the team may help:</p>
+<p>The topic can be a bit confusing to people new to it, but this video by a prolific kOS YouTuber may help:</p>
 <p><a class="reference external" href="https://www.youtube.com/watch?v=pcbURdU_WyU">CheersKevin&#8217;s explanation of delegates</a></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -541,7 +532,7 @@ normally be in <a class="reference internal" href="variables.html#scope"><span>s
 <p>Under the hood, kOS handles several different kinds of &#8220;functions&#8221; and
 methods that aren&#8217;t actually implemented the same way.  A <code class="docutils literal"><span class="pre">KOSDelegate</span></code>
 attempts to hide the details of these differences from the user, but
-one difference in particular still stands out.  In kOS version 0.19.0,
+one difference in particular still stands out.  As of kOS version 1.1.5.2,
 you cannot reliably make a delegate of a suffix just yet.  (<em>This is
 intended as a future feature though.  It&#8217;s been put off because it
 involves decisions that impact the future of the language and which, once
@@ -625,7 +616,7 @@ wrapper around a structure suffix call, and make a delegate of <strong>that</str
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

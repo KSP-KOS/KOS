@@ -4,16 +4,12 @@
 Career Limits
 =============
 
-The theme of KSP 0.90 is that some features of your space program don't work until after you've made some upgrades.
+The theme of KSP's "career mode" is that some features of your space program don't work until after you've made some upgrades.
 kOS now supports enforcing these checks, as described below.
 
 .. contents::
     :local:
     :depth: 2
-
-.. warning::
-
-    .. These limitation enforcements do not exist in versions of kOS prior to kOS 0.15.4
 
 The rules being enforced
 ------------------------

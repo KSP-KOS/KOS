@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Parts and PartModules &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Ship Parts and PartModules &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Career Limits" href="career_limits.html"/>
         <link rel="prev" title="The Name Tag System" href="nametag.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -170,7 +170,7 @@
             
   <div class="section" id="ship-parts-and-partmodules">
 <span id="parts-and-partmodules"></span><h1>Ship Parts and PartModules<a class="headerlink" href="#ship-parts-and-partmodules" title="Permalink to this headline">¶</a></h1>
-<p>As of v0.15, kOS has introduced the ability to access the functionality of Parts&#8217; actions, and right-click context menus. However, to understand how to use them it is necessary to first understand a little bit about the structure of parts in a vessel in Kerbal Space Program.</p>
+<p>kOS has the ability to access the functionality of Parts&#8217; actions, and right-click context menus. However, to understand how to use them it is necessary to first understand a little bit about the structure of parts in a vessel in Kerbal Space Program.</p>
 <p>In Kerbal Space Program, a Vessel is a collection of Parts arranged in a tree Structure. In kOS, you can access the parts one of two ways:</p>
 <div class="section" id="tutorial">
 <h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
@@ -295,7 +295,7 @@ has a length of zero:</p>
 <div class="section" id="kspfields">
 <h3>KSPFields<a class="headerlink" href="#kspfields" title="Permalink to this headline">¶</a></h3>
 <p>A KSPField is a single variable that a PartModule attaches to a part. Some of the KSPFields are also displayed in the RMB context menu of a part. It has a current value, and if the field has had a &#8220;tweakable&#8221; GUI interface attached to it, then it&#8217;s also a settable field by the user manipulating the field in the context menu. In kOS, you can only access those KSPFields that are currently visible on the RMB context menu. We, the developers of kOS, instituted this rule out of respect for the developers of other mods and the stock KSP game. If they didn&#8217;t allow the user to see or manipulate the variable directly in the GUI, then we shouldn&#8217;t allow it to be manipulated or seen by a kOS script either.</p>
-<p>KSPFields are read or manipulated by the following <a class="reference external" href="../../structure/partmodule/index.html">suffixes of PartModule</a></p>
+<p>KSPFields are read or manipulated by <a class="reference internal" href="../structures/vessels/partmodule.html#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">PartModule:GetField</span></code></a> and <a class="reference internal" href="../structures/vessels/partmodule.html#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><code class="xref ks ks-meth docutils literal"><span class="pre">Partmodule:SetField</span></code></a>.</p>
 <ul class="simple">
 <li>:GETFIELD(&#8220;name of field&#8221;).</li>
 <li>:SETFIELD(&#8220;name of field&#8221;, new_value_for_field).</li>
@@ -306,7 +306,7 @@ has a length of zero:</p>
 <h3>KSPEvents<a class="headerlink" href="#kspevents" title="Permalink to this headline">¶</a></h3>
 <p>A KSPEvent, just like a KSPField, is a thing that a PartModule can put on the RMB context menu for a part. The difference is that a KSPEvent does not actually HAVE a value. It&#8217;s not a variable. Rather it&#8217;s just a button with a label next to it. When you press the button, it causes some sort of software inside the PartModule to run. An example of this is the &#8220;undock node&#8221; button you see on many of the docking ports.</p>
 <p><strong>Difference between a KSPEvent and a boolean KSPField</strong>: If you see a label next to a button in the RMB context menu, it might be a KSPEvent, OR it might be a boolean KSPField variable which is editable with a tweakable GUI. They look exactly the same in the user interface. To tell the difference, you need to look at what happens when you click the button. If clicking the button causes the button to depress inward and stay pressed in until you click it again, then this is a boolean value KSPField. If clicking the button pops the button in and then it pops out again right away, then this is a KSPEvent instead.</p>
-<p>KSPEvents are manipulated by the following <a class="reference external" href="../../structure/partmodule/index.html">suffix of PartModule</a></p>
+<p>KSPEvents are manipulated by the following suffix of PartModule, called <a class="reference internal" href="../structures/vessels/partmodule.html#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><code class="xref ks ks-meth docutils literal"><span class="pre">PartModule:DoEvent</span></code></a>.</p>
 <ul class="simple">
 <li>:DOEVENT(&#8220;name of event&#8221;).</li>
 </ul>
@@ -316,7 +316,7 @@ has a length of zero:</p>
 <h3>KSPActions:<a class="headerlink" href="#kspactions" title="Permalink to this headline">¶</a></h3>
 <p>A KSPAction is a bit different from a KSPField or KSPEvent. A KSPAction is like a KSPEvent in that it causes some software inside the PartModule to be run. But it doesn&#8217;t work via the RMB context menu for the part. Instead KSPAction&#8217;s are those things you see being made avaiable to you as options you can assign into an Action Group in the VAB or SPH. When you have the action group editor tab enabled in the VAB or SPH, and then click on a part, that part asks all of its PartModules if they have any KSPActions they&#8217;d like to provide access to, and gathers all those answers and lists them in the user interface for you to select from and assign to the action group.</p>
 <p>kOS now allows you to access any of those actions without necessarily having had to assign them to any action groups if you didn&#8217;t want to.</p>
-<p>KSPActions are manipulated by the following <a class="reference external" href="../../structure/partmodule/index.html">suffix of PartModule</a></p>
+<p>KSPActions are manipulated by the following suffix of PartModule, called <a class="reference internal" href="../structures/vessels/partmodule.html#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><code class="xref ks ks-meth docutils literal"><span class="pre">PartModule:DoAction</span></code></a>.</p>
 <ul class="simple">
 <li>:DOACTION(&#8220;name of action&#8221;, new_boolan_value).</li>
 </ul>
@@ -415,7 +415,7 @@ has a length of zero:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

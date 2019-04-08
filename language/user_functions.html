@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript User Functions &mdash; kOS 1.1.5.0 documentation</title>
+  <title>KerboScript User Functions &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Anonymous Functions (A kind of Delegate)" href="anonymous.html"/>
         <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -509,12 +509,6 @@ it with 2 arguments, both P4 and P3 get defaulted.)</p>
 expression, the expression will not get executed if the calling
 function had an argument present in that position.  The expression
 only gets executed if the system needed to pad a missing argument.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.18.3: </span>Optional Parameters were added as a new feature in kOS 0.18.3</p>
-</div>
-</div>
 </div>
 <div class="section" id="functions-and-the-terminal-interpreter">
 <span id="interpreter-functions"></span><h3><a class="toc-backref" href="#id11">Functions and the terminal interpreter</a><a class="headerlink" href="#functions-and-the-terminal-interpreter" title="Permalink to this headline">¶</a></h3>
@@ -530,7 +524,7 @@ an &#8220;Unknown Identifer&#8221; error, or worse yet, it may end
 up jumping into random parts of your code that have nothing
 to do with the actual function call you&#8217;re trying to
 make.</p>
-<p>As a rule of thumb, in kOS 0.17.0, make sure you only use
+<p>As a rule of thumb, make sure you only use
 functions from inside script programs.  Don&#8217;t try to call
 them interactively from the interpreter prompt.  You will
 get very strange and (seemingly) inexplicable errors.</p>
@@ -601,7 +595,7 @@ work is found <a class="reference internal" href="variables.html#scope"><span>on
 <p class="first admonition-title">Warning</p>
 <div class="last versionadded">
 <p><span class="versionmodified">New in version 0.17: </span><strong>Breaking Change:</strong> The kerboscript from prior versions
-of kOS did allow you do make <code class="docutils literal"><span class="pre">declare</span></code> statements
+of kOS did allow you to make <code class="docutils literal"><span class="pre">declare</span></code> statements
 without any initializers in them (and in fact you couldn&#8217;t
 provide an initializer for them in prior versions even if
 you wanted to).</p>
@@ -802,7 +796,7 @@ to use it, is <a class="reference internal" href="anonymous.html#anonymous-funct
 <h2><a class="toc-backref" href="#id23">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="calling-program-s-functions-from-the-interpreter">
 <h3><a class="toc-backref" href="#id24">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
-<p>As <a class="reference internal" href="#interpreter-functions"><span>explained above</span></a>, kOS 0.17.0 does
+<p>As <a class="reference internal" href="#interpreter-functions"><span>explained above</span></a>, kOS does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.</p>
@@ -926,7 +920,7 @@ compiler directive, the typo would be noticed:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

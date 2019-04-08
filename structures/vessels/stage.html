@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Stage &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Stage &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Vessel" href="vessel.html"/>
         <link rel="prev" title="Sensor" href="sensor.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -110,12 +110,14 @@
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
@@ -308,6 +310,16 @@ vessel will throw an exception.</p>
 <td>Get only</td>
 <td>the <a class="reference internal" href="../collections/lexicon.html#structure:LEXICON" title="LEXICON structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Lexicon</span></code></a> of name <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> keyed <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></code></a> values in the current stage</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></td>
+<td><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Get only</td>
+<td>one of the nearest <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> parts that is going to be activated by staging (not necessarily in next stage). <cite>None</cite> if there is no decoupler.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STAGE:NEXTSEPARATOR" title="STAGE:NEXTSEPARATOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTSEPARATOR</span></code></a></td>
+<td><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> or <a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Get only</td>
+<td>Alias name for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -380,6 +392,55 @@ list entirely on every call, so it is recommended that you cache the value
 if it will be reference repeatedly.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:STAGE:NEXTDECOUPLER">
+Stage:<code class="descname">NextDecoupler</code><a class="headerlink" href="#attribute:STAGE:NEXTDECOUPLER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>One of the nearest <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> parts that is going to be activated by staging
+(not necessarily in next stage, if that stage does not contain any decoupler, separator,
+launch clamp or docking port with staging enabled). <cite>None</cite> if there is no decoupler.</p>
+<p>This is particularly helpful for advanced staging logic, e.g.:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">STAGE</span><span class="p">.</span>
+<span class="k">IF</span> <span class="k">stage</span><span class="p">:</span><span class="nv">nextDecoupler</span><span class="p">:</span><span class="nv">isType</span><span class="p">(</span><span class="s">&quot;LaunchClamp&quot;</span><span class="p">)</span>
+    <span class="k">STAGE</span><span class="p">.</span>
+<span class="k">IF</span> <span class="k">stage</span><span class="p">:</span><span class="nv">nextDecoupler</span> <span class="o">&lt;&gt;</span> <span class="s">&quot;None&quot;</span> <span class="p">{</span>
+    <span class="k">WHEN</span> <span class="nv">availableThrust</span> <span class="o">=</span> <span class="mf">0</span> <span class="ow">or</span> <span class="p">(</span>
+        <span class="k">stage</span><span class="p">:</span><span class="nv">resourcesLex</span><span class="p">[</span><span class="s">&quot;LiquidFuel&quot;</span><span class="p">]:</span><span class="nv">amount</span> <span class="o">=</span> <span class="mf">0</span> <span class="ow">and</span>
+        <span class="k">stage</span><span class="p">:</span><span class="nv">resourcesLex</span><span class="p">[</span><span class="s">&quot;SolidFuel&quot;</span><span class="p">]:</span><span class="nv">amount</span> <span class="o">=</span> <span class="mf">0</span><span class="p">)</span>
+    <span class="k">THEN</span> <span class="p">{</span>
+        <span class="k">STAGE</span><span class="p">.</span>
+        <span class="k">return</span> <span class="k">stage</span><span class="p">:</span><span class="nv">nextDecoupler</span> <span class="o">&lt;&gt;</span> <span class="s">&quot;None&quot;</span><span class="p">.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STAGE:NEXTSEPARATOR">
+Stage:<code class="descname">NextSeparator</code><a class="headerlink" href="#attribute:STAGE:NEXTSEPARATOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Alias for <a class="reference internal" href="#attribute:STAGE:NEXTDECOUPLER" title="STAGE:NEXTDECOUPLER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">NEXTDECOUPLER</span></code></a></p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -424,7 +485,7 @@ if it will be reference repeatedly.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

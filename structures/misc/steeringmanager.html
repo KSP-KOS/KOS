@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SteeringManager &mdash; kOS 1.1.5.0 documentation</title>
+  <title>SteeringManager &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="String" href="string.html"/>
         <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -199,12 +199,6 @@ portion of the steering system.</p>
 <span class="c1">// Change the torque calculation to multiply the available torque by 1.5.</span>
 <span class="k">SET</span> <span class="nv">STEERINGMANAGER</span><span class="p">:</span><span class="nv">ROLLTORQUEFACTOR</span> <span class="ow">TO</span> <span class="mf">1</span><span class="p">.</span><span class="mf">5</span><span class="p">.</span>
 </pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionadded">
-<p><span class="versionmodified">New in version 0.18: </span>The <a class="reference internal" href="#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></code></a> was added to improve the accuracy of kOS&#8217;s cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymmetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.</p>
-</div>
 </div>
 <dl class="structure">
 <dt id="structure:STEERINGMANAGER">
@@ -815,7 +809,7 @@ SteeringManager:<code class="descname">ROLLTORQUEFACTOR</code><a class="headerli
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

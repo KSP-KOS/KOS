@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Communication &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Communication &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Transferring resources" href="resource_transfer.html"/>
         <link rel="prev" title="Serialization" href="serialization.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -344,12 +344,27 @@ another mod or a setting.</dd>
 <dd><p class="first">This manager will use KSP&#8217;s stock CommNet implementation to monitor
 connections.  It will only be available if CommNet is enabled in the KSP
 difficulty settings.</p>
-<div class="last admonition note">
+<div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">CommNet has limitations on updating connections for vessels
+<p class="last"><strong>Active Vessel</strong>: CommNet has limitations on updating connections for vessels
 which are not the active vessel.  The best way to ensure that a connection
 is updated is to include one of the kinds of antenna that can act as
 a relay on one or both of the vessels.</p>
+</div>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Debris Vessel</strong>: To save on computer load, CommNet cuts all &#8220;debris&#8221;
+vessels out of the system when loading the scene and does not track
+them.  Therefore any vessel that was of type &#8220;debris&#8221; when the scene
+was first loaded will be unable to have a connection, regardless of
+what antennas it may have on it, and regardless of whether you change
+its vessel type to something other than &#8220;debris&#8221; during the scene.
+The vessel type has to be something other than &#8220;debris&#8221; <em>at the moment
+the scene is first loaded</em> in order for it to be able to have CommNet
+connections.  If you have a &#8220;debris&#8221; vessel that has no communication
+connections, you can change the vessel type from &#8220;debris&#8221; to something
+else, <em>and then go to the tracking station and come back</em>, then <em>that</em>
+can cause the vessel to have a connection again.</p>
 </div>
 </dd>
 <dt>RemoteTechConnectivityManager</dt>
@@ -454,7 +469,7 @@ not included.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

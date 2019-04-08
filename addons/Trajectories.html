@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Trajectories &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Trajectories &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Contribute" href="../contribute.html"/>
         <link rel="prev" title="DMagic Orbital Science" href="OrbitalScience.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -107,7 +107,9 @@
 <li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IR.html">Infernal Robotics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="OrbitalScience.html">DMagic Orbital Science</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Trajectories</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Trajectories</a><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
@@ -167,7 +169,7 @@
 </ul>
 <p>Trajectories is a mod that displays trajectory predictions, accounting for atmospheric drag, lift, etc.. See the forum thread for more details.</p>
 <p>This addon is not associated with and not supported by the creator of Trajectories.</p>
-<p>The Trajectories API is accessed throgh C# reflection, and is designed for the
+<p>The Trajectories API is accessed through C# reflection, and is designed for the
 current version. This means that future Trajectories updates may break this
 addon, in which case <code class="docutils literal"><span class="pre">ADDONS:TR:AVAILABLE</span></code> will return false.  It is also
 possible for future versions of Trjectories to remain fully compatible.</p>
@@ -190,15 +192,24 @@ possible for future versions of Trjectories to remain fully compatible.</p>
 <p>Trajectories does its calculation based on the vessel&#8217;s current orientation. Any tiny change in orientation will change the prediction.</p>
 <p>Accuracy is not guaranteed.</p>
 <p>See this repository for an example of this addon being used to land a rocket on the launch pad: <a class="reference external" href="https://github.com/CalebJ2/kOS-landing-script">https://github.com/CalebJ2/kOS-landing-script</a></p>
+<div class="section" id="trajectories-version-compatibility">
+<h2>Trajectories Version Compatibility<a class="headerlink" href="#trajectories-version-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>The Trajectories mod went through some changes between Trajectories 1.x
+and Trajectories 2.x.  These changes alter the way that the kOS
+Trajectories AddOn has to communicate with the Trajectories mod, and
+added new suffixes that kOS could use.  However, for backward
+compatibility kOS will try to support an older version of Trajectories
+if that&#8217;s what&#8217;s installed.  Places where a suffx only works with
+newer versions of Trajectories are noted below in the suffix table.</p>
 <p>Access structure TRAddon via <code class="docutils literal"><span class="pre">ADDONS:TR</span></code>.</p>
 <dl class="structure">
 <dt id="structure:TRADDON">
 <em class="property">structure </em><code class="descname">TRAddon</code><a class="headerlink" href="#structure:TRADDON" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="20%" />
-<col width="26%" />
-<col width="54%" />
+<col width="19%" />
+<col width="25%" />
+<col width="56%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -211,31 +222,59 @@ possible for future versions of Trjectories to remain fully compatible.</p>
 <td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
 <td>True if a compatible Trajectories version is installed.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:HASIMPACT" title="TRADDON:HASIMPACT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASIMPACT</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:GETVERSION" title="TRADDON:GETVERSION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">GETVERSION</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> (readonly)</td>
+<td><strong>(only TR 2.2.0 and up)</strong> Trajectories version string.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:ISVERTWO" title="TRADDON:ISVERTWO attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISVERTWO</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
+<td>True if Trajectories version is 2.0.0 or above.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:ISVERTWOTWO" title="TRADDON:ISVERTWOTWO attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ISVERTWOTWO</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
+<td>True if Trajectories version is 2.2.0 or above.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:HASIMPACT" title="TRADDON:HASIMPACT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASIMPACT</span></code></a></td>
 <td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
 <td>True if Trajectories has calculated an impact position for the current vessel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:IMPACTPOS" title="TRADDON:IMPACTPOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IMPACTPOS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:IMPACTPOS" title="TRADDON:IMPACTPOS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">IMPACTPOS</span></code></a></td>
 <td><a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> (readonly)</td>
 <td>Returns a <a class="reference internal" href="../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> with the predicted impact position.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a></td>
 <td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
 <td>Vector at which to point to follow predicted trajectory.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:PLANNEDVECTOR" title="TRADDON:PLANNEDVECTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVECTOR</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:PLANNEDVECTOR" title="TRADDON:PLANNEDVECTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVECTOR</span></code></a></td>
 <td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
 <td>Alias for <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:TRADDON:SETTARGET" title="TRADDON:SETTARGET method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETTARGET(position)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:TRADDON:SETTARGET" title="TRADDON:SETTARGET method"><code class="xref ks ks-meth docutils literal"><span class="pre">SETTARGET(position)</span></code></a></td>
 <td>None</td>
 <td>Set Trajectories target.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:HASTARGET" title="TRADDON:HASTARGET attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASTARGET</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a> (readonly)</td>
+<td><strong>(only TR 2.0.0 and up)</strong> True if Trajectories&#8217; target position has been selected.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:TIMETILLIMPACT" title="TRADDON:TIMETILLIMPACT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TIMETILLIMPACT</span></code></a></td>
+<td><code class="xref ks ks-struct docutils literal"><span class="pre">ScalarValue</span></code> (readonly)</td>
+<td><strong>(only TR 2.2.0 and up)</strong> Seconds until impact</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:RETROGRADE" title="TRADDON:RETROGRADE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RETROGRADE</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td><strong>(only TR 2.2.0 and up)</strong> Descent profile is retrograde mode.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:PROGRADE" title="TRADDON:PROGRADE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></code></a></td>
+<td><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+<td><strong>(only TR 2.2.0 and up)</strong> Descent profile is prograde mode.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></td>
 <td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
 <td>Offset plus <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a> to correct path for targeted impact.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:TRADDON:CORRECTEDVECTOR" title="TRADDON:CORRECTEDVECTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVECTOR</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TRADDON:CORRECTEDVECTOR" title="TRADDON:CORRECTEDVECTOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVECTOR</span></code></a></td>
 <td><a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> (readonly)</td>
 <td>Alias for <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></td>
 </tr>
@@ -256,7 +295,71 @@ TRAddon:<code class="descname">AVAILABLE</code><a class="headerlink" href="#attr
 </tr>
 </tbody>
 </table>
-<p>True if a compatible Trajectories version is installed.</p>
+<p>True if a compatible Trajectories version is installed.  If this
+is not true, then none of the other suffixes listed here are safe to
+call (they can cause error and program crash).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:GETVERSION">
+TRAddon:<code class="descname">GETVERSION</code><a class="headerlink" href="#attribute:TRADDON:GETVERSION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Only gives the correct answer for Trajectries version &gt;= 2.2.0</strong></p>
+<p><em>For earlier versions, it gives a hardcoded fixed answer, as follows:</em></p>
+<ul class="simple">
+<li>For any Trajectories version earlier than 2.0.0,
+this returns the empty string &#8220;&#8221;.</li>
+<li>For any Trajectories version at least 2.0.0 but
+below 2.2.0, this returns the &#8216;rounded off&#8217; answer &#8220;2.0.0&#8221;
+regardless of the precise version number within that range.</li>
+<li>If your Trajectories version is at least 2.2.0 or above,
+this returns the specific version string correctly.</li>
+</ul>
+<p>For cases where you need to check for a known minimum Trajectories
+version, it is probably better to use the specific boolean suffix
+for that version (for example, <a class="reference internal" href="#attribute:TRADDON:ISVERTWO" title="TRADDON:ISVERTWO attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRAddon:ISVERTWO</span></code></a>, or
+<a class="reference internal" href="#attribute:TRADDON:ISVERTWOTWO" title="TRADDON:ISVERTWOTWO attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRAddon:ISVERTWOTWO</span></code></a>.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:ISVERTWO">
+TRAddon:<code class="descname">ISVERTWO</code><a class="headerlink" href="#attribute:TRADDON:ISVERTWO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if the Trajectories mod is at least version 2.0.0 or above.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:ISVERTWOTWO">
+TRAddon:<code class="descname">ISVERTWOTWO</code><a class="headerlink" href="#attribute:TRADDON:ISVERTWOTWO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if the Trajectories mod is at least version 2.2.0 or above.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -346,6 +449,92 @@ TRAddon:<code class="descname">SETTARGET</code><span class="sig-paren">(</span>p
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:TRADDON:HASTARGET">
+TRAddon:<code class="descname">HASTARGET</code><a class="headerlink" href="#attribute:TRADDON:HASTARGET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Did Not Exist in Trajectories before 2.0.0!</strong></p>
+<p><em>If :attr:`TRAddons:ISVERTWO` is false, using this suffix will cause
+a runtime error.</em></p>
+<p>The Trajectories Addon can be given a target position on the ground.
+This is true if such a position is selected, or false if it is not.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:TIMETILLIMPACT">
+TRAddon:<code class="descname">TIMETILLIMPACT</code><a class="headerlink" href="#attribute:TRADDON:TIMETILLIMPACT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Did Not Exist in Trajectories before 2.2.0!</strong></p>
+<p><em>If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+a runtime error.</em></p>
+<p>Gives you Trajectories&#8217; prediction of how many seconds until impact
+on ground or water.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:PROGRADE">
+TRAddon:<code class="descname">PROGRADE</code><a class="headerlink" href="#attribute:TRADDON:PROGRADE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Did Not Exist in Trajectories before 2.2.0!</strong></p>
+<p><em>If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+a runtime error.</em></p>
+<p>True if the Trajectories descent profile is set to &#8216;prograde&#8217; mode.
+You can set this to have the same effect as clicking on prograde mode
+in the trajectories GUI.  Setting this value to true causes
+<a class="reference internal" href="#attribute:TRADDON:RETROGRADE" title="TRADDON:RETROGRADE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRAddon:RETROGRADE</span></code></a> to become false.  (They cannot both be
+true at the same time.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TRADDON:RETROGRADE">
+TRAddon:<code class="descname">RETROGRADE</code><a class="headerlink" href="#attribute:TRADDON:RETROGRADE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/misc/boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Did Not Exist in Trajectories before 2.2.0!</strong></p>
+<p><em>If :attr:`TRAddons:ISVERTWOTWO` is false, using this suffix will cause
+a runtime error.</em></p>
+<p>True if the Trajectories descent profile is set to &#8216;retrograde&#8217; mode.
+You can set this to have the same effect as clicking on retrograde mode
+in the trajectories GUI.  Setting this value to true causes
+<a class="reference internal" href="#attribute:TRADDON:PROGRADE" title="TRADDON:PROGRADE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TRAddon:PROGRADE</span></code></a> to become false.  (They cannot both be
+true at the same time.)</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:TRADDON:CORRECTEDVEC">
 TRAddon:<code class="descname">CORRECTEDVEC</code><a class="headerlink" href="#attribute:TRADDON:CORRECTEDVEC" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -361,8 +550,11 @@ TRAddon:<code class="descname">CORRECTEDVEC</code><a class="headerlink" href="#a
 <p>A vector that applies an offset to <a class="reference internal" href="#attribute:TRADDON:PLANNEDVEC" title="TRADDON:PLANNEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PLANNEDVEC</span></code></a>
 intended to correct the predicted trajectory to impact at the selected
 target position.  This vector does not use any aerodynamic prediction and
-is a very simplistic representation.  Accuracy is not guaranteed, but it
-should at least help determine if you need to pitch the nose up or down.</p>
+is a very simplistic representation.  It is also just a unit vector.  It
+contains no magnitude information about how far off the selected target is
+from the predicted impact - just the way the offset points. Accuracy is
+not guaranteed, but it should at least help determine if you need to
+pitch the nose up or down.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -381,6 +573,7 @@ TRAddon:<code class="descname">CORRECTEDVECTOR</code><a class="headerlink" href=
 <p>Alias for <a class="reference internal" href="#attribute:TRADDON:CORRECTEDVEC" title="TRADDON:CORRECTEDVEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CORRECTEDVEC</span></code></a></p>
 </dd></dl>
 
+</div>
 </div>
 
 
@@ -424,7 +617,7 @@ TRAddon:<code class="descname">CORRECTEDVECTOR</code><a class="headerlink" href=
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

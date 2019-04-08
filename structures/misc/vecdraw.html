@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Drawing Vectors on the Screen &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Drawing Vectors on the Screen &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Voice" href="voice.html"/>
         <link rel="prev" title="WARP" href="timewarp.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -226,6 +226,34 @@ to show things on the screen:</p>
     <span class="p">).</span>
 </pre></div>
 </div>
+<p>Vector arrows can also be created with dynamic positioning and color.  To do
+this, instead of passing static values for the first three arguments of
+<code class="docutils literal"><span class="pre">VECDRAW()</span></code> or <code class="docutils literal"><span class="pre">VECDRAWARGS()</span></code>, you can pass a
+<a class="reference internal" href="../../language/delegates.html#delegates"><span>Delegate</span></a> for any of them, which returns a value of the
+correct type.  Here&#8217;s an example where the Start, Vec, and Color are all
+dynamically adjusted by anonymous delegates that kOS will frequently call
+for you as it draws the arrow:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// Small dynamically moving vecdraw example:</span>
+<span class="k">SET</span> <span class="nv">anArrow</span> <span class="ow">TO</span> <span class="nv">VECDRAW</span><span class="p">(</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="mf">6</span><span class="o">-</span><span class="mf">4</span><span class="o">*</span><span class="nv">cos</span><span class="p">(</span><span class="mf">100</span><span class="o">*</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">))</span> <span class="o">*</span> <span class="nv">up</span><span class="p">:</span><span class="nv">vector</span><span class="p">.</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="mf">4</span><span class="o">*</span><span class="nv">sin</span><span class="p">(</span><span class="mf">100</span><span class="o">*</span><span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">))</span> <span class="o">*</span> <span class="nv">up</span><span class="p">:</span><span class="nv">vector</span><span class="p">.</span>  <span class="p">},</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="nv">RGBA</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="nv">RANDOM</span><span class="p">(),</span> <span class="mf">1</span><span class="p">).</span> <span class="p">},</span>
+  <span class="s">&quot;Jumping arrow!&quot;</span><span class="p">,</span>
+  <span class="mf">1</span><span class="p">.</span><span class="mf">0</span><span class="p">,</span>
+  <span class="nb">TRUE</span><span class="p">,</span>
+  <span class="mf">0</span><span class="p">.</span><span class="mf">2</span>
+<span class="p">).</span>
+<span class="k">wait</span> <span class="mf">20</span><span class="p">.</span> <span class="c1">// Give user time to see it in motion.</span>
+<span class="k">set</span> <span class="nv">anArrow</span><span class="p">:</span><span class="nv">show</span> <span class="ow">to</span> <span class="nb">false</span><span class="p">.</span> <span class="c1">// Make it stop drawing.</span>
+</pre></div>
+</div>
+<p>In the above example, <code class="docutils literal"><span class="pre">VECDRAW()</span></code> detects that the first argument
+is a delegate, and it uses this information to decide to assign
+it into <a class="reference internal" href="#attribute:VECDRAW:STARTUPDATER" title="VECDRAW:STARTUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:STARTUPDATER</span></code></a>, instead of into <a class="reference internal" href="#attribute:VECDRAW:START" title="VECDRAW:START attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:START</span></code></a>.
+Similarly it detects that the second argument is a delegate, so it
+assigns it into <a class="reference internal" href="#attribute:VECDRAW:VECUPDATER" title="VECDRAW:VECUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:VECUPDATER</span></code></a> instead of into <a class="reference internal" href="#attribute:VECDRAW:VEC" title="VECDRAW:VEC attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:VEC</span></code></a>.
+And it does the same thing with the third argument, assigning it into
+<a class="reference internal" href="#attribute:VECDRAW:COLORUPDATER" title="VECDRAW:COLORUPDATER attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLORUPDATER</span></code></a>, instead of <a class="reference internal" href="#attribute:VECDRAW:COLOR" title="VECDRAW:COLOR attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VecDraw:COLOR</span></code></a>.</p>
 <p>All the parameters of the <code class="docutils literal"><span class="pre">VECDRAW()</span></code> and <code class="docutils literal"><span class="pre">VECDRAWARGS()</span></code> are
 optional.  You can leave any of the lastmost parameters off and they
 will be given a default:</p>
@@ -465,11 +493,6 @@ VecDraw:<code class="descname">SCALE</code><a class="headerlink" href="#attribut
 </table>
 <p>Optional, defaults to 1.0. Scalar to multiply the VEC by, and the WIDTH,
 but not the START.</p>
-<div class="versionchanged">
-<p><span class="versionmodified">Changed in version 0.19.0: </span>In previous versions, this also moved the start location, but most
-users found that useless and confusing and that has been
-changed as described above.</p>
-</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -504,9 +527,6 @@ VecDraw:<code class="descname">WIDTH</code><a class="headerlink" href="#attribut
 <p>Define the width of the drawn line, in meters.  The deafult is 0.2 if
 left off.  Note, this also causes the font of the label to be enlarged
 to match if set to a value larger than 0.2.</p>
-<div class="versionadded">
-<p><span class="versionmodified">New in version 0.19.0: </span>This parameter didn&#8217;t exist before kOS 0.19.0.</p>
-</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -685,7 +705,7 @@ VecDraw:<code class="descname">COLOURUPDATER</code><a class="headerlink" href="#
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

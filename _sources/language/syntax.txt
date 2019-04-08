@@ -224,10 +224,6 @@ Some suffixes are actually functions you can call. When that is the case, these 
 User Functions
 --------------
 
-.. note::
-    .. versionadded:: 0.17
-        This feature did not exist in prior versions of kerboscript.
-
 Help for the new user - What is a Function?
     In programming terminology, there is a commonly used feature of
     many programming languages that works as follows:

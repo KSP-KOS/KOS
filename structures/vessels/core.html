@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Core &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Core &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="CraftTemplate" href="crafttemplate.html"/>
         <link rel="prev" title="ALT" href="alt.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -110,12 +110,14 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dockingport.html">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
@@ -215,13 +217,16 @@
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:ELEMENT" title="CORE:ELEMENT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ELEMENT</span></code></a></td>
 <td><cite>Element</cite></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:VERSION" title="CORE:VERSION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERSION</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:TAG" title="CORE:TAG attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></code></a></td>
+<td><cite>The kOS nametag on the part this CPU runs on</cite></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:VERSION" title="CORE:VERSION attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">VERSION</span></code></a></td>
 <td><cite>Version</cite></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:CURRENTVOLUME" title="CORE:CURRENTVOLUME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CURRENTVOLUME</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:CURRENTVOLUME" title="CORE:CURRENTVOLUME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CURRENTVOLUME</span></code></a></td>
 <td><a class="reference internal" href="../volumes_and_files/volume.html#structure:VOLUME" title="VOLUME structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:MESSAGES" title="CORE:MESSAGES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGES</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:MESSAGES" title="CORE:MESSAGES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MESSAGES</span></code></a></td>
 <td><a class="reference internal" href="../communication/message_queue.html#structure:MESSAGEQUEUE" title="MESSAGEQUEUE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">MessageQueue</span></code></a></td>
 </tr>
 </tbody>
@@ -274,6 +279,23 @@ CORE:<code class="descname">VERSION</code><a class="headerlink" href="#attribute
 </tbody>
 </table>
 <p>The kOS version currently running.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:TAG">
+CORE:<code class="descname">TAG</code><a class="headerlink" href="#attribute:CORE:TAG" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The kOS name tag currently assigned to the part this core is
+inside.  This is the same thing as Core:part:tag.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -351,7 +373,7 @@ CORE:<code class="descname">MESSAGES</code><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

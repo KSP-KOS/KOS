@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>TextField &mdash; kOS 1.1.5.0 documentation</title>
+  <title>TextField &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,9 +35,9 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Creating GUIs" href="../gui.html"/>
-        <link rel="next" title="Widget" href="widget.html"/>
+        <link rel="next" title="TipDisplay" href="tipdisplay.html"/>
         <link rel="prev" title="StyleState" href="stylestate.html"/> 
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -124,6 +124,7 @@
 <li class="toctree-l3"><a class="reference internal" href="stylerecoffset.html">StyleRectOffset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stylestate.html">StyleState</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">TextField</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tipdisplay.html">TipDisplay</a></li>
 <li class="toctree-l3"><a class="reference internal" href="widget.html">Widget</a></li>
 </ul>
 </li>
@@ -226,6 +227,10 @@ background.</p>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:TEXTFIELD:ONCONFIRM" title="TEXTFIELD:ONCONFIRM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ONCONFIRM</span></code></a></td>
 <td><a class="reference internal" href="../misc/kosdelegate.html#structure:KOSDELEGATE" title="KOSDELEGATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">KOSDelegate</span></code></a> (<a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>)</td>
 <td>Your function called whenever the <a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIRMED</span></code></a> state changes.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TEXTFIELD:TOOLTIP" title="TEXTFIELD:TOOLTIP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOOLTIP</span></code></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Hint Text to appear in the field when it&#8217;s empty.</td>
 </tr>
 </tbody>
 </table>
@@ -351,6 +356,41 @@ one parameter, the new string value, and return nothing.</p>
 interaction.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:TEXTFIELD:TOOLTIP">
+TextField:<code class="descname">TOOLTIP</code><a class="headerlink" href="#attribute:TEXTFIELD:TOOLTIP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>(Technically this is inherited from <a class="reference internal" href="label.html#structure:LABEL" title="LABEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Label</span></code></a>, but it behaves
+quite differently in <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a> &#8220;Labels&#8221; than it does for
+other more &#8220;normal&#8221; types of label.)</p>
+<p>Unity3d&#8217;s IMGUI system cannot quite work with proper mouse hover
+tooltips on typing text fields.  kOS can&#8217;t help this.  It&#8217;s a limit
+of the Unity3d tool under the hood.  So instead, when you set a
+Tooltip for a <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a>, kOS uses that field differently
+than it does for other kinds of &#8220;label&#8221;.</p>
+<p>In the case of a <a class="reference internal" href="#structure:TEXTFIELD" title="TEXTFIELD structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TEXTFIELD</span></code></a>, the TOOLTIP, instead of being
+a string that is set when you hover the mouse over the widget, is
+the string that will appear inside the field as a hint in a
+greyed-out way when the field is empty-string.  If the user empties
+the value of the field, then kOS will show this TOOLTIP value inside
+the field as the hint about what they should type there.  (The actual
+value of the field&#8217;s <code class="docutils literal"><span class="pre">:TEXT</span></code> attribute will still be <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>, even
+when the TOOLTIP is showing in the widget.)</p>
+<p>Example:</p>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">set</span> <span class="nv">myTextField</span><span class="p">:</span><span class="nv">TOOLTIP</span> <span class="ow">to</span> <span class="s">&quot;Type a Planet Name Here&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The values of <a class="reference internal" href="#attribute:TEXTFIELD:CHANGED" title="TEXTFIELD:CHANGED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CHANGED</span></code></a> and <a class="reference internal" href="#attribute:TEXTFIELD:CONFIRMED" title="TEXTFIELD:CONFIRMED attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CONFIRMED</span></code></a> reset to False as soon as their value is accessed.</p>
@@ -366,7 +406,7 @@ interaction.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="widget.html" class="btn btn-neutral float-right" title="Widget" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tipdisplay.html" class="btn btn-neutral float-right" title="TipDisplay" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="stylestate.html" class="btn btn-neutral" title="StyleState" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -400,7 +440,7 @@ interaction.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

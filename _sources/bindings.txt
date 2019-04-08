@@ -24,6 +24,8 @@ SHIP:
   CPU part that is running this Kerboscript code at the moment. This is
   the `CPU Vessel <general/cpu_vessel.html>`__.
 
+.. _target:
+
 TARGET:
 
 - **Variable Name**: TARGET
@@ -92,7 +94,7 @@ APOAPSIS         Same as SHIP:APOAPSIS
 PERIAPSIS        Same as SHIP:PERIAPSIS
 SENSORS          Same as SHIP:SENSORS
 SRFPROGRADE      Same as SHIP:SRFPROGRADE
-SRFREROGRADE     Same as SHIP:SRFREROGRADE
+SRFRETROGRADE    Same as SHIP:SRFRETROGRADE
 OBT              Same as SHIP:OBT
 STATUS           Same as SHIP:STATUS
 SHIPNAME         Same as SHIP:NAME

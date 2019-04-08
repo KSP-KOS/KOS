@@ -45,6 +45,10 @@ KUniverse 4th wall methods
           - :struct:`String`
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
+        * - :meth:`PAUSE`
+          - None
+          - Method
+          - Pauses KSP, bringing up the "Escape Menu".
         * - :attr:`CANQUICKSAVE`
           - :struct:`Boolean`
           - Get
@@ -113,6 +117,10 @@ KUniverse 4th wall methods
           - :struct:`List` of :struct:`CraftTemplate`
           - Method
           - A list of all craft templates in the save specific and stock folders.
+        * - :attr:`REALTIME`
+          - :struct:`Scalar`
+          - Get only
+          - Real world timestamp (outside of game) in seconds since 1970
 
 
 .. attribute:: KUniverse:CANREVERT
@@ -170,6 +178,36 @@ KUniverse 4th wall methods
     - "SPH" for things built in the space plane hangar,
     - "VAB" for things built in the vehicle assembly building.
     - "" (empty :struct:`String`) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
+
+.. method:: KUniverse:PAUSE()
+
+    :access: Method
+    :type: None.
+
+    Pauses Kerbal Space Program, bringing up the same pause menu that would
+    normally appear when you hit the "Escape" key.
+
+    **Warning:** *NO lines of Kerboscript code can run while the game is
+    paused!!!  If you call this, you will be stopping your script there
+    until a human being clicks "resume" on the pause menu.*
+
+    kOS is designed to thematically act like a computer that lives *inside*
+    the game universe. That means it stops when the game clock stops, for
+    the same reason a bouncing ball stops when the game clock stops.
+
+    Until a human being resumes the game by clicking the Resume button
+    in the menu, your script will be stuck.  This makes it impossible
+    to have the program run code that decides when to un-pause the game.
+    Once the Resume button is clicked, then the program will
+    continue where it left off, just after the point where it called
+    ``KUniverse:PAUSE().``.
+
+    Note, if you use Control-C in the terminal to kill the program,
+    that *will* work while the game is paused like this.  If you make
+    the mistake of having your script keep re-pausing the game every
+    time the game resumes (i.e. you call ``Kuniverse:PAUSE()``
+    again and again in a loop), then using Control-C in the terminal
+    can be a way to break out of this problem.
 
 .. attribute:: KUniverse:CANQUICKSAVE
 
@@ -395,6 +433,21 @@ KUniverse 4th wall methods
 
         kOS: (KUNIVERSE:DEBUGLOG) this is my message
 
+.. attribute:: KUniverse:REALTIME
+
+    :access: Get Only
+    :type: :struct:`Scalar`
+
+    Returns the current time in the real world (outside of the game).
+    It uses the so called "UNIX time" convention - that is the number
+    of seconds since the start of 1970, right at midnight, 1st January.
+    
+.. attribute:: KUniverse:REALWORLDTIME
+
+    :access: Get Only
+    :type: :struct:`Scalar`
+
+    An alias for :struct:`KUniverse:REALTIME`.
 
 ****
 

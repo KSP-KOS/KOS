@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Iterator &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Iterator &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Collections" href="../collections.html"/>
         <link rel="next" title="Lexicon" href="lexicon.html"/>
         <link rel="prev" title="Enumerable" href="enumerable.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -212,16 +212,8 @@ initial position of the index is always -1, and the current value is always
 invalid.  This represents a position just <em>before the start</em> of the list of
 items.  Only after the first time <code class="xref ks ks-attr docutils literal"><span class="pre">NEXT</span></code> is called does the value of
 <code class="xref ks ks-attr docutils literal"><span class="pre">VALUE</span></code> become usable as the first thing in the collection.</p>
-<div class="section" id="rewinding-no-longer-supported">
-<h2>Rewinding No Longer Supported<a class="headerlink" href="#rewinding-no-longer-supported" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">There used to be a :RESET method for iterators, but it has been
-removed as it was not always implemented and sometimes gave an
-error.  Now to start the enumeration over you need to obtain a
-new iterator.</p>
-</div>
-</div>
+<p>If you want to restart an iteration you must call the <code class="docutils literal"><span class="pre">:ITERATOR</span></code> suffix of
+the collection again to obtain a new iterator.  Older versions of kOS had a <code class="docutils literal"><span class="pre">:RESET</span></code> suffix but it was removed as it could not be supported on all types.</p>
 <div class="section" id="members">
 <h2>Members<a class="headerlink" href="#members" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
@@ -277,16 +269,6 @@ Iterator:<code class="descname">RESET</code><span class="sig-paren">(</span><spa
 </tbody>
 </table>
 <p>This suffix has been deleted from kOS.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Previous versions of kOS had a <code class="docutils literal"><span class="pre">:RESET</span></code> suffix for Iterators.  This doesn&#8217;t
-exist anymore and is being left in the documentation here just so people trying
-to search for it will find this message explaining where it went.  kOS had to
-drop it because it&#8217;s no longer as easy to implement it under the hood with
-newer versions of .Net.</p>
-</div>
-<p>(If you want to restart an iteration you must call the <code class="docutils literal"><span class="pre">:ITERATOR</span></code> suffix of
-the collection again to obtain a new iterator.)</p>
 </dd></dl>
 
 <dl class="method">
@@ -399,7 +381,7 @@ Iterator:<code class="descname">VALUE</code><a class="headerlink" href="#attribu
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

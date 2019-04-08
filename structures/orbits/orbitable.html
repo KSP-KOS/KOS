@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Orbitable (Vessels and Bodies) &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Orbitable (Vessels and Bodies) &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Orbits" href="../orbits.html"/>
         <link rel="next" title="OrbitableVelocity" href="orbitablevelocity.html"/>
         <link rel="prev" title="Orbit" href="orbit.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -184,8 +184,8 @@
 <dd><p><strong>These terms are all read-only.</strong></p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="32%" />
-<col width="68%" />
+<col width="25%" />
+<col width="75%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -259,13 +259,11 @@
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:PATCHES" title="ORBITABLE:PATCHES attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="orbit.html#structure:ORBIT" title="ORBIT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Orbits</span></code></a></td>
 </tr>
-<tr class="row-even"><td colspan="2">The Following are deprecated (use apoapsis and periapsis on <a class="reference internal" href="#attribute:ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></code></a>)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:APOAPSIS" title="ORBITABLE:APOAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m) (Deprecated, use :OBT:APOAPSIS instead.)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:APOAPSIS" title="ORBITABLE:APOAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:PERIAPSIS" title="ORBITABLE:PERIAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></code></a></td>
-<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:PERIAPSIS" title="ORBITABLE:PERIAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m) (Deprecated, use :OBT:PERIAPSIS instead.)</td>
 </tr>
 </tbody>
 </table>
@@ -637,7 +635,10 @@ Orbitable:<code class="descname">APOAPSIS</code><a class="headerlink" href="#att
 </tbody>
 </table>
 <div class="deprecated">
-<p><span class="versionmodified">Deprecated since version 0.15: </span>Use <a class="reference internal" href="orbit.html#attribute:ORBIT:APOAPSIS" title="ORBIT:APOAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBT:APOAPSIS</span></code></a> instead.</p>
+<p><span class="versionmodified">Deprecated since version 0.15: </span>This is only kept here for backward compatibility.
+in new scripts you write, use <a class="reference internal" href="orbit.html#attribute:ORBIT:APOAPSIS" title="ORBIT:APOAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBT:APOAPSIS</span></code></a>.
+(i.e. use <code class="docutils literal"><span class="pre">SHIP:OBT:APOAPSIS</span></code> instead of <code class="docutils literal"><span class="pre">SHIP:APOAPSIS</span></code>,
+or use <code class="docutils literal"><span class="pre">MUN:OBT:APOAPSIS</span></code> instead of <code class="docutils literal"><span class="pre">MUN:APOAPSIS</span></code>, etc).</p>
 </div>
 </dd></dl>
 
@@ -655,7 +656,10 @@ Orbitable:<code class="descname">PERIAPSIS</code><a class="headerlink" href="#at
 </tbody>
 </table>
 <div class="deprecated">
-<p><span class="versionmodified">Deprecated since version 0.15: </span>Use <a class="reference internal" href="orbit.html#attribute:ORBIT:PERIAPSIS" title="ORBIT:PERIAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBT:PERIAPSIS</span></code></a> instead.</p>
+<p><span class="versionmodified">Deprecated since version 0.15: </span>This is only kept here for backward compatibility.
+in new scripts you write, use <a class="reference internal" href="orbit.html#attribute:ORBIT:PERIAPSIS" title="ORBIT:PERIAPSIS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">OBT:PERIAPSIS</span></code></a>.
+(i.e. use <code class="docutils literal"><span class="pre">SHIP:OBT:PERIAPSIS</span></code> instead of <code class="docutils literal"><span class="pre">SHIP:PERIAPSIS</span></code>).
+or use <code class="docutils literal"><span class="pre">MUN:OBT:PERIAPSIS</span></code> instead of <code class="docutils literal"><span class="pre">MUN:PERIAPSIS</span></code>, etc).</p>
 </div>
 </dd></dl>
 
@@ -702,7 +706,7 @@ Orbitable:<code class="descname">PERIAPSIS</code><a class="headerlink" href="#at
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

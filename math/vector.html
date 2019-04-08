@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vectors &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Vectors &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Directions" href="direction.html"/>
         <link rel="prev" title="Scalar" href="scalar.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -162,7 +162,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="vectors">
-<h1>Vectors<a class="headerlink" href="#vectors" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Vectors<a class="headerlink" href="#vectors" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
@@ -426,13 +426,13 @@ Vector:<code class="descname">VEC</code><a class="headerlink" href="#attribute:V
 <tr class="row-even"><td><a class="reference internal" href="#vector"><span>* (asterisk)</span></a></td>
 <td><a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a> or <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#id1"><span>+ (plus)</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#id2"><span>+ (plus)</span></a></td>
 <td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#id1"><span>- (minus)</span></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#id2"><span>- (minus)</span></a></td>
 <td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#id1"><span>- (unary)</span></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#id2"><span>- (unary)</span></a></td>
 <td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#function:VDOT" title="VDOT function"><code class="xref ks ks-func docutils literal"><span class="pre">VDOT</span></code></a>, <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><code class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></code></a>, <a class="reference internal" href="#vector"><span>* (asterisk)</span></a></td>
@@ -452,7 +452,9 @@ Vector:<code class="descname">VEC</code><a class="headerlink" href="#attribute:V
 <span class="target" id="vector"><span id="index-0"></span></span><dl class="object">
 <dt>
 <code class="descname">*</code></dt>
-<dd><p><a class="reference external" href="vecsmul">Scalar multiplication</a> or <a class="reference external" href="vecdot">dot product</a> of two <code class="docutils literal"><span class="pre">Vectors</span></code>. See also <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><code class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></code></a>:</p>
+<dd><p><a class="reference external" href="https://mathinsight.org/vector_introduction#scalarmultiplication">Scalar multiplication</a> or
+<a class="reference external" href="https://mathinsight.org/dot_product">dot product</a>
+of two <code class="docutils literal"><span class="pre">Vectors</span></code>. See also <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><code class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></code></a>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">a</span> <span class="ow">TO</span> <span class="mf">2</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">vec1</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">vec2</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">).</span>
@@ -468,10 +470,10 @@ the vector by a scalar of (-1):</p>
 </div>
 </dd></dl>
 
-<span class="target" id="index-1"></span><span class="target" id="id1"><span id="index-2"></span></span><dl class="object">
+<span class="target" id="index-1"></span><span class="target" id="id2"><span id="index-2"></span></span><dl class="object">
 <dt>
 <code class="descname">+, -</code></dt>
-<dd><p><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <a class="reference external" href="vecadd">addition and subtraction</a> by a scalar or another <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a>:</p>
+<dd><p><a class="reference external" href="https://mathinsight.org/vector_introduction#addition">Adding</a> and <a class="reference external" href="https:/mathinsight.org/vector_introduction#subtraction">subtracting</a> a <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> with another <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">a</span> <span class="ow">TO</span> <span class="mf">2</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">vec1</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">vec2</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">).</span>
@@ -482,8 +484,9 @@ the vector by a scalar of (-1):</p>
 <p>Note that the <em>unary</em> minus operator is the same thing as multiplying
 the vector by a scalar of (-1), and is not technically an addition or
 subtraction operator:</p>
-<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">PRINT</span> <span class="o">-</span><span class="nv">vec1</span><span class="p">.</span>     <span class="c1">// these two both print the</span>
-<span class="k">PRINT</span> <span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="o">*</span><span class="nv">vec1</span><span class="p">.</span> <span class="c1">// exact same thing.</span>
+<div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="c1">// These two both print the same exact thing:</span>
+<span class="k">PRINT</span> <span class="o">-</span><span class="nv">vec1</span><span class="p">.</span>
+<span class="k">PRINT</span> <span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="o">*</span><span class="nv">vec1</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -507,7 +510,7 @@ subtraction operator:</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <a class="reference external" href="vecdot">vector dot-product</a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <a class="reference external" href="https://mathinsight.org/dot_product">vector dot-product</a></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">scalar</span></code></a></p>
@@ -515,14 +518,16 @@ subtraction operator:</p>
 </tr>
 </tbody>
 </table>
-<p>This is the <a class="reference external" href="vecdot">dot product</a> of two vectors returning a scalar number. This is the same as <a class="reference internal" href="#vector"><span>v1 * v2</span></a>:</p>
+<p>This is the <a class="reference external" href="https://mathinsight.org/dot_product">dot product</a> of two vectors returning a scalar number. This is the same as <a class="reference internal" href="#vector"><span>v1 * v2</span></a>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">vec1</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">vec2</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">).</span>
 
-<span class="c1">// These will all print the value: 20</span>
-<span class="k">PRINT</span> <span class="nv">vec1</span> <span class="o">*</span> <span class="nv">vec2</span><span class="p">.</span>
+<span class="c1">// These are different ways to perform the same operation.</span>
+<span class="c1">// All of them will print the value: 20</span>
+<span class="c1">// -------------------------------------------------------</span>
 <span class="k">PRINT</span> <span class="nv">VDOT</span><span class="p">(</span><span class="nv">vec1</span><span class="p">,</span> <span class="nv">vec2</span><span class="p">).</span>
 <span class="k">PRINT</span> <span class="nv">VECTORDOTPRODUCT</span><span class="p">(</span><span class="nv">vec1</span><span class="p">,</span> <span class="nv">vec2</span><span class="p">).</span>
+<span class="k">PRINT</span> <span class="nv">vec1</span> <span class="o">*</span> <span class="nv">vec2</span><span class="p">.</span> <span class="c1">// multiplication of two vectors with asterisk &quot;*&quot; performs a VDOT().</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -546,7 +551,7 @@ subtraction operator:</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <a class="reference external" href="veccross">vector cross-product</a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <a class="reference external" href="https://mathinsight.org/cross_product">vector cross-product</a></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a></p>
@@ -554,7 +559,7 @@ subtraction operator:</p>
 </tr>
 </tbody>
 </table>
-<p>The vector <a class="reference external" href="veccross">cross product</a> of two vectors in the order <code class="docutils literal"><span class="pre">(v1,v2)</span></code> returning a new <cite>Vector</cite>:</p>
+<p>The vector <a class="reference external" href="https://mathinsight.org/cross-product/">cross product</a> of two vectors in the order <code class="docutils literal"><span class="pre">(v1,v2)</span></code> returning a new <cite>Vector</cite>:</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">vec1</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">).</span>
 <span class="k">SET</span> <span class="nv">vec2</span> <span class="ow">TO</span> <span class="nv">V</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">).</span>
 
@@ -692,7 +697,7 @@ using a right-handed coordinate system.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

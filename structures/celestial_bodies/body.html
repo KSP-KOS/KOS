@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Body &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Body &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Creating GUIs" href="../gui.html"/>
         <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -179,12 +179,7 @@
 <span class="k">SET</span> <span class="nv">MY_VAR</span> <span class="ow">TO</span> <span class="nv">BODY</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">).</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<div class="last versionchanged">
-<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>Orbitable</span></a>, and can use all the terms described for these objects too.</p>
-</div>
-</div>
+<p>Bodies are also <a class="reference internal" href="../orbits/orbitable.html#orbitable"><span>Orbitable</span></a>, and as such have all the associated suffixes.</p>
 <p>Bodies&#8217; names are added to the kerboscript language as variable names as well.
 This means you can use the variable <code class="docutils literal"><span class="pre">Mun</span></code> to mean the same thing as <code class="docutils literal"><span class="pre">BODY(&quot;Mun&quot;)</span></code>,
 and the variable <code class="docutils literal"><span class="pre">Kerbin</span></code> to mean the same thing as <code class="docutils literal"><span class="pre">BODY(&quot;Kerbin&quot;)</span></code>, and so on.</p>
@@ -280,37 +275,46 @@ broken behavior if a planet or moon exists that overrides a keyword name.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MASS" title="BODY:MASS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (kg)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:HASOCEAN" title="BODY:HASOCEAN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASOCEAN</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:HASSOLIDSURFACE" title="BODY:HASSOLIDSURFACE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HASSOLIDSURFACE</span></code></a></td>
+<td><a class="reference internal" href="../misc/boolean.html#boolean"><span>boolean</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ORBITINGCHILDREN" title="BODY:ORBITINGCHILDREN attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ORBITINGCHILDREN</span></code></a></td>
+<td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (s)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:RADIUS" title="BODY:RADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:RADIUS" title="BODY:RADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:MU" title="BODY:MU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MU</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:MU" title="BODY:MU attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">MU</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (<span class="math">\(m^3 s^{−2}\)</span>)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ATM" title="BODY:ATM attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></code></a></td>
 <td><a class="reference internal" href="atmosphere.html#structure:ATMOSPHERE" title="ATMOSPHERE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></code></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></code></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP-RAW</span></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:BODY:GEOPOSITIONOF" title="BODY:GEOPOSITIONOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">GEOPOSITIONOF</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:BODY:GEOPOSITIONOF" title="BODY:GEOPOSITIONOF method"><code class="xref ks ks-meth docutils literal"><span class="pre">GEOPOSITIONOF</span></code></a></td>
 <td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> given <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><span>SHIP-RAW</span></a> position vector</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:BODY:GEOPOSITIONLATLNG" title="BODY:GEOPOSITIONLATLNG method"><code class="xref ks ks-meth docutils literal"><span class="pre">GEOPOSITIONLATLNG</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:BODY:GEOPOSITIONLATLNG" title="BODY:GEOPOSITIONLATLNG method"><code class="xref ks ks-meth docutils literal"><span class="pre">GEOPOSITIONLATLNG</span></code></a></td>
 <td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><code class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></code></a> given latitude and longitude values</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ALTITUDEOF" title="BODY:ALTITUDEOF attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEOF</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ALTITUDEOF" title="BODY:ALTITUDEOF attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEOF</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:SOIRADIUS" title="BODY:SOIRADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SOIRADIUS</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:SOIRADIUS" title="BODY:SOIRADIUS attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">SOIRADIUS</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (m)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONANGLE</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONANGLE</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#scalar"><span>scalar</span></a> (deg)</td>
 </tr>
 </tbody>
@@ -337,6 +341,27 @@ Body:<code class="descname">DESCRIPTION</code><a class="headerlink" href="#attri
 <dt id="attribute:BODY:MASS">
 Body:<code class="descname">MASS</code><a class="headerlink" href="#attribute:BODY:MASS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The mass of the body in kilograms.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:BODY:HASOCEAN">
+Body:<code class="descname">HASOCEAN</code><a class="headerlink" href="#attribute:BODY:HASOCEAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this body has an ocean.  Example: In the stock solar system,
+this is True for Kerbin and False for Mun.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:BODY:HASSOLIDSURFACE">
+Body:<code class="descname">HASSOLIDSURFACE</code><a class="headerlink" href="#attribute:BODY:HASSOLIDSURFACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this body has a solid surface.  Example: In the stock solar system,
+this is True for Kerbin and False for Jool.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:BODY:ORBITINGCHILDREN">
+Body:<code class="descname">ORBITINGCHILDREN</code><a class="headerlink" href="#attribute:BODY:ORBITINGCHILDREN" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the bodies orbiting this body.  Example: In the stock solar system,
+Kerbin:orbitingchildren is a list two things: Mun and Minmus.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -500,7 +525,7 @@ of zero).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

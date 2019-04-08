@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The kOS Telnet Server &mdash; kOS 1.1.5.0 documentation</title>
+  <title>The kOS Telnet Server &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
         <link rel="next" title="Files and Volumes" href="volumes.html"/>
         <link rel="prev" title="Making GUIs in kOS" href="gui.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -174,7 +174,16 @@
 inside Kerbal Space Program.</p>
 <div style="margin-top:10px;">
     <iframe width="560" height="315" src="https://www.youtube.com/embed/CgwRY-OrPhI?list=PLdXwd2JlyAvo_pH1tS3P7elVTYjvmIh-m" frameborder="0" allowfullscreen></iframe>
-</div><p>Telnet is an old network protocol designed in the early days of the Internet, long
+</div><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>To use this feature you <strong>must</strong> make sure you have the main game
+option &#8220;Simulate in Background&#8221; turned <strong>on</strong>.  It can be found in
+Kerbal Space Program&#8217;s main menu settings screen, under
+&#8220;General&#8221; settings.</p>
+<p class="last">More explanation can be found further down this page in the
+section titled &#8220;Simulate in Background&#8221;.</p>
+</div>
+<p>Telnet is an old network protocol designed in the early days of the Internet, long
 before World Wide Web.  Its purpose was (is) to allow you to get access to the
 remote command line interfaces of distant server computers, acting as if the
 keyboard and computer screen in front of you was a terminal hooked up to a distant
@@ -190,13 +199,14 @@ on, see the section called &#8220;<a class="reference internal" href="#security"
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#telnet-clients" id="id4">Telnet clients</a></li>
-<li><a class="reference internal" href="#using-it" id="id5">Using it</a></li>
-<li><a class="reference internal" href="#special-keys" id="id6">Special Keys</a></li>
-<li><a class="reference internal" href="#howto-putty-client" id="id7">HOWTO: Putty client</a></li>
-<li><a class="reference internal" href="#howto-command-line-client" id="id8">HOWTO: Command-line client</a></li>
-<li><a class="reference internal" href="#howto-other-client" id="id9">HOWTO: Other client</a></li>
-<li><a class="reference internal" href="#security" id="id10">Security</a></li>
-<li><a class="reference internal" href="#homemade-telnet-clients" id="id11">Homemade telnet clients</a></li>
+<li><a class="reference internal" href="#simulate-in-background" id="id5">Simulate in Background</a></li>
+<li><a class="reference internal" href="#using-it" id="id6">Using it</a></li>
+<li><a class="reference internal" href="#special-keys" id="id7">Special Keys</a></li>
+<li><a class="reference internal" href="#howto-putty-client" id="id8">HOWTO: Putty client</a></li>
+<li><a class="reference internal" href="#howto-command-line-client" id="id9">HOWTO: Command-line client</a></li>
+<li><a class="reference internal" href="#howto-other-client" id="id10">HOWTO: Other client</a></li>
+<li><a class="reference internal" href="#security" id="id11">Security</a></li>
+<li><a class="reference internal" href="#homemade-telnet-clients" id="id12">Homemade telnet clients</a></li>
 </ul>
 </div>
 <div class="figure">
@@ -227,8 +237,25 @@ distribution.  Open an xterm window, and in that window type the telnet
 command, as described by the section titled &#8220;<a class="reference internal" href="#howto-command-line-client">HOWTO: Command-line client</a>&#8220;</dd>
 </dl>
 </div>
+<div class="section" id="simulate-in-background">
+<h2><a class="toc-backref" href="#id5">Simulate in Background</a><a class="headerlink" href="#simulate-in-background" title="Permalink to this headline">¶</a></h2>
+<p>To use the kOS telnet feature, you must have the stock KSP game&#8217;s
+option called &#8220;Simulate in Background&#8221; turned on.  This option
+is found on Kerbal Space Program&#8217;s &#8220;General&#8221; settings screen
+(Note, this is the settings screen you find on the
+<em>title screen</em> of the game, NOT the smaller subset of settings
+you find on the &#8220;escape&#8221; menu in-game.)</p>
+<p><strong>Why?</strong> Because when that option is turned off, the entire KSP
+game is paused any time you switch focus to a different program
+on your computer other than KSP.  When the game is thusly paused,
+the kOS telnet server inside the game is frozen and can&#8217;t respond
+to anything the telnet client sends it.  (If you are typing into a
+telnet client program on your computer, then <em>that</em> will be the
+the focussed window instead of the KSP game, so this issue will
+come up the majority of the time.)</p>
+</div>
 <div class="section" id="using-it">
-<h2><a class="toc-backref" href="#id5">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Using it</a><a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first">Turn on the telnet server by going into the app control panel and clicking
 on the green circle next to the word &#8220;Telnet&#8221;.  Alternatively, you can
@@ -336,7 +363,7 @@ the telnet welcome menu again.</li>
 </ol>
 </div>
 <div class="section" id="special-keys">
-<h2><a class="toc-backref" href="#id6">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Special Keys</a><a class="headerlink" href="#special-keys" title="Permalink to this headline">¶</a></h2>
 <p>The following keys have special meaning in the telnet session:</p>
 <dl class="docutils">
 <dt>Control-L</dt>
@@ -385,7 +412,7 @@ terminal code for it.</dd>
 </dl>
 </div>
 <div class="section" id="howto-putty-client">
-<h2><a class="toc-backref" href="#id7">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">HOWTO: Putty client</a><a class="headerlink" href="#howto-putty-client" title="Permalink to this headline">¶</a></h2>
 <p>(These instructions assume you use the default kOS Telnet server settings, of
 the loopback address 127.0.0.1, and port number 5410.  If you&#8217;ve changed those
 settings then alter the numbers you see here accordingly.)</p>
@@ -408,7 +435,7 @@ time there&#8217;s a problem, making it very hard to diagnose because you can&#8
 message the server was sending back to you just before the window went away.</p>
 </div>
 <div class="section" id="howto-command-line-client">
-<h2><a class="toc-backref" href="#id8">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">HOWTO: Command-line client</a><a class="headerlink" href="#howto-command-line-client" title="Permalink to this headline">¶</a></h2>
 <div class="figure" id="id2">
 <a class="reference internal image-reference" href="../_images/telnet_xterm.png"><img alt="../_images/telnet_xterm.png" src="../_images/telnet_xterm.png" style="width: 75%;" /></a>
 <p class="caption"><span class="caption-text">Showing the use of telnet in an x-term window.</span></p>
@@ -437,7 +464,7 @@ actually have the xterm program itself installed that you can use.</p>
 </ol>
 </div>
 <div class="section" id="howto-other-client">
-<h2><a class="toc-backref" href="#id9">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">HOWTO: Other client</a><a class="headerlink" href="#howto-other-client" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>Set the IP address to 127.0.0.1 using whatever means the program has for it.</li>
 <li>Set the port number to 5410 using whatever means the program has for it.</li>
@@ -447,7 +474,7 @@ less good, but still perhaps workable option.</li>
 </ol>
 </div>
 <div class="section" id="security">
-<h2><a class="toc-backref" href="#id10">Security</a><a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">Security</a><a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
 <p>The telnet protocol performs no encryption of its data, and as such any attempt
 at securing the system using a name/password combination would have been
 utterly pointless.  Rather than provide a false sense of security that&#8217;s not
@@ -497,7 +524,7 @@ of kOS.  (While implementing from scratch the server side of the older, simpler
 telnet protocol, while still work, was more doable).</p>
 </div>
 <div class="section" id="homemade-telnet-clients">
-<h2><a class="toc-backref" href="#id11">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Homemade telnet clients</a><a class="headerlink" href="#homemade-telnet-clients" title="Permalink to this headline">¶</a></h2>
 <p>This section is only of interest to hobbyists making Kerbal console hardware rigs
 and software developers trying to make interface mods that pretend to be
 kOS terminals.  If you are neither of those two, then don&#8217;t worry if this section
@@ -665,7 +692,7 @@ should be able to capture and ignore it.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

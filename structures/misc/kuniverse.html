@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KUniverse 4th wall methods &mdash; kOS 1.1.5.0 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Vessel Load Distance" href="loaddistance.html"/>
         <link rel="prev" title="KOSDelegate" href="kosdelegate.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -244,90 +244,100 @@
 <td>Get</td>
 <td>Returns the name of this vessel&#8217;s editor, &#8220;SPH&#8221; or &#8220;VAB&#8221;.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANQUICKSAVE" title="KUNIVERSE:CANQUICKSAVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CANQUICKSAVE</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:PAUSE" title="KUNIVERSE:PAUSE method"><code class="xref ks ks-meth docutils literal"><span class="pre">PAUSE</span></code></a></td>
+<td>None</td>
+<td>Method</td>
+<td>Pauses KSP, bringing up the &#8220;Escape Menu&#8221;.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANQUICKSAVE" title="KUNIVERSE:CANQUICKSAVE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">CANQUICKSAVE</span></code></a></td>
 <td><a class="reference internal" href="boolean.html#structure:BOOLEAN" title="BOOLEAN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Boolean</span></code></a></td>
 <td>Get</td>
 <td>Returns true if quicksave is currently enabled and available.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKSAVE" title="KUNIVERSE:QUICKSAVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKSAVE()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKSAVE" title="KUNIVERSE:QUICKSAVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKSAVE()</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Invoke KSP&#8217;s built in quicksave.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKLOAD" title="KUNIVERSE:QUICKLOAD method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKLOAD()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKLOAD" title="KUNIVERSE:QUICKLOAD method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKLOAD()</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Invoke KSP&#8217;s built in quickload.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKSAVETO" title="KUNIVERSE:QUICKSAVETO method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKSAVETO(name)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKSAVETO" title="KUNIVERSE:QUICKSAVETO method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKSAVETO(name)</span></code></a></td>
 <td><a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Method</td>
 <td>Perform quicksave to the save with the given name.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKLOADFROM" title="KUNIVERSE:QUICKLOADFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKLOADFROM(name)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:QUICKLOADFROM" title="KUNIVERSE:QUICKLOADFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">QUICKLOADFROM(name)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Perform quickload from the save with the given name.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:QUICKSAVELIST" title="KUNIVERSE:QUICKSAVELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">QUICKSAVELIST</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:QUICKSAVELIST" title="KUNIVERSE:QUICKSAVELIST attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">QUICKSAVELIST</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
 <td>Get</td>
 <td>A list of all quicksave files for this game.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:HOURSPERDAY" title="KUNIVERSE:HOURSPERDAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HOURSPERDAY</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:HOURSPERDAY" title="KUNIVERSE:HOURSPERDAY attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">HOURSPERDAY</span></code></a></td>
 <td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
 <td>Get</td>
 <td>Number of hours per day (6 or 24) according to your game settings.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:DEBUGLOG" title="KUNIVERSE:DEBUGLOG method"><code class="xref ks ks-meth docutils literal"><span class="pre">DEBUGLOG(message)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:DEBUGLOG" title="KUNIVERSE:DEBUGLOG method"><code class="xref ks ks-meth docutils literal"><span class="pre">DEBUGLOG(message)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Causes a <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a> to append to the Unity debug log file.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="KUNIVERSE:DEFAULTLOADDISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTLOADDISTANCE</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="KUNIVERSE:DEFAULTLOADDISTANCE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTLOADDISTANCE</span></code></a></td>
 <td><a class="reference internal" href="loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></code></a></td>
 <td>Get</td>
 <td>Returns the set of default load and pack distances for the game.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:TIMEWARP" title="KUNIVERSE:TIMEWARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TIMEWARP</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:TIMEWARP" title="KUNIVERSE:TIMEWARP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TIMEWARP</span></code></a></td>
 <td><a class="reference internal" href="timewarp.html#structure:TIMEWARP" title="TIMEWARP structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TimeWarp</span></code></a></td>
 <td>Get</td>
 <td>Returns a value you can use to manipulate Kerbal Space Program&#8217;s time warp.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="KUNIVERSE:ACTIVEVESSEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESSEL</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="KUNIVERSE:ACTIVEVESSEL attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESSEL</span></code></a></td>
 <td><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></code></a></td>
 <td>Get/Set</td>
 <td>Returns the active vessel, or lets you set the active vessel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL(vessel)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL(vessel)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Lets you switch active vessels even when the game refuses to allow it.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:FORCEACTIVE" title="KUNIVERSE:FORCEACTIVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:FORCEACTIVE" title="KUNIVERSE:FORCEACTIVE method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Same as <a class="reference internal" href="#method:KUNIVERSE:FORCESETACTIVEVESSEL" title="KUNIVERSE:FORCESETACTIVEVESSEL method"><code class="xref ks ks-meth docutils literal"><span class="pre">FORCESETACTIVEVESSEL</span></code></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:GETCRAFT" title="KUNIVERSE:GETCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETCRAFT(name,</span> <span class="pre">editor)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:GETCRAFT" title="KUNIVERSE:GETCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">GETCRAFT(name,</span> <span class="pre">editor)</span></code></a></td>
 <td><a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
 <td>Method</td>
 <td>Get the file path for the craft with the given name, saved in the given editor.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFT" title="KUNIVERSE:LAUNCHCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFT(template)</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFT" title="KUNIVERSE:LAUNCHCRAFT method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFT(template)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Launch a new instance of the given craft at it&#8217;s default launch site.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="KUNIVERSE:LAUNCHCRAFTFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFTFROM(template,</span> <span class="pre">site)</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:LAUNCHCRAFTFROM" title="KUNIVERSE:LAUNCHCRAFTFROM method"><code class="xref ks ks-meth docutils literal"><span class="pre">LAUNCHCRAFTFROM(template,</span> <span class="pre">site)</span></code></a></td>
 <td>None</td>
 <td>Method</td>
 <td>Launch a new instance of the given craft at the given site.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:KUNIVERSE:CRAFTLIST" title="KUNIVERSE:CRAFTLIST method"><code class="xref ks ks-meth docutils literal"><span class="pre">CRAFTLIST()</span></code></a></td>
 <td><a class="reference internal" href="../collections/list.html#structure:LIST" title="LIST structure"><code class="xref ks ks-struct docutils literal"><span class="pre">List</span></code></a> of <a class="reference internal" href="../vessels/crafttemplate.html#structure:CRAFTTEMPLATE" title="CRAFTTEMPLATE structure"><code class="xref ks ks-struct docutils literal"><span class="pre">CraftTemplate</span></code></a></td>
 <td>Method</td>
 <td>A list of all craft templates in the save specific and stock folders.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:REALTIME" title="KUNIVERSE:REALTIME attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">REALTIME</span></code></a></td>
+<td><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+<td>Get only</td>
+<td>Real world timestamp (outside of game) in seconds since 1970</td>
 </tr>
 </tbody>
 </table>
@@ -455,6 +465,41 @@ The value is one of:</p>
 <li>&#8220;VAB&#8221; for things built in the vehicle assembly building.</li>
 <li>&#8220;&#8221; (empty <a class="reference internal" href="string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a>) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)</li>
 </ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:PAUSE">
+KUniverse:<code class="descname">PAUSE</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:KUNIVERSE:PAUSE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+<p>Pauses Kerbal Space Program, bringing up the same pause menu that would
+normally appear when you hit the &#8220;Escape&#8221; key.</p>
+<p><strong>Warning:</strong> <em>NO lines of Kerboscript code can run while the game is
+paused!!!  If you call this, you will be stopping your script there
+until a human being clicks &#8220;resume&#8221; on the pause menu.</em></p>
+<p>kOS is designed to thematically act like a computer that lives <em>inside</em>
+the game universe. That means it stops when the game clock stops, for
+the same reason a bouncing ball stops when the game clock stops.</p>
+<p>Until a human being resumes the game by clicking the Resume button
+in the menu, your script will be stuck.  This makes it impossible
+to have the program run code that decides when to un-pause the game.
+Once the Resume button is clicked, then the program will
+continue where it left off, just after the point where it called
+<code class="docutils literal"><span class="pre">KUniverse:PAUSE().</span></code>.</p>
+<p>Note, if you use Control-C in the terminal to kill the program,
+that <em>will</em> work while the game is paused like this.  If you make
+the mistake of having your script keep re-pausing the game every
+time the game resumes (i.e. you call <code class="docutils literal"><span class="pre">Kuniverse:PAUSE()</span></code>
+again and again in a loop), then using Control-C in the terminal
+can be a way to break out of this problem.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -849,6 +894,40 @@ each OS.  Consult the list below to see where it is on your platform.</p>
 </div>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:REALTIME">
+KUniverse:<code class="descname">REALTIME</code><a class="headerlink" href="#attribute:KUNIVERSE:REALTIME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get Only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>Returns the current time in the real world (outside of the game).
+It uses the so called &#8220;UNIX time&#8221; convention - that is the number
+of seconds since the start of 1970, right at midnight, 1st January.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:REALWORLDTIME">
+KUniverse:<code class="descname">REALWORLDTIME</code><a class="headerlink" href="#attribute:KUNIVERSE:REALWORLDTIME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get Only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/scalar.html#structure:SCALAR" title="SCALAR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Scalar</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>An alias for <code class="xref ks ks-struct docutils literal"><span class="pre">KUniverse:REALTIME</span></code>.</p>
+</dd></dl>
+
 <hr class="docutils" />
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
@@ -914,7 +993,7 @@ each OS.  Consult the list below to see where it is on your platform.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

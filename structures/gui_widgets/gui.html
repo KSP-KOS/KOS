@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GUI structure &mdash; kOS 1.1.5.0 documentation</title>
+  <title>GUI structure &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Creating GUIs" href="../gui.html"/>
         <link rel="next" title="Label" href="label.html"/>
         <link rel="prev" title="Button" href="button.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -124,6 +124,7 @@
 <li class="toctree-l3"><a class="reference internal" href="stylerecoffset.html">StyleRectOffset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stylestate.html">StyleState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="textfield.html">TextField</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tipdisplay.html">TipDisplay</a></li>
 <li class="toctree-l3"><a class="reference internal" href="widget.html">Widget</a></li>
 </ul>
 </li>
@@ -232,11 +233,15 @@ of them.)</p>
 <td><a class="reference internal" href="skin.html#structure:SKIN" title="SKIN structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Skin</span></code></a></td>
 <td>The skin defining the default style of widgets in this GUI.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:GUI:SHOW" title="GUI:SHOW method"><code class="xref ks ks-meth docutils literal"><span class="pre">SHOW</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:GUI:TOOLTIP" title="GUI:TOOLTIP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">TOOLTIP</span></code></a></td>
+<td><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+<td>Current value of hovertext</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:GUI:SHOW" title="GUI:SHOW method"><code class="xref ks ks-meth docutils literal"><span class="pre">SHOW</span></code></a></td>
 <td>none</td>
 <td>Call to make the gui appear</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:GUI:HIDE" title="GUI:HIDE method"><code class="xref ks ks-meth docutils literal"><span class="pre">HIDE</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:GUI:HIDE" title="GUI:HIDE method"><code class="xref ks ks-meth docutils literal"><span class="pre">HIDE</span></code></a></td>
 <td>none</td>
 <td>Call to make the gui disappear</td>
 </tr>
@@ -345,6 +350,29 @@ be used by default by all the widgets of the appropriate type
 inside the window.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:GUI:TOOLTIP">
+GUI:<code class="descname">TOOLTIP</code><a class="headerlink" href="#attribute:GUI:TOOLTIP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/string.html#structure:STRING" title="STRING structure"><code class="xref ks ks-struct docutils literal"><span class="pre">String</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>If the mouse pointer is hovering over a GUI label widget inside this
+window somewhere that has its <a class="reference internal" href="label.html#attribute:LABEL:TOOLTIP" title="LABEL:TOOLTIP attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">Label:TOOLTIP</span></code></a> property set, then
+this string will contain that TOOLTIP property copied into it (otherwise
+it will be an empty string, <code class="docutils literal"><span class="pre">&quot;&quot;</span></code>).  This is the value that will be
+displayed inside this window&#8217;s <a class="reference internal" href="tipdisplay.html#structure:TIPDISPLAY" title="TIPDISPLAY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TipDisplay</span></code></a> widget if you add
+a TipDisplay widget to the window.  Using this value, you can come up
+with your own alternate ways to display tooltips to the user, if you
+like, instead of using the baked-in <a class="reference internal" href="tipdisplay.html#structure:TIPDISPLAY" title="TIPDISPLAY structure"><code class="xref ks ks-struct docutils literal"><span class="pre">TipDisplay</span></code></a> technique.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="method:GUI:SHOW">
 GUI:<code class="descname">SHOW</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#method:GUI:SHOW" title="Permalink to this definition">¶</a></dt>
@@ -420,7 +448,7 @@ GUI:<code class="descname">HIDE</code><span class="sig-paren">(</span><span clas
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

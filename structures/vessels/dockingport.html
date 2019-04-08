@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DockingPort &mdash; kOS 1.1.5.0 documentation</title>
+  <title>DockingPort &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,10 +35,10 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Element" href="element.html"/>
-        <link rel="prev" title="CrewMember" href="crewmember.html"/> 
+        <link rel="prev" title="Decoupler" href="decoupler.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -110,12 +110,14 @@
 <li class="toctree-l3"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crafttemplate.html">CraftTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crewmember.html">CrewMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decoupler.html">Decoupler</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">DockingPort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="element.html">Element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="engine.html">Engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.html">ETA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gimbal.html">Gimbal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kosprocessor.html">kOSProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="launchclamp.html">LaunchClamp</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Maneuver Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="part.html">Part</a></li>
 <li class="toctree-l3"><a class="reference internal" href="partmodule.html">PartModule</a></li>
@@ -190,11 +192,12 @@
             
   <div class="section" id="dockingport">
 <span id="id1"></span><h1>DockingPort<a class="headerlink" href="#dockingport" title="Permalink to this headline">¶</a></h1>
-<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST PARTS</span></a> will be of type <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a>.</p>
+<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><span>LIST PARTS</span></a> will be of type <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a>.
+Such part can also be retrieved from <a class="reference internal" href="../../commands/flight/systems.html#global:TARGET" title="TARGET global"><code class="xref ks ks-global docutils literal"><span class="pre">TARGET</span></code></a>, if docking port is selected as target.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
-<p><span class="versionmodified">New in version 0.18: </span>The spelling of suffixes <cite>AQUIRERANGE</cite>, <cite>AQUIREFORCE</cite>, and <cite>AQUIRETORQURE</cite> on the <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a> structure has been corrected.  Please use <cite>ACQUIRERANGE</cite>, <cite>ACQUIREFORCE</cite>, and <cite>ACQUIRETORQURE</cite> instead.  Using the old incorrect spelling, a deprecation exception will be thrown, with instruction to use the new spelling.</p>
+<p><span class="versionmodified">New in version 0.18: </span>The spelling of suffixes <cite>AQUIRERANGE</cite>, <cite>AQUIREFORCE</cite>, and <cite>AQUIRETORQUE</cite> on the <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a> structure has been corrected.  Please use <cite>ACQUIRERANGE</cite>, <cite>ACQUIREFORCE</cite>, and <cite>ACQUIRETORQURE</cite> instead.  Using the old incorrect spelling, a deprecation exception will be thrown, with instruction to use the new spelling.</p>
 </div>
 </div>
 <dl class="structure">
@@ -213,9 +216,9 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
+<tr class="row-even"><td>All suffixes of <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a></td>
 <td>&nbsp;</td>
-<td>A <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a> is a kind of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a></td>
+<td>A <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a> is a kind of <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a> (which is <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>)</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:ACQUIRERANGE" title="DOCKINGPORT:ACQUIRERANGE attribute"><code class="xref ks ks-attr docutils literal"><span class="pre">ACQUIRERANGE</span></code></a></td>
 <td>scalar</td>
@@ -267,7 +270,7 @@
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Part</span></code></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a>.</p>
+<p class="last"><a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a> is a type of <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a>, and therefore can use all the suffixes of <a class="reference internal" href="decoupler.html#structure:DECOUPLER" title="DECOUPLER structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Decoupler</span></code></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><code class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></code></a>.</p>
 </div>
 <dl class="attribute">
 <dt id="attribute:DOCKINGPORT:ACQUIRERANGE">
@@ -482,7 +485,7 @@ DockingPort:<code class="descname">TARGETABLE</code><a class="headerlink" href="
         <a href="element.html" class="btn btn-neutral float-right" title="Element" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="crewmember.html" class="btn btn-neutral" title="CrewMember" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="decoupler.html" class="btn btn-neutral" title="Decoupler" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -513,7 +516,7 @@ DockingPort:<code class="descname">TARGETABLE</code><a class="headerlink" href="
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Raw Control &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Raw Control &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Pilot Input" href="pilot.html"/>
         <link rel="prev" title="Cooked Control" href="cooked.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -184,7 +184,7 @@
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">SET</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">CONTROL</span><span class="p">:</span><span class="nv">YAW</span> <span class="ow">to</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>This will start pushing the ship to rotate a bit faster to the right, like pushing the <code class="docutils literal"><span class="pre">D</span></code> key gently. All the following values are set between <span class="math">\(-1\)</span> and <span class="math">\(+1\)</span>. Zero means the control is neutral. You can set to values smaller in magnitude than <span class="math">\(-1\)</span> and <span class="math">\(+1\)</span> for gentler control:</p>
+<p>This will start pushing the ship to rotate a bit faster to the right, like pushing the <code class="docutils literal"><span class="pre">D</span></code> key gently. All the following values are set between <span class="math">\(-1\)</span> and <span class="math">\(+1\)</span>. Zero means the control is neutral. You can set to values smaller in magnitude than <span class="math">\(-1\)</span> and <span class="math">\(+1\)</span> for gentler control, (but be aware of the 5% <a class="reference internal" href="#raw-null-zone"><span>null zone mentioned below</span></a>):</p>
 <div class="highlight-kerboscript"><div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;Gently pushing forward for 3 seconds.&quot;</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">SHIP</span><span class="p">:</span><span class="nv">CONTROL</span><span class="p">:</span><span class="nv">FORE</span> <span class="ow">TO</span> <span class="mf">0</span><span class="p">.</span><span class="mf">2</span><span class="p">.</span>
 <span class="k">SET</span> <span class="nv">now</span> <span class="ow">to</span> <span class="nv">time</span><span class="p">:</span><span class="nv">seconds</span><span class="p">.</span>
@@ -208,6 +208,18 @@
 </pre></div>
 </div>
 <p>One can use <a class="reference internal" href="#ship-control-rotation"><span>SHIP:CONTROL:ROTATION</span></a> and <a class="reference internal" href="#ship-control-translation"><span>SHIP:CONTROL:TRANSLATION</span></a> to see the ship&#8217;s current situation.</p>
+<div class="section" id="null-zone">
+<span id="raw-null-zone"></span><h2>5% null zone<a class="headerlink" href="#null-zone" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The stock raw controls enforce a null zone that kOS can&#8217;t seem to override
+(We&#8217;ve tried).  Be aware that if you set a translation raw control to a
+value between -0.05 and +0.05, the stock game seems to ignore it and treat
+it as zero.  (While this may seem to be related to the null zones on the
+game&#8217;s controls setttings page, which also default ot 5%, in reality this
+seems to happen regardless of what you change those settings to).</p>
+</div>
+</div>
 <div class="section" id="raw-flight-controls-reference">
 <h2>Raw Flight Controls Reference<a class="headerlink" href="#raw-flight-controls-reference" title="Permalink to this headline">¶</a></h2>
 <p>These &#8220;Raw&#8221; controls allow you the direct control of flight parameters while the current program is running.</p>
@@ -360,25 +372,34 @@ properly placed thrusters and appropriate fuel.</p>
 <span class="target" id="ship-control-fore"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:FORE</code></dt>
-<dd><p>Controls the translation of the ship forward <span class="math">\((+1)\)</span> or backward <span class="math">\((-1)\)</span>.</p>
+<dd><p>Controls the translation of the ship forward <span class="math">\((+1)\)</span> or backward <span class="math">\((-1)\)</span>.
+Note that this control has a <a class="reference internal" href="#raw-null-zone"><span>game-enforced 5% null zone</span></a> that
+kOS doesn&#8217;t seem to be able to change.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-starboard"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:STARBOARD</code></dt>
-<dd><p>Controls the translation of the ship to the right <span class="math">\((+1)\)</span> or left <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.</p>
+<dd><p>Controls the translation of the ship to the right <span class="math">\((+1)\)</span> or left <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.
+Note that this control has a <a class="reference internal" href="#raw-null-zone"><span>game-enforced 5% null zone</span></a> that
+kOS doesn&#8217;t seem to be able to change.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-top"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:TOP</code></dt>
-<dd><p>Controls the translation of the ship up <span class="math">\((+1)\)</span> or down <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.</p>
+<dd><p>Controls the translation of the ship up <span class="math">\((+1)\)</span> or down <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.
+Note that this control has a <a class="reference internal" href="#raw-null-zone"><span>game-enforced 5% null zone</span></a> that
+kOS doesn&#8217;t seem to be able to change.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-translation"></span><dl class="object">
 <dt>
 <code class="descname">SHIP:CONTROL:TRANSLATION</code></dt>
-<dd><p>Controls the translation as a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <code class="docutils literal"><span class="pre">(STARBOARD,</span> <span class="pre">TOP,</span> <span class="pre">FORE)</span></code>.</p>
+<dd><p>Controls the translation as a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><code class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></code></a> <code class="docutils literal"><span class="pre">(STARBOARD,</span> <span class="pre">TOP,</span> <span class="pre">FORE)</span></code>.
+Note that each axis of this this control vector has a
+<a class="reference internal" href="#raw-null-zone"><span>game-enforced 5% null zone</span></a> that kOS doesn&#8217;t seem to be
+able to change.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-wheelsteer"></span><dl class="object">
@@ -473,7 +494,7 @@ To free any single control, set it back to zero. To give all controls back to th
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

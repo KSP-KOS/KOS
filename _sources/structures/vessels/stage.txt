@@ -101,6 +101,14 @@ Stage Structure
           - :struct:`Lexicon`
           - Get only
           - the :struct:`Lexicon` of name :struct:`String` keyed :struct:`AggregateResource` values in the current stage
+        * - :attr:`NEXTDECOUPLER`
+          - :struct:`Decoupler` or :struct:`String`
+          - Get only
+          - one of the nearest :struct:`Decoupler` parts that is going to be activated by staging (not necessarily in next stage). `None` if there is no decoupler.
+        * - :attr:`NEXTSEPARATOR`
+          - :struct:`Decoupler` or :struct:`String`
+          - Get only
+          - Alias name for :attr:`NEXTDECOUPLER`
 
 .. attribute:: Stage:READY
 
@@ -133,3 +141,35 @@ Stage Structure
     the name suffix on the :struct:`AggregateResource`.  This suffix walks the parts
     list entirely on every call, so it is recommended that you cache the value
     if it will be reference repeatedly.
+
+.. attribute:: Stage:NextDecoupler
+
+    :access: Get
+    :type: :struct:`Decoupler`
+
+    One of the nearest :struct:`Decoupler` parts that is going to be activated by staging
+    (not necessarily in next stage, if that stage does not contain any decoupler, separator,
+    launch clamp or docking port with staging enabled). `None` if there is no decoupler.
+
+    This is particularly helpful for advanced staging logic, e.g.:
+    ::
+
+        STAGE.
+        IF stage:nextDecoupler:isType("LaunchClamp")
+            STAGE.
+        IF stage:nextDecoupler <> "None" {
+            WHEN availableThrust = 0 or (
+                stage:resourcesLex["LiquidFuel"]:amount = 0 and
+                stage:resourcesLex["SolidFuel"]:amount = 0)
+            THEN {
+                STAGE.
+                return stage:nextDecoupler <> "None".
+            }
+        }
+
+.. attribute:: Stage:NextSeparator
+
+    :access: Get
+    :type: :struct:`Decoupler`
+
+    Alias for :attr:`NEXTDECOUPLER<Stage:NEXTDECOUPLER>`

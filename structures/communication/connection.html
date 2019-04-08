@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Connection &mdash; kOS 1.1.5.0 documentation</title>
+  <title>Connection &mdash; kOS 1.1.7.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.5.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
         <link rel="up" title="Communication" href="../communication.html"/>
         <link rel="next" title="Message" href="message.html"/>
         <link rel="prev" title="Communication" href="../communication.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.5.0
+                1.1.7.0
               </div>
             
           
@@ -239,20 +239,97 @@ Connection:<code class="descname">ISCONNECTED</code><a class="headerlink" href="
 </tr>
 </tbody>
 </table>
-<p>True if the connection is opened and messages can be sent. For CPU connections this will be always true if the destionation CPU belongs to the same vessel as the current CPU.
-For vessel connections this will be always true in stock game. <a class="reference internal" href="../../addons/RemoteTech.html#remotetech"><span>RemoteTech</span></a> introduces the concept of connectivity and may cause this to be false.
-The connection has to be opened only in the moment of sending the message in order for it to arrive. If connection is lost after the message was sent,
-but before it arrives at its destination it will have no effect on whether the message will reach its destination or not.</p>
+<p>True if the connection is opened and messages can be sent.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>For CPU connections:</dt>
+<dd><ul class="first last simple">
+<li>This will be true if the destination CPU belongs to the same vessel
+as the current CPU, and will be false otherwise.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>For Vessel connections:</dt>
+<dd><ul class="first last simple">
+<li>If you are using Stock KSP and chose the PermitAll connectivity
+manager, then this will aways return true.</li>
+<li>If you are using Stock KSP and chose the CommNet connectivity
+manager, then this will obey the rules of the stock CommNet system
+for whether a connection path exists between the source and
+destination vessel.</li>
+<li>If you are using the RemoteTech and chose the RemoteTech
+connectivity manager, then this will obey the rules of the
+RemoteTech mod for whether a connection path exists between the
+source and destination vessel.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The connection has to be opened only in the moment of sending the message in order for it to arrive. If connection is lost after the message was sent,
+but before it arrives at its destination, this will have no effect on whether the message will reach its destination or not.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<blockquote>
+<div><strong>Debris Vessels</strong>: If you are using the KSP Stock CommNet system,
+be aware that it never includes &#8220;debris&#8221; type vessels in the
+communications network.  <code class="docutils literal"><span class="pre">ISCONNECTED</span></code> will always be false
+for any vessel of type &#8220;debris&#8221;, no matter what antennas it
+may have on it.</div></blockquote>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>ISCONNECTION fails just after scene load</strong>: If you have just loaded
+the scene, such as after a vessel switch, then both the Stock CommNet
+system and the RemoteTech mod often have a slight delay before they
+&#8220;find&#8221; all the communication paths that exist.  This means that
+ISCONNECTION will often return <code class="docutils literal"><span class="pre">False</span></code> for the first second or two
+after a scene load, even when the correct answer should be <code class="docutils literal"><span class="pre">True</span></code>.
+It will be unable to report the correct answer until a second or so
+later after the communications paths have all been discovered by the
+game.  Because of this, if you have a boot script that depends on an
+accurate answer for ISCONNECTED, it&#8217;s a good idea for that boot
+script to start with a short wait of a second or two at the top of
+the script.</p>
+</div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:CONNECTION:DELAY">
 Connection:<code class="descname">DELAY</code><a class="headerlink" href="#attribute:CONNECTION:DELAY" title="Permalink to this definition">¶</a></dt>
-<dd><p>The number of seconds that it will take for messages sent using this connection to arrive at their destination. This value will be equal to -1 if connection is not opened.
-For CPU connections this will be always equal to 0 if the destination CPU belongs to the same vessel as the current CPU.  Otherwise it will be equal to -1.
-For vessel connections this will be always zero in stock game as messages arrive instantaneously. <a class="reference internal" href="../../addons/RemoteTech.html#remotetech"><span>RemoteTech</span></a> introduces the concept of
-connectivity and may cause this to be a positive number (if there is some signal delay due to the large distance between the vessels) or -1 (if there is no connection
-between the vessels).</p>
+<dd><p>The number of seconds that it will take for messages sent using this connection to arrive at their destination. This value will be equal to -1 if connection is not opened.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>For CPU connections:</dt>
+<dd><ul class="first last simple">
+<li>This will be always equal to 0 if the destination CPU belongs
+to the same vessel as the current CPU.  Otherwise it will be
+equal to -1 as no such connection is allowed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>For vessel connections:</dt>
+<dd><ul class="first last simple">
+<li>If you are using the PermitAll Connectivity Manager, then this
+will always be zero, as messages arrive instantly.</li>
+<li>If you are using the stock CommNet Connectivirty Manager, then this
+will always be zero, as stock CommNet does not impose any delay
+from radio signals.</li>
+<li>If you are using the RemoteTech Connectivity Manager, then this
+will report RemoteTech&#8217;s signal delay along the path being used
+to form the connection.  RemoteTech calculates the number of
+seconds of delay due radio signals traveling at the speed of light,
+which can be quite significant when dealing with interplanetary
+distances.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="attribute">
@@ -335,7 +412,7 @@ This method will fail to send the message and return false if <a class="referenc
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.5.0',
+            VERSION:'1.1.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
