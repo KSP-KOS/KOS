@@ -24,6 +24,34 @@ release.
 
 ****
 
+Changes in 1.1.7.0
+------------------
+
+IR Next
+:::::::
+
+Documented the change to using :ref:`IR Next instead of IR <IR>`.
+
+CORE:TAG
+::::::::
+
+Documented :attr:`CORE:TAG`.
+
+TIME
+::::
+
+Documented :function:`TIME(universal_time)`.
+
+PAUSE
+:::::
+
+Added ability to pause the game with :meth:`Kuniverse:PAUSE()`.
+
+List Fonts
+::::::::::
+
+Added :ref:`FONTS <list_fonts>` to the things you can LIST.
+
 Changes in 1.1.6.2
 ------------------
 
