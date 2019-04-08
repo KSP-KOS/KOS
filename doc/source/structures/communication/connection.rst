@@ -95,22 +95,23 @@ Structure
 .. attribute:: Connection:DELAY
 
     The number of seconds that it will take for messages sent using this connection to arrive at their destination. This value will be equal to -1 if connection is not opened.
+
     - For CPU connections:
-        - This will be always equal to 0 if the destination CPU belongs
-          to the same vessel as the current CPU.  Otherwise it will be
-          equal to -1 as no such connection is allowed.
+	- This will be always equal to 0 if the destination CPU belongs
+	  to the same vessel as the current CPU.  Otherwise it will be
+	  equal to -1 as no such connection is allowed.
     - For vessel connections:
-        - If you are using the PermitAll Connectivity Manager, then this
-          will always be zero, as messages arrive instantly.
-        - If you are using the stock CommNet Connectivirty Manager, then this
-          will always be zero, as stock CommNet does not impose any delay
-          from radio signals.
-        - If you are using the RemoteTech Connectivity Manager, then this
-          will report RemoteTech's signal delay along the path being used
-          to form the connection.  RemoteTech calculates the number of 
-          seconds of delay due radio signals traveling at the speed of light,
-          which can be quite significant when dealing with interplanetary
-          distances.
+	- If you are using the PermitAll Connectivity Manager, then this
+	  will always be zero, as messages arrive instantly.
+	- If you are using the stock CommNet Connectivirty Manager, then this
+	  will always be zero, as stock CommNet does not impose any delay
+	  from radio signals.
+	- If you are using the RemoteTech Connectivity Manager, then this
+	  will report RemoteTech's signal delay along the path being used
+	  to form the connection.  RemoteTech calculates the number of 
+	  seconds of delay due radio signals traveling at the speed of light,
+	  which can be quite significant when dealing with interplanetary
+	  distances.
 
 .. attribute:: Connection:DESTINATION
 

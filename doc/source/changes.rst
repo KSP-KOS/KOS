@@ -40,7 +40,7 @@ Documented :attr:`CORE:TAG`.
 TIME
 ::::
 
-Documented :function:`TIME(universal_time)`.
+Documented :func:`TIME(universal_time)`.
 
 PAUSE
 :::::

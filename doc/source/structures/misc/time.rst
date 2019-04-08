@@ -56,7 +56,7 @@ Special variable TIME
     The special variable :global:`TIME` is used to get the current time
     in the gameworld (not the real world where you're sitting in a chair
     playing Kerbal Space Program.)  It is the same thing as calling
-    :function:`TIME` with empty parentheses.
+    :func:`TIME` with empty parentheses.
 
 Using a TimeSpan
 ----------------
