@@ -1,7 +1,8 @@
-﻿using kOS.Safe.Compilation.KS;
+using kOS.Safe.Compilation.KS;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Utilities;
 using System;
 using System.IO;
@@ -30,6 +31,7 @@ namespace kOS.Suffixed
             AddSuffix("REVERTTOEDITOR", new NoArgsVoidSuffix(RevertToEditor));
             AddSuffix("REVERTTO", new OneArgsSuffix<StringValue>(RevertTo));
             AddSuffix("CANQUICKSAVE", new Suffix<BooleanValue>(CanQuicksave));
+            AddSuffix("PAUSE", new NoArgsVoidSuffix(PauseGame));
             AddSuffix("QUICKSAVE", new NoArgsVoidSuffix(QuickSave));
             AddSuffix("QUICKLOAD", new NoArgsVoidSuffix(QuickLoad));
             AddSuffix("QUICKSAVETO", new OneArgsSuffix<StringValue>(QuickSaveTo));
@@ -159,6 +161,19 @@ namespace kOS.Suffixed
                 return true;
             }
             return false;
+        }
+
+        public void PauseGame()
+        {
+            string textToHud = "kOS script has triggered a Pause Game.  Manual intervention needed to resume.";
+            ScreenMessages.PostScreenMessage("<color=#ffff80><size=20>" + textToHud + "</size></color>", 10, ScreenMessageStyle.UPPER_CENTER);
+
+            PauseMenu.Display();
+
+            // It would be weird to execute the rest of the IPU's instructions when the script said to pause the game.
+            // Presumably most users would expect calling Pause to make the script stop right there, not
+            // like 3 or 4 lines later.  Therefore stop this FixedUpdate tick here:
+            shared.Cpu.YieldProgram(new YieldFinishedNextTick());
         }
 
         public void QuickSave()

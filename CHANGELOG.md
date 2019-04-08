@@ -1,6 +1,83 @@
 kOS Mod Changelog
 =================
 
+# v1.1.7.0 Lets get Serial
+
+Mostly fixes.  The motivation for this release is to get fixes
+out to the public before KSP 1.7 comes.
+
+Built for KSP 1.6.1
+
+### BREAKING CHANGES
+
+- Compatibility for the old Infernal Robotics is officially removed
+  in favor of support for the "IR Next" mod.
+
+### NEW FEATURES
+
+- Support for the "IR Next" mod. (The only infernal robotics
+  mod was no longer being updated anyway and didn't work on
+  KSP 1.6.1.  But IR Next, although not officially released yet,
+  does work on 1.6.1, so we switched to that.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2354)
+- More types are now serializable as messages or JSON files:
+  Notevalue, Direction, RGBAcolor, and HSVAcolor.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2466)
+- ``CORE:TAG`` is now settable
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2472)
+- ``KUNIVERSE:PAUSE`` suffix added.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2477)
+- Added a new ``TIME(seconds)`` Constructor to make a 
+  ``Timespan`` out of a Universal timestamp.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2478)
+- New ``LIST FONTS.`` feature so the user can see which font
+  names are loaded into Unity for use in user GUIs.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2481)
+
+### BUG FIXES
+
+- Several documentation alterations:
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2442)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2446)
+- kOS would throw a Nullref if a script tried to check for a CommNet
+  connection to a vessel that has been classified as type "debris".
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2447)
+- Sometimes kOS broke the Space Center, making the buildings impossible
+  to click on.  This was caused by input locks not letting go when the
+  terminal is open while the kOS physical part gets exploded.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2443)
+- Fix to the kOS icon being broken (showing just a purple square) in Blizzy
+  Toolbar mod.
+  [pull request(https://github.com/KSP-KOS/KOS/pull/2454)
+- GeoPosition was written improperly in messages or JSON files.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2460)
+- The "hue" part of HSV colors was never quite implemented properly from
+  when it was first introduced. (It was mapping all hue numbers down
+  into just 1/6th of the full range of hues, so greens and blues
+  were not available.)
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2462)
+- When using the message queue system while Remote Tech is installed,
+  you could not send messages to vessels far away outside the load
+  distance bubble (i.e. 2.5km-ish).  This is fixed.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2457)
+- Vecdraws were incapable of drawing dark colors like black because they
+  were using an additive-only shader.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2468)
+- Fix a case where cooked steering from the terminal refused to let go if
+  a subsequent kerboscript error is typed into the same terminal.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2471)
+- If "run once" was used, and the system chose not to run the program
+  because it was already run, it was possible for the stack to get
+  corrupted in a way that confused defaulted parameters to programs.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2476)
+- Fixed Multimode engine bug that was introduced in v1.1.6.1.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2479)
+- Moved kOS dialog box to a new position to fix a clickthrough
+  problem that caused you to secretly pick a kOS connectivity
+  manager without realizing it when you click on things in the
+  Remote Tech dialog box.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2480)
+
 # v1.1.6.3 Folder Path Protection
 
 Built for KSP 1.6.1

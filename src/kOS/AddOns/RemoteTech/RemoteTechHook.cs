@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
@@ -24,6 +24,15 @@ namespace kOS.AddOns.RemoteTech
             }
         }
 
+        /// <summary>
+        /// True if Not ONLY does the vessel exist and Remote Tech is enabled,
+        /// but ALSO, the vessel is *loaded* and has a ModuleSPU.  Note that if
+        /// the vessel does have a ModuleSPU but is *NOT* loaded (i.e. it's outside
+        /// the physics bubble), then this will return False *no matter what*,
+        /// because Remote Tech removes the Flight Computer from all distant vessels.
+        /// </summary>
+        /// <param name="vesselId"></param>
+        /// <returns></returns>
         public static bool IsAvailable(Guid vesselId)
         {
             try

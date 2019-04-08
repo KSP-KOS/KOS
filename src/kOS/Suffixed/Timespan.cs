@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Serialization;
@@ -28,7 +28,10 @@ namespace kOS.Suffixed
         private const int SECONDS_IN_EARTH_DAY = SECONDS_IN_EARTH_HOUR * HOURS_IN_EARTH_DAY;
         private const int SECONDS_IN_EARTH_YEAR = SECONDS_IN_EARTH_DAY * DAYS_IN_YEAR;
 
-        public TimeSpan()
+        // Only used by CreateFromDump() and the other constructors.
+        // Don't make it public because it leaves fields
+        // unpopulated:
+        private TimeSpan()
         {
             InitializeSuffixes();
         }
@@ -36,6 +39,14 @@ namespace kOS.Suffixed
         public TimeSpan(double unixStyleTime) : this()
         {
             span = unixStyleTime;
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static TimeSpan CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new TimeSpan();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()

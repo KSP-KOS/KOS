@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -47,9 +47,18 @@ namespace kOS.Sound
         {
         }
 
-        // Dummy default constructor that is necessary for all SerailizableStructure's.
-        public NoteValue()
+        // Only used by CreateFromDump()- don't make it public because it leaves fields
+        // unpopulated if not immediately followed up by LoadDump():
+        private NoteValue()
         {
+        }
+
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static NoteValue CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new NoteValue();
+            newObj.LoadDump(d);
+            return newObj;
         }
 
         private void InitializeSuffixes()
@@ -76,7 +85,7 @@ namespace kOS.Sound
             result.Header = "NOTE";
 
             result.Add("freq", Frequency);
-            result.Add("endfreq", Frequency);
+            result.Add("endfreq", EndFrequency);
             result.Add("vol", Volume);
             result.Add("keydown", KeyDownLength);
             result.Add("duration", Duration);

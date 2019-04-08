@@ -34,6 +34,16 @@ namespace kOS.Communication
             }
         }
 
+        /// <summary>A sanity check to avoid nullref errors when the vessel is
+        /// not a participant in the stock CommNet system and is thus lacking
+        /// certain properties. (Debris vessels lack CommNet info.)</summary>
+        public static bool IsCommnetParticipant(Vessel v)
+        {
+            if (v == null || v.Connection == null || v.Connection.Comm == null)
+                return false;
+            return true;
+        }
+
         public double GetDelay(Vessel vessel1, Vessel vessel2)
         {
             if (!IsEnabled)
@@ -61,6 +71,8 @@ namespace kOS.Communication
         {
             if (!IsEnabled)
                 return true;
+            if (!IsCommnetParticipant(vessel))
+                return false;
 
             // IsConnectedHome is only set to true on the active vessel, so we have to manually
             // call the FindHome method to evaluate the home connection.
@@ -82,7 +94,7 @@ namespace kOS.Communication
         {
             if (!IsEnabled)
                 return true;
-            if (vessel == null) // null check to handle fringe instances where connection is checked after nullified
+            if (!IsCommnetParticipant(vessel))
                 return false;
 
             // IsConnected is only set to true on the active vessel, so we have to manually
@@ -105,6 +117,8 @@ namespace kOS.Communication
         {
             if (!IsEnabled)
                 return true;
+            if (!IsCommnetParticipant(vessel1) || !IsCommnetParticipant(vessel2))
+                return false;
 
             // We next need to query the network to find a connection between the two vessels.
             // I found no exposed method for accessing cached paths directly, other than the

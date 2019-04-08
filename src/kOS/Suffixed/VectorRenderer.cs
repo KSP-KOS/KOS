@@ -1,4 +1,4 @@
-﻿using kOS.Safe;
+using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Execution;
@@ -340,7 +340,6 @@ namespace kOS.Suffixed
 
                     line = lineObj.AddComponent<LineRenderer>();
                     hat = hatObj.AddComponent<LineRenderer>();
-                    //TODO: 1.1 TODO
                     label = labelObj.GetComponent<GUIText>();
 
                     line.useWorldSpace = false;
@@ -348,8 +347,11 @@ namespace kOS.Suffixed
 
                     GetShipCenterCoords();
 
-                    line.material = new Material(Shader.Find("Particles/Additive"));
-                    hat.material = new Material(Shader.Find("Particles/Additive"));
+                    // Note the Shader name string below comes from Kerbal's packaged shaders the
+                    // game ships with - there's many to choose from but they're not documented what
+                    // they are.  This was settled upon via trial and error:
+                    line.material = new Material(Shader.Find("Particles/Alpha Blended"));
+                    hat.material = new Material(Shader.Find("Particles/Alpha Blended"));
 
                     // This is how font loading would work if other fonts were available in KSP:
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );

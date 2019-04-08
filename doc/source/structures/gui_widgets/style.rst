@@ -114,6 +114,17 @@ Style
         :access: Get/Set
 
         The name of the font of the text on the content or "" if the default.
+        If you want to see the list of available font names, you can do
+        so with :ref:`List Fonts. <list_fonts>`.  Please note that just
+        because you see a font in that list on your computer,
+        that doesn't always mean that same font will exist on
+        someone else's computer.  KSP ships with a few fonts that it
+        does universally put on all platform installs, but other
+        fonts in that list might be installed locally on your computer
+        only by other mods (like kOS itself, which loads all your
+        monospaced fonts for optional use as the terminal font).
+        Fonts that we know KSP itself tends to install are:
+        Arial, CALIBRI, HEADINGFONT, calibri, calibrib, calibriz, calibril, and dotty
 
     .. attribute:: FONTSIZE
 

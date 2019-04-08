@@ -86,6 +86,14 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
+        // Required for all IDumpers for them to work, but can't enforced by the interface because it's static:
+        public static Lexicon CreateFromDump(SafeSharedObjects shared, Dump d)
+        {
+            var newObj = new Lexicon();
+            newObj.LoadDump(d);
+            return newObj;
+        }
+
         private void FillWithEnumerableValues(IEnumerable<Structure> values)
         {
             if ((values.Count() == 1) && (values.First() is IEnumerable<Structure>)) {

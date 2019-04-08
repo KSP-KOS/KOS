@@ -457,6 +457,11 @@ namespace kOS.Suffixed
 
         public override void LoadDump(Dump dump)
         {
+            Vessel = VesselFromDump(dump);
+        }
+
+        private static Vessel VesselFromDump(Dump dump)
+        {
             string guid = dump[DumpGuid] as string;
 
             if (guid == null)
@@ -471,7 +476,7 @@ namespace kOS.Suffixed
                 throw new KOSSerializationException("Vessel with the given id does not exist");
             }
 
-            Vessel = vessel;
+            return vessel;
         }
     }
 }

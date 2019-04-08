@@ -4,6 +4,7 @@ using kOS.Execution;
 using kOS.Communication;
 using kOS.Persistence;
 using kOS.Safe;
+using kOS.Safe.Serialization;
 using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
@@ -41,6 +42,14 @@ namespace kOS.Module
             {
                 KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
                 return tag == null ? string.Empty : tag.nameTag;
+            }
+            set
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                // Really a null tag shouldn't ever happen.  It would mean kOS is installed but KOSNameTag's aren't on all the things.
+                // And that should only happen if someone has a bad ModuleManager config that's screwing with kOS.
+                if (tag != null)
+                    tag.nameTag = value;
             }
         }
 
@@ -814,6 +823,7 @@ namespace kOS.Module
         {
             Opcode.InitMachineCodeData();
             CompiledObject.InitTypeData();
+            SafeSerializationMgr.CheckIDumperStatics();
         }
 
         private void ProcessElectricity(Part partObj, float time)

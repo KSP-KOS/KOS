@@ -107,7 +107,7 @@ Examples::
     where:
 
     ``h``
-        A floating point number from 0.0 to 360.0 for the hue component.
+        A floating point number from 0.0 to 1.0 for the hue component.
     ``s``
         A floating point number from 0.0 to 1.0 for the saturation component.
     ``v``
