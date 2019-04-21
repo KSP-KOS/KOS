@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
@@ -310,7 +310,7 @@ namespace kOS.Safe.Compilation
             
             // List of all subclasses of Opcode:
             Type opcodeType = typeof(Opcode);
-            IEnumerable<Type> opcodeTypes = opcodeType.Assembly.GetTypes().Where( t => t.IsSubclassOf(opcodeType) );
+            IEnumerable<Type> opcodeTypes = ReflectUtil.GetLoadedTypes(opcodeType.Assembly).Where( t => t.IsSubclassOf(opcodeType) );
             foreach (Type opType in opcodeTypes)
             {
                 if (!opType.IsAbstract) // only the ones that can be instanced matter.
