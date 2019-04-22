@@ -188,8 +188,8 @@ namespace kOS.Communication
                 Module.kOSSettingsChecker.QueueDialog(
                     // Anchor positions represents the position in the dialog that will be anchored
                     // The range is 0.0f-1.0f and for example (0.5f, 1.0f) represents the top of the dialog
-                    // being anchored in the middle (x-direction) and at the top of the screen (y-direction).
-                    // Whereas (0.5f, 0.0f) would do the same, but at the bottom of the screen (y-direction).
+                    // being anchored in the middle (x-direction) and at the top of the dialog (y-direction).
+                    // Whereas (0.5f, 0.0f) would do the same, but at the bottom of the dialog (y-direction).
 
                     // The center position configured for the Dialog (first two parameters Rect) represents
                     // the location on screen where the anchored position will appear.
