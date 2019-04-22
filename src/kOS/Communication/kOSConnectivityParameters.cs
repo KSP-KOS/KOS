@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace kOS.Communication
 {
@@ -185,14 +186,40 @@ namespace kOS.Communication
                     options.Add(new DialogGUIButton(text, () => { connectivityHandler = name; }, true));
                 }
                 Module.kOSSettingsChecker.QueueDialog(
-                    // Using 1.5, 1.5 fixes github issue #2456 by making it shift a
-                    // bit down and left from center (1.5 times box's own width)
-                    1.5f, 1.5f,
+                    // Anchor positions represents the position in the dialog that will be anchored
+                    // The range is 0.0f-1.0f and for example (0.5f, 1.0f) represents the top of the dialog
+                    // being anchored in the middle (x-direction) and at the top of the screen (y-direction).
+                    // Whereas (0.5f, 0.0f) would do the same, but at the bottom of the screen (y-direction).
+
+                    // The center position configured for the Dialog (first two parameters Rect) represents
+                    // the location on screen where the anchored position will appear.
+                    // The range is 0.0f-1.0f with (0.0f, 0.0f) representing lower left corner.
+
+                    // The part which is really hard to explain, other than emperically, is that
+                    // the anchor position and the center position on screen need to be the
+                    // same to produce a UI location that is mostly invariant for UI scaling.
+                    // For example, using an anchor of (0.5f, 0.5f) and center position (0.5, 1.0f)
+                    // correctly results in a dialog at the top of the screen, with the center
+                    // of the dialog at the edge of the screen. Decreasing the UI scaling to
+                    // 80% moves the dialog towards the center of the screen, while 120% moves
+                    // the dialog entirely offscreen.
+
+                    // In x-direction the window is positioned at the center of screen with 0.5f
+                    // In y-direction the window is positioned below center of screen with 0.1f
+                    // This to prevent overlap with RemoteTech window (see #2456) also at a
+                    // resolution of (considering that RemoteTech doesn't apply UI scaling):
+                    // * 1920x1080 using 100% UI scaling
+                    // * 3840x2160 using 200% UI scaling
+                    // Previous values of (1.5f, 1.5f) for the anchor only give undefined behavior
+                    // causing the window to appear offscreen at higher scale factors such as 180%
+                    0.5f, 0.1f,
                     new MultiOptionDialog(
                         "Select Dialog",
                         SELECT_DIALOG_TEXT,
                         "kOS",
                         HighLogic.UISkin,
+                        // when using Rect width must be specified, height is automatically determined
+                        new Rect(0.5f, 0.1f, 300.0f, 0.0f),
                         options.ToArray()));
             }
             availableConnectivityManagers.UnionWith(knownHandlers);
