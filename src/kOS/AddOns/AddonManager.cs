@@ -11,7 +11,6 @@ namespace kOS.AddOns
     {
         public Dictionary<string, Suffixed.Addon> AllAddons { get; private set; }
         private static readonly Dictionary<kOSAddonAttribute, Type> rawAttributes = new Dictionary<kOSAddonAttribute, Type>();
-        private readonly SharedObjects shared;
 
         public AddonManager(SharedObjects sharedObj)
         {
