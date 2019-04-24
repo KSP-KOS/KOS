@@ -13,17 +13,22 @@ namespace kOS.Suffixed.Part
     [kOS.Safe.Utilities.KOSNomenclature("Engine")]
     public class EngineValue : PartValue
     {
-        public ModuleEngines Engine1 { get; private set; }
-        public ModuleEngines Engine2 { get; private set; }
+        public List<ModuleEngines> EngineList { get; private set; }
         public MultiModeEngine Multi { get; private set; }
         public GimbalFields Gimbal { get; private set; }
-
-        public ModuleEngines Engine {
+        public IEnumerable<ModuleEngines> Engines {
             get {
-                return Engine2 == null || Multi.runningPrimary ? Engine1 : Engine2;
+                if (EngineList.Count > 0 && Multi != null)
+                {
+                    return EngineList.Count < 2 || Multi.runningPrimary ? EngineList.GetRange(0, 1) : EngineList.GetRange(1, 1);
+                }
+                else
+                {
+                    return EngineList;
+                }
             }
         }
-        public bool MultiMode { get { return Engine2 != null; } }
+        public bool MultiMode { get { return Multi != null; } }
         public bool HasGimbal { get { return Gimbal != null; } }
 
         /// <summary>
@@ -45,42 +50,30 @@ namespace kOS.Suffixed.Part
                 }
                 else if (e != null)
                 {
-                    if (Engine1 == null)
-                        Engine1 = e;
-                    else if (Engine2 == null)
-                        Engine2 = e;
-                    else
-                        SafeHouse.Logger.LogWarning("Third engine on {0}: {1}", part.name, part.partInfo.title);
+                    EngineList.Add(e);
                 }
             }
-            if (Engine1 == null)
+            if (EngineList.Count < 1)
                 throw new KOSException("Attempted to build an Engine from part with no ModuleEngines on {0}: {1}", part.name, part.partInfo.title);
-            if (Engine2 == null)
+            if (EngineList.Count < 2)
             {
                 if (Multi != null)
                     SafeHouse.Logger.LogWarning("MultiModeEngine without second engine on {0}: {1}", part.name, part.partInfo.title);
             }
             else
             {
-                if (Multi == null)
+                if (Multi != null)
                 {
-                    Engine2 = null;
-                    SafeHouse.Logger.LogWarning("Second engine without multi-mode on {0}: {1}", part.name, part.partInfo.title);
-                }
-                else
-                {
-                    if (Multi.primaryEngineID == Engine2.engineID)
+                    if (Multi.primaryEngineID == EngineList[1].engineID)
                     {
-                        var tmp = Engine1;
-                        Engine1 = Engine2;
-                        Engine2 = tmp;
+                        EngineList.Reverse();
                     }
-                    else if (Multi.primaryEngineID != Engine1.engineID)
+                    else if (Multi.primaryEngineID != EngineList[0].engineID)
                         SafeHouse.Logger.LogWarning("Primary engine ID={0} does not match multi.e1={1} on {2}: {3}",
-                            Engine1.engineID, Multi.primaryEngineID, part.name, part.partInfo.title);
-                    if (Multi.secondaryEngineID != Engine2.engineID)
+                            EngineList[0].engineID, Multi.primaryEngineID, part.name, part.partInfo.title);
+                    if (Multi.secondaryEngineID != EngineList[1].engineID)
                         SafeHouse.Logger.LogWarning("Secondary engine ID={0} does not match multi.e2={1} on {2}: {3}",
-                            Engine2.engineID, Multi.secondaryEngineID, part.name, part.partInfo.title);
+                            EngineList[1].engineID, Multi.secondaryEngineID, part.name, part.partInfo.title);
                 }
             }
 
@@ -95,29 +88,29 @@ namespace kOS.Suffixed.Part
         {
             AddSuffix("ACTIVATE", new NoArgsVoidSuffix(Activate));
             AddSuffix("SHUTDOWN", new NoArgsVoidSuffix(Shutdown));
-            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => Engine.thrustPercentage,
-                                                          value => Engine.thrustPercentage = value,
+            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<ScalarValue>(() => Engines.Average(e => e.thrustPercentage),
+                                                          value => EngineList.ForEach(e => e.thrustPercentage = value),
                                                           0f, 100f, 0f,
                                                           "thrust limit percentage for this engine"));
-            AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => Engine.GetThrust()));
-            AddSuffix("THRUST", new Suffix<ScalarValue>(() => Engine.finalThrust));
-            AddSuffix("FUELFLOW", new Suffix<ScalarValue>(() => Engine.fuelFlowGui));
-            AddSuffix("ISP", new Suffix<ScalarValue>(() => Engine.realIsp));
-            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(() => Engine.atmosphereCurve.Evaluate(0)));
-            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(() => Engine.atmosphereCurve.Evaluate(1)));
-            AddSuffix("FLAMEOUT", new Suffix<BooleanValue>(() => Engine.flameout));
-            AddSuffix("IGNITION", new Suffix<BooleanValue>(() => Engine.getIgnitionState));
-            AddSuffix("ALLOWRESTART", new Suffix<BooleanValue>(() => Engine.allowRestart));
-            AddSuffix("ALLOWSHUTDOWN", new Suffix<BooleanValue>(() => Engine.allowShutdown));
-            AddSuffix("THROTTLELOCK", new Suffix<BooleanValue>(() => Engine.throttleLocked));
+            AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.GetThrust())));
+            AddSuffix("THRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.finalThrust)));
+            AddSuffix("FUELFLOW", new Suffix<ScalarValue>(() => Engines.Sum(e => e.fuelFlowGui)));
+            AddSuffix("ISP", new Suffix<ScalarValue>(() => Engines.Average(e => e.realIsp)));
+            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(() => Engines.Average(e => e.atmosphereCurve.Evaluate(0))));
+            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(() => Engines.Average(e => e.atmosphereCurve.Evaluate(1))));
+            AddSuffix("FLAMEOUT", new Suffix<BooleanValue>(() => Engines.All(e => e.flameout)));
+            AddSuffix("IGNITION", new Suffix<BooleanValue>(() => Engines.All(e => e.getIgnitionState)));
+            AddSuffix("ALLOWRESTART", new Suffix<BooleanValue>(() => Engines.All(e => e.allowRestart)));
+            AddSuffix("ALLOWSHUTDOWN", new Suffix<BooleanValue>(() => Engines.All(e => e.allowShutdown)));
+            AddSuffix("THROTTLELOCK", new Suffix<BooleanValue>(() => Engines.All(e => e.throttleLocked)));
             AddSuffix("ISPAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetIspAtAtm));
             AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetMaxThrustAtAtm));
-            AddSuffix("AVAILABLETHRUST", new Suffix<ScalarValue>(() => Engine.GetThrust(useThrustLimit: true)));
+            AddSuffix("AVAILABLETHRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.GetThrust(useThrustLimit: true))));
             AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetAvailableThrustAtAtm));
-            AddSuffix("POSSIBLETHRUST", new Suffix<ScalarValue>(() => Engine.GetThrust(useThrustLimit: true, operational: false)));
+            AddSuffix("POSSIBLETHRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.GetThrust(useThrustLimit: true, operational: false))));
             AddSuffix("POSSIBLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetPossibleThrustAtAtm));
-            AddSuffix("MAXPOSSIBLETHRUST", new Suffix<ScalarValue>(() => Engine.GetThrust(operational: false)));
-            AddSuffix("MAXPOSSIBLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(atm => Engine.GetThrust(atm, operational: false)));
+            AddSuffix("MAXPOSSIBLETHRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.GetThrust(operational: false))));
+            AddSuffix("MAXPOSSIBLETHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(atm => Engines.Sum(e => e.GetThrust(atm, operational: false))));
             //MultiMode features
             AddSuffix("MULTIMODE", new Suffix<BooleanValue>(() => MultiMode));
             AddSuffix("MODES", new Suffix<ListValue>(GetAllModes, "A List of all modes of this engine"));
@@ -139,7 +132,11 @@ namespace kOS.Suffixed.Part
                 foreach (var module in part.Modules)
                 {
                     if (module is IEngineStatus)
+                    {
                         toReturn.Add(vessel[part]);
+                        // Only add each part once
+                        break;
+                    }
                 }
             }
             return toReturn;
@@ -148,30 +145,30 @@ namespace kOS.Suffixed.Part
         public void Activate()
         {
             ThrowIfNotCPUVessel();
-            Engine.Activate();
+            EngineList.ForEach(e => e.Activate());
         }
 
         public void Shutdown()
         {
             ThrowIfNotCPUVessel();
-            Engine.Shutdown();
+            EngineList.ForEach(e => e.Shutdown());
         }
 
         public ScalarValue GetIspAtAtm(ScalarValue atmPressure)
         {
-            return Engine.GetIsp(atmPressure.GetDoubleValue());
+            return Engines.Average(e => e.GetIsp(atmPressure.GetDoubleValue()));
         }
         public ScalarValue GetMaxThrustAtAtm(ScalarValue atmPressure)
         {
-            return Engine.GetThrust(atmPressure);
+            return Engines.Sum(e => e.GetThrust(atmPressure));
         }
         public ScalarValue GetAvailableThrustAtAtm(ScalarValue atmPressure)
         {
-            return Engine.GetThrust(atmPressure, useThrustLimit: true);
+            return Engines.Sum(e => e.GetThrust(atmPressure, useThrustLimit: true));
         }
         public ScalarValue GetPossibleThrustAtAtm(ScalarValue atmPressure)
         {
-            return Engine.GetThrust(atmPressure, useThrustLimit: true, operational: false);
+            return Engines.Sum(e => e.GetThrust(atmPressure, useThrustLimit: true, operational: false));
         }
 
         public ListValue GetAllModes()
