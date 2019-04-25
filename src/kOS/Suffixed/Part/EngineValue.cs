@@ -37,6 +37,7 @@ namespace kOS.Suffixed.Part
         internal EngineValue(SharedObjects shared, global::Part part, PartValue parent, DecouplerValue decoupler)
             : base(shared, part, parent, decoupler)
         {
+            EngineList = new List<ModuleEngines>();
             foreach (var module in part.Modules)
             {
                 var mme = module as MultiModeEngine;
@@ -95,9 +96,9 @@ namespace kOS.Suffixed.Part
             AddSuffix("MAXTHRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.GetThrust())));
             AddSuffix("THRUST", new Suffix<ScalarValue>(() => Engines.Sum(e => e.finalThrust)));
             AddSuffix("FUELFLOW", new Suffix<ScalarValue>(() => Engines.Sum(e => e.fuelFlowGui)));
-            AddSuffix("ISP", new Suffix<ScalarValue>(() => Engines.Average(e => e.realIsp)));
-            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(() => Engines.Average(e => e.atmosphereCurve.Evaluate(0))));
-            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(() => Engines.Average(e => e.atmosphereCurve.Evaluate(1))));
+            AddSuffix("ISP", new Suffix<ScalarValue>(GetIsp));
+            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(GetVacuumIsp));
+            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(GetSeaLevelIsp));
             AddSuffix("FLAMEOUT", new Suffix<BooleanValue>(() => Engines.All(e => e.flameout)));
             AddSuffix("IGNITION", new Suffix<BooleanValue>(() => Engines.All(e => e.getIgnitionState)));
             AddSuffix("ALLOWRESTART", new Suffix<BooleanValue>(() => Engines.All(e => e.allowRestart)));
@@ -154,10 +155,39 @@ namespace kOS.Suffixed.Part
             EngineList.ForEach(e => e.Shutdown());
         }
 
+        // The following functions calculate the correct Isp for multiple engines, regardless of individual performance.
+        // Isps cannot be simply summed or averaged if the engines have different thrust output,
+        // however mass flow and thrust can be summed, so these are used to derive a combined Isp.
+        // This is based on the identity MassFlow = Thrust / (g0 * Isp), with g0 factored out.
+        public ScalarValue GetIsp()
+        {
+            // Get the combined flow rate of all engines
+            double flowRate = Engines.Sum(e => e.GetThrust(operational: false) / e.realIsp);
+            // Divide combined thrust by combined flow rate to get a correct Isp for all engines combined
+            return flowRate > 0 ? Engines.Sum(e => e.GetThrust(operational: false)) / flowRate : 0;
+        }
+        public ScalarValue GetVacuumIsp()
+        {
+            // Get the combined flow rate of all engines
+            double flowRate = Engines.Sum(e => e.GetThrust(0, operational: false) / e.atmosphereCurve.Evaluate(0));
+            // Divide combined thrust by combined flow rate to get a correct Isp for all engines combined
+            return flowRate > 0 ? Engines.Sum(e => e.GetThrust(0, operational: false)) / flowRate : 0;
+        }
+        public ScalarValue GetSeaLevelIsp()
+        {
+            // Get the combined flow rate of all engines
+            double flowRate = Engines.Sum(e => e.GetThrust(1, operational: false) / e.atmosphereCurve.Evaluate(1));
+            // Divide combined thrust by combined flow rate to get a correct Isp for all engines combined
+            return flowRate > 0 ? Engines.Sum(e => e.GetThrust(1, operational: false)) / flowRate : 0;
+        }
         public ScalarValue GetIspAtAtm(ScalarValue atmPressure)
         {
-            return Engines.Average(e => e.GetIsp(atmPressure.GetDoubleValue()));
+            // Get the combined flow rate of all engines
+            double flowRate = Engines.Sum(e => e.GetThrust(atmPressure, operational: false) / e.GetIsp(atmPressure.GetDoubleValue()));
+            // Divide combined thrust by combined flow rate to get a correct Isp for all engines combined
+            return flowRate > 0 ? Engines.Sum(e => e.GetThrust(atmPressure, operational: false)) / flowRate : 0;
         }
+
         public ScalarValue GetMaxThrustAtAtm(ScalarValue atmPressure)
         {
             return Engines.Sum(e => e.GetThrust(atmPressure));
