@@ -180,8 +180,6 @@ namespace kOS.Utilities
                 throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to itself.");
             else if (val.GetVessel() == currentVessel)
                 throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a part of itself.");
-            else if (val is CelestialBody && VesselUltimatelyOrbits(currentVessel, (CelestialBody)val))
-                throw new Safe.Exceptions.KOSInvalidTargetException("A ship cannot set TARGET to a body it is either directly or indirectly orbiting.");
 
             // If any kOS terminal (not just the one this CPU uses as its Shared.Window, but ANY kOS terminal
             // from any kOS CPU) is the focused window right now, causing input lockouts, we must
@@ -793,29 +791,6 @@ namespace kOS.Utilities
             var bodyRotation = body.transform.rotation;
             Quaternion bodyFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(bodyRotation) * Quaternion.identity);
             return new Direction(bodyFacing);
-        }
-
-        /// <summary>
-        /// True if the vessel orbits the body, or the body's parent, or the body's grandparent, etc.
-        /// </summary>
-        /// <param name="vessel"></param>
-        /// <param name="body"></param>
-        /// <returns></returns>
-        public static bool VesselUltimatelyOrbits(Vessel vessel, CelestialBody body)
-        {
-            CelestialBody current;
-            for( current = vessel.mainBody
-                ;
-                current != null &&
-                current != body && // End if a match is found
-                current != current.referenceBody  // Weirdly the Sun's parent is itself, not null, so it would loop forever without this.
-                ;
-                current = current.referenceBody)
-            {
-                // do-nothing body.
-            }
-            // True if the loop exited prematurely because of a match:
-            return current == body;
         }
     }
 }
