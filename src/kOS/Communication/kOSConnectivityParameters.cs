@@ -186,6 +186,11 @@ namespace kOS.Communication
                     options.Add(new DialogGUIButton(text, () => { connectivityHandler = name; }, true));
                 }
                 Module.kOSSettingsChecker.QueueDialog(
+                    // (Justification for the following very long comment:
+                    //    KSP does not document how these anchor position arguments work, and
+                    //    they are utterly alien and weird, so having it explained in full
+                    //    is important since if we wait a while it will all get forgotten again.)
+                    //
                     // Anchor positions represents the position in the dialog that will be anchored
                     // The range is 0.0f-1.0f and for example (0.5f, 1.0f) represents the dialog
                     // being anchored in the middle (x-direction) and at the top of the dialog (y-direction).
