@@ -117,7 +117,10 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
 .. attribute:: Body:ROTATIONPERIOD
 
-    The length of the body's day in seconds. I.e. how long it takes for it to make one rotation.
+    The number of seconds it takes the body to rotate around its own axis.
+    This is the sedereal rotation period which can differ from the length
+    of a day due to the fact that the body moves a bit further around the
+    Sun while it's rotating around its own axis.
 
 .. attribute:: Body:RADIUS
 
@@ -136,7 +139,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:ANGULARVEL
 
     Angular velocity of the body's rotation about its axis (its
-    day) expressed as a vector.
+    sidereal day) expressed as a vector.
 
     The direction the angular velocity points is in Ship-Raw orientation,
     and represents the axis of rotation.  Remember that everything in
@@ -146,7 +149,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     and stick out your thumb, the thumb's direction is the way the
     angular velocity vector will point.
 
-    The magnitude of the vector is the speed of the rotation.
+    The magnitude of the vector is the speed of the rotation, *in radians*.
 
     Note, unlike many of the other parts of kOS, the rotation speed is
     expressed in radians rather than degrees.  This is to make it
@@ -191,5 +194,6 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     current positon of the body's prime meridian (body longitude
     of zero).
 
-    The value is in constant motion, and once per body's day, its
-    ``:rotationangle`` will wrap around through a full 360 degrees.
+    The value is in constant motion, and once per body's rotation
+    period ("sidereal day"), its ``:rotationangle`` will wrap
+    around through a full 360 degrees.
