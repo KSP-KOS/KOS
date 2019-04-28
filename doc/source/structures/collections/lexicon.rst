@@ -59,8 +59,8 @@ keys and values::
 Will have the same effect as::
 
     set mylexicon to lexicon().
-    mylexicon["key1"] = "value1".
-    mylexicon["key2"] = "value2".
+    set mylexicon["key1"] to "value1".
+    set mylexicon["key2"] to "value2".
 
 Obviously when this syntax is used an even number of arguments is expected.
 
