@@ -60,6 +60,8 @@
     <Compile Include="AddOns\InfernalRobotics\IRHandler.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRServoWrapper.cs" />
     <Compile Include="AddOns\InfernalRobotics\IRWrapper.cs" />
+    <Compile Include="AddOns\Principia\Addon.cs" />
+    <Compile Include="AddOns\Principia\PrincipiaWrapper.cs" />
     <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
