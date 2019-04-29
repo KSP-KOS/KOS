@@ -63,8 +63,8 @@ namespace kOS.AddOns.RemoteTech
             if (loadedAssembly == null) return null;
             SafeHouse.Logger.Log(string.Format("Found RemoteTech! Version: {0}.{1}", loadedAssembly.versionMajor, loadedAssembly.versionMinor)); 
 
-            var type = loadedAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName.Equals(REMOTE_TECH_API)) ??
-                       loadedAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName.Equals(ALT_REMOTE_TECH_API));
+            var type = ReflectUtil.GetLoadedTypes(loadedAssembly.assembly).FirstOrDefault(t => t.FullName.Equals(REMOTE_TECH_API)) ??
+                       ReflectUtil.GetLoadedTypes(loadedAssembly.assembly).FirstOrDefault(t => t.FullName.Equals(ALT_REMOTE_TECH_API));
 
             if (type == null) return null;
 
