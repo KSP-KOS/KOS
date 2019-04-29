@@ -405,10 +405,16 @@ namespace kOS.Utilities
                 {
                     atLeastOneSolarPanel = true;
 
-                    if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
+                    // To fix #2488 - KSP calls all solar panels "ModuleDeployableSolarPanel" even if
+                    // they aren't deployable.   The only way to tell if it's actually deployable
+                    // (versus fixed in place) is to see if it had an animation defined.
+                    if (c.useAnimation)
                     {
-                        // If just one panel is not deployed return false
-                        return false;
+                        if (c.deployState == ModuleDeployablePart.DeployState.RETRACTED) // apparently this was "simplified"
+                        {
+                            // If just one panel is not deployed return false
+                            return false;
+                        }
                     }
                 }
             }
@@ -422,8 +428,14 @@ namespace kOS.Utilities
             {
                 foreach (var c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
                 {
-                    if (state) { c.Extend(); }
-                    else { c.Retract(); }
+                    // To fix #2488 - KSP calls all solar panels "ModuleDeployableSolarPanel" even if
+                    // they aren't deployable.   The only way to tell if it's actually deployable
+                    // (versus fixed in place) is to see if it had an animation defined.
+                    if (c.useAnimation)
+                    {
+                        if (state) { c.Extend(); }
+                        else { c.Retract(); }
+                    }
                 }
             }
         }
