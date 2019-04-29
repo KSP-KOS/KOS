@@ -99,10 +99,10 @@ namespace kOS.Suffixed.Part
             AddSuffix("ISP", new Suffix<ScalarValue>(GetIsp));
             AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<ScalarValue>(GetVacuumIsp));
             AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<ScalarValue>(GetSeaLevelIsp));
-            AddSuffix("FLAMEOUT", new Suffix<BooleanValue>(() => Engines.All(e => e.flameout)));
-            AddSuffix("IGNITION", new Suffix<BooleanValue>(() => Engines.All(e => e.getIgnitionState)));
-            AddSuffix("ALLOWRESTART", new Suffix<BooleanValue>(() => Engines.All(e => e.allowRestart)));
-            AddSuffix("ALLOWSHUTDOWN", new Suffix<BooleanValue>(() => Engines.All(e => e.allowShutdown)));
+            AddSuffix("FLAMEOUT", new Suffix<BooleanValue>(() => Engines.Any(e => e.flameout)));
+            AddSuffix("IGNITION", new Suffix<BooleanValue>(() => Engines.Any(e => e.getIgnitionState)));
+            AddSuffix("ALLOWRESTART", new Suffix<BooleanValue>(() => Engines.Any(e => e.allowRestart)));
+            AddSuffix("ALLOWSHUTDOWN", new Suffix<BooleanValue>(() => Engines.Any(e => e.allowShutdown)));
             AddSuffix("THROTTLELOCK", new Suffix<BooleanValue>(() => Engines.All(e => e.throttleLocked)));
             AddSuffix("ISPAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetIspAtAtm));
             AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<ScalarValue, ScalarValue>(GetMaxThrustAtAtm));
