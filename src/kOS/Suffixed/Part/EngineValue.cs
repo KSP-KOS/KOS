@@ -13,9 +13,15 @@ namespace kOS.Suffixed.Part
     [kOS.Safe.Utilities.KOSNomenclature("Engine")]
     public class EngineValue : PartValue
     {
+        /// <summary>All the Engine Modules in the part regardless of whether they are currently
+        /// selected.  If this is a multi-mode engine, then all its variations are present
+        /// in the list even though they can't all be in use at the same time.</summary>
         private List<ModuleEngines> RawEngineList { get; set; }
         public MultiModeEngine Multi { get; private set; }
         public GimbalFields Gimbal { get; private set; }
+        /// <summary>Only those Engine Modules that the part's current engine mode allows to work.
+        /// (i.e. if an engine has a wet mode and a dry mode, then you should see either the wet module
+        /// or the dry module in this list, but not both at once.)</summary>
         public IEnumerable<ModuleEngines> FilteredEngineList {
             get {
                 if (RawEngineList.Count > 0 && Multi != null)
