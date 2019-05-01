@@ -146,13 +146,19 @@ namespace kOS.Suffixed.Part
         public void Activate()
         {
             ThrowIfNotCPUVessel();
-            FilteredEngineList.ForEach(e => e.Activate());
+            foreach (ModuleEngines e in FilteredEngineList)
+            {
+                e.Activate();
+            }
         }
 
         public void Shutdown()
         {
             ThrowIfNotCPUVessel();
-            FilteredEngineList.ForEach(e => e.Shutdown());
+            foreach (ModuleEngines e in FilteredEngineList)
+            {
+                e.Shutdown();
+            }
         }
 
         // The following functions calculate the correct Isp for multiple engines, regardless of individual performance.
