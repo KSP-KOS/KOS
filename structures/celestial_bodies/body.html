@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Body &mdash; kOS 1.1.7.0 documentation</title>
+  <title>Body &mdash; kOS 1.1.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 1.1.7.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 1.1.8.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Creating GUIs" href="../gui.html"/>
         <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.1.7.0
+                1.1.8.0
               </div>
             
           
@@ -373,7 +373,10 @@ Body:<code class="descname">ALTITUDE</code><a class="headerlink" href="#attribut
 <dl class="attribute">
 <dt id="attribute:BODY:ROTATIONPERIOD">
 Body:<code class="descname">ROTATIONPERIOD</code><a class="headerlink" href="#attribute:BODY:ROTATIONPERIOD" title="Permalink to this definition">¶</a></dt>
-<dd><p>The length of the body&#8217;s day in seconds. I.e. how long it takes for it to make one rotation.</p>
+<dd><p>The number of seconds it takes the body to rotate around its own axis.
+This is the sedereal rotation period which can differ from the length
+of a day due to the fact that the body moves a bit further around the
+Sun while it&#8217;s rotating around its own axis.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -398,7 +401,7 @@ Body:<code class="descname">ATM</code><a class="headerlink" href="#attribute:BOD
 <dt id="attribute:BODY:ANGULARVEL">
 Body:<code class="descname">ANGULARVEL</code><a class="headerlink" href="#attribute:BODY:ANGULARVEL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Angular velocity of the body&#8217;s rotation about its axis (its
-day) expressed as a vector.</p>
+sidereal day) expressed as a vector.</p>
 <p>The direction the angular velocity points is in Ship-Raw orientation,
 and represents the axis of rotation.  Remember that everything in
 Kerbal Space Program uses a <em>left-handed coordinate system</em>, which
@@ -406,7 +409,7 @@ affects which way the angular velocity vector will point.  If you
 curl the fingers of your <strong>left</strong> hand in the direction of the rotation,
 and stick out your thumb, the thumb&#8217;s direction is the way the
 angular velocity vector will point.</p>
-<p>The magnitude of the vector is the speed of the rotation.</p>
+<p>The magnitude of the vector is the speed of the rotation, <em>in radians</em>.</p>
 <p>Note, unlike many of the other parts of kOS, the rotation speed is
 expressed in radians rather than degrees.  This is to make it
 congruent with how VESSEL:ANGULARMOMENTUM is expressed, and for
@@ -477,8 +480,9 @@ Body:<code class="descname">ROTATIONANGLE</code><a class="headerlink" href="#att
 <a class="reference internal" href="../../bindings.html#solarprimevector"><span>Solar Prime Vector</span></a> and the
 current positon of the body&#8217;s prime meridian (body longitude
 of zero).</p>
-<p>The value is in constant motion, and once per body&#8217;s day, its
-<code class="docutils literal"><span class="pre">:rotationangle</span></code> will wrap around through a full 360 degrees.</p>
+<p>The value is in constant motion, and once per body&#8217;s rotation
+period (&#8220;sidereal day&#8221;), its <code class="docutils literal"><span class="pre">:rotationangle</span></code> will wrap
+around through a full 360 degrees.</p>
 </dd></dl>
 
 </div>
@@ -525,7 +529,7 @@ of zero).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.1.7.0',
+            VERSION:'1.1.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

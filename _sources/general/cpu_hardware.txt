@@ -172,8 +172,7 @@ Triggers for Cooked Steering
 
 *This is a kind of* :ref:`recurring trigger <recurring_trigger>`.
 
-The ``lock`` expressions associated with
-`Cooked Control <commands/flight/cooked.html>`__,
+The ``lock`` expressions associated with :ref:`Cooked Control <cooked>`,
 meaning ``STEERING``, ``THROTTLE``, ``WHEELSTEERING``, and
 ``WHEELTHROTTLE``, have triggers associated with them.
 kOS will keep calling these expressions repeatedly as frequently
