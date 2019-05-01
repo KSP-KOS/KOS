@@ -182,7 +182,7 @@ namespace kOS.Safe.Serialization
 
             // All the classes in which the class is derived from IDumper, and instances of the class are
             // actually constructable because it isn't Abstract:
-            IEnumerable<Type> iDumperClasses = allKSPAssemblies.SelectMany(a => a.GetTypes()).Where(
+            IEnumerable<Type> iDumperClasses = allKSPAssemblies.SelectMany(a => ReflectUtil.GetLoadedTypes(a)).Where(
                 b => dumperInterface.IsAssignableFrom(b) && b.IsClass && !b.IsAbstract);
 
             List<string> offendingClasses = new List<string>();

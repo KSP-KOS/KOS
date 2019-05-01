@@ -24,6 +24,12 @@ release.
 
 ****
 
+Changes in 1.1.8.0
+------------------
+
+Nothing but minor documentation error corrections - no new features
+documented.
+
 Changes in 1.1.7.0
 ------------------
 

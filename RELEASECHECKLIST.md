@@ -42,7 +42,7 @@ note where it says "(*backport*)" below if you are doing a backport.
 - [ ] Update [Forum thread](https://forum.kerbalspaceprogram.com/index.php?/topic/165628-13-kos-v1130-kos-scriptable-autopilot-system/) with new change log, release date and version
 - [ ] Post update in the forum thread
 - [ ] Post update on [reddit board](http://www.reddit.com/r/kos)
-- [ ] Push the gh-pages branch to KSP-KOS/KOS_DOC (unless this is a *backport*)
+- [ ] Push the gh-pages branch to KSP-KOS/KOS_DOC (unless this is a *backport*). Note, if the previous push of gh-pages to KOS_DOC was done in a sloppy fashion, the attempt to do this push may result in a ridiculously large number of merge conflicts that are too much to handle.  It may be necessecary to force this push with ``git push -f``.  (The merge conflicts can happen because Sphinx re-numbers the HTML ID tags across all the HTML elements in all the files when you insert one thing.  Thus git thinks you've changed *everything* on each new commit of gh-pages.)
 
 ### CKAN FIX (Post-Post-Build)
 

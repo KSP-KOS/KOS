@@ -230,6 +230,7 @@
     <Compile Include="Utilities\KOSNomenclature.cs" />
     <Compile Include="Utilities\KOSNomenclatureAttribute.cs" />
     <Compile Include="Utilities\MovingAverage.cs" />
+    <Compile Include="Utilities\ReflectUtil.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />

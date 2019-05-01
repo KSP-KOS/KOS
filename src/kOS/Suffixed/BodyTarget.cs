@@ -12,7 +12,7 @@ using kOS.Safe.Serialization;
 namespace kOS.Suffixed
 {
     [kOS.Safe.Utilities.KOSNomenclature("Body")]
-    public class BodyTarget : Orbitable
+    public class BodyTarget : Orbitable, IKOSTargetable
     {
         private static string DumpName = "name";
 
@@ -90,8 +90,6 @@ namespace kOS.Suffixed
         {
             return CreateOrGetExisting(VesselUtils.GetBodyByName(bodyName), shared);
         }
-
-
 
         private void BodyInitializeSuffixes()
         {
