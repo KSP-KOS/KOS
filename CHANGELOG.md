@@ -1,6 +1,103 @@
 kOS Mod Changelog
 =================
 
+# v1.1.8.0 Engines and KSP 1.7 compatibility
+
+Mostly this was motivated by a need to get an officially
+recompiled-for-KSP-1.7 version out there (even though the previous
+version worked on KSP 1.7, it wasn't officially compiled for KSP
+1.7.)
+
+Along the way there were one or two bug fixes and documenation
+cleanups.
+
+### BREAKING CHANGES
+
+- Not that we know of, unless you were unaware that some of 
+  the bugs fixed were in fact bugs and had written a script
+  to expect that behaviour as normal.  (Read the bug fixes
+  below to be sure.)
+
+### NEW FEATURES
+
+- Support of multiple-at-the-same-time engines that exist in
+  some mods (but not in stock, as far as we can tell).  Stock
+  contains single engines in a part, and multi-mode engines
+  in a part (where only one of the engines in the part is
+  active at a time, i.e. wet/dry mode engines or jet/rocket
+  mode engines).  But some mods contain parts that have more
+  than one engine in them that are selected *at the same time*,
+  rather than toggle-switched like the stock multi-mode engines.
+  One example is the RD-108 engine that the RealEngines mod
+  provides.  Its main "straight" engines are one Engine Module,
+  and its smaller "gimbal" engines around the edge are a second
+  Engine Module.  Both modules are active at once and need their
+  information aggregated to work with kOS's "an engine part is
+  just one module" system.  This PR does so.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2498)
+  **Special thanks to first time contributer RCrockford for doing
+  all the legwork on this**.
+
+### BUG FIXES
+
+- The behaviour of ``LIST ENGINES`` in regards to multi-mode engines
+  was restored to what it was supposed to have been.  Becuase of a
+  small change KSP made, it's been wrong since KSP 1.5, apparently.
+  Prior to KSP 1.5 it worked correctly by giving a list that contains
+  one entry in the LIST ENGINES per engine. But since then it has been
+  returning 3 duplicate instances in the list per each multi-mode engine.
+  This release fixes it, and the previous correct behavior is restored
+  (just returning one, not three).
+  The problem was discovered during regression testing of
+  the [pull request](https://github.com/KSP-KOS/KOS/pull/2498),
+  so the fix is inside that same pull request.
+- kOS could be rendered completely inert and broken if other mods not
+  under kOS's control had broken DLL files.  Specifically, kOS would
+  abort partway through initializing itself if any other DLL file in the
+  entire KSP game had failed to load during the KSP loading screen.  kOS
+  has a "reflection" walk through all the classes that hadn't accounted
+  for the fact that .net apparently keeps a null stub of a class in memory
+  after a class fails to load, rather than it just not existing at all
+  like one would expect.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2492)
+  (This was discovered with KSP 1.7 because KSP 1.7 broke some other
+  mod's DLLs making them not load, but the problem was actually there
+  all along waiting for some DLL file to trigger it.)
+- Reworking the position of the Connectivity Manager Dialog box.
+  Our exploratory reverse-engineering of just what the undocumented
+  arguments to KSP's MultiOptionDialog mean, which was used to move the
+  box to fix [issue 2456](https://github.com/KSP-KOS/KOS/issues/2456)
+  were still wrong.  They didn't do exactly what we thought they did.
+  (The misinterpretation became relevant when the player has UI scaling
+  set higher than 100% and that pushed the dialog box off screen.)
+  **Thanks to contributor madman2003 for doing more reverse-engineering
+  on this and submitting the fix.**
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2493)
+- Fix to bug where kOS scripts could no longer ``SET TARGET`` to a
+  Celestial Body and could only set targets to vessels or parts.
+  This bug was introduced in the previous release of kOS by a
+  hamfisted typing error while fixing the fact that Body wasn't
+  serializable.  It was an error that unfortunately didn't result
+  in any noticable problem when compiling or testing, as it 
+  *only* removed the Body's declaration that "I am the kind of class
+  that knows how to be a target" and it affected nothing else.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2501)
+- Several small documentation edits:
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2503),
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2505),
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2506)
+- Trying to toggle the ``panels`` value on or off would result
+  in infinite log spam if the ship contained a fixed undeployable
+  solar panel like the OX-STAT.  kOS was watching for the existence
+  of ModuleDeployableSolarPanel to see if the part could be deployed
+  or not, but apparently at some point KSP started defining all
+  solar panels as having ModuleDeployableSolarPanel, even if they're
+  not actually deployable.  Now kOS doesn't treat the panel as
+  deployable unless it also has its animation property defined in
+  addition to claiming to be a ModuleDeployableSolarPanel.
+  [pull request](https://github.com/KSP-KOS/KOS/pull/2504)
+
+
 # v1.1.7.0 Lets get Serial
 
 Mostly fixes.  The motivation for this release is to get fixes
