@@ -13,8 +13,8 @@ namespace kOS.Suffixed.Part
     [kOS.Safe.Utilities.KOSNomenclature("Engine")]
     public class EngineValue : PartValue
     {
-        /// <summary>All the Engine Modules in the part regardless of whether they are currently
-        /// selected.  If this is a multi-mode engine, then all its variations are present
+        /// <summary>All the Engine Modules in the part regardless of "engine mode".
+        /// If this is a multi-mode engine, then all its variations are present
         /// in the list even though they can't all be in use at the same time.</summary>
         private List<ModuleEngines> RawEngineList { get; set; }
         public MultiModeEngine Multi { get; private set; }
