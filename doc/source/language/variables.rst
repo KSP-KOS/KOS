@@ -290,7 +290,7 @@ example "TARGET", "GEAR", "THROTTLE", "STEERING", etc.  It only works
 variables that your script created.
 
 If ``UNSET`` does not find a variable to remove, or it fails to remove
-the variable becasue it is a built-in name as explained above, then
+the variable because it is a built-in name as explained above, then
 it will NOT generate an error.  It will simply quietly move on to the
 next statement, doing nothing.
 
