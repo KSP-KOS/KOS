@@ -102,7 +102,7 @@ Drawing Vectors on the Screen
         // paramters LABEL, SCALE, SHOW, and WIDTH.
         SET vd TO VECDRAW(V(0,0,0), 5*north:vector, red).
 
-    To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just UNSET the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
+    To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just :ref:`UNSET <unset>` the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
 
 .. _clearvecdraws:
 

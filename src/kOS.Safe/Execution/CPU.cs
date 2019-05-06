@@ -785,7 +785,7 @@ namespace kOS.Safe.Execution
         public void RemoveVariable(string identifier)
         {
             VariableScope currentScope = GetCurrentScope();
-            Variable variable = currentScope.RemoveNested(identifier);
+            Variable variable = currentScope.RemoveNestedUserVar(identifier);
             if (variable != null)
             {
                 // Tell Variable to orphan its old value now.  Faster than relying
