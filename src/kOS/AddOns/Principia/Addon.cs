@@ -37,13 +37,8 @@ namespace kOS.AddOns.Principia
         {
             if (Available())
             {
-                if ( PrincipiaWrapper.FlightPlanExists(shared.Vessel) )
-                {
-                    int nodeCount = PrincipiaWrapper.FlightPlanNumberOfManoeuvres(shared.Vessel) ?? 0;
-                    return (nodeCount > 0);
-                }
-
-                return false;
+                int nodeCount = PrincipiaWrapper.FlightPlanNumberOfManoeuvres(shared.Vessel) ?? 0;
+                return (nodeCount > 0);
             }
             throw new KOSUnavailableAddonException("HASMANOEUVRE", "Principia");
         }
@@ -52,13 +47,10 @@ namespace kOS.AddOns.Principia
         {
             if (Available())
             {
-                if (PrincipiaWrapper.FlightPlanExists(shared.Vessel))
+                int nodeCount = PrincipiaWrapper.FlightPlanNumberOfManoeuvres(shared.Vessel) ?? 0;
+                if (nodeCount > 0)
                 {
-                    int nodeCount = PrincipiaWrapper.FlightPlanNumberOfManoeuvres(shared.Vessel) ?? 0;
-                    if (nodeCount > 0)
-                    {
-                        return new PRManoeuvre(shared.Vessel, 0, shared);
-                    }
+                    return new PRManoeuvre(shared.Vessel, 0, shared);
                 }
 
                 throw new KOSSituationallyInvalidException("No manoeuvres present!");
@@ -72,13 +64,10 @@ namespace kOS.AddOns.Principia
             {
                 var list = new ListValue();
 
-                if (PrincipiaWrapper.FlightPlanExists(shared.Vessel))
+                int nodeCount = PrincipiaWrapper.FlightPlanNumberOfManoeuvres(shared.Vessel) ?? 0;
+                for (int i = 0; i < nodeCount; ++i)
                 {
-                    int nodeCount = PrincipiaWrapper.FlightPlanNumberOfManoeuvres(shared.Vessel) ?? 0;
-                    for (int i = 0; i < nodeCount; ++i)
-                    {
-                        list.Add(new PRManoeuvre(shared.Vessel, i, shared));
-                    }
+                    list.Add(new PRManoeuvre(shared.Vessel, i, shared));
                 }
 
                 return list;

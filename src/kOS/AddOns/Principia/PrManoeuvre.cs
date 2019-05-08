@@ -57,17 +57,15 @@ namespace kOS.AddOns.Principia
 
         private void Update()
         {
-            // If this node is attached, and the values on the attached node have changed, I need to reflect that
+            // If this node is attached, and the values on the attached node have changed, I need to reflect that.
             // Because this is just integer indexed, it's a bit prone to breakage if the flight plan changes.
-            // Not really a good way around this with the current principia flight planning.
+            // Not really a good way around this with the current Principia flight planning.
             if (index < 0)
                 return;
 
             time = PrincipiaWrapper.FlightPlanGetManoeuvreInitialTime(vesselRef, index) ?? time;
             duration = PrincipiaWrapper.FlightPlanGetManoeuvreDuration(vesselRef, index) ?? duration;
-            Vector3d guidance = PrincipiaWrapper.FlightPlanGetManoeuvreGuidance(vesselRef, index) ?? deltaV.normalized;
-            double deltaVMag = PrincipiaWrapper.FlightPlanGetManoeuvreDeltaV(vesselRef, index) ?? deltaV.magnitude;
-            deltaV = guidance * deltaVMag;
+            deltaV = PrincipiaWrapper.FlightPlanGetManoeuvreGuidance(vesselRef, index) ?? deltaV;
         }
     }
 }

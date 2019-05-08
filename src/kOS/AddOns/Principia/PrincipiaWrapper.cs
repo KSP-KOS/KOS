@@ -15,10 +15,8 @@ namespace kOS.AddOns.Principia
         private static object principiaObject = null;
         private static MethodInfo prGeopotentialGetCoefficient = null;
         private static MethodInfo prGeopotentialGetReferenceRadius = null;
-        private static MethodInfo prFlightPlanExists = null;
         private static MethodInfo prFlightPlanNumberOfManoeuvres = null;
         private static MethodInfo prFlightPlanGetManoeuvreInitialTime = null;
-        private static MethodInfo prFlightPlanGetManoeuvreDeltaV = null;
         private static MethodInfo prFlightPlanGetManoeuvreDuration = null;
         private static MethodInfo prFlightPlanGetManoeuvreGuidance = null;
 
@@ -73,10 +71,8 @@ namespace kOS.AddOns.Principia
 
                 prGeopotentialGetCoefficient = principiaAPIType.GetMethod("GeopotentialGetCoefficient", BindingFlags.Public | BindingFlags.Instance);
                 prGeopotentialGetReferenceRadius = principiaAPIType.GetMethod("GeopotentialGetReferenceRadius", BindingFlags.Public | BindingFlags.Instance);
-                prFlightPlanExists = principiaAPIType.GetMethod("FlightPlanExists", BindingFlags.Public | BindingFlags.Instance);
                 prFlightPlanNumberOfManoeuvres = principiaAPIType.GetMethod("FlightPlanNumberOfManoeuvres", BindingFlags.Public | BindingFlags.Instance);
                 prFlightPlanGetManoeuvreInitialTime = principiaAPIType.GetMethod("FlightPlanGetManoeuvreInitialTime", BindingFlags.Public | BindingFlags.Instance);
-                prFlightPlanGetManoeuvreDeltaV = principiaAPIType.GetMethod("FlightPlanGetManoeuvreDeltaV", BindingFlags.Public | BindingFlags.Instance);
                 prFlightPlanGetManoeuvreDuration = principiaAPIType.GetMethod("FlightPlanGetManoeuvreDuration", BindingFlags.Public | BindingFlags.Instance);
                 prFlightPlanGetManoeuvreGuidance = principiaAPIType.GetMethod("FlightPlanGetManoeuvreGuidance", BindingFlags.Public | BindingFlags.Instance);
 
@@ -196,13 +192,6 @@ namespace kOS.AddOns.Principia
             CelestialBody earth = FlightGlobals.GetHomeBody();
             return (double?)prGeopotentialGetReferenceRadius.Invoke(principiaObject, new object[] { earth.flightGlobalsIndex });
         }
-        public static bool FlightPlanExists(Vessel vessel)
-        {
-            if (prFlightPlanExists == null)
-                return false;
-
-            return (bool)prFlightPlanExists.Invoke(principiaObject, new object[] { vessel?.id.ToString() });
-        }
         public static int? FlightPlanNumberOfManoeuvres(Vessel vessel)
         {
             if (prFlightPlanNumberOfManoeuvres == null)
@@ -216,13 +205,6 @@ namespace kOS.AddOns.Principia
                 return null;
 
             return (double?)prFlightPlanGetManoeuvreInitialTime.Invoke(principiaObject, new object[] { vessel?.id.ToString(), index });
-        }
-        public static double? FlightPlanGetManoeuvreDeltaV(Vessel vessel, int index)
-        {
-            if (prFlightPlanGetManoeuvreDeltaV == null)
-                return null;
-
-            return (double?)prFlightPlanGetManoeuvreDeltaV.Invoke(principiaObject, new object[] { vessel?.id.ToString(), index });
         }
         public static double? FlightPlanGetManoeuvreDuration(Vessel vessel, int index)
         {
