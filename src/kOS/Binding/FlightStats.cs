@@ -14,6 +14,8 @@ namespace kOS.Binding
     [Binding("ksp")]
     public class FlightStats : Binding
     {
+        private StageValues stageValue;
+
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));

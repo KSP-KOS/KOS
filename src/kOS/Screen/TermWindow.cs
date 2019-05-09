@@ -143,7 +143,6 @@ namespace kOS.Screen
             closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.
             resizeButtonCoords = new Rect(0, 0, 0, 0); // will be resized later.
 
-            root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
             terminalImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal", false);
             terminalFrameImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal_frame", false);
             terminalFrameActiveImage = Utilities.Utils.GetTextureWithErrorMsg("kOS/GFX/dds_monitor_minimal_frame_active", false);
@@ -160,7 +159,7 @@ namespace kOS.Screen
                 networkZigZagImage != null &&
                 brightnessButtonImage != null &&
                 fontHeightButtonImage != null;
-
+;
             terminalImageStyle = Create9SliceStyle(terminalImage);
             terminalFrameStyle = Create9SliceStyle(terminalFrameImage);
             terminalFrameActiveStyle = Create9SliceStyle(terminalFrameActiveImage);
@@ -222,7 +221,7 @@ namespace kOS.Screen
         private void LoadAudio()
         {
             beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
-            AudioClip beepClip = beepURL.GetAudioClip(false);
+            AudioClip beepClip = beepURL.GetAudioClip();
             beepSource = gameObject.AddComponent<AudioSource>();
             beepSource.clip = beepClip;
         }
