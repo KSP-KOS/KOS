@@ -1,4 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed.Part;
@@ -196,7 +196,7 @@ namespace kOS.Suffixed.PartModuleField
             {
                 returnValue.Add(new StringValue(string.Format(formatter,
                                               IsEditable(field) ? "settable" : "get-only",
-                                              field.guiName.ToLower(),
+                                              field.guiName.Length > 0 ? field.guiName.ToLower() : field.name.ToLower(),
                                               Utilities.Utils.KOSType(field.FieldInfo.FieldType))));
             }
             return returnValue;
